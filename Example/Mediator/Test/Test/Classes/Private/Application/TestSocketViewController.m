@@ -22,6 +22,7 @@
 @interface TestSocketViewController () <FWAsyncSocketDelegate>
 
 @property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UILabel *label2;
 
 @end
 
@@ -35,7 +36,22 @@
     self.label.numberOfLines = 0;
     self.label.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.label];
-    [self.label fwPinEdgesToSuperview];
+    [self.label fwAlignCenterToSuperviewWithOffset:CGPointMake(0, -50)];
+    [self.label fwPinEdgesToSuperviewHorizontal];
+    
+    self.label2 = [[UILabel alloc] init];
+    self.label2.numberOfLines = 0;
+    self.label2.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.label2];
+    [self.label2 fwAlignCenterToSuperviewWithOffset:CGPointMake(0, 50)];
+    [self.label2 fwPinEdgesToSuperviewHorizontal];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self testOAuth2];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -213,6 +229,73 @@
 {
     FWLogInfo(@"socketDidDisconnect:%p withError: %@", sock, err);
     self.label.text = @"Disconnected";
+}
+
+#pragma mark - OAuth2
+
+- (void)testOAuth2
+{
+    self.label2.text = @"Sending...";
+    NSURL *baseURL = [NSURL URLWithString:@"http://brentertainment.com/oauth2/"];
+    FWOAuth2Manager *manager = [[FWOAuth2Manager alloc] initWithBaseURL:baseURL clientID:@"demoapp" secret:@"demopass"];
+    manager.useHTTPBasicAuthentication = NO;
+    FWWeakifySelf();
+    [manager authenticateUsingOAuthWithURLString:@"lockdin/token" username:@"demouser" password:@"testpass" scope:nil success:^(FWOAuthCredential * _Nonnull credential) {
+        FWStrongifySelf();
+        self.label2.text = [credential description];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self testCredential];
+        });
+    } failure:^(NSError * _Nonnull error) {
+        FWStrongifySelf();
+        self.label2.text = error.localizedDescription;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self testCredential];
+        });
+    }];
+}
+
+- (void)testCredential
+{
+    NSString *identifier = @"FWOAuth2Credential";
+    FWOAuthCredential *credential = [FWOAuthCredential retrieveCredentialWithIdentifier:identifier];
+    NSString *credentialText = FWOAuthCredential.storeCredentialInKeychain ? @"Keychain Credential " : @"NSUserDefaults Credential ";
+    if (credential) {
+        self.label2.text = [credential description];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (![credential isExpired]) {
+                self.label2.text = [credentialText stringByAppendingString:@"valid"];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.label2.text = [credential description];
+                });
+            } else {
+                self.label2.text = [credentialText stringByAppendingString:@"expired"];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [FWOAuthCredential deleteCredentialWithIdentifier:identifier];
+                    self.label2.text = [credentialText stringByAppendingString:@"deleted"];
+                });
+            }
+        });
+    } else {
+        self.label2.text = [credentialText stringByAppendingString:@"empty"];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            FWOAuthCredential *credential = [[FWOAuthCredential alloc] initWithOAuthToken:@"oauth_token" tokenType:@"token_type"];
+            [credential setRefreshToken:@"refresh_token" expiration:[NSDate dateWithTimeIntervalSince1970:NSDate.fwCurrentTime + 60]];
+            [FWOAuthCredential storeCredential:credential withIdentifier:identifier];
+            self.label2.text = [credentialText stringByAppendingString:@"stored"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                FWOAuthCredential *credential = [FWOAuthCredential retrieveCredentialWithIdentifier:identifier];
+                self.label2.text = [credential description];
+            });
+        });
+    }
 }
 
 @end

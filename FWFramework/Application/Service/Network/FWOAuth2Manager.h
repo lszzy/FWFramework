@@ -282,6 +282,11 @@ extern NSString * const kFWOAuthRefreshGrantType;
 ///-----------------------------------------
 
 /**
+ Whether to store the credential in the Keychain. Default is No, store in NSUserDefaults. Must be set before use.
+ */
+@property (class, nonatomic, assign) BOOL storeCredentialInKeychain;
+
+/**
  Stores the specified OAuth credential for a given web service identifier in the Keychain.
  with the default Keychain Accessibilty of kSecAttrAccessibleWhenUnlocked.
 
@@ -304,7 +309,7 @@ extern NSString * const kFWOAuthRefreshGrantType;
  */
 + (BOOL)storeCredential:(FWOAuthCredential *)credential
          withIdentifier:(NSString *)identifier
-      withAccessibility:(id)securityAccessibility;
+      withAccessibility:(nullable id)securityAccessibility;
 
 /**
  Retrieves the OAuth credential stored with the specified service identifier from the Keychain.

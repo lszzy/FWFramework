@@ -291,6 +291,8 @@ static NSDictionary * FWKeychainQueryDictionaryWithIdentifier(NSString *identifi
              };
 }
 
+static BOOL FWOAuth2CredentialInKeychain = NO;
+
 @interface FWOAuthCredential()
 @property (readwrite, nonatomic, copy) NSString *accessToken;
 @property (readwrite, nonatomic, copy) NSString *tokenType;
@@ -353,9 +355,23 @@ static NSDictionary * FWKeychainQueryDictionaryWithIdentifier(NSString *identifi
 
 #pragma mark Keychain
 
++ (BOOL)storeCredentialInKeychain
+{
+    return FWOAuth2CredentialInKeychain;
+}
+
++ (void)setStoreCredentialInKeychain:(BOOL)inKeychain
+{
+    FWOAuth2CredentialInKeychain = inKeychain;
+}
+
 + (BOOL)storeCredential:(FWOAuthCredential *)credential
          withIdentifier:(NSString *)identifier
 {
+    if (!FWOAuth2CredentialInKeychain) {
+        return [self storeCredential:credential withIdentifier:identifier withAccessibility:nil];
+    }
+    
     id securityAccessibility = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wtautological-compare"
@@ -371,6 +387,12 @@ static NSDictionary * FWKeychainQueryDictionaryWithIdentifier(NSString *identifi
          withIdentifier:(NSString *)identifier
       withAccessibility:(id)securityAccessibility
 {
+    if (!FWOAuth2CredentialInKeychain) {
+        NSData *credentialData = [NSKeyedArchiver archivedDataWithRootObject:credential];
+        [[NSUserDefaults standardUserDefaults] setObject:credentialData forKey:identifier];
+        return [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     NSMutableDictionary *queryDictionary = [FWKeychainQueryDictionaryWithIdentifier(identifier) mutableCopy];
 
     NSMutableDictionary *updateDictionary = [NSMutableDictionary dictionary];
@@ -394,6 +416,11 @@ static NSDictionary * FWKeychainQueryDictionaryWithIdentifier(NSString *identifi
 }
 
 + (BOOL)deleteCredentialWithIdentifier:(NSString *)identifier {
+    if (!FWOAuth2CredentialInKeychain) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:identifier];
+        return [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     NSMutableDictionary *queryDictionary = [FWKeychainQueryDictionaryWithIdentifier(identifier) mutableCopy];
 
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)queryDictionary);
@@ -402,6 +429,12 @@ static NSDictionary * FWKeychainQueryDictionaryWithIdentifier(NSString *identifi
 }
 
 + (FWOAuthCredential *)retrieveCredentialWithIdentifier:(NSString *)identifier {
+    if (!FWOAuth2CredentialInKeychain) {
+        NSData *credentialData = [[NSUserDefaults standardUserDefaults] objectForKey:identifier];
+        if (!credentialData) return nil;
+        return [NSKeyedUnarchiver unarchiveObjectWithData:credentialData];
+    }
+    
     NSMutableDictionary *queryDictionary = [FWKeychainQueryDictionaryWithIdentifier(identifier) mutableCopy];
     queryDictionary[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
     queryDictionary[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
