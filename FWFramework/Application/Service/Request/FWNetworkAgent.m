@@ -80,19 +80,21 @@
 }
 
 - (FWJSONResponseSerializer *)jsonResponseSerializer {
-    if (!_jsonResponseSerializer) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         _jsonResponseSerializer = [FWJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
         _jsonResponseSerializer.removesKeysWithNullValues = _config.removeNullValues;
-    }
+    });
     return _jsonResponseSerializer;
 }
 
 - (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier {
-    if (!_xmlParserResponseSerialzier) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         _xmlParserResponseSerialzier = [FWXMLParserResponseSerializer serializer];
         _xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
-    }
+    });
     return _xmlParserResponseSerialzier;
 }
 
@@ -290,7 +292,8 @@
     BOOL result = [request statusCodeValidator];
     if (!result) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestValidationErrorDomain code:FWRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:@"Invalid status code"}];
+            NSString *desc = [NSString stringWithFormat:@"Invalid status code (%ld)", (long)[request responseStatusCode]];
+            *error = [NSError errorWithDomain:FWRequestValidationErrorDomain code:FWRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:desc}];
         }
         return result;
     }

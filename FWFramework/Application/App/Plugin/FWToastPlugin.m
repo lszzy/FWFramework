@@ -181,19 +181,14 @@
                               contentInsets:(UIEdgeInsets)contentInsets
                                cornerRadius:(CGFloat)cornerRadius
 {
+    [self fwHideIndicatorLoadingInvalidateTimer];
+    
     // 判断之前的指示器是否存在
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
         // 能否直接使用之前的指示器(避免进度重复调用出现闪烁)
         UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
         if (centerView) {
-            // 清除延时隐藏Timer
-            NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
-            if (indicatorTimer) {
-                [indicatorTimer invalidate];
-                objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
-            }
-            
             // 重用指示器视图并移至顶层
             [self bringSubviewToFront:indicatorView];
             indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
@@ -285,13 +280,7 @@
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
         [indicatorView removeFromSuperview];
-        
-        // 清除延时隐藏Timer
-        NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
-        if (indicatorTimer) {
-            [indicatorTimer invalidate];
-            objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
-        }
+        [self fwHideIndicatorLoadingInvalidateTimer];
         
         return YES;
     }
@@ -303,6 +292,7 @@
     UIButton *indicatorView = [self viewWithTag:2011];
     if (indicatorView) {
         // 创建Common模式Timer，避免ScrollView滚动时不触发
+        [self fwHideIndicatorLoadingInvalidateTimer];
         NSTimer *indicatorTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
             [self fwHideIndicatorLoading];
         } repeats:NO];
@@ -311,6 +301,15 @@
         return YES;
     }
     return NO;
+}
+
+- (void)fwHideIndicatorLoadingInvalidateTimer
+{
+    NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
+    if (indicatorTimer) {
+        [indicatorTimer invalidate];
+        objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
+    }
 }
 
 - (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
@@ -373,13 +372,7 @@
     UIButton *toastView = [self viewWithTag:2031];
     if (toastView) {
         [toastView removeFromSuperview];
-        
-        // 清除延时隐藏Timer
-        NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:));
-        if (toastTimer) {
-            [toastTimer invalidate];
-            objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
-        }
+        [self fwHideIndicatorMessageInvalidateTimer];
         
         return YES;
     }
@@ -392,6 +385,7 @@
     UIButton *toastView = [self viewWithTag:2031];
     if (toastView) {
         // 创建Common模式Timer，避免ScrollView滚动时不触发
+        [self fwHideIndicatorMessageInvalidateTimer];
         NSTimer *toastTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
             BOOL hideResult = [self fwHideIndicatorMessage];
             if (hideResult && completion) {
@@ -403,6 +397,15 @@
         return YES;
     }
     return NO;
+}
+
+- (void)fwHideIndicatorMessageInvalidateTimer
+{
+    NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:));
+    if (toastTimer) {
+        [toastTimer invalidate];
+        objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
+    }
 }
 
 @end

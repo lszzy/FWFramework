@@ -19,6 +19,16 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 /// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
+/// 网络图片加载选项，默认兼容SDWebImage
+typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
+    /// 空选项，默认值
+    FWImageOptionNone = 0,
+    /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
+    FWImageOptionRefreshCached = 1 << 3,
+    /// 禁止调用imageView.setImage:显示图片
+    FWImageOptionAvoidSetImage = 1 << 10,
+};
+
 /*!
  @brief UIImage+FWImage
  */
@@ -44,6 +54,12 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// 下载网络图片并返回下载凭据
 + (nullable id)fwDownloadImage:(nullable id)url
+                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                      progress:(nullable void (^)(double progress))progress;
+
+/// 下载网络图片并返回下载凭据，指定option
++ (nullable id)fwDownloadImage:(nullable id)url
+                       options:(FWImageOptions)options
                     completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
@@ -92,6 +108,9 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// 动画ImageView视图类，优先加载插件，默认UIImageView
 @property (class, nonatomic, unsafe_unretained) Class fwImageViewAnimatedClass;
 
+/// 当前正在加载的网络图片URL
+@property (nonatomic, copy, readonly, nullable) NSURL *fwImageURL;
+
 /// 加载网络图片，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(nullable id)url;
 
@@ -104,9 +123,10 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
          placeholderImage:(nullable UIImage *)placeholderImage
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion;
 
-/// 加载网络图片，支持占位、回调和进度，优先加载插件，默认使用框架网络库
+/// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage
+                  options:(FWImageOptions)options
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                  progress:(nullable void (^)(double progress))progress;
 
@@ -122,10 +142,14 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 @optional
 
+/// 获取imageView正在加载的URL插件方法
+- (nullable NSURL *)fwImageURL:(UIImageView *)imageView;
+
 /// imageView加载网络图片插件方法
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
+            options:(FWImageOptions)options
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
 
@@ -134,6 +158,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)fwDownloadImage:(nullable NSURL *)imageURL
+                       options:(FWImageOptions)options
                     completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
@@ -153,7 +178,17 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 /// SDWebImage图片插件，启用Component_SDWebImage组件后生效
 @interface FWSDWebImagePlugin : NSObject <FWImagePlugin>
 
+/// 单例模式
 @property (class, nonatomic, readonly) FWSDWebImagePlugin *sharedInstance;
+
+/// 图片加载完成是否显示渐变动画，默认NO
+@property (nonatomic, assign) BOOL fadeAnimated;
+
+/// 图片前置过滤器，setImageURL开始时调用
+@property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
+
+/// 图片后置过滤器，setImageURL完成时调用
+@property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
 
 @end
 

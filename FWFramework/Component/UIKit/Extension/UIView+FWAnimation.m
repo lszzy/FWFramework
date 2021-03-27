@@ -228,7 +228,7 @@
                                completion:(void (^)(BOOL finished))completion
 {
     // 默认动画完成后自动移除，removedOnCompletion为YES
-    CATransition *transition = [CATransition animation];
+    CATransition *transition = [CATransition new];
     
     /** type
      *
@@ -273,7 +273,7 @@
      *  type与subtype的对应关系(必看),如果对应错误,动画不会显现.
      *  http://iphonedevwiki.net/index.php/CATransition
      */
-    transition.subtype = subtype;
+    if (subtype) transition.subtype = subtype;
     
     /** timingFunction
      *
@@ -287,7 +287,7 @@
      *  kCAMediaTimingFunctionEaseInEaseOut     先慢后快再慢
      *  kCAMediaTimingFunctionDefault           实际效果是动画中间比较快.
       */
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:timingFunction];
+    if (timingFunction) transition.timingFunction = [CAMediaTimingFunction functionWithName:timingFunction];
     
     // 动画持续时间，默认为0.25秒，传0即可
     transition.duration = duration;
@@ -302,6 +302,11 @@
     // 所有核心动画和特效都是基于CAAnimation(作用于CALayer)
     [self.layer addAnimation:transition forKey:@"FWAnimation"];
     return transition;
+}
+
+- (void)fwRemoveAnimation
+{
+    [self.layer removeAnimationForKey:@"FWAnimation"];
 }
 
 - (void)fwRemoveAllAnimations
@@ -404,6 +409,17 @@
                          self.alpha = alpha;
                      }
                      completion:completion];
+}
+
+- (void)fwFadeWithBlock:(void (^)(void))block
+               duration:(NSTimeInterval)duration
+             completion:(void (^)(BOOL))completion
+{
+    [UIView transitionWithView:self
+                      duration:duration
+                       options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction
+                    animations:block
+                    completion:completion];
 }
 
 - (void)fwRotateWithDegree:(CGFloat)degree

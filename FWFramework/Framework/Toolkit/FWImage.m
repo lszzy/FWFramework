@@ -76,8 +76,16 @@ UIImage * FWImageFile(NSString *path) {
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
+    return [self fwDownloadImage:url options:0 completion:completion progress:progress];
+}
+
++ (id)fwDownloadImage:(id)url
+              options:(FWImageOptions)options
+           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+             progress:(void (^)(double))progress
+{
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:completion:progress:)]) {
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwDownloadImage:options:completion:progress:)]) {
         NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
             imageURL = [NSURL URLWithString:url];
@@ -90,7 +98,7 @@ UIImage * FWImageFile(NSString *path) {
             imageURL = [url URL];
         }
         
-        return [imagePlugin fwDownloadImage:imageURL completion:completion progress:progress];
+        return [imagePlugin fwDownloadImage:imageURL options:options completion:completion progress:progress];
     }
     return nil;
 }
@@ -242,6 +250,15 @@ UIImage * FWImageFile(NSString *path) {
     objc_setAssociatedObject([UIImageView class], @selector(fwImageViewAnimatedClass), animatedClass, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSURL *)fwImageURL
+{
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageURL:)]) {
+        return [imagePlugin fwImageURL:self];
+    }
+    return nil;
+}
+
 - (void)fwSetImageWithURL:(id)url
 {
     [self fwSetImageWithURL:url placeholderImage:nil];
@@ -257,16 +274,17 @@ UIImage * FWImageFile(NSString *path) {
          placeholderImage:(UIImage *)placeholderImage
                completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
 {
-    [self fwSetImageWithURL:url placeholderImage:placeholderImage completion:completion progress:nil];
+    [self fwSetImageWithURL:url placeholderImage:placeholderImage options:0 completion:completion progress:nil];
 }
 
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(UIImage *)placeholderImage
+                  options:(FWImageOptions)options
                completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
                  progress:(void (^)(double))progress
 {
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:completion:progress:)]) {
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageView:setImageURL:placeholder:options:completion:progress:)]) {
         NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
             imageURL = [NSURL URLWithString:url];
@@ -279,7 +297,7 @@ UIImage * FWImageFile(NSString *path) {
             imageURL = [url URL];
         }
         
-        [imagePlugin fwImageView:self setImageURL:imageURL placeholder:placeholderImage completion:completion progress:progress];
+        [imagePlugin fwImageView:self setImageURL:imageURL placeholder:placeholderImage options:options completion:completion progress:progress];
     }
 }
 
@@ -331,15 +349,30 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage sd_imageWithData:data scale:scale];
 }
 
+- (NSURL *)fwImageURL:(UIImageView *)imageView
+{
+    return imageView.sd_imageURL;
+}
+
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
+            options:(FWImageOptions)options
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+    if (self.fadeAnimated && !imageView.sd_imageTransition) {
+        imageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
+    }
+    
+    if (self.preFilter) {
+        self.preFilter(imageView);
+    }
+    
+    __weak __typeof__(self) self_weak_ = self;
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
-                          options:SDWebImageRetryFailed
+                          options:options | SDWebImageRetryFailed
                           context:nil
                          progress:progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                             if (expectedSize > 0) {
@@ -352,9 +385,16 @@ UIImage * FWImageFile(NSString *path) {
                                 }
                             }
                         } : nil
-                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                            completion(image, error);
-                        } : nil];
+                        completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                            __typeof__(self) self = self_weak_;
+                            if (self.postFilter) {
+                                self.postFilter(imageView, image);
+                            }
+                                                
+                            if (completion) {
+                                completion(image, error);
+                            }
+                        }];
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView
@@ -363,12 +403,13 @@ UIImage * FWImageFile(NSString *path) {
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
+              options:(FWImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     return [[SDWebImageManager sharedManager]
             loadImageWithURL:imageURL
-            options:SDWebImageRetryFailed
+            options:options | SDWebImageRetryFailed
             progress:(progress ? ^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                 if (expectedSize > 0) {
                     if ([NSThread isMainThread]) {
