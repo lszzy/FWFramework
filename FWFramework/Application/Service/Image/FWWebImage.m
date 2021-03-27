@@ -9,7 +9,6 @@
 
 #import "FWWebImage.h"
 #import "FWPlugin.h"
-#import "FWImage.h"
 #import "FWHTTPSessionManager.h"
 #import <objc/runtime.h>
 
@@ -363,14 +362,16 @@
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+                                                 options:(FWImageOptions)options
                                                  success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
                                                  failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
-    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] success:success failure:failure progress:progress];
+    return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] options:options success:success failure:failure progress:progress];
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
                                            withReceiptID:(nonnull NSUUID *)receiptID
+                                                 options:(FWImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
@@ -378,7 +379,7 @@
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
-        if (URLIdentifier == nil) {
+        if (URLIdentifier.length == 0) {
             if (failure) {
                 NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -402,14 +403,16 @@
             case NSURLRequestUseProtocolCachePolicy:
             case NSURLRequestReturnCacheDataElseLoad:
             case NSURLRequestReturnCacheDataDontLoad: {
-                UIImage *cachedImage = [self.imageCache imageforRequest:request withAdditionalIdentifier:nil];
-                if (cachedImage != nil) {
-                    if (success) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            success(request, nil, cachedImage);
-                        });
+                if (!(options & FWImageOptionRefreshCached)) {
+                    UIImage *cachedImage = [self.imageCache imageforRequest:request withAdditionalIdentifier:nil];
+                    if (cachedImage != nil) {
+                        if (success) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                success(request, nil, cachedImage);
+                            });
+                        }
+                        return;
                     }
-                    return;
                 }
                 break;
             }
@@ -639,34 +642,66 @@
     objc_setAssociatedObject(object, @selector(activeImageDownloadReceipt:), receipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSURL *)imageURLForObject:(id)object
+{
+    if (!object) return nil;
+    return (NSURL *)objc_getAssociatedObject(object, @selector(imageURLForObject:));
+}
+
+- (void)setImageURL:(NSURL *)imageURL forObject:(id)object
+{
+    if (!object) return;
+    objc_setAssociatedObject(object, @selector(imageURLForObject:), imageURL, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)imageOperationKeyForObject:(id)object
+{
+    if (!object) return nil;
+    return (NSString *)objc_getAssociatedObject(object, @selector(imageOperationKeyForObject:));
+}
+
+- (void)setImageOperationKey:(NSString *)operationKey forObject:(id)object
+{
+    if (!object) return;
+    objc_setAssociatedObject(object, @selector(imageOperationKeyForObject:), operationKey, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)downloadImageForObject:(id)object
                       imageURL:(id)url
+                       options:(FWImageOptions)options
                    placeholder:(void (^)(void))placeholder
-                    completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+                    completion:(void (^)(UIImage * _Nullable, BOOL, NSError * _Nullable))completion
                       progress:(void (^)(double))progress
 {
     if (!object) return;
     NSURLRequest *urlRequest = [self urlRequestWithURL:url];
+    [self setImageOperationKey:NSStringFromClass([object class]) forObject:object];
+    FWImageDownloadReceipt *activeReceipt = [self activeImageDownloadReceipt:object];
+    if (activeReceipt != nil) {
+        [self cancelTaskForImageDownloadReceipt:activeReceipt];
+        [self setActiveImageDownloadReceipt:nil forObject:object];
+    }
+    [self setImageURL:[urlRequest URL] forObject:object];
+    
     if ([urlRequest URL] == nil) {
         if (placeholder) {
             placeholder();
         }
         if (completion) {
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadURL userInfo:nil];
-            completion(nil, error);
+            completion(nil, NO, error);
         }
         return;
     }
-    
-    if ([[self activeImageDownloadReceipt:object].task.originalRequest.URL.absoluteString isEqualToString:urlRequest.URL.absoluteString]) return;
-    [self cancelImageDownloadTask:object];
 
-    //Use the image from the image cache if it exists
-    id<FWImageRequestCache> imageCache = self.imageCache;
-    UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    UIImage *cachedImage = nil;
+    if (!(options & FWImageOptionRefreshCached)) {
+        id<FWImageRequestCache> imageCache = self.imageCache;
+        cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    }
     if (cachedImage) {
         if (completion) {
-            completion(cachedImage, nil);
+            completion(cachedImage, YES, nil);
         }
         [self setActiveImageDownloadReceipt:nil forObject:object];
     } else {
@@ -679,11 +714,12 @@
         receipt = [self
                    downloadImageForURL:urlRequest
                    withReceiptID:downloadID
+                   options:options
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                            if (completion) {
-                               completion(responseObject, nil);
+                               completion(responseObject, NO, nil);
                            }
                            [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                        }
@@ -692,7 +728,7 @@
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                         if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
                             if (completion) {
-                                completion(nil, error);
+                                completion(nil, NO, error);
                             }
                             [strongSelf setActiveImageDownloadReceipt:nil forObject:object];
                         }
@@ -716,6 +752,7 @@
         [self cancelTaskForImageDownloadReceipt:receipt];
         [self setActiveImageDownloadReceipt:nil forObject:object];
     }
+    [self setImageOperationKey:nil forObject:object];
 }
 
 @end
@@ -756,19 +793,51 @@
     return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
 }
 
+- (NSURL *)fwImageURL:(UIImageView *)imageView
+{
+    return [[FWImageDownloader sharedDownloader] imageURLForObject:imageView];
+}
+
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
+            options:(FWImageOptions)options
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL placeholder:^{
-        if (placeholder) imageView.image = placeholder;
-    } completion:^(UIImage *image, NSError *error) {
+    if (self.preFilter) {
+        self.preFilter(imageView);
+    }
+    
+    __weak __typeof__(self) self_weak_ = self;
+    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
+        imageView.image = placeholder;
+    } completion:^(UIImage *image, BOOL isCache, NSError *error) {
+        __typeof__(self) self = self_weak_;
+        BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
+        if (autoSetImage && self.fadeAnimated && !isCache) {
+            NSString *originalOperationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+            [UIView transitionWithView:imageView duration:0 options:0 animations:^{
+                NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
+            } completion:^(BOOL finished) {
+                [UIView transitionWithView:imageView duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction animations:^{
+                    NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                    if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
+                    
+                    imageView.image = image;
+                } completion:nil];
+            }];
+        } else if (autoSetImage) {
+            imageView.image = image;
+        }
+        
+        if (self.postFilter) {
+            self.postFilter(imageView, image);
+        }
+        
         if (completion) {
             completion(image, error);
-        } else {
-            if (image) imageView.image = image;
         }
     } progress:progress];
 }
@@ -779,10 +848,11 @@
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
+              options:(FWImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
         if (completion) {
             completion(responseObject, nil);
         }

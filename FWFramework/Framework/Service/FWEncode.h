@@ -120,12 +120,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Query
 
 /**
- * 字典编码为url参数字符串
+ * 字典编码为URL参数字符串
  */
 + (NSString *)fwQueryEncode:(NSDictionary<NSString *, id> *)dictionary;
 
 /**
- * url参数字符串解码为字典
+ * URL参数字符串解码为字典，支持完整URL
  */
 - (NSDictionary<NSString *, NSString *> *)fwQueryDecode;
 
@@ -374,6 +374,13 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
  @return UTF8编码数据
  */
 @property (nonatomic, strong, readonly, nullable) NSData *fwUTF8Data;
+
+/*!
+ @brief 转换为URL对象
+ 
+ @return URL对象
+ */
+@property (nonatomic, copy, readonly, nullable) NSURL *fwURL;
 
 /*!
  @brief 从指定位置截取子串

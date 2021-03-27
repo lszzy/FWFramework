@@ -66,6 +66,8 @@
 		2FC06A38253FCF61009C8E23 /* UICollectionView+FWDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */; };
 		2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD411D259DB1E900163B7F /* FWMediator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDD4120259DB1E900163B7F /* FWMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD411E259DB1E900163B7F /* FWMediator.m */; };
+		2FE118E0260EFA8B00797C6B /* FWOAuth2Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE118DE260EFA8B00797C6B /* FWOAuth2Manager.m */; };
+		2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE118DF260EFA8B00797C6B /* FWOAuth2Manager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE56501257BDD0A00BF89E5 /* FWViewControllerStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE564FF257BDD0A00BF89E5 /* FWViewControllerStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE56502257BDD0A00BF89E5 /* FWViewControllerStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -401,6 +403,8 @@
 		2FC06A37253FCF61009C8E23 /* UICollectionView+FWDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+FWDelegate.swift"; sourceTree = "<group>"; };
 		2FDD411D259DB1E900163B7F /* FWMediator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWMediator.h; sourceTree = "<group>"; };
 		2FDD411E259DB1E900163B7F /* FWMediator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWMediator.m; sourceTree = "<group>"; };
+		2FE118DE260EFA8B00797C6B /* FWOAuth2Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWOAuth2Manager.m; sourceTree = "<group>"; };
+		2FE118DF260EFA8B00797C6B /* FWOAuth2Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWOAuth2Manager.h; sourceTree = "<group>"; };
 		2FE564FF257BDD0A00BF89E5 /* FWViewControllerStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWViewControllerStyle.h; sourceTree = "<group>"; };
 		2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWViewControllerStyle.m; sourceTree = "<group>"; };
 		2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWDynamicLayout.h; sourceTree = "<group>"; };
@@ -907,6 +911,8 @@
 				2FFE1B532507BF95000332A3 /* FWHTTPSessionManager.m */,
 				2FFE1B502507BF95000332A3 /* FWNetworkReachabilityManager.h */,
 				2FFE1B542507BF95000332A3 /* FWNetworkReachabilityManager.m */,
+				2FE118DF260EFA8B00797C6B /* FWOAuth2Manager.h */,
+				2FE118DE260EFA8B00797C6B /* FWOAuth2Manager.m */,
 				2FFE1B4F2507BF95000332A3 /* FWSecurityPolicy.h */,
 				2FFE1B562507BF95000332A3 /* FWSecurityPolicy.m */,
 				2FFE1B4E2507BF95000332A3 /* FWURLRequestSerialization.h */,
@@ -1256,6 +1262,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */,
 				2F65D76825F7451E00E522D6 /* FWNotification.h in Headers */,
 				2F65D76D25F7451E00E522D6 /* FWKeychain.h in Headers */,
 				2F65D76F25F7451E00E522D6 /* FWLanguage.h in Headers */,
@@ -1588,6 +1595,7 @@
 				2FFE1D6B2507BFBD000332A3 /* UICollectionView+FWFramework.m in Sources */,
 				2FFE840E2515C4BF00545D6E /* FWAdaptive.m in Sources */,
 				2FFE1D562507BFBD000332A3 /* UIDevice+FWFramework.m in Sources */,
+				2FE118E0260EFA8B00797C6B /* FWOAuth2Manager.m in Sources */,
 				2FFE1D952507BFBD000332A3 /* FWSegmentedControl.m in Sources */,
 				2FFE1C3B2507BFA5000332A3 /* FWCollectionViewController.m in Sources */,
 				2F64834325E5641F00E9B77F /* FWNavigationController.m in Sources */,

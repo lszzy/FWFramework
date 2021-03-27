@@ -134,7 +134,7 @@
             [retStr appendFormat:@"\\u%.4x", [self characterAtIndex:i]];
         }
     }
-    return retStr;
+    return [NSString stringWithString:retStr];
 }
 
 - (NSString *)fwUnicodeDecode
@@ -184,13 +184,15 @@
         value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
         [string appendFormat:@"%@=%@", key, value];
     }
-    return string;
+    return [NSString stringWithString:string];
 }
 
 - (NSDictionary<NSString *,NSString *> *)fwQueryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSArray *parameters = [self componentsSeparatedByString:@"&"];
+    NSURL *url = [NSURL fwURLWithString:self];
+    NSString *queryString = url.scheme.length > 0 ? url.query : self;
+    NSArray *parameters = [queryString componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
         NSArray<NSString *> *contents = [parameter componentsSeparatedByString:@"="];
         if ([contents count] == 2) {
@@ -214,7 +216,7 @@
     for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++){
         [output appendFormat:@"%02x", digest[i]];
     }
-    return output;
+    return [NSString stringWithString:output];
 }
 
 - (NSString *)fwMd5EncodeFile
@@ -498,6 +500,11 @@ NSURL * FWSafeURL(id value) {
     return [self dataUsingEncoding:NSUTF8StringEncoding];
 }
 
+- (NSURL *)fwURL
+{
+    return [NSURL fwURLWithString:self];
+}
+
 - (NSString *)fwSubstringFromIndex:(NSInteger)from
 {
     if (from < 0) {
@@ -587,8 +594,13 @@ NSURL * FWSafeURL(id value) {
 - (NSDictionary<NSString *,NSString *> *)fwQueryDictionary
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:self.absoluteString ?: @""];
-    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSString *urlString = self.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    if (!urlComponents) {
+        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    }
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
         dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
     }];
     return [dict copy];
