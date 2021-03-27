@@ -67,7 +67,7 @@
 		2FDD411F259DB1E900163B7F /* FWMediator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FDD411D259DB1E900163B7F /* FWMediator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FDD4120259DB1E900163B7F /* FWMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDD411E259DB1E900163B7F /* FWMediator.m */; };
 		2FE118E0260EFA8B00797C6B /* FWOAuth2Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE118DE260EFA8B00797C6B /* FWOAuth2Manager.m */; };
-		2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE118DF260EFA8B00797C6B /* FWOAuth2Manager.h */; };
+		2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE118DF260EFA8B00797C6B /* FWOAuth2Manager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE56501257BDD0A00BF89E5 /* FWViewControllerStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FE564FF257BDD0A00BF89E5 /* FWViewControllerStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FE56502257BDD0A00BF89E5 /* FWViewControllerStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE56500257BDD0A00BF89E5 /* FWViewControllerStyle.m */; };
 		2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FF0B3BC250FCA8D005B93DD /* FWDynamicLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1262,6 +1262,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */,
 				2F65D76825F7451E00E522D6 /* FWNotification.h in Headers */,
 				2F65D76D25F7451E00E522D6 /* FWKeychain.h in Headers */,
 				2F65D76F25F7451E00E522D6 /* FWLanguage.h in Headers */,
@@ -1415,7 +1416,6 @@
 				2FFE1C402507BFA5000332A3 /* FWCollectionViewController.h in Headers */,
 				2FFE1BE52507BF95000332A3 /* FWModel.h in Headers */,
 				2FFE1D4F2507BFBD000332A3 /* UIPageControl+FWFramework.h in Headers */,
-				2FE118E1260EFA8B00797C6B /* FWOAuth2Manager.h in Headers */,
 				2FA99DA4228AA9CF0059DFDB /* FWFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

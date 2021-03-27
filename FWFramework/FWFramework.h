@@ -103,8 +103,8 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 #import "FWWebImage.h"
 #endif
 
-#if __has_include("FWHTTPSessionManager.h")
-#import "FWHTTPSessionManager.h"
+#if __has_include("FWOAuth2Manager.h")
+#import "FWOAuth2Manager.h"
 #endif
 
 #if __has_include("FWNetworkPrivate.h")
