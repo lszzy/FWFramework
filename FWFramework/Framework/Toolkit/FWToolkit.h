@@ -199,7 +199,7 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 @interface UIView (FWToolkit)
 
 /// 获取响应的视图控制器
-@property (nonatomic, strong, readonly, nullable) UIViewController *fwViewController;
+@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
 
 @end
 
