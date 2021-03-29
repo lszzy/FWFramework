@@ -233,6 +233,7 @@ open class FWPagingListContainerView: UIView {
             if collectionView.frame == CGRect.zero || collectionView.bounds.size != bounds.size {
                 collectionView.frame = bounds
                 collectionView.collectionViewLayout.invalidateLayout()
+                collectionView.reloadData()
                 collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex)*collectionView.bounds.size.width, y: 0), animated: false)
             }else {
                 collectionView.frame = bounds
@@ -303,14 +304,16 @@ open class FWPagingListContainerView: UIView {
             containerVC.addChild(vc)
         }
         validListDict[index] = list
-        if type == .scrollView {
-            list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
-            scrollView.addSubview(list.listView())
-        }else {
-            let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0))
-            cell?.contentView.subviews.forEach { $0.removeFromSuperview() }
-            list.listView().frame = cell?.contentView.bounds ?? CGRect.zero
-            cell?.contentView.addSubview(list.listView())
+        switch type {
+            case .scrollView:
+                list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
+                scrollView.addSubview(list.listView())
+            case .collectionView:
+                if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) {
+                    cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                    list.listView().frame = cell.contentView.bounds
+                    cell.contentView.addSubview(list.listView())
+                }
         }
     }
 
@@ -443,7 +446,11 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         let list = validListDict[indexPath.item]
         if list != nil {
-            list?.listView().frame = cell.contentView.bounds
+            if list is UIViewController {
+                list?.listView().frame = cell.contentView.bounds
+            }else {
+                list?.listView().frame = cell.bounds
+            }
             cell.contentView.addSubview(list!.listView())
         }
         return cell
@@ -455,7 +462,7 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.listContainerViewDidScroll?(self)
-        guard scrollView.isTracking || scrollView.isDragging else {
+        guard scrollView.isTracking || scrollView.isDragging || scrollView.isDecelerating else {
             return
         }
         let percent = scrollView.contentOffset.x/scrollView.bounds.size.width
@@ -732,7 +739,7 @@ open class FWPagingView: UIView {
         currentScrollingListView = nil
         validListDict.removeAll()
         refreshTableHeaderView()
-        if pinSectionHeaderVerticalOffset != 0 {
+        if pinSectionHeaderVerticalOffset != 0 && mainTableView.contentOffset.y > CGFloat(pinSectionHeaderVerticalOffset) {
             mainTableView.contentOffset = .zero
         }
         mainTableView.reloadData()
@@ -1421,9 +1428,10 @@ extension FWPagingSmoothView: UICollectionViewDataSource, UICollectionViewDelega
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.pagingSmoothViewDidScroll?(scrollView)
+        let indexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
         let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
         let listScrollView = listDict[index]?.listScrollView()
-        if index != currentIndex && !(scrollView.isDragging || scrollView.isDecelerating) && listScrollView?.contentOffset.y ?? 0 <= -heightForPinHeader {
+        if (indexPercent - CGFloat(index) == 0) && index != currentIndex && !(scrollView.isDragging || scrollView.isDecelerating) && listScrollView?.contentOffset.y ?? 0 <= -heightForPinHeader {
             horizontalScrollDidEnd(at: index)
         }else {
             //左右滚动的时候，就把listHeaderContainerView添加到self，达到悬浮在顶部的效果
