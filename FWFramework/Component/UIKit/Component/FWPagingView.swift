@@ -842,23 +842,23 @@ open class FWPagingView: UIView {
         return !(scrollView.contentInset.top != 0 && scrollView.contentInset.top != CGFloat(pinSectionHeaderVerticalOffset))
     }
 
-    func mainTableViewMaxContentOffsetY() -> CGFloat {
+    public func mainTableViewMaxContentOffsetY() -> CGFloat {
         guard let delegate = delegate else { return 0 }
         return CGFloat(delegate.tableHeaderViewHeight(in: self)) - CGFloat(pinSectionHeaderVerticalOffset)
     }
 
-    public func setMainTableViewToMaxContentOffsetY() {
+    open func setMainTableViewToMaxContentOffsetY() {
         mainTableView.contentOffset = CGPoint(x: 0, y: mainTableViewMaxContentOffsetY())
     }
 
-    func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
+    open func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
         if #available(iOS 11.0, *) {
             return -scrollView.adjustedContentInset.top
         }
         return -scrollView.contentInset.top
     }
 
-    func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
+    open func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
         scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: minContentOffsetYInListScrollView(scrollView))
     }
 
