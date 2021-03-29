@@ -1030,6 +1030,8 @@ extension FWPagingView: FWPagingListContainerViewDelegate {
 
 @objcMembers
 open class FWPagingListRefreshView: FWPagingView {
+    public var minContentOffsetYBlock: ((UIScrollView) -> CGFloat)?
+    
     private var lastScrollingListViewContentOffsetY: CGFloat = 0
 
     public override init(delegate: FWPagingViewDelegate, listContainerType: FWPagingListContainerType = .collectionView) {
@@ -1105,6 +1107,13 @@ open class FWPagingListRefreshView: FWPagingView {
             }
         }
         lastScrollingListViewContentOffsetY = currentScrollingListView.contentOffset.y;
+    }
+    
+    open override func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
+        if let block = minContentOffsetYBlock {
+            return block(scrollView)
+        }
+        return super.minContentOffsetYInListScrollView(scrollView)
     }
 
 }
