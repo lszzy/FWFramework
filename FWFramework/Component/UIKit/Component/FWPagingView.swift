@@ -1030,7 +1030,8 @@ extension FWPagingView: FWPagingListContainerViewDelegate {
 
 @objcMembers
 open class FWPagingListRefreshView: FWPagingView {
-    public var minContentOffsetYBlock: ((UIScrollView) -> CGFloat)?
+    //listScrollView悬停时可下拉的contentInset，用于实现悬停时子页面下拉刷新效果
+    public var listScrollViewPinContentInsetBlock: ((UIScrollView) -> CGFloat)?
     
     private var lastScrollingListViewContentOffsetY: CGFloat = 0
 
@@ -1110,10 +1111,16 @@ open class FWPagingListRefreshView: FWPagingView {
     }
     
     open override func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
-        if let block = minContentOffsetYBlock {
-            return block(scrollView)
+        var minContentOffsetY = super.minContentOffsetYInListScrollView(scrollView)
+        if let block = listScrollViewPinContentInsetBlock {
+            minContentOffsetY -= block(scrollView)
         }
-        return super.minContentOffsetYInListScrollView(scrollView)
+        return minContentOffsetY
+    }
+    
+    open override func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
+        //不修改子页面原始的minContentOffsetY，停留原始位置
+        scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: super.minContentOffsetYInListScrollView(scrollView))
     }
 
 }
