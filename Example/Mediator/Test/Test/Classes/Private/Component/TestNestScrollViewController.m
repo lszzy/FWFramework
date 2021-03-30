@@ -340,10 +340,10 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     
     if (self.refreshList) {
         FWPagingListRefreshView *pagerView = [[FWPagingListRefreshView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
-        pagerView.minContentOffsetYBlock = ^CGFloat(UIScrollView *scrollView) {
+        pagerView.listScrollViewPinContentInsetBlock = ^CGFloat(UIScrollView *scrollView) {
             TestNestChildController *viewController = scrollView.fwViewController;
             if (viewController.refreshList && viewController.section && !viewController.isInserted) {
-                return -FWScreenHeight;
+                return FWScreenHeight;
             }
             return 0;
         };
