@@ -233,6 +233,7 @@ open class FWPagingListContainerView: UIView {
             if collectionView.frame == CGRect.zero || collectionView.bounds.size != bounds.size {
                 collectionView.frame = bounds
                 collectionView.collectionViewLayout.invalidateLayout()
+                collectionView.reloadData()
                 collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex)*collectionView.bounds.size.width, y: 0), animated: false)
             }else {
                 collectionView.frame = bounds
@@ -303,14 +304,16 @@ open class FWPagingListContainerView: UIView {
             containerVC.addChild(vc)
         }
         validListDict[index] = list
-        if type == .scrollView {
-            list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
-            scrollView.addSubview(list.listView())
-        }else {
-            let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0))
-            cell?.contentView.subviews.forEach { $0.removeFromSuperview() }
-            list.listView().frame = cell?.contentView.bounds ?? CGRect.zero
-            cell?.contentView.addSubview(list.listView())
+        switch type {
+            case .scrollView:
+                list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
+                scrollView.addSubview(list.listView())
+            case .collectionView:
+                if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) {
+                    cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                    list.listView().frame = cell.contentView.bounds
+                    cell.contentView.addSubview(list.listView())
+                }
         }
     }
 
@@ -443,7 +446,11 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         let list = validListDict[indexPath.item]
         if list != nil {
-            list?.listView().frame = cell.contentView.bounds
+            if list is UIViewController {
+                list?.listView().frame = cell.contentView.bounds
+            }else {
+                list?.listView().frame = cell.bounds
+            }
             cell.contentView.addSubview(list!.listView())
         }
         return cell
@@ -455,7 +462,7 @@ extension FWPagingListContainerView: UICollectionViewDataSource, UICollectionVie
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.listContainerViewDidScroll?(self)
-        guard scrollView.isTracking || scrollView.isDragging else {
+        guard scrollView.isTracking || scrollView.isDragging || scrollView.isDecelerating else {
             return
         }
         let percent = scrollView.contentOffset.x/scrollView.bounds.size.width
@@ -732,7 +739,7 @@ open class FWPagingView: UIView {
         currentScrollingListView = nil
         validListDict.removeAll()
         refreshTableHeaderView()
-        if pinSectionHeaderVerticalOffset != 0 {
+        if pinSectionHeaderVerticalOffset != 0 && mainTableView.contentOffset.y > CGFloat(pinSectionHeaderVerticalOffset) {
             mainTableView.contentOffset = .zero
         }
         mainTableView.reloadData()
@@ -835,23 +842,23 @@ open class FWPagingView: UIView {
         return !(scrollView.contentInset.top != 0 && scrollView.contentInset.top != CGFloat(pinSectionHeaderVerticalOffset))
     }
 
-    func mainTableViewMaxContentOffsetY() -> CGFloat {
+    public func mainTableViewMaxContentOffsetY() -> CGFloat {
         guard let delegate = delegate else { return 0 }
         return CGFloat(delegate.tableHeaderViewHeight(in: self)) - CGFloat(pinSectionHeaderVerticalOffset)
     }
 
-    public func setMainTableViewToMaxContentOffsetY() {
+    open func setMainTableViewToMaxContentOffsetY() {
         mainTableView.contentOffset = CGPoint(x: 0, y: mainTableViewMaxContentOffsetY())
     }
 
-    func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
+    open func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
         if #available(iOS 11.0, *) {
             return -scrollView.adjustedContentInset.top
         }
         return -scrollView.contentInset.top
     }
 
-    func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
+    open func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
         scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: minContentOffsetYInListScrollView(scrollView))
     }
 
@@ -1023,6 +1030,9 @@ extension FWPagingView: FWPagingListContainerViewDelegate {
 
 @objcMembers
 open class FWPagingListRefreshView: FWPagingView {
+    //listScrollView悬停时可下拉的contentInset，用于实现悬停时子页面下拉刷新效果
+    public var listScrollViewPinContentInsetBlock: ((UIScrollView) -> CGFloat)?
+    
     private var lastScrollingListViewContentOffsetY: CGFloat = 0
 
     public override init(delegate: FWPagingViewDelegate, listContainerType: FWPagingListContainerType = .collectionView) {
@@ -1098,6 +1108,19 @@ open class FWPagingListRefreshView: FWPagingView {
             }
         }
         lastScrollingListViewContentOffsetY = currentScrollingListView.contentOffset.y;
+    }
+    
+    open override func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
+        var minContentOffsetY = super.minContentOffsetYInListScrollView(scrollView)
+        if let block = listScrollViewPinContentInsetBlock {
+            minContentOffsetY -= block(scrollView)
+        }
+        return minContentOffsetY
+    }
+    
+    open override func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
+        //不修改子页面原始的minContentOffsetY，停留原始位置
+        scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: super.minContentOffsetYInListScrollView(scrollView))
     }
 
 }
@@ -1421,9 +1444,10 @@ extension FWPagingSmoothView: UICollectionViewDataSource, UICollectionViewDelega
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.pagingSmoothViewDidScroll?(scrollView)
+        let indexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
         let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
         let listScrollView = listDict[index]?.listScrollView()
-        if index != currentIndex && !(scrollView.isDragging || scrollView.isDecelerating) && listScrollView?.contentOffset.y ?? 0 <= -heightForPinHeader {
+        if (indexPercent - CGFloat(index) == 0) && index != currentIndex && !(scrollView.isDragging || scrollView.isDecelerating) && listScrollView?.contentOffset.y ?? 0 <= -heightForPinHeader {
             horizontalScrollDidEnd(at: index)
         }else {
             //左右滚动的时候，就把listHeaderContainerView添加到self，达到悬浮在顶部的效果
