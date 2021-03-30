@@ -53,6 +53,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 @property (nonatomic, assign) BOOL section;
 @property (nonatomic, assign) BOOL cart;
 @property (nonatomic, assign) BOOL isRefreshed;
+@property (nonatomic, assign) BOOL isInserted;
 @property (nonatomic, weak) FWPagingView *pagerView;
 
 @property (nonatomic, copy) void(^scrollCallback)(UIScrollView *scrollView);
@@ -113,9 +114,15 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.tableView fwEndRefreshing];
-        self.isRefreshed = !self.isRefreshed;
-        [self.tableData removeAllObjects];
-        [self renderData];
+        if (self.refreshList && self.section && !self.isInserted) {
+            self.isInserted = YES;
+            for (int i = 0; i < 5; i++) {
+                [self.tableData insertObject:[NSString stringWithFormat:@"我是插入的测试数据%@", @(4-i)] atIndex:0];
+            }
+        } else {
+            [self.tableData removeAllObjects];
+            [self renderData];
+        }
         [self.collectionView reloadData];
         FWWeakifySelf();
         [self.tableView fwReloadDataWithCompletion:^{
@@ -332,7 +339,15 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     };
     
     if (self.refreshList) {
-        self.pagerView = [[FWPagingListRefreshView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
+        FWPagingListRefreshView *pagerView = [[FWPagingListRefreshView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
+        pagerView.listScrollViewPinContentInsetBlock = ^CGFloat(UIScrollView *scrollView) {
+            TestNestChildController *viewController = scrollView.fwViewController;
+            if (viewController.refreshList && viewController.section && !viewController.isInserted) {
+                return FWScreenHeight;
+            }
+            return 0;
+        };
+        self.pagerView = pagerView;
     } else {
         self.pagerView = [[FWPagingView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
     }
