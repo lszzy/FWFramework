@@ -76,6 +76,24 @@ extension UITabBarController: UITabBarControllerDelegate {
     }
     
     // MARK: - UITabBarControllerDelegate
+    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        /*
+        // 测试点击TabBar需要先登录的场景
+        if let index = tabBarController.viewControllers?.firstIndex(of: viewController), index == 1 {
+            if !Mediator.userModule.isLogin() {
+                Mediator.userModule.login { [weak self] in
+                    if self?.viewControllers?.contains(viewController) ?? false {
+                        self?.selectedViewController = viewController
+                    }
+                }
+                return false
+            }
+        }
+        */
+        
+        return true
+    }
+    
     public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let animation = CAKeyframeAnimation(keyPath: "transform.scale")
         animation.values = [1.0, 1.4, 0.9, 1.15, 0.95, 1.02, 1.0]
