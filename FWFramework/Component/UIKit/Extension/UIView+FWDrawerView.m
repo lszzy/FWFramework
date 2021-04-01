@@ -203,7 +203,7 @@
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self togglePosition:position];
     } completion:^(BOOL finished) {
         // 动画完成时需释放displayLink
