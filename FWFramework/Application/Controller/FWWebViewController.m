@@ -194,7 +194,7 @@
 {
     WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
     webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
-    // 默认跨WKWebView共享cookie，只需设置processPool为单例对象即可
+    // 默认跨WKWebView共享cookie，注意切换用户时可重置processPool清空cookie
     static WKProcessPool *processPoll = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
