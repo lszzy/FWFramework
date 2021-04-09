@@ -11,6 +11,8 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWWebViewBridge
+
 @implementation FWWebViewJsBridgeBase {
     __weak id _webViewDelegate;
     long _uniqueId;
@@ -546,52 +548,20 @@ NSString * FWWebViewJsBridge_js() {
 
 - (NSString *)fwUserAgent
 {
-    if (self.customUserAgent != nil) {
-        return self.customUserAgent;
-    }
+    if (self.customUserAgent != nil) return self.customUserAgent;
     NSString *userAgent = [self fwPerformPropertySelector:@"userAgent"];
-    return [userAgent isKindOfClass:[NSString class]] ? userAgent : nil;
-}
-
-+ (void)fwClearWebCache:(void (^)(void))completion
-{
-    NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-    NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completion];
-}
-
-+ (NSString *)fwWebViewUserAgent
-{
-    static NSString *staticUserAgent = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
-        webConfiguration.applicationNameForUserAgent = [self fwBrowserExtensionUserAgent];
-        WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
-        
-        NSString *userAgent = [webView fwPerformPropertySelector:@"userAgent"];
-        if ([userAgent isKindOfClass:[NSString class]] && userAgent.length > 0) {
-            staticUserAgent = userAgent;
-        } else {
-            staticUserAgent = [self fwBrowserUserAgent];
-        }
-    });
-    return staticUserAgent;
+    if ([userAgent isKindOfClass:[NSString class]]) return userAgent;
+    return [WKWebView fwBrowserUserAgent];
 }
 
 + (NSString *)fwBrowserUserAgent
 {
-    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", [self fwBrowserPlatformUserAgent], [self fwBrowserExtensionUserAgent]];
+    NSString *platformUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
+    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", platformUserAgent, [self fwExtensionUserAgent]];
     return userAgent;
 }
 
-+ (NSString *)fwBrowserPlatformUserAgent
-{
-    NSString *userAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
-    return userAgent;
-}
-
-+ (NSString *)fwBrowserExtensionUserAgent
++ (NSString *)fwExtensionUserAgent
 {
     NSString *userAgent = [NSString stringWithFormat:@"Mobile/15E148 Safari/605.1.15 %@/%@", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
     return userAgent;
@@ -605,7 +575,9 @@ NSString * FWWebViewJsBridge_js() {
 
 @end
 
-@implementation UIProgressView (FWWebViewBridge)
+#pragma mark - FWWebView
+
+@implementation UIProgressView (FWWebView)
 
 - (void)fwSetProgress:(float)progress
 {

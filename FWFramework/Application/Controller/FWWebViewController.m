@@ -193,7 +193,7 @@
 - (WKWebViewConfiguration *)fwInnerRenderWebConfiguration
 {
     WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
-    webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
+    webConfiguration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
     // 默认跨WKWebView共享cookie，注意切换用户时可重置processPool清空cookie
     static WKProcessPool *processPoll = nil;
     static dispatch_once_t onceToken;
