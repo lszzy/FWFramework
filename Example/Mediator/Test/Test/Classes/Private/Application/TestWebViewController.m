@@ -54,8 +54,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
-    
     [self loadRequestUrl];
 }
 
@@ -96,18 +94,31 @@
 
 - (void)loadRequestUrl
 {
+    [self.view fwHideEmptyView];
+    
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
     urlRequest.timeoutInterval = 30;
     [urlRequest setValue:@"test" forHTTPHeaderField:@"Test-Token"];
     self.webRequest = urlRequest;
 }
 
+- (void)didFinishLoad
+{
+    if (self.fwIsDataLoaded) return;
+    self.fwIsDataLoaded = YES;
+    
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
+}
+
 - (void)didFailLoad:(NSError *)error
 {
+    if (self.fwIsDataLoaded) return;
+    
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(loadRequestUrl)];
+    
     FWWeakifySelf();
     [self.view fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        [self.view fwHideEmptyView];
         [self loadRequestUrl];
     }];
 }
