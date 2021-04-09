@@ -121,6 +121,37 @@ NSString * FWWebViewJsBridge_js(void);
 
 #pragma mark - FWWebView
 
+@protocol FWWebViewDelegate <WKNavigationDelegate, WKUIDelegate>
+
+@optional
+
+/// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等
+- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
+
+/// 已经加载完成，可用来获取title、设置按钮等
+- (void)didFinishLoad;
+
+/// 网页加载失败，可用来处理加载异常等
+- (void)didFailLoad:(NSError *)error;
+
+@end
+
+@interface FWWebView : WKWebView
+
+/// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
+@property (class, nonatomic, strong) WKProcessPool *processPool;
+
+/// 事件代理，包含navigationDelegate和UIDelegate
+@property (nonatomic, weak, nullable) id<FWWebViewDelegate> delegate;
+
+/// 进度视图，默认trackTintColor为clear
+@property (nonatomic, readonly) UIProgressView *progressView;
+
+/// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
+@property (nonatomic, strong, nullable) id webRequest;
+
+@end
+
 @interface UIProgressView (FWWebView)
 
 /// 更新进度，0和1自动切换隐藏状态。可设置trackTintColor为clear，隐藏背景色
