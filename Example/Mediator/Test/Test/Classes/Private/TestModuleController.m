@@ -119,7 +119,6 @@
               @[@"NSObject+FWThread", @"TestThreadViewController"],
               @[@"NSAttributedString+FWOption", @"TestAttributedStringViewController"],
               @[@"UITableView+Hover", @"TestScrollViewController"],
-              @[@"WKWebView+FWFramework", @"TestWebProgressViewController"],
               @[@"UIViewController+FWTransition", @"TestTransitionViewController"],
               @[@"UIViewController+FWWorkflow", @"TestWorkflowViewController"],
               @[@"UITextField+FWKeyboard", @"TestKeyboardViewController"],
