@@ -73,7 +73,14 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 *
 *  @param clazz    路由类，需实现FWRouterProtocol协议
 */
-+ (void)registerClass:(Class<FWRouterProtocol>)clazz;
++ (BOOL)registerClass:(Class<FWRouterProtocol>)clazz;
+
+/**
+*  预置路由类，需要实现FWRouterProtocol协议，仅当路由未被注册时生效
+*
+*  @param clazz    路由类，需实现FWRouterProtocol协议
+*/
++ (BOOL)presetClass:(Class<FWRouterProtocol>)clazz;
 
 /**
  *  取消注册某个路由类
@@ -91,7 +98,16 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
  */
-+ (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler;
++ (BOOL)registerURL:(id)pattern withHandler:(FWRouterHandler)handler;
+
+/**
+ *  预置 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil，仅当路由未被注册时生效
+ *
+ *  @param pattern    字符串或字符串数组(批量)，带上 scheme，如 app://beauty/:id
+ *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
+ *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
+ */
++ (BOOL)presetURL:(id)pattern withHandler:(FWRouterHandler)handler;
 
 /**
  *  取消注册某个 pattern
