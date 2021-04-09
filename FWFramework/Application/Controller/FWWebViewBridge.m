@@ -8,7 +8,12 @@
  */
 
 #import "FWWebViewBridge.h"
+#import "FWAutoLayout.h"
 #import "FWSwizzle.h"
+#import "FWMessage.h"
+#import "FWEncode.h"
+#import "FWProxy.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWWebViewBridge
@@ -718,6 +723,119 @@ NSString * FWWebViewJsBridge_js() {
 @end
 
 #pragma mark - FWWebView
+
+@interface FWWebViewDelegateProxy : FWDelegateProxy <FWWebViewDelegate>
+
+@end
+
+@implementation FWWebViewDelegateProxy
+
+@end
+
+static WKProcessPool *fwStaticProcessPool = nil;
+
+@interface FWWebView ()
+
+@property (nonatomic, strong) FWWebViewDelegateProxy *delegateProxy;
+
+@property (nonatomic, strong) UIProgressView *progressView;
+
+@end
+
+@implementation FWWebView
+
++ (WKProcessPool *)processPool
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!fwStaticProcessPool) fwStaticProcessPool = [[WKProcessPool alloc] init];
+    });
+    return fwStaticProcessPool;
+}
+
++ (void)setProcessPool:(WKProcessPool *)processPool
+{
+    if (processPool) fwStaticProcessPool = processPool;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration
+{
+    self = [super initWithFrame:frame configuration:configuration];
+    if (self) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (void)didInitialize
+{
+    self.delegateProxy = [[FWWebViewDelegateProxy alloc] init];
+    self.navigationDelegate = self.delegateProxy;
+    self.UIDelegate = self.delegateProxy;
+    self.configuration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
+    self.configuration.processPool = [FWWebView processPool];
+    self.allowsBackForwardNavigationGestures = YES;
+    if (@available(iOS 11.0, *)) {
+        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
+    self.progressView.trackTintColor = [UIColor clearColor];
+    [self.progressView fwSetProgress:0];
+    [self addSubview:self.progressView];
+    [self.progressView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [self.progressView fwSetDimension:NSLayoutAttributeHeight toSize:2.f];
+    [self fwObserveProperty:@"estimatedProgress" block:^(FWWebView *webView, NSDictionary *change) {
+        [webView.progressView fwSetProgress:webView.estimatedProgress];
+    }];
+}
+
+- (id<FWWebViewDelegate>)delegate
+{
+    return self.delegateProxy.delegate;
+}
+
+- (void)setDelegate:(id<FWWebViewDelegate>)delegate
+{
+    self.delegateProxy.delegate = delegate;
+}
+
+- (void)setWebRequest:(id)webRequest
+{
+    _webRequest = webRequest;
+    
+    if (!webRequest) return;
+    if ([webRequest isKindOfClass:[NSURLRequest class]]) {
+        [self loadRequest:webRequest];
+        return;
+    }
+    
+    NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
+    if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
+        requestUrl = [NSURL fwURLWithString:webRequest];
+    }
+    if (requestUrl.absoluteString.length < 1) return;
+    
+    if (requestUrl.isFileURL) {
+        NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
+        if (htmlString) {
+            [self loadHTMLString:htmlString baseURL:requestUrl];
+        }
+    } else {
+        [self loadRequest:[NSURLRequest requestWithURL:requestUrl]];
+    }
+}
+
+@end
 
 @implementation UIProgressView (FWWebView)
 
