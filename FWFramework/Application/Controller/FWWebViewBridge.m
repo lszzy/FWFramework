@@ -9,6 +9,7 @@
 
 #import "FWWebViewBridge.h"
 #import "FWAutoLayout.h"
+#import "FWAlertPlugin.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
 #import "FWEncode.h"
@@ -729,6 +730,121 @@ NSString * FWWebViewJsBridge_js() {
 @end
 
 @implementation FWWebViewDelegateProxy
+
+#pragma mark - WKNavigationDelegate
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        return [self.delegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldStartLoad:)] &&
+        ![self.delegate shouldStartLoad:navigationAction]) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
+        [self.delegate webView:webView didFinishNavigation:navigation];
+        return;
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishLoad)]) {
+        [self.delegate didFinishLoad];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)]) {
+        [self.delegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+        return;
+    }
+    
+    if (error.code == NSURLErrorCancelled) return;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
+        [self.delegate didFailLoad:error];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
+        [self.delegate webView:webView didFailNavigation:navigation withError:error];
+        return;
+    }
+    
+    if (error.code == NSURLErrorCancelled) return;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
+        [self.delegate didFailLoad:error];
+    }
+}
+
+#pragma mark - WKUIDelegate
+
+- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptAlertPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:NSLocalizedString(@"关闭", nil) cancelBlock:^{
+        completionHandler();
+    }];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptConfirmPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) confirmBlock:^{
+        completionHandler(YES);
+    } cancelBlock:^{
+        completionHandler(NO);
+    } priority:FWAlertPriorityNormal];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptTextInputPanelWithPrompt:prompt defaultText:defaultText initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) promptBlock:^(UITextField *textField) {
+        textField.text = defaultText;
+    } confirmBlock:^(NSString *text) {
+        completionHandler(text);
+    } cancelBlock:^{
+        completionHandler(nil);
+    } priority:FWAlertPriorityNormal];
+}
+
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:)]) {
+        return [self.delegate webView:webView createWebViewWithConfiguration:configuration forNavigationAction:navigationAction windowFeatures:windowFeatures];
+    }
+    
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
+}
 
 @end
 
