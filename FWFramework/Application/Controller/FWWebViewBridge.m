@@ -735,8 +735,14 @@ NSString * FWWebViewJsBridge_js() {
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled &&
+        [navigationAction.request isKindOfClass:NSMutableURLRequest.class]) {
+        [FWWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
-        return [self.delegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        [self.delegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        return;
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldStartLoad:)] &&
@@ -750,6 +756,28 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+    if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled) {
+        if (@available(iOS 11.0, *)) {
+            [FWWebViewCookieManager copyWebViewCookie:webView completion:nil];
+        } else {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+            NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+            for (NSHTTPCookie *cookie in cookies) {
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+            }
+        }
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+        [self.delegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+        return;
+    }
+    
+    decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
@@ -841,7 +869,11 @@ NSString * FWWebViewJsBridge_js() {
     }
     
     if (!navigationAction.targetFrame.isMainFrame) {
-        [webView loadRequest:navigationAction.request];
+        if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled) {
+            [webView loadRequest:[FWWebViewCookieManager fixRequest:navigationAction.request]];
+        } else {
+            [webView loadRequest:navigationAction.request];
+        }
     }
     return nil;
 }
@@ -899,6 +931,9 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.UIDelegate = self.delegateProxy;
     self.configuration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
     self.configuration.processPool = [FWWebView processPool];
+    if (!self.configuration.userContentController) {
+        self.configuration.userContentController = [WKUserContentController new];
+    }
     self.allowsBackForwardNavigationGestures = YES;
     if (@available(iOS 11.0, *)) {
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -949,6 +984,20 @@ static WKProcessPool *fwStaticProcessPool = nil;
     } else {
         [self loadRequest:[NSURLRequest requestWithURL:requestUrl]];
     }
+}
+
+- (WKNavigation *)loadRequest:(NSURLRequest *)request
+{
+    if (self.cookieEnabled && request.URL.scheme.length > 0) {
+        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[FWWebViewCookieManager ajaxCookieScripts] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+        [self.configuration.userContentController addUserScript:cookieScript];
+        
+        NSMutableURLRequest *cookieRequest = request.mutableCopy;
+        [FWWebViewCookieManager syncRequestCookie:cookieRequest];
+        return [super loadRequest:cookieRequest];
+    }
+    
+    return [super loadRequest:request];
 }
 
 @end

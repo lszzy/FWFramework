@@ -144,6 +144,9 @@ NSString * FWWebViewJsBridge_js(void);
 /// 事件代理，包含navigationDelegate和UIDelegate
 @property (nonatomic, weak, nullable) id<FWWebViewDelegate> delegate;
 
+/// 是否启用Cookie管理，默认NO未启用
+@property (nonatomic, assign) BOOL cookieEnabled;
+
 /// 进度视图，默认trackTintColor为clear
 @property (nonatomic, readonly) UIProgressView *progressView;
 
