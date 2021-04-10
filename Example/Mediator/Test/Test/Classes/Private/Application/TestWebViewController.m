@@ -75,14 +75,6 @@
             tipLabel.text = [NSString stringWithFormat:@"此网页由 %@ 提供", webView.URL.host];
         }
     }];
-    
-    // 跨WKWebView共享cookie，如需切换用户时清空cookie，重置此配置即可
-    static WKProcessPool *processPool = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        processPool = [[WKProcessPool alloc] init];
-    });
-    self.webView.configuration.processPool = processPool;
 }
 
 - (void)shareRequestUrl

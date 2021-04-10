@@ -136,6 +136,9 @@ NSString * FWWebViewJsBridge_js(void);
 
 @end
 
+/*!
+ @brief WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
+ */
 @interface FWWebView : WKWebView
 
 /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
