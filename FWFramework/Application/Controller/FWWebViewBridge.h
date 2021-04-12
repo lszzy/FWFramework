@@ -160,8 +160,8 @@ NSString * FWWebViewJsBridge_js(void);
 
 @interface UIProgressView (FWWebView)
 
-/// 更新进度，0和1自动切换隐藏状态。可设置trackTintColor为clear，隐藏背景色
-- (void)fwSetProgress:(float)progress;
+/// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
+@property (nonatomic, assign) float fwWebProgress;
 
 @end
 
