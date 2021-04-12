@@ -941,12 +941,19 @@ static WKProcessPool *fwStaticProcessPool = nil;
     
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
     self.progressView.trackTintColor = [UIColor clearColor];
-    [self.progressView fwSetProgress:0];
+    self.progressView.fwWebProgress = 0;
     [self addSubview:self.progressView];
     [self.progressView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [self.progressView fwSetDimension:NSLayoutAttributeHeight toSize:2.f];
     [self fwObserveProperty:@"estimatedProgress" block:^(FWWebView *webView, NSDictionary *change) {
-        [webView.progressView fwSetProgress:webView.estimatedProgress];
+        if (webView.estimatedProgress < 1.0) {
+            webView.progressView.fwWebProgress = webView.estimatedProgress;
+        }
+    }];
+    [self fwObserveProperty:@"loading" block:^(FWWebView *webView, NSDictionary *change) {
+        if (!webView.isLoading) {
+            webView.progressView.fwWebProgress = 1.0;
+        }
     }];
 }
 
@@ -1004,16 +1011,24 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 @implementation UIProgressView (FWWebView)
 
-- (void)fwSetProgress:(float)progress
+- (float)fwWebProgress
 {
-    if (progress == 0) {
+    return self.progress;
+}
+
+- (void)setFwWebProgress:(float)progress
+{
+    if (progress <= 0) {
         self.alpha = 0;
-    } else if (self.alpha == 0 && progress > 0) {
-        self.progress = 0;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1.0;
-        }];
-    } else if (self.alpha == 1.0 && progress == 1.0) {
+    } else if (progress > 0 && progress < 1.0) {
+        if (self.alpha == 0) {
+            self.progress = 0;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.alpha = 1.0;
+            }];
+        }
+    } else {
+        self.alpha = 1.0;
         [UIView animateWithDuration:0.2 animations:^{
             self.alpha = 0.0;
         } completion:^(BOOL finished) {
