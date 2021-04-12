@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nullable, nonatomic, strong) id webRequest NS_SWIFT_UNAVAILABLE("");
 
+/// 渲染网页配置，renderWebView之前调用，默认未实现
+- (WKWebViewConfiguration *)renderWebConfiguration;
+
 /// 渲染网页视图，renderView之前调用，默认未实现
 - (void)renderWebView;
 
