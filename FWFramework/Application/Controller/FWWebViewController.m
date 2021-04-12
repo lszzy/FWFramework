@@ -9,12 +9,9 @@
 
 #import "FWWebViewController.h"
 #import "FWViewControllerStyle.h"
-#import "FWEncode.h"
 #import "FWMessage.h"
-#import "FWToolkit.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
-#import "FWAlertPlugin.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWWebViewController
@@ -28,44 +25,24 @@
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
         @"webView" : @"fwInnerWebView",
-        @"progressView" : @"fwInnerProgressView",
         @"webItems" : @"fwInnerWebItems",
         @"webRequest" : @"fwInnerWebRequest",
         @"setWebRequest:" : @"fwInnerSetWebRequest:",
-        @"renderWebConfiguration" : @"fwInnerRenderWebConfiguration",
         @"renderWebLayout" : @"fwInnerRenderWebLayout",
         @"onWebClose": @"fwInnerOnWebClose",
-        @"webView:didFinishNavigation:" : @"fwInnerWebView:didFinishNavigation:",
-        @"webView:didFailProvisionalNavigation:withError:" : @"fwInnerWebView:didFailProvisionalNavigation:withError:",
-        @"webView:didFailNavigation:withError:" : @"fwInnerWebView:didFailNavigation:withError:",
-        @"webView:decidePolicyForNavigationAction:decisionHandler:" : @"fwInnerWebView:decidePolicyForNavigationAction:decisionHandler:",
-        @"webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:",
-        @"webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:",
-        @"webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:" : @"fwInnerWebView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:",
-        @"webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:" : @"fwInnerWebView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:",
     };
     [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
 }
 
 - (void)webViewControllerLoadView:(UIViewController<FWWebViewController> *)viewController
 {
-    WKWebView *webView = [viewController webView];
-    webView.navigationDelegate = viewController;
-    webView.UIDelegate = viewController;
+    FWWebView *webView = [viewController webView];
+    webView.delegate = viewController;
     [viewController.view addSubview:webView];
-    
-    UIProgressView *progressView = [viewController progressView];
-    [webView addSubview:progressView];
-    [progressView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-    [progressView fwSetDimension:NSLayoutAttributeHeight toSize:2.f];
     
     __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
         weakController.navigationItem.title = webView.title;
-    }];
-    __weak __typeof(progressView) weakProgressView = progressView;
-    [webView fwObserveProperty:@"estimatedProgress" block:^(WKWebView *webView, NSDictionary *change) {
-        [weakProgressView fwSetProgress:webView.estimatedProgress];
     }];
     
     if ([viewController respondsToSelector:@selector(renderWebView)]) {
@@ -90,7 +67,7 @@
 {
     NSArray *webItems = viewController.webItems;
     if (webItems.count < 1 || !viewController.navigationController) {
-        [self webViewControllerLoadRequest:viewController];
+        viewController.webView.webRequest = viewController.webRequest;
         return;
     }
     
@@ -136,34 +113,7 @@
         }
     }];
     
-    [self webViewControllerLoadRequest:viewController];
-}
-
-- (void)webViewControllerLoadRequest:(UIViewController<FWWebViewController> *)viewController
-{
-    id webRequest = [viewController webRequest];
-    if (!webRequest) return;
-    
-    WKWebView *webView = [viewController webView];
-    if ([webRequest isKindOfClass:[NSURLRequest class]]) {
-        [webView loadRequest:webRequest];
-        return;
-    }
-    
-    NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
-    if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
-        requestUrl = [NSURL fwURLWithString:webRequest];
-    }
-    if (requestUrl.absoluteString.length < 1) return;
-    
-    if (requestUrl.isFileURL) {
-        NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
-        if (htmlString) {
-            [webView loadHTMLString:htmlString baseURL:requestUrl];
-        }
-    } else {
-        [webView loadRequest:[NSURLRequest requestWithURL:requestUrl]];
-    }
+    viewController.webView.webRequest = viewController.webRequest;
 }
 
 @end
@@ -176,38 +126,14 @@
 
 @implementation UIViewController (FWWebViewController)
 
-- (WKWebView *)fwInnerWebView
+- (FWWebView *)fwInnerWebView
 {
-    WKWebView *webView = objc_getAssociatedObject(self, _cmd);
+    FWWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
-        webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[(id<FWWebViewController>)self renderWebConfiguration]];
-        webView.allowsBackForwardNavigationGestures = YES;
-        if (@available(iOS 11.0, *)) {
-            webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
+        webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[WKWebViewConfiguration new]];
         objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return webView;
-}
-
-- (WKWebViewConfiguration *)fwInnerRenderWebConfiguration
-{
-    WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
-    webConfiguration.applicationNameForUserAgent = [WKWebView fwBrowserExtensionUserAgent];
-    // 如需跨WKWebView共享cookie，设置processPool为单例对象即可
-    return webConfiguration;
-}
-
-- (UIProgressView *)fwInnerProgressView
-{
-    UIProgressView *progressView = objc_getAssociatedObject(self, _cmd);
-    if (!progressView) {
-        progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
-        progressView.trackTintColor = [UIColor clearColor];
-        [progressView fwSetProgress:0];
-        objc_setAssociatedObject(self, _cmd, progressView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return progressView;
 }
 
 - (NSArray *)fwInnerWebItems
@@ -225,7 +151,7 @@
         return;
     }
     
-    WKWebView *webView = [(id<FWWebViewController>)self webView];
+    FWWebView *webView = [(id<FWWebViewController>)self webView];
     WKBackForwardListItem *firstItem = webView.backForwardList.backList.firstObject;
     if (firstItem != nil) {
         [webView goToBackForwardListItem:firstItem];
@@ -242,93 +168,15 @@
     objc_setAssociatedObject(self, @selector(fwInnerWebRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
-        [[FWViewControllerManager sharedInstance] webViewControllerLoadRequest:(UIViewController<FWWebViewController> *)self];
+        FWWebView *webView = [(id<FWWebViewController>)self webView];
+        webView.webRequest = webRequest;
     }
 }
 
 - (void)fwInnerRenderWebLayout
 {
-    WKWebView *webView = [(id<FWWebViewController>)self webView];
+    FWWebView *webView = [(id<FWWebViewController>)self webView];
     [webView fwPinEdgesToSuperview];
-}
-
-#pragma mark - WKNavigationDelegate
-
-- (void)fwInnerWebView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-{
-    if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
-        ![(id<FWWebViewController>)self shouldStartLoad:navigationAction]) {
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
-    }
-    if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
-        [UIApplication fwOpenURL:navigationAction.request.URL];
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
-    }
-    decisionHandler(WKNavigationActionPolicyAllow);
-}
-
-- (void)fwInnerWebView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
-{
-    if ([self respondsToSelector:@selector(didFinishLoad)]) {
-        [(id<FWWebViewController>)self didFinishLoad];
-    }
-}
-
-- (void)fwInnerWebView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
-{
-    if (error.code == NSURLErrorCancelled) return;
-    
-    if ([self respondsToSelector:@selector(didFailLoad:)]) {
-        [(id<FWWebViewController>)self didFailLoad:error];
-    }
-}
-
-- (void)fwInnerWebView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
-{
-    if (error.code == NSURLErrorCancelled) return;
-    
-    if ([self respondsToSelector:@selector(didFailLoad:)]) {
-        [(id<FWWebViewController>)self didFailLoad:error];
-    }
-}
-
-#pragma mark - WKUIDelegate
-
-- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
-{
-    [self fwShowAlertWithTitle:nil message:message cancel:NSLocalizedString(@"关闭", nil) cancelBlock:^{
-        completionHandler();
-    }];
-}
-
-- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
-{
-    [self fwShowConfirmWithTitle:nil message:message cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) confirmBlock:^{
-        completionHandler(YES);
-    } cancelBlock:^{
-        completionHandler(NO);
-    } priority:FWAlertPriorityNormal];
-}
-
-- (void)fwInnerWebView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *))completionHandler
-{
-    [self fwShowPromptWithTitle:nil message:prompt cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) promptBlock:^(UITextField *textField) {
-        textField.text = defaultText;
-    } confirmBlock:^(NSString *text) {
-        completionHandler(text);
-    } cancelBlock:^{
-        completionHandler(nil);
-    } priority:FWAlertPriorityNormal];
-}
-
-- (WKWebView *)fwInnerWebView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
-{
-    if (!navigationAction.targetFrame.isMainFrame) {
-        [webView loadRequest:navigationAction.request];
-    }
-    return nil;
 }
 
 @end

@@ -207,7 +207,6 @@
 		2FFE1D392507BFBD000332A3 /* UIView+FWFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C782507BFBC000332A3 /* UIView+FWFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D3A2507BFBD000332A3 /* UIView+FWLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C792507BFBC000332A3 /* UIView+FWLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D3B2507BFBD000332A3 /* UIView+FWStatistical.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C7A2507BFBC000332A3 /* UIView+FWStatistical.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1D3C2507BFBD000332A3 /* WKWebView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C7B2507BFBC000332A3 /* WKWebView+FWFramework.m */; };
 		2FFE1D3D2507BFBD000332A3 /* UIColor+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C7C2507BFBC000332A3 /* UIColor+FWFramework.m */; };
 		2FFE1D3F2507BFBD000332A3 /* UIApplication+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C7E2507BFBC000332A3 /* UIApplication+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D412507BFBD000332A3 /* UITextView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C802507BFBC000332A3 /* UITextView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -251,7 +250,6 @@
 		2FFE1D6F2507BFBD000332A3 /* UIColor+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CAE2507BFBD000332A3 /* UIColor+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D702507BFBD000332A3 /* UIApplication+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CAF2507BFBD000332A3 /* UIApplication+FWFramework.m */; };
 		2FFE1D712507BFBD000332A3 /* UIView+FWStatistical.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CB02507BFBD000332A3 /* UIView+FWStatistical.m */; };
-		2FFE1D722507BFBD000332A3 /* WKWebView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CB12507BFBD000332A3 /* WKWebView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D732507BFBD000332A3 /* UIView+FWFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CB22507BFBD000332A3 /* UIView+FWFrame.m */; };
 		2FFE1D742507BFBD000332A3 /* UIView+FWLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CB32507BFBD000332A3 /* UIView+FWLayer.m */; };
 		2FFE1D752507BFBD000332A3 /* UIImage+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CB42507BFBD000332A3 /* UIImage+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -544,7 +542,6 @@
 		2FFE1C782507BFBC000332A3 /* UIView+FWFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWFrame.h"; sourceTree = "<group>"; };
 		2FFE1C792507BFBC000332A3 /* UIView+FWLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWLayer.h"; sourceTree = "<group>"; };
 		2FFE1C7A2507BFBC000332A3 /* UIView+FWStatistical.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FWStatistical.h"; sourceTree = "<group>"; };
-		2FFE1C7B2507BFBC000332A3 /* WKWebView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1C7C2507BFBC000332A3 /* UIColor+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1C7E2507BFBC000332A3 /* UIApplication+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1C802507BFBC000332A3 /* UITextView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+FWFramework.h"; sourceTree = "<group>"; };
@@ -588,7 +585,6 @@
 		2FFE1CAE2507BFBD000332A3 /* UIColor+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1CAF2507BFBD000332A3 /* UIApplication+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1CB02507BFBD000332A3 /* UIView+FWStatistical.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWStatistical.m"; sourceTree = "<group>"; };
-		2FFE1CB12507BFBD000332A3 /* WKWebView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1CB22507BFBD000332A3 /* UIView+FWFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWFrame.m"; sourceTree = "<group>"; };
 		2FFE1CB32507BFBD000332A3 /* UIView+FWLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FWLayer.m"; sourceTree = "<group>"; };
 		2FFE1CB42507BFBD000332A3 /* UIImage+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FWFramework.h"; sourceTree = "<group>"; };
@@ -1153,8 +1149,6 @@
 				2FFE1CA72507BFBD000332A3 /* UIViewController+FWTransition.m */,
 				2FFE1C632507BFBC000332A3 /* UIWindow+FWFramework.h */,
 				2FFE1C932507BFBC000332A3 /* UIWindow+FWFramework.m */,
-				2FFE1CB12507BFBD000332A3 /* WKWebView+FWFramework.h */,
-				2FFE1C7B2507BFBC000332A3 /* WKWebView+FWFramework.m */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1288,7 +1282,6 @@
 				2FFE84102515C4BF00545D6E /* FWAdaptive.h in Headers */,
 				2FF0B3BE250FCA8D005B93DD /* FWDynamicLayout.h in Headers */,
 				2F63D40C250CBB6000BA83A6 /* FWSceneDelegate.h in Headers */,
-				2FFE1D722507BFBD000332A3 /* WKWebView+FWFramework.h in Headers */,
 				2FFE1D5B2507BFBD000332A3 /* UIControl+FWFramework.h in Headers */,
 				2FFE1D0E2507BFBD000332A3 /* UIView+FWFramework.h in Headers */,
 				2FFE1C0F2507BF95000332A3 /* FWState.h in Headers */,
@@ -1635,7 +1628,6 @@
 				2FFE1D102507BFBD000332A3 /* UIPageControl+FWFramework.m in Sources */,
 				2FFE1D772507BFBD000332A3 /* FWPhotoBrowser.m in Sources */,
 				2FFE1D682507BFBD000332A3 /* UIViewController+FWTransition.m in Sources */,
-				2FFE1D3C2507BFBD000332A3 /* WKWebView+FWFramework.m in Sources */,
 				2F65D82F25F7ACC200E522D6 /* FWViewWrapper.swift in Sources */,
 				2FFE1C182507BF95000332A3 /* FWLog.swift in Sources */,
 				2FFE1D202507BFBD000332A3 /* UIGestureRecognizer+FWFramework.m in Sources */,

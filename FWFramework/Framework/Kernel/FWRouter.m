@@ -121,13 +121,24 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Class
 
-+ (void)registerClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)registerClass:(Class<FWRouterProtocol>)clazz
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
-    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return;
+    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return NO;
+    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return NO;
     
-    [self registerURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
+    return [self registerURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
+        return [clazz fwRouterHandler:context];
+    }];
+}
+
++ (BOOL)presetClass:(Class<FWRouterProtocol>)clazz
+{
+    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
+    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return NO;
+    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return NO;
+    
+    return [self presetURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
         return [clazz fwRouterHandler:context];
     }];
 }
@@ -142,18 +153,42 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - URL
 
-+ (void)registerURL:(id)pattern withHandler:(FWRouterHandler)handler
++ (BOOL)registerURL:(id)pattern withHandler:(FWRouterHandler)handler
 {
     if ([pattern isKindOfClass:[NSArray class]]) {
+        BOOL result = YES;
         for (id subPattern in pattern) {
-            [self registerURL:subPattern withHandler:handler];
+            result = [self registerURL:subPattern withHandler:handler isPreset:NO] && result;
         }
+        return result;
     } else {
-        NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
-        if (handler && subRoutes) {
-            subRoutes[FWRouterCoreKey] = [handler copy];
-        }
+        return [self registerURL:pattern withHandler:handler isPreset:NO];
     }
+}
+
++ (BOOL)presetURL:(id)pattern withHandler:(FWRouterHandler)handler
+{
+    if ([pattern isKindOfClass:[NSArray class]]) {
+        BOOL result = YES;
+        for (id subPattern in pattern) {
+            result = [self registerURL:subPattern withHandler:handler isPreset:YES] && result;
+        }
+        return result;
+    } else {
+        return [self registerURL:pattern withHandler:handler isPreset:YES];
+    }
+}
+
++ (BOOL)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler isPreset:(BOOL)isPreset
+{
+    if (!handler || pattern.length < 1) return NO;
+    
+    NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
+    if (!subRoutes) return NO;
+    if (isPreset && subRoutes[FWRouterCoreKey] != nil) return NO;
+    
+    subRoutes[FWRouterCoreKey] = [handler copy];
+    return YES;
 }
 
 + (void)unregisterURL:(id)pattern

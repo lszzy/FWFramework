@@ -34,6 +34,5 @@
 #import "UIViewController+FWFramework.h"
 #import "UINavigationController+FWFramework.h"
 #import "UIWindow+FWFramework.h"
-#import "WKWebView+FWFramework.h"
 
 #endif /* UIKit_FWFramework_h */

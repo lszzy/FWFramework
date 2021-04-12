@@ -82,23 +82,12 @@ extension FWTableViewController where Self: UIViewController {
 
 extension FWWebViewController where Self: UIViewController {
     /// 网页视图，默认显示滚动条，启用前进后退手势
-    @nonobjc public var webView: WKWebView {
-        if let result = fwProperty(forName: "webView") as? WKWebView {
+    @nonobjc public var webView: FWWebView {
+        if let result = fwProperty(forName: "webView") as? FWWebView {
             return result
         } else {
-            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! WKWebView
+            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! FWWebView
             fwSetProperty(result, forName: "webView")
-            return result
-        }
-    }
-    
-    /// 进度视图，默认trackTintColor为clear
-    @nonobjc public var progressView: UIProgressView {
-        if let result = fwProperty(forName: "progressView") as? UIProgressView {
-            return result
-        } else {
-            let result = FWViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("progressView"), withObject: self) as! UIProgressView
-            fwSetProperty(result, forName: "progressView")
             return result
         }
     }
