@@ -53,9 +53,23 @@
 
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
 {
+    return [self registerService:serviceProtocol withModule:moduleClass isPreset:NO];
+}
+
++ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
+{
+    return [self registerService:serviceProtocol withModule:moduleClass isPreset:YES];
+}
+
++ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass isPreset:(BOOL)isPreset
+{
     NSString *protocolName = NSStringFromProtocol(serviceProtocol);
     if (protocolName.length == 0 || !moduleClass ||
         ![moduleClass conformsToProtocol:serviceProtocol]) {
+        return NO;
+    }
+    
+    if (isPreset && ([[FWMediator sharedInstance].moduleDict objectForKey:protocolName] != nil)) {
         return NO;
     }
     

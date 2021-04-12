@@ -8,8 +8,16 @@
  */
 
 #import "FWWebViewBridge.h"
+#import "FWAutoLayout.h"
+#import "FWAlertPlugin.h"
 #import "FWSwizzle.h"
+#import "FWMessage.h"
+#import "FWEncode.h"
+#import "FWProxy.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
+
+#pragma mark - FWWebViewBridge
 
 @implementation FWWebViewJsBridgeBase {
     __weak id _webViewDelegate;
@@ -546,52 +554,20 @@ NSString * FWWebViewJsBridge_js() {
 
 - (NSString *)fwUserAgent
 {
-    if (self.customUserAgent != nil) {
-        return self.customUserAgent;
-    }
+    if (self.customUserAgent != nil) return self.customUserAgent;
     NSString *userAgent = [self fwPerformPropertySelector:@"userAgent"];
-    return [userAgent isKindOfClass:[NSString class]] ? userAgent : nil;
-}
-
-+ (void)fwClearWebCache:(void (^)(void))completion
-{
-    NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-    NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completion];
-}
-
-+ (NSString *)fwWebViewUserAgent
-{
-    static NSString *staticUserAgent = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        WKWebViewConfiguration *webConfiguration = [WKWebViewConfiguration new];
-        webConfiguration.applicationNameForUserAgent = [self fwBrowserExtensionUserAgent];
-        WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
-        
-        NSString *userAgent = [webView fwPerformPropertySelector:@"userAgent"];
-        if ([userAgent isKindOfClass:[NSString class]] && userAgent.length > 0) {
-            staticUserAgent = userAgent;
-        } else {
-            staticUserAgent = [self fwBrowserUserAgent];
-        }
-    });
-    return staticUserAgent;
+    if ([userAgent isKindOfClass:[NSString class]]) return userAgent;
+    return [WKWebView fwBrowserUserAgent];
 }
 
 + (NSString *)fwBrowserUserAgent
 {
-    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", [self fwBrowserPlatformUserAgent], [self fwBrowserExtensionUserAgent]];
+    NSString *platformUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
+    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", platformUserAgent, [self fwExtensionUserAgent]];
     return userAgent;
 }
 
-+ (NSString *)fwBrowserPlatformUserAgent
-{
-    NSString *userAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
-    return userAgent;
-}
-
-+ (NSString *)fwBrowserExtensionUserAgent
++ (NSString *)fwExtensionUserAgent
 {
     NSString *userAgent = [NSString stringWithFormat:@"Mobile/15E148 Safari/605.1.15 %@/%@", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
     return userAgent;
@@ -605,18 +581,454 @@ NSString * FWWebViewJsBridge_js() {
 
 @end
 
-@implementation UIProgressView (FWWebViewBridge)
+#pragma mark - FWWebViewCookieManager
 
-- (void)fwSetProgress:(float)progress
+@implementation FWWebViewCookieManager
+
++ (void)syncRequestCookie:(NSMutableURLRequest *)request
 {
-    if (progress == 0) {
-        self.alpha = 0;
-    } else if (self.alpha == 0 && progress > 0) {
-        self.progress = 0;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1.0;
+    if (!request.URL) {
+        return;
+    }
+    
+    NSArray<NSHTTPCookie *> *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL];
+    if (availableCookie.count > 0) {
+        NSDictionary *reqHeader = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookie];
+        NSString *cookieStr = [reqHeader objectForKey:@"Cookie"];
+        [request setValue:cookieStr forHTTPHeaderField:@"Cookie"];
+    }
+}
+
++ (void)syncRequestHttpOnlyCookie:(NSMutableURLRequest *)request
+{
+    if (!request.URL) {
+        return;
+    }
+    
+    NSArray<NSHTTPCookie *> *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL];
+    if (availableCookie.count > 0) {
+        NSMutableString *cookieStr = [[request valueForHTTPHeaderField:@"Cookie"] mutableCopy];
+        if (!cookieStr) {
+            cookieStr = [[NSMutableString alloc] init];
+        }
+        for (NSHTTPCookie *cookie in availableCookie) {
+            if (!cookie.isHTTPOnly) {
+                continue;
+            }
+            [cookieStr appendFormat:@"%@=%@;", cookie.name, cookie.value];
+        }
+        [request setValue:cookieStr forHTTPHeaderField:@"Cookie"];
+    }
+}
+
++ (NSString *)ajaxCookieScripts
+{
+    NSMutableString *cookieScript = [[NSMutableString alloc] init];
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        if ([cookie.value rangeOfString:@"'"].location != NSNotFound) {
+            continue;
+        }
+        [cookieScript appendFormat:@"document.cookie='%@=%@;", cookie.name, cookie.value];
+        if (cookie.domain || cookie.domain.length > 0) {
+            [cookieScript appendFormat:@"domain=%@;", cookie.domain];
+        }
+        if (cookie.path || cookie.path.length > 0) {
+            [cookieScript appendFormat:@"path=%@;", cookie.path];
+        }
+        if (cookie.expiresDate) {
+            [cookieScript appendFormat:@"expires=%@;", [[self cookieDateFormatter] stringFromDate:cookie.expiresDate]];
+        }
+        if (cookie.secure) {
+            [cookieScript appendString:@"Secure;"];
+        }
+        if (cookie.HTTPOnly) {
+            [cookieScript appendString:@"HTTPOnly;"];
+        }
+        [cookieScript appendFormat:@"'\n"];
+    }
+    return cookieScript;
+}
+
++ (NSMutableURLRequest *)fixRequest:(NSURLRequest *)request
+{
+    NSMutableURLRequest *fixedRequest;
+    if ([request isKindOfClass:[NSMutableURLRequest class]]) {
+        fixedRequest = (NSMutableURLRequest *)request;
+    } else {
+        fixedRequest = request.mutableCopy;
+    }
+    
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL]) {
+        NSString *value = [NSString stringWithFormat:@"%@=%@", cookie.name, cookie.value];
+        [array addObject:value];
+    }
+
+    NSString *cookie = [array componentsJoinedByString:@";"];
+    [fixedRequest setValue:cookie forHTTPHeaderField:@"Cookie"];
+    return fixedRequest;
+}
+
++ (void)copySharedCookie:(WKWebView *)webView completion:(void (^)(void))completion
+{
+    if (@available(iOS 11.0, *)) {
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+        WKHTTPCookieStore *cookieStroe = webView.configuration.websiteDataStore.httpCookieStore;
+        if (cookies.count == 0) {
+            completion ? completion() : nil;
+            return;
+        }
+        for (NSHTTPCookie *cookie in cookies) {
+            [cookieStroe setCookie:cookie completionHandler:^{
+                if ([[cookies lastObject] isEqual:cookie]) {
+                    completion ? completion() : nil;
+                    return;
+                }
+            }];
+        }
+    }
+}
+
++ (void)copyWebViewCookie:(WKWebView *)webView completion:(void (^)(void))completion
+{
+    if (@available(iOS 11.0, *)) {
+        WKHTTPCookieStore *cookieStroe = webView.configuration.websiteDataStore.httpCookieStore;
+        [cookieStroe getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
+            if (cookies.count == 0) {
+                completion ? completion() : nil;
+                return;
+            }
+            for (NSHTTPCookie *cookie in cookies) {
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+                if ([[cookies lastObject] isEqual:cookie]) {
+                    completion ? completion() : nil;
+                    return;
+                }
+            }
         }];
-    } else if (self.alpha == 1.0 && progress == 1.0) {
+    }
+}
+
++ (NSDateFormatter *)cookieDateFormatter
+{
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [NSDateFormatter new];
+        formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+        formatter.dateFormat = @"EEE, d MMM yyyy HH:mm:ss zzz";
+    });
+    return formatter;
+}
+
+@end
+
+#pragma mark - FWWebView
+
+@interface FWWebViewDelegateProxy : FWDelegateProxy <FWWebViewDelegate>
+
+@end
+
+@implementation FWWebViewDelegateProxy
+
+#pragma mark - WKNavigationDelegate
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled &&
+        [navigationAction.request isKindOfClass:NSMutableURLRequest.class]) {
+        [FWWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        [self.delegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        return;
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldStartLoad:)] &&
+        ![self.delegate shouldStartLoad:navigationAction]) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    if ([UIApplication fwIsSystemURL:navigationAction.request.URL]) {
+        [UIApplication fwOpenURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+    if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled) {
+        if (@available(iOS 11.0, *)) {
+            [FWWebViewCookieManager copyWebViewCookie:webView completion:nil];
+        } else {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+            NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+            for (NSHTTPCookie *cookie in cookies) {
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+            }
+        }
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+        [self.delegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+        return;
+    }
+    
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
+        [self.delegate webView:webView didFinishNavigation:navigation];
+        return;
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishLoad)]) {
+        [self.delegate didFinishLoad];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)]) {
+        [self.delegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+        return;
+    }
+    
+    if (error.code == NSURLErrorCancelled) return;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
+        [self.delegate didFailLoad:error];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
+        [self.delegate webView:webView didFailNavigation:navigation withError:error];
+        return;
+    }
+    
+    if (error.code == NSURLErrorCancelled) return;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
+        [self.delegate didFailLoad:error];
+    }
+}
+
+#pragma mark - WKUIDelegate
+
+- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptAlertPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:NSLocalizedString(@"关闭", nil) cancelBlock:^{
+        completionHandler();
+    }];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptConfirmPanelWithMessage:message initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) confirmBlock:^{
+        completionHandler(YES);
+    } cancelBlock:^{
+        completionHandler(NO);
+    } priority:FWAlertPriorityNormal];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *))completionHandler
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:)]) {
+        [self.delegate webView:webView runJavaScriptTextInputPanelWithPrompt:prompt defaultText:defaultText initiatedByFrame:frame completionHandler:completionHandler];
+        return;
+    }
+    
+    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) promptBlock:^(UITextField *textField) {
+        textField.text = defaultText;
+    } confirmBlock:^(NSString *text) {
+        completionHandler(text);
+    } cancelBlock:^{
+        completionHandler(nil);
+    } priority:FWAlertPriorityNormal];
+}
+
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:)]) {
+        return [self.delegate webView:webView createWebViewWithConfiguration:configuration forNavigationAction:navigationAction windowFeatures:windowFeatures];
+    }
+    
+    if (!navigationAction.targetFrame.isMainFrame) {
+        if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled) {
+            [webView loadRequest:[FWWebViewCookieManager fixRequest:navigationAction.request]];
+        } else {
+            [webView loadRequest:navigationAction.request];
+        }
+    }
+    return nil;
+}
+
+@end
+
+static WKProcessPool *fwStaticProcessPool = nil;
+
+@interface FWWebView ()
+
+@property (nonatomic, strong) FWWebViewDelegateProxy *delegateProxy;
+
+@property (nonatomic, strong) UIProgressView *progressView;
+
+@end
+
+@implementation FWWebView
+
++ (WKProcessPool *)processPool
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!fwStaticProcessPool) fwStaticProcessPool = [[WKProcessPool alloc] init];
+    });
+    return fwStaticProcessPool;
+}
+
++ (void)setProcessPool:(WKProcessPool *)processPool
+{
+    if (processPool) fwStaticProcessPool = processPool;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration
+{
+    self = [super initWithFrame:frame configuration:configuration];
+    if (self) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (void)didInitialize
+{
+    self.delegateProxy = [[FWWebViewDelegateProxy alloc] init];
+    self.navigationDelegate = self.delegateProxy;
+    self.UIDelegate = self.delegateProxy;
+    self.configuration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
+    self.configuration.processPool = [FWWebView processPool];
+    if (!self.configuration.userContentController) {
+        self.configuration.userContentController = [WKUserContentController new];
+    }
+    self.allowsBackForwardNavigationGestures = YES;
+    if (@available(iOS 11.0, *)) {
+        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
+    self.progressView.trackTintColor = [UIColor clearColor];
+    self.progressView.fwWebProgress = 0;
+    [self addSubview:self.progressView];
+    [self.progressView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [self.progressView fwSetDimension:NSLayoutAttributeHeight toSize:2.f];
+    [self fwObserveProperty:@"estimatedProgress" block:^(FWWebView *webView, NSDictionary *change) {
+        if (webView.estimatedProgress < 1.0) {
+            webView.progressView.fwWebProgress = webView.estimatedProgress;
+        }
+    }];
+    [self fwObserveProperty:@"loading" block:^(FWWebView *webView, NSDictionary *change) {
+        if (!webView.isLoading) {
+            webView.progressView.fwWebProgress = 1.0;
+        }
+    }];
+}
+
+- (id<FWWebViewDelegate>)delegate
+{
+    return self.delegateProxy.delegate;
+}
+
+- (void)setDelegate:(id<FWWebViewDelegate>)delegate
+{
+    self.delegateProxy.delegate = delegate;
+}
+
+- (void)setWebRequest:(id)webRequest
+{
+    _webRequest = webRequest;
+    
+    if (!webRequest) return;
+    if ([webRequest isKindOfClass:[NSURLRequest class]]) {
+        [self loadRequest:webRequest];
+        return;
+    }
+    
+    NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
+    if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
+        requestUrl = [NSURL fwURLWithString:webRequest];
+    }
+    if (requestUrl.absoluteString.length < 1) return;
+    
+    if (requestUrl.isFileURL) {
+        NSString *htmlString = [NSString stringWithContentsOfURL:requestUrl encoding:NSUTF8StringEncoding error:NULL];
+        if (htmlString) {
+            [self loadHTMLString:htmlString baseURL:requestUrl];
+        }
+    } else {
+        [self loadRequest:[NSURLRequest requestWithURL:requestUrl]];
+    }
+}
+
+- (WKNavigation *)loadRequest:(NSURLRequest *)request
+{
+    if (self.cookieEnabled && request.URL.scheme.length > 0) {
+        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[FWWebViewCookieManager ajaxCookieScripts] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+        [self.configuration.userContentController addUserScript:cookieScript];
+        
+        NSMutableURLRequest *cookieRequest = request.mutableCopy;
+        [FWWebViewCookieManager syncRequestCookie:cookieRequest];
+        return [super loadRequest:cookieRequest];
+    }
+    
+    return [super loadRequest:request];
+}
+
+@end
+
+@implementation UIProgressView (FWWebView)
+
+- (float)fwWebProgress
+{
+    return self.progress;
+}
+
+- (void)setFwWebProgress:(float)progress
+{
+    if (progress <= 0) {
+        self.alpha = 0;
+    } else if (progress > 0 && progress < 1.0) {
+        if (self.alpha == 0) {
+            self.progress = 0;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.alpha = 1.0;
+            }];
+        }
+    } else {
+        self.alpha = 1.0;
         [UIView animateWithDuration:0.2 animations:^{
             self.alpha = 0.0;
         } completion:^(BOOL finished) {

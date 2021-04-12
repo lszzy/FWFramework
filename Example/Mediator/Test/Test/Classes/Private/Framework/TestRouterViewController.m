@@ -265,6 +265,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     [self.tableData addObjectsFromArray:@[
                                          @[@"打开Web", @"onOpenHttp"],
+                                         @[@"测试Cookie", @"onOpenCookie"],
                                          @[@"打开Url", @"onOpen"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，协议", @"onOpenController"],
@@ -446,6 +447,11 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)onOpenHttp
 {
     [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+}
+
+- (void)onOpenCookie
+{
+    [FWRouter openURL:@"http://kvm.wuyong.site/cookie.php"];
 }
 
 - (void)onOpenUniversalLinks

@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWWebViewBridge
+
 typedef void (^FWJsBridgeResponseCallback)(id responseData);
 typedef void (^FWJsBridgeHandler)(id data, FWJsBridgeResponseCallback responseCallback);
 typedef NSDictionary FWJsBridgeMessage;
@@ -69,35 +71,97 @@ NSString * FWWebViewJsBridge_js(void);
 @interface WKWebView (FWWebViewBridge)
 
 /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-@property (strong, nonatomic, nullable) FWWebViewJsBridge *fwJsBridge;
+@property (nonatomic, strong, nullable) FWWebViewJsBridge *fwJsBridge;
 
-/// 获取当前UserAgent，未自定义时为默认，失败时返回nil，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-@property (copy, readonly, nonatomic, nullable) NSString *fwUserAgent;
-
-/// 清理WebView缓存，完成时回调
-+ (void)fwClearWebCache:(nullable void (^)(void))completion;
-
-/// 获取并缓存WebView默认UserAgent，包含应用信息，需主线程调用，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
-@property (class, nonatomic, copy, readonly) NSString *fwWebViewUserAgent;
+/// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+@property (nonatomic, copy, readonly) NSString *fwUserAgent;
 
 /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
 @property (class, nonatomic, copy, readonly) NSString *fwBrowserUserAgent;
 
-/// 获取默认浏览器平台UserAgent，不含扩展信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)
-@property (class, nonatomic, copy, readonly) NSString *fwBrowserPlatformUserAgent;
-
 /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-@property (class, nonatomic, copy, readonly) NSString *fwBrowserExtensionUserAgent;
+@property (class, nonatomic, copy, readonly) NSString *fwExtensionUserAgent;
 
 /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
 @property (class, nonatomic, copy, readonly) NSString *fwRequestUserAgent;
 
 @end
 
-@interface UIProgressView (FWWebViewBridge)
+#pragma mark - FWWebViewCookieManager
 
-/// 更新进度，0和1自动切换隐藏状态。可设置trackTintColor为clear，隐藏背景色
-- (void)fwSetProgress:(float)progress;
+/*!
+@brief WKWebView管理Cookie
+
+@see https://github.com/karosLi/KKJSBridge
+*/
+@interface FWWebViewCookieManager : NSObject
+
+/// 同步首个请求的Cookie
++ (void)syncRequestCookie:(NSMutableURLRequest *)request;
+
+/// 同步请求的httpOnly Cookie
++ (void)syncRequestHttpOnlyCookie:(NSMutableURLRequest *)request;
+
+/// 同步ajax请求的Cookie
++ (NSString *)ajaxCookieScripts;
+
+/// 同步重定向请求的Cookie
++ (NSMutableURLRequest *)fixRequest:(NSURLRequest *)request;
+
+/// 拷贝共享Cookie到webView，iOS11+有效
++ (void)copySharedCookie:(WKWebView *)toWebView completion:(nullable void (^)(void))completion;
+
+/// 拷贝webView到共享Cookie，iOS11+有效
++ (void)copyWebViewCookie:(WKWebView *)fromWebView completion:(nullable void (^)(void))completion;
+
+/// Cookie日期格式化对象
++ (NSDateFormatter *)cookieDateFormatter;
+
+@end
+
+#pragma mark - FWWebView
+
+@protocol FWWebViewDelegate <WKNavigationDelegate, WKUIDelegate>
+
+@optional
+
+/// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等
+- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
+
+/// 已经加载完成，可用来获取title、设置按钮等
+- (void)didFinishLoad;
+
+/// 网页加载失败，可用来处理加载异常等
+- (void)didFailLoad:(NSError *)error;
+
+@end
+
+/*!
+ @brief WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
+ */
+@interface FWWebView : WKWebView
+
+/// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
+@property (class, nonatomic, strong) WKProcessPool *processPool;
+
+/// 事件代理，包含navigationDelegate和UIDelegate
+@property (nonatomic, weak, nullable) id<FWWebViewDelegate> delegate;
+
+/// 是否启用Cookie管理，默认NO未启用
+@property (nonatomic, assign) BOOL cookieEnabled;
+
+/// 进度视图，默认trackTintColor为clear
+@property (nonatomic, readonly) UIProgressView *progressView;
+
+/// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
+@property (nonatomic, strong, nullable) id webRequest;
+
+@end
+
+@interface UIProgressView (FWWebView)
+
+/// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
+@property (nonatomic, assign) float fwWebProgress;
 
 @end
 

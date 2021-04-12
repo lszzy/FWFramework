@@ -60,6 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 注册指定模块服务，返回注册结果
 + (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass;
 
+/// 预置指定模块服务，仅当模块未注册时生效
++ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass;
+
 /// 取消注册指定模块服务
 + (void)unregisterService:(Protocol *)serviceProtocol;
 
