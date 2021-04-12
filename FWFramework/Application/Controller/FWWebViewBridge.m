@@ -906,6 +906,14 @@ static WKProcessPool *fwStaticProcessPool = nil;
     if (processPool) fwStaticProcessPool = processPool;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    configuration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
+    configuration.processPool = [FWWebView processPool];
+    return [self initWithFrame:frame configuration:configuration];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration
 {
     self = [super initWithFrame:frame configuration:configuration];
@@ -929,11 +937,6 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.delegateProxy = [[FWWebViewDelegateProxy alloc] init];
     self.navigationDelegate = self.delegateProxy;
     self.UIDelegate = self.delegateProxy;
-    self.configuration.applicationNameForUserAgent = [WKWebView fwExtensionUserAgent];
-    self.configuration.processPool = [FWWebView processPool];
-    if (!self.configuration.userContentController) {
-        self.configuration.userContentController = [WKUserContentController new];
-    }
     self.allowsBackForwardNavigationGestures = YES;
     if (@available(iOS 11.0, *)) {
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

@@ -130,7 +130,11 @@
 {
     FWWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
-        webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[WKWebViewConfiguration new]];
+        if ([self respondsToSelector:@selector(renderWebConfiguration)]) {
+            webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[(id<FWWebViewController>)self renderWebConfiguration]];
+        } else {
+            webView = [[FWWebView alloc] initWithFrame:CGRectZero];
+        }
         objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return webView;
