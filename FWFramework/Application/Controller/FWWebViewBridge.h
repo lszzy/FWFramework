@@ -126,13 +126,13 @@ NSString * FWWebViewJsBridge_js(void);
 @optional
 
 /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等
-- (BOOL)shouldStartLoad:(WKNavigationAction *)navigationAction;
+- (BOOL)webViewShouldLoad:(WKNavigationAction *)navigationAction;
 
 /// 已经加载完成，可用来获取title、设置按钮等
-- (void)didFinishLoad;
+- (void)webViewFinishLoad;
 
 /// 网页加载失败，可用来处理加载异常等
-- (void)didFailLoad:(NSError *)error;
+- (void)webViewFailLoad:(NSError *)error;
 
 @end
 

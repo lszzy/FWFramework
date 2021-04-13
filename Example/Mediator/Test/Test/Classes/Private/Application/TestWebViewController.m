@@ -94,7 +94,7 @@
     self.webRequest = urlRequest;
 }
 
-- (void)didFinishLoad
+- (void)webViewFinishLoad
 {
     if (self.fwIsDataLoaded) return;
     self.fwIsDataLoaded = YES;
@@ -102,7 +102,7 @@
     [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
 }
 
-- (void)didFailLoad:(NSError *)error
+- (void)webViewFailLoad:(NSError *)error
 {
     if (self.fwIsDataLoaded) return;
     
@@ -117,8 +117,8 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    if ([self respondsToSelector:@selector(shouldStartLoad:)] &&
-        ![self shouldStartLoad:navigationAction]) {
+    if ([self respondsToSelector:@selector(webViewShouldLoad:)] &&
+        ![self webViewShouldLoad:navigationAction]) {
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
