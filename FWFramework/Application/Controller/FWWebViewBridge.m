@@ -745,8 +745,8 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldStartLoad:)] &&
-        ![self.delegate shouldStartLoad:navigationAction]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewShouldLoad:)] &&
+        ![self.delegate webViewShouldLoad:navigationAction]) {
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
@@ -787,8 +787,8 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didFinishLoad)]) {
-        [self.delegate didFinishLoad];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewFinishLoad)]) {
+        [self.delegate webViewFinishLoad];
     }
 }
 
@@ -800,8 +800,8 @@ NSString * FWWebViewJsBridge_js() {
     }
     
     if (error.code == NSURLErrorCancelled) return;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
-        [self.delegate didFailLoad:error];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewFailLoad:)]) {
+        [self.delegate webViewFailLoad:error];
     }
 }
 
@@ -813,8 +813,8 @@ NSString * FWWebViewJsBridge_js() {
     }
     
     if (error.code == NSURLErrorCancelled) return;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didFailLoad:)]) {
-        [self.delegate didFailLoad:error];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewFailLoad:)]) {
+        [self.delegate webViewFailLoad:error];
     }
 }
 
