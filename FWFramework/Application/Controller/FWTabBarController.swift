@@ -393,9 +393,9 @@ internal extension FWTabBar /* Actions */ {
             return
         }
         
-        if (customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false {
-            return
-        }
+        //if (customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false {
+            //return
+        //}
         
         if let item = item as? FWTabBarItem {
             item.contentView.highlight(animated: true, completion: nil)
@@ -413,9 +413,9 @@ internal extension FWTabBar /* Actions */ {
             return
         }
         
-        if (customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false {
-            return
-        }
+        //if (customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false {
+            //return
+        //}
         
         if let item = item as? FWTabBarItem {
             item.contentView.dehighlight(animated: true, completion: nil)
@@ -438,11 +438,11 @@ internal extension FWTabBar /* Actions */ {
             return
         }
         
-        if (customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false {
+        if animated && ((customDelegate?.tabBar(self, shouldSelect: item) ?? true) == false) {
             return
         }
         
-        if (customDelegate?.tabBar(self, shouldHijack: item) ?? false) == true {
+        if animated && ((customDelegate?.tabBar(self, shouldHijack: item) ?? false) == true) {
             customDelegate?.tabBar(self, didHijack: item)
             if animated {
                 if let item = item as? FWTabBarItem {
@@ -478,7 +478,7 @@ internal extension FWTabBar /* Actions */ {
                 moreContentView?.reselect(animated: animated, completion: nil)
             }
             
-            if let tabBarController = tabBarController {
+            if animated, let tabBarController = tabBarController {
                 var navVC: UINavigationController?
                 if let n = tabBarController.selectedViewController as? UINavigationController {
                     navVC = n
@@ -501,7 +501,9 @@ internal extension FWTabBar /* Actions */ {
             }
         }
         
-        delegate?.tabBar?(self, didSelect: item)
+        if animated {
+            delegate?.tabBar?(self, didSelect: item)
+        }
         self.updateAccessibilityLabels()
     }
     

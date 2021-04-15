@@ -77,10 +77,8 @@ extension UITabBarController: UITabBarControllerDelegate {
     
     // MARK: - UITabBarControllerDelegate
     public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        /*
-        // 测试点击TabBar需要先登录的场景
         if let index = tabBarController.viewControllers?.firstIndex(of: viewController), index == 1 {
-            if !Mediator.userModule.isLogin() {
+            if AppConfig.isRootLogin && !Mediator.userModule.isLogin() {
                 Mediator.userModule.login { [weak self] in
                     if self?.viewControllers?.contains(viewController) ?? false {
                         self?.selectedViewController = viewController
@@ -89,7 +87,6 @@ extension UITabBarController: UITabBarControllerDelegate {
                 return false
             }
         }
-        */
         
         return true
     }
