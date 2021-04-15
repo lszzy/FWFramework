@@ -6,7 +6,6 @@
 //
 
 import FWFramework
-import Mediator
 import Core
 
 @objcMembers class UserLoginController: UIViewController, FWViewController {
@@ -15,15 +14,9 @@ import Core
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = UserBundle.localizedString("loginButton")
-        
-        let testButton = UIButton(type: .system)
-        testButton.setTitle(UserBundle.localizedString("testButton"), for: .normal)
-        testButton.setImage(UserBundle.imageNamed("test")?.fwCompressImage(withMaxWidth: 25), for: .normal)
-        testButton.fwAddTouch { [weak self] (sender) in
-            self?.navigationController?.pushViewController(Mediator.testModule.testViewController(), animated: true)
+        fwSetLeftBarItem(CoreBundle.imageNamed("close")) { [weak self] (sender) in
+            self?.fwClose(animated: true)
         }
-        self.view.addSubview(testButton)
-        testButton.fwLayoutChain.centerX().centerYToView(self.view as Any, withOffset: -80)
         
         let button = UIButton(type: .system)
         button.setTitle(UserBundle.localizedString("loginButton"), for: .normal)
