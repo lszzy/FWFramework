@@ -133,8 +133,11 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onRoot() {
-        fwShowSheet(withTitle: FWLocalizedString("rootTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: ["UITabBar+Navigation", "FWTabBar+Navigation", "Navigation+UITabBar", "Navigation+FWTabBar"]) { (index) in
+        fwShowSheet(withTitle: FWLocalizedString("rootTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: ["UITabBar+Navigation", "FWTabBar+Navigation", "Navigation+UITabBar", "Navigation+FWTabBar", AppConfig.isRootLogin ? "Login required" : "No Login required"]) { (index) in
             switch index {
+            case 0:
+                AppConfig.isRootNavigation = false
+                AppConfig.isRootCustom = false
             case 1:
                 AppConfig.isRootNavigation = false
                 AppConfig.isRootCustom = true
@@ -145,8 +148,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
                 AppConfig.isRootNavigation = true
                 AppConfig.isRootCustom = true
             default:
-                AppConfig.isRootNavigation = false
-                AppConfig.isRootCustom = false
+                AppConfig.isRootLogin = !AppConfig.isRootLogin
             }
             UITabBarController.refreshController()
         }

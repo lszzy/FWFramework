@@ -16,4 +16,7 @@ class AppConfig: NSObject {
     
     @FWUserDefaultAnnotation("isRootCustom", defaultValue: false)
     static var isRootCustom: Bool
+    
+    @FWUserDefaultAnnotation("isRootLogin", defaultValue: false)
+    static var isRootLogin: Bool
 }

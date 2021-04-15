@@ -48,6 +48,10 @@ As this framework is constantly upgrading, optimizing and expanding new function
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
+Version 1.3.5:
+
+	* Optimize FWTabBarController, the performance is consistent with UITabBarController
+
 Version 1.3.4:
 
 	* Refactor FWWebViewDelegate method
