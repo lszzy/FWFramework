@@ -554,9 +554,9 @@ NSString * FWWebViewJsBridge_js() {
 
 - (NSString *)fwUserAgent
 {
-    if (self.customUserAgent != nil) return self.customUserAgent;
+    if (self.customUserAgent.length > 0) return self.customUserAgent;
     NSString *userAgent = [self fwPerformPropertySelector:@"userAgent"];
-    if ([userAgent isKindOfClass:[NSString class]]) return userAgent;
+    if ([userAgent isKindOfClass:[NSString class]] && userAgent.length > 0) return userAgent;
     return [WKWebView fwBrowserUserAgent];
 }
 
