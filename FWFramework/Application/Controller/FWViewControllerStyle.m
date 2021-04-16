@@ -72,10 +72,35 @@
             }
         }));
         
+        FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidLoad;
+        }));
+        
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
             
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillAppear;
             [selfObject fwUpdateNavigationBarStyle:animated];
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidAppear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewWillDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillDisappear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidDisappear;
         }));
     });
 }
@@ -369,6 +394,32 @@
     } else {
         objc_setAssociatedObject(self, @selector(fwPopBackBarItem), nil, OBJC_ASSOCIATION_ASSIGN);
     }
+}
+
+#pragma mark - State
+
+- (FWViewControllerVisibleState)fwVisibleState
+{
+    return [objc_getAssociatedObject(self, @selector(fwVisibleState)) unsignedIntegerValue];
+}
+
+- (void)setFwVisibleState:(FWViewControllerVisibleState)fwVisibleState
+{
+    BOOL valueChanged = self.fwVisibleState != fwVisibleState;
+    objc_setAssociatedObject(self, @selector(fwVisibleState), @(fwVisibleState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (valueChanged && self.fwVisibleStateChanged) {
+        self.fwVisibleStateChanged(self, fwVisibleState);
+    }
+}
+
+- (void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    return objc_getAssociatedObject(self, @selector(fwVisibleStateChanged));
+}
+
+- (void)setFwVisibleStateChanged:(void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    objc_setAssociatedObject(self, @selector(fwVisibleStateChanged), fwVisibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end

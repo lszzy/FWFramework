@@ -33,6 +33,24 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 @end
 
+#pragma mark - FWViewControllerVisibleState
+
+/// 视图控制器生命周期状态枚举
+typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
+    /// 未触发ViewDidLoad
+    FWViewControllerVisibleStateDefault = 0,
+    /// 已触发ViewDidLoad
+    FWViewControllerVisibleStateDidLoad,
+    /// 已触发ViewWillAppear
+    FWViewControllerVisibleStateWillAppear,
+    /// 已触发ViewDidAppear
+    FWViewControllerVisibleStateDidAppear,
+    /// 已触发ViewWillDisappear
+    FWViewControllerVisibleStateWillDisappear,
+    /// 已触发ViewDidDisappear
+    FWViewControllerVisibleStateDidDisappear,
+};
+
 #pragma mark - UIViewController+FWStyle
 
 /*!
@@ -103,6 +121,14 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 /// 设置导航栏返回按钮点击block事件，默认fwPopBackBarItem自动调用。逻辑同上
 @property (nonatomic, copy, nullable) BOOL (^fwBackBarBlock)(void);
+
+#pragma mark - State
+
+/// 当前生命周期状态，默认Default
+@property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;
+
+/// 生命周期变化时通知句柄，默认nil
+@property (nonatomic, copy, nullable) void (^fwVisibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
 
 @end
 
