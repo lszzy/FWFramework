@@ -32,4 +32,27 @@
     return (*objc_superAllocTyped)(&mySuper, aSelector, object);
 }
 
+- (BOOL)fwHasOverrideMethod:(SEL)selector ofSuperclass:(Class)superclass
+{
+    return [NSObject fwHasOverrideMethod:selector forClass:self.class ofSuperclass:superclass];
+}
+
++ (BOOL)fwHasOverrideMethod:(SEL)selector forClass:(Class)aClass ofSuperclass:(Class)superclass
+{
+    if (![aClass isSubclassOfClass:superclass]) {
+        return NO;
+    }
+    
+    if (![superclass instancesRespondToSelector:selector]) {
+        return NO;
+    }
+    
+    Method superclassMethod = class_getInstanceMethod(superclass, selector);
+    Method instanceMethod = class_getInstanceMethod(aClass, selector);
+    if (!instanceMethod || instanceMethod == superclassMethod) {
+        return NO;
+    }
+    return YES;
+}
+
 @end
