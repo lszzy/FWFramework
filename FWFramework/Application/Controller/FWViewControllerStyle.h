@@ -148,6 +148,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变
 @property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
+/// 设置主题背景图片(nil时透明)并隐藏底部线条，自动跟随系统改变
+@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
+
 /// 设置透明背景并隐藏底部线条
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
 
@@ -168,6 +171,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 设置主题背景色并隐藏顶部线条，自动跟随系统改变
 @property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
+
+/// 设置主题背景图片并隐藏顶部线条，自动跟随系统改变
+@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 @end
 
