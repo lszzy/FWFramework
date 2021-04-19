@@ -47,7 +47,7 @@ platform :ios do
     end
 
     puts "Changelog: #{CHANGELOG_TEXT}"
-    cocoapods(repo_update: true, use_bundle_exec: false)
+    cocoapods(repo_update: true, clean_install: true, use_bundle_exec: false)
   end
 
   desc "Push a new test build to Pgyer"
