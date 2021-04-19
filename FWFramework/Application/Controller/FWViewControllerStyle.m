@@ -72,10 +72,35 @@
             }
         }));
         
+        FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidLoad;
+        }));
+        
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
             
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillAppear;
             [selfObject fwUpdateNavigationBarStyle:animated];
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidAppear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewWillDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillDisappear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidDisappear;
         }));
     });
 }
@@ -371,6 +396,32 @@
     }
 }
 
+#pragma mark - State
+
+- (FWViewControllerVisibleState)fwVisibleState
+{
+    return [objc_getAssociatedObject(self, @selector(fwVisibleState)) unsignedIntegerValue];
+}
+
+- (void)setFwVisibleState:(FWViewControllerVisibleState)fwVisibleState
+{
+    BOOL valueChanged = self.fwVisibleState != fwVisibleState;
+    objc_setAssociatedObject(self, @selector(fwVisibleState), @(fwVisibleState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (valueChanged && self.fwVisibleStateChanged) {
+        self.fwVisibleStateChanged(self, fwVisibleState);
+    }
+}
+
+- (void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    return objc_getAssociatedObject(self, @selector(fwVisibleStateChanged));
+}
+
+- (void)setFwVisibleStateChanged:(void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    objc_setAssociatedObject(self, @selector(fwVisibleStateChanged), fwVisibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 @end
 
 #pragma mark - UINavigationBar+FWStyle
@@ -417,12 +468,31 @@
     [self setShadowImage:[UIImage new]];
 }
 
+- (UIImage *)fwThemeBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
+}
+
+- (void)setFwThemeBackgroundImage:(UIImage *)backgroundImage
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIImage *image = backgroundImage ?: [UIImage new];
+    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new]];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
     
     if (self.fwThemeBackgroundColor != nil) {
         UIImage *image = [UIImage fwImageWithColor:self.fwThemeBackgroundColor] ?: [UIImage new];
+        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        [self setShadowImage:[UIImage new]];
+    }
+    
+    if (self.fwThemeBackgroundImage != nil) {
+        UIImage *image = self.fwThemeBackgroundImage.fwThemeImage ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
@@ -474,12 +544,29 @@
     self.shadowImage = [UIImage new];
 }
 
+- (UIImage *)fwThemeBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
+}
+
+- (void)setFwThemeBackgroundImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.backgroundImage = image;
+    self.shadowImage = [UIImage new];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
     
     if (self.fwThemeBackgroundColor != nil) {
         self.backgroundImage = [UIImage fwImageWithColor:self.fwThemeBackgroundColor];
+        self.shadowImage = [UIImage new];
+    }
+    
+    if (self.fwThemeBackgroundImage != nil) {
+        self.backgroundImage = self.fwThemeBackgroundImage.fwThemeImage;
         self.shadowImage = [UIImage new];
     }
 }

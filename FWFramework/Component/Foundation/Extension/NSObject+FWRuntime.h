@@ -372,6 +372,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable id)fwPerformSuperSelector:(SEL)aSelector withObject:(nullable id)object;
 
+/*!
+ @brief 判断当前类是否有重写某个父类的指定方法
+ 
+ @param selector 要判断的方法
+ @param superclass 要比较的父类，必须是当前类的某个 superclass
+ @return YES 表示子类有重写了父类方法，NO 表示没有重写
+ */
+- (BOOL)fwHasOverrideMethod:(SEL)selector ofSuperclass:(Class)superclass;
+
+/*!
+ @brief 判断指定的类是否有重写某个父类的指定方法
+ 
+ @param selector 要判断的方法
+ @param superclass 要比较的父类，必须是当前类的某个 superclass
+ @return YES 表示子类有重写了父类方法，NO 表示没有重写
+ */
++ (BOOL)fwHasOverrideMethod:(SEL)selector forClass:(Class)aClass ofSuperclass:(Class)superclass;
+
 @end
 
 NS_ASSUME_NONNULL_END
