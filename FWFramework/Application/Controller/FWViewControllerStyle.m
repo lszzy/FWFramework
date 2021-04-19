@@ -468,12 +468,31 @@
     [self setShadowImage:[UIImage new]];
 }
 
+- (UIImage *)fwThemeBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
+}
+
+- (void)setFwThemeBackgroundImage:(UIImage *)backgroundImage
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIImage *image = backgroundImage ?: [UIImage new];
+    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new]];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
     
     if (self.fwThemeBackgroundColor != nil) {
         UIImage *image = [UIImage fwImageWithColor:self.fwThemeBackgroundColor] ?: [UIImage new];
+        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        [self setShadowImage:[UIImage new]];
+    }
+    
+    if (self.fwThemeBackgroundImage != nil) {
+        UIImage *image = self.fwThemeBackgroundImage.fwThemeImage ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
@@ -525,12 +544,29 @@
     self.shadowImage = [UIImage new];
 }
 
+- (UIImage *)fwThemeBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
+}
+
+- (void)setFwThemeBackgroundImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.backgroundImage = image;
+    self.shadowImage = [UIImage new];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
     
     if (self.fwThemeBackgroundColor != nil) {
         self.backgroundImage = [UIImage fwImageWithColor:self.fwThemeBackgroundColor];
+        self.shadowImage = [UIImage new];
+    }
+    
+    if (self.fwThemeBackgroundImage != nil) {
+        self.backgroundImage = self.fwThemeBackgroundImage.fwThemeImage;
         self.shadowImage = [UIImage new];
     }
 }
