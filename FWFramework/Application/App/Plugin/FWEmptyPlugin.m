@@ -256,8 +256,8 @@
 - (void)updateDetailTextLabelWithText:(NSString *)text {
     if (self.detailTextLabelFont && self.detailTextLabelTextColor && text) {
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.minimumLineHeight = self.detailTextLabelFont.pointSize + 10;
-        paragraphStyle.maximumLineHeight = self.detailTextLabelFont.pointSize + 10;
+        paragraphStyle.minimumLineHeight = self.detailTextLabelFont.lineHeight;
+        paragraphStyle.maximumLineHeight = self.detailTextLabelFont.lineHeight;
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
