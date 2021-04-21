@@ -39,7 +39,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 /// 视图控制器生命周期状态枚举
 typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     /// 未触发ViewDidLoad
-    FWViewControllerVisibleStateDefault = 0,
+    FWViewControllerVisibleStateReady = 0,
     /// 已触发ViewDidLoad
     FWViewControllerVisibleStateDidLoad,
     /// 已触发ViewWillAppear

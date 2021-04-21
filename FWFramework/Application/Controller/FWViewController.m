@@ -184,7 +184,7 @@
         
         // 2. 控制器renderInit
         if ([viewController respondsToSelector:@selector(renderInit)]) {
-            [viewController performSelector:@selector(renderInit)];
+            [(id<FWViewController>)viewController renderInit];
         }
     }
 }
@@ -206,7 +206,7 @@
         
         // 2. 控制器renderView
         if ([viewController respondsToSelector:@selector(renderView)]) {
-            [viewController performSelector:@selector(renderView)];
+            [(id<FWViewController>)viewController renderView];
         }
     }
 }
@@ -228,12 +228,17 @@
         
         // 2. 控制器renderModel
         if ([viewController respondsToSelector:@selector(renderModel)]) {
-            [viewController performSelector:@selector(renderModel)];
+            [(id<FWViewController>)viewController renderModel];
         }
         
         // 3. 控制器renderData
         if ([viewController respondsToSelector:@selector(renderData)]) {
-            [viewController performSelector:@selector(renderData)];
+            [(id<FWViewController>)viewController renderData];
+        }
+        
+        // 4. 控制器renderState
+        if ([viewController respondsToSelector:@selector(renderState:withObject:)]) {
+            [(id<FWViewController>)viewController renderState:FWViewControllerStateReady withObject:nil];
         }
     }
 }

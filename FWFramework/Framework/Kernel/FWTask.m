@@ -11,10 +11,10 @@
 #pragma mark - FWTask
 
 typedef NS_ENUM(NSInteger, FWTaskState) {
-    FWTaskStateCreate,
+    FWTaskStateCreated,
     FWTaskStateReady = 1,
     FWTaskStateLoading,
-    FWTaskStateSuccessed,
+    FWTaskStateSuccess,
     FWTaskStateFailure,
     FWTaskStateCanceled,
 };
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
             // 调试日志
             NSLog(@"\n********** TASK %@ FAILED", NSStringFromClass(self.class));
         } else {
-            self.state = FWTaskStateSuccessed;
+            self.state = FWTaskStateSuccess;
             
             // 调试日志
             NSLog(@"\n********** TASK %@ FINISHED", NSStringFromClass(self.class));
@@ -131,7 +131,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 - (BOOL)isFinished
 {
-    return self.state == FWTaskStateSuccessed || self.state == FWTaskStateFailure || self.state == FWTaskStateCanceled;
+    return self.state == FWTaskStateSuccess || self.state == FWTaskStateFailure || self.state == FWTaskStateCanceled;
 }
 
 - (BOOL)isExecuting
@@ -146,7 +146,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
         {
             switch (toState) {
                 case FWTaskStateLoading:
-                case FWTaskStateSuccessed:
+                case FWTaskStateSuccess:
                 case FWTaskStateFailure:
                 case FWTaskStateCanceled:
                     return YES;
@@ -160,7 +160,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
         case FWTaskStateLoading:
         {
             switch (toState) {
-                case FWTaskStateSuccessed:
+                case FWTaskStateSuccess:
                 case FWTaskStateFailure:
                 case FWTaskStateCanceled:
                     return YES;
@@ -211,7 +211,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
             [self didChangeValueForKey:@"isExecuting"];
             break;
         }
-        case FWTaskStateSuccessed:
+        case FWTaskStateSuccess:
         case FWTaskStateFailure:
         {
             [self willChangeValueForKey:@"isFinished"];
