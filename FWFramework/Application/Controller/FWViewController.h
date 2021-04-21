@@ -12,6 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 视图控制器页面状态可扩展枚举
+typedef NSInteger FWViewControllerState NS_TYPED_EXTENSIBLE_ENUM;
+static const FWViewControllerState FWViewControllerStateReady   = 0;
+static const FWViewControllerState FWViewControllerStateLoading = 1;
+static const FWViewControllerState FWViewControllerStateSuccess = 2;
+static const FWViewControllerState FWViewControllerStateFailure = 3;
+
 /*!
  @brief 视图控制器挂钩协议，可覆写
  */
@@ -30,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 渲染数据模型，viewDidLoad自动调用，默认未实现
 - (void)renderData;
+
+/// 渲染页面状态，viewDidLoad自动调用，默认未实现。初始状态为ready，其它需手工触发
+- (void)renderState:(FWViewControllerState)state withObject:(nullable id)object;
 
 @end
 
