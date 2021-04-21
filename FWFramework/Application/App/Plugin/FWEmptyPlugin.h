@@ -57,6 +57,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否存在显示中的空界面
 - (BOOL)fwExistsEmptyView;
 
+#pragma mark - Config
+
+/// 默认空界面文本
+@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyText UI_APPEARANCE_SELECTOR;
+/// 默认空界面详细文本
+@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyDetail UI_APPEARANCE_SELECTOR;
+/// 默认空界面图片
+@property (nonatomic, strong, nullable) UIImage *fwDefaultEmptyImage UI_APPEARANCE_SELECTOR;
+/// 默认空界面动作按钮
+@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyAction UI_APPEARANCE_SELECTOR;
+
 @end
 
 #pragma mark - FWEmptyView

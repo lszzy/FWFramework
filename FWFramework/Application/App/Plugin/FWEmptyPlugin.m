@@ -41,9 +41,14 @@
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
+    NSString *emptyText = text ?: self.fwDefaultEmptyText;
+    NSString *emptyDetail = detail ?: self.fwDefaultEmptyDetail;
+    UIImage *emptyImage = image ?: self.fwDefaultEmptyImage;
+    NSString *emptyAction = action ?: (block ? self.fwDefaultEmptyAction : nil);
+    
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
-        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
+        [plugin fwShowEmptyViewWithText:emptyText detail:emptyDetail image:emptyImage action:emptyAction block:block inView:self];
         return;
     }
     
@@ -55,10 +60,10 @@
     [self addSubview:emptyView];
     [emptyView fwPinEdgesToSuperview];
     [emptyView setLoadingViewHidden:YES];
-    [emptyView setImage:image];
-    [emptyView setTextLabelText:text];
-    [emptyView setDetailTextLabelText:detail];
-    [emptyView setActionButtonTitle:action];
+    [emptyView setImage:emptyImage];
+    [emptyView setTextLabelText:emptyText];
+    [emptyView setDetailTextLabelText:emptyDetail];
+    [emptyView setActionButtonTitle:emptyAction];
     if (block) [emptyView.actionButton fwAddTouchBlock:block];
 }
 
@@ -83,6 +88,48 @@
     
     UIView *emptyView = [self viewWithTag:2021];
     return emptyView != nil ? YES : NO;
+}
+
+#pragma mark - Config
+
+- (NSString *)fwDefaultEmptyText
+{
+    return objc_getAssociatedObject(self, @selector(fwDefaultEmptyText));
+}
+
+- (void)setFwDefaultEmptyText:(NSString *)text
+{
+    objc_setAssociatedObject(self, @selector(fwDefaultEmptyText), text, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)fwDefaultEmptyDetail
+{
+    return objc_getAssociatedObject(self, @selector(fwDefaultEmptyDetail));
+}
+
+- (void)setFwDefaultEmptyDetail:(NSString *)detail
+{
+    objc_setAssociatedObject(self, @selector(fwDefaultEmptyDetail), detail, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (UIImage *)fwDefaultEmptyImage
+{
+    return objc_getAssociatedObject(self, @selector(fwDefaultEmptyImage));
+}
+
+- (void)setFwDefaultEmptyImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwDefaultEmptyImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSString *)fwDefaultEmptyAction
+{
+    return objc_getAssociatedObject(self, @selector(fwDefaultEmptyAction));
+}
+
+- (void)setFwDefaultEmptyAction:(NSString *)action
+{
+    objc_setAssociatedObject(self, @selector(fwDefaultEmptyAction), action, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end
