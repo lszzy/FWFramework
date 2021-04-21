@@ -138,4 +138,45 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UIScrollView+FWEmptyView
+
+/// 空界面代理协议
+@protocol FWEmptyViewDelegate <NSObject>
+@optional
+
+/// 显示空界面，contentView为空界面容器
+- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+
+/// 隐藏空界面，contentView为空界面容器
+- (void)fwHideEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+
+/// 显示空界面时是否允许滚动，默认NO
+- (BOOL)fwEmptyViewShouldScroll:(UIScrollView *)scrollView;
+
+/// 无数据时是否显示空界面，默认YES
+- (BOOL)fwEmptyViewShouldDisplay:(UIScrollView *)scrollView;
+
+/// 有数据时是否强制显示空界面，默认NO
+- (BOOL)fwEmptyViewForceDisplay:(UIScrollView *)scrollView;
+
+@end
+
+/**
+ @brief 滚动视图空界面分类
+ 
+ @see https://github.com/dzenbot/DZNEmptyView
+ */
+@interface UIScrollView (FWEmptyView)
+
+/// 空界面代理，默认nil
+@property (nonatomic, weak, nullable) IBOutlet id<FWEmptyViewDelegate> fwEmptyViewDelegate;
+
+/// 是否正在显示空界面
+@property (nonatomic, assign, readonly) BOOL fwIsEmptyViewVisible;
+
+/// 刷新空界面
+- (void)fwReloadEmptyView;
+
+@end
+
 NS_ASSUME_NONNULL_END

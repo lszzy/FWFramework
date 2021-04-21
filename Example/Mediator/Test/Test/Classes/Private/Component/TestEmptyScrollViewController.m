@@ -8,7 +8,7 @@
 
 #import "TestEmptyScrollViewController.h"
 
-@interface TestEmptyScrollViewController () <FWTableViewController, FWEmptyViewDataSource, FWEmptyViewDelegate>
+@interface TestEmptyScrollViewController () <FWTableViewController, FWEmptyViewDelegate>
 
 @end
 
@@ -21,8 +21,7 @@
 
 - (void)renderView
 {
-    self.tableView.backgroundColor = Theme.tableColor;
-    self.tableView.fwEmptyViewDataSource = self;
+    self.tableView.backgroundColor = Theme.backgroundColor;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
 }
@@ -43,7 +42,6 @@
 - (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
 {
     FWWeakifySelf();
-    contentView.backgroundColor = Theme.backgroundColor;
     [contentView fwShowEmptyViewWithText:@"暂无数据" detail:nil image:nil action:@"重新加载" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
