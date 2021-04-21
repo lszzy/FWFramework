@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWEmptyPlugin)
 
-/// 显示空界面，默认样式
+/// 显示空界面
 - (void)fwShowEmptyView;
 
 /// 显示空界面，指定文本
