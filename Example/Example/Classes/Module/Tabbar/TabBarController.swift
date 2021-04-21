@@ -35,7 +35,7 @@ extension UITabBarController: UITabBarControllerDelegate {
     // MARK: - Private
     private func setupController() {
         delegate = self
-        tabBar.fwTextColor = Theme.textColor
+        tabBar.fwForegroundColor = Theme.textColor
         tabBar.fwThemeBackgroundColor = Theme.barColor
         
         let homeController = HomeViewController()

@@ -37,19 +37,13 @@ import FWFramework
         // 导航栏样式设置
         let defaultAppearance = FWNavigationBarAppearance()
         defaultAppearance.foregroundColor = Theme.textColor
-        defaultAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = Theme.barColor
-        }
+        defaultAppearance.backgroundColor = Theme.barColor
         let whiteAppearance = FWNavigationBarAppearance()
         whiteAppearance.foregroundColor = Theme.textColor.fwThemeColor(.light)
-        whiteAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = .white
-        }
+        whiteAppearance.backgroundColor = .white
         let transparentAppearance = FWNavigationBarAppearance()
         transparentAppearance.foregroundColor = Theme.textColor
-        transparentAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = .clear
-        }
+        transparentAppearance.isTransparent = true
         FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
         FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)

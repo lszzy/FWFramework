@@ -193,20 +193,25 @@
         [self.navigationController setNavigationBarHidden:isHidden animated:animated];
     }
     if (isTransparent) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+        [self.navigationController.navigationBar fwSetBackgroundTransparent];
     }
     
     if (appearance.backgroundColor) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage fwImageWithColor:appearance.backgroundColor] forBarMetrics:UIBarMetricsDefault];
-        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+        if (appearance.backgroundColor.fwIsThemeColor) {
+            self.navigationController.navigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
+        } else {
+            self.navigationController.navigationBar.fwBackgroundColor = appearance.backgroundColor;
+        }
+    }
+    if (appearance.backgroundImage) {
+        if (appearance.backgroundImage.fwIsThemeImage) {
+            self.navigationController.navigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
+        } else {
+            self.navigationController.navigationBar.fwBackgroundImage = appearance.backgroundImage;
+        }
     }
     if (appearance.foregroundColor) {
-        [self.navigationController.navigationBar setTintColor:appearance.foregroundColor];
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
-        if (@available(iOS 11.0, *)) {
-            [self.navigationController.navigationBar setLargeTitleTextAttributes:@{NSForegroundColorAttributeName: appearance.foregroundColor}];
-        }
+        self.navigationController.navigationBar.fwForegroundColor = appearance.foregroundColor;
     }
     if (appearance.appearanceBlock) {
         appearance.appearanceBlock(self.navigationController.navigationBar);
@@ -428,12 +433,12 @@
 
 @implementation UINavigationBar (FWStyle)
 
-- (UIColor *)fwTextColor
+- (UIColor *)fwForegroundColor
 {
     return self.tintColor;
 }
 
-- (void)setFwTextColor:(UIColor *)color
+- (void)setFwForegroundColor:(UIColor *)color
 {
     self.tintColor = color;
     self.titleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
@@ -453,6 +458,21 @@
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
+    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new]];
+}
+
+- (UIImage *)fwBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwBackgroundImage));
+}
+
+- (void)setFwBackgroundImage:(UIImage *)backgroundImage
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIImage *image = backgroundImage ?: [UIImage new];
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
 }
@@ -516,12 +536,12 @@
 
 @implementation UITabBar (FWStyle)
 
-- (UIColor *)fwTextColor
+- (UIColor *)fwForegroundColor
 {
     return self.tintColor;
 }
 
-- (void)setFwTextColor:(UIColor *)color
+- (void)setFwForegroundColor:(UIColor *)color
 {
     self.tintColor = color;
 }
@@ -537,6 +557,20 @@
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.backgroundImage = [UIImage fwImageWithColor:color];
+    self.shadowImage = [UIImage new];
+}
+
+- (UIImage *)fwBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwBackgroundImage));
+}
+
+- (void)setFwBackgroundImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.backgroundImage = image;
     self.shadowImage = [UIImage new];
 }
 
