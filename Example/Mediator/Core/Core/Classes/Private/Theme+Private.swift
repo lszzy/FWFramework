@@ -47,5 +47,8 @@ import FWFramework
         FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
         FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+        
+        // 吐司等插件设置
+        UIView.appearance().fwDefaultLoadingText = "加载中..."
     }
 }

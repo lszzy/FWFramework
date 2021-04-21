@@ -54,6 +54,9 @@ static const FWToastStyle FWToastStyleFailure = 2;
  */
 @interface UIView (FWToastPlugin)
 
+/// 显示加载吐司，需手工隐藏，默认文本
+- (void)fwShowLoading;
+
 /// 显示加载吐司，需手工隐藏，支持String和AttributedString
 - (void)fwShowLoadingWithText:(nullable id)text;
 
@@ -80,6 +83,9 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 #pragma mark - Static
 
+/// 显示加载吐司，需手工隐藏，默认文本
++ (void)fwShowLoading;
+
 /// 显示加载吐司，需手工隐藏，支持String和AttributedString
 + (void)fwShowLoadingWithText:(nullable id)text;
 
@@ -103,6 +109,11 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 /// 隐藏消息吐司，仅用于提前隐藏
 + (void)fwHideMessage;
+
+#pragma mark - Config
+
+/// 默认加载文本，支持String和AttributedString
+@property (nonatomic, strong, nullable) id fwDefaultLoadingText UI_APPEARANCE_SELECTOR;
 
 @end
 
