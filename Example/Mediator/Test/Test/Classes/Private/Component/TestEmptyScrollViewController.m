@@ -21,6 +21,7 @@
 
 - (void)renderView
 {
+    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDataSource = self;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
@@ -39,79 +40,16 @@
 
 #pragma mark - FWEmptyViewDataSource
 
-- (NSAttributedString *)fwTitleForEmptyView:(UIScrollView *)scrollView
+- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
 {
-    return [[NSAttributedString alloc] initWithString:@"暂无数据" attributes:@{
-        NSForegroundColorAttributeName: UIColor.grayColor
+    FWWeakifySelf();
+    contentView.backgroundColor = Theme.backgroundColor;
+    [contentView fwShowEmptyViewWithText:@"暂无数据" detail:nil image:nil action:@"重新加载" block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        
+        [self.tableData setArray:@[@1]];
+        [self.tableView reloadData];
     }];
-}
-
-- (NSAttributedString *)fwDescriptionForEmptyView:(UIScrollView *)scrollView
-{
-    return [[NSAttributedString alloc] initWithString:@"请稍候再试" attributes:@{
-        NSForegroundColorAttributeName: UIColor.grayColor
-    }];
-}
-
-- (UIImage *)fwImageForEmptyView:(UIScrollView *)scrollView
-{
-    return [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle];
-}
-
-- (CAAnimation *)fwImageAnimationForEmptyView:(UIScrollView *)scrollView
-{
-    CATransition *transition = [CATransition animation];
-    transition.type = kCATransitionPush;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.duration = 2.5;
-    return transition;
-}
-
-- (NSAttributedString *)fwButtonTitleForEmptyView:(UIScrollView *)scrollView forState:(UIControlState)state
-{
-    return [[NSAttributedString alloc] initWithString:@"再试一次" attributes:@{
-        NSForegroundColorAttributeName: Theme.textColor
-    }];
-}
-
-- (UIColor *)fwBackgroundColorForEmptyView:(UIScrollView *)scrollView
-{
-    return [Theme backgroundColor];
-}
-
-- (CGFloat)fwVerticalOffsetForEmptyView:(UIScrollView *)scrollView
-{
-    return -50;
-}
-
-- (CGFloat)fwSpaceHeightForEmptyView:(UIScrollView *)scrollView
-{
-    return 15;
-}
-
-- (BOOL)fwEmptyViewShouldFadeIn:(UIScrollView *)scrollView
-{
-    return YES;
-}
-
-- (BOOL)fwEmptyViewShouldAllowScroll:(UIScrollView *)scrollView
-{
-    return YES;
-}
-
-- (BOOL)fwEmptyViewShouldAnimateImageView:(UIScrollView *)scrollView
-{
-    return YES;
-}
-
-- (void)fwEmptyView:(UIScrollView *)scrollView didTapView:(UIView *)view
-{
-    NSLog(@"fwEmptyView:%@ didTapView:%@", scrollView, view);
-}
-
-- (void)fwEmptyView:(UIScrollView *)scrollView didTapButton:(UIButton *)button
-{
-    NSLog(@"fwEmptyView:%@ didTapButton:%@", scrollView, button);
 }
 
 @end
