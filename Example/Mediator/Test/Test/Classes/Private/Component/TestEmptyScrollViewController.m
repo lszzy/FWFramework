@@ -44,7 +44,7 @@
 - (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
 {
     FWWeakifySelf();
-    [contentView fwShowEmptyViewWithText:@"暂无数据" detail:nil image:nil action:@"重新加载" block:^(id  _Nonnull sender) {
+    [contentView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
         [self.tableData addObjectsFromArray:@[@1, @2, @3, @4, @5, @6, @7, @8]];
