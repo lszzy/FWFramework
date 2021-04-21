@@ -113,7 +113,7 @@ static const FWToastStyle FWToastStyleFailure = 2;
 #pragma mark - Config
 
 /// 默认加载文本，支持String和AttributedString
-@property (nonatomic, strong, nullable) id fwDefaultLoadingText UI_APPEARANCE_SELECTOR;
+@property (class, nonatomic, strong, nullable) id fwDefaultLoadingText;
 
 @end
 

@@ -49,9 +49,9 @@ import FWFramework
         FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
         
         // 吐司等插件设置
-        UIView.appearance().fwDefaultLoadingText = "加载中..."
-        UIView.appearance().fwDefaultEmptyText = "暂无数据"
-        UIView.appearance().fwDefaultEmptyImage = UIImage.fwImageWithAppIcon()
-        UIView.appearance().fwDefaultEmptyAction = "重新加载"
+        UIView.fwDefaultLoadingText = "加载中..."
+        UIView.fwDefaultEmptyText = "暂无数据"
+        UIView.fwDefaultEmptyImage = UIImage.fwImageWithAppIcon()
+        UIView.fwDefaultEmptyAction = "重新加载"
     }
 }

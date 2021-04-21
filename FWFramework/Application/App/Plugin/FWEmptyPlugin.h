@@ -60,13 +60,13 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Config
 
 /// 默认空界面文本
-@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyText UI_APPEARANCE_SELECTOR;
+@property (class, nonatomic, copy, nullable) NSString *fwDefaultEmptyText;
 /// 默认空界面详细文本
-@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyDetail UI_APPEARANCE_SELECTOR;
+@property (class, nonatomic, copy, nullable) NSString *fwDefaultEmptyDetail;
 /// 默认空界面图片
-@property (nonatomic, strong, nullable) UIImage *fwDefaultEmptyImage UI_APPEARANCE_SELECTOR;
+@property (class, nonatomic, strong, nullable) UIImage *fwDefaultEmptyImage;
 /// 默认空界面动作按钮
-@property (nonatomic, copy, nullable) NSString *fwDefaultEmptyAction UI_APPEARANCE_SELECTOR;
+@property (class, nonatomic, copy, nullable) NSString *fwDefaultEmptyAction;
 
 @end
 

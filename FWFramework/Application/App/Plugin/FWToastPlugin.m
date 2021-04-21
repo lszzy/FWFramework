@@ -16,6 +16,8 @@
 
 #pragma mark - UIView+FWToastPlugin
 
+static id fwStaticLoadingText = nil;
+
 @implementation UIView (FWToastPlugin)
 
 - (void)fwShowLoading
@@ -25,7 +27,7 @@
 
 - (void)fwShowLoadingWithText:(id)text
 {
-    id loadingText = text ?: self.fwDefaultLoadingText;
+    id loadingText = text ?: UIView.fwDefaultLoadingText;
     NSAttributedString *attributedText = [loadingText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:loadingText] : loadingText;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
@@ -166,14 +168,14 @@
 
 #pragma mark - Config
 
-- (id)fwDefaultLoadingText
++ (id)fwDefaultLoadingText
 {
-    return objc_getAssociatedObject(self, @selector(fwDefaultLoadingText));
+    return fwStaticLoadingText;
 }
 
-- (void)setFwDefaultLoadingText:(id)text
++ (void)setFwDefaultLoadingText:(id)text
 {
-    objc_setAssociatedObject(self, @selector(fwDefaultLoadingText), text, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    fwStaticLoadingText = text;
 }
 
 @end
