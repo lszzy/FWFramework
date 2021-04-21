@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWEmptyPlugin)
 
+/// 显示空界面，默认样式
+- (void)fwShowEmptyView;
+
 /// 显示空界面，指定文本
 - (void)fwShowEmptyViewWithText:(nullable NSString *)text;
 
@@ -164,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  @brief 滚动视图空界面分类
  
- @see https://github.com/dzenbot/DZNEmptyView
+ @see https://github.com/dzenbot/DZNEmptyDataSet
  */
 @interface UIScrollView (FWEmptyView)
 
