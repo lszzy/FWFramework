@@ -21,7 +21,7 @@
 
 - (void)renderView
 {
-    self.tableView.backgroundColor = Theme.backgroundColor;
+    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
 }
@@ -34,6 +34,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView];
+    cell.textLabel.textColor = Theme.textColor;
+    cell.textLabel.text = FWSafeString([self.tableData fwObjectAtIndex:indexPath.row]);
     return cell;
 }
 
@@ -41,15 +43,13 @@
 
 - (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
 {
-    contentView.backgroundColor = UIColor.redColor;
-    /*
     FWWeakifySelf();
     [contentView fwShowEmptyViewWithText:@"暂无数据" detail:nil image:nil action:@"重新加载" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
-        [self.tableData setArray:@[@1]];
+        [self.tableData addObjectsFromArray:@[@1, @2, @3, @4, @5, @6, @7, @8]];
         [self.tableView reloadData];
-    }];*/
+    }];
 }
 
 @end

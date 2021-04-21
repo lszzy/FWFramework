@@ -415,6 +415,19 @@
 
 #pragma mark - UIScrollView+FWEmptyView
 
+@interface FWEmptyContentView : UIView
+
+@end
+
+@implementation FWEmptyContentView
+
+- (void)didMoveToSuperview
+{
+    self.frame = self.superview.bounds;
+}
+
+@end
+
 @implementation UIScrollView (FWEmptyView)
 
 + (void)fwEnableEmptyDelegate
@@ -446,10 +459,7 @@
 
 - (void)setFwEmptyViewDelegate:(id<FWEmptyViewDelegate>)delegate
 {
-    if (!delegate) {
-        [self fwRemoveEmptyView];
-    }
-    
+    if (!delegate) [self fwRemoveEmptyView];
     objc_setAssociatedObject(self, @selector(fwEmptyViewDelegate), [[FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [UIScrollView fwEnableEmptyDelegate];
@@ -479,8 +489,9 @@
     if (shouldDisplay) {
         [self fwRemoveEmptyView];
         
-        UIView *contentView = [UIView new];
+        UIView *contentView = [FWEmptyContentView new];
         self.fwEmptyContentView = contentView;
+        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         contentView.userInteractionEnabled = YES;
         contentView.backgroundColor = [UIColor clearColor];
         contentView.clipsToBounds = YES;
@@ -489,7 +500,6 @@
         } else {
             [self addSubview:contentView];
         }
-        [contentView fwPinEdgesToSuperview];
         
         if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
             self.scrollEnabled = [self.fwEmptyViewDelegate fwEmptyViewShouldScroll:self];
