@@ -37,17 +37,19 @@
     return cell;
 }
 
-#pragma mark - FWEmptyViewDataSource
+#pragma mark - FWEmptyViewDelegate
 
 - (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
 {
+    contentView.backgroundColor = UIColor.redColor;
+    /*
     FWWeakifySelf();
     [contentView fwShowEmptyViewWithText:@"暂无数据" detail:nil image:nil action:@"重新加载" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
         [self.tableData setArray:@[@1]];
         [self.tableView reloadData];
-    }];
+    }];*/
 }
 
 @end

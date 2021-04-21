@@ -19,6 +19,11 @@
 
 @implementation UIView (FWEmptyPlugin)
 
+- (void)fwShowEmptyView
+{
+    [self fwShowEmptyViewWithText:nil];
+}
+
 - (void)fwShowEmptyViewWithText:(NSString *)text
 {
     [self fwShowEmptyViewWithText:text detail:nil];
@@ -110,7 +115,7 @@
 
 @interface FWEmptyView ()
 
-@property(nonatomic, strong) UIScrollView *scrollView;  // 保证内容超出屏幕时也不至于直接被clip（比如横屏时）
+@property(nonatomic, strong) UIScrollView *scrollView;
 
 @end
 
@@ -146,7 +151,7 @@
     [self.scrollView addSubview:self.contentView];
     
     _loadingView = (UIView<FWEmptyViewLoadingViewProtocol> *)[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    ((UIActivityIndicatorView *)self.loadingView).hidesWhenStopped = NO;    // 此控件是通过loadingView.hidden属性来控制显隐的，如果UIActivityIndicatorView的hidesWhenStopped属性设置为YES的话，则手动设置它的hidden属性就会失效，因此这里要置为NO
+    ((UIActivityIndicatorView *)self.loadingView).hidesWhenStopped = NO;
     [self.contentView addSubview:self.loadingView];
     
     _imageView = [[UIImageView alloc] init];
@@ -441,8 +446,8 @@
 
 - (void)setFwEmptyViewDelegate:(id<FWEmptyViewDelegate>)delegate
 {
-    if (!delegate || ![self fwEmptyCanDisplay]) {
-        [self fwEmptyViewInvalidate];
+    if (!delegate) {
+        [self fwRemoveEmptyView];
     }
     
     objc_setAssociatedObject(self, @selector(fwEmptyViewDelegate), [[FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -452,13 +457,12 @@
 
 - (BOOL)fwIsEmptyViewVisible
 {
-    UIView *view = objc_getAssociatedObject(self, @selector(fwEmptyContentView));
-    return view && view.superview ? !view.hidden : NO;
+    return self.fwEmptyContentView ? YES : NO;
 }
 
 - (void)fwReloadEmptyView
 {
-    if (![self fwEmptyCanDisplay]) return;
+    if (!self.fwEmptyViewDelegate) return;
     
     BOOL shouldDisplay = NO;
     if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewForceDisplay:)]) {
@@ -473,17 +477,19 @@
     }
     
     if (shouldDisplay) {
-        UIView *contentView = [self fwEmptyContentView];
-        contentView.hidden = NO;
-        if (!contentView.superview) {
-            if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
-                [self insertSubview:contentView atIndex:0];
-                [contentView fwPinEdgesToSuperview];
-            } else {
-                [self addSubview:contentView];
-                [contentView fwPinEdgesToSuperview];
-            }
+        [self fwRemoveEmptyView];
+        
+        UIView *contentView = [UIView new];
+        self.fwEmptyContentView = contentView;
+        contentView.userInteractionEnabled = YES;
+        contentView.backgroundColor = [UIColor clearColor];
+        contentView.clipsToBounds = YES;
+        if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
+            [self insertSubview:contentView atIndex:0];
+        } else {
+            [self addSubview:contentView];
         }
+        [contentView fwPinEdgesToSuperview];
         
         if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
             self.scrollEnabled = [self.fwEmptyViewDelegate fwEmptyViewShouldScroll:self];
@@ -494,37 +500,30 @@
         if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:scrollView:)]) {
             [self.fwEmptyViewDelegate fwShowEmptyView:contentView scrollView:self];
         } else {
-            [contentView fwShowEmptyViewWithText:nil];
+            [contentView fwShowEmptyView];
         }
     } else {
-        [self fwEmptyViewInvalidate];
+        [self fwRemoveEmptyView];
     }
 }
 
-- (UIView *)fwEmptyContentView
+- (void)fwRemoveEmptyView
 {
-    UIView *view = objc_getAssociatedObject(self, @selector(fwEmptyContentView));
-    if (!view) {
-        view = [UIView new];
-        view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        view.userInteractionEnabled = YES;
-        view.backgroundColor = [UIColor clearColor];
-        view.clipsToBounds = YES;
-        view.hidden = YES;
-        
-        objc_setAssociatedObject(self, @selector(fwEmptyContentView), view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIView *contentView = self.fwEmptyContentView;
+    if (!contentView) return;
+    
+    self.scrollEnabled = YES;
+    
+    if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwHideEmptyView:scrollView:)]) {
+        [self.fwEmptyViewDelegate fwHideEmptyView:contentView scrollView:self];
+    } else {
+        [contentView fwHideEmptyView];
     }
-    return view;
-}
-
-- (BOOL)fwEmptyCanDisplay
-{
-    if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate conformsToProtocol:@protocol(FWEmptyViewDelegate)]) {
-        if ([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]] || [self isKindOfClass:[UIScrollView class]]) {
-            return YES;
-        }
+    
+    if (contentView.superview) {
+        [contentView removeFromSuperview];
     }
-    return NO;
+    self.fwEmptyContentView = nil;
 }
 
 - (NSInteger)fwEmptyItemsCount
@@ -536,7 +535,7 @@
     
     if ([self isKindOfClass:[UITableView class]]) {
         UITableView *tableView = (UITableView *)self;
-        id <UITableViewDataSource> dataSource = tableView.dataSource;
+        id<UITableViewDataSource> dataSource = tableView.dataSource;
         
         NSInteger sections = 1;
         if (dataSource && [dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) {
@@ -550,7 +549,7 @@
         }
     } else if ([self isKindOfClass:[UICollectionView class]]) {
         UICollectionView *collectionView = (UICollectionView *)self;
-        id <UICollectionViewDataSource> dataSource = collectionView.dataSource;
+        id<UICollectionViewDataSource> dataSource = collectionView.dataSource;
         
         NSInteger sections = 1;
         if (dataSource && [dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)]) {
@@ -566,19 +565,14 @@
     return items;
 }
 
-- (void)fwEmptyViewInvalidate
+- (UIView *)fwEmptyContentView
 {
-    if (!self.fwIsEmptyViewVisible) return;
-    
-    self.scrollEnabled = YES;
-    
-    UIView *contentView = [self fwEmptyContentView];
-    if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwHideEmptyView:scrollView:)]) {
-        [self.fwEmptyViewDelegate fwHideEmptyView:contentView scrollView:self];
-    }
-    
-    if (contentView.superview) [contentView removeFromSuperview];
-    objc_setAssociatedObject(self, @selector(fwEmptyContentView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return objc_getAssociatedObject(self, @selector(fwEmptyContentView));
+}
+
+- (void)setFwEmptyContentView:(UIView *)contentView
+{
+    objc_setAssociatedObject(self, @selector(fwEmptyContentView), contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
