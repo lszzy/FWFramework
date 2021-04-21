@@ -475,20 +475,20 @@
     if (!self.fwEmptyViewDelegate) return;
     
     BOOL shouldDisplay = NO;
-    if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewForceDisplay:)]) {
+    if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewForceDisplay:)]) {
         shouldDisplay = [self.fwEmptyViewDelegate fwEmptyViewForceDisplay:self];
     }
     if (!shouldDisplay) {
-        if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldDisplay:)]) {
+        if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldDisplay:)]) {
             shouldDisplay = [self.fwEmptyViewDelegate fwEmptyViewShouldDisplay:self] && [self fwEmptyItemsCount] == 0;
         } else {
             shouldDisplay = [self fwEmptyItemsCount] == 0;
         }
     }
     
+    [self fwRemoveEmptyView];
+    
     if (shouldDisplay) {
-        [self fwRemoveEmptyView];
-        
         UIView *contentView = [FWEmptyContentView new];
         self.fwEmptyContentView = contentView;
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -501,19 +501,17 @@
             [self addSubview:contentView];
         }
         
-        if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
+        if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
             self.scrollEnabled = [self.fwEmptyViewDelegate fwEmptyViewShouldScroll:self];
         } else {
             self.scrollEnabled = NO;
         }
         
-        if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:scrollView:)]) {
+        if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:scrollView:)]) {
             [self.fwEmptyViewDelegate fwShowEmptyView:contentView scrollView:self];
         } else {
             [contentView fwShowEmptyView];
         }
-    } else {
-        [self fwRemoveEmptyView];
     }
 }
 
