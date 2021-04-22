@@ -197,7 +197,6 @@
 		2FFE1D2E2507BFBD000332A3 /* UITableView+FWBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C6D2507BFBC000332A3 /* UITableView+FWBackgroundView.m */; };
 		2FFE1D2F2507BFBD000332A3 /* FWAlertPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C6E2507BFBC000332A3 /* FWAlertPlugin.m */; };
 		2FFE1D302507BFBD000332A3 /* UIScrollView+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C6F2507BFBC000332A3 /* UIScrollView+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1D312507BFBD000332A3 /* UIScrollView+FWEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C702507BFBC000332A3 /* UIScrollView+FWEmptyView.m */; };
 		2FFE1D322507BFBD000332A3 /* UIViewController+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C712507BFBC000332A3 /* UIViewController+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D342507BFBD000332A3 /* UISearchBar+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C732507BFBC000332A3 /* UISearchBar+FWFramework.m */; };
 		2FFE1D352507BFBD000332A3 /* UITableView+FWTemplateLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C742507BFBC000332A3 /* UITableView+FWTemplateLayout.m */; };
@@ -235,7 +234,6 @@
 		2FFE1D5C2507BFBD000332A3 /* UITableView+FWTemplateLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C9B2507BFBC000332A3 /* UITableView+FWTemplateLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D5D2507BFBD000332A3 /* UISearchBar+FWFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C9C2507BFBC000332A3 /* UISearchBar+FWFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D5E2507BFBD000332A3 /* UIViewController+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1C9D2507BFBC000332A3 /* UIViewController+FWFramework.m */; };
-		2FFE1D602507BFBD000332A3 /* UIScrollView+FWEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1C9F2507BFBC000332A3 /* UIScrollView+FWEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D612507BFBD000332A3 /* FWAlertPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CA02507BFBC000332A3 /* FWAlertPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D622507BFBD000332A3 /* UIScrollView+FWFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CA12507BFBC000332A3 /* UIScrollView+FWFramework.m */; };
 		2FFE1D632507BFBD000332A3 /* UITableView+FWBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CA22507BFBC000332A3 /* UITableView+FWBackgroundView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -532,7 +530,6 @@
 		2FFE1C6D2507BFBC000332A3 /* UITableView+FWBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWBackgroundView.m"; sourceTree = "<group>"; };
 		2FFE1C6E2507BFBC000332A3 /* FWAlertPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAlertPlugin.m; sourceTree = "<group>"; };
 		2FFE1C6F2507BFBC000332A3 /* UIScrollView+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWFramework.h"; sourceTree = "<group>"; };
-		2FFE1C702507BFBC000332A3 /* UIScrollView+FWEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWEmptyView.m"; sourceTree = "<group>"; };
 		2FFE1C712507BFBC000332A3 /* UIViewController+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1C732507BFBC000332A3 /* UISearchBar+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UISearchBar+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1C742507BFBC000332A3 /* UITableView+FWTemplateLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FWTemplateLayout.m"; sourceTree = "<group>"; };
@@ -570,7 +567,6 @@
 		2FFE1C9B2507BFBC000332A3 /* UITableView+FWTemplateLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWTemplateLayout.h"; sourceTree = "<group>"; };
 		2FFE1C9C2507BFBC000332A3 /* UISearchBar+FWFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISearchBar+FWFramework.h"; sourceTree = "<group>"; };
 		2FFE1C9D2507BFBC000332A3 /* UIViewController+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+FWFramework.m"; sourceTree = "<group>"; };
-		2FFE1C9F2507BFBC000332A3 /* UIScrollView+FWEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+FWEmptyView.h"; sourceTree = "<group>"; };
 		2FFE1CA02507BFBC000332A3 /* FWAlertPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAlertPlugin.h; sourceTree = "<group>"; };
 		2FFE1CA12507BFBC000332A3 /* UIScrollView+FWFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+FWFramework.m"; sourceTree = "<group>"; };
 		2FFE1CA22507BFBC000332A3 /* UITableView+FWBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FWBackgroundView.h"; sourceTree = "<group>"; };
@@ -1104,8 +1100,6 @@
 				2FFE1C4F2507BFBC000332A3 /* UIPageControl+FWFramework.m */,
 				2F6313A6251DC83F0040F949 /* UIScrollView+FWContentView.h */,
 				2F6313A7251DC83F0040F949 /* UIScrollView+FWContentView.m */,
-				2FFE1C9F2507BFBC000332A3 /* UIScrollView+FWEmptyView.h */,
-				2FFE1C702507BFBC000332A3 /* UIScrollView+FWEmptyView.m */,
 				2FFE1C6F2507BFBC000332A3 /* UIScrollView+FWFramework.h */,
 				2FFE1CA12507BFBC000332A3 /* UIScrollView+FWFramework.m */,
 				2FFE1C9C2507BFBC000332A3 /* UISearchBar+FWFramework.h */,
@@ -1334,7 +1328,6 @@
 				2FFE1D6A2507BFBD000332A3 /* UITextView+FWPlaceholder.h in Headers */,
 				2FFE1D822507BFBD000332A3 /* FWPageControl.h in Headers */,
 				2FFE1D372507BFBD000332A3 /* FWToastPlugin.h in Headers */,
-				2FFE1D602507BFBD000332A3 /* UIScrollView+FWEmptyView.h in Headers */,
 				2FFE1D8C2507BFBD000332A3 /* FWPhotoBrowser.h in Headers */,
 				2FFE1D482507BFBD000332A3 /* UILabel+FWFramework.h in Headers */,
 				2FFE1BB72507BF95000332A3 /* FWCacheManager.h in Headers */,
@@ -1503,7 +1496,6 @@
 				2FFE1C082507BF95000332A3 /* FWTest.swift in Sources */,
 				2FFE1D172507BFBD000332A3 /* UINavigationController+FWWorkflow.m in Sources */,
 				2FFE1C162507BF95000332A3 /* FWTask.m in Sources */,
-				2FFE1D312507BFBD000332A3 /* UIScrollView+FWEmptyView.m in Sources */,
 				2FFE1D572507BFBD000332A3 /* UITextField+FWKeyboard.m in Sources */,
 				2FFE1C3F2507BFA5000332A3 /* FWViewController.m in Sources */,
 				2F25749A25399A5300880FEF /* FWRefreshPlugin.m in Sources */,
