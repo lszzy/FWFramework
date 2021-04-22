@@ -16,11 +16,35 @@
 
 #pragma mark - UIView+FWToastPlugin
 
+@implementation FWToastPluginConfig
+
++ (FWToastPluginConfig *)sharedInstance
+{
+    static FWToastPluginConfig *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWToastPluginConfig alloc] init];
+    });
+    return instance;
+}
+
+@end
+
 @implementation UIView (FWToastPlugin)
+
+- (void)fwShowLoading
+{
+    [self fwShowLoadingWithText:nil];
+}
 
 - (void)fwShowLoadingWithText:(id)text
 {
-    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
+    id loadingText = text;
+    if (!loadingText && FWToastPluginConfig.sharedInstance.defaultLoadingText) {
+        loadingText = FWToastPluginConfig.sharedInstance.defaultLoadingText();
+    }
+    
+    NSAttributedString *attributedText = [loadingText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:loadingText] : loadingText;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
         [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
@@ -49,7 +73,12 @@
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
-    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
+    id progressText = text;
+    if (!progressText && FWToastPluginConfig.sharedInstance.defaultProgressText) {
+        progressText = FWToastPluginConfig.sharedInstance.defaultProgressText();
+    }
+    
+    NSAttributedString *attributedText = [progressText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:progressText] : progressText;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
         [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
@@ -88,7 +117,12 @@
 
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
+    id messageText = text;
+    if (!messageText && FWToastPluginConfig.sharedInstance.defaultMessageText) {
+        messageText = FWToastPluginConfig.sharedInstance.defaultMessageText(style);
+    }
+    
+    NSAttributedString *attributedText = [messageText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:messageText] : messageText;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
         [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
@@ -112,6 +146,11 @@
 }
 
 #pragma mark - Static
+
++ (void)fwShowLoading
+{
+    [UIWindow.fwMainWindow fwShowLoading];
+}
 
 + (void)fwShowLoadingWithText:(id)text
 {

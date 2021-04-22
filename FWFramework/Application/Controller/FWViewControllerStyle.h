@@ -22,8 +22,9 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 /// 导航栏样式配置
 @interface FWNavigationBarAppearance : NSObject
 
-@property (nullable, nonatomic, strong) UIColor *backgroundColor;
 @property (nullable, nonatomic, strong) UIColor *foregroundColor;
+@property (nullable, nonatomic, strong) UIColor *backgroundColor;
+@property (nullable, nonatomic, strong) UIImage *backgroundImage;
 @property (nonatomic, assign) BOOL isHidden;
 @property (nonatomic, assign) BOOL isTransparent;
 @property (nullable, nonatomic, copy) void (^appearanceBlock)(UINavigationBar *navigationBar);
@@ -38,7 +39,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 /// 视图控制器生命周期状态枚举
 typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     /// 未触发ViewDidLoad
-    FWViewControllerVisibleStateDefault = 0,
+    FWViewControllerVisibleStateReady = 0,
     /// 已触发ViewDidLoad
     FWViewControllerVisibleStateDidLoad,
     /// 已触发ViewWillAppear
@@ -139,19 +140,22 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UINavigationBar (FWStyle)
 
-/// 设置文字和按钮颜色
-@property (nonatomic, strong, nullable) UIColor *fwTextColor UI_APPEARANCE_SELECTOR;
+/// 设置前景颜色，包含文字和按钮等
+@property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色(nil时透明)并隐藏底部线条
+/// 设置背景颜色(nil时透明)并隐藏底部线条，自动清空主题背景
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变
+/// 设置背景图片(nil时透明)并隐藏底部线条，自动清空主题背景
+@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
+
+/// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
 @property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
-/// 设置主题背景图片(nil时透明)并隐藏底部线条，自动跟随系统改变
+/// 设置主题背景图片(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
 @property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
-/// 设置透明背景并隐藏底部线条
+/// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
 
 @end
@@ -163,16 +167,19 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UITabBar (FWStyle)
 
-/// 设置文字和按钮颜色
-@property (nonatomic, strong, nullable) UIColor *fwTextColor;
+/// 设置前景颜色，包含文字和按钮等
+@property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色并隐藏顶部线条
+/// 设置背景颜色并隐藏顶部线条，自动清空主题背景
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置主题背景色并隐藏顶部线条，自动跟随系统改变
+/// 设置背景图片并隐藏顶部线条，自动清空主题背景
+@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+
+/// 设置主题背景色并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
 @property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
 
-/// 设置主题背景图片并隐藏顶部线条，自动跟随系统改变
+/// 设置主题背景图片并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
 @property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 @end

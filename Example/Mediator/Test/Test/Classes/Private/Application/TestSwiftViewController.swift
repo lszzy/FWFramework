@@ -52,8 +52,33 @@ import FWFramework
 }
 
 @objcMembers class SwiftTestViewController: UIViewController, FWViewController {
-    func renderView() {
-        view.backgroundColor = UIColor.fwRandom
+    func renderState(_ state: FWViewControllerState, with object: Any?) {
+        switch state {
+        case .success:
+            view.fwShowEmpty(withText: object as? String)
+        case .failure:
+            view.fwShowEmpty(withText: (object as? NSError)?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
+                self?.view.fwHideEmpty()
+                
+                self?.renderState(.loading, with: nil)
+            }
+        case .loading:
+            view.fwShowLoading(withText: "开始加载")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.view.fwHideLoading()
+                
+                if [0, 1].randomElement() == 1 {
+                    self?.renderState(.success, with: "加载成功")
+                } else {
+                    self?.renderState(.failure, with: NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "加载失败"]))
+                }
+            }
+        case .ready:
+            view.backgroundColor = Theme.backgroundColor
+            renderState(.loading, with: nil)
+        default:
+            break;
+        }
     }
 }
 

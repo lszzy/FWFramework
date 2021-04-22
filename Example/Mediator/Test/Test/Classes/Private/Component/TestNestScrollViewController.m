@@ -418,13 +418,13 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
     if (progress >= 1) {
         self.navigationController.navigationBar.fwBackgroundColor = [Theme barColor];
-        self.navigationController.navigationBar.fwTextColor = [Theme textColor];
+        self.navigationController.navigationBar.fwForegroundColor = [Theme textColor];
     } else if (progress >= 0 && progress < 1) {
         self.navigationController.navigationBar.fwBackgroundColor = [[Theme barColor] colorWithAlphaComponent:progress];
         if (progress <= 0.5) {
-            self.navigationController.navigationBar.fwTextColor = [[Theme textColor] colorWithAlphaComponent:1 - progress];
+            self.navigationController.navigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:1 - progress];
         } else {
-            self.navigationController.navigationBar.fwTextColor = [[Theme textColor] colorWithAlphaComponent:progress];
+            self.navigationController.navigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:progress];
         }
     }
 }

@@ -37,21 +37,42 @@ import FWFramework
         // 导航栏样式设置
         let defaultAppearance = FWNavigationBarAppearance()
         defaultAppearance.foregroundColor = Theme.textColor
-        defaultAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = Theme.barColor
-        }
+        defaultAppearance.backgroundColor = Theme.barColor
         let whiteAppearance = FWNavigationBarAppearance()
         whiteAppearance.foregroundColor = Theme.textColor.fwThemeColor(.light)
-        whiteAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = .white
-        }
+        whiteAppearance.backgroundColor = .white
         let transparentAppearance = FWNavigationBarAppearance()
         transparentAppearance.foregroundColor = Theme.textColor
-        transparentAppearance.appearanceBlock = { (navigationBar) in
-            navigationBar.fwThemeBackgroundColor = .clear
-        }
+        transparentAppearance.isTransparent = true
         FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
         FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+        
+        // 吐司等插件设置
+        FWToastPluginConfig.sharedInstance.defaultLoadingText = {
+            return "加载中..."
+        }
+        FWToastPluginConfig.sharedInstance.defaultProgressText = {
+            return "上传中..."
+        }
+        FWToastPluginConfig.sharedInstance.defaultMessageText = { (style) in
+            switch style {
+            case .success:
+                return "操作成功"
+            case .failure:
+                return "操作失败"
+            default:
+                return nil
+            }
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultText = {
+            return "暂无数据"
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultImage = {
+            return UIImage.fwImageWithAppIcon()
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultAction = {
+            return "重新加载"
+        }
     }
 }
