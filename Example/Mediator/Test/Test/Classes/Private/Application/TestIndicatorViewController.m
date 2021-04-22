@@ -83,7 +83,7 @@
 
 - (void)onIndicator
 {
-    [self.view fwShowLoadingWithText:nil];
+    [self.view fwShowLoadingWithText:@""];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideLoading];
     });
@@ -91,7 +91,7 @@
 
 - (void)onIndicator2
 {
-    [self.view fwShowLoadingWithText:@"正在加载..."];
+    [self.view fwShowLoading];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideLoading];
     });
@@ -99,7 +99,7 @@
 
 - (void)onIndicator3
 {
-    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil indicatorColor:[UIColor fwThemeLight:[UIColor grayColor] dark:[UIColor whiteColor]] backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:NO contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil indicatorColor:[UIColor fwThemeLight:[UIColor grayColor] dark:[UIColor whiteColor]] backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.view fwHideIndicatorLoading];
     });
@@ -107,9 +107,9 @@
 
 - (void)onIndicator4
 {
-    [self.view fwShowLoadingWithText:@"正在加载..."];
+    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] indicatorColor:[UIColor fwThemeLight:[UIColor grayColor] dark:[UIColor whiteColor]] backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self.view fwHideIndicatorLoading];
     });
 }
 

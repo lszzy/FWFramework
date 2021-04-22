@@ -149,12 +149,16 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle))provider
 {
+    UIColor *color = nil;
     if (@available(iOS 13, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+        color = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
             return provider([FWThemeManager.sharedInstance style:traitCollection]);
         }];
+    } else {
+        color = provider(FWThemeManager.sharedInstance.style);
     }
-    return provider(FWThemeManager.sharedInstance.style);
+    objc_setAssociatedObject(color, @selector(fwIsThemeColor), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return color;
 }
 
 + (UIColor *)fwThemeNamed:(NSString *)name
@@ -204,6 +208,11 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
         return [self resolvedColorWithTraitCollection:traitCollection];
     }
     return self;
+}
+
+- (BOOL)fwIsThemeColor
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsThemeColor)) boolValue];
 }
 
 @end
@@ -276,6 +285,11 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
         return [self.fwThemeObject object:style];
     }
     return self;
+}
+
+- (BOOL)fwIsThemeImage
+{
+    return self.fwThemeObject ? YES : NO;
 }
 
 - (FWThemeObject<UIImage *> *)fwThemeObject

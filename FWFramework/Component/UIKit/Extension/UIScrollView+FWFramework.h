@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "UIScrollView+FWContentView.h"
-#import "UIScrollView+FWEmptyView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

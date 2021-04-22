@@ -29,12 +29,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// 空界面插件配置类
+@interface FWEmptyPluginConfig : NSObject
+
+/// 配置单例
+@property (class, nonatomic, readonly) FWEmptyPluginConfig *sharedInstance;
+
+/// 默认空界面文本句柄
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);
+/// 默认空界面详细文本句柄
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultDetail)(void);
+/// 默认空界面图片句柄
+@property (nonatomic, copy, nullable) UIImage * _Nullable (^defaultImage)(void);
+/// 默认空界面动作按钮句柄
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultAction)(void);
+
+@end
+
 #pragma mark - UIView+FWEmptyPlugin
 
 /*!
  @brief UIView+FWEmptyPlugin
  */
 @interface UIView (FWEmptyPlugin)
+
+/// 显示空界面
+- (void)fwShowEmptyView;
 
 /// 显示空界面，指定文本
 - (void)fwShowEmptyViewWithText:(nullable NSString *)text;
@@ -58,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWEmptyView
 
-@protocol FWEmptyViewLoadingViewProtocol <NSObject>
+@protocol FWEmptyLoadingViewProtocol <NSObject>
 
 @optional
 
@@ -75,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWEmptyView : UIView
 
 // 布局顺序从上到下依次为：imageView, loadingView, textLabel, detailTextLabel, actionButton
-@property(nonatomic, strong) UIView<FWEmptyViewLoadingViewProtocol> *loadingView;   // 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
+@property(nonatomic, strong) UIView<FWEmptyLoadingViewProtocol> *loadingView;   // 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
 @property(nonatomic, strong, readonly) UIImageView *imageView;
 @property(nonatomic, strong, readonly) UILabel *textLabel;
 @property(nonatomic, strong, readonly) UILabel *detailTextLabel;
@@ -135,6 +155,47 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 返回一个恰好容纳所有子 view 的大小
 - (CGSize)sizeThatContentViewFits;
+
+@end
+
+#pragma mark - UIScrollView+FWEmptyView
+
+/// 空界面代理协议
+@protocol FWEmptyViewDelegate <NSObject>
+@optional
+
+/// 显示空界面，contentView为空界面容器
+- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+
+/// 隐藏空界面，contentView为空界面容器
+- (void)fwHideEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+
+/// 显示空界面时是否允许滚动，默认NO
+- (BOOL)fwEmptyViewShouldScroll:(UIScrollView *)scrollView;
+
+/// 无数据时是否显示空界面，默认YES
+- (BOOL)fwEmptyViewShouldDisplay:(UIScrollView *)scrollView;
+
+/// 有数据时是否强制显示空界面，默认NO
+- (BOOL)fwEmptyViewForceDisplay:(UIScrollView *)scrollView;
+
+@end
+
+/**
+ @brief 滚动视图空界面分类
+ 
+ @see https://github.com/dzenbot/DZNEmptyDataSet
+ */
+@interface UIScrollView (FWEmptyView)
+
+/// 空界面代理，默认nil
+@property (nonatomic, weak, nullable) IBOutlet id<FWEmptyViewDelegate> fwEmptyViewDelegate;
+
+/// 是否正在显示空界面
+@property (nonatomic, assign, readonly) BOOL fwIsEmptyViewVisible;
+
+/// 刷新空界面
+- (void)fwReloadEmptyView;
 
 @end
 
