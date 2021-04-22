@@ -1,13 +1,12 @@
 //
-//  FWAlertController.h
+//  FWAlertControllerImpl.h
 //  FWFramework
 //
 //  Created by wuyong on 2020/4/25.
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "FWAlertPlugin.h"
+#import "FWAlertPluginImpl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
