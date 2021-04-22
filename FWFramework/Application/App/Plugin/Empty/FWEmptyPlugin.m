@@ -16,7 +16,7 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-#pragma mark - UIView+FWEmptyPlugin
+#pragma mark - FWEmptyPlugin
 
 @implementation FWEmptyPluginConfig
 
@@ -32,7 +32,9 @@
 
 @end
 
-@implementation UIView (FWEmptyPlugin)
+#pragma mark - FWEmptyPluginView
+
+@implementation UIView (FWEmptyPluginView)
 
 - (void)fwShowEmptyView
 {
@@ -119,7 +121,46 @@
 
 @end
 
-#pragma mark - UIScrollView+FWEmptyView
+@implementation UIViewController (FWEmptyPluginView)
+
+- (void)fwShowEmptyView
+{
+    [self.view fwShowEmptyView];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text
+{
+    [self.view fwShowEmptyViewWithText:text];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail
+{
+    [self.view fwShowEmptyViewWithText:text detail:detail];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
+{
+    [self.view fwShowEmptyViewWithText:text detail:detail image:image];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
+{
+    [self.view fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
+}
+
+- (void)fwHideEmptyView
+{
+    [self.view fwHideEmptyView];
+}
+
+- (BOOL)fwExistsEmptyView
+{
+    return [self.view fwExistsEmptyView];
+}
+
+@end
+
+#pragma mark - UIScrollView+FWEmptyPlugin
 
 @interface FWEmptyContentView : UIView
 
@@ -134,7 +175,7 @@
 
 @end
 
-@implementation UIScrollView (FWEmptyView)
+@implementation UIScrollView (FWEmptyPlugin)
 
 + (void)fwEnableEmptyDelegate
 {

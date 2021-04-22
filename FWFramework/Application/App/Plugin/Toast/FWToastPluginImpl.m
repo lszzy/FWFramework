@@ -12,9 +12,9 @@
 #import "FWBlock.h"
 #import <objc/runtime.h>
 
-#pragma mark - UIView+FWIndicator
+#pragma mark - UIView+FWToastPluginImpl
 
-@implementation UIView (FWIndicator)
+@implementation UIView (FWToastPluginImpl)
 
 - (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
                             attributedTitle:(NSAttributedString *)attributedTitle

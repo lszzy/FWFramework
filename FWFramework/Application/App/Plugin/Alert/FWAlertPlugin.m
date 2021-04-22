@@ -9,11 +9,11 @@
 #import "FWAlertPlugin.h"
 #import "FWAlertPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWRouter.h"
+#import "FWToolkit.h"
 
-#pragma mark - UIViewController+FWAlert
+#pragma mark - FWAlertPluginController
 
-@implementation UIViewController (FWAlert)
+@implementation UIViewController (FWAlertPluginController)
 
 - (void)fwShowAlertWithTitle:(id)title
                      message:(id)message
@@ -264,21 +264,23 @@
     [alertController fwAlertPriorityPresentIn:self];
 }
 
-#pragma mark - Static
+@end
 
-+ (void)fwShowAlertWithTitle:(id)title
+@implementation UIView (FWAlertPluginController)
+
+- (void)fwShowAlertWithTitle:(id)title
                      message:(id)message
                       cancel:(id)cancel
                  cancelBlock:(void (^)(void))cancelBlock
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowAlertWithTitle:title
                        message:message
                         cancel:cancel
                    cancelBlock:cancelBlock];
 }
 
-+ (void)fwShowAlertWithTitle:(id)title
+- (void)fwShowAlertWithTitle:(id)title
                      message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
@@ -286,7 +288,7 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowAlertWithTitle:title
                        message:message
                         cancel:cancel
@@ -296,13 +298,13 @@
                       priority:priority];
 }
 
-+ (void)fwShowConfirmWithTitle:(id)title
+- (void)fwShowConfirmWithTitle:(id)title
                        message:(id)message
                         cancel:(id)cancel
                        confirm:(id)confirm
                   confirmBlock:(void (^)(void))confirmBlock
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowConfirmWithTitle:title
                          message:message
                           cancel:cancel
@@ -310,7 +312,7 @@
                     confirmBlock:confirmBlock];
 }
 
-+ (void)fwShowConfirmWithTitle:(id)title
+- (void)fwShowConfirmWithTitle:(id)title
                        message:(id)message
                         cancel:(id)cancel
                        confirm:(id)confirm
@@ -318,7 +320,7 @@
                    cancelBlock:(void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowConfirmWithTitle:title
                          message:message
                           cancel:cancel
@@ -328,13 +330,13 @@
                         priority:priority];
 }
 
-+ (void)fwShowPromptWithTitle:(id)title
+- (void)fwShowPromptWithTitle:(id)title
                       message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
                  confirmBlock:(void (^)(NSString *))confirmBlock
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowPromptWithTitle:title
                         message:message
                          cancel:cancel
@@ -342,7 +344,7 @@
                    confirmBlock:confirmBlock];
 }
 
-+ (void)fwShowPromptWithTitle:(id)title
+- (void)fwShowPromptWithTitle:(id)title
                       message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
@@ -351,7 +353,7 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowPromptWithTitle:title
                         message:message
                          cancel:cancel
@@ -362,7 +364,7 @@
                        priority:priority];
 }
 
-+ (void)fwShowPromptWithTitle:(id)title
+- (void)fwShowPromptWithTitle:(id)title
                       message:(id)message
                        cancel:(id)cancel
                       confirm:(id)confirm
@@ -372,7 +374,7 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowPromptWithTitle:title
                         message:message
                          cancel:cancel
@@ -384,13 +386,13 @@
                        priority:priority];
 }
 
-+ (void)fwShowSheetWithTitle:(id)title
+- (void)fwShowSheetWithTitle:(id)title
                      message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
                  actionBlock:(void (^)(NSInteger))actionBlock
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowSheetWithTitle:title
                        message:message
                         cancel:cancel
@@ -398,7 +400,7 @@
                    actionBlock:actionBlock];
 }
 
-+ (void)fwShowSheetWithTitle:(id)title
+- (void)fwShowSheetWithTitle:(id)title
                      message:(id)message
                       cancel:(id)cancel
                      actions:(NSArray *)actions
@@ -406,7 +408,7 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowSheetWithTitle:title
                        message:message
                         cancel:cancel
@@ -416,7 +418,7 @@
                       priority:priority];
 }
 
-+ (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
+- (void)fwShowAlertWithStyle:(UIAlertControllerStyle)style
                        title:(id)title
                      message:(id)message
                       cancel:(id)cancel
@@ -428,7 +430,7 @@
                  customBlock:(nullable void (^)(id))customBlock
                     priority:(FWAlertPriority)priority
 {
-    UIViewController *ctrl = UIWindow.fwMainWindow.fwTopPresentedController;
+    UIViewController *ctrl = self.fwViewController;
     [ctrl fwShowAlertWithStyle:style
                          title:title
                        message:message
