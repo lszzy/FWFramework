@@ -47,6 +47,21 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 @end
 
+/// 吐司插件配置类
+@interface FWToastPluginConfig : NSObject
+
+/// 配置单例
+@property (class, nonatomic, readonly) FWToastPluginConfig *sharedInstance;
+
+/// 默认加载吐司文本句柄，支持String和AttributedString
+@property (nonatomic, copy, nullable) id _Nullable (^defaultLoadingText)(void);
+/// 默认进度条吐司文本句柄，支持String和AttributedString
+@property (nonatomic, copy, nullable) id _Nullable (^defaultProgressText)(void);
+/// 默认消息吐司文本句柄，支持String和AttributedString
+@property (nonatomic, copy, nullable) id _Nullable (^defaultMessageText)(FWToastStyle style);
+
+@end
+
 #pragma mark - UIView+FWToastPlugin
 
 /*!
@@ -109,11 +124,6 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 /// 隐藏消息吐司，仅用于提前隐藏
 + (void)fwHideMessage;
-
-#pragma mark - Config
-
-/// 默认加载文本，支持String和AttributedString
-@property (class, nonatomic, strong, nullable) id fwDefaultLoadingText;
 
 @end
 

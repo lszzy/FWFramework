@@ -49,9 +49,30 @@ import FWFramework
         FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
         
         // 吐司等插件设置
-        UIView.fwDefaultLoadingText = "加载中..."
-        UIView.fwDefaultEmptyText = "暂无数据"
-        UIView.fwDefaultEmptyImage = UIImage.fwImageWithAppIcon()
-        UIView.fwDefaultEmptyAction = "重新加载"
+        FWToastPluginConfig.sharedInstance.defaultLoadingText = {
+            return "加载中..."
+        }
+        FWToastPluginConfig.sharedInstance.defaultProgressText = {
+            return "上传中..."
+        }
+        FWToastPluginConfig.sharedInstance.defaultMessageText = { (style) in
+            switch style {
+            case .success:
+                return "操作成功"
+            case .failure:
+                return "操作失败"
+            default:
+                return nil
+            }
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultText = {
+            return "暂无数据"
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultImage = {
+            return UIImage.fwImageWithAppIcon()
+        }
+        FWEmptyPluginConfig.sharedInstance.defaultAction = {
+            return "重新加载"
+        }
     }
 }
