@@ -17,10 +17,19 @@
 
 #pragma mark - UIView+FWEmptyPlugin
 
-static NSString *fwStaticEmptyText = nil;
-static NSString *fwStaticEmptyDetail = nil;
-static UIImage *fwStaticEmptyImage = nil;
-static NSString *fwStaticEmptyAction = nil;
+@implementation FWEmptyPluginConfig
+
++ (FWEmptyPluginConfig *)sharedInstance
+{
+    static FWEmptyPluginConfig *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWEmptyPluginConfig alloc] init];
+    });
+    return instance;
+}
+
+@end
 
 @implementation UIView (FWEmptyPlugin)
 
@@ -46,10 +55,22 @@ static NSString *fwStaticEmptyAction = nil;
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
-    NSString *emptyText = text ?: UIView.fwDefaultEmptyText;
-    NSString *emptyDetail = detail ?: UIView.fwDefaultEmptyDetail;
-    UIImage *emptyImage = image ?: UIView.fwDefaultEmptyImage;
-    NSString *emptyAction = action ?: (block ? UIView.fwDefaultEmptyAction : nil);
+    NSString *emptyText = text;
+    if (!emptyText && FWEmptyPluginConfig.sharedInstance.defaultText) {
+        emptyText = FWEmptyPluginConfig.sharedInstance.defaultText();
+    }
+    NSString *emptyDetail = detail;
+    if (!emptyDetail && FWEmptyPluginConfig.sharedInstance.defaultDetail) {
+        emptyDetail = FWEmptyPluginConfig.sharedInstance.defaultDetail();
+    }
+    UIImage *emptyImage = image;
+    if (!emptyImage && FWEmptyPluginConfig.sharedInstance.defaultImage) {
+        emptyImage = FWEmptyPluginConfig.sharedInstance.defaultImage();
+    }
+    NSString *emptyAction = action;
+    if (!emptyAction && block && FWEmptyPluginConfig.sharedInstance.defaultAction) {
+        emptyAction = FWEmptyPluginConfig.sharedInstance.defaultAction();
+    }
     
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (plugin && [plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
@@ -93,48 +114,6 @@ static NSString *fwStaticEmptyAction = nil;
     
     UIView *emptyView = [self viewWithTag:2021];
     return emptyView != nil ? YES : NO;
-}
-
-#pragma mark - Config
-
-+ (NSString *)fwDefaultEmptyText
-{
-    return fwStaticEmptyText;
-}
-
-+ (void)setFwDefaultEmptyText:(NSString *)text
-{
-    fwStaticEmptyText = text;
-}
-
-+ (NSString *)fwDefaultEmptyDetail
-{
-    return fwStaticEmptyDetail;
-}
-
-+ (void)setFwDefaultEmptyDetail:(NSString *)detail
-{
-    fwStaticEmptyDetail = detail;
-}
-
-+ (UIImage *)fwDefaultEmptyImage
-{
-    return fwStaticEmptyImage;
-}
-
-+ (void)setFwDefaultEmptyImage:(UIImage *)image
-{
-    fwStaticEmptyImage = image;
-}
-
-+ (NSString *)fwDefaultEmptyAction
-{
-    return fwStaticEmptyAction;
-}
-
-+ (void)setFwDefaultEmptyAction:(NSString *)action
-{
-    fwStaticEmptyAction = action;
 }
 
 @end
@@ -202,7 +181,7 @@ static NSString *fwStaticEmptyAction = nil;
     _contentView = [[UIView alloc] init];
     [self.scrollView addSubview:self.contentView];
     
-    _loadingView = (UIView<FWEmptyViewLoadingViewProtocol> *)[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _loadingView = (UIView<FWEmptyLoadingViewProtocol> *)[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     ((UIActivityIndicatorView *)self.loadingView).hidesWhenStopped = NO;
     [self.contentView addSubview:self.loadingView];
     
@@ -332,7 +311,7 @@ static NSString *fwStaticEmptyAction = nil;
     [self setNeedsLayout];
 }
 
-- (void)setLoadingView:(UIView<FWEmptyViewLoadingViewProtocol> *)loadingView {
+- (void)setLoadingView:(UIView<FWEmptyLoadingViewProtocol> *)loadingView {
     if (self.loadingView != loadingView) {
         [self.loadingView removeFromSuperview];
         _loadingView = loadingView;
