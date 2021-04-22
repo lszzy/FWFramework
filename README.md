@@ -48,6 +48,13 @@ As this framework is constantly upgrading, optimizing and expanding new function
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
+Version 1.4.0:
+
+	* Refactor the implementation of FWEmptyPlugin to support scroll view and default text
+	* Refactored FWToastPlugin to support default text
+	* FWViewController added renderState state rendering method
+	* FWNavigationBarAppearance supports theme colors and theme pictures
+
 Version 1.3.6:
 
 	* Add a method to get the life cycle status of ViewController
