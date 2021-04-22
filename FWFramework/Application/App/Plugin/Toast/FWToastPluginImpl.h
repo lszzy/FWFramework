@@ -11,12 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIView+FWIndicator
+#pragma mark - UIView+FWToastPluginImpl
 
 /*!
- @brief UIView+FWIndicator
+ @brief UIView+FWToastPluginImpl
  */
-@interface UIView (FWIndicator)
+@interface UIView (FWToastPluginImpl)
 
 /**
  *  显示加载指示器，不可点击（简单版）

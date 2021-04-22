@@ -10,9 +10,8 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWRouter.h"
 
-#pragma mark - UIView+FWToastPlugin
+#pragma mark - FWToastPlugin
 
 @implementation FWToastPluginConfig
 
@@ -28,7 +27,9 @@
 
 @end
 
-@implementation UIView (FWToastPlugin)
+#pragma mark - FWToastPluginView
+
+@implementation UIView (FWToastPluginView)
 
 - (void)fwShowLoading
 {
@@ -143,51 +144,53 @@
     [self fwHideIndicatorMessage];
 }
 
-#pragma mark - Static
+@end
 
-+ (void)fwShowLoading
+@implementation UIViewController (FWToastPluginView)
+
+- (void)fwShowLoading
 {
-    [UIWindow.fwMainWindow fwShowLoading];
+    [self.view fwShowLoading];
 }
 
-+ (void)fwShowLoadingWithText:(id)text
+- (void)fwShowLoadingWithText:(id)text
 {
-    [UIWindow.fwMainWindow fwShowLoadingWithText:text];
+    [self.view fwShowLoadingWithText:text];
 }
 
-+ (void)fwHideLoading
+- (void)fwHideLoading
 {
-    [UIWindow.fwMainWindow fwHideLoading];
+    [self.view fwHideLoading];
 }
 
-+ (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
+- (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
-    [UIWindow.fwMainWindow fwShowProgressWithText:text progress:progress];
+    [self.view fwShowProgressWithText:text progress:progress];
 }
 
-+ (void)fwHideProgress
+- (void)fwHideProgress
 {
-    [UIWindow.fwMainWindow fwHideProgress];
+    [self.view fwHideProgress];
 }
 
-+ (void)fwShowMessageWithText:(id)text
+- (void)fwShowMessageWithText:(id)text
 {
-    [UIWindow.fwMainWindow fwShowMessageWithText:text];
+    [self.view fwShowMessageWithText:text];
 }
 
-+ (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
+- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
 {
-    [UIWindow.fwMainWindow fwShowMessageWithText:text style:style];
+    [self.view fwShowMessageWithText:text style:style];
 }
 
-+ (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
+- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    [UIWindow.fwMainWindow fwShowMessageWithText:text style:style completion:completion];
+    [self.view fwShowMessageWithText:text style:style completion:completion];
 }
 
-+ (void)fwHideMessage
+- (void)fwHideMessage
 {
-    [UIWindow.fwMainWindow fwHideMessage];
+    [self.view fwHideMessage];
 }
 
 @end

@@ -46,12 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIView+FWEmptyPlugin
+#pragma mark - FWEmptyPluginView
 
-/*!
- @brief UIView+FWEmptyPlugin
- */
-@interface UIView (FWEmptyPlugin)
+/// 空界面插件视图协议，使用空界面插件
+@protocol FWEmptyPluginView <NSObject>
+@required
 
 /// 显示空界面
 - (void)fwShowEmptyView;
@@ -76,7 +75,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIScrollView+FWEmptyView
+/// UIView使用空界面插件
+@interface UIView (FWEmptyPluginView) <FWEmptyPluginView>
+
+@end
+
+/// UIViewController使用空界面插件，内部使用UIViewController.view
+@interface UIViewController (FWEmptyPluginView) <FWEmptyPluginView>
+
+@end
+
+#pragma mark - UIScrollView+FWEmptyPlugin
 
 /// 空界面代理协议
 @protocol FWEmptyViewDelegate <NSObject>
@@ -104,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://github.com/dzenbot/DZNEmptyDataSet
  */
-@interface UIScrollView (FWEmptyView)
+@interface UIScrollView (FWEmptyPlugin)
 
 /// 空界面代理，默认nil
 @property (nonatomic, weak, nullable) IBOutlet id<FWEmptyViewDelegate> fwEmptyViewDelegate;
