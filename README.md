@@ -48,6 +48,12 @@ As this framework is constantly upgrading, optimizing and expanding new function
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
+Version 1.4.1:
+
+	* UIScrollView supports fwOverlayView view
+	* UIScrollView supports displaying an empty interface and modifying the FWEmptyViewDelegate method
+	* Added new empty interface gradient animation configuration, which is enabled by default
+
 Version 1.4.0:
 
 	* Refactor the implementation of FWEmptyPlugin to support scroll view and default text
