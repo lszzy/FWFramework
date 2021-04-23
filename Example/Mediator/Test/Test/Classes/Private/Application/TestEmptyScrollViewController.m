@@ -41,10 +41,10 @@
 
 #pragma mark - FWEmptyViewDelegate
 
-- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
+- (void)fwShowEmptyView:(UIScrollView *)scrollView
 {
     FWWeakifySelf();
-    [contentView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
+    [scrollView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
         [self.tableData addObjectsFromArray:@[@1, @2, @3, @4, @5, @6, @7, @8]];

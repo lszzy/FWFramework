@@ -527,16 +527,17 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 - (void)didMoveToSuperview
 {
-    self.frame = self.superview.bounds;
+    [super didMoveToSuperview];
     
     if (self.fadeAnimated) {
         self.fadeAnimated = NO;
         self.alpha = 0;
+        self.frame = self.superview.bounds;
         [UIView animateWithDuration:0.25 animations:^{
             self.alpha = 1.0;
         } completion:NULL];
     } else {
-        self.alpha = 1.0;
+        self.frame = self.superview.bounds;
     }
 }
 
@@ -553,17 +554,16 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
         overlayView.userInteractionEnabled = YES;
         overlayView.backgroundColor = UIColor.clearColor;
         overlayView.clipsToBounds = YES;
-        overlayView.alpha = 0;
         
         objc_setAssociatedObject(self, @selector(fwOverlayView), overlayView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return overlayView;
 }
 
-- (BOOL)fwIsOverlayViewVisible
+- (BOOL)fwHasOverlayView
 {
     UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
-    return overlayView && overlayView.superview && !overlayView.isHidden;
+    return overlayView && overlayView.superview;
 }
 
 - (void)fwShowOverlayView
@@ -573,14 +573,14 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 - (void)fwShowOverlayViewAnimated:(BOOL)animated
 {
-    [self fwHideOverlayView];
-    
     FWScrollOverlayView *overlayView = (FWScrollOverlayView *)self.fwOverlayView;
-    overlayView.fadeAnimated = animated;
-    if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
-        [self insertSubview:overlayView atIndex:0];
-    } else {
-        [self addSubview:overlayView];
+    if (!overlayView.superview) {
+        overlayView.fadeAnimated = animated;
+        if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
+            [self insertSubview:overlayView atIndex:0];
+        } else {
+            [self addSubview:overlayView];
+        }
     }
 }
 
