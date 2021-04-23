@@ -514,3 +514,82 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 }
 
 @end
+
+#pragma mark - UIScrollView+FWToolkit
+
+@interface FWScrollOverlayView : UIView
+
+@property (nonatomic, assign) BOOL fadeAnimated;
+
+@end
+
+@implementation FWScrollOverlayView
+
+- (void)didMoveToSuperview
+{
+    self.frame = self.superview.bounds;
+    
+    if (self.fadeAnimated) {
+        self.fadeAnimated = NO;
+        self.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 1.0;
+        } completion:NULL];
+    } else {
+        self.alpha = 1.0;
+    }
+}
+
+@end
+
+@implementation UIScrollView (FWEmptyPlugin)
+
+- (UIView *)fwOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (!overlayView) {
+        overlayView = [[FWScrollOverlayView alloc] init];
+        overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        overlayView.userInteractionEnabled = YES;
+        overlayView.backgroundColor = UIColor.clearColor;
+        overlayView.clipsToBounds = YES;
+        overlayView.alpha = 0;
+        
+        objc_setAssociatedObject(self, @selector(fwOverlayView), overlayView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return overlayView;
+}
+
+- (BOOL)fwIsOverlayViewVisible
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    return overlayView && overlayView.superview && !overlayView.isHidden;
+}
+
+- (void)fwShowOverlayView
+{
+    [self fwShowOverlayViewAnimated:NO];
+}
+
+- (void)fwShowOverlayViewAnimated:(BOOL)animated
+{
+    [self fwHideOverlayView];
+    
+    FWScrollOverlayView *overlayView = (FWScrollOverlayView *)self.fwOverlayView;
+    overlayView.fadeAnimated = animated;
+    if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
+        [self insertSubview:overlayView atIndex:0];
+    } else {
+        [self addSubview:overlayView];
+    }
+}
+
+- (void)fwHideOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (overlayView && overlayView.superview) {
+        [overlayView removeFromSuperview];
+    }
+}
+
+@end
