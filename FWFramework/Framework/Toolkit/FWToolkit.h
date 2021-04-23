@@ -216,10 +216,10 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 是否显示自定义浮层
 @property (nonatomic, assign, readonly) BOOL fwHasOverlayView;
 
-/// 显示自定义浮层，自动添加到滚动视图
+/// 显示自定义浮层，自动添加到滚动视图顶部、表格视图底部
 - (void)fwShowOverlayView;
 
-/// 显示自定义浮层，自动添加到滚动视图并执行渐变动画
+/// 显示自定义浮层，执行渐变动画，自动添加到滚动视图顶部、表格视图底部
 - (void)fwShowOverlayViewAnimated:(BOOL)animated;
 
 /// 隐藏自定义浮层，自动从滚动视图移除

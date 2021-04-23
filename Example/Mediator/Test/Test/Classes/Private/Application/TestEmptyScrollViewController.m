@@ -24,6 +24,23 @@
     self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
+    [self.tableView fwReloadEmptyView];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 100)];
+    view.backgroundColor = Theme.cellColor;
+    
+    UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:Theme.textColor text:@"我是Section头视图"];
+    [view addSubview:label];
+    label.fwLayoutChain.leftWithInset(15).centerY();
+    return view;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -44,6 +61,7 @@
 - (void)fwShowEmptyView:(UIScrollView *)scrollView
 {
     FWWeakifySelf();
+    scrollView.fwOverlayView.backgroundColor = Theme.tableColor;
     [scrollView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
