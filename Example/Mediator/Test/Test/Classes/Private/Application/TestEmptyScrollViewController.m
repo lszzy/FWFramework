@@ -26,6 +26,22 @@
     [self.tableView reloadData];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 100)];
+    view.backgroundColor = Theme.cellColor;
+    
+    UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:Theme.textColor text:@"我是Section头视图"];
+    [view addSubview:label];
+    label.fwLayoutChain.leftWithInset(15).centerY();
+    return view;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.tableData.count;
@@ -41,10 +57,11 @@
 
 #pragma mark - FWEmptyViewDelegate
 
-- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView
+- (void)fwShowEmptyView:(UIScrollView *)scrollView
 {
     FWWeakifySelf();
-    [contentView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
+    scrollView.fwOverlayView.backgroundColor = Theme.tableColor;
+    [scrollView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
         [self.tableData addObjectsFromArray:@[@1, @2, @3, @4, @5, @6, @7, @8]];

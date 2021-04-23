@@ -32,7 +32,7 @@
 #pragma mark - TableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.view.fwExistsEmptyView ? 0 : 4;
+    return self.view.fwHasEmptyView ? 0 : 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
