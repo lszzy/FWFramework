@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 隐藏空界面
 - (void)fwHideEmptyView:(UIView *)view;
 
-/// 是否正在显示空界面
-- (BOOL)fwIsEmptyViewVisible:(UIView *)view;
+/// 是否显示空界面
+- (BOOL)fwHasEmptyView:(UIView *)view;
 
 @end
 
@@ -73,8 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 隐藏空界面
 - (void)fwHideEmptyView;
 
-/// 是否正在显示空界面
-- (BOOL)fwIsEmptyViewVisible;
+/// 是否显示空界面
+- (BOOL)fwHasEmptyView;
 
 @end
 
@@ -94,11 +94,11 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FWEmptyViewDelegate <NSObject>
 @optional
 
-/// 显示空界面，contentView为空界面容器
-- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+/// 显示空界面，默认调用UIScrollView.fwShowEmptyView
+- (void)fwShowEmptyView:(UIScrollView *)scrollView;
 
-/// 隐藏空界面，contentView为空界面容器
-- (void)fwHideEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+/// 隐藏空界面，默认调用UIScrollView.fwHideEmptyView
+- (void)fwHideEmptyView:(UIScrollView *)scrollView;
 
 /// 显示空界面时是否允许滚动，默认NO
 - (BOOL)fwEmptyViewShouldScroll:(UIScrollView *)scrollView;

@@ -213,8 +213,8 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 滚动视图自定义浮层，用于显示空界面、骨架屏等，支持UIScrollView|UITableView|UICollectionView
 @property (nonatomic, strong, readonly) UIView *fwOverlayView;
 
-/// 是否正在显示自定义浮层
-@property (nonatomic, assign, readonly) BOOL fwIsOverlayViewVisible;
+/// 是否显示自定义浮层
+@property (nonatomic, assign, readonly) BOOL fwHasOverlayView;
 
 /// 显示自定义浮层，自动添加到滚动视图
 - (void)fwShowOverlayView;

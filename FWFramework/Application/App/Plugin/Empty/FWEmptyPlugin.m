@@ -14,6 +14,7 @@
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyPlugin
@@ -118,11 +119,11 @@
     if (emptyView) { [emptyView removeFromSuperview]; }
 }
 
-- (BOOL)fwIsEmptyViewVisible
+- (BOOL)fwHasEmptyView
 {
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwIsEmptyViewVisible:)]) {
-        return [plugin fwIsEmptyViewVisible:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwHasEmptyView:)]) {
+        return [plugin fwHasEmptyView:self];
     }
     
     UIView *emptyView = [self viewWithTag:2021];
@@ -131,26 +132,47 @@
 
 @end
 
+@implementation UIScrollView (FWEmptyPluginView)
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
+{
+    [self fwShowOverlayView];
+    [self.fwOverlayView fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
+}
+
+- (void)fwHideEmptyView
+{
+    [self.fwOverlayView fwHideEmptyView];
+    [self fwHideOverlayView];
+}
+
+- (BOOL)fwHasEmptyView
+{
+    return self.fwHasOverlayView && [self.fwOverlayView fwHasEmptyView];
+}
+
+@end
+
 @implementation UIViewController (FWEmptyPluginView)
 
 - (void)fwShowEmptyView
 {
-    [self.view fwShowEmptyView];
+    [self fwShowEmptyViewWithText:nil];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text
 {
-    [self.view fwShowEmptyViewWithText:text];
+    [self fwShowEmptyViewWithText:text detail:nil];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail
 {
-    [self.view fwShowEmptyViewWithText:text detail:detail];
+    [self fwShowEmptyViewWithText:text detail:detail image:nil];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
 {
-    [self.view fwShowEmptyViewWithText:text detail:detail image:image];
+    [self fwShowEmptyViewWithText:text detail:detail image:image action:nil block:nil];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
@@ -163,31 +185,18 @@
     [self.view fwHideEmptyView];
 }
 
-- (BOOL)fwIsEmptyViewVisible
+- (BOOL)fwHasEmptyView
 {
-    return [self.view fwIsEmptyViewVisible];
+    return [self.view fwHasEmptyView];
 }
 
 @end
 
 #pragma mark - UIScrollView+FWEmptyPlugin
 
-@interface FWEmptyContentView : UIView
-
-@end
-
-@implementation FWEmptyContentView
-
-- (void)didMoveToSuperview
-{
-    self.frame = self.superview.bounds;
-}
-
-@end
-
 @implementation UIScrollView (FWEmptyPlugin)
 
-+ (void)fwEnableEmptyDelegate
++ (void)fwEnableEmptyPlugin
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -216,15 +225,10 @@
 
 - (void)setFwEmptyViewDelegate:(id<FWEmptyViewDelegate>)delegate
 {
-    if (!delegate) [self fwRemoveEmptyView];
+    if (!delegate) [self fwEmptyInvalidate];
     objc_setAssociatedObject(self, @selector(fwEmptyViewDelegate), [[FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    [UIScrollView fwEnableEmptyDelegate];
-}
-
-- (BOOL)fwIsEmptyViewVisible
-{
-    return self.fwEmptyContentView ? YES : NO;
+    [UIScrollView fwEnableEmptyPlugin];
 }
 
 - (void)fwReloadEmptyView
@@ -243,52 +247,34 @@
         }
     }
     
-    [self fwRemoveEmptyView];
+    [self fwEmptyInvalidate];
     
     if (shouldDisplay) {
-        UIView *contentView = [FWEmptyContentView new];
-        self.fwEmptyContentView = contentView;
-        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        contentView.userInteractionEnabled = YES;
-        contentView.backgroundColor = [UIColor clearColor];
-        contentView.clipsToBounds = YES;
-        if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
-            [self insertSubview:contentView atIndex:0];
-        } else {
-            [self addSubview:contentView];
-        }
-        
         if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
             self.scrollEnabled = [self.fwEmptyViewDelegate fwEmptyViewShouldScroll:self];
         } else {
             self.scrollEnabled = NO;
         }
         
-        if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:scrollView:)]) {
-            [self.fwEmptyViewDelegate fwShowEmptyView:contentView scrollView:self];
+        if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:)]) {
+            [self.fwEmptyViewDelegate fwShowEmptyView:self];
         } else {
-            [contentView fwShowEmptyView];
+            [self fwShowEmptyView];
         }
     }
 }
 
-- (void)fwRemoveEmptyView
+- (void)fwEmptyInvalidate
 {
-    UIView *contentView = self.fwEmptyContentView;
-    if (!contentView) return;
+    if (!self.fwEmptyViewDelegate) return;
     
     self.scrollEnabled = YES;
     
-    if (self.fwEmptyViewDelegate && [self.fwEmptyViewDelegate respondsToSelector:@selector(fwHideEmptyView:scrollView:)]) {
-        [self.fwEmptyViewDelegate fwHideEmptyView:contentView scrollView:self];
+    if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwHideEmptyView:)]) {
+        [self.fwEmptyViewDelegate fwHideEmptyView:self];
     } else {
-        [contentView fwHideEmptyView];
+        [self fwHideEmptyView];
     }
-    
-    if (contentView.superview) {
-        [contentView removeFromSuperview];
-    }
-    self.fwEmptyContentView = nil;
 }
 
 - (NSInteger)fwEmptyItemsCount
@@ -328,16 +314,6 @@
         }
     }
     return items;
-}
-
-- (UIView *)fwEmptyContentView
-{
-    return objc_getAssociatedObject(self, @selector(fwEmptyContentView));
-}
-
-- (void)setFwEmptyContentView:(UIView *)contentView
-{
-    objc_setAssociatedObject(self, @selector(fwEmptyContentView), contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
