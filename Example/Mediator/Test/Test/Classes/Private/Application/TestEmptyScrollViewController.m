@@ -24,7 +24,6 @@
     self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDelegate = self;
     [self.tableView reloadData];
-    [self.tableView fwReloadEmptyView];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

@@ -10,7 +10,6 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWToolkit.h"
 
 #pragma mark - FWToastPlugin
 
@@ -143,64 +142,6 @@
     }
     
     [self fwHideIndicatorMessage];
-}
-
-@end
-
-@implementation UIScrollView (FWToastPluginView)
-
-- (void)fwShowLoading
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowLoading];
-}
-
-- (void)fwShowLoadingWithText:(id)text
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowLoadingWithText:text];
-}
-
-- (void)fwHideLoading
-{
-    [self.fwOverlayView fwHideLoading];
-    [self fwHideOverlayView];
-}
-
-- (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowProgressWithText:text progress:progress];
-}
-
-- (void)fwHideProgress
-{
-    [self.fwOverlayView fwHideProgress];
-    [self fwHideOverlayView];
-}
-
-- (void)fwShowMessageWithText:(id)text
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowMessageWithText:text];
-}
-
-- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowMessageWithText:text style:style];
-}
-
-- (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowMessageWithText:text style:style completion:completion];
-}
-
-- (void)fwHideMessage
-{
-    [self.fwOverlayView fwHideMessage];
-    [self fwHideOverlayView];
 }
 
 @end
