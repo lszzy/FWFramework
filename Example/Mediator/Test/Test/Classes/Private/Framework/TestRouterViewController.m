@@ -65,7 +65,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
         return object;
     };
     FWRouter.errorHandler = ^(FWRouterContext * _Nonnull context) {
-        [UIViewController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\nurl: %@\nparameters: %@", context.URL, context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
+        [UIWindow.fwMainWindow.fwTopPresentedController fwShowAlertWithTitle:[NSString stringWithFormat:@"url not supported\nurl: %@\nparameters: %@", context.URL, context.parameters] message:nil cancel:@"OK" cancelBlock:nil];
     };
 }
 

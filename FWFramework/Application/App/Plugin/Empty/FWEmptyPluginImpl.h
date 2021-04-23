@@ -1,5 +1,5 @@
 /*!
- @header     FWEmptyPlugin.h
+ @header     FWEmptyPluginImpl.h
  @indexgroup FWFramework
  @brief      FWEmptyPlugin
  @author     wuyong
@@ -7,74 +7,9 @@
  @updated    2020/9/3
  */
 
-#import <UIKit/UIKit.h>
+#import "FWEmptyPlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#pragma mark - FWEmptyPlugin
-
-/// 空界面插件协议，应用可自定义空界面插件实现
-@protocol FWEmptyPlugin <NSObject>
-
-@optional
-
-/// 显示空界面，指定文本、图片和动作按钮
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block inView:(UIView *)view;
-
-/// 隐藏空界面
-- (void)fwHideEmptyView:(UIView *)view;
-
-/// 是否存在显示中的空界面
-- (BOOL)fwExistsEmptyView:(UIView *)view;
-
-@end
-
-/// 空界面插件配置类
-@interface FWEmptyPluginConfig : NSObject
-
-/// 配置单例
-@property (class, nonatomic, readonly) FWEmptyPluginConfig *sharedInstance;
-
-/// 默认空界面文本句柄
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);
-/// 默认空界面详细文本句柄
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultDetail)(void);
-/// 默认空界面图片句柄
-@property (nonatomic, copy, nullable) UIImage * _Nullable (^defaultImage)(void);
-/// 默认空界面动作按钮句柄
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultAction)(void);
-
-@end
-
-#pragma mark - UIView+FWEmptyPlugin
-
-/*!
- @brief UIView+FWEmptyPlugin
- */
-@interface UIView (FWEmptyPlugin)
-
-/// 显示空界面
-- (void)fwShowEmptyView;
-
-/// 显示空界面，指定文本
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text;
-
-/// 显示空界面，指定文本和详细文本
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail;
-
-/// 显示空界面，指定文本、详细文本和图片
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image;
-
-/// 显示空界面，指定文本、详细文本、图片和动作按钮
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block;
-
-/// 隐藏空界面
-- (void)fwHideEmptyView;
-
-/// 是否存在显示中的空界面
-- (BOOL)fwExistsEmptyView;
-
-@end
 
 #pragma mark - FWEmptyView
 
@@ -158,44 +93,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIScrollView+FWEmptyView
+#pragma mark - UIScrollView+FWEmptyPluginImpl
 
-/// 空界面代理协议
-@protocol FWEmptyViewDelegate <NSObject>
-@optional
+@interface UIScrollView (FWEmptyPluginImpl)
 
-/// 显示空界面，contentView为空界面容器
-- (void)fwShowEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+/// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
+@property (nonatomic, strong, readonly) UIView *fwOverlayView;
 
-/// 隐藏空界面，contentView为空界面容器
-- (void)fwHideEmptyView:(UIView *)contentView scrollView:(UIScrollView *)scrollView;
+/// 是否显示自定义浮层
+@property (nonatomic, assign, readonly) BOOL fwHasOverlayView;
 
-/// 显示空界面时是否允许滚动，默认NO
-- (BOOL)fwEmptyViewShouldScroll:(UIScrollView *)scrollView;
+/// 显示自定义浮层，自动添加到滚动视图顶部、表格视图底部
+- (void)fwShowOverlayView;
 
-/// 无数据时是否显示空界面，默认YES
-- (BOOL)fwEmptyViewShouldDisplay:(UIScrollView *)scrollView;
+/// 显示自定义浮层，执行渐变动画，自动添加到滚动视图顶部、表格视图底部
+- (void)fwShowOverlayViewAnimated:(BOOL)animated;
 
-/// 有数据时是否强制显示空界面，默认NO
-- (BOOL)fwEmptyViewForceDisplay:(UIScrollView *)scrollView;
-
-@end
-
-/**
- @brief 滚动视图空界面分类
- 
- @see https://github.com/dzenbot/DZNEmptyDataSet
- */
-@interface UIScrollView (FWEmptyView)
-
-/// 空界面代理，默认nil
-@property (nonatomic, weak, nullable) IBOutlet id<FWEmptyViewDelegate> fwEmptyViewDelegate;
-
-/// 是否正在显示空界面
-@property (nonatomic, assign, readonly) BOOL fwIsEmptyViewVisible;
-
-/// 刷新空界面
-- (void)fwReloadEmptyView;
+/// 隐藏自定义浮层，自动从滚动视图移除
+- (void)fwHideOverlayView;
 
 @end
 
