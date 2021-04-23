@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 隐藏空界面
 - (void)fwHideEmptyView:(UIView *)view;
 
-/// 是否存在显示中的空界面
-- (BOOL)fwExistsEmptyView:(UIView *)view;
+/// 是否正在显示空界面
+- (BOOL)fwIsEmptyViewVisible:(UIView *)view;
 
 @end
 
@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 配置单例
 @property (class, nonatomic, readonly) FWEmptyPluginConfig *sharedInstance;
+
+/// 显示空界面时是否执行淡入动画，默认YES
+@property (nonatomic, assign) BOOL fadeAnimated;
 
 /// 默认空界面文本句柄
 @property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);
@@ -70,8 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 隐藏空界面
 - (void)fwHideEmptyView;
 
-/// 是否存在显示中的空界面
-- (BOOL)fwExistsEmptyView;
+/// 是否正在显示空界面
+- (BOOL)fwIsEmptyViewVisible;
 
 @end
 
@@ -117,9 +120,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 空界面代理，默认nil
 @property (nonatomic, weak, nullable) IBOutlet id<FWEmptyViewDelegate> fwEmptyViewDelegate;
-
-/// 是否正在显示空界面
-@property (nonatomic, assign, readonly) BOOL fwIsEmptyViewVisible;
 
 /// 刷新空界面
 - (void)fwReloadEmptyView;

@@ -26,6 +26,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[FWEmptyPluginConfig alloc] init];
+        instance.fadeAnimated = YES;
     });
     return instance;
 }
@@ -86,6 +87,7 @@
     
     emptyView = [[FWEmptyView alloc] initWithFrame:self.bounds];
     emptyView.tag = 2021;
+    emptyView.alpha = 0;
     [self addSubview:emptyView];
     [emptyView fwPinEdgesToSuperview];
     [emptyView setLoadingViewHidden:YES];
@@ -94,6 +96,14 @@
     [emptyView setDetailTextLabelText:emptyDetail];
     [emptyView setActionButtonTitle:emptyAction];
     if (block) [emptyView.actionButton fwAddTouchBlock:block];
+    
+    if (FWEmptyPluginConfig.sharedInstance.fadeAnimated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            emptyView.alpha = 1.0;
+        } completion:NULL];
+    } else {
+        emptyView.alpha = 1.0;
+    }
 }
 
 - (void)fwHideEmptyView
@@ -108,11 +118,11 @@
     if (emptyView) { [emptyView removeFromSuperview]; }
 }
 
-- (BOOL)fwExistsEmptyView
+- (BOOL)fwIsEmptyViewVisible
 {
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwExistsEmptyView:)]) {
-        return [plugin fwExistsEmptyView:self];
+    if (plugin && [plugin respondsToSelector:@selector(fwIsEmptyViewVisible:)]) {
+        return [plugin fwIsEmptyViewVisible:self];
     }
     
     UIView *emptyView = [self viewWithTag:2021];
@@ -153,9 +163,9 @@
     [self.view fwHideEmptyView];
 }
 
-- (BOOL)fwExistsEmptyView
+- (BOOL)fwIsEmptyViewVisible
 {
-    return [self.view fwExistsEmptyView];
+    return [self.view fwIsEmptyViewVisible];
 }
 
 @end
