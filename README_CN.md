@@ -48,6 +48,12 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
 
+1.4.1版本：
+
+	* UIScrollView支持fwOverlayView视图
+	* UIScrollView支持显示空界面，修改FWEmptyViewDelegate方法
+	* 新增空界面渐变动画配置，默认开启
+
 1.4.0版本：
 
 	* 重构FWEmptyPlugin实现，支持滚动视图和默认文本
