@@ -248,7 +248,7 @@
 
 - (void)setFwEmptyViewDelegate:(id<FWEmptyViewDelegate>)delegate
 {
-    if (!delegate) [self fwEmptyInvalidate];
+    if (!delegate) [self fwInvalidateEmptyView];
     objc_setAssociatedObject(self, @selector(fwEmptyViewDelegate), [[FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [UIScrollView fwEnableEmptyPlugin];
@@ -270,9 +270,11 @@
         }
     }
     
-    [self fwEmptyInvalidate];
+    [self fwInvalidateEmptyView];
     
     if (shouldDisplay) {
+        objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
         if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwEmptyViewShouldScroll:)]) {
             self.scrollEnabled = [self.fwEmptyViewDelegate fwEmptyViewShouldScroll:self];
         } else {
@@ -287,9 +289,10 @@
     }
 }
 
-- (void)fwEmptyInvalidate
+- (void)fwInvalidateEmptyView
 {
-    if (!self.fwEmptyViewDelegate) return;
+    if (![objc_getAssociatedObject(self, @selector(fwInvalidateEmptyView)) boolValue]) return;
+    objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     self.scrollEnabled = YES;
     
