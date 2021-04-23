@@ -14,7 +14,6 @@
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
-#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyPlugin

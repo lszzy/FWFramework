@@ -8,6 +8,7 @@
  */
 
 #import "FWEmptyPluginImpl.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWEmptyView
 
@@ -331,6 +332,85 @@
     appearance.textLabelTextColor = [UIColor colorWithRed:93/255.0 green:100/255.0 blue:110/255.0 alpha:1];
     appearance.detailTextLabelTextColor = [UIColor colorWithRed:133/255.0 green:140/255.0 blue:150/255.0 alpha:1];
     appearance.actionButtonTitleColor = [UIColor colorWithRed:49/255.0 green:189/255.0 blue:243/255.0 alpha:1];
+}
+
+@end
+
+#pragma mark - UIScrollView+FWEmptyPluginImpl
+
+@interface FWScrollOverlayView : UIView
+
+@property (nonatomic, assign) BOOL fadeAnimated;
+
+@end
+
+@implementation FWScrollOverlayView
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    
+    if (self.fadeAnimated) {
+        self.fadeAnimated = NO;
+        self.alpha = 0;
+        self.frame = self.superview.bounds;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 1.0;
+        } completion:NULL];
+    } else {
+        self.frame = self.superview.bounds;
+    }
+}
+
+@end
+
+@implementation UIScrollView (FWEmptyPluginImpl)
+
+- (UIView *)fwOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (!overlayView) {
+        overlayView = [[FWScrollOverlayView alloc] init];
+        overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        overlayView.userInteractionEnabled = YES;
+        overlayView.backgroundColor = UIColor.clearColor;
+        overlayView.clipsToBounds = YES;
+        
+        objc_setAssociatedObject(self, @selector(fwOverlayView), overlayView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return overlayView;
+}
+
+- (BOOL)fwHasOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    return overlayView && overlayView.superview;
+}
+
+- (void)fwShowOverlayView
+{
+    [self fwShowOverlayViewAnimated:NO];
+}
+
+- (void)fwShowOverlayViewAnimated:(BOOL)animated
+{
+    FWScrollOverlayView *overlayView = (FWScrollOverlayView *)self.fwOverlayView;
+    if (!overlayView.superview) {
+        overlayView.fadeAnimated = animated;
+        if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
+            [self insertSubview:overlayView atIndex:0];
+        } else {
+            [self addSubview:overlayView];
+        }
+    }
+}
+
+- (void)fwHideOverlayView
+{
+    UIView *overlayView = objc_getAssociatedObject(self, @selector(fwOverlayView));
+    if (overlayView && overlayView.superview) {
+        [overlayView removeFromSuperview];
+    }
 }
 
 @end

@@ -203,28 +203,4 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
-#pragma mark - UIScrollView+FWToolkit
-
-/*!
- @brief UIScrollView+FWToolkit
- */
-@interface UIScrollView (FWToolkit)
-
-/// 滚动视图自定义浮层，用于显示空界面、骨架屏等，支持UIScrollView|UITableView|UICollectionView
-@property (nonatomic, strong, readonly) UIView *fwOverlayView;
-
-/// 是否显示自定义浮层
-@property (nonatomic, assign, readonly) BOOL fwHasOverlayView;
-
-/// 显示自定义浮层，自动添加到滚动视图顶部、表格视图底部
-- (void)fwShowOverlayView;
-
-/// 显示自定义浮层，执行渐变动画，自动添加到滚动视图顶部、表格视图底部
-- (void)fwShowOverlayViewAnimated:(BOOL)animated;
-
-/// 隐藏自定义浮层，自动从滚动视图移除
-- (void)fwHideOverlayView;
-
-@end
-
 NS_ASSUME_NONNULL_END

@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// UIView使用空界面插件
+/// UIView使用空界面插件，兼容UITableView|UICollectionView
 @interface UIView (FWEmptyPluginView) <FWEmptyPluginView>
 
 @end
