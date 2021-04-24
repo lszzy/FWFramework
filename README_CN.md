@@ -48,6 +48,10 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
 
+1.4.2版本：
+
+	* 修复FWRouter路由参数解析问题，代码优化
+
 1.4.1版本：
 
 	* UIScrollView支持fwOverlayView视图
@@ -60,6 +64,10 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	* 重构FWToastPlugin支持默认文本
 	* FWViewController新增renderState状态渲染方法
 	* FWNavigationBarAppearance支持主题颜色和主题图片
+
+1.3.7版本：
+
+	* 修复FWRouter路由参数解析问题
 
 1.3.6版本：
 
