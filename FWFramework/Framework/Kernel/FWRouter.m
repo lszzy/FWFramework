@@ -14,9 +14,8 @@
 
 @interface FWRouterContext ()
 
-@property (nonatomic, assign) BOOL isOpening;
-@property (nonatomic, copy) NSDictionary *routeParameters;
 @property (nonatomic, copy) NSDictionary *parameters;
+@property (nonatomic, assign) BOOL isOpening;
 
 @end
 
@@ -36,32 +35,27 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     FWRouterContext *context = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
+    context.parameters = self.parameters;
     context.isOpening = self.isOpening;
-    context.routeParameters = self.routeParameters;
     return context;
 }
 
 - (NSDictionary *)parameters
 {
-    if (_parameters) return _parameters;
-
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    if (self.routeParameters) {
-        [parameters addEntriesFromDictionary:self.routeParameters];
-    }
-    
-    NSURL *nsurl = self.URL.length > 0 ? [NSURL URLWithString:self.URL] : nil;
-    if (!nsurl && self.URL.length > 0) {
-        nsurl = [NSURL URLWithString:[self.URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    if (nsurl) {
-        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
-        for (NSURLQueryItem *item in queryItems) {
-            parameters[item.name] = [item.value stringByRemovingPercentEncoding];
+    if (!_parameters) {
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+        NSURL *nsurl = self.URL.length > 0 ? [NSURL URLWithString:self.URL] : nil;
+        if (!nsurl && self.URL.length > 0) {
+            nsurl = [NSURL URLWithString:[self.URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
         }
+        if (nsurl) {
+            NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+            for (NSURLQueryItem *item in queryItems) {
+                parameters[item.name] = [item.value stringByRemovingPercentEncoding];
+            }
+        }
+        _parameters = [parameters copy];
     }
-    
-    _parameters = [parameters copy];
     return _parameters;
 }
 
@@ -265,8 +259,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return NO;
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    return routeParameters[FWRouterBlockKey] ? YES : NO;
+    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    return parameters[FWRouterBlockKey] ? YES : NO;
 }
 
 + (void)openURL:(id)URL
@@ -288,14 +282,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return;
-    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
-    FWRouterHandler handler = routeParameters[FWRouterBlockKey];
-    [routeParameters removeObjectForKey:FWRouterBlockKey];
+    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    FWRouterHandler handler = parameters[FWRouterBlockKey];
+    [parameters removeObjectForKey:FWRouterBlockKey];
     
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
-    context.routeParameters = [routeParameters copy];
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:completion];
+    context.parameters = [parameters copy];
     context.isOpening = YES;
     
     if ([self sharedInstance].preFilter) {
@@ -327,8 +320,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return NO;
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    return routeParameters[FWRouterBlockKey] ? YES : NO;
+    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    return parameters[FWRouterBlockKey] ? YES : NO;
 }
 
 + (id)objectForURL:(id)URL
@@ -340,14 +333,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return nil;
-    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
-    FWRouterHandler handler = routeParameters[FWRouterBlockKey];
-    [routeParameters removeObjectForKey:FWRouterBlockKey];
+    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    FWRouterHandler handler = parameters[FWRouterBlockKey];
+    [parameters removeObjectForKey:FWRouterBlockKey];
     
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:nil];
-    context.routeParameters = [routeParameters copy];
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:nil];
+    context.parameters = [parameters copy];
     context.isOpening = NO;
     
     if ([self sharedInstance].preFilter) {
@@ -530,6 +522,17 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
         if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
             break;
+        }
+    }
+    
+    NSURL *nsurl = url.length > 0 ? [NSURL URLWithString:url] : nil;
+    if (!nsurl && url.length > 0) {
+        nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    if (nsurl) {
+        NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+        for (NSURLQueryItem *item in queryItems) {
+            parameters[item.name] = [item.value stringByRemovingPercentEncoding];
         }
     }
     

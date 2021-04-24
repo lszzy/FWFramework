@@ -203,7 +203,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;
-    label.text = [NSString stringWithFormat:@"%@", self.context.parameters];
+    label.text = [NSString stringWithFormat:@"URL: %@\n\nparameters: %@", self.context.URL, self.context.parameters];
     [self.view addSubview:label];
     [label fwAlignCenterToSuperview];
     [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];
@@ -240,33 +240,42 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 {
     self.navigationItem.title = @"FWRouter";
     NSString *url = @"http://test.com?id=我是中文";
-    NSLog(@"fwUrlEncode: %@", [url fwUrlEncode]);
-    NSLog(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
-    NSLog(@"fwUrlEncodeComponent: %@", [url fwUrlEncodeComponent]);
-    NSLog(@"fwUrlDecodeComponent: %@", [[url fwUrlEncodeComponent] fwUrlDecodeComponent]);
+    FWLogDebug(@"fwUrlEncode: %@", [url fwUrlEncode]);
+    FWLogDebug(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
+    FWLogDebug(@"fwUrlEncodeComponent: %@", [url fwUrlEncodeComponent]);
+    FWLogDebug(@"fwUrlDecodeComponent: %@", [[url fwUrlEncodeComponent] fwUrlDecodeComponent]);
+    
+    url = @"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2";
+    FWLogDebug(@"string.fwQueryDecode: %@", [url fwQueryDecode]);
+    FWLogDebug(@"string.fwQueryEncode: %@", [NSString fwQueryEncode:[url fwQueryDecode]]);
+    NSURL *nsurl = [NSURL fwURLWithString:url];
+    FWLogDebug(@"query.fwQueryDecode: %@", [nsurl.query fwQueryDecode]);
+    FWLogDebug(@"url.fwQueryDictionary: %@", nsurl.fwQueryDictionary);
 }
 
 - (void)renderData
 {
     NSString *str = @"http://test.com?id=我是中文";
     NSURL *url = [NSURL URLWithString:str];
-    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    FWLogDebug(@"str: %@ =>\nurl: %@", str, url);
     url = [NSURL fwURLWithString:str];
-    NSLog(@"str: %@ =>\nurl: %@", str, url);
+    FWLogDebug(@"str: %@ =>\nurl: %@", str, url);
     
     NSString *urlStr = [FWRouter generateURL:TestRouter.ROUTE_TEST parameters:nil];
-    NSLog(@"url: %@", urlStr);
+    FWLogDebug(@"url: %@", urlStr);
     urlStr = [FWRouter generateURL:TestRouter.ROUTE_TEST parameters:@[@1]];
-    NSLog(@"url: %@", urlStr);
+    FWLogDebug(@"url: %@", urlStr);
     urlStr = [FWRouter generateURL:TestRouter.ROUTE_TEST parameters:@{@"id": @2}];
-    NSLog(@"url: %@", urlStr);
+    FWLogDebug(@"url: %@", urlStr);
     urlStr = [FWRouter generateURL:TestRouter.ROUTE_TEST parameters:@3];
-    NSLog(@"url: %@", urlStr);
+    FWLogDebug(@"url: %@", urlStr);
     
     [self.tableData addObjectsFromArray:@[
                                          @[@"打开Web", @"onOpenHttp"],
                                          @[@"测试Cookie", @"onOpenCookie"],
+                                         @[@"Url编码", @"onOpenEncode"],
                                          @[@"打开Url", @"onOpen"],
+                                         @[@"中文Url", @"onOpenChinese"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，协议", @"onOpenController"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
@@ -327,12 +336,22 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpen
 {
-    [FWRouter openURL:@"app://test/1"];
+    [FWRouter openURL:@"app://test/1#anchor"];
+}
+
+- (void)onOpenChinese
+{
+    [FWRouter openURL:@"app://test/%E4%B8%AD%E6%96%87?value=1#anchor"];
+}
+
+- (void)onOpenEncode
+{
+    [FWRouter openURL:@"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"];
 }
 
 - (void)onOpenWild
 {
-    [FWRouter openURL:@"wildcard://not_found?id=1"];
+    [FWRouter openURL:@"wildcard://not_found?id=1#anchor"];
 }
 
 - (void)onOpenController
@@ -446,12 +465,12 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenHttp
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/test.php#anchor"];
 }
 
 - (void)onOpenCookie
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/cookie.php"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/cookie.php?param=value#anchor"];
 }
 
 - (void)onOpenUniversalLinks
