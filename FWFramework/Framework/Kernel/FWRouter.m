@@ -294,7 +294,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:completion];
     context.routeParameters = [routeParameters copy];
     context.isOpening = YES;
     
