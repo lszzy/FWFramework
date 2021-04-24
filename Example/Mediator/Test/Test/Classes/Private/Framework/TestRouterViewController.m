@@ -275,6 +275,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"测试Cookie", @"onOpenCookie"],
                                          @[@"Url编码", @"onOpenEncode"],
                                          @[@"打开Url", @"onOpen"],
+                                         @[@"中文Url", @"onOpenChinese"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
                                          @[@"打开Url，协议", @"onOpenController"],
                                          @[@"打开Url，支持回调", @"onOpenCallback"],
@@ -335,7 +336,12 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpen
 {
-    [FWRouter openURL:@"app://test/1"];
+    [FWRouter openURL:@"app://test/1#anchor"];
+}
+
+- (void)onOpenChinese
+{
+    [FWRouter openURL:@"app://test/中文#anchor"];
 }
 
 - (void)onOpenEncode
@@ -345,7 +351,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenWild
 {
-    [FWRouter openURL:@"wildcard://not_found?id=1"];
+    [FWRouter openURL:@"wildcard://not_found?id=1#anchor"];
 }
 
 - (void)onOpenController
