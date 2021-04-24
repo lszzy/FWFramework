@@ -459,12 +459,12 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenHttp
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/test.php"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/test.php#anchor"];
 }
 
 - (void)onOpenCookie
 {
-    [FWRouter openURL:@"http://kvm.wuyong.site/cookie.php"];
+    [FWRouter openURL:@"http://kvm.wuyong.site/cookie.php?param=value#anchor"];
 }
 
 - (void)onOpenUniversalLinks
