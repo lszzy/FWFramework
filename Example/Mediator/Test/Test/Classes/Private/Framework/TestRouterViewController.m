@@ -245,7 +245,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     FWLogDebug(@"fwUrlEncodeComponent: %@", [url fwUrlEncodeComponent]);
     FWLogDebug(@"fwUrlDecodeComponent: %@", [[url fwUrlEncodeComponent] fwUrlDecodeComponent]);
     
-    url = @"app://test/1?value=2&name=中文2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3D%E4%B8%AD%E6%96%87#/home/index";
+    url = @"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2";
     FWLogDebug(@"string.fwQueryDecode: %@", [url fwQueryDecode]);
     FWLogDebug(@"string.fwQueryEncode: %@", [NSString fwQueryEncode:[url fwQueryDecode]]);
     NSURL *nsurl = [NSURL fwURLWithString:url];
@@ -340,7 +340,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenEncode
 {
-    [FWRouter openURL:@"app://test/1?value=2&name=中文2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3D%E4%B8%AD%E6%96%87#/home/index"];
+    [FWRouter openURL:@"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"];
 }
 
 - (void)onOpenWild
