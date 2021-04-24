@@ -288,13 +288,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return;
-    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:completion];
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:completion];
     context.routeParameters = [routeParameters copy];
     context.isOpening = YES;
     
@@ -340,13 +339,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 {
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return nil;
-    URL = [rewriteURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     
-    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:URL];
+    NSMutableDictionary *routeParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
     FWRouterHandler handler = routeParameters[FWRouterBlockKey];
     [routeParameters removeObjectForKey:FWRouterBlockKey];
     
-    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:URL userInfo:userInfo completion:nil];
+    FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:nil];
     context.routeParameters = [routeParameters copy];
     context.isOpening = NO;
     
