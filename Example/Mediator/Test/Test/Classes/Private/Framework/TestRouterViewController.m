@@ -341,7 +341,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenChinese
 {
-    [FWRouter openURL:@"app://test/中文#anchor"];
+    [FWRouter openURL:@"app://test/%E4%B8%AD%E6%96%87?value=1#anchor"];
 }
 
 - (void)onOpenEncode
