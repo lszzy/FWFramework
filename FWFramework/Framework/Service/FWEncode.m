@@ -613,6 +613,7 @@ NSURL * FWSafeURL(id value) {
     NSURL *url = [self URLWithString:URLString];
     // 如果生成失败，自动URL编码再试
     if (!url && URLString.length > 0) {
+        // url = [self URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)URLString, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, kCFStringEncodingUTF8))];
         url = [self URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
     }
     return url;
