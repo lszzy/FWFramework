@@ -375,7 +375,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenFailed
 {
-    [FWRouter openURL:@"app://test"];
+    [FWRouter openURL:@"app://test?FWRouterBlock=1"];
 }
 
 - (void)onRewrite1

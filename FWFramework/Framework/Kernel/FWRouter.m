@@ -538,6 +538,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     
     if (subRoutes[FWRouterCoreKey]) {
         parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
+    } else {
+        [parameters removeObjectForKey:FWRouterBlockKey];
     }
     return parameters;
 }
