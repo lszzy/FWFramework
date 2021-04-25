@@ -435,16 +435,16 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 - (NSArray *)pathComponentsFromURL:(NSString *)URL
 {
     NSMutableArray *pathComponents = [NSMutableArray array];
-    if ([URL rangeOfString:@"://"].location != NSNotFound) {
-        NSArray *pathSegments = [URL componentsSeparatedByString:@"://"];
+    NSRange urlRange = [URL rangeOfString:@"://"];
+    if (urlRange.location != NSNotFound) {
         // 如果 URL 包含协议，那么把协议作为第一个元素放进去
-        NSString *pathScheme = pathSegments.firstObject;
+        NSString *pathScheme = [URL substringToIndex:urlRange.location];
         if (pathScheme.length > 0) {
             [pathComponents addObject:pathScheme];
         }
         
         // 如果只有协议，那么放一个占位符
-        URL = pathSegments.lastObject;
+        URL = [URL substringFromIndex:urlRange.location + urlRange.length];
         if (!URL.length) {
             [pathComponents addObject:FWRouterWildcardCharacter];
         }
@@ -538,6 +538,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     
     if (subRoutes[FWRouterCoreKey]) {
         parameters[FWRouterBlockKey] = [subRoutes[FWRouterCoreKey] copy];
+    } else {
+        [parameters removeObjectForKey:FWRouterBlockKey];
     }
     return parameters;
 }
