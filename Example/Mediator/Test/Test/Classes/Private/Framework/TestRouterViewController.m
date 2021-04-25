@@ -274,6 +274,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"打开Web", @"onOpenHttp"],
                                          @[@"测试Cookie", @"onOpenCookie"],
                                          @[@"Url编码", @"onOpenEncode"],
+                                         @[@"Url未编码", @"onOpenImage"],
                                          @[@"打开Url", @"onOpen"],
                                          @[@"中文Url", @"onOpenChinese"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
@@ -349,6 +350,11 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     [FWRouter openURL:@"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"];
 }
 
+- (void)onOpenImage
+{
+    [FWRouter openURL:@"app://test/1?url=https://kvm.wuyong.site/test.php"];
+}
+
 - (void)onOpenWild
 {
     [FWRouter openURL:@"wildcard://not_found?id=1#anchor"];
@@ -375,7 +381,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenFailed
 {
-    [FWRouter openURL:@"app://test"];
+    [FWRouter openURL:@"app://test?FWRouterBlock=1"];
 }
 
 - (void)onRewrite1

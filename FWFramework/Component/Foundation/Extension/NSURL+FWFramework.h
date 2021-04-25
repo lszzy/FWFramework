@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 生成百度地图外部URL，URL SCHEME为：baidumap
  
  @param addr 显示地址，格式latitude,longitude或搜索地址
- @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
  @return NSURL
  */
 + (nullable instancetype)fwBaiduMapsURLWithAddr:(nullable NSString *)addr options:(nullable NSDictionary *)options;
@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param saddr 导航起始点，格式latitude,longitude或搜索地址
  @param daddr 导航结束点，格式latitude,longitude或搜索地址
  @param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving
- @param options 可选附加参数，如@{@"src": @"site.wuyong.Example", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
  @return NSURL
  */
 + (nullable instancetype)fwBaiduMapsURLWithSaddr:(nullable NSString *)saddr daddr:(nullable NSString *)daddr mode:(nullable NSString *)mode options:(nullable NSDictionary *)options;
