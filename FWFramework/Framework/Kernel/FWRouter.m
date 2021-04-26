@@ -315,15 +315,6 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Object
 
-+ (BOOL)isObjectURL:(id)URL
-{
-    NSString *rewriteURL = [self rewriteURL:URL];
-    if (rewriteURL.length < 1) return NO;
-    
-    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    return parameters[FWRouterBlockKey] ? YES : NO;
-}
-
 + (id)objectForURL:(id)URL
 {
     return [self objectForURL:URL userInfo:nil];
