@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 全局启用NavigationBar转场。启用后各个ViewController管理自己的导航栏样式，在viewDidLoad或viewViewAppear中设置即可
 + (void)fwEnableBarTransition;
 
-/// 自定义转场过程中containerView的背景色，默认白色
+/// 自定义转场过程中containerView的背景色，默认透明
 @property (nonatomic, strong) UIColor *fwContainerBackgroundColor;
 
 @end

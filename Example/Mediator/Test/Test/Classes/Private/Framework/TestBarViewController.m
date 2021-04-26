@@ -16,11 +16,6 @@
 
 @implementation TestBarSubViewController
 
-- (id)fwBarTransitionIdentifier
-{
-    return @(self.fwNavigationBarStyle);
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -31,7 +26,7 @@
     } else if (self.index < 4) {
         self.fwNavigationBarStyle = FWNavigationBarStyleWhite;
     } else {
-        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleWhite), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
+        self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleDefault), @(FWNavigationBarStyleWhite), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
     }
     
     FWWeakifySelf();
