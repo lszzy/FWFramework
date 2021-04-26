@@ -193,13 +193,6 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Object
 
 /**
- * 检测是否已注册object
- *
- *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
- */
-+ (BOOL)isObjectURL:(id)URL;
-
-/**
  * 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
  *
  *  @param URL 带 Scheme，如 app://beauty/3，支持NSURL和NSString
