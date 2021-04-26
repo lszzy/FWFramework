@@ -17,6 +17,8 @@
 @property (nonatomic, copy) NSDictionary *parameters;
 @property (nonatomic, assign) BOOL isOpening;
 
++ (NSURL *)URLWithString:(NSString *)URLString;
+
 @end
 
 @implementation FWRouterContext
@@ -44,10 +46,7 @@
 {
     if (!_parameters) {
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-        NSURL *nsurl = self.URL.length > 0 ? [NSURL URLWithString:self.URL] : nil;
-        if (!nsurl && self.URL.length > 0) {
-            nsurl = [NSURL URLWithString:[self.URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-        }
+        NSURL *nsurl = [FWRouterContext URLWithString:self.URL];
         if (nsurl) {
             NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
             for (NSURLQueryItem *item in queryItems) {
@@ -57,6 +56,15 @@
         _parameters = [parameters copy];
     }
     return _parameters;
+}
+
++ (NSURL *)URLWithString:(NSString *)URLString
+{
+    NSURL *URL = URLString.length > 0 ? [NSURL URLWithString:URLString] : nil;
+    if (!URL && URLString.length > 0) {
+        URL = [NSURL URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    return URL;
 }
 
 @end
@@ -441,10 +449,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         }
     }
     
-    NSURL *nsurl = URL.length > 0 ? [NSURL URLWithString:URL] : nil;
-    if (!nsurl && URL.length > 0) {
-        nsurl = [NSURL URLWithString:[URL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
+    NSURL *nsurl = [FWRouterContext URLWithString:URL];
     for (NSString *pathComponent in [nsurl pathComponents]) {
         if ([pathComponent isEqualToString:@"/"]) continue;
         if ([[pathComponent substringToIndex:1] isEqualToString:@"?"]) break;
@@ -516,10 +521,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         }
     }
     
-    NSURL *nsurl = url.length > 0 ? [NSURL URLWithString:url] : nil;
-    if (!nsurl && url.length > 0) {
-        nsurl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
+    NSURL *nsurl = [FWRouterContext URLWithString:url];
     if (nsurl) {
         NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
         for (NSURLQueryItem *item in queryItems) {
