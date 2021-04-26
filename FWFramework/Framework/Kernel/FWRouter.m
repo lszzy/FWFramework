@@ -434,7 +434,16 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 - (NSArray *)pathComponentsFromURL:(NSString *)URL
 {
     NSMutableArray *pathComponents = [NSMutableArray array];
+    // 解析scheme://path格式
     NSRange urlRange = [URL rangeOfString:@"://"];
+    if (urlRange.location == NSNotFound) {
+        // 解析scheme:path格式
+        NSString *urlScheme = [[FWRouterContext URLWithString:URL].scheme stringByAppendingString:@":"];
+        if (urlScheme.length > 1 && [URL hasPrefix:urlScheme]) {
+            urlRange = NSMakeRange(urlScheme.length - 1, 1);
+        }
+    }
+    
     if (urlRange.location != NSNotFound) {
         // 如果 URL 包含协议，那么把协议作为第一个元素放进去
         NSString *pathScheme = [URL substringToIndex:urlRange.location];
