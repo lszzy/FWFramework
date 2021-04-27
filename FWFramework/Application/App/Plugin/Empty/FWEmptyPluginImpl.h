@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, readonly) UIButton *actionButton;
 
 // 可通过调整这些insets来控制间距
+@property(nonatomic, assign) UIEdgeInsets contentViewInsets UI_APPEARANCE_SELECTOR;   // 默认为(0, 16, 0, 16)
 @property(nonatomic, assign) UIEdgeInsets imageViewInsets UI_APPEARANCE_SELECTOR;   // 默认为(0, 0, 36, 0)
 @property(nonatomic, assign) UIEdgeInsets loadingViewInsets UI_APPEARANCE_SELECTOR;     // 默认为(0, 0, 36, 0)
 @property(nonatomic, assign) UIEdgeInsets textLabelInsets UI_APPEARANCE_SELECTOR;   // 默认为(0, 0, 10, 0)
