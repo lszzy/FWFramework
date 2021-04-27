@@ -67,7 +67,6 @@
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.scrollsToTop = NO;
-    self.scrollView.contentInset = self.contentViewInsets;
     [self addSubview:self.scrollView];
     
     _contentView = [[UIView alloc] init];
@@ -101,6 +100,7 @@
     [super layoutSubviews];
     
     self.scrollView.frame = self.bounds;
+    self.scrollView.contentInset = self.contentViewInsets;
     
     CGSize contentViewSize = [self sizeThatContentViewFits];
     // contentView 默认垂直居中于 scrollView
