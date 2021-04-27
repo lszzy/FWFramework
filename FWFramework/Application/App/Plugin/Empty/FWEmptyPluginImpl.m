@@ -67,7 +67,7 @@
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.scrollsToTop = NO;
-    self.scrollView.contentInset = UIEdgeInsetsMake(0, 16, 0, 16);
+    self.scrollView.contentInset = self.contentViewInsets;
     [self addSubview:self.scrollView];
     
     _contentView = [[UIView alloc] init];
@@ -318,6 +318,7 @@
 
 + (void)setDefaultAppearance {
     FWEmptyView *appearance = [FWEmptyView appearance];
+    appearance.contentViewInsets = UIEdgeInsetsMake(0, 16, 0, 16);
     appearance.imageViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.loadingViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.textLabelInsets = UIEdgeInsetsMake(0, 0, 10, 0);
