@@ -46,6 +46,12 @@ platform :ios do
       CHANGELOG_TEXT = prompt(text: "Changelog:", multi_line_end_keyword: "END")
     end
 
+    if "#{lane}".include? "test"
+      CHANGELOG_TEXT = "测试环境版本，更新内容：\n#{CHANGELOG_TEXT}"
+    else
+      CHANGELOG_TEXT = "正式环境版本，更新内容：\n#{CHANGELOG_TEXT}"
+    end
+
     puts "Changelog: #{CHANGELOG_TEXT}"
     cocoapods(repo_update: true, clean_install: true, use_bundle_exec: false)
   end
@@ -112,7 +118,6 @@ platform :ios do
       clean: true
     )
     if options[:update]
-      CHANGELOG_TEXT = options[:update]
       upload_to_testflight(
         skip_waiting_for_build_processing: false,
         changelog: CHANGELOG_TEXT,
@@ -140,7 +145,6 @@ platform :ios do
       clean: true
     )
     if options[:update]
-      CHANGELOG_TEXT = options[:update]
       upload_to_testflight(
         skip_waiting_for_build_processing: false,
         changelog: CHANGELOG_TEXT,
