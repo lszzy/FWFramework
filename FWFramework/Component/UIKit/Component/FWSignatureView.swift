@@ -210,7 +210,7 @@ final public class FWSignatureView: UIView {
 /// - optional didStart(_ view : FWSignatureView)
 /// - optional didFinish(_ view : FWSignatureView)
 @objc
-public protocol FWSignatureDelegate: class {
+public protocol FWSignatureDelegate {
     func didStart(_ view : FWSignatureView)
     func didFinish(_ view : FWSignatureView)
 }
