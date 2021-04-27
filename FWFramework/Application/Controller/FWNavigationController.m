@@ -343,7 +343,7 @@
 - (UIColor *)fwContainerBackgroundColor
 {
     UIColor *backgroundColor = objc_getAssociatedObject(self, @selector(fwContainerBackgroundColor));
-    return backgroundColor ?: [UIColor whiteColor];
+    return backgroundColor ?: [UIColor clearColor];
 }
 
 - (void)setFwContainerBackgroundColor:(UIColor *)backgroundColor

@@ -96,6 +96,10 @@
     [emptyView setDetailTextLabelText:emptyDetail];
     [emptyView setActionButtonTitle:emptyAction];
     if (block) [emptyView.actionButton fwAddTouchBlock:block];
+
+    if (FWEmptyPluginConfig.sharedInstance.customBlock) {
+        FWEmptyPluginConfig.sharedInstance.customBlock(self);
+    }
     
     if (FWEmptyPluginConfig.sharedInstance.fadeAnimated) {
         [UIView animateWithDuration:0.25 animations:^{

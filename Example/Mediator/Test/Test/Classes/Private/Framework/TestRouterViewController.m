@@ -275,6 +275,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
                                          @[@"测试Cookie", @"onOpenCookie"],
                                          @[@"Url编码", @"onOpenEncode"],
                                          @[@"Url未编码", @"onOpenImage"],
+                                         @[@"不规范Url", @"onOpenSlash"],
                                          @[@"打开Url", @"onOpen"],
                                          @[@"中文Url", @"onOpenChinese"],
                                          @[@"打开Url，通配符*", @"onOpenWild"],
@@ -353,6 +354,11 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)onOpenImage
 {
     [FWRouter openURL:@"app://test/1?url=https://kvm.wuyong.site/test.php"];
+}
+
+- (void)onOpenSlash
+{
+    [FWRouter openURL:@"app:test/1#anchor"];
 }
 
 - (void)onOpenWild
