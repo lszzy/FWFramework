@@ -47,9 +47,9 @@ platform :ios do
     end
 
     if "#{lane}".include? "test"
-      CHANGELOG_TEXT = "测试环境版本，更新内容：\n#{CHANGELOG_TEXT}"
+      CHANGELOG_TEXT = "测试环境版本#{BUILD_NUMBER}，更新内容：\n#{CHANGELOG_TEXT}"
     else
-      CHANGELOG_TEXT = "正式环境版本，更新内容：\n#{CHANGELOG_TEXT}"
+      CHANGELOG_TEXT = "正式环境版本#{BUILD_NUMBER}，更新内容：\n#{CHANGELOG_TEXT}"
     end
 
     puts "Changelog: #{CHANGELOG_TEXT}"
