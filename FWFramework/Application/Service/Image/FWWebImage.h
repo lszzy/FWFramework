@@ -130,7 +130,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 #pragma mark - FWAppImagePlugin
 
 /// 应用默认图片插件
-@interface FWAppImagePlugin : NSObject
+@interface FWAppImagePlugin : NSObject <FWImagePlugin>
 
 /// 单例模式
 @property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;

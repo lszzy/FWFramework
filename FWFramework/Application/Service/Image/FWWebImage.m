@@ -759,10 +759,6 @@
 
 #pragma mark - FWAppImagePlugin
 
-@interface FWAppImagePlugin () <FWImagePlugin>
-
-@end
-
 @implementation FWAppImagePlugin
 
 + (void)load

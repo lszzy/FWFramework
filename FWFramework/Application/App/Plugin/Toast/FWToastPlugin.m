@@ -50,13 +50,7 @@
         return;
     }
     
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [FWAppToastPlugin.sharedInstance fwShowLoadingWithAttributedText:attributedText inView:self];
 }
 
 - (void)fwHideLoading
@@ -67,7 +61,7 @@
         return;
     }
     
-    [self fwHideIndicatorLoading];
+    [FWAppToastPlugin.sharedInstance fwHideLoading:self];
 }
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
@@ -84,13 +78,7 @@
         return;
     }
     
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [FWAppToastPlugin.sharedInstance fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
 }
 
 - (void)fwHideProgress
@@ -101,7 +89,7 @@
         return;
     }
     
-    [self fwHideIndicatorLoading];
+    [FWAppToastPlugin.sharedInstance fwHideProgress:self];
 }
 
 - (void)fwShowMessageWithText:(id)text
@@ -128,9 +116,7 @@
         return;
     }
     
-    UIView *indicatorView = [self fwShowIndicatorMessageWithAttributedText:attributedText];
-    indicatorView.userInteractionEnabled = completion ? YES : NO;
-    [self fwHideIndicatorMessageAfterDelay:2.0 completion:completion];
+    [FWAppToastPlugin.sharedInstance fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
 }
 
 - (void)fwHideMessage
@@ -141,7 +127,7 @@
         return;
     }
     
-    [self fwHideIndicatorMessage];
+    [FWAppToastPlugin.sharedInstance fwHideMessage:self];
 }
 
 @end

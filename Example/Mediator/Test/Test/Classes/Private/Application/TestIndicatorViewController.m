@@ -39,10 +39,9 @@
 {
     self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
-                                         @[@"上下无文本", @"onIndicator"],
-                                         @[@"上下文本", @"onIndicator2"],
-                                         @[@"左右无文本", @"onIndicator3"],
-                                         @[@"左右文本", @"onIndicator4"],
+                                         @[@"无文本", @"onIndicator"],
+                                         @[@"有文本", @"onIndicator2"],
+                                         @[@"文本太长", @"onIndicator3"],
                                          @[@"加载动画", @"onLoading"],
                                          @[@"进度动画", @"onProgress"],
                                          @[@"加载动画(window)", @"onLoadingWindow"],
@@ -99,17 +98,9 @@
 
 - (void)onIndicator3
 {
-    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:nil indicatorColor:[UIColor fwThemeLight:[UIColor grayColor] dark:[UIColor whiteColor]] backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
+    [self.view fwShowLoadingWithText:@"我是很长很长很长很长很长很长很长很长很长很长的加载文案"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicatorLoading];
-    });
-}
-
-- (void)onIndicator4
-{
-    [self.view fwShowIndicatorLoadingWithStyle:UIActivityIndicatorViewStyleGray attributedTitle:[[NSAttributedString alloc] initWithString:@"正在加载..."] indicatorColor:[UIColor fwThemeLight:[UIColor grayColor] dark:[UIColor whiteColor]] backgroundColor:[UIColor clearColor] dimBackgroundColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] horizontalAlignment:YES contentInsets:UIEdgeInsetsMake(10, 10, 10, 10) cornerRadius:5];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideIndicatorLoading];
+        [self.view fwHideLoading];
     });
 }
 

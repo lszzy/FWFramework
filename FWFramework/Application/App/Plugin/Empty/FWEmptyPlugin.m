@@ -26,9 +26,17 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[FWEmptyPluginConfig alloc] init];
-        instance.fadeAnimated = YES;
     });
     return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _fadeAnimated = YES;
+    }
+    return self;
 }
 
 @end
