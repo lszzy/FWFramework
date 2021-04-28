@@ -67,6 +67,7 @@
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.scrollsToTop = NO;
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, 16, 0, 16);
     [self addSubview:self.scrollView];
     
     _contentView = [[UIView alloc] init];
@@ -100,7 +101,6 @@
     [super layoutSubviews];
     
     self.scrollView.frame = self.bounds;
-    self.scrollView.contentInset = self.contentViewInsets;
     
     CGSize contentViewSize = [self sizeThatContentViewFits];
     // contentView 默认垂直居中于 scrollView
@@ -242,6 +242,15 @@
     [self setNeedsLayout];
 }
 
+- (UIEdgeInsets)contentViewInsets {
+    return self.scrollView.contentInset;
+}
+
+- (void)setContentViewInsets:(UIEdgeInsets)contentViewInsets {
+    self.scrollView.contentInset = contentViewInsets;
+    [self setNeedsLayout];
+}
+
 - (void)setImageViewInsets:(UIEdgeInsets)imageViewInsets {
     _imageViewInsets = imageViewInsets;
     [self setNeedsLayout];
@@ -318,7 +327,6 @@
 
 + (void)setDefaultAppearance {
     FWEmptyView *appearance = [FWEmptyView appearance];
-    appearance.contentViewInsets = UIEdgeInsetsMake(0, 16, 0, 16);
     appearance.imageViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.loadingViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.textLabelInsets = UIEdgeInsetsMake(0, 0, 10, 0);
