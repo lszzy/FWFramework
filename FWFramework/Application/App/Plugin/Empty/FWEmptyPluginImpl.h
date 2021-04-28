@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWEmptyView
 
+/// 自定义空界面加载视图协议
 @protocol FWEmptyLoadingViewProtocol <NSObject>
-
 @optional
 
-// 当调用 setLoadingViewHidden:NO 时，系统将自动调用此处的 startAnimating
+/// 当调用setLoadingViewHidden:NO时，将自动调用此处的startAnimating
 - (void)startAnimating;
 
 @end
