@@ -35,12 +35,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL horizontalAlignment;
 /// 文本内间距，默认{10, 10, 10, 10}
 @property (nonatomic, assign) UIEdgeInsets contentInsets;
+/// 指示器和文本之间的间距，默认5.0
+@property (nonatomic, assign) CGFloat contentSpacing;
 /// 吐司左右最小内间距，默认10
 @property (nonatomic, assign) CGFloat paddingWidth;
 /// 指示器圆角半径，默认5.0
 @property (nonatomic, assign) CGFloat cornerRadius;
 /// 消息吐司自动隐藏延迟时间，默认2.0秒
 @property (nonatomic, assign) NSTimeInterval delayTime;
+/// 吐司自定义样式句柄，默认nil
+@property (nonatomic, copy, nullable) void (^customBlock)(UIView *view);
 
 #pragma mark - Public
 

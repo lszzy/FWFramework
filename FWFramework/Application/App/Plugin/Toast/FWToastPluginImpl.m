@@ -43,6 +43,7 @@
         _dimBackgroundColor = [UIColor clearColor];
         _horizontalAlignment = NO;
         _contentInsets = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
+        _contentSpacing = 5.f;
         _paddingWidth = 10.f;
         _cornerRadius = 5.f;
         _delayTime = 2.0;
@@ -64,15 +65,8 @@
         if (centerView) {
             // 重用指示器视图并移至顶层
             [view bringSubviewToFront:indicatorView];
-            indicatorView.backgroundColor = self.dimBackgroundColor;
-            centerView.backgroundColor = self.backgroundColor;
-            centerView.layer.cornerRadius = self.cornerRadius;
-            UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
-            activityView.activityIndicatorViewStyle = self.indicatorStyle;
-            activityView.color = self.indicatorColor;
             UILabel *titleLabel = [indicatorView viewWithTag:2015];
             titleLabel.attributedText = attributedTitle;
-            titleLabel.textColor = self.textColor;
             return indicatorView;
         }
         
@@ -132,7 +126,7 @@
         [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
-        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:activityView withOffset:5.f];
+        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:activityView withOffset:self.contentSpacing];
         [titleLabel fwAddCollapseConstraint:collapseConstraint];
     // 上下布局
     } else {
@@ -144,8 +138,12 @@
         [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
         [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
-        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:5.f];
+        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:self.contentSpacing];
         [titleLabel fwAddCollapseConstraint:collapseConstraint];
+    }
+    
+    if (self.customBlock) {
+        self.customBlock(view);
     }
     return indicatorView;
 }
@@ -222,6 +220,10 @@
     textLabel.attributedText = attributedText;
     [centerView addSubview:textLabel];
     [textLabel fwPinEdgesToSuperviewWithInsets:self.contentInsets];
+    
+    if (self.customBlock) {
+        self.customBlock(view);
+    }
     return toastView;
 }
 
