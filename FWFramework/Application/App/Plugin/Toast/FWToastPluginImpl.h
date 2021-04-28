@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 消息吐司自动隐藏延迟时间，默认2.0秒
 @property (nonatomic, assign) NSTimeInterval delayTime;
 
+#pragma mark - Public
+
 /// 显示指示器，不可点击，返回指示器视图
 - (UIView *)showIndicator:(nullable NSAttributedString *)attributedTitle inView:(UIView *)view;
 
