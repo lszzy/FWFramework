@@ -279,7 +279,6 @@
 		2FFE1D852507BFBD000332A3 /* FWProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CC52507BFBD000332A3 /* FWProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D862507BFBD000332A3 /* FWBannerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CC62507BFBD000332A3 /* FWBannerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D872507BFBD000332A3 /* FWCropViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CC72507BFBD000332A3 /* FWCropViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2FFE1D882507BFBD000332A3 /* FWIndicatorControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CC82507BFBD000332A3 /* FWIndicatorControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D892507BFBD000332A3 /* FWMarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CC92507BFBD000332A3 /* FWMarqueeLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D8A2507BFBD000332A3 /* FWGridView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CCA2507BFBD000332A3 /* FWGridView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D8B2507BFBD000332A3 /* FWAttributedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CCB2507BFBD000332A3 /* FWAttributedLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -294,7 +293,6 @@
 		2FFE1D952507BFBD000332A3 /* FWSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */; };
 		2FFE1D962507BFBD000332A3 /* FWTagCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2FFE1D972507BFBD000332A3 /* FWSkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */; };
-		2FFE1D982507BFBD000332A3 /* FWIndicatorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CD82507BFBD000332A3 /* FWIndicatorControl.m */; };
 		2FFE1D992507BFBD000332A3 /* FWCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CD92507BFBD000332A3 /* FWCropViewController.m */; };
 		2FFE1D9A2507BFBD000332A3 /* FWBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CDA2507BFBD000332A3 /* FWBannerView.m */; };
 		2FFE1D9B2507BFBD000332A3 /* FWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FFE1CDB2507BFBD000332A3 /* FWProgressView.m */; };
@@ -620,7 +618,6 @@
 		2FFE1CC52507BFBD000332A3 /* FWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWProgressView.h; sourceTree = "<group>"; };
 		2FFE1CC62507BFBD000332A3 /* FWBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWBannerView.h; sourceTree = "<group>"; };
 		2FFE1CC72507BFBD000332A3 /* FWCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWCropViewController.h; sourceTree = "<group>"; };
-		2FFE1CC82507BFBD000332A3 /* FWIndicatorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWIndicatorControl.h; sourceTree = "<group>"; };
 		2FFE1CC92507BFBD000332A3 /* FWMarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWMarqueeLabel.h; sourceTree = "<group>"; };
 		2FFE1CCA2507BFBD000332A3 /* FWGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWGridView.h; sourceTree = "<group>"; };
 		2FFE1CCB2507BFBD000332A3 /* FWAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAttributedLabel.h; sourceTree = "<group>"; };
@@ -635,7 +632,6 @@
 		2FFE1CD52507BFBD000332A3 /* FWSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWSegmentedControl.m; sourceTree = "<group>"; };
 		2FFE1CD62507BFBD000332A3 /* FWTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWTagCollectionView.h; sourceTree = "<group>"; };
 		2FFE1CD72507BFBD000332A3 /* FWSkeletonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FWSkeletonView.swift; sourceTree = "<group>"; };
-		2FFE1CD82507BFBD000332A3 /* FWIndicatorControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWIndicatorControl.m; sourceTree = "<group>"; };
 		2FFE1CD92507BFBD000332A3 /* FWCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWCropViewController.m; sourceTree = "<group>"; };
 		2FFE1CDA2507BFBD000332A3 /* FWBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWBannerView.m; sourceTree = "<group>"; };
 		2FFE1CDB2507BFBD000332A3 /* FWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWProgressView.m; sourceTree = "<group>"; };
@@ -1224,8 +1220,6 @@
 				2FFE1CBB2507BFBD000332A3 /* FWFloatLayoutView.m */,
 				2FFE1CCA2507BFBD000332A3 /* FWGridView.h */,
 				2FFE1CB92507BFBD000332A3 /* FWGridView.m */,
-				2FFE1CC82507BFBD000332A3 /* FWIndicatorControl.h */,
-				2FFE1CD82507BFBD000332A3 /* FWIndicatorControl.m */,
 				2FFE1CC92507BFBD000332A3 /* FWMarqueeLabel.h */,
 				2FFE1CBA2507BFBD000332A3 /* FWMarqueeLabel.m */,
 				2FFE1CC22507BFBD000332A3 /* FWPageControl.h */,
@@ -1444,7 +1438,6 @@
 				2FFE1DCA2507BFBD000332A3 /* NSURL+FWFramework.h in Headers */,
 				2FFE1BC32507BF95000332A3 /* FWCacheAbstract.h in Headers */,
 				2FFE1BCE2507BF95000332A3 /* FWURLResponseSerialization.h in Headers */,
-				2FFE1D882507BFBD000332A3 /* FWIndicatorControl.h in Headers */,
 				2FFE1BC72507BF95000332A3 /* FWURLRequestSerialization.h in Headers */,
 				2FFE1DB92507BFBD000332A3 /* NSObject+FWRuntime.h in Headers */,
 				2FFE1D3F2507BFBD000332A3 /* UIApplication+FWFramework.h in Headers */,
@@ -1698,7 +1691,6 @@
 				2FFE1BD02507BF95000332A3 /* FWURLRequestSerialization.m in Sources */,
 				2F1626892574DC8E0037427D /* FWImage.m in Sources */,
 				2FFE1BD72507BF95000332A3 /* FWBatchRequestAgent.m in Sources */,
-				2FFE1D982507BFBD000332A3 /* FWIndicatorControl.m in Sources */,
 				2FFE1D6D2507BFBD000332A3 /* UITextView+FWFramework.m in Sources */,
 				2F65D76B25F7451E00E522D6 /* FWVersion.m in Sources */,
 				2FFE1BCD2507BF95000332A3 /* FWNetworkReachabilityManager.m in Sources */,
