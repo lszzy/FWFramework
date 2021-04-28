@@ -11,104 +11,54 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIView+FWToastPluginImpl
+#pragma mark - FWAppToastPlugin
 
-/*!
- @brief UIView+FWToastPluginImpl
- */
-@interface UIView (FWToastPluginImpl)
+/// 应用默认吐司插件
+@interface FWAppToastPlugin : NSObject <FWToastPlugin>
 
-/**
- *  显示加载指示器，不可点击（简单版）
- *
- *  @param style           样式
- *  @param attributedTitle 属性文本，默认白色、16号字体
- *  @return 加载指示器视图
- */
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(nullable NSAttributedString *)attributedTitle;
+/// 单例模式
+@property (class, nonatomic, readonly) FWAppToastPlugin *sharedInstance;
 
-/**
- *  显示加载指示器，不可点击（详细版）
- *
- *  @param style               样式
- *  @param attributedTitle     属性文本，默认白色、16号字体
- *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
- *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
- *  @param horizontalAlignment 是否水平对齐，默认垂直对齐
- *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
- *  @param cornerRadius        圆角半径，默认5.0
- *  @return 加载指示器视图
- */
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(nullable NSAttributedString *)attributedTitle
-                             indicatorColor:(nullable UIColor *)indicatorColor
-                            backgroundColor:(nullable UIColor *)backgroundColor
-                         dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                        horizontalAlignment:(BOOL)horizontalAlignment
-                              contentInsets:(UIEdgeInsets)contentInsets
-                               cornerRadius:(CGFloat)cornerRadius;
+/// 文本字体，默认16号
+@property (nonatomic, strong) UIFont *textFont;
+/// 文本颜色，默认白色
+@property (nonatomic, strong) UIColor *textColor;
+/// 指示器样式，默认medium
+@property (nonatomic, assign) UIActivityIndicatorViewStyle indicatorStyle;
+/// 指示器颜色，默认白色
+@property (nonatomic, strong) UIColor *indicatorColor;
+/// 吐司背景色，默认#404040
+@property (nonatomic, strong) UIColor *backgroundColor;
+/// 全局背景色，默认透明
+@property (nonatomic, strong) UIColor *dimBackgroundColor;
+/// 是否水平对齐，默认NO垂直对齐
+@property (nonatomic, assign) BOOL horizontalAlignment;
+/// 文本内间距，默认{10, 10, 10, 10}
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+/// 吐司左右最小内间距，默认10
+@property (nonatomic, assign) CGFloat paddingWidth;
+/// 指示器圆角半径，默认5.0
+@property (nonatomic, assign) CGFloat cornerRadius;
+/// 消息吐司自动隐藏延迟时间，默认2.0秒
+@property (nonatomic, assign) NSTimeInterval delayTime;
 
-/**
- *  隐藏加载指示器，与show必须成对出现
- *
- *  @return 如果加载指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorLoading;
+/// 显示指示器，不可点击，返回指示器视图
+- (UIView *)showIndicator:(nullable NSAttributedString *)attributedTitle inView:(UIView *)view;
 
-/**
- *  延迟n秒后自动隐藏加载指示器，如果期间调用了show则取消隐藏，可避免连续show|hide时闪烁问题
- *
- *  @param delay 延迟时间，如0.1秒
- *  @return 如果加载指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorLoadingAfterDelay:(NSTimeInterval)delay;
+/// 隐藏指示器，与show必须成对出现。指示器不存在时返回NO
+- (BOOL)hideIndicator:(UIView *)view;
 
-/**
- *  显示消息指示器，默认不可点击（简单版）
- *
- *  @param attributedText 属性文本，默认白色、16号字体
- *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
- */
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText;
+/// 延迟n秒后自动隐藏指示器，如果期间调用了show则取消隐藏，可避免连续show|hide时闪烁问题。指示器不存在时返回NO
+- (BOOL)hideIndicatorAfterDelay:(NSTimeInterval)delay inView:(UIView *)view;
 
-/**
- *  显示消息指示器，默认不可点击（详细版）
- *
- *  @param attributedText      属性文本，默认白色、16号字体
- *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
- *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
- *  @param paddingWidth        吐司左右最小内间距，默认10
- *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
- *  @param cornerRadius        圆角半径，默认5.0
- *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
- */
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText
-                                      indicatorColor:(nullable UIColor *)indicatorColor
-                                     backgroundColor:(nullable UIColor *)backgroundColor
-                                  dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                                        paddingWidth:(CGFloat)paddingWidth
-                                       contentInsets:(UIEdgeInsets)contentInsets
-                                        cornerRadius:(CGFloat)cornerRadius;
+/// 显示吐司，默认不可点击，返回吐司视图。如需点击可设置userInteractionEnabled为NO
+- (UIView *)showToast:(nullable NSAttributedString *)attributedText inView:(UIView *)view;
 
-/**
- *  手工隐藏消息指示器
- *
- *  @return 如果消息指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorMessage;
+/// 手工隐藏吐司。吐司不存在时返回NO
+- (BOOL)hideToast:(UIView *)view;
 
-/**
- *  延迟n秒后自动隐藏消息指示器
- *
- *  @param delay 延迟时间
- *  @param completion 完成回调
- *  @return 如果消息指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorMessageAfterDelay:(NSTimeInterval)delay
-                              completion:(nullable void (^)(void))completion;
+/// 延迟n秒后自动隐藏吐司。吐司不存在时返回NO
+- (BOOL)hideToastAfterDelay:(NSTimeInterval)delay completion:(nullable void (^)(void))completion inView:(UIView *)view;
 
 @end
 
