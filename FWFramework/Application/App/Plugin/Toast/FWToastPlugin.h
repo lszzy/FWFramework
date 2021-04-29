@@ -47,28 +47,6 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 @end
 
-/// 吐司插件配置类
-@interface FWToastPluginConfig : NSObject
-
-/// 配置单例
-@property (class, nonatomic, readonly) FWToastPluginConfig *sharedInstance;
-
-/// 显示吐司时是否执行淡入动画，默认YES
-@property (nonatomic, assign) BOOL fadeAnimated;
-/// 吐司自动隐藏时间，默认2.0
-@property (nonatomic, assign) NSTimeInterval delayTime;
-/// 吐司自定义句柄，show方法自动调用
-@property (nonatomic, copy, nullable) void (^customBlock)(UIView *view);
-
-/// 默认加载吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultLoadingText)(void);
-/// 默认进度条吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultProgressText)(void);
-/// 默认消息吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultMessageText)(FWToastStyle style);
-
-@end
-
 #pragma mark - FWToastPluginView
 
 /// 吐司插件视图协议，使用吐司插件
