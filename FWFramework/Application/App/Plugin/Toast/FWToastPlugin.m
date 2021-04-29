@@ -9,34 +9,7 @@
 
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
-#import "FWAutoLayout.h"
 #import "FWPlugin.h"
-
-#pragma mark - FWToastPlugin
-
-@implementation FWToastPluginConfig
-
-+ (FWToastPluginConfig *)sharedInstance
-{
-    static FWToastPluginConfig *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWToastPluginConfig alloc] init];
-    });
-    return instance;
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _fadeAnimated = YES;
-        _delayTime = 2.0;
-    }
-    return self;
-}
-
-@end
 
 #pragma mark - FWToastPluginView
 
@@ -49,96 +22,40 @@
 
 - (void)fwShowLoadingWithText:(id)text
 {
-    id loadingText = text;
-    if (!loadingText && FWToastPluginConfig.sharedInstance.defaultLoadingText) {
-        loadingText = FWToastPluginConfig.sharedInstance.defaultLoadingText();
-    }
-    
-    NSAttributedString *attributedText = [loadingText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:loadingText] : loadingText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
-        [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2011];
-    if (toastView) {
-        [toastView invalidateTimer];
-        [self bringSubviewToFront:toastView];
-        toastView.attributedTitle = attributedText;
-        return;
-    }
-    
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeIndicator];
-    toastView.tag = 2011;
-    toastView.attributedTitle = attributedText;
-    [self addSubview:toastView];
-    [toastView fwPinEdgesToSuperview];
-    
-    if (FWToastPluginConfig.sharedInstance.customBlock) {
-        FWToastPluginConfig.sharedInstance.customBlock(self);
-    }
-    [toastView showAnimated:FWToastPluginConfig.sharedInstance.fadeAnimated];
+    [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
 }
 
 - (void)fwHideLoading
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideLoading:)]) {
-        [plugin fwHideLoading:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideLoading:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2011];
-    if (toastView) [toastView hide];
+    [plugin fwHideLoading:self];
 }
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
-    id progressText = text;
-    if (!progressText && FWToastPluginConfig.sharedInstance.defaultProgressText) {
-        progressText = FWToastPluginConfig.sharedInstance.defaultProgressText();
-    }
-    
-    NSAttributedString *attributedText = [progressText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:progressText] : progressText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
-        [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2012];
-    if (toastView) {
-        [toastView invalidateTimer];
-        [self bringSubviewToFront:toastView];
-        toastView.attributedTitle = attributedText;
-        toastView.progress = progress;
-        return;
-    }
-    
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeProgress];
-    toastView.tag = 2012;
-    toastView.attributedTitle = attributedText;
-    toastView.progress = progress;
-    [self addSubview:toastView];
-    [toastView fwPinEdgesToSuperview];
-    
-    if (FWToastPluginConfig.sharedInstance.customBlock) {
-        FWToastPluginConfig.sharedInstance.customBlock(self);
-    }
-    [toastView showAnimated:FWToastPluginConfig.sharedInstance.fadeAnimated];
+    [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
 }
 
 - (void)fwHideProgress
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideProgress:)]) {
-        [plugin fwHideProgress:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideProgress:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2012];
-    if (toastView) [toastView hide];
+    [plugin fwHideProgress:self];
 }
 
 - (void)fwShowMessageWithText:(id)text
@@ -153,46 +70,21 @@
 
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    id messageText = text;
-    if (!messageText && FWToastPluginConfig.sharedInstance.defaultMessageText) {
-        messageText = FWToastPluginConfig.sharedInstance.defaultMessageText(style);
-    }
-    
-    NSAttributedString *attributedText = [messageText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:messageText] : messageText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
-        [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2013];
-    BOOL fadeAnimated = FWToastPluginConfig.sharedInstance.fadeAnimated && !toastView;
-    if (toastView) [toastView hide];
-    
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeText];
-    toastView.tag = 2013;
-    toastView.userInteractionEnabled = completion ? YES : NO;
-    toastView.attributedTitle = attributedText;
-    [self addSubview:toastView];
-    [toastView fwPinEdgesToSuperview];
-    
-    if (FWToastPluginConfig.sharedInstance.customBlock) {
-        FWToastPluginConfig.sharedInstance.customBlock(self);
-    }
-    [toastView showAnimated:fadeAnimated];
-    [toastView hideAfterDelay:FWToastPluginConfig.sharedInstance.delayTime completion:completion];
+    [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
 }
 
 - (void)fwHideMessage
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideMessage:)]) {
-        [plugin fwHideMessage:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideMessage:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    FWToastView *toastView = [self viewWithTag:2013];
-    if (toastView) [toastView hide];
+    [plugin fwHideMessage:self];
 }
 
 @end
