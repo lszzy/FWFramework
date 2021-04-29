@@ -757,24 +757,24 @@
 
 @end
 
-#pragma mark - FWAppImagePlugin
+#pragma mark - FWImagePluginImpl
 
-@implementation FWAppImagePlugin
+@implementation FWImagePluginImpl
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[FWAppImagePlugin class]];
+        [FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[FWImagePluginImpl class]];
     });
 }
 
-+ (FWAppImagePlugin *)sharedInstance
++ (FWImagePluginImpl *)sharedInstance
 {
-    static FWAppImagePlugin *instance = nil;
+    static FWImagePluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWAppImagePlugin alloc] init];
+        instance = [[FWImagePluginImpl alloc] init];
     });
     return instance;
 }
