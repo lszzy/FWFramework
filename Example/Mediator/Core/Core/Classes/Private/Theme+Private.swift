@@ -65,13 +65,13 @@ import FWFramework
                 return nil
             }
         }
-        FWEmptyPluginConfig.sharedInstance.defaultText = {
+        FWEmptyPluginImpl.sharedInstance.defaultText = {
             return "暂无数据"
         }
-        FWEmptyPluginConfig.sharedInstance.defaultImage = {
+        FWEmptyPluginImpl.sharedInstance.defaultImage = {
             return UIImage.fwImageWithAppIcon()
         }
-        FWEmptyPluginConfig.sharedInstance.defaultAction = {
+        FWEmptyPluginImpl.sharedInstance.defaultAction = {
             return "重新加载"
         }
     }

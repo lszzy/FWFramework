@@ -165,4 +165,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWLogPluginImpl
+
+/*!
+ @brief 默认NSLog日志插件
+ */
+@interface FWLogPluginImpl : NSObject <FWLogPlugin>
+
+/// 单例模式对象
+@property (class, nonatomic, readonly) FWLogPluginImpl *sharedInstance;
+
+@end
+
 NS_ASSUME_NONNULL_END

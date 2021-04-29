@@ -91,14 +91,32 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     // 过滤不支持的级别
     if (!(fwStaticLogLevel & type)) return;
     
-    // 插件存在，调用插件
+    // 插件存在，调用插件；否则使用默认插件
     id<FWLogPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWLogPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwLog:withMessage:)]) {
-        [plugin fwLog:type withMessage:message];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwLog:withMessage:)]) {
+        plugin = FWLogPluginImpl.sharedInstance;
     }
-    
-    // 插件不存在，系统日志
+    [plugin fwLog:type withMessage:message];
+}
+
+@end
+
+#pragma mark - FWLogPluginImpl
+
+@implementation FWLogPluginImpl
+
++ (FWLogPluginImpl *)sharedInstance
+{
+    static FWLogPluginImpl *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWLogPluginImpl alloc] init];
+    });
+    return instance;
+}
+
+- (void)fwLog:(FWLogType)type withMessage:(NSString *)message
+{
     switch (type) {
         case FWLogTypeError:
             NSLog(@"%@ ERROR: %@", @"❌", message);

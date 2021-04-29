@@ -101,4 +101,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWAlertPluginImpl
+
+/// 默认弹窗插件
+@interface FWAlertPluginImpl : NSObject <FWAlertPlugin>
+
+/// 单例模式对象
+@property (class, nonatomic, readonly) FWAlertPluginImpl *sharedInstance;
+
+@end
+
 NS_ASSUME_NONNULL_END
