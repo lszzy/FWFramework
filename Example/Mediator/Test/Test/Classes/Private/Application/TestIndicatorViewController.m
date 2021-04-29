@@ -45,7 +45,7 @@
                                          @[@"加载动画", @"onLoading"],
                                          @[@"进度动画", @"onProgress"],
                                          @[@"加载动画(window)", @"onLoadingWindow"],
-                                         @[@"进度动画(window)", @"onProgressWindow"],
+                                         @[@"加载进度动画(window)", @"onProgressWindow"],
                                          @[@"单行吐司(可点击)", @"onToast"],
                                          @[@"多行吐司(默认不可点击)", @"onToast2"],
                                          ]];
@@ -114,11 +114,11 @@
 
 - (void)onProgress
 {
-    [self.view fwShowLoadingWithText:@"上传中"];
+    [self.view fwShowProgressWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", 0.0f] progress:0];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self mockProgress];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwHideLoading];
+            [self.view fwHideProgress];
         });
     });
 }
@@ -130,7 +130,7 @@
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwShowLoadingWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]];
+            [self.view fwShowProgressWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100] progress:progress];
         });
         usleep(finish ? 2000000 : 50000);
     }
@@ -147,7 +147,6 @@
 - (void)onProgressWindow
 {
     [self.view.window fwShowLoadingWithText:@"上传中"];
-    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self mockProgressWindow];
         dispatch_async(dispatch_get_main_queue(), ^{
