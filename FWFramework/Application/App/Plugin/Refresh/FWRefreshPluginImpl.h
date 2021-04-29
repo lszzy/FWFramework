@@ -115,4 +115,14 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 @end
 
+#pragma mark - FWRefreshPluginImpl
+
+/// 默认刷新插件
+@interface FWRefreshPluginImpl : NSObject <FWRefreshPlugin>
+
+/// 单例模式
+@property (class, nonatomic, readonly) FWRefreshPluginImpl *sharedInstance;
+
+@end
+
 NS_ASSUME_NONNULL_END

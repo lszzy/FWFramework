@@ -19,140 +19,116 @@
 
 - (BOOL)fwIsRefreshing {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwIsRefreshing:)]) {
-        return [refreshPlugin fwIsRefreshing:self];
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwIsRefreshing:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    return self.fwPullRefreshView.state == FWPullRefreshStateLoading;
+    return [refreshPlugin fwIsRefreshing:self];
 }
 
 - (BOOL)fwShowRefreshing {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwShowRefreshing:)]) {
-        return [refreshPlugin fwShowRefreshing:self];
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwShowRefreshing:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    return self.fwShowPullRefresh;
+    return [refreshPlugin fwShowRefreshing:self];
 }
 
 - (void)setFwShowRefreshing:(BOOL)fwShowRefreshing {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetShowRefreshing:scrollView:)]) {
-        [refreshPlugin fwSetShowRefreshing:fwShowRefreshing scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetShowRefreshing:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    self.fwShowPullRefresh = fwShowRefreshing;
+    [refreshPlugin fwSetShowRefreshing:fwShowRefreshing scrollView:self];
 }
 
 - (void)fwSetRefreshingBlock:(void (^)(void))block {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetRefreshingBlock:scrollView:)]) {
-        [refreshPlugin fwSetRefreshingBlock:block scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetRefreshingBlock:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwAddPullRefreshWithBlock:block];
+    [refreshPlugin fwSetRefreshingBlock:block scrollView:self];
 }
 
 - (void)fwSetRefreshingTarget:(id)target action:(SEL)action {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetRefreshingTarget:action:scrollView:)]) {
-        [refreshPlugin fwSetRefreshingTarget:target action:action scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetRefreshingTarget:action:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwAddPullRefreshWithTarget:target action:action];
+    [refreshPlugin fwSetRefreshingTarget:target action:action scrollView:self];
 }
 
 - (void)fwBeginRefreshing {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwBeginRefreshing:)]) {
-        [refreshPlugin fwBeginRefreshing:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwBeginRefreshing:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwTriggerPullRefresh];
+    [refreshPlugin fwBeginRefreshing:self];
 }
 
 - (void)fwEndRefreshing {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwEndRefreshing:)]) {
-        [refreshPlugin fwEndRefreshing:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwEndRefreshing:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self.fwPullRefreshView stopAnimating];
+    [refreshPlugin fwEndRefreshing:self];
 }
 
 #pragma mark - Loading
 
 - (BOOL)fwIsLoading {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwIsLoading:)]) {
-        return [refreshPlugin fwIsLoading:self];
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwIsLoading:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    return self.fwInfiniteScrollView.state == FWInfiniteScrollStateLoading;
+    return [refreshPlugin fwIsLoading:self];
 }
 
 - (BOOL)fwShowLoading {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwShowLoading:)]) {
-        return [refreshPlugin fwShowLoading:self];
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwShowLoading:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    return self.fwShowInfiniteScroll;
+    return [refreshPlugin fwShowLoading:self];
 }
 
 - (void)setFwShowLoading:(BOOL)fwShowLoading {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetShowLoading:scrollView:)]) {
-        [refreshPlugin fwSetShowLoading:fwShowLoading scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetShowLoading:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    self.fwShowInfiniteScroll = fwShowLoading;
+    [refreshPlugin fwSetShowLoading:fwShowLoading scrollView:self];
 }
 
 - (void)fwSetLoadingBlock:(void (^)(void))block {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetLoadingBlock:scrollView:)]) {
-        [refreshPlugin fwSetLoadingBlock:block scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetLoadingBlock:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwAddInfiniteScrollWithBlock:block];
+    [refreshPlugin fwSetLoadingBlock:block scrollView:self];
 }
 
 - (void)fwSetLoadingTarget:(id)target action:(SEL)action {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwSetLoadingTarget:action:scrollView:)]) {
-        [refreshPlugin fwSetLoadingTarget:target action:action scrollView:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwSetLoadingTarget:action:scrollView:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwAddInfiniteScrollWithTarget:target action:action];
+    [refreshPlugin fwSetLoadingTarget:target action:action scrollView:self];
 }
 
 - (void)fwBeginLoading {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwBeginLoading:)]) {
-        [refreshPlugin fwBeginLoading:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwBeginLoading:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self fwTriggerInfiniteScroll];
+    [refreshPlugin fwBeginLoading:self];
 }
 
 - (void)fwEndLoading {
     id<FWRefreshPlugin> refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
-    if (refreshPlugin && [refreshPlugin respondsToSelector:@selector(fwEndLoading:)]) {
-        [refreshPlugin fwEndLoading:self];
-        return;
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(fwEndLoading:)]) {
+        refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    
-    [self.fwInfiniteScrollView stopAnimating];
+    [refreshPlugin fwEndLoading:self];
 }
 
 @end
