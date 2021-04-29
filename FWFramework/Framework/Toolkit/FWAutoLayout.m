@@ -217,7 +217,9 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint
 {
     constraint.fwOriginalConstant = constraint.constant;
-    [self.fwInnerCollapseConstraints addObject:constraint];
+    if (![self.fwInnerCollapseConstraints containsObject:constraint]) {
+        [self.fwInnerCollapseConstraints addObject:constraint];
+    }
 }
 
 - (NSMutableArray *)fwInnerCollapseConstraints

@@ -9,6 +9,7 @@
 
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
+#import "FWAutoLayout.h"
 #import "FWPlugin.h"
 
 #pragma mark - FWToastPlugin
@@ -23,6 +24,16 @@
         instance = [[FWToastPluginConfig alloc] init];
     });
     return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _fadeAnimated = YES;
+        _delayTime = 2.0;
+    }
+    return self;
 }
 
 @end
@@ -50,7 +61,24 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwShowLoadingWithAttributedText:attributedText inView:self];
+    FWToastView *toastView = [self viewWithTag:2011];
+    if (toastView) {
+        [toastView invalidateTimer];
+        [self bringSubviewToFront:toastView];
+        toastView.attributedTitle = attributedText;
+        return;
+    }
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeIndicator];
+    toastView.tag = 2011;
+    toastView.attributedTitle = attributedText;
+    [self addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (FWToastPluginConfig.sharedInstance.customBlock) {
+        FWToastPluginConfig.sharedInstance.customBlock(self);
+    }
+    [toastView showAnimated:FWToastPluginConfig.sharedInstance.fadeAnimated];
 }
 
 - (void)fwHideLoading
@@ -61,7 +89,8 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwHideLoading:self];
+    FWToastView *toastView = [self viewWithTag:2011];
+    if (toastView) [toastView hide];
 }
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
@@ -78,7 +107,26 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
+    FWToastView *toastView = [self viewWithTag:2012];
+    if (toastView) {
+        [toastView invalidateTimer];
+        [self bringSubviewToFront:toastView];
+        toastView.attributedTitle = attributedText;
+        toastView.progress = progress;
+        return;
+    }
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeProgress];
+    toastView.tag = 2012;
+    toastView.attributedTitle = attributedText;
+    toastView.progress = progress;
+    [self addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (FWToastPluginConfig.sharedInstance.customBlock) {
+        FWToastPluginConfig.sharedInstance.customBlock(self);
+    }
+    [toastView showAnimated:FWToastPluginConfig.sharedInstance.fadeAnimated];
 }
 
 - (void)fwHideProgress
@@ -89,7 +137,8 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwHideProgress:self];
+    FWToastView *toastView = [self viewWithTag:2012];
+    if (toastView) [toastView hide];
 }
 
 - (void)fwShowMessageWithText:(id)text
@@ -116,7 +165,22 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
+    FWToastView *toastView = [self viewWithTag:2013];
+    BOOL fadeAnimated = FWToastPluginConfig.sharedInstance.fadeAnimated && !toastView;
+    if (toastView) [toastView hide];
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeText];
+    toastView.tag = 2013;
+    toastView.userInteractionEnabled = completion ? YES : NO;
+    toastView.attributedTitle = attributedText;
+    [self addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (FWToastPluginConfig.sharedInstance.customBlock) {
+        FWToastPluginConfig.sharedInstance.customBlock(self);
+    }
+    [toastView showAnimated:fadeAnimated];
+    [toastView hideAfterDelay:FWToastPluginConfig.sharedInstance.delayTime completion:completion];
 }
 
 - (void)fwHideMessage
@@ -127,7 +191,8 @@
         return;
     }
     
-    [FWAppToastPlugin.sharedInstance fwHideMessage:self];
+    FWToastView *toastView = [self viewWithTag:2013];
+    if (toastView) [toastView hide];
 }
 
 @end
