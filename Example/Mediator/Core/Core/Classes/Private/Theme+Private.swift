@@ -65,6 +65,14 @@ import FWFramework
                 return nil
             }
         }
+        FWEmptyPluginImpl.sharedInstance.customBlock = { (emptyView) in
+            // 设置图片中心为总高度的1/3
+            emptyView.verticalOffsetBlock = { (totalHeight, contentHeight, imageHeight) in
+                let centerOriginY = (totalHeight - contentHeight) / 2
+                let targetOriginY = totalHeight / 3 - imageHeight / 2
+                return targetOriginY - centerOriginY
+            }
+        }
         FWEmptyPluginImpl.sharedInstance.defaultText = {
             return "暂无数据"
         }

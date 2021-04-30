@@ -104,8 +104,10 @@
     
     self.scrollView.frame = self.bounds;
     CGSize contentViewSize = [self sizeThatContentViewFits];
+    // 如果 verticalOffsetBlock 存在，计算垂直偏移
     if (self.verticalOffsetBlock) {
-        self.verticalOffset = self.verticalOffsetBlock(self.scrollView.bounds.size, contentViewSize);
+        CGFloat imageViewHeight = [self.imageView sizeThatFits:CGSizeMake(contentViewSize.width, CGFLOAT_MAX)].height + (self.imageViewInsets.top + self.imageViewInsets.bottom);
+        _verticalOffset = self.verticalOffsetBlock(self.scrollView.bounds.size.height, contentViewSize.height, imageViewHeight);
     }
     
     // contentView 默认垂直居中于 scrollView
@@ -281,7 +283,7 @@
     [self setNeedsLayout];
 }
 
-- (void)setVerticalOffsetBlock:(CGFloat (^)(CGSize, CGSize))verticalOffsetBlock {
+- (void)setVerticalOffsetBlock:(CGFloat (^)(CGFloat, CGFloat, CGFloat))verticalOffsetBlock {
     _verticalOffsetBlock = verticalOffsetBlock;
     [self setNeedsLayout];
 }
