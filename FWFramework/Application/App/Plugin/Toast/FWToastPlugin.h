@@ -47,21 +47,6 @@ static const FWToastStyle FWToastStyleFailure = 2;
 
 @end
 
-/// 吐司插件配置类
-@interface FWToastPluginConfig : NSObject
-
-/// 配置单例
-@property (class, nonatomic, readonly) FWToastPluginConfig *sharedInstance;
-
-/// 默认加载吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultLoadingText)(void);
-/// 默认进度条吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultProgressText)(void);
-/// 默认消息吐司文本句柄，支持String和AttributedString
-@property (nonatomic, copy, nullable) id _Nullable (^defaultMessageText)(FWToastStyle style);
-
-@end
-
 #pragma mark - FWToastPluginView
 
 /// 吐司插件视图协议，使用吐司插件

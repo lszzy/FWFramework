@@ -10,259 +10,426 @@
 #import "FWToastPluginImpl.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
+#import "FWPlugin.h"
+#import "FWProxy.h"
 #import <objc/runtime.h>
 
-#pragma mark - UIView+FWToastPluginImpl
+#pragma mark - FWToastProgressView
 
-@implementation UIView (FWToastPluginImpl)
+@implementation FWToastProgressView
 
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(NSAttributedString *)attributedTitle
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    return [self fwShowIndicatorLoadingWithStyle:style
-                                 attributedTitle:attributedTitle
-                                  indicatorColor:nil
-                                 backgroundColor:nil
-                              dimBackgroundColor:nil
-                             horizontalAlignment:NO
-                                   contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                                    cornerRadius:5.f];
+    self = [super initWithFrame:frame];
+    if (self) {
+        _progressColor = [UIColor whiteColor];
+        _lineWidth = 2.f;
+    }
+    return self;
 }
 
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(NSAttributedString *)attributedTitle
-                             indicatorColor:(UIColor *)indicatorColor
-                            backgroundColor:(UIColor *)backgroundColor
-                         dimBackgroundColor:(UIColor *)dimBackgroundColor
-                        horizontalAlignment:(BOOL)horizontalAlignment
-                              contentInsets:(UIEdgeInsets)contentInsets
-                               cornerRadius:(CGFloat)cornerRadius
+- (void)drawRect:(CGRect)rect
 {
-    [self fwHideIndicatorLoadingInvalidateTimer];
+    UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
+    processBackgroundPath.lineWidth = self.lineWidth;
+    processBackgroundPath.lineCapStyle = kCGLineCapButt;
+    CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    CGFloat radius = (self.bounds.size.width - self.lineWidth) / 2;
+    CGFloat startAngle = - ((float)M_PI / 2);
+    CGFloat endAngle = (2 * (float)M_PI) + startAngle;
+    [processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+    [[self.progressColor colorWithAlphaComponent:0.1] set];
+    [processBackgroundPath stroke];
     
-    // 判断之前的指示器是否存在
-    UIButton *indicatorView = [self viewWithTag:2011];
-    if (indicatorView) {
-        // 能否直接使用之前的指示器(避免进度重复调用出现闪烁)
-        UIView *centerView = [indicatorView viewWithTag:(horizontalAlignment ? 2013 : 2012)];
-        if (centerView) {
-            // 重用指示器视图并移至顶层
-            [self bringSubviewToFront:indicatorView];
-            indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-            centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
-            centerView.layer.cornerRadius = cornerRadius;
-            UIActivityIndicatorView *activityView = [indicatorView viewWithTag:2014];
-            activityView.activityIndicatorViewStyle = style;
-            activityView.color = indicatorColor ?: [UIColor whiteColor];
-            UILabel *titleLabel = [indicatorView viewWithTag:2015];
-            titleLabel.attributedText = attributedTitle;
-            titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-            return indicatorView;
+    UIBezierPath *processPath = [UIBezierPath bezierPath];
+    processPath.lineCapStyle = kCGLineCapSquare;
+    processPath.lineWidth = self.lineWidth;
+    endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
+    [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+    [self.progressColor set];
+    [processPath stroke];
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    [self setNeedsDisplay];
+}
+
+@end
+
+#pragma mark - FWToastView
+
+@interface FWToastView ()
+
+@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIView *firstView;
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
+@property (nonatomic, strong) FWToastProgressView *progressView;
+
+@property (nonatomic, strong) NSTimer *hideTimer;
+
+@end
+
+@implementation FWToastView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    return [self initWithType:FWToastViewTypeCustom];
+}
+
+- (instancetype)initWithType:(FWToastViewType)type
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        _type = type;
+        _contentBackgroundColor = [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
+        _contentMarginInsets = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
+        _contentInsets = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
+        _contentSpacing = 5.f;
+        _contentCornerRadius = 5.f;
+        if (@available(iOS 13.0, *)) {
+            _indicatorStyle = UIActivityIndicatorViewStyleMedium;
+        } else {
+            _indicatorStyle = UIActivityIndicatorViewStyleWhite;
         }
+        _indicatorColor = [UIColor whiteColor];
+        if (type == FWToastViewTypeProgress) {
+            _indicatorSize = CGSizeMake(37.f, 37.f);
+        } else {
+            _indicatorSize = CGSizeZero;
+        }
+        _titleFont = [UIFont systemFontOfSize:16];
+        _titleColor = [UIColor whiteColor];
         
-        // 移除旧的视图
-        [self fwHideIndicatorLoading];
+        self.backgroundColor = [UIColor clearColor];
+        self.userInteractionEnabled = YES;
+        
+        [self setupTypeView];
+    }
+    return self;
+}
+
+- (void)setupTypeView
+{
+    _contentView = [UIView fwAutoLayoutView];
+    _contentView.userInteractionEnabled = NO;
+    _contentView.layer.masksToBounds = YES;
+    [self addSubview:_contentView];
+    
+    _titleLabel = [UILabel fwAutoLayoutView];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.numberOfLines = 0;
+    [_contentView addSubview:_titleLabel];
+    
+    switch (self.type) {
+        case FWToastViewTypeImage: {
+            _imageView = [UIImageView fwAutoLayoutView];
+            _imageView.userInteractionEnabled = NO;
+            _imageView.backgroundColor = [UIColor clearColor];
+            [_contentView addSubview:_imageView];
+            break;
+        }
+        case FWToastViewTypeIndicator: {
+            _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:_indicatorStyle];
+            _indicatorView.userInteractionEnabled = NO;
+            [_contentView addSubview:_indicatorView];
+            break;
+        }
+        case FWToastViewTypeProgress: {
+            _progressView = [FWToastProgressView fwAutoLayoutView];
+            _progressView.backgroundColor = [UIColor clearColor];
+            _progressView.userInteractionEnabled = NO;
+            [_contentView addSubview:_progressView];
+            break;
+        }
+        case FWToastViewTypeText:
+        case FWToastViewTypeCustom:
+        default: {
+            break;
+        }
+    }
+}
+
+- (void)updateTypeView
+{
+    self.contentView.backgroundColor = self.contentBackgroundColor;
+    self.contentView.layer.cornerRadius = self.contentCornerRadius;
+    [self.contentView fwAlignCenterToSuperview];
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentMarginInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentMarginInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentMarginInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.contentMarginInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    self.titleLabel.font = self.titleFont;
+    self.titleLabel.textColor = self.titleColor;
+    self.titleLabel.attributedText = self.attributedTitle;
+    
+    switch (self.type) {
+        case FWToastViewTypeCustom: {
+            self.firstView = self.customView;
+            if (self.customView && !self.customView.superview) {
+                [self.contentView addSubview:self.customView];
+            }
+            break;
+        }
+        case FWToastViewTypeImage: {
+            self.firstView = self.imageView;
+            self.imageView.image = self.indicatorImage;
+            break;
+        }
+        case FWToastViewTypeIndicator: {
+            self.firstView = self.indicatorView;
+            self.indicatorView.activityIndicatorViewStyle = self.indicatorStyle;
+            self.indicatorView.color = self.indicatorColor;
+            break;
+        }
+        case FWToastViewTypeProgress: {
+            self.firstView = self.progressView;
+            self.progressView.progressColor = self.indicatorColor;
+            break;
+        }
+        case FWToastViewTypeText:
+        default: {
+            break;
+        }
     }
     
-    // 背景容器，不可点击
-    indicatorView = [UIButton fwAutoLayoutView];
-    indicatorView.userInteractionEnabled = YES;
-    indicatorView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-    indicatorView.tag = 2011;
-    [self addSubview:indicatorView];
-    [indicatorView fwPinEdgesToSuperview];
+    if (!self.firstView) {
+        [self.titleLabel fwPinEdgesToSuperviewWithInsets:self.contentInsets];
+        return;
+    }
     
-    // 居中容器
-    UIView *centerView = [UIView fwAutoLayoutView];
-    centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
-    centerView.layer.masksToBounds = YES;
-    centerView.layer.cornerRadius = cornerRadius;
-    centerView.tag = (horizontalAlignment ? 2013 : 2012);
-    [indicatorView addSubview:centerView];
-    [centerView fwAlignCenterToSuperview];
+    if (self.indicatorSize.width > 0 && self.indicatorSize.height > 0) {
+        [self.firstView fwSetDimensionsToSize:self.indicatorSize];
+    }
+    if (self.firstView && [self.firstView respondsToSelector:@selector(startAnimating)]) {
+        [(UIView<FWToastLoadingViewProtocol> *)self.firstView startAnimating];
+    }
     
-    // 小菊花
-    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
-    activityView.userInteractionEnabled = NO;
-    activityView.backgroundColor = [UIColor clearColor];
-    activityView.color = indicatorColor ?: [UIColor whiteColor];
-    activityView.tag = 2014;
-    [centerView addSubview:activityView];
-    [activityView startAnimating];
-    
-    // 文本框
-    UILabel *titleLabel = [UILabel fwAutoLayoutView];
-    titleLabel.userInteractionEnabled = NO;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont systemFontOfSize:16];
-    titleLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.numberOfLines = 0;
-    titleLabel.attributedText = attributedTitle;
-    titleLabel.tag = 2015;
-    titleLabel.fwAutoCollapse = YES;
-    [centerView addSubview:titleLabel];
-    
-    // 左右布局
-    if (horizontalAlignment) {
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:contentInsets.left];
-        [activityView fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:contentInsets.right];
-        [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
-        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:activityView withOffset:5.f];
-        [titleLabel fwAddCollapseConstraint:collapseConstraint];
+    if (self.horizontalAlignment) {
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentInsets.left];
+        [self.firstView fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.contentInsets.right];
+        [self.titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterY];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
+        self.titleLabel.fwAutoCollapse = YES;
+        NSLayoutConstraint *collapseConstraint = [self.titleLabel fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:self.firstView withOffset:self.contentSpacing];
+        [self.titleLabel fwAddCollapseConstraint:collapseConstraint];
     // 上下布局
     } else {
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:contentInsets.top];
-        [activityView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
-        [activityView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:contentInsets.bottom];
-        [titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
-        [titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
-        NSLayoutConstraint *collapseConstraint = [titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:5.f];
-        [titleLabel fwAddCollapseConstraint:collapseConstraint];
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentInsets.top];
+        [self.firstView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.firstView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentInsets.bottom];
+        [self.titleLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.titleLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:self.contentInsets.right relation:NSLayoutRelationGreaterThanOrEqual];
+        self.titleLabel.fwAutoCollapse = YES;
+        NSLayoutConstraint *collapseConstraint = [self.titleLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.firstView withOffset:self.contentSpacing];
+        [self.titleLabel fwAddCollapseConstraint:collapseConstraint];
     }
-    return indicatorView;
 }
 
-- (BOOL)fwHideIndicatorLoading
+- (void)setAttributedTitle:(NSAttributedString *)attributedTitle
 {
-    UIButton *indicatorView = [self viewWithTag:2011];
-    if (indicatorView) {
-        [indicatorView removeFromSuperview];
-        [self fwHideIndicatorLoadingInvalidateTimer];
+    _attributedTitle = attributedTitle;
+    self.titleLabel.attributedText = attributedTitle;
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    UIView *progressView = self.progressView ?: self.customView;
+    if (progressView && [progressView respondsToSelector:@selector(setProgress:)]) {
+        [(UIView<FWToastProgressViewProtocol> *)progressView setProgress:progress];
+    }
+}
+
+#pragma mark - Public
+
+- (void)show
+{
+    [self showAnimated:NO];
+}
+
+- (void)showAnimated:(BOOL)animated
+{
+    [self updateTypeView];
+    
+    if (animated) {
+        self.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 1.0;
+        } completion:NULL];
+    }
+}
+
+- (BOOL)hide
+{
+    if (self.superview != nil) {
+        [self removeFromSuperview];
+        [self invalidateTimer];
         
         return YES;
     }
     return NO;
 }
 
-- (BOOL)fwHideIndicatorLoadingAfterDelay:(NSTimeInterval)delay
+- (BOOL)hideAfterDelay:(NSTimeInterval)delay completion:(void (^)(void))completion
 {
-    UIButton *indicatorView = [self viewWithTag:2011];
-    if (indicatorView) {
-        // 创建Common模式Timer，避免ScrollView滚动时不触发
-        [self fwHideIndicatorLoadingInvalidateTimer];
-        NSTimer *indicatorTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
-            [self fwHideIndicatorLoading];
-        } repeats:NO];
-        objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), indicatorTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
-        return YES;
-    }
-    return NO;
-}
-
-- (void)fwHideIndicatorLoadingInvalidateTimer
-{
-    NSTimer *indicatorTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:));
-    if (indicatorTimer) {
-        [indicatorTimer invalidate];
-        objc_setAssociatedObject(self, @selector(fwHideIndicatorLoadingAfterDelay:), nil, OBJC_ASSOCIATION_ASSIGN);
-    }
-}
-
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
-{
-    return [self fwShowIndicatorMessageWithAttributedText:attributedText
-                                           indicatorColor:nil
-                                          backgroundColor:nil
-                                       dimBackgroundColor:nil
-                                             paddingWidth:10.f
-                                            contentInsets:UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f)
-                                             cornerRadius:5.f];
-}
-
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(NSAttributedString *)attributedText
-                                      indicatorColor:(UIColor *)indicatorColor
-                                     backgroundColor:(UIColor *)backgroundColor
-                                  dimBackgroundColor:(UIColor *)dimBackgroundColor
-                                        paddingWidth:(CGFloat)paddingWidth
-                                       contentInsets:(UIEdgeInsets)contentInsets
-                                        cornerRadius:(CGFloat)cornerRadius
-{
-    // 移除之前的视图
-    [self fwHideIndicatorMessage];
-    
-    // 背景容器，默认不可点击
-    UIButton *toastView = [UIButton fwAutoLayoutView];
-    toastView.userInteractionEnabled = YES;
-    toastView.backgroundColor = dimBackgroundColor ?: [UIColor clearColor];
-    toastView.tag = 2031;
-    [self addSubview:toastView];
-    [toastView fwPinEdgesToSuperview];
-    
-    // 居中容器
-    UIView *centerView = [UIView fwAutoLayoutView];
-    centerView.userInteractionEnabled = NO;
-    centerView.backgroundColor = backgroundColor ?: [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
-    centerView.layer.masksToBounds = YES;
-    centerView.layer.cornerRadius = cornerRadius;
-    [toastView addSubview:centerView];
-    [centerView fwAlignCenterToSuperview];
-    [centerView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:paddingWidth relation:NSLayoutRelationGreaterThanOrEqual];
-    [centerView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:paddingWidth relation:NSLayoutRelationGreaterThanOrEqual];
-    
-    // 文本框
-    UILabel *textLabel = [UILabel fwAutoLayoutView];
-    textLabel.userInteractionEnabled = NO;
-    textLabel.backgroundColor = [UIColor clearColor];
-    textLabel.font = [UIFont systemFontOfSize:16];
-    textLabel.textColor = indicatorColor ?: [UIColor whiteColor];
-    textLabel.textAlignment = NSTextAlignmentCenter;
-    textLabel.numberOfLines = 0;
-    textLabel.attributedText = attributedText;
-    [centerView addSubview:textLabel];
-    [textLabel fwPinEdgesToSuperviewWithInsets:contentInsets];
-    return toastView;
-}
-
-- (BOOL)fwHideIndicatorMessage
-{
-    UIButton *toastView = [self viewWithTag:2031];
-    if (toastView) {
-        [toastView removeFromSuperview];
-        [self fwHideIndicatorMessageInvalidateTimer];
-        
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)fwHideIndicatorMessageAfterDelay:(NSTimeInterval)delay
-                              completion:(void (^)(void))completion
-{
-    UIButton *toastView = [self viewWithTag:2031];
-    if (toastView) {
-        // 创建Common模式Timer，避免ScrollView滚动时不触发
-        [self fwHideIndicatorMessageInvalidateTimer];
-        NSTimer *toastTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
-            BOOL hideResult = [self fwHideIndicatorMessage];
-            if (hideResult && completion) {
+    if (self.superview != nil) {
+        [self invalidateTimer];
+        __weak __typeof__(self) self_weak_ = self;
+        self.hideTimer = [NSTimer fwCommonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
+            __typeof__(self) self = self_weak_;
+            BOOL hideSuccess = [self hide];
+            if (hideSuccess && completion) {
                 completion();
             }
         } repeats:NO];
-        objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), toastTimer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
-        return YES;
     }
     return NO;
 }
 
-- (void)fwHideIndicatorMessageInvalidateTimer
+- (void)invalidateTimer
 {
-    NSTimer *toastTimer = objc_getAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:));
-    if (toastTimer) {
-        [toastTimer invalidate];
-        objc_setAssociatedObject(self, @selector(fwHideIndicatorMessageAfterDelay:completion:), nil, OBJC_ASSOCIATION_ASSIGN);
+    if (self.hideTimer) {
+        [self.hideTimer invalidate];
+        self.hideTimer = nil;
     }
+}
+
+@end
+
+#pragma mark - FWToastPluginImpl
+
+@implementation FWToastPluginImpl
+
++ (FWToastPluginImpl *)sharedInstance
+{
+    static FWToastPluginImpl *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWToastPluginImpl alloc] init];
+    });
+    return instance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _fadeAnimated = YES;
+        _delayTime = 2.0;
+    }
+    return self;
+}
+
+- (void)fwShowLoadingWithAttributedText:(NSAttributedString *)attributedText inView:(UIView *)view
+{
+    NSAttributedString *loadingText = attributedText;
+    if (!loadingText && self.defaultLoadingText) {
+        loadingText = self.defaultLoadingText();
+    }
+    
+    FWToastView *toastView = [view viewWithTag:2011];
+    if (toastView) {
+        [toastView invalidateTimer];
+        [view bringSubviewToFront:toastView];
+        toastView.attributedTitle = loadingText;
+        return;
+    }
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeIndicator];
+    toastView.tag = 2011;
+    toastView.attributedTitle = loadingText;
+    [view addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (self.customBlock) {
+        self.customBlock(toastView);
+    }
+    [toastView showAnimated:self.fadeAnimated];
+}
+
+- (void)fwHideLoading:(UIView *)view
+{
+    FWToastView *toastView = [view viewWithTag:2011];
+    if (toastView) [toastView hide];
+}
+
+- (void)fwShowProgressWithAttributedText:(NSAttributedString *)attributedText progress:(CGFloat)progress inView:(UIView *)view
+{
+    NSAttributedString *progressText = attributedText;
+    if (!progressText && self.defaultProgressText) {
+        progressText = self.defaultProgressText();
+    }
+    
+    FWToastView *toastView = [view viewWithTag:2012];
+    if (toastView) {
+        [toastView invalidateTimer];
+        [view bringSubviewToFront:toastView];
+        toastView.attributedTitle = progressText;
+        toastView.progress = progress;
+        return;
+    }
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeProgress];
+    toastView.tag = 2012;
+    toastView.attributedTitle = progressText;
+    toastView.progress = progress;
+    [view addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (self.customBlock) {
+        self.customBlock(toastView);
+    }
+    [toastView showAnimated:self.fadeAnimated];
+}
+
+- (void)fwHideProgress:(UIView *)view
+{
+    FWToastView *toastView = [view viewWithTag:2012];
+    if (toastView) [toastView hide];
+}
+
+- (void)fwShowMessageWithAttributedText:(NSAttributedString *)attributedText style:(FWToastStyle)style completion:(void (^)(void))completion inView:(UIView *)view
+{
+    NSAttributedString *messageText = attributedText;
+    if (!messageText && self.defaultMessageText) {
+        messageText = self.defaultMessageText(style);
+    }
+    
+    FWToastView *toastView = [view viewWithTag:2013];
+    BOOL fadeAnimated = self.fadeAnimated && !toastView;
+    if (toastView) [toastView hide];
+    
+    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeText];
+    toastView.tag = 2013;
+    toastView.userInteractionEnabled = completion ? YES : NO;
+    toastView.attributedTitle = messageText;
+    [view addSubview:toastView];
+    [toastView fwPinEdgesToSuperview];
+    
+    if (self.customBlock) {
+        self.customBlock(toastView);
+    }
+    [toastView showAnimated:fadeAnimated];
+    [toastView hideAfterDelay:self.delayTime completion:completion];
+}
+
+- (void)fwHideMessage:(UIView *)view
+{
+    FWToastView *toastView = [view viewWithTag:2013];
+    if (toastView) [toastView hide];
 }
 
 @end

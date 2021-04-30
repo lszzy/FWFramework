@@ -125,7 +125,6 @@
               @[@"UILabel+FWFramework", @"TestLabelViewController"],
               @[@"UIView+FWGradient", @"TestGradientViewController"],
               @[@"NSURL+FWVendor", @"TestUrlViewController"],
-              @[@"FWIndicatorControl", @"TestIndicatorControlViewController"],
               @[@"FWSkeletonView", @"TestSkeletonViewController"],
               @[@"UITableView+Background", @"TestTableBackgroundViewController"],
               @[@"FWPagingView", @"TestNestScrollViewController"],
