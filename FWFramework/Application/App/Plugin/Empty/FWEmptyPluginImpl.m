@@ -103,8 +103,11 @@
     [super layoutSubviews];
     
     self.scrollView.frame = self.bounds;
-    
     CGSize contentViewSize = [self sizeThatContentViewFits];
+    if (self.verticalOffsetBlock) {
+        self.verticalOffset = self.verticalOffsetBlock(self.scrollView.bounds.size, contentViewSize);
+    }
+    
     // contentView 默认垂直居中于 scrollView
     self.contentView.frame = CGRectMake(0, CGRectGetMidY(self.scrollView.bounds) - contentViewSize.height / 2 + self.verticalOffset, contentViewSize.width, contentViewSize.height);
     
@@ -275,6 +278,11 @@
 
 - (void)setVerticalOffset:(CGFloat)verticalOffset {
     _verticalOffset = verticalOffset;
+    [self setNeedsLayout];
+}
+
+- (void)setVerticalOffsetBlock:(CGFloat (^)(CGSize, CGSize))verticalOffsetBlock {
+    _verticalOffsetBlock = verticalOffsetBlock;
     [self setNeedsLayout];
 }
 
