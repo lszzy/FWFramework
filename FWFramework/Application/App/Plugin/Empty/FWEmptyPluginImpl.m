@@ -479,11 +479,11 @@
     }
     
     FWEmptyView *emptyView = [view viewWithTag:2021];
+    BOOL fadeAnimated = self.fadeAnimated && !emptyView;
     if (emptyView) { [emptyView removeFromSuperview]; }
     
     emptyView = [[FWEmptyView alloc] initWithFrame:view.bounds];
     emptyView.tag = 2021;
-    emptyView.alpha = 0;
     [view addSubview:emptyView];
     [emptyView fwPinEdgesToSuperview];
     [emptyView setLoadingViewHidden:YES];
@@ -497,12 +497,11 @@
         self.customBlock(emptyView);
     }
     
-    if (self.fadeAnimated) {
+    if (fadeAnimated) {
+        emptyView.alpha = 0;
         [UIView animateWithDuration:0.25 animations:^{
             emptyView.alpha = 1.0;
         } completion:NULL];
-    } else {
-        emptyView.alpha = 1.0;
     }
 }
 
