@@ -54,8 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) UIEdgeInsets actionButtonInsets UI_APPEARANCE_SELECTOR;
 /// 如果不想要内容整体垂直居中，则可通过调整此属性来进行垂直偏移。默认为-30，即内容比中间略微偏上
 @property(nonatomic, assign) CGFloat verticalOffset UI_APPEARANCE_SELECTOR;
-/// 自定义垂直偏移句柄，参数依次为空视图尺寸，内容尺寸
-@property(nonatomic, copy, nullable) CGFloat (^verticalOffsetBlock)(CGSize totalSize, CGSize contentSize);
+/// 自定义垂直偏移句柄，参数依次为总高度，内容高度，图片高度
+@property(nonatomic, copy, nullable) CGFloat (^verticalOffsetBlock)(CGFloat totalHeight, CGFloat contentHeight, CGFloat imageHeight);
 
 /// textLabel字体，默认为15pt系统字体
 @property(nonatomic, strong) UIFont *textLabelFont UI_APPEARANCE_SELECTOR;
