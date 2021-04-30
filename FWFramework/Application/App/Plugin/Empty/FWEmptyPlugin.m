@@ -9,29 +9,10 @@
 
 #import "FWEmptyPlugin.h"
 #import "FWEmptyPluginImpl.h"
-#import "FWAutoLayout.h"
-#import "FWBlock.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
-
-#pragma mark - FWEmptyPlugin
-
-@implementation FWEmptyPluginConfig
-
-+ (FWEmptyPluginConfig *)sharedInstance
-{
-    static FWEmptyPluginConfig *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWEmptyPluginConfig alloc] init];
-        instance.fadeAnimated = YES;
-    });
-    return instance;
-}
-
-@end
 
 #pragma mark - FWEmptyPluginView
 
@@ -59,78 +40,29 @@
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
-    NSString *emptyText = text;
-    if (!emptyText && FWEmptyPluginConfig.sharedInstance.defaultText) {
-        emptyText = FWEmptyPluginConfig.sharedInstance.defaultText();
-    }
-    NSString *emptyDetail = detail;
-    if (!emptyDetail && FWEmptyPluginConfig.sharedInstance.defaultDetail) {
-        emptyDetail = FWEmptyPluginConfig.sharedInstance.defaultDetail();
-    }
-    UIImage *emptyImage = image;
-    if (!emptyImage && FWEmptyPluginConfig.sharedInstance.defaultImage) {
-        emptyImage = FWEmptyPluginConfig.sharedInstance.defaultImage();
-    }
-    NSString *emptyAction = action;
-    if (!emptyAction && block && FWEmptyPluginConfig.sharedInstance.defaultAction) {
-        emptyAction = FWEmptyPluginConfig.sharedInstance.defaultAction();
-    }
-    
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
-        [plugin fwShowEmptyViewWithText:emptyText detail:emptyDetail image:emptyImage action:emptyAction block:block inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
+        plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    
-    FWEmptyView *emptyView = [self viewWithTag:2021];
-    if (emptyView) { [emptyView removeFromSuperview]; }
-    
-    emptyView = [[FWEmptyView alloc] initWithFrame:self.bounds];
-    emptyView.tag = 2021;
-    emptyView.alpha = 0;
-    [self addSubview:emptyView];
-    [emptyView fwPinEdgesToSuperview];
-    [emptyView setLoadingViewHidden:YES];
-    [emptyView setImage:emptyImage];
-    [emptyView setTextLabelText:emptyText];
-    [emptyView setDetailTextLabelText:emptyDetail];
-    [emptyView setActionButtonTitle:emptyAction];
-    if (block) [emptyView.actionButton fwAddTouchBlock:block];
-
-    if (FWEmptyPluginConfig.sharedInstance.customBlock) {
-        FWEmptyPluginConfig.sharedInstance.customBlock(self);
-    }
-    
-    if (FWEmptyPluginConfig.sharedInstance.fadeAnimated) {
-        [UIView animateWithDuration:0.25 animations:^{
-            emptyView.alpha = 1.0;
-        } completion:NULL];
-    } else {
-        emptyView.alpha = 1.0;
-    }
+    [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
 }
 
 - (void)fwHideEmptyView
 {
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideEmptyView:)]) {
-        [plugin fwHideEmptyView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideEmptyView:)]) {
+        plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    
-    UIView *emptyView = [self viewWithTag:2021];
-    if (emptyView) { [emptyView removeFromSuperview]; }
+    [plugin fwHideEmptyView:self];
 }
 
 - (BOOL)fwHasEmptyView
 {
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHasEmptyView:)]) {
-        return [plugin fwHasEmptyView:self];
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHasEmptyView:)]) {
+        plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    
-    UIView *emptyView = [self viewWithTag:2021];
-    return emptyView != nil ? YES : NO;
+    return [plugin fwHasEmptyView:self];
 }
 
 @end

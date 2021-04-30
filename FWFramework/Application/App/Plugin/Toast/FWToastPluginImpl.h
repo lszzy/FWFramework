@@ -11,104 +11,144 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIView+FWToastPluginImpl
+#pragma mark - FWToastProgressView
 
-/*!
- @brief UIView+FWToastPluginImpl
- */
-@interface UIView (FWToastPluginImpl)
+/// 自定义吐司加载视图协议
+@protocol FWToastLoadingViewProtocol <NSObject>
+@optional
 
-/**
- *  显示加载指示器，不可点击（简单版）
- *
- *  @param style           样式
- *  @param attributedTitle 属性文本，默认白色、16号字体
- *  @return 加载指示器视图
- */
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(nullable NSAttributedString *)attributedTitle;
+/// 当显示指示器时，将自动调用此处的startAnimating
+- (void)startAnimating;
 
-/**
- *  显示加载指示器，不可点击（详细版）
- *
- *  @param style               样式
- *  @param attributedTitle     属性文本，默认白色、16号字体
- *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
- *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
- *  @param horizontalAlignment 是否水平对齐，默认垂直对齐
- *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
- *  @param cornerRadius        圆角半径，默认5.0
- *  @return 加载指示器视图
- */
-- (UIView *)fwShowIndicatorLoadingWithStyle:(UIActivityIndicatorViewStyle)style
-                            attributedTitle:(nullable NSAttributedString *)attributedTitle
-                             indicatorColor:(nullable UIColor *)indicatorColor
-                            backgroundColor:(nullable UIColor *)backgroundColor
-                         dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                        horizontalAlignment:(BOOL)horizontalAlignment
-                              contentInsets:(UIEdgeInsets)contentInsets
-                               cornerRadius:(CGFloat)cornerRadius;
+@end
 
-/**
- *  隐藏加载指示器，与show必须成对出现
- *
- *  @return 如果加载指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorLoading;
+/// 自定义吐司进度条视图协议
+@protocol FWToastProgressViewProtocol <NSObject>
+@optional
 
-/**
- *  延迟n秒后自动隐藏加载指示器，如果期间调用了show则取消隐藏，可避免连续show|hide时闪烁问题
- *
- *  @param delay 延迟时间，如0.1秒
- *  @return 如果加载指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorLoadingAfterDelay:(NSTimeInterval)delay;
+/// 当进度发生变化时，将自动调用此处的setProgress:
+- (void)setProgress:(CGFloat)progress;
 
-/**
- *  显示消息指示器，默认不可点击（简单版）
- *
- *  @param attributedText 属性文本，默认白色、16号字体
- *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
- */
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText;
+@end
 
-/**
- *  显示消息指示器，默认不可点击（详细版）
- *
- *  @param attributedText      属性文本，默认白色、16号字体
- *  @param indicatorColor      指示器颜色，影响指示器和文本颜色
- *  @param backgroundColor     吐司背景色，默认黑色、透明度0.8
- *  @param dimBackgroundColor  全局背景色，默认透明，如#000000,0.4
- *  @param paddingWidth        吐司左右最小内间距，默认10
- *  @param contentInsets       文本内间距，默认{10, 10, 10, 10}
- *  @param cornerRadius        圆角半径，默认5.0
- *  @return 消息指示器视图，如需点击其它视图可设置userInteractionEnabled为NO
- */
-- (UIView *)fwShowIndicatorMessageWithAttributedText:(nullable NSAttributedString *)attributedText
-                                      indicatorColor:(nullable UIColor *)indicatorColor
-                                     backgroundColor:(nullable UIColor *)backgroundColor
-                                  dimBackgroundColor:(nullable UIColor *)dimBackgroundColor
-                                        paddingWidth:(CGFloat)paddingWidth
-                                       contentInsets:(UIEdgeInsets)contentInsets
-                                        cornerRadius:(CGFloat)cornerRadius;
+/// 默认吐司进度条视图
+@interface FWToastProgressView : UIView
 
-/**
- *  手工隐藏消息指示器
- *
- *  @return 如果消息指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorMessage;
+/// 进度条颜色，默认白色
+@property (nonatomic, strong) UIColor *progressColor;
+/// 进度条宽度，默认2
+@property (nonatomic, assign) CGFloat lineWidth;
+/// 当前进度
+@property (nonatomic, assign) CGFloat progress;
 
-/**
- *  延迟n秒后自动隐藏消息指示器
- *
- *  @param delay 延迟时间
- *  @param completion 完成回调
- *  @return 如果消息指示器不存在，返回NO
- */
-- (BOOL)fwHideIndicatorMessageAfterDelay:(NSTimeInterval)delay
-                              completion:(nullable void (^)(void))completion;
+@end
+
+#pragma mark - FWToastView
+
+/// 吐司视图类型
+typedef NS_ENUM(NSInteger, FWToastViewType) {
+    /// 自定义吐司
+    FWToastViewTypeCustom = 0,
+    /// 文本吐司
+    FWToastViewTypeText,
+    /// 图片吐司
+    FWToastViewTypeImage,
+    /// 指示器吐司
+    FWToastViewTypeIndicator,
+    /// 进度条吐司
+    FWToastViewTypeProgress,
+};
+
+/// 吐司视图，默认背景色透明
+@interface FWToastView : UIControl
+
+/// 当前吐司类型，只读
+@property (nonatomic, readonly) FWToastViewType type;
+
+/// 内容视图，可设置背景色(默认#404040)、圆角(默认5)，只读
+@property (nonatomic, readonly) UIView *contentView;
+/// 自定义视图，仅Custom生效
+@property (nonatomic, strong, nullable) UIView *customView;
+/// 图片视图，仅Image存在
+@property (nonatomic, readonly, nullable) UIImageView *imageView;
+/// 指示器视图，仅Loading存在
+@property (nonatomic, readonly, nullable) UIActivityIndicatorView *indicatorView;
+/// 进度条视图，仅Progress存在
+@property (nonatomic, readonly, nullable) FWToastProgressView *progressView;
+/// 标题标签，都存在，有内容时才显示
+@property (nonatomic, readonly) UILabel *titleLabel;
+
+/// 内容背景色，默认#404040
+@property (nonatomic, strong) UIColor *contentBackgroundColor UI_APPEARANCE_SELECTOR;
+/// 内容视图最小外间距，默认{10, 10, 10, 10}
+@property (nonatomic, assign) UIEdgeInsets contentMarginInsets UI_APPEARANCE_SELECTOR;
+/// 内容视图内间距，默认{10, 10, 10, 10}
+@property (nonatomic, assign) UIEdgeInsets contentInsets UI_APPEARANCE_SELECTOR;
+/// 视图和文本之间的间距，默认5.0
+@property (nonatomic, assign) CGFloat contentSpacing UI_APPEARANCE_SELECTOR;
+/// 内容圆角半径，默认5.0
+@property (nonatomic, assign) CGFloat contentCornerRadius UI_APPEARANCE_SELECTOR;
+/// 是否水平对齐，默认NO垂直对齐
+@property (nonatomic, assign) BOOL horizontalAlignment UI_APPEARANCE_SELECTOR;
+/// 指示器图片，支持动画图片，自适应大小，仅Image生效
+@property (nonatomic, strong, nullable) UIImage *indicatorImage;
+/// 指示器样式，默认medium，仅Loading生效
+@property (nonatomic, assign) UIActivityIndicatorViewStyle indicatorStyle UI_APPEARANCE_SELECTOR;
+/// 指示器颜色，默认白色，仅Loading生效
+@property (nonatomic, strong) UIColor *indicatorColor UI_APPEARANCE_SELECTOR;
+/// 指示器大小，默认根据类型处理
+@property (nonatomic, assign) CGSize indicatorSize UI_APPEARANCE_SELECTOR;
+/// 标题字体，默认16号
+@property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
+/// 标题颜色，默认白色
+@property (nonatomic, strong) UIColor *titleColor UI_APPEARANCE_SELECTOR;
+
+/// 带属性标题文本，为空时不显示
+@property (nonatomic, copy, nullable) NSAttributedString *attributedTitle;
+/// 当前指示器进度值，范围0~1，仅Progress生效
+@property (nonatomic, assign) CGFloat progress;
+
+/// 初始化指定类型指示器
+- (instancetype)initWithType:(FWToastViewType)type;
+
+/// 显示吐司，不执行动画
+- (void)show;
+
+/// 显示吐司，执行淡入渐变动画
+- (void)showAnimated:(BOOL)animated;
+
+/// 隐藏吐司。吐司不存在时返回NO
+- (BOOL)hide;
+
+/// 隐藏吐司，延迟指定时间后执行。吐司不存在时返回NO
+- (BOOL)hideAfterDelay:(NSTimeInterval)delay completion:(nullable void (^)(void))completion;
+
+/// 清理延迟隐藏吐司定时器
+- (void)invalidateTimer;
+
+@end
+
+#pragma mark - FWToastPluginImpl
+
+/// 默认吐司插件
+@interface FWToastPluginImpl : NSObject <FWToastPlugin>
+
+/// 单例模式
+@property (class, nonatomic, readonly) FWToastPluginImpl *sharedInstance;
+
+/// 显示吐司时是否执行淡入动画，默认YES
+@property (nonatomic, assign) BOOL fadeAnimated;
+/// 吐司自动隐藏时间，默认2.0
+@property (nonatomic, assign) NSTimeInterval delayTime;
+/// 吐司自定义句柄，show方法自动调用
+@property (nonatomic, copy, nullable) void (^customBlock)(FWToastView *toastView);
+
+/// 默认加载吐司文本句柄
+@property (nonatomic, copy, nullable) NSAttributedString * _Nullable (^defaultLoadingText)(void);
+/// 默认进度条吐司文本句柄
+@property (nonatomic, copy, nullable) NSAttributedString * _Nullable (^defaultProgressText)(void);
+/// 默认消息吐司文本句柄
+@property (nonatomic, copy, nullable) NSAttributedString * _Nullable (^defaultMessageText)(FWToastStyle style);
 
 @end
 

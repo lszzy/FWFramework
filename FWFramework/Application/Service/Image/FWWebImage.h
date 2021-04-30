@@ -127,13 +127,13 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 @end
 
-#pragma mark - FWAppImagePlugin
+#pragma mark - FWImagePluginImpl
 
-/// 应用默认图片插件
-@interface FWAppImagePlugin : NSObject
+/// 默认图片插件
+@interface FWImagePluginImpl : NSObject <FWImagePlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWAppImagePlugin *sharedInstance;
+@property (class, nonatomic, readonly) FWImagePluginImpl *sharedInstance;
 
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;

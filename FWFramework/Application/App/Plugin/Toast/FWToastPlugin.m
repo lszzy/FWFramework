@@ -11,22 +11,6 @@
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
 
-#pragma mark - FWToastPlugin
-
-@implementation FWToastPluginConfig
-
-+ (FWToastPluginConfig *)sharedInstance
-{
-    static FWToastPluginConfig *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWToastPluginConfig alloc] init];
-    });
-    return instance;
-}
-
-@end
-
 #pragma mark - FWToastPluginView
 
 @implementation UIView (FWToastPluginView)
@@ -38,70 +22,40 @@
 
 - (void)fwShowLoadingWithText:(id)text
 {
-    id loadingText = text;
-    if (!loadingText && FWToastPluginConfig.sharedInstance.defaultLoadingText) {
-        loadingText = FWToastPluginConfig.sharedInstance.defaultLoadingText();
-    }
-    
-    NSAttributedString *attributedText = [loadingText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:loadingText] : loadingText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
-        [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowLoadingWithAttributedText:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [plugin fwShowLoadingWithAttributedText:attributedText inView:self];
 }
 
 - (void)fwHideLoading
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideLoading:)]) {
-        [plugin fwHideLoading:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideLoading:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    [self fwHideIndicatorLoading];
+    [plugin fwHideLoading:self];
 }
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
-    id progressText = text;
-    if (!progressText && FWToastPluginConfig.sharedInstance.defaultProgressText) {
-        progressText = FWToastPluginConfig.sharedInstance.defaultProgressText();
-    }
-    
-    NSAttributedString *attributedText = [progressText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:progressText] : progressText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
-        [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowProgressWithAttributedText:progress:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-        style = UIActivityIndicatorViewStyleMedium;
-    } else {
-        style = UIActivityIndicatorViewStyleWhite;
-    }
-    [self fwShowIndicatorLoadingWithStyle:style attributedTitle:attributedText];
+    [plugin fwShowProgressWithAttributedText:attributedText progress:progress inView:self];
 }
 
 - (void)fwHideProgress
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideProgress:)]) {
-        [plugin fwHideProgress:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideProgress:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    [self fwHideIndicatorLoading];
+    [plugin fwHideProgress:self];
 }
 
 - (void)fwShowMessageWithText:(id)text
@@ -116,32 +70,21 @@
 
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    id messageText = text;
-    if (!messageText && FWToastPluginConfig.sharedInstance.defaultMessageText) {
-        messageText = FWToastPluginConfig.sharedInstance.defaultMessageText(style);
-    }
-    
-    NSAttributedString *attributedText = [messageText isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:messageText] : messageText;
+    NSAttributedString *attributedText = [text isKindOfClass:[NSString class]] ? [[NSAttributedString alloc] initWithString:text] : text;
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
-        [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowMessageWithAttributedText:style:completion:inView:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    UIView *indicatorView = [self fwShowIndicatorMessageWithAttributedText:attributedText];
-    indicatorView.userInteractionEnabled = completion ? YES : NO;
-    [self fwHideIndicatorMessageAfterDelay:2.0 completion:completion];
+    [plugin fwShowMessageWithAttributedText:attributedText style:style completion:completion inView:self];
 }
 
 - (void)fwHideMessage
 {
     id<FWToastPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWToastPlugin)];
-    if (plugin && [plugin respondsToSelector:@selector(fwHideMessage:)]) {
-        [plugin fwHideMessage:self];
-        return;
+    if (!plugin || ![plugin respondsToSelector:@selector(fwHideMessage:)]) {
+        plugin = FWToastPluginImpl.sharedInstance;
     }
-    
-    [self fwHideIndicatorMessage];
+    [plugin fwHideMessage:self];
 }
 
 @end

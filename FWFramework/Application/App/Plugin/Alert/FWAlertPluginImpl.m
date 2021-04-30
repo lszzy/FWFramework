@@ -348,3 +348,88 @@
 }
 
 @end
+
+#pragma mark - FWAlertPluginImpl
+
+@implementation FWAlertPluginImpl
+
++ (FWAlertPluginImpl *)sharedInstance
+{
+    static FWAlertPluginImpl *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWAlertPluginImpl alloc] init];
+    });
+    return instance;
+}
+
+- (void)fwViewController:(UIViewController *)viewController
+               showAlert:(UIAlertControllerStyle)style
+                   title:(id)title
+                 message:(id)message
+                  cancel:(id)cancel
+                 actions:(NSArray *)actions
+             promptCount:(NSInteger)promptCount
+             promptBlock:(void (^)(UITextField *, NSInteger))promptBlock
+             actionBlock:(void (^)(NSArray<NSString *> *, NSInteger))actionBlock
+             cancelBlock:(void (^)(void))cancelBlock
+             customBlock:(void (^)(id))customBlock
+                priority:(FWAlertPriority)priority
+{
+    // 初始化Alert
+    UIAlertController *alertController = [UIAlertController fwAlertControllerWithTitle:title
+                                                                               message:message
+                                                                        preferredStyle:style];
+    
+    // 添加输入框
+    for (NSInteger promptIndex = 0; promptIndex < promptCount; promptIndex++) {
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            if (promptBlock) promptBlock(textField, promptIndex);
+        }];
+    }
+    
+    // 添加动作按钮
+    for (NSInteger actionIndex = 0; actionIndex < actions.count; actionIndex++) {
+        UIAlertAction *alertAction = [UIAlertAction fwActionWithObject:actions[actionIndex] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            if (actionBlock) {
+                NSMutableArray *values = [NSMutableArray new];
+                for (NSInteger fieldIndex = 0; fieldIndex < promptCount; fieldIndex++) {
+                    UITextField *textField = alertController.textFields[fieldIndex];
+                    [values addObject:textField.text ?: @""];
+                }
+                actionBlock(values.copy, actionIndex);
+            }
+        }];
+        [alertController addAction:alertAction];
+    }
+    
+    // 添加取消按钮
+    if (cancel != nil) {
+        UIAlertAction *cancelAction = [UIAlertAction fwActionWithObject:cancel style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            if (cancelBlock) cancelBlock();
+        }];
+        [alertController addAction:cancelAction];
+    }
+    
+    // 添加首选按钮
+    if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
+        UIAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
+        if (preferredAction) {
+            if (@available(iOS 9.0, *)) {
+                alertController.preferredAction = preferredAction;
+            }
+        }
+    }
+    
+    // 自定义Alert
+    if (customBlock) {
+        customBlock(alertController);
+    }
+    
+    // 显示Alert
+    alertController.fwAlertPriorityEnabled = YES;
+    alertController.fwAlertPriority = priority;
+    [alertController fwAlertPriorityPresentIn:viewController];
+}
+
+@end

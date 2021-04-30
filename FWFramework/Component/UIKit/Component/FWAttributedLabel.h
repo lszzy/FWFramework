@@ -18,7 +18,6 @@
 #import "FWCropViewController.h"
 #import "FWFloatLayoutView.h"
 #import "FWGridView.h"
-#import "FWIndicatorControl.h"
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
 #import "FWPasscodeView.h"
