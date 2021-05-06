@@ -508,7 +508,15 @@
 - (void)fwHideEmptyView:(UIView *)view
 {
     UIView *emptyView = [view viewWithTag:2021];
-    if (emptyView) { [emptyView removeFromSuperview]; }
+    if (!emptyView) return;
+    
+    if ([emptyView.superview isKindOfClass:[FWScrollOverlayView class]]) {
+        UIView *overlayView = emptyView.superview;
+        [emptyView removeFromSuperview];
+        [overlayView removeFromSuperview];
+    } else {
+        [emptyView removeFromSuperview];
+    }
 }
 
 - (BOOL)fwHasEmptyView:(UIView *)view

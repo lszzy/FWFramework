@@ -89,4 +89,9 @@
     }];
 }
 
+- (void)fwHideEmptyView:(UIScrollView *)scrollView
+{
+    [self.view fwHideEmptyView];
+}
+
 @end
