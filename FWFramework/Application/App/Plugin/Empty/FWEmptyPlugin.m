@@ -44,7 +44,14 @@
     if (!plugin || ![plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
         plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
+    
+    if ([self isKindOfClass:[UIScrollView class]]) {
+        UIScrollView *scrollView = (UIScrollView *)self;
+        [scrollView fwShowOverlayView];
+        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:scrollView.fwOverlayView];
+    } else {
+        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
+    }
 }
 
 - (void)fwHideEmptyView
@@ -53,7 +60,14 @@
     if (!plugin || ![plugin respondsToSelector:@selector(fwHideEmptyView:)]) {
         plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    [plugin fwHideEmptyView:self];
+    
+    if ([self isKindOfClass:[UIScrollView class]]) {
+        UIScrollView *scrollView = (UIScrollView *)self;
+        [plugin fwHideEmptyView:scrollView.fwOverlayView];
+        [scrollView fwHideOverlayView];
+    } else {
+        [plugin fwHideEmptyView:self];
+    }
 }
 
 - (BOOL)fwHasEmptyView
@@ -62,52 +76,13 @@
     if (!plugin || ![plugin respondsToSelector:@selector(fwHasEmptyView:)]) {
         plugin = FWEmptyPluginImpl.sharedInstance;
     }
-    return [plugin fwHasEmptyView:self];
-}
-
-@end
-
-@implementation UIScrollView (FWEmptyPluginView)
-
-- (void)fwShowEmptyView
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowEmptyView];
-}
-
-- (void)fwShowEmptyViewWithText:(NSString *)text
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowEmptyViewWithText:text];
-}
-
-- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowEmptyViewWithText:text detail:detail];
-}
-
-- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowEmptyViewWithText:text detail:detail image:image];
-}
-
-- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
-{
-    [self fwShowOverlayView];
-    [self.fwOverlayView fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
-}
-
-- (void)fwHideEmptyView
-{
-    [self.fwOverlayView fwHideEmptyView];
-    [self fwHideOverlayView];
-}
-
-- (BOOL)fwHasEmptyView
-{
-    return self.fwHasOverlayView && [self.fwOverlayView fwHasEmptyView];
+    
+    if ([self isKindOfClass:[UIScrollView class]]) {
+        UIScrollView *scrollView = (UIScrollView *)self;
+        return scrollView.fwHasOverlayView && [plugin fwHasEmptyView:scrollView.fwOverlayView];;
+    } else {
+        return [plugin fwHasEmptyView:self];
+    }
 }
 
 @end
@@ -206,8 +181,7 @@
         }
     }
     
-    [self fwInvalidateEmptyView];
-    
+    BOOL hideSuccess = [self fwInvalidateEmptyView];
     if (shouldDisplay) {
         objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
@@ -217,17 +191,20 @@
             self.scrollEnabled = NO;
         }
         
+        BOOL fadeAnimated = FWEmptyPluginImpl.sharedInstance.fadeAnimated;
+        FWEmptyPluginImpl.sharedInstance.fadeAnimated = hideSuccess ? NO : fadeAnimated;
         if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:)]) {
             [self.fwEmptyViewDelegate fwShowEmptyView:self];
         } else {
             [self fwShowEmptyView];
         }
+        FWEmptyPluginImpl.sharedInstance.fadeAnimated = fadeAnimated;
     }
 }
 
-- (void)fwInvalidateEmptyView
+- (BOOL)fwInvalidateEmptyView
 {
-    if (![objc_getAssociatedObject(self, @selector(fwInvalidateEmptyView)) boolValue]) return;
+    if (![objc_getAssociatedObject(self, @selector(fwInvalidateEmptyView)) boolValue]) return NO;
     objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     self.scrollEnabled = YES;
@@ -237,6 +214,7 @@
     } else {
         [self fwHideEmptyView];
     }
+    return YES;
 }
 
 - (NSInteger)fwEmptyItemsCount

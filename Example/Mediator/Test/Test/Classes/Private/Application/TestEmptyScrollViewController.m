@@ -19,10 +19,30 @@
     return UITableViewStyleGrouped;
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self.tableData removeAllObjects];
+        [self.tableView reloadData];
+    }];
+}
+
 - (void)renderView
 {
     self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDelegate = self;
+    FWWeakifySelf();
+    [self.tableView fwAddPullRefreshWithBlock:^{
+        FWStrongifySelf();
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            FWStrongifySelf();
+            [self.tableData removeAllObjects];
+            [self.tableView reloadData];
+            [self.tableView fwEndRefreshing];
+        });
+    }];
     [self.tableView reloadData];
 }
 
@@ -67,6 +87,11 @@
         [self.tableData addObjectsFromArray:@[@1, @2, @3, @4, @5, @6, @7, @8]];
         [self.tableView reloadData];
     }];
+}
+
+- (void)fwHideEmptyView:(UIScrollView *)scrollView
+{
+    [self.view fwHideEmptyView];
 }
 
 @end
