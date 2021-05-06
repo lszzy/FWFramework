@@ -374,12 +374,12 @@
     if (self.fadeAnimated) {
         self.fadeAnimated = NO;
         self.alpha = 0;
-        self.frame = self.superview.bounds;
+        self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height);
         [UIView animateWithDuration:0.25 animations:^{
             self.alpha = 1.0;
         } completion:NULL];
     } else {
-        self.frame = self.superview.bounds;
+        self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height);
     }
 }
 
@@ -479,11 +479,11 @@
     }
     
     FWEmptyView *emptyView = [view viewWithTag:2021];
+    BOOL fadeAnimated = self.fadeAnimated && !emptyView;
     if (emptyView) { [emptyView removeFromSuperview]; }
     
     emptyView = [[FWEmptyView alloc] initWithFrame:view.bounds];
     emptyView.tag = 2021;
-    emptyView.alpha = 0;
     [view addSubview:emptyView];
     [emptyView fwPinEdgesToSuperview];
     [emptyView setLoadingViewHidden:YES];
@@ -497,19 +497,26 @@
         self.customBlock(emptyView);
     }
     
-    if (self.fadeAnimated) {
+    if (fadeAnimated) {
+        emptyView.alpha = 0;
         [UIView animateWithDuration:0.25 animations:^{
             emptyView.alpha = 1.0;
         } completion:NULL];
-    } else {
-        emptyView.alpha = 1.0;
     }
 }
 
 - (void)fwHideEmptyView:(UIView *)view
 {
     UIView *emptyView = [view viewWithTag:2021];
-    if (emptyView) { [emptyView removeFromSuperview]; }
+    if (!emptyView) return;
+    
+    if ([emptyView.superview isKindOfClass:[FWScrollOverlayView class]]) {
+        UIView *overlayView = emptyView.superview;
+        [emptyView removeFromSuperview];
+        [overlayView removeFromSuperview];
+    } else {
+        [emptyView removeFromSuperview];
+    }
 }
 
 - (BOOL)fwHasEmptyView:(UIView *)view
