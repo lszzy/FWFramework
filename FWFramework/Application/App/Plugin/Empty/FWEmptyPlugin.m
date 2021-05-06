@@ -206,8 +206,7 @@
         }
     }
     
-    [self fwInvalidateEmptyView];
-    
+    BOOL hideSuccess = [self fwInvalidateEmptyView];
     if (shouldDisplay) {
         objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
@@ -217,17 +216,20 @@
             self.scrollEnabled = NO;
         }
         
+        BOOL fadeAnimated = FWEmptyPluginImpl.sharedInstance.fadeAnimated;
+        FWEmptyPluginImpl.sharedInstance.fadeAnimated = hideSuccess ? NO : fadeAnimated;
         if ([self.fwEmptyViewDelegate respondsToSelector:@selector(fwShowEmptyView:)]) {
             [self.fwEmptyViewDelegate fwShowEmptyView:self];
         } else {
             [self fwShowEmptyView];
         }
+        FWEmptyPluginImpl.sharedInstance.fadeAnimated = fadeAnimated;
     }
 }
 
-- (void)fwInvalidateEmptyView
+- (BOOL)fwInvalidateEmptyView
 {
-    if (![objc_getAssociatedObject(self, @selector(fwInvalidateEmptyView)) boolValue]) return;
+    if (![objc_getAssociatedObject(self, @selector(fwInvalidateEmptyView)) boolValue]) return NO;
     objc_setAssociatedObject(self, @selector(fwInvalidateEmptyView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     self.scrollEnabled = YES;
@@ -237,6 +239,7 @@
     } else {
         [self fwHideEmptyView];
     }
+    return YES;
 }
 
 - (NSInteger)fwEmptyItemsCount
