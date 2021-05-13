@@ -8,6 +8,7 @@
  */
 
 #import "FWLoader.h"
+#import "FWLog.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerLoaderTarget
@@ -84,9 +85,10 @@
         const char *methodChar = sel_getName(method_getName(methods[i]));
         if (!methodChar) continue;
         NSString *methodName = [NSString stringWithUTF8String:methodChar];
-        if ([methodName hasPrefix:@"load"] && ![methodName containsString:@":"]) {
-            [methodNames addObject:methodName];
-        }
+        if (![methodName hasPrefix:@"load"]) continue;
+        if ([methodName containsString:@":"]) continue;
+        if ([methodName isEqualToString:@"loaders"]) continue;
+        [methodNames addObject:methodName];
     }
     free(methods);
     
@@ -101,6 +103,15 @@
         [loader performSelector:NSSelectorFromString(methodName)];
 #pragma clang diagnostic pop
     }
+    
+#ifdef DEBUG
+    NSMutableString *debugDescription = [[NSMutableString alloc] init];
+    NSInteger debugCount = 0;
+    for (NSString *methodName in methodNames) {
+        [debugDescription appendFormat:@"%@. %@\n", @(++debugCount), methodName];
+    }
+    FWLogDebug(@"\n========== LOADER ==========\n%@========== LOADER ==========", debugDescription);
+#endif
 }
 
 #pragma mark - Lifecycle

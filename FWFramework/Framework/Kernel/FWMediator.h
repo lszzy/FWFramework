@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
     [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
 
 /// 模块默认优先级，100
-#define FWModulePriorityDefault 100
+static const NSUInteger FWModulePriorityDefault = 100;
 
 /*!
  @brief 业务模块协议，各业务必须实现

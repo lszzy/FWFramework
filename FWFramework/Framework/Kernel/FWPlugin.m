@@ -68,13 +68,14 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 - (NSString *)description
 {
-    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
+    NSMutableString *debugDescription = [[NSMutableString alloc] init];
+    NSInteger debugCount = 0;
     for (NSString *protocolName in self.pluginPool) {
         FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
-        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, (plugin.instance ?: plugin.value)];
+        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, (plugin.instance ?: plugin.value)];
     }
     
-    return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", mutableDescription];
+    return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription];
 }
 
 #pragma mark - Public
