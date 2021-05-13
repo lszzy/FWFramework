@@ -23,6 +23,10 @@ class NotificationModule: NSObject, NotificationService {
         return sharedModule as! Self
     }
     
+    static func priority() -> UInt {
+        return FWModulePriorityDefault + 1
+    }
+    
     public func setup() {
         FWLogDebug(#function)
     }
