@@ -137,6 +137,7 @@
     NSArray *modules = [self allRegisteredModules];
     for (Class<FWModuleProtocol> moduleClass in modules) {
         @try {
+            if (![[moduleClass sharedInstance] respondsToSelector:@selector(setup)]) continue;
             BOOL setupSync = NO;
             if ([moduleClass respondsToSelector:@selector(setupSynchronously)]) {
                 setupSync = [moduleClass setupSynchronously];
