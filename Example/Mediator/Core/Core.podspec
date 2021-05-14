@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Core'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of Core.'
   s.description      = 'A description of Core.'
   s.homepage         = 'https://github.com/lingshizhuangzi@gmail.com/Core'

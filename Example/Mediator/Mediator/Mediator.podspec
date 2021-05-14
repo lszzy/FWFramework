@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Mediator'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of Mediator.'
   s.description      = 'A description of Mediator.'
   s.homepage         = 'https://github.com/lingshizhuangzi@gmail.com/Mediator'

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'User'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of User.'
   s.description      = 'A description of User.'
   s.homepage         = 'https://github.com/lingshizhuangzi@gmail.com/User'
