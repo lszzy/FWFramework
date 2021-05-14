@@ -123,8 +123,10 @@
 
 - (void)setupApplication:(UIApplication *)application options:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)options
 {
+    /*
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
+     */
     
     /*
     [[FWNotificationManager sharedInstance] clearNotificationBadges];
