@@ -27,7 +27,7 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
 {
     [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
@@ -121,10 +121,12 @@
 
 #pragma mark - Protected
 
-- (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options
+- (void)setupApplication:(UIApplication *)application options:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)options
 {
+    /*
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
+     */
     
     /*
     [[FWNotificationManager sharedInstance] clearNotificationBadges];

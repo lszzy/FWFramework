@@ -7,24 +7,39 @@
 //
 
 import Foundation
+#if DEBUG
+import FWDebug
+#endif
 
-@objc protocol NotificationService: FWModuleProtocol {}
+@objc protocol AppService: FWModuleProtocol {}
 
 @objc extension FWLoader {
-    func loadNotificationModule() {
-        FWMediator.registerService(NotificationService.self, withModule: NotificationModule.self)
+    func loadAppModule() {
+        FWMediator.registerService(AppService.self, withModule: AppModule.self)
     }
 }
 
-class NotificationModule: NSObject, NotificationService {
-    private static let sharedModule = NotificationModule()
+class AppModule: NSObject, AppService {
+    private static let sharedModule = AppModule()
     
     public static func sharedInstance() -> Self {
         return sharedModule as! Self
     }
     
-    public func setup() {
-        FWLogDebug(#function)
+    func setup() {
+        #if DEBUG
+        FWDebugManager.sharedInstance().openUrl = { (url) in
+            if let scheme = NSURL.fwURL(with: url)?.scheme, scheme.count > 0 {
+                FWRouter.openURL(url)
+                return true
+            }
+            return false
+        }
+        #endif
+        
+        DispatchQueue.main.async {
+            FWThemeManager.sharedInstance.overrideWindow = true
+        }
     }
     
     // MARK: - UIApplicationDelegate
