@@ -37,10 +37,6 @@ import Mediator
         return sharedModule as! Self
     }
     
-    public func setup() {
-        FWLogDebug(#function)
-    }
-    
     public func isLogin() -> Bool {
         return userId.count > 0
     }

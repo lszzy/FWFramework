@@ -28,3 +28,88 @@ import FWFramework
         return button
     }
 }
+
+extension Theme {
+    static func setupTheme() {
+        setupAppearance()
+        setupPlugin()
+    }
+    
+    private static func setupAppearance() {
+        // 控制器样式设置
+        let intercepter = FWViewControllerIntercepter()
+        intercepter.initIntercepter = #selector(FWViewControllerManager.viewControllerInit(_:))
+        intercepter.loadViewIntercepter = #selector(FWViewControllerManager.viewControllerLoadView(_:))
+        intercepter.viewDidLoadIntercepter = #selector(FWViewControllerManager.viewControllerViewDidLoad(_:))
+        FWViewControllerManager.sharedInstance.register(FWViewController.self, with: intercepter)
+        
+        // 导航栏样式设置
+        let defaultAppearance = FWNavigationBarAppearance()
+        defaultAppearance.foregroundColor = Theme.textColor
+        defaultAppearance.backgroundColor = Theme.barColor
+        let whiteAppearance = FWNavigationBarAppearance()
+        whiteAppearance.foregroundColor = Theme.textColor.fwThemeColor(.light)
+        whiteAppearance.backgroundColor = .white
+        let transparentAppearance = FWNavigationBarAppearance()
+        transparentAppearance.foregroundColor = Theme.textColor
+        transparentAppearance.isTransparent = true
+        FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
+        FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
+        FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+    }
+    
+    private static func setupPlugin() {
+        // 吐司等插件设置
+        FWToastPluginImpl.sharedInstance.defaultLoadingText = {
+            return NSAttributedString(string: "加载中...")
+        }
+        FWToastPluginImpl.sharedInstance.defaultProgressText = {
+            return NSAttributedString(string: "上传中...")
+        }
+        FWToastPluginImpl.sharedInstance.defaultMessageText = { (style) in
+            switch style {
+            case .success:
+                return NSAttributedString(string: "操作成功")
+            case .failure:
+                return NSAttributedString(string: "操作失败")
+            default:
+                return nil
+            }
+        }
+        FWEmptyPluginImpl.sharedInstance.customBlock = { (emptyView) in
+            // 设置图片中心为总高度的1/3
+            emptyView.verticalOffsetBlock = { (totalHeight, contentHeight, imageHeight) in
+                let centerOriginY = (totalHeight - contentHeight) / 2
+                let targetOriginY = totalHeight / 3 - imageHeight / 2
+                return targetOriginY - centerOriginY
+            }
+        }
+        FWEmptyPluginImpl.sharedInstance.defaultText = {
+            return "暂无数据"
+        }
+        FWEmptyPluginImpl.sharedInstance.defaultImage = {
+            return UIImage.fwImageWithAppIcon()
+        }
+        FWEmptyPluginImpl.sharedInstance.defaultAction = {
+            return "重新加载"
+        }
+    }
+}
+
+@objc extension FWViewControllerManager {
+    func viewControllerInit(_ viewController: UIViewController) {
+        viewController.edgesForExtendedLayout = []
+        viewController.extendedLayoutIncludesOpaqueBars = true
+        viewController.automaticallyAdjustsScrollViewInsets = false
+        viewController.hidesBottomBarWhenPushed = true
+        viewController.fwNavigationBarStyle = .default
+    }
+    
+    func viewControllerLoadView(_ viewController: UIViewController) {
+        viewController.view.backgroundColor = Theme.tableColor
+    }
+    
+    func viewControllerViewDidLoad(_ viewController: UIViewController) {
+        viewController.fwBackBarItem = CoreBundle.imageNamed("back")
+    }
+}

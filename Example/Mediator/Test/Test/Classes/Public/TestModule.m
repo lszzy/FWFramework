@@ -8,21 +8,26 @@
 #import "TestModule.h"
 #import "TestModuleController.h"
 
-@implementation TestModule
+@interface FWLoader (TestModule)
 
-+ (void)load
+@end
+
+@implementation FWLoader (TestModule)
+
+- (void)loadTestModule
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWRegModule(TestModuleService);
-    });
+    [FWMediator registerService:@protocol(TestModuleService) withModule:TestModule.class];
 }
+
+@end
+
+@implementation TestModule
 
 FWDefSingleton(TestModule);
 
-- (void)setup
++ (NSUInteger)priority
 {
-    FWLogDebug(@"TestModule.setup");
+    return FWModulePriorityDefault - 1;
 }
 
 - (UIViewController *)testViewController

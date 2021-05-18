@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Protected
 
 /// 初始化应用配置，子类重写
-- (void)setupApplication:(UIApplication *)application options:(NSDictionary *)options;
+- (void)setupApplication:(UIApplication *)application options:(nullable NSDictionary<UIApplicationLaunchOptionsKey,id> *)options;
 
 /// 初始化根控制器，子类重写
 - (void)setupController;

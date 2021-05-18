@@ -214,7 +214,7 @@
         
         if (assertError) {
             NSDictionary *userInfo = assertError.userInfo;
-            formatError = [NSString stringWithFormat:@"- assertTrue ( %@ ); ( %@ - %@ #%@ )", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
+            formatError = [NSString stringWithFormat:@"- assertTrue(%@); (%@ - %@ #%@)", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
             testCasePassed = NO;
         }
         
@@ -225,11 +225,11 @@
         
         if ( testCasePassed ) {
             succeedCount += 1;
-            [testLog appendFormat:@"[  OK  ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
+            [testLog appendFormat:@"%@. %@: %@ (%lu/%lu) (%.0f%%) (%.003fs)\n", @(succeedCount + failedCount), @"✔️", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
         } else {
             failedCount += 1;
-            [testLog appendFormat:@"[ FAIL ] : %@ ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
-            [testLog appendFormat:@"    %@\n", formatError];
+            [testLog appendFormat:@"%@. %@: %@ (%lu/%lu) (%.0f%%) (%.003fs)\n", @(succeedCount + failedCount), @"❌", formatClass, (unsigned long)succeedTestCount, (unsigned long)totalTestCount, classPassRate, time];
+            [testLog appendFormat:@"     %@\n", formatError];
         }
     }
     
@@ -240,7 +240,7 @@
     float passRate = totalCount > 0 ? (succeedCount * 1.0f) / (totalCount * 1.0f) * 100.0f : 100.0f;
     
     // 生成测试日志
-    NSString *totalLog = [NSString stringWithFormat:@"  TOTAL  : [ %@ ] ( %lu/%lu ) ( %.0f%% ) ( %.003fs )\n", failedCount < 1 ? @"OK" : @"FAIL", (unsigned long)succeedCount, (unsigned long)totalCount, passRate, totalTime];
+    NSString *totalLog = [NSString stringWithFormat:@"   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? @"✔️" : @"❌", (unsigned long)succeedCount, (unsigned long)totalCount, passRate, totalTime];
     self.testLogs = [NSString stringWithFormat:@"\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : @""];
 }
 

@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
     [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
 
 /// 模块默认优先级，100
-#define FWModulePriorityDefault 100
+static const NSUInteger FWModulePriorityDefault = 100;
 
 /*!
  @brief 业务模块协议，各业务必须实现
@@ -32,16 +32,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// 模块单例
 + (instancetype)sharedInstance;
 
-/// 模块初始化方法，App启动或模块加载时自动调用
+@optional
+
+/// 模块初始化方法，默认未实现，setupAllModules自动调用
 - (void)setup;
 
-@optional
+/// 是否主线程同步调用setup，默认为NO，后台线程异步调用
++ (BOOL)setupSynchronously;
 
 /// 模块优先级，0最低。默认为Default优先级
 + (NSUInteger)priority;
-
-/// 是否主线程同步调用，默认为NO，后台线程异步调用
-+ (BOOL)setupSynchronously;
 
 @end
 

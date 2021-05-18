@@ -11,24 +11,6 @@ import Foundation
 import FWDebug
 #endif
 
-@objc extension FWLoader {
-    func loadSettingsViewController() {
-        #if DEBUG
-        FWDebugManager.sharedInstance().openUrl = { (url) in
-            if let scheme = NSURL.fwURL(with: url)?.scheme, scheme.count > 0 {
-                FWRouter.openURL(url)
-                return true
-            }
-            return false
-        }
-        #endif
-        
-        DispatchQueue.main.async {
-            FWThemeManager.sharedInstance.overrideWindow = true
-        }
-    }
-}
-
 class SettingsViewController: UIViewController, FWTableViewController {
     private lazy var loginButton: UIButton = {
         let button = Theme.largeButton()

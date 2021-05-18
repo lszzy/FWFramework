@@ -38,12 +38,19 @@
 
 - (NSString *)description
 {
-    NSMutableString *mutableDescription = [[NSMutableString alloc] init];
-    for (NSString *protocolName in self.moduleDict) {
-        [mutableDescription appendFormat:@"%@ : %@\n", protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
+    NSMutableString *debugDescription = [[NSMutableString alloc] init];
+    NSArray *sortedKeys = [self.moduleDict keysSortedByValueUsingComparator:^NSComparisonResult(Class class1, Class class2) {
+        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : FWModulePriorityDefault;
+        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : FWModulePriorityDefault;
+        if (priority1 == priority2) return NSOrderedSame;
+        return priority1 < priority2 ? NSOrderedDescending : NSOrderedAscending;
+    }];
+    NSInteger debugCount = 0;
+    for (NSString *protocolName in sortedKeys) {
+        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
     }
     
-    return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", mutableDescription];
+    return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription];
 }
 
 + (FWLoader<Protocol *,id> *)sharedLoader
@@ -117,21 +124,10 @@
 {
     NSArray *modules = [FWMediator sharedInstance].moduleDict.allValues;
     NSArray *sortedModules = [modules sortedArrayUsingComparator:^NSComparisonResult(Class class1, Class class2) {
-        NSUInteger priority1 = FWModulePriorityDefault;
-        NSUInteger priority2 = FWModulePriorityDefault;
-        if ([class1 respondsToSelector:@selector(priority)]) {
-            priority1 = [class1 priority];
-        }
-        if ([class2 respondsToSelector:@selector(priority)]) {
-            priority2 = [class2 priority];
-        }
-        if (priority1 == priority2) {
-            return NSOrderedSame;
-        } else if (priority1 < priority2) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedAscending;
-        }
+        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : FWModulePriorityDefault;
+        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : FWModulePriorityDefault;
+        if (priority1 == priority2) return NSOrderedSame;
+        return priority1 < priority2 ? NSOrderedDescending : NSOrderedAscending;
     }];
     return sortedModules;
 }
@@ -141,6 +137,7 @@
     NSArray *modules = [self allRegisteredModules];
     for (Class<FWModuleProtocol> moduleClass in modules) {
         @try {
+            if (![[moduleClass sharedInstance] respondsToSelector:@selector(setup)]) continue;
             BOOL setupSync = NO;
             if ([moduleClass respondsToSelector:@selector(setupSynchronously)]) {
                 setupSync = [moduleClass setupSynchronously];
