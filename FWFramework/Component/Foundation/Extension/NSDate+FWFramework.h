@@ -20,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - System
 
 /// 系统运行时间
-@property (class, nonatomic, assign, readonly) long long fwSystemUptime;
+@property (class, nonatomic, assign, readonly) NSTimeInterval fwSystemUptime;
 
-/// 获取系统启动时间
-@property (class, nonatomic, readonly, nullable) NSDate *fwSystemBoottime;
+/// 系统启动时间
+@property (class, nonatomic, assign, readonly) NSTimeInterval fwSystemBoottime;
 
 #pragma mark - Convert
 

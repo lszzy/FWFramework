@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
 
+// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
+@property (nullable, nonatomic, weak) UIScrollView *fwKeyboardScrollView;
+
 #pragma mark - Return
 
 // 点击键盘完成按钮是否关闭键盘，默认NO，二选一
@@ -68,6 +71,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
 @property (nonatomic, assign) BOOL fwTouchResign UI_APPEARANCE_SELECTOR;
+
+// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
+@property (nullable, nonatomic, weak) UIScrollView *fwKeyboardScrollView;
 
 #pragma mark - Return
 
