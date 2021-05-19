@@ -1,16 +1,24 @@
 # fastlane {name} [version:1.0.0] [build:1.0.0.1] [update:Changelog] [skip:true]
 # https://docs.fastlane.tools
 # update_fastlane
+# 授权方式一：使用api_key的方式授权
+# 1. http://docs.fastlane.tools/app-store-connect-api/
+# 授权方式二：默认使用两步验证，有效期一个月，可运行如下命令手工授权
+# 1. fastlane spaceauth
+# 授权方式三：配置.env专用密码+skip_waiting_for_build_processing+apple_id
+# 1. FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="{PASSWORD}"
 
 # config
 PGYER_APIKEY="{PGYER_APIKEY}"
 PGYER_USERKEY="{PGYER_USERKEY}"
 PGYER_PASSWD="{PGYER_PASSWD}"
+APPSTORE_ID="{APPSTORE_ID}"
 
 # .env
 # PGYER_APIKEY="{PGYER_APIKEY}"
 # PGYER_USERKEY="{PGYER_USERKEY}"
 # PGYER_PASSWD="{PGYER_PASSWD}"
+# APPSTORE_ID="{APPSTORE_ID}"
 # Fastfile
 # ENV["PGYER_APIKEY"]
 
@@ -126,6 +134,7 @@ platform :ios do
     else
       upload_to_testflight(
         skip_waiting_for_build_processing: true,
+        apple_id: APPSTORE_ID,
         skip_submission: true
       )
     end
@@ -153,6 +162,7 @@ platform :ios do
     else
       upload_to_testflight(
         skip_waiting_for_build_processing: true,
+        apple_id: APPSTORE_ID,
         skip_submission: true
       )
     end

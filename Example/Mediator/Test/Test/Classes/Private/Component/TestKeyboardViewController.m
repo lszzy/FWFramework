@@ -8,6 +8,8 @@
 
 #import "TestKeyboardViewController.h"
 
+static BOOL keyboardScrollView = NO;
+
 @interface TestKeyboardViewController () <FWScrollViewController, UITextFieldDelegate, UITextViewDelegate>
 
 FWPropertyStrong(UITextField *, mobileField);
@@ -41,6 +43,12 @@ FWPropertyAssign(BOOL, canScroll);
     textViewAppearance.fwKeyboardManager = YES;
     textViewAppearance.fwTouchResign = YES;
     textViewAppearance.fwKeyboardResign = YES;
+    textFieldAppearance.fwKeyboardScrollView = keyboardScrollView ? self.scrollView : nil;
+    textViewAppearance.fwKeyboardScrollView = keyboardScrollView ? self.scrollView : nil;
+    if (keyboardScrollView) {
+        self.navigationItem.title = @"UIScrollView+FWKeyboard";
+    }
+    keyboardScrollView = !keyboardScrollView;
     
     UITextField *mobileField = [self createTextField];
     self.mobileField = mobileField;
