@@ -16,6 +16,7 @@
 
 static BOOL fwStaticKeyboardShowing = NO;
 static CGFloat fwStaticKeyboardOrigin = 0;
+static CGFloat fwStaticKeyboardOffset = 0;
 static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @interface FWInnerKeyboardTarget : NSObject
@@ -30,6 +31,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @property (nonatomic, copy) void (^returnBlock)(id textInput);
 
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
+@property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, assign) BOOL keyboardActive;
 
@@ -170,6 +172,26 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     if (!self.textInput.isFirstResponder) return;
     if (!self.keyboardManager || !self.viewController) return;
     
+    if (self.scrollView != nil) {
+        if (!fwStaticKeyboardShowing) {
+            fwStaticKeyboardShowing = YES;
+            fwStaticKeyboardOffset = self.scrollView.contentOffset.y;
+        }
+        
+        CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        UIView *convertView = self.textInput.window ?: self.viewController.view.window;
+        CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
+        CGFloat targetOffsetY = MAX(self.scrollView.contentOffset.y + self.keyboardSpacing + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
+        
+        CGPoint contentOffset = self.scrollView.contentOffset;
+        contentOffset.y = targetOffsetY;
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.scrollView.contentOffset = contentOffset;
+        }];
+        return;
+    }
+    
     if (!fwStaticKeyboardShowing) {
         fwStaticKeyboardShowing = YES;
         fwStaticKeyboardOrigin = self.viewController.view.frame.origin.y;
@@ -179,7 +201,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
-    CGFloat viewTargetY = MIN(self.viewController.view.frame.origin.y + CGRectGetMinY(keyboardRect) - self.keyboardSpacing - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
+    CGFloat viewTargetY = MIN(self.viewController.view.frame.origin.y - self.keyboardSpacing + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
     
     CGRect viewFrame = self.viewController.view.frame;
     viewFrame.origin.y = viewTargetY;
@@ -197,6 +219,21 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     if (!self.textInput.isFirstResponder) return;
     if (!self.keyboardManager || !self.viewController || !fwStaticKeyboardShowing) return;
+    
+    if (self.scrollView != nil) {
+        CGFloat originOffsetY = fwStaticKeyboardOffset;
+        fwStaticKeyboardShowing = NO;
+        fwStaticKeyboardOffset = 0;
+        
+        CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        
+        CGPoint contentOffset = self.scrollView.contentOffset;
+        contentOffset.y = originOffsetY;
+        [UIView animateWithDuration:animationDuration animations:^{
+            self.scrollView.contentOffset = contentOffset;
+        }];
+        return;
+    }
     
     CGFloat viewOriginY = fwStaticKeyboardOrigin;
     fwStaticKeyboardShowing = NO;
@@ -334,6 +371,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fwInnerKeyboardTarget.touchResign = fwTouchResign;
 }
 
+- (UIScrollView *)fwKeyboardScrollView
+{
+    return self.fwInnerKeyboardTarget.scrollView;
+}
+
+- (void)setFwKeyboardScrollView:(UIScrollView *)fwKeyboardScrollView
+{
+    self.fwInnerKeyboardTarget.scrollView = fwKeyboardScrollView;
+}
+
 - (FWInnerKeyboardTarget *)fwInnerKeyboardTarget
 {
     FWInnerKeyboardTarget *target = objc_getAssociatedObject(self, _cmd);
@@ -459,6 +506,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)setFwTouchResign:(BOOL)fwTouchResign
 {
     self.fwInnerKeyboardTarget.touchResign = fwTouchResign;
+}
+
+- (UIScrollView *)fwKeyboardScrollView
+{
+    return self.fwInnerKeyboardTarget.scrollView;
+}
+
+- (void)setFwKeyboardScrollView:(UIScrollView *)fwKeyboardScrollView
+{
+    self.fwInnerKeyboardTarget.scrollView = fwKeyboardScrollView;
 }
 
 - (FWInnerKeyboardTarget *)fwInnerKeyboardTarget
