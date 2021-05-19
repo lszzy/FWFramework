@@ -14,38 +14,36 @@
 
 #pragma mark - System
 
-+ (long long)fwSystemUptime
++ (NSTimeInterval)fwSystemUptime
 {
-    struct timeval boottime;
+    struct timeval bootTime;
     int mib[2] = {CTL_KERN, KERN_BOOTTIME};
-    size_t size = sizeof(boottime);
-    time_t now;
-    time_t uptime = -1;
-    (void)time(&now);
-    if (sysctl(mib, 2, &boottime, &size, NULL, 0) != -1 && boottime.tv_sec != 0) {
-        uptime = now - boottime.tv_sec;
+    size_t size = sizeof(bootTime);
+    int resctl = sysctl(mib, 2, &bootTime, &size, NULL, 0);
+
+    struct timeval now;
+    struct timezone tz;
+    gettimeofday(&now, &tz);
+    
+    NSTimeInterval uptime = 0;
+    if (resctl != -1 && bootTime.tv_sec != 0) {
+        uptime = now.tv_sec - bootTime.tv_sec;
+        uptime += (now.tv_usec - bootTime.tv_usec) / 1.e6;
     }
     return uptime;
 }
 
-+ (NSDate *)fwSystemBoottime
++ (NSTimeInterval)fwSystemBoottime
 {
-    const int MIB_SIZE = 2;
+    struct timeval bootTime;
+    int mib[2] = {CTL_KERN, KERN_BOOTTIME};
+    size_t size = sizeof(bootTime);
+    int resctl = sysctl(mib, 2, &bootTime, &size, NULL, 0);
     
-    int mib[MIB_SIZE];
-    size_t size;
-    struct timeval boottime;
-    
-    mib[0] = CTL_KERN;
-    mib[1] = KERN_BOOTTIME;
-    size = sizeof(boottime);
-    
-    if (sysctl(mib, MIB_SIZE, &boottime, &size, NULL, 0) != -1) {
-        NSDate* bootDate = [NSDate dateWithTimeIntervalSince1970:boottime.tv_sec + boottime.tv_usec / 1.e6];
-        return bootDate;
+    if (resctl != -1 && bootTime.tv_sec != 0) {
+        return bootTime.tv_sec + bootTime.tv_usec / 1.e6;
     }
-    
-    return nil;
+    return 0;
 }
 
 #pragma mark - Convert
