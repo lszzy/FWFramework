@@ -85,16 +85,21 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-+ (long long)fwCurrentSystemUptime
++ (NSTimeInterval)fwCurrentSystemUptime
 {
-    struct timeval boottime;
+    struct timeval bootTime;
     int mib[2] = {CTL_KERN, KERN_BOOTTIME};
-    size_t size = sizeof(boottime);
-    time_t now;
-    time_t uptime = -1;
-    (void)time(&now);
-    if (sysctl(mib, 2, &boottime, &size, NULL, 0) != -1 && boottime.tv_sec != 0) {
-        uptime = now - boottime.tv_sec;
+    size_t size = sizeof(bootTime);
+    int resctl = sysctl(mib, 2, &bootTime, &size, NULL, 0);
+
+    struct timeval now;
+    struct timezone tz;
+    gettimeofday(&now, &tz);
+    
+    NSTimeInterval uptime = 0;
+    if (resctl != -1 && bootTime.tv_sec != 0) {
+        uptime = now.tv_sec - bootTime.tv_sec;
+        uptime += (now.tv_usec - bootTime.tv_usec) / 1.e6;
     }
     return uptime;
 }
