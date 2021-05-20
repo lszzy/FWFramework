@@ -365,11 +365,6 @@ UIImage * FWImageFile(NSString *path) {
         imageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
     }
     
-    if (self.preFilter) {
-        self.preFilter(imageView);
-    }
-    
-    __weak __typeof__(self) self_weak_ = self;
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder
                           options:options | SDWebImageRetryFailed
@@ -385,16 +380,9 @@ UIImage * FWImageFile(NSString *path) {
                                 }
                             }
                         } : nil
-                        completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                            __typeof__(self) self = self_weak_;
-                            if (self.postFilter) {
-                                self.postFilter(imageView, image);
-                            }
-                                                
-                            if (completion) {
-                                completion(image, error);
-                            }
-                        }];
+                        completed:completion ? ^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                            completion(image, error);
+                        } : nil];
 }
 
 - (void)fwCancelImageRequest:(UIImageView *)imageView

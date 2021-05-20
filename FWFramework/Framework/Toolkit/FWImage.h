@@ -184,12 +184,6 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;
 
-/// 图片前置过滤器，setImageURL开始时调用
-@property (nonatomic, copy, nullable) void (^preFilter)(UIImageView *imageView);
-
-/// 图片后置过滤器，setImageURL完成时调用
-@property (nonatomic, copy, nullable) void (^postFilter)(UIImageView *imageView, UIImage * _Nullable image);
-
 @end
 
 NS_ASSUME_NONNULL_END
