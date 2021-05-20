@@ -801,17 +801,11 @@
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
-    if (self.preFilter) {
-        self.preFilter(imageView);
-    }
-    
-    __weak __typeof__(self) self_weak_ = self;
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
         imageView.image = placeholder;
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
-        __typeof__(self) self = self_weak_;
         BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
-        if (autoSetImage && self.fadeAnimated && !isCache) {
+        if (autoSetImage && FWImagePluginImpl.sharedInstance.fadeAnimated && !isCache) {
             NSString *originalOperationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
             [UIView transitionWithView:imageView duration:0 options:0 animations:^{
                 NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
@@ -826,10 +820,6 @@
             }];
         } else if (autoSetImage) {
             imageView.image = image;
-        }
-        
-        if (self.postFilter) {
-            self.postFilter(imageView, image);
         }
         
         if (completion) {
