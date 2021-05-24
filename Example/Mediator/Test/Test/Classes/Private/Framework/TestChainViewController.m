@@ -39,7 +39,7 @@
     UIImageView *image = [UIImageView new];
     image.image = [UIImage fwImageWithAppIcon];
     [self.view addSubview:image];
-    image.fwLayoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).attribute(NSLayoutAttributeHeight, NSLayoutAttributeHeight, view).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
+    image.fwLayoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).heightToWidth(1.0).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
     
     FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
     attr.text = @"attr";

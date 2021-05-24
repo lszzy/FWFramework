@@ -7,6 +7,7 @@
 //
 
 #import "TestImageViewController.h"
+@import SDWebImage;
 
 @interface TestImageCell : UITableViewCell
 
@@ -62,6 +63,9 @@
         self.isSDWebImage = !self.isSDWebImage;
         [FWPluginManager unloadPlugin:@protocol(FWImagePlugin)];
         [FWPluginManager registerPlugin:@protocol(FWImagePlugin) withObject:self.isSDWebImage ? [FWSDWebImagePlugin class] : [FWImagePluginImpl class]];
+        if (self.isSDWebImage) {
+            [[SDImageCache sharedImageCache] clearWithCacheType:SDImageCacheTypeAll completion:nil];
+        }
         
         [self.tableData removeAllObjects];
         [self.tableView reloadData];

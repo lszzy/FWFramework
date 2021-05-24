@@ -33,6 +33,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 /*! @brief 路由URL解析参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary *parameters;
+/*! @brief 路由userInfo和parameters合并参数，URL参数优先级高 */
+@property (nonatomic, copy, readonly) NSDictionary *mergeParameters;
 /*！@brief 路由是否以openURL方式打开，区别于objectForURL */
 @property (nonatomic, assign, readonly) BOOL isOpening;
 
