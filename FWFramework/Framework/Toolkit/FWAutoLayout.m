@@ -452,6 +452,34 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - Dimension
 
+- (NSArray<NSLayoutConstraint *> *)fwSetDimensionsToSize:(CGSize)size
+{
+    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+    [constraints addObject:[self fwSetDimension:NSLayoutAttributeWidth toSize:size.width]];
+    [constraints addObject:[self fwSetDimension:NSLayoutAttributeHeight toSize:size.height]];
+    return constraints;
+}
+
+- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size
+{
+    return [self fwSetDimension:dimension toSize:size relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation
+{
+    return [self fwConstrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation];
+}
+
+- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier
+{
+    return [self fwMatchDimension:dimension toDimension:toDimension withMultiplier:multiplier relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+{
+    return [self fwMatchDimension:dimension toDimension:toDimension ofView:self withMultiplier:multiplier relation:relation];
+}
+
 - (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView
 {
     return [self fwMatchDimension:dimension toDimension:toDimension ofView:otherView withOffset:0.0];
@@ -475,24 +503,6 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
 {
     return [self fwConstrainAttribute:dimension toAttribute:toDimension ofView:otherView withMultiplier:multiplier relation:relation];
-}
-
-- (NSArray<NSLayoutConstraint *> *)fwSetDimensionsToSize:(CGSize)size
-{
-    NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self fwSetDimension:NSLayoutAttributeWidth toSize:size.width]];
-    [constraints addObject:[self fwSetDimension:NSLayoutAttributeHeight toSize:size.height]];
-    return constraints;
-}
-
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size
-{
-    return [self fwSetDimension:dimension toSize:size relation:NSLayoutRelationEqual];
-}
-
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation
-{
-    return [self fwConstrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation];
 }
 
 #pragma mark - Constrain
@@ -1315,6 +1325,22 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 {
     return ^id(CGFloat height) {
         [self.view fwSetDimension:NSLayoutAttributeHeight toSize:height];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(CGFloat))widthToHeight
+{
+    return ^id(CGFloat multiplier) {
+        [self.view fwMatchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeHeight withMultiplier:multiplier];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(CGFloat))heightToWidth
+{
+    return ^id(CGFloat multiplier) {
+        [self.view fwMatchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeWidth withMultiplier:multiplier];
         return self;
     };
 }
