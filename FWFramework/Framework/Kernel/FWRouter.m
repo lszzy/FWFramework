@@ -15,6 +15,7 @@
 @interface FWRouterContext ()
 
 @property (nonatomic, copy) NSDictionary *parameters;
+@property (nonatomic, copy) NSDictionary *mergeParameters;
 @property (nonatomic, assign) BOOL isOpening;
 
 + (NSURL *)URLWithString:(NSString *)URLString;
@@ -56,6 +57,17 @@
         _parameters = [parameters copy];
     }
     return _parameters;
+}
+
+- (NSDictionary *)mergeParameters
+{
+    if (!_mergeParameters) {
+        NSMutableDictionary *mergeParameters = [[NSMutableDictionary alloc] init];
+        if (self.userInfo) [mergeParameters addEntriesFromDictionary:self.userInfo];
+        [mergeParameters addEntriesFromDictionary:self.parameters];
+        _mergeParameters = [mergeParameters copy];
+    }
+    return _mergeParameters;
 }
 
 + (NSURL *)URLWithString:(NSString *)URLString
