@@ -9,6 +9,7 @@
 
 #import "UIApplication+FWFramework.h"
 #import "FWEncode.h"
+#import "FWRouter.h"
 #import "FWToolkit.h"
 #import <StoreKit/StoreKit.h>
 
@@ -117,6 +118,13 @@
     } else {
         [self fwOpenURL:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appId]];
     }
+}
+
++ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
+{
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityController.excludedActivityTypes = excludedTypes;
+    [FWRouter presentViewController:activityController animated:YES completion:nil];
 }
 
 + (void)fwSendEmail:(NSString *)email

@@ -52,6 +52,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 
 	* FWAutoLayout增加视图宽高比布局方法
 	* FWRouterContext增加mergeParameters方法
+	* UIApplication新增调用系统分享方法
 
 1.5.3版本：
 
