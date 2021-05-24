@@ -401,6 +401,18 @@ public class FWLayoutChain {
         view?.fwSetDimension(.height, toSize: height, relation: relation)
         return self
     }
+    
+    @discardableResult
+    public func widthToHeight(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+        view?.fwMatchDimension(.width, toDimension: .height, withMultiplier: multiplier, relation: relation)
+        return self
+    }
+    
+    @discardableResult
+    public func heightToWidth(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain {
+        view?.fwMatchDimension(.height, toDimension: .width, withMultiplier: multiplier, relation: relation)
+        return self
+    }
 
     @discardableResult
     public func sizeToView(_ view: Any) -> FWLayoutChain {

@@ -360,6 +360,54 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Dimension
 
 /*!
+ @brief 设置宽高尺寸
+ 
+ @param size 尺寸大小
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)fwSetDimensionsToSize:(CGSize)size;
+
+/*!
+ @brief 设置某个尺寸
+ 
+ @param dimension 尺寸属性
+ @param size 尺寸大小
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size;
+
+/*!
+ @brief 设置某个尺寸，指定关系
+ 
+ @param dimension 尺寸属性
+ @param size 尺寸大小
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation;
+
+/*!
+ @brief 与视图自身尺寸属性指定比例
+ 
+ @param dimension 尺寸属性
+ @param toDimension 目标尺寸属性
+ @param multiplier 指定比例
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier;
+
+/*!
+ @brief 与视图自身尺寸属性指定比例，指定关系
+ 
+ @param dimension 尺寸属性
+ @param toDimension 目标尺寸属性
+ @param multiplier 指定比例
+ @param relation 约束关系
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+
+/*!
  @brief 与指定视图尺寸属性相同
  
  @param dimension 尺寸属性
@@ -414,33 +462,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return 布局约束
  */
 - (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
-
-/*!
- @brief 设置宽高尺寸
- 
- @param size 尺寸大小
- @return 约束数组
- */
-- (NSArray<NSLayoutConstraint *> *)fwSetDimensionsToSize:(CGSize)size;
-
-/*!
- @brief 设置某个尺寸
- 
- @param dimension 尺寸属性
- @param size 尺寸大小
- @return 布局约束
- */
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size;
-
-/*!
- @brief 设置某个尺寸，指定关系
- 
- @param dimension 尺寸属性
- @param size 尺寸大小
- @param relation 约束关系
- @return 布局约束
- */
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation;
 
 #pragma mark - Constrain
 
@@ -725,6 +746,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^size)(CGSize size);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^width)(CGFloat width);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^height)(CGFloat height);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^widthToHeight)(CGFloat multiplier);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^heightToWidth)(CGFloat multiplier);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^sizeToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^widthToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^heightToView)(id view);
