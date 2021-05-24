@@ -60,6 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 打开AppStore评论页
 + (void)fwOpenAppReview:(NSString *)appId;
 
+// 打开系统分享
++ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
+
 // 发送邮件
 + (void)fwSendEmail:(NSString *)email;
 
