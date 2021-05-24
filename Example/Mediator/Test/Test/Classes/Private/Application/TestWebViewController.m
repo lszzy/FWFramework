@@ -79,9 +79,7 @@
 
 - (void)shareRequestUrl
 {
-    NSURL *url = [NSURL URLWithString:self.requestUrl];
-    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:url, nil] applicationActivities:nil];
-    [self presentViewController:activityController animated:YES completion:nil];
+    [UIApplication fwOpenActivityItems:@[FWSafeURL(self.requestUrl)] excludedTypes:nil];
 }
 
 - (void)loadRequestUrl

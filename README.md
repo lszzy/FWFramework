@@ -52,6 +52,7 @@ Version 1.5.4:
 
 	* FWAutoLayout increases the layout method of view aspect ratio
 	* FWRouterContext adds mergeParameters method
+	* UIApplication adds a new calling system sharing method
 
 Version 1.5.3:
 
