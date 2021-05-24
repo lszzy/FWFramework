@@ -181,58 +181,6 @@
     return result;
 }
 
-#pragma mark - Number
-
-- (NSNumber *)fwNumberValue
-{
-    NSString *str = [[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
-    if (!str || str.length < 1) {
-        return nil;
-    }
-    
-    static NSDictionary *dict;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dict = @{
-                 @"true" :   @(YES),
-                 @"yes" :    @(YES),
-                 @"false" :  @(NO),
-                 @"no" :     @(NO),
-                 @"nil" :    [NSNull null],
-                 @"null" :   [NSNull null],
-                 @"<null>" : [NSNull null]
-                 };
-    });
-    
-    id num = dict[str];
-    if (num) {
-        return (num != [NSNull null]) ? num : nil;
-    }
-    
-    // 十六进制
-    int sign = 0;
-    if ([str hasPrefix:@"0x"]) {
-        sign = 1;
-    } else if ([str hasPrefix:@"-0x"]) {
-        sign = -1;
-    }
-    if (sign != 0) {
-        NSScanner *scan = [NSScanner scannerWithString:str];
-        unsigned num = -1;
-        BOOL success = [scan scanHexInt:&num];
-        if (success) {
-            return [NSNumber numberWithLong:((long)num * sign)];
-        } else {
-            return nil;
-        }
-    }
-    
-    // 普通数字
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    return [formatter numberFromString:self];
-}
-
 #pragma mark - Static
 
 + (NSString *)fwUUIDString
