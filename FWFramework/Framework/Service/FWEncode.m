@@ -300,14 +300,14 @@
 #pragma mark - FWSafeType
 
 NSNumber * FWSafeNumber(id value) {
-    if (!value) return @0;
+    if (!value) return @(0);
     if ([value isKindOfClass:[NSNumber class]]) return value;
-    NSString *string = [NSString stringWithFormat:@"%@", value];
-    return [NSNumber numberWithDouble:[string doubleValue]];
+    NSNumber *num = FWSafeString(value).fwNumber;
+    return num ?: @(0);
 }
 
 NSString * FWSafeString(id value) {
-    if (!value) return @"";
+    if (!value || [value isKindOfClass:[NSNull class]]) return @"";
     if ([value isKindOfClass:[NSString class]]) return value;
     return [NSString stringWithFormat:@"%@", value];
 }
@@ -362,11 +362,9 @@ NSURL * FWSafeURL(id value) {
     if ([self isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)self;
     } else if ([self isKindOfClass:[NSString class]]) {
-        return [NSNumber numberWithDouble:[(NSString *)self doubleValue]];
+        return [(NSString *)self fwNumber];
     } else if ([self isKindOfClass:[NSDate class]]) {
         return [NSNumber numberWithDouble:[(NSDate *)self timeIntervalSince1970]];
-    } else if ([self isKindOfClass:[NSNull class]]) {
-        return [NSNumber numberWithInteger:0];
     } else {
         return nil;
     }
@@ -503,6 +501,57 @@ NSURL * FWSafeURL(id value) {
 - (NSURL *)fwURL
 {
     return [NSURL fwURLWithString:self];
+}
+
+- (NSNumber *)fwNumber
+{
+    static NSCharacterSet *dot;
+    static NSDictionary *dic;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dot = [NSCharacterSet characterSetWithRange:NSMakeRange('.', 1)];
+        dic = @{@"TRUE"   : @(YES),
+                @"True"   : @(YES),
+                @"true"   : @(YES),
+                @"FALSE"  : @(NO),
+                @"False"  : @(NO),
+                @"false"  : @(NO),
+                @"YES"    : @(YES),
+                @"Yes"    : @(YES),
+                @"yes"    : @(YES),
+                @"NO"     : @(NO),
+                @"No"     : @(NO),
+                @"no"     : @(NO),
+                @"NIL"    : (id)kCFNull,
+                @"Nil"    : (id)kCFNull,
+                @"nil"    : (id)kCFNull,
+                @"NULL"   : (id)kCFNull,
+                @"Null"   : (id)kCFNull,
+                @"null"   : (id)kCFNull,
+                @"(NULL)" : (id)kCFNull,
+                @"(Null)" : (id)kCFNull,
+                @"(null)" : (id)kCFNull,
+                @"<NULL>" : (id)kCFNull,
+                @"<Null>" : (id)kCFNull,
+                @"<null>" : (id)kCFNull};
+    });
+    
+    NSNumber *num = dic[self];
+    if (num != nil) {
+        if (num == (id)kCFNull) return nil;
+        return num;
+    }
+    if ([self rangeOfCharacterFromSet:dot].location != NSNotFound) {
+        const char *cstring = self.UTF8String;
+        if (!cstring) return nil;
+        double cnum = atof(cstring);
+        if (isnan(cnum) || isinf(cnum)) return nil;
+        return @(cnum);
+    } else {
+        const char *cstring = self.UTF8String;
+        if (!cstring) return nil;
+        return @(atoll(cstring));
+    }
 }
 
 - (NSString *)fwSubstringFromIndex:(NSInteger)from

@@ -61,12 +61,12 @@
     return [self fwFormatNumber:digit roundingMode:NSNumberFormatterRoundCeiling];
 }
 
-- (NSNumber*)fwFloorNumber:(NSUInteger)digit
+- (NSNumber *)fwFloorNumber:(NSUInteger)digit
 {
     return [self fwFormatNumber:digit roundingMode:NSNumberFormatterRoundFloor];
 }
 
-- (NSNumber*)fwFormatNumber:(NSUInteger)digit
+- (NSNumber *)fwFormatNumber:(NSUInteger)digit
                roundingMode:(NSNumberFormatterRoundingMode)roundingMode
 {
     NSString *string = [self fwFormatString:digit roundingMode:roundingMode];
