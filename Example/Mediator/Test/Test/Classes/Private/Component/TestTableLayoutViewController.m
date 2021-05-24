@@ -364,6 +364,7 @@
     NSString *fromImageUrl = [cell.object.imageUrl stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
     NSInteger currentIndex = [self.photoBrowser.pictureUrls indexOfObject:fromImageUrl];
     self.photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
+    [self photoBrowser:self.photoBrowser scrollToIndex:self.photoBrowser.currentIndex];
     [self.photoBrowser showFromView:cell.myImageView];
 }
 
@@ -410,22 +411,11 @@
         [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
     }
     
-    // 创建标题Label
-    UILabel *label = [photoView viewWithTag:102];
-    if (!label) {
-        label = [UILabel new];
-        label.tag = 102;
-        label.textColor = [UIColor whiteColor];
-        [photoView addSubview:label];
-        [label fwAlignAxis:NSLayoutAttributeCenterX toView:photoBrowser];
-        [label fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:photoBrowser withOffset:-(68 + UIScreen.fwSafeAreaInsets.bottom)];
-    }
-    
     // 仅供参考视图
-    UILabel *tipLabel = [photoView.imageView viewWithTag:103];
+    UILabel *tipLabel = [photoView.imageView viewWithTag:102];
     if (!tipLabel) {
         tipLabel = [UILabel new];
-        tipLabel.tag = 103;
+        tipLabel.tag = 102;
         tipLabel.hidden = YES;
         tipLabel.fwContentInset = UIEdgeInsetsMake(2, 8, 2, 8);
         [tipLabel fwSetCornerRadius:12.5];
@@ -442,19 +432,28 @@
     UIButton *button = [photoView viewWithTag:101];
     button.hidden = !photoView.imageLoaded;
     
-    UILabel *label = [photoView viewWithTag:102];
-    if ([photoView.urlString isKindOfClass:[NSString class]]) {
-        label.text = FWSafeURL(photoView.urlString).pathComponents.lastObject;
-    } else {
-        label.text = FWSafeString(@([photoView.urlString hash]));
-    }
-    
-    UILabel *tipLabel = [photoView viewWithTag:103];
+    UILabel *tipLabel = [photoView.imageView viewWithTag:102];
     tipLabel.hidden = !photoView.imageLoaded;
 }
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
-    NSLog(@"%ld", index);
+    // 创建标题Label
+    UILabel *label = [photoBrowser viewWithTag:103];
+    if (!label) {
+        label = [UILabel new];
+        label.tag = 103;
+        label.textColor = [UIColor whiteColor];
+        [photoBrowser addSubview:label];
+        [label fwAlignAxis:NSLayoutAttributeCenterX toView:photoBrowser];
+        [label fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:photoBrowser withOffset:-(68 + UIScreen.fwSafeAreaInsets.bottom)];
+    }
+    
+    id urlString = [photoBrowser.pictureUrls fwObjectAtIndex:index];
+    if ([urlString isKindOfClass:[NSString class]]) {
+        label.text = FWSafeURL(urlString).pathComponents.lastObject;
+    } else {
+        label.text = FWSafeString(@([urlString hash]));
+    }
 }
 
 #pragma mark - Action
