@@ -96,11 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, readonly) NSString *fwEscapeHtml;
 
-#pragma mark - Number
-
-// 字符串转NSNumber
-@property (nonatomic, readonly, nullable) NSNumber *fwNumberValue;
-
 #pragma mark - Static
 
 // 创建一个UUID字符串，示例："D1178E50-2A4D-4F1F-9BD3-F6AAB00E06B1"。也可调用NSUUID.UUID.UUIDString
