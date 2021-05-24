@@ -338,6 +338,7 @@
     if (!self.photoBrowser) {
         FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
         self.photoBrowser = photoBrowser;
+        photoBrowser.pageTextCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (42 + UIScreen.fwSafeAreaInsets.bottom));
         photoBrowser.delegate = self;
         photoBrowser.pictureUrls = @[
                                      @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
@@ -397,8 +398,9 @@
     if (!button) {
         button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = 101;
+        button.hidden = YES;
         [button setTitle:@"保存" forState:UIControlStateNormal];
-        [button setTitleColor:[Theme textColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button fwAddTouchTarget:self action:@selector(onSaveImage:)];
         // 添加到phtoView，默认会滚动。也可固定位置添加到photoBrowser
         [photoView addSubview:button];
@@ -408,13 +410,47 @@
         [button fwSetDimensionsToSize:CGSizeMake(80, FWNavigationBarHeight)];
     }
     
-    // 默认隐藏按钮
-    button.hidden = YES;
+    // 创建标题Label
+    UILabel *label = [photoView viewWithTag:102];
+    if (!label) {
+        label = [UILabel new];
+        label.tag = 102;
+        label.textColor = [UIColor whiteColor];
+        [photoView addSubview:label];
+        [label fwAlignAxis:NSLayoutAttributeCenterX toView:photoBrowser];
+        [label fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:photoBrowser withOffset:-(68 + UIScreen.fwSafeAreaInsets.bottom)];
+    }
+    
+    // 仅供参考视图
+    UILabel *tipLabel = [photoView.imageView viewWithTag:103];
+    if (!tipLabel) {
+        tipLabel = [UILabel new];
+        tipLabel.tag = 103;
+        tipLabel.hidden = YES;
+        tipLabel.fwContentInset = UIEdgeInsetsMake(2, 8, 2, 8);
+        [tipLabel fwSetCornerRadius:12.5];
+        tipLabel.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.5];
+        tipLabel.text = @"图片仅供参考";
+        tipLabel.font = FWFontRegular(12);
+        tipLabel.textColor = [UIColor whiteColor];
+        [photoView.imageView addSubview:tipLabel];
+        tipLabel.fwLayoutChain.bottomWithInset(16).rightWithInset(16);
+    }
 }
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser finishLoadPhotoView:(FWPhotoView *)photoView {
     UIButton *button = [photoView viewWithTag:101];
     button.hidden = !photoView.imageLoaded;
+    
+    UILabel *label = [photoView viewWithTag:102];
+    if ([photoView.urlString isKindOfClass:[NSString class]]) {
+        label.text = FWSafeURL(photoView.urlString).pathComponents.lastObject;
+    } else {
+        label.text = FWSafeString(@([photoView.urlString hash]));
+    }
+    
+    UILabel *tipLabel = [photoView viewWithTag:103];
+    tipLabel.hidden = !photoView.imageLoaded;
 }
 
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser scrollToIndex:(NSInteger)index {
