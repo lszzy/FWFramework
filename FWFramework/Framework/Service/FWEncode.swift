@@ -288,63 +288,63 @@ extension Optional {
 }
 extension Int: FWSafeUnwrappable {
     public static var fwSafeValue: Int = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Int8: FWSafeUnwrappable {
     public static var fwSafeValue: Int8 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Int16: FWSafeUnwrappable {
     public static var fwSafeValue: Int16 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Int32: FWSafeUnwrappable {
     public static var fwSafeValue: Int32 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Int64: FWSafeUnwrappable {
     public static var fwSafeValue: Int64 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension UInt: FWSafeUnwrappable {
     public static var fwSafeValue: UInt = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension UInt8: FWSafeUnwrappable {
     public static var fwSafeValue: UInt8 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension UInt16: FWSafeUnwrappable {
     public static var fwSafeValue: UInt16 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension UInt32: FWSafeUnwrappable {
     public static var fwSafeValue: UInt32 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension UInt64: FWSafeUnwrappable {
     public static var fwSafeValue: UInt64 = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Float: FWSafeUnwrappable {
     public static var fwSafeValue: Float = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Double: FWSafeUnwrappable {
     public static var fwSafeValue: Double = .zero
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Bool: FWSafeUnwrappable {
     public static var fwSafeValue: Bool = false
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension String: FWSafeUnwrappable {
     public static var fwSafeValue: String = ""
     public var fwIsEmpty: Bool { return self.isEmpty }
 }
 extension NSNumber: FWSafeUnwrappable {
-    public static var fwSafeValue: Self { return Self(value: 0) }
-    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+    public static var fwSafeValue: Self { return Self.init(value: 0) }
+    public var fwIsEmpty: Bool { return self == .fwSafeValue }
 }
 extension Array: FWSafeUnwrappable {
     public static var fwSafeValue: Array<Element> { return [] }
