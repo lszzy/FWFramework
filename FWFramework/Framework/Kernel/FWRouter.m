@@ -43,7 +43,7 @@
     return context;
 }
 
-- (NSDictionary *)URLParameters
+- (NSDictionary<NSString *,NSString *> *)URLParameters
 {
     if (!_URLParameters) {
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
