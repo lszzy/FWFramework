@@ -173,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Save
 
 // 保存图片到相册，保存成功时error为nil
-- (void)fwSaveImageWithBlock:(nullable void (^)(NSError *error))block;
+- (void)fwSaveImageWithBlock:(nullable void (^)(NSError * _Nullable error))block;
 
 @end
 
