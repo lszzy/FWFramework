@@ -20,10 +20,10 @@
         FWSwizzleClass(UIControl, @selector(sendAction:to:forEvent:), FWSwizzleReturn(void), FWSwizzleArgs(SEL action, id target, UIEvent *event), FWSwizzleCode({
             // 仅拦截Touch事件，且配置了间隔时间的Event
             if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fwTouchEventInterval > 0) {
-                if (event.timestamp - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
+                if ([[NSDate date] timeIntervalSince1970] - selfObject.fwTouchEventTimestamp < selfObject.fwTouchEventInterval) {
                     return;
                 }
-                selfObject.fwTouchEventTimestamp = event.timestamp;
+                selfObject.fwTouchEventTimestamp = [[NSDate date] timeIntervalSince1970];
             }
             
             FWSwizzleOriginal(action, target, event);
