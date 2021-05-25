@@ -32,7 +32,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 @property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
 /*! @brief 路由URL解析参数字典 */
-@property (nonatomic, copy, readonly) NSDictionary *URLParameters;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *URLParameters;
 /*! @brief 路由userInfo和URLParameters合并参数，URL参数优先级高 */
 @property (nonatomic, copy, readonly) NSDictionary *parameters;
 /*！@brief 路由是否以openURL方式打开，区别于objectForURL */
