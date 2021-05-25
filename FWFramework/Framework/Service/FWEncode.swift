@@ -233,60 +233,59 @@ private struct FWAnyCodingKey: CodingKey {
 
 // MARK: - FWSafeUnwrappable
 
-/// 安全解包协议
-public protocol FWSafeUnwrappable {
-    /// 提供安全默认值
-    static var fwSafeValue: Self { get }
-    /// 判断对象是否为空(nil或默认值)
-    var fwIsEmpty: Bool { get }
-}
-
-extension Optional where Wrapped: FWSafeUnwrappable {
-    /// 获取安全值。当值为nil时，会返回默认值。注意可选链调用时可能不会触发，推荐使用FWSafeValue
-    public var fwSafeValue: Wrapped {
-        if let value = self {
-            return value
-        } else {
-            return Wrapped.fwSafeValue
-        }
-    }
-    
-    /// 判断对象是否为空(nil或默认值)。注意可选链调用时可能不会触发，推荐使用FWIsEmpty
-    public var fwIsEmpty: Bool {
-        if let value = self {
-            return value.fwIsEmpty
-        } else {
-            return true
-        }
-    }
-}
-
-extension Optional {
-    /// 判断对象是否为nil。注意可选链调用时可能不会触发，推荐使用FWIsNil
-    public var fwIsNil: Bool {
-        return self == nil
-    }
-}
-
-/// 获取安全值。当值为nil时，会返回默认值
-/// - Parameter value: 实现了安全解包协议的可选对象
 public func FWSafeValue<T: FWSafeUnwrappable>(_ value: T?) -> T {
     return value.fwSafeValue
 }
 
-/// 判断对象是否为空(nil或默认值)
-/// - Parameter value: 实现了安全解包协议的可选对象
 public func FWIsEmpty<T: FWSafeUnwrappable>(_ value: T?) -> Bool {
     return value.fwIsEmpty
 }
 
-/// 判断对象是否为nil
-/// - Parameter value: 可选对象
 public func FWIsNil(_ value: Any?) -> Bool {
     return value.fwIsNil
 }
 
-/// 常用类实现安全解包协议
+public protocol FWSafeUnwrappable {
+    static var fwSafeValue: Self { get }
+    var fwIsEmpty: Bool { get }
+    
+    var fwAsInt: Int { get }
+    var fwAsBool: Bool { get }
+    var fwAsFloat: Float { get }
+    var fwAsDouble: Double { get }
+    var fwAsString: String { get }
+    var fwAsNumber: NSNumber { get }
+    var fwAsArray: [Any] { get }
+    var fwAsDicationary: [AnyHashable: Any] { get }
+}
+
+extension FWSafeUnwrappable {
+    public var fwAsInt: Int { return fwAsNumber.intValue }
+    public var fwAsBool: Bool { return fwAsNumber.boolValue }
+    public var fwAsFloat: Float { return fwAsNumber.floatValue }
+    public var fwAsDouble: Double { return fwAsNumber.doubleValue }
+    public var fwAsString: String { return FWSafeString(self) }
+    public var fwAsNumber: NSNumber { return FWSafeNumber(self) }
+    public var fwAsArray: [Any] { return (self as? [Any]) ?? .fwSafeValue }
+    public var fwAsDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .fwSafeValue }
+}
+
+extension Optional where Wrapped: FWSafeUnwrappable {
+    public var fwSafeValue: Wrapped { if let value = self { return value } else { return .fwSafeValue } }
+    public var fwIsEmpty: Bool { if let value = self { return value.fwIsEmpty } else { return true } }
+}
+extension Optional {
+    public var fwIsNil: Bool { return self == nil }
+    
+    public var fwAsInt: Int { return fwAsNumber.intValue }
+    public var fwAsBool: Bool { return fwAsNumber.boolValue }
+    public var fwAsFloat: Float { return fwAsNumber.floatValue }
+    public var fwAsDouble: Double { return fwAsNumber.doubleValue }
+    public var fwAsString: String { return FWSafeString(self) }
+    public var fwAsNumber: NSNumber { return FWSafeNumber(self) }
+    public var fwAsArray: [Any] { return (self as? [Any]) ?? .fwSafeValue }
+    public var fwAsDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .fwSafeValue }
+}
 extension Int: FWSafeUnwrappable {
     public static var fwSafeValue: Int = .zero
     public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
@@ -343,6 +342,10 @@ extension String: FWSafeUnwrappable {
     public static var fwSafeValue: String = ""
     public var fwIsEmpty: Bool { return self.isEmpty }
 }
+extension NSNumber: FWSafeUnwrappable {
+    public static var fwSafeValue: Self { return Self(value: 0) }
+    public var fwIsEmpty: Bool { return self == Self.fwSafeValue }
+}
 extension Array: FWSafeUnwrappable {
     public static var fwSafeValue: Array<Element> { return [] }
     public var fwIsEmpty: Bool { return self.isEmpty }
@@ -358,7 +361,6 @@ extension Dictionary: FWSafeUnwrappable {
 
 // MARK: - FWSafeBridge
 
-/// 常用类快捷OC桥接属性
 extension Array {
     public var fwNSArray: NSArray { return self as NSArray }
 }
