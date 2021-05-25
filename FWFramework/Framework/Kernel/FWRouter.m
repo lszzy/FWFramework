@@ -14,8 +14,8 @@
 
 @interface FWRouterContext ()
 
+@property (nonatomic, copy) NSDictionary *URLParameters;
 @property (nonatomic, copy) NSDictionary *parameters;
-@property (nonatomic, copy) NSDictionary *mergeParameters;
 @property (nonatomic, assign) BOOL isOpening;
 
 + (NSURL *)URLWithString:(NSString *)URLString;
@@ -38,14 +38,14 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     FWRouterContext *context = [[[self class] allocWithZone:zone] initWithURL:self.URL userInfo:self.userInfo completion:self.completion];
-    context.parameters = self.parameters;
+    context.URLParameters = self.URLParameters;
     context.isOpening = self.isOpening;
     return context;
 }
 
-- (NSDictionary *)parameters
+- (NSDictionary *)URLParameters
 {
-    if (!_parameters) {
+    if (!_URLParameters) {
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
         NSURL *nsurl = [FWRouterContext URLWithString:self.URL];
         if (nsurl) {
@@ -54,20 +54,20 @@
                 parameters[item.name] = [item.value stringByRemovingPercentEncoding];
             }
         }
+        _URLParameters = [parameters copy];
+    }
+    return _URLParameters;
+}
+
+- (NSDictionary *)parameters
+{
+    if (!_parameters) {
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+        if (self.userInfo) [parameters addEntriesFromDictionary:self.userInfo];
+        [parameters addEntriesFromDictionary:self.URLParameters];
         _parameters = [parameters copy];
     }
     return _parameters;
-}
-
-- (NSDictionary *)mergeParameters
-{
-    if (!_mergeParameters) {
-        NSMutableDictionary *mergeParameters = [[NSMutableDictionary alloc] init];
-        if (self.userInfo) [mergeParameters addEntriesFromDictionary:self.userInfo];
-        [mergeParameters addEntriesFromDictionary:self.parameters];
-        _mergeParameters = [mergeParameters copy];
-    }
-    return _mergeParameters;
 }
 
 + (NSURL *)URLWithString:(NSString *)URLString
@@ -279,8 +279,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return NO;
     
-    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    return parameters[FWRouterBlockKey] ? YES : NO;
+    NSMutableDictionary *URLParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    return URLParameters[FWRouterBlockKey] ? YES : NO;
 }
 
 + (void)openURL:(id)URL
@@ -303,12 +303,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return;
     
-    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    FWRouterHandler handler = parameters[FWRouterBlockKey];
-    [parameters removeObjectForKey:FWRouterBlockKey];
+    NSMutableDictionary *URLParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    FWRouterHandler handler = URLParameters[FWRouterBlockKey];
+    [URLParameters removeObjectForKey:FWRouterBlockKey];
     
     FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:completion];
-    context.parameters = [parameters copy];
+    context.URLParameters = [URLParameters copy];
     context.isOpening = YES;
     
     if ([self sharedInstance].preFilter) {
@@ -345,12 +345,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSString *rewriteURL = [self rewriteURL:URL];
     if (rewriteURL.length < 1) return nil;
     
-    NSMutableDictionary *parameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
-    FWRouterHandler handler = parameters[FWRouterBlockKey];
-    [parameters removeObjectForKey:FWRouterBlockKey];
+    NSMutableDictionary *URLParameters = [[self sharedInstance] routeParametersFromURL:rewriteURL];
+    FWRouterHandler handler = URLParameters[FWRouterBlockKey];
+    [URLParameters removeObjectForKey:FWRouterBlockKey];
     
     FWRouterContext *context = [[FWRouterContext alloc] initWithURL:rewriteURL userInfo:userInfo completion:nil];
-    context.parameters = [parameters copy];
+    context.URLParameters = [URLParameters copy];
     context.isOpening = NO;
     
     if ([self sharedInstance].preFilter) {

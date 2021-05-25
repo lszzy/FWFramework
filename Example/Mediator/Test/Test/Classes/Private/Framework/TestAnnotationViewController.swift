@@ -29,7 +29,7 @@ class TestPluginManager {
 
 class TestRouter {
     @FWRouterAnnotation("app://plugin/:id", handler: { (object) in
-        let pluginId = FWSafeString(object.parameters["id"])
+        let pluginId = FWSafeString(object.urlParameters["id"])
         UIWindow.fwMain?.fwShowMessage(withText: "plugin - \(pluginId)")
         return nil
     })
