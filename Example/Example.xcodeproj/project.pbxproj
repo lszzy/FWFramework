@@ -101,7 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				2FF8D89424C8883F006A83B5 /* Classes */,
-				2FF8D89524C88863006A83B5 /* Resources */,
+				2FF8D89524C88863006A83B5 /* Assets */,
 				2FF8D89624C8887B006A83B5 /* Supporting Files */,
 			);
 			path = Example;
@@ -117,7 +117,7 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
-		2FF8D89524C88863006A83B5 /* Resources */ = {
+		2FF8D89524C88863006A83B5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
 				2FF8D9C124C88C86006A83B5 /* Assets.xcassets */,
@@ -125,7 +125,7 @@
 				2FF8D9F924C88D6A006A83B5 /* Localizable.strings */,
 				2FF8D9DA24C88C86006A83B5 /* LaunchScreen.storyboard */,
 			);
-			path = Resources;
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		2FF8D89624C8887B006A83B5 /* Supporting Files */ = {
