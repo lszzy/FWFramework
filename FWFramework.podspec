@@ -12,9 +12,6 @@ Pod::Spec.new do |s|
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = 'FWFramework'
-  s.resource_bundles      = {
-    'FWFramework' => ['FWFramework/Assets/**/*.{xcassets,lproj}']
-  }
 
   s.subspec 'FWFramework' do |ss|
     ss.dependency 'FWFramework/Framework'
@@ -25,6 +22,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Framework' do |ss|
     ss.source_files = 'FWFramework/Classes/FWFramework.h'
+    ss.resource = 'FWFramework/Assets/FWFramework.bundle'
 
     ss.subspec 'Kernel' do |sss|
       sss.source_files = 'FWFramework/Classes/Framework/Kernel/*.{h,m,swift}'
