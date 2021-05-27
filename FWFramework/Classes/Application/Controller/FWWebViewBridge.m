@@ -15,6 +15,7 @@
 #import "FWEncode.h"
 #import "FWProxy.h"
 #import "FWToolkit.h"
+#import "FWLanguage.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWWebViewBridge
@@ -827,7 +828,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:NSLocalizedString(@"关闭", nil) cancelBlock:^{
+    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:[FWFrameworkBundle localizedString:@"关闭"] cancelBlock:^{
         completionHandler();
     }];
 }
@@ -839,7 +840,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) confirmBlock:^{
+    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:[FWFrameworkBundle localizedString:@"取消"] confirm:[FWFrameworkBundle localizedString:@"确定"] confirmBlock:^{
         completionHandler(YES);
     } cancelBlock:^{
         completionHandler(NO);
@@ -853,7 +854,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:NSLocalizedString(@"取消", nil) confirm:NSLocalizedString(@"确定", nil) promptBlock:^(UITextField *textField) {
+    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:[FWFrameworkBundle localizedString:@"取消"] confirm:[FWFrameworkBundle localizedString:@"确定"] promptBlock:^(UITextField *textField) {
         textField.text = defaultText;
     } confirmBlock:^(NSString *text) {
         completionHandler(text);

@@ -9,6 +9,7 @@
 
 #import "FWCropViewController.h"
 #import "UIImagePickerController+FWFramework.h"
+#import "FWLanguage.h"
 
 static const CGFloat kFWCropViewControllerTitleTopPadding = 14.0f;
 static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
@@ -542,8 +543,8 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
     BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
     //Prepare the localized options
-    NSString *cancelButtonTitle = NSLocalizedString(@"取消", nil);
-    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : NSLocalizedString(@"原有", nil);
+    NSString *cancelButtonTitle = [FWFrameworkBundle localizedString:@"取消"];
+    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : [FWFrameworkBundle localizedString:@"原有"];
     
     //Prepare the list that will be fed to the alert view/controller
     
@@ -1410,7 +1411,7 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
     
     _doneTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_doneTextButton setTitle: _doneTextButtonTitle ?
-        _doneTextButtonTitle : NSLocalizedString(@"完成", nil)
+        _doneTextButtonTitle : [FWFrameworkBundle localizedString:@"完成"]
                      forState:UIControlStateNormal];
     [_doneTextButton setTitleColor:[UIColor colorWithRed:1.0f green:0.8f blue:0.0f alpha:1.0f] forState:UIControlStateNormal];
     [_doneTextButton.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -1427,7 +1428,7 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
     _cancelTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     
     [_cancelTextButton setTitle: _cancelTextButtonTitle ?
-        _cancelTextButtonTitle : NSLocalizedString(@"取消", nil)
+        _cancelTextButtonTitle : [FWFrameworkBundle localizedString:@"取消"]
                        forState:UIControlStateNormal];
     [_cancelTextButton.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
     [_cancelTextButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
