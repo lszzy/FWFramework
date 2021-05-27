@@ -209,6 +209,24 @@
                     completion:completion];
 }
 
+- (void)fwAddTransitionWithOption:(UIViewAnimationOptions)option
+                            block:(void (^)(void))block
+                         duration:(NSTimeInterval)duration
+                animationsEnabled:(BOOL)animationsEnabled
+                       completion:(void (^)(BOOL finished))completion
+{
+    [UIView transitionWithView:self
+                      duration:duration
+                       options:option
+                    animations:^{
+                        BOOL wasEnabled = UIView.areAnimationsEnabled;
+                        [UIView setAnimationsEnabled:animationsEnabled];
+                        if (block) block();
+                        [UIView setAnimationsEnabled:wasEnabled];
+                    }
+                    completion:completion];
+}
+
 - (void)fwAddTransitionToView:(UIView *)toView
                    withOption:(UIViewAnimationOptions)option
                      duration:(NSTimeInterval)duration

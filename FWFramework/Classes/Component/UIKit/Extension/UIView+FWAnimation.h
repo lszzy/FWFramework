@@ -115,6 +115,21 @@ NS_ASSUME_NONNULL_BEGIN
                        completion:(nullable void (^)(BOOL finished))completion;
 
 /**
+ 添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController
+ 
+ @param option     动画选项
+ @param block      动画代码块
+ @param duration   持续时间
+ @param animationsEnabled 是否启用动画
+ @param completion 完成事件
+ */
+- (void)fwAddTransitionWithOption:(UIViewAnimationOptions)option
+                            block:(void (^)(void))block
+                         duration:(NSTimeInterval)duration
+                animationsEnabled:(BOOL)animationsEnabled
+                       completion:(nullable void (^)(BOOL finished))completion;
+
+/**
  添加转场动画
  
  @param toView     目标视图
