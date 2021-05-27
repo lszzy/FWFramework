@@ -7,7 +7,7 @@
  @updated    2020/4/21
  */
 
-#import <Foundation/Foundation.h>
+#import "FWMediator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -62,6 +62,16 @@ FWFramework所需本地化翻译如下：完成|关闭|确定|取消，配置同
 
 /// 读取指定bundle内strings文件本地化字符串，指定table，支持动态切换
 + (NSString *)fwLocalizedString:(NSString *)key table:(nullable NSString *)table bundle:(nullable NSBundle *)bundle;
+
+@end
+
+#pragma mark - FWFrameworkBundle
+
+/**
+ @brief 框架内置Bundle类，应用可替换
+ @discussion 如果应用主Bundle内存在FWFramework.bundle，则优先使用。默认使用框架内置FWFramework.bundle
+ */
+@interface FWFrameworkBundle : FWModuleBundle
 
 @end
 

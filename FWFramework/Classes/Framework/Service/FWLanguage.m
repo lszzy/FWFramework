@@ -191,3 +191,22 @@ static NSString *fwStaticPreferredLanguage = nil;
 }
 
 @end
+
+#pragma mark - FWFrameworkBundle
+
+@implementation FWFrameworkBundle
+
++ (NSBundle *)bundle
+{
+    static NSBundle *bundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        bundle = [[NSBundle fwBundleWithName:@"FWFramework"] fwLocalizedBundle];
+        if (!bundle) {
+            bundle = [[NSBundle fwBundleWithClass:[FWFrameworkBundle class] name:@"FWFramework"] fwLocalizedBundle];
+        }
+    });
+    return bundle;
+}
+
+@end
