@@ -60,7 +60,8 @@
 
 @interface FWLoader ()
 
-@property (nonatomic, strong) NSMutableArray *loaders;
+@property (nonatomic, strong) NSMutableArray *allLoaders;
+@property (nonatomic, copy) NSString *autoloadLogs;
 
 @end
 
@@ -72,11 +73,27 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWLoader autoload];
+        [[FWLoader sharedInstance] autoload];
     });
 }
 
-+ (void)autoload
++ (FWLoader *)sharedInstance
+{
+    static FWLoader *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWLoader alloc] init];
+    });
+    return instance;
+}
+
+- (NSString *)description
+{
+    if (self.autoloadLogs) return self.autoloadLogs;
+    return [super description];
+}
+
+- (void)autoload
 {
     NSMutableArray<NSString *> *methodNames = [NSMutableArray array];
     unsigned int methodCount = 0;
@@ -87,7 +104,6 @@
         NSString *methodName = [NSString stringWithUTF8String:methodChar];
         if (![methodName hasPrefix:@"load"]) continue;
         if ([methodName containsString:@":"]) continue;
-        if ([methodName isEqualToString:@"loaders"]) continue;
         [methodNames addObject:methodName];
     }
     free(methods);
@@ -96,22 +112,19 @@
         return [obj1 compare:obj2];
     }];
     
-    FWLoader *loader = [[FWLoader alloc] init];
     for (NSString *methodName in methodNames) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [loader performSelector:NSSelectorFromString(methodName)];
+        [self performSelector:NSSelectorFromString(methodName)];
 #pragma clang diagnostic pop
     }
     
-#ifdef DEBUG
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
     NSInteger debugCount = 0;
     for (NSString *methodName in methodNames) {
         [debugDescription appendFormat:@"%@. %@\n", @(++debugCount), methodName];
     }
-    FWLogDebug(@"\n========== LOADER ==========\n%@========== LOADER ==========", debugDescription);
-#endif
+    self.autoloadLogs = [NSString stringWithFormat:@"\n========== LOADER ==========\n%@========== LOADER ==========", debugDescription];
 }
 
 #pragma mark - Lifecycle
@@ -120,7 +133,7 @@
 {
     self = [super init];
     if (self) {
-        _loaders = [[NSMutableArray alloc] init];
+        _allLoaders = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -129,7 +142,7 @@
 {
     FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
     loader.block = block;
-    [self.loaders addObject:loader];
+    [self.allLoaders addObject:loader];
     return loader.identifier;
 }
 
@@ -138,13 +151,13 @@
     FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
     loader.target = target;
     loader.action = action;
-    [self.loaders addObject:loader];
+    [self.allLoaders addObject:loader];
     return loader.identifier;
 }
 
 - (void)remove:(NSString *)identifier
 {
-    NSMutableArray *loaders = self.loaders;
+    NSMutableArray *loaders = self.allLoaders;
     [loaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
         if ([loader.identifier isEqualToString:identifier]) {
             [loaders removeObject:loader];
@@ -154,13 +167,13 @@
 
 - (void)removeAll
 {
-    [self.loaders removeAllObjects];
+    [self.allLoaders removeAllObjects];
 }
 
 - (id)load:(id)input
 {
     __block id output = nil;
-    [self.loaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
+    [self.allLoaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
         output = [loader invoke:input];
         if (output) *stop = YES;
     }];

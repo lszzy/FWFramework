@@ -153,6 +153,7 @@
     }
     
 #ifdef DEBUG
+    FWLogDebug(@"%@", [NSClassFromString(@"FWLoader") sharedInstance]);
     FWLogDebug(@"%@", [FWMediator sharedInstance]);
     FWLogDebug(@"%@", [NSClassFromString(@"FWPluginManager") sharedInstance]);
 #endif

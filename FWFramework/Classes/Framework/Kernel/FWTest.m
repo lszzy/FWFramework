@@ -152,7 +152,8 @@
 
 - (NSString *)description
 {
-    return self.testLogs ?: @"";
+    if (self.testLogs) return self.testLogs;
+    return [super description];
 }
 
 - (void)runTests
