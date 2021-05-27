@@ -10,6 +10,7 @@
 #import "FWProxy.h"
 #import "FWBlock.h"
 #import "FWToolkit.h"
+#import "FWLanguage.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerKeyboardTarget
@@ -258,7 +259,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
 {
     UIBarButtonItem *rightItem = nil;
-    NSString *rightTitle = title.length > 0 ? title : NSLocalizedString(@"完成", nil);
+    NSString *rightTitle = title.length > 0 ? title : [FWFrameworkBundle localizedString:@"完成"];
     if (block != nil) {
         rightItem = [UIBarButtonItem fwBarItemWithObject:rightTitle block:block];
         rightItem.style = UIBarButtonItemStyleDone;
