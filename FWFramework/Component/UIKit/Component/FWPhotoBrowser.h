@@ -80,6 +80,22 @@
  */
 - (void)photoBrowser:(FWPhotoBrowser *)photoBrowser finishLoadPhotoView:(FWPhotoView *)photoView;
 
+/**
+ 图片视图将要显示回调，可用来处理自定义视图动画效果。注意photoView可重用
+ 
+ @param photoBrowser 图片浏览器
+ @param photoView 图片视图，索引为index属性
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser willShowPhotoView:(FWPhotoView *)photoView;
+
+/**
+ 图片视图将要隐藏回调，可用来处理自定义视图动画效果。注意photoView可重用
+ 
+ @param photoBrowser 图片浏览器
+ @param photoView 图片视图，索引为index属性
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser willDismissPhotoView:(FWPhotoView *)photoView;
+
 @end
 
 /*!
@@ -120,7 +136,12 @@
 @property (nonatomic, assign) CGFloat imagesSpacing;
 
 /**
- 页数文字中心点，默认：居中，中心 y 距离底部 20
+ 页数文字标签，只读，方便外部布局
+ */
+@property (nonatomic, weak, readonly) UILabel *pageTextLabel;
+
+/**
+ 页数文字中心点，默认：居中，中心 y 距离底部 20+安全区域高度
  */
 @property (nonatomic, assign) CGPoint pageTextCenter;
 
