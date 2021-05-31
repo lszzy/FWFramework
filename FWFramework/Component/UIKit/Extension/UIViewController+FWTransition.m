@@ -150,7 +150,7 @@
 
 - (BOOL)presentationEnabled
 {
-    return self.presentationBlock != nil || self.presentationController != nil;
+    return self.presentationBlock != nil;
 }
 
 - (void)setPresentationEnabled:(BOOL)presentationEnabled
@@ -163,7 +163,6 @@
         };
     } else {
         self.presentationBlock = nil;
-        self.presentationController = nil;
     }
 }
 
@@ -214,9 +213,9 @@
 - (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source
 {
     if (self.presentationBlock) {
-        self.presentationController = self.presentationBlock(presented, presenting);
+        return self.presentationBlock(presented, presenting);
     }
-    return self.presentationController;
+    return nil;
 }
 
 #pragma mark - UINavigationControllerDelegate
