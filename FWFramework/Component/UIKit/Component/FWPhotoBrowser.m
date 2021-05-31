@@ -10,6 +10,7 @@
 #import "FWPhotoBrowser.h"
 #import "FWProgressView.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 #import "FWImage.h"
 
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
@@ -48,7 +49,7 @@
     self.statusBarHidden = YES;
     self.imagesSpacing = 20;
     self.pageTextFont = [UIFont systemFontOfSize:16];
-    self.pageTextCenter = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - 20);
+    self.pageTextCenter = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - (20 + UIScreen.fwSafeAreaInsets.bottom));
     self.pageTextColor = [UIColor whiteColor];
     // 初始化数组
     self.photoViews = [NSMutableArray array];
@@ -125,6 +126,10 @@
     [photoView animationShowWithFromRect:rect animationBlock:^{
         self.backgroundColor = [UIColor blackColor];
         self.pageTextLabel.alpha = 1;
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(photoBrowser:willShowPhotoView:)]) {
+            [self.delegate photoBrowser:self willShowPhotoView:photoView];
+        }
     } completionBlock:^{
         // 设置左边与右边的 photoView
         if (self.currentPage != 0 && self.picturesCount > 1) {
@@ -173,6 +178,10 @@
     [photoView animationDismissWithToRect:rect animationBlock:^{
         self.backgroundColor = [UIColor clearColor];
         self.pageTextLabel.alpha = 0;
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(photoBrowser:willDismissPhotoView:)]) {
+            [self.delegate photoBrowser:self willDismissPhotoView:photoView];
+        }
     } completionBlock:^{
         [self.photoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.photoViews removeAllObjects];
