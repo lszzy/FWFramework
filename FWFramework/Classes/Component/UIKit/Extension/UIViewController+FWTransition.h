@@ -78,9 +78,6 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 // 设置展示控制器创建句柄，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
 @property (nullable, nonatomic, copy) UIPresentationController *(^presentationBlock)(UIViewController *presented, UIViewController *presenting);
 
-// 设置展示控制器，自定义弹出效果。present时建议设置modalPresentationStyle为UIModalPresentationCustom
-@property (nullable, nonatomic, strong) UIPresentationController *presentationController;
-
 #pragma mark - Animate
 
 // 转场上下文，只读
