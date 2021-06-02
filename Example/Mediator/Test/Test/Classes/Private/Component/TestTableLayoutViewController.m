@@ -338,7 +338,6 @@
     if (!self.photoBrowser) {
         FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
         self.photoBrowser = photoBrowser;
-        photoBrowser.pageTextCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (42 + UIScreen.fwSafeAreaInsets.bottom));
         photoBrowser.delegate = self;
         photoBrowser.pictureUrls = @[
                                      @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
@@ -442,10 +441,11 @@
     if (!label) {
         label = [UILabel new];
         label.tag = 103;
+        label.alpha = 0;
         label.textColor = [UIColor whiteColor];
         [photoBrowser addSubview:label];
         [label fwAlignAxis:NSLayoutAttributeCenterX toView:photoBrowser];
-        [label fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:photoBrowser withOffset:-(68 + UIScreen.fwSafeAreaInsets.bottom)];
+        [label fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:photoBrowser.pageTextLabel withOffset:-20];
     }
     
     id urlString = [photoBrowser.pictureUrls fwObjectAtIndex:index];
@@ -454,6 +454,26 @@
     } else {
         label.text = FWSafeString(@([urlString hash]));
     }
+}
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser willShowPhotoView:(FWPhotoView *)photoView {
+    UILabel *label = [photoBrowser viewWithTag:103];
+    label.alpha = 1;
+    
+    UIButton *button = [photoView viewWithTag:101];
+    button.alpha = 1;
+    UILabel *tipLabel = [photoView.imageView viewWithTag:102];
+    tipLabel.alpha = 1;
+}
+
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser willDismissPhotoView:(FWPhotoView *)photoView {
+    UILabel *label = [photoBrowser viewWithTag:103];
+    label.alpha = 0;
+
+    UIButton *button = [photoView viewWithTag:101];
+    button.alpha = 0;
+    UILabel *tipLabel = [photoView.imageView viewWithTag:102];
+    tipLabel.alpha = 0;
 }
 
 #pragma mark - Action
