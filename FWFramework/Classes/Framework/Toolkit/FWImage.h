@@ -184,6 +184,9 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;
 
+/// 图片自定义句柄，setImageURL开始时调用
+@property (nonatomic, copy, nullable) void (^customBlock)(UIImageView *imageView);
+
 @end
 
 NS_ASSUME_NONNULL_END

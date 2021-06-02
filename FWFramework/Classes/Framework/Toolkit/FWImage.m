@@ -364,6 +364,9 @@ UIImage * FWImageFile(NSString *path) {
     if (self.fadeAnimated && !imageView.sd_imageTransition) {
         imageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
     }
+    if (self.customBlock) {
+        self.customBlock(imageView);
+    }
     
     [imageView sd_setImageWithURL:imageURL
                  placeholderImage:placeholder

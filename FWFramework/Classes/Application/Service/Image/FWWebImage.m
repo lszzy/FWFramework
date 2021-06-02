@@ -801,6 +801,10 @@
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
+    if (self.customBlock) {
+        self.customBlock(imageView);
+    }
+    
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
         imageView.image = placeholder;
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
