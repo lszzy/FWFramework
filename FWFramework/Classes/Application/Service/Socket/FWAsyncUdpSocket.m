@@ -28,8 +28,8 @@
 #define LogError(frmt, ...)     FWLogError(frmt, ##__VA_ARGS__)
 #define LogWarn(frmt, ...)      FWLogWarn(frmt, ##__VA_ARGS__)
 #define LogInfo(frmt, ...)      FWLogInfo(frmt, ##__VA_ARGS__)
-#define LogVerbose(frmt, ...)   FWLogVerbose(frmt, ##__VA_ARGS__)
-#define LogTrace()              FWLogVerbose(@"%@", NSStringFromSelector(_cmd))
+#define LogVerbose(frmt, ...)   FWLogTrace(frmt, ##__VA_ARGS__)
+#define LogTrace()              FWLogTrace(@"%@", NSStringFromSelector(_cmd))
 
 /**
  * A socket file descriptor is really just an integer.

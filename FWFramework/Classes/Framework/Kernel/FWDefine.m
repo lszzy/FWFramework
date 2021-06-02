@@ -1,5 +1,5 @@
 /*!
- @header     FWMacro.m
+ @header     FWDefine.m
  @indexgroup FWFramework
  @brief      核心宏定义
  @author     wuyong
@@ -7,7 +7,7 @@
  @updated    2018-05-16
  */
 
-#import "FWMacro.h"
+#import "FWDefine.h"
 
 @implementation FWBenchmark
 

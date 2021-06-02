@@ -13,7 +13,7 @@
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
-#import <FWFramework/FWMacro.h>
+#import <FWFramework/FWDefine.h>
 #import <FWFramework/FWNotification.h>
 #import <FWFramework/FWToolkit.h>
 
@@ -71,7 +71,7 @@ FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
 
 #else
 
-#import "FWMacro.h"
+#import "FWDefine.h"
 #import "FWNotification.h"
 #import "FWToolkit.h"
 
