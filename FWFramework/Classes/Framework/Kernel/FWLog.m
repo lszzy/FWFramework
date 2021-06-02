@@ -36,14 +36,14 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     fwStaticLogLevel = level;
 }
 
-+ (void)verbose:(NSString *)format, ...
++ (void)trace:(NSString *)format, ...
 {
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeVerbose withMessage:message];
+    [self log:FWLogTypeTrace withMessage:message];
 }
 
 + (void)debug:(NSString *)format, ...
@@ -128,10 +128,10 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
             NSLog(@"%@ INFO: %@", @"ℹ️", message);
             break;
         case FWLogTypeDebug:
-            NSLog(@"%@ DEBUG: %@", @"📝", message);
+            NSLog(@"%@ DEBUG: %@", @"⏱️", message);
             break;
         default:
-            NSLog(@"%@ VERBOSE: %@", @"♈", message);
+            NSLog(@"%@ TRACE: %@", @"📝", message);
             break;
     }
 }

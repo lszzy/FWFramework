@@ -1,5 +1,5 @@
 /*!
- @header     FWMacro.h
+ @header     FWDefine.h
  @indexgroup FWFramework
  @brief      核心宏定义
  @author     wuyong
@@ -7,8 +7,8 @@
  @updated    2018-05-11
  */
 
-#ifndef FWMacro_h
-#define FWMacro_h
+#ifndef FWDefine_h
+#define FWDefine_h
 
 #import <Foundation/Foundation.h>
 #import "FWLoader.h"
@@ -23,7 +23,185 @@
 #import "FWTask.h"
 #import "FWTest.h"
 
-#pragma mark - Meta
+#pragma mark - Block
+
+#ifndef weakify
+
+/*!
+ @brief 解决block循环引用，@weakify，和@strongify配对使用
+ 
+ @param x 变量名，如self
+ */
+#define weakify( x ) \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    autoreleasepool{} __weak __typeof__(x) x##_weak_ = x; \
+    _Pragma("clang diagnostic pop")
+
+#endif /* weakify */
+
+#ifndef strongify
+
+/*!
+ @brief 解决block循环引用，@strongify，和@weakify配对使用
+ 
+ @param x 变量名，如self
+ */
+#define strongify( x ) \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    try{} @finally{} __typeof__(x) x = x##_weak_; \
+    _Pragma("clang diagnostic pop")
+
+#endif /* strongify */
+
+/*!
+ @brief 解决block循环引用，和FWStrongify配对使用
+ 
+ @param x 变量名，如self
+ */
+#define FWWeakify( x ) \
+    @_Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    autoreleasepool{} __weak __typeof__(x) x##_weak_ = x; \
+    _Pragma("clang diagnostic pop")
+
+/*!
+ @brief 解决block循环引用，和FWWeakify配对使用
+ 
+ @param x 变量名，如self
+ */
+#define FWStrongify( x ) \
+    @_Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    try{} @finally{} __typeof__(x) x = x##_weak_; \
+    _Pragma("clang diagnostic pop")
+
+/*!
+ @brief 解决self循环引用。等价于：typeof(self) __weak self_weak_ = self;
+ */
+#define FWWeakifySelf( ) \
+    FWWeakify( self )
+
+/*!
+ @brief 解决self循环引用。等价于：typeof(self_weak_) __strong self = self_weak_;
+ */
+#define FWStrongifySelf( ) \
+    FWStrongify( self )
+
+/*!
+ @brief 通用不带参数block
+ */
+typedef void (^FWBlockVoid)(void);
+
+/*!
+ @brief 通用id参数block
+ 
+ @param param id参数
+ */
+typedef void (^FWBlockParam)(id _Nullable param);
+
+/*!
+ @brief 通用bool参数block
+ 
+ @param isTrue bool参数
+ */
+typedef void (^FWBlockBool)(BOOL isTrue);
+
+/*!
+ @brief 通用NSInteger参数block
+ 
+ @param index NSInteger参数
+ */
+typedef void (^FWBlockInt)(NSInteger index);
+
+/*!
+ @brief 通用double参数block
+ 
+ @param value double参数
+ */
+typedef void (^FWBlockDouble)(double value);
+
+/*!
+ @brief 通用(BOOL,id)参数block
+ 
+ @param isTrue BOOL参数
+ @param param id参数
+ */
+typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
+
+#pragma mark - Singleton
+
+/*!
+ @brief 定义单例头文件
+ 
+ @param cls 类名
+ */
+#define FWSingleton( cls ) \
+    @property (class, nonatomic, readonly) cls *sharedInstance;
+
+/*!
+ @brief 定义单例实现
+ 
+ @param cls 类名
+ */
+#define FWDefSingleton( cls ) \
+    + (cls *)sharedInstance \
+    { \
+        static dispatch_once_t once; \
+        static __strong id __singleton__ = nil; \
+        dispatch_once( &once, ^{ __singleton__ = [[cls alloc] init]; } ); \
+        return __singleton__; \
+    }
+
+#pragma mark - Foundation
+
+#ifdef DEBUG
+
+/// 调试模式打开日志
+#define NSLog(format, ...) \
+    NSLog((@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
+
+#else
+
+/// 正式环境关闭日志
+#define NSLog(...)
+
+#endif
+
+/// 标记废弃方法或属性
+#define	FWDeprecated( msg ) \
+    __attribute__((deprecated(msg)))
+
+/// 标记未使用的变量
+#define	FWUnused( x ) \
+    { id __unused_var__ __attribute__((unused)) = (id)(x); }
+
+/// 标记未完成的功能
+#define FWTodo( msg ) \
+    _Pragma(fw_macro_cstring(message("✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖ TODO: " msg)))
+
+/// 声明dealloc方法，可不传参数，也可传code，或者{code}
+#define FWDealloc( x ) \
+    - (void)dealloc \
+    { \
+        [[NSNotificationCenter defaultCenter] removeObserver:self]; \
+        NSLog(@"%@ did dealloc", NSStringFromClass(self.class)); \
+        x \
+    }
+
+/// 标记忽略调用方法警告开始
+#define FWIgnoredBegin( ) \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"") \
+    _Pragma("clang diagnostic ignored \"-Wundeclared-selector\"")
+
+/// 标记忽略警告结束
+#define FWIgnoredEnd( ) \
+    _Pragma("clang diagnostic pop")
+
+#pragma mark - Macro
 
 /*!
  @brief 参数字符串连接
@@ -223,183 +401,8 @@
 #define fw_macro_default_at_8( N, X, A, B, C, D, E, F, G ) \
     N > 7 ? X : fw_macro_default_at_7( N, G, A, B, C, D, E, F )
 
-#pragma mark - Block
 
-#ifndef weakify
-
-/*!
- @brief 解决block循环引用，@weakify，和@strongify配对使用
- 
- @param x 变量名，如self
- */
-#define weakify( x ) \
-    _Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
-    autoreleasepool{} __weak __typeof__(x) x##_weak_ = x; \
-    _Pragma("clang diagnostic pop")
-
-#endif /* weakify */
-
-#ifndef strongify
-
-/*!
- @brief 解决block循环引用，@strongify，和@weakify配对使用
- 
- @param x 变量名，如self
- */
-#define strongify( x ) \
-    _Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
-    try{} @finally{} __typeof__(x) x = x##_weak_; \
-    _Pragma("clang diagnostic pop")
-
-#endif /* strongify */
-
-/*!
- @brief 解决block循环引用，和FWStrongify配对使用
- 
- @param x 变量名，如self
- */
-#define FWWeakify( x ) \
-    @_Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
-    autoreleasepool{} __weak __typeof__(x) x##_weak_ = x; \
-    _Pragma("clang diagnostic pop")
-
-/*!
- @brief 解决block循环引用，和FWWeakify配对使用
- 
- @param x 变量名，如self
- */
-#define FWStrongify( x ) \
-    @_Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
-    try{} @finally{} __typeof__(x) x = x##_weak_; \
-    _Pragma("clang diagnostic pop")
-
-/*!
- @brief 解决self循环引用。等价于：typeof(self) __weak self_weak_ = self;
- */
-#define FWWeakifySelf( ) \
-    FWWeakify( self )
-
-/*!
- @brief 解决self循环引用。等价于：typeof(self_weak_) __strong self = self_weak_;
- */
-#define FWStrongifySelf( ) \
-    FWStrongify( self )
-
-/*!
- @brief 通用不带参数block
- */
-typedef void (^FWBlockVoid)(void);
-
-/*!
- @brief 通用id参数block
- 
- @param param id参数
- */
-typedef void (^FWBlockParam)(id _Nullable param);
-
-/*!
- @brief 通用bool参数block
- 
- @param isTrue bool参数
- */
-typedef void (^FWBlockBool)(BOOL isTrue);
-
-/*!
- @brief 通用NSInteger参数block
- 
- @param index NSInteger参数
- */
-typedef void (^FWBlockInt)(NSInteger index);
-
-/*!
- @brief 通用double参数block
- 
- @param value double参数
- */
-typedef void (^FWBlockDouble)(double value);
-
-/*!
- @brief 通用(BOOL,id)参数block
- 
- @param isTrue BOOL参数
- @param param id参数
- */
-typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
-
-#pragma mark - Singleton
-
-/*!
- @brief 定义单例头文件
- 
- @param cls 类名
- */
-#define FWSingleton( cls ) \
-    @property (class, nonatomic, readonly) cls *sharedInstance;
-
-/*!
- @brief 定义单例实现
- 
- @param cls 类名
- */
-#define FWDefSingleton( cls ) \
-    + (cls *)sharedInstance \
-    { \
-        static dispatch_once_t once; \
-        static __strong id __singleton__ = nil; \
-        dispatch_once( &once, ^{ __singleton__ = [[cls alloc] init]; } ); \
-        return __singleton__; \
-    }
-
-#pragma mark - Foundation
-
-#ifdef DEBUG
-
-/// 调试模式打开日志
-#define NSLog(format, ...) \
-    NSLog((@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
-
-#else
-
-/// 正式环境关闭日志
-#define NSLog(...)
-
-#endif
-
-/// 标记废弃方法或属性
-#define	FWDeprecated( msg ) \
-    __attribute__((deprecated(msg)))
-
-/// 标记未使用的变量
-#define	FWUnused( x ) \
-    { id __unused_var__ __attribute__((unused)) = (id)(x); }
-
-/// 标记未完成的功能
-#define FWTodo( msg ) \
-    _Pragma(fw_macro_cstring(message("✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖✖ TODO: " msg)))
-
-/// 声明dealloc方法，可不传参数，也可传code，或者{code}
-#define FWDealloc( x ) \
-    - (void)dealloc \
-    { \
-        [[NSNotificationCenter defaultCenter] removeObserver:self]; \
-        NSLog(@"%@ did dealloc", NSStringFromClass(self.class)); \
-        x \
-    }
-
-/// 标记忽略调用方法警告开始
-#define FWIgnoredBegin( ) \
-    _Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
-    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"") \
-    _Pragma("clang diagnostic ignored \"-Wundeclared-selector\"")
-
-/// 标记忽略警告结束
-#define FWIgnoredEnd( ) \
-    _Pragma("clang diagnostic pop")
+#pragma mark - Benchmark
 
 /// 标记时间调试开始
 #define FWBenchmarkBegin( x ) \
@@ -426,4 +429,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FWMacro_h */
+#endif /* FWDefine_h */

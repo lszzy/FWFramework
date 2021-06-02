@@ -12,12 +12,12 @@
 #pragma mark - Macro
 
 /*!
- @brief 记录详细日志
+ @brief 记录跟踪日志
  
  @param format 日志格式，同NSLog
  */
-#define FWLogVerbose( format, ... ) \
-    [FWLog verbose:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+#define FWLogTrace( format, ... ) \
+    [FWLog trace:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录调试日志
@@ -60,14 +60,14 @@
  @const FWLogTypeWarn 警告类型，0...00010
  @const FWLogTypeInfo 信息类型，0...00100
  @const FWLogTypeDebug 调试类型，0...01000
- @const FWLogTypeVerbose 详细类型，0...10000
+ @const FWLogTypeTrace 跟踪类型，0...10000
  */
 typedef NS_OPTIONS(NSUInteger, FWLogType) {
-    FWLogTypeError   = 1 << 0,
-    FWLogTypeWarn    = 1 << 1,
-    FWLogTypeInfo    = 1 << 2,
-    FWLogTypeDebug   = 1 << 3,
-    FWLogTypeVerbose = 1 << 4,
+    FWLogTypeError = 1 << 0,
+    FWLogTypeWarn  = 1 << 1,
+    FWLogTypeInfo  = 1 << 2,
+    FWLogTypeDebug = 1 << 3,
+    FWLogTypeTrace = 1 << 4,
 };
 
 /*!
@@ -78,17 +78,17 @@ typedef NS_OPTIONS(NSUInteger, FWLogType) {
  @const FWLogLevelWarn 警告以上级别，0...00011
  @const FWLogLevelInfo 信息以上级别，0...00111
  @const FWLogLevelDebug 调试以上级别，0...01111
- @const FWLogLevelVerbose 详细以上级别，0...11111
+ @const FWLogLevelTrace 跟踪以上级别，0...11111
  @const FWLogLevelAll 所有级别，1...11111
  */
 typedef NS_ENUM(NSUInteger, FWLogLevel) {
-    FWLogLevelOff     = 0,
-    FWLogLevelError   = FWLogTypeError,
-    FWLogLevelWarn    = FWLogLevelError | FWLogTypeWarn,
-    FWLogLevelInfo    = FWLogLevelWarn  | FWLogTypeInfo,
-    FWLogLevelDebug   = FWLogLevelInfo  | FWLogTypeDebug,
-    FWLogLevelVerbose = FWLogLevelDebug | FWLogTypeVerbose,
-    FWLogLevelAll     = NSUIntegerMax,
+    FWLogLevelOff   = 0,
+    FWLogLevelError = FWLogTypeError,
+    FWLogLevelWarn  = FWLogLevelError | FWLogTypeWarn,
+    FWLogLevelInfo  = FWLogLevelWarn  | FWLogTypeInfo,
+    FWLogLevelDebug = FWLogLevelInfo  | FWLogTypeDebug,
+    FWLogLevelTrace = FWLogLevelDebug | FWLogTypeTrace,
+    FWLogLevelAll   = NSUIntegerMax,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -102,11 +102,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, assign) FWLogLevel level;
 
 /*!
- @brief 详细日志
+ @brief 跟踪日志
 
  @param format 日志格式，同NSLog
  */
-+ (void)verbose:(NSString *)format, ...;
++ (void)trace:(NSString *)format, ...;
 
 /*!
  @brief 调试日志

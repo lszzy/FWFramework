@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// 记录详细日志
+/// 记录跟踪日志
 ///
 /// - Parameters:
 ///   - format: 格式化字符串
@@ -16,8 +16,8 @@ import Foundation
 ///   - file: 文件名，默认传参
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
-public func FWLogVerbose(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    FWLog.log(.verbose, withMessage: String(format: "(%@ #%d %@) %@", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+public func FWLogTrace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
+    FWLog.log(.trace, withMessage: String(format: "(%@ #%d %@) %@", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录调试日志
@@ -70,7 +70,7 @@ public func FWLogError(_ format: String, _ arguments: CVarArg..., file: String =
 
 /// FWLog扩展
 extension FWLog {
-    /// 记录详细日志
+    /// 记录跟踪日志
     ///
     /// - Parameters:
     ///   - format: 格式化字符串
@@ -78,8 +78,8 @@ extension FWLog {
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
-    public class func verbose(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        log(.verbose, withMessage: String(format: "(%@ #%d %@) %@", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
+        log(.trace, withMessage: String(format: "(%@ #%d %@) %@", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
     /// 记录调试日志
