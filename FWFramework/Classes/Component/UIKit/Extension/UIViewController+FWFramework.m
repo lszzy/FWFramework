@@ -161,6 +161,7 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 - (void)fwAddChildViewController:(UIViewController *)viewController inView:(UIView *)view
 {
     [self addChildViewController:viewController];
+    [viewController didMoveToParentViewController:self];
     [view addSubview:viewController.view];
     // viewController.view.frame = view.bounds;
     [viewController.view fwPinEdgesToSuperview];

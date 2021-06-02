@@ -121,6 +121,7 @@
               @[@"UITableView+Hover", @"TestScrollViewController"],
               @[@"UIViewController+FWTransition", @"TestTransitionViewController"],
               @[@"UIViewController+FWWorkflow", @"TestWorkflowViewController"],
+              @[@"UIViewController+FWFramework", @"Test.TestChildViewController"],
               @[@"UITextField+FWKeyboard", @"TestKeyboardViewController"],
               @[@"UILabel+FWFramework", @"TestLabelViewController"],
               @[@"UIView+FWGradient", @"TestGradientViewController"],
