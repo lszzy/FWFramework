@@ -263,6 +263,11 @@
     return viewController.presentingViewController.presentedViewController == viewController;
 }
 
+- (BOOL)fwIsRoot
+{
+    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
+}
+
 - (id)fwBarTitle
 {
     return self.navigationItem.titleView ?: self.navigationItem.title;

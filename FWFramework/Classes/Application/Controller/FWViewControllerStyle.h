@@ -88,8 +88,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 #pragma mark - Item
 
-/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便添加左上角关闭按钮
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便设置关闭按钮
 @property (nonatomic, assign, readonly) BOOL fwIsPresented;
+
+/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES，方便设置关闭按钮
+@property (nonatomic, assign, readonly) BOOL fwIsRoot;
 
 /// 快捷设置导航栏标题文字或试图
 @property (nonatomic, strong, nullable) id fwBarTitle;
