@@ -11,25 +11,18 @@
 #import "FWLoader.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWPlugin
+#pragma mark - FWInnerPluginTarget
 
-typedef NS_ENUM(NSInteger, FWPluginType) {
-    FWPluginTypeObject,
-    FWPluginTypeBlock,
-    FWPluginTypeFactory,
-};
+@interface FWInnerPluginTarget : NSObject
 
-@interface FWPlugin : NSObject
-
-@property (nonatomic, assign) FWPluginType type;
-@property (nonatomic, strong, nullable) id value;
-
+@property (nonatomic, strong, nullable) id object;
 @property (nonatomic, strong, nullable) id instance;
 @property (nonatomic, assign) BOOL locked;
+@property (nonatomic, assign) BOOL isFactory;
 
 @end
 
-@implementation FWPlugin
+@implementation FWInnerPluginTarget
 
 @end
 
@@ -37,7 +30,7 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
 
 @interface FWPluginManager ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, FWPlugin *> *pluginPool;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, FWInnerPluginTarget *> *pluginPool;
 @property (nonatomic, strong) FWLoader<Protocol *, id> *pluginLoader;
 
 @end
@@ -71,8 +64,8 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
     NSInteger debugCount = 0;
     for (NSString *protocolName in self.pluginPool) {
-        FWPlugin *plugin = [self.pluginPool objectForKey:protocolName];
-        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, (plugin.instance ?: plugin.value)];
+        FWInnerPluginTarget *plugin = [self.pluginPool objectForKey:protocolName];
+        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, (plugin.instance ?: plugin.object)];
     }
     
     return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription];
@@ -85,73 +78,37 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     return [self sharedInstance].pluginLoader;
 }
 
-+ (BOOL)registerPlugin:(Protocol *)protocol withObject:(id)obj
++ (BOOL)registerPlugin:(Protocol *)pluginProtocol withObject:(id)object
 {
-    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:NO];
+    return [self registerPlugin:pluginProtocol withObject:object isPreset:NO];
 }
 
-+ (BOOL)presetPlugin:(Protocol *)protocol withObject:(id)obj
++ (BOOL)presetPlugin:(Protocol *)pluginProtocol withObject:(id)object
 {
-    return [self registerPlugin:protocol withValue:obj type:FWPluginTypeObject isPreset:YES];
+    return [self registerPlugin:pluginProtocol withObject:object isPreset:YES];
 }
 
-+ (BOOL)registerPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
++ (BOOL)registerPlugin:(Protocol *)pluginProtocol withObject:(id)object isPreset:(BOOL)isPreset
 {
-    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:NO];
-}
-
-+ (BOOL)presetPlugin:(Protocol *)protocol withBlock:(id (^)(void))block
-{
-    return [self registerPlugin:protocol withValue:block type:FWPluginTypeBlock isPreset:YES];
-}
-
-+ (BOOL)registerPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
-{
-    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:NO];
-}
-
-+ (BOOL)presetPlugin:(Protocol *)protocol withFactory:(id (^)(void))factory
-{
-    return [self registerPlugin:protocol withValue:factory type:FWPluginTypeFactory isPreset:YES];
-}
-
-+ (BOOL)registerPlugin:(Protocol *)protocol withValue:(id)value type:(FWPluginType)type isPreset:(BOOL)isPreset
-{
-    if (!protocol || !value) {
-        return NO;
+    if (!pluginProtocol || !object) return NO;
+    
+    NSString *protocolName = NSStringFromProtocol(pluginProtocol);
+    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    if (plugin) {
+        if (plugin.locked) return NO;
+        if (isPreset) return NO;
     }
     
-    // 插件已锁定时不能注册
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
-    if (plugin && plugin.locked) {
-        return NO;
-    }
-    
-    // 插件已存在时不能注册预置插件
-    if (isPreset && plugin) {
-        return NO;
-    }
-    
-    // 插件必须实现插件协议
-    if (type == FWPluginTypeObject) {
-        if (![value conformsToProtocol:protocol]) {
-            NSLog(@"plugin %@ must confirms to protocol %@", value, protocolName);
-            return NO;
-        }
-    }
-    
-    FWPlugin *newPlugin = [[FWPlugin alloc] init];
-    newPlugin.type = type;
-    newPlugin.value = value;
+    FWInnerPluginTarget *newPlugin = [[FWInnerPluginTarget alloc] init];
+    newPlugin.object = object;
     [[self sharedInstance].pluginPool setObject:newPlugin forKey:protocolName];
     return YES;
 }
 
-+ (void)unregisterPlugin:(Protocol *)protocol
++ (void)unregisterPlugin:(Protocol *)pluginProtocol
 {
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    NSString *protocolName = NSStringFromProtocol(pluginProtocol);
+    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin || plugin.locked) {
         return;
     }
@@ -159,80 +116,61 @@ typedef NS_ENUM(NSInteger, FWPluginType) {
     [[self sharedInstance].pluginPool removeObjectForKey:protocolName];
 }
 
-+ (id)loadPlugin:(Protocol *)protocol
++ (id)loadPlugin:(Protocol *)pluginProtocol
 {
-    // 插件未注册时返回nil
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    NSString *protocolName = NSStringFromProtocol(pluginProtocol);
+    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) {
-        // 尝试调用加载器
-        id object = [[self sharedLoader] load:protocol];
+        id object = [[self sharedLoader] load:pluginProtocol];
         if (!object) return nil;
         
-        // 自动注册插件并使用
-        [self registerPlugin:protocol withObject:object];
+        [self registerPlugin:pluginProtocol withObject:object];
         plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
         if (!plugin) return nil;
     }
     
-    // 插件已初始化直接返回
-    if (plugin.instance) {
+    if (plugin.instance && !plugin.isFactory) {
         return plugin.instance;
     }
     
-    // 初始化插件
     plugin.locked = YES;
-    id instance = nil;
-    switch (plugin.type) {
-        case FWPluginTypeObject: {
-            if (object_isClass(plugin.value)) {
-                Class cls = (Class)plugin.value;
-                if ([cls respondsToSelector:@selector(sharedInstance)]) {
-                    plugin.instance = [cls sharedInstance];
-                } else {
-                    plugin.instance = [[cls alloc] init];
-                }
-            } else {
-                plugin.instance = plugin.value;
+    plugin.isFactory = NO;
+    if (object_isClass(plugin.object)) {
+        Class pluginClass = (Class)plugin.object;
+        if ([pluginClass respondsToSelector:@selector(pluginInstance)]) {
+            plugin.instance = [pluginClass pluginInstance];
+        } else if ([pluginClass respondsToSelector:@selector(pluginFactory)]) {
+            if (plugin.instance && [plugin.instance respondsToSelector:@selector(pluginDidUnload)]) {
+                [plugin.instance pluginDidUnload];
             }
-            instance = plugin.instance;
-            break;
+            plugin.instance = [pluginClass pluginFactory];
+            plugin.isFactory = YES;
+        } else if ([pluginClass respondsToSelector:@selector(sharedInstance)]) {
+            plugin.instance = [pluginClass sharedInstance];
+        } else {
+            plugin.instance = [[pluginClass alloc] init];
         }
-        case FWPluginTypeBlock: {
-            id (^block)(void) = plugin.value;
-            plugin.instance = block();
-            instance = plugin.instance;
-            break;
-        }
-        case FWPluginTypeFactory: {
-            id (^block)(void) = plugin.value;
-            instance = block();
-            break;
-        }
-        default: {
-            break;
-        }
+    } else {
+        plugin.instance = plugin.object;
     }
     
-    // 插件必须实现插件协议
-    if (![instance conformsToProtocol:protocol]) {
-        NSLog(@"plugin %@ must confirms to protocol %@", instance, protocolName);
-        plugin.instance = nil;
-        return nil;
+    if (plugin.instance && [plugin.instance respondsToSelector:@selector(pluginDidLoad)]) {
+        [plugin.instance pluginDidLoad];
     }
-    
-    return instance;
+    return plugin.instance;
 }
 
-+ (void)unloadPlugin:(Protocol *)protocol
++ (void)unloadPlugin:(Protocol *)pluginProtocol
 {
-    NSString *protocolName = NSStringFromProtocol(protocol);
-    FWPlugin *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
-    if (!plugin) {
-        return;
-    }
+    NSString *protocolName = NSStringFromProtocol(pluginProtocol);
+    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    if (!plugin) return;
     
+    if (plugin.instance && [plugin.instance respondsToSelector:@selector(pluginDidUnload)]) {
+        [plugin.instance pluginDidUnload];
+    }
     plugin.instance = nil;
+    plugin.isFactory = NO;
     plugin.locked = NO;
 }
 

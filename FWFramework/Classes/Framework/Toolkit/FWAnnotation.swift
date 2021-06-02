@@ -71,33 +71,28 @@ public struct FWModuleAnnotation<T> {
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
 public struct FWPluginAnnotation<T> {
-    let plugin: Protocol
+    let pluginProtocol: Protocol
+    var plugin: T?
     
-    public init(_ plugin: Protocol) {
-        self.plugin = plugin
+    public init(_ pluginProtocol: Protocol) {
+        self.pluginProtocol = pluginProtocol
     }
     
-    public init(_ plugin: Protocol, object: Any) {
-        self.plugin = plugin
-        FWPluginManager.registerPlugin(plugin, with: object)
-    }
-    
-    public init(_ plugin: Protocol, block: @escaping () -> T) {
-        self.plugin = plugin
-        FWPluginManager.registerPlugin(plugin, withBlock: block)
-    }
-    
-    public init(_ plugin: Protocol, factory: @escaping () -> T) {
-        self.plugin = plugin
-        FWPluginManager.registerPlugin(plugin, withFactory: factory)
+    public init(_ pluginProtocol: Protocol, object: Any) {
+        self.pluginProtocol = pluginProtocol
+        FWPluginManager.registerPlugin(pluginProtocol, with: object)
     }
     
     public var wrappedValue: T {
         get {
-            return FWPluginManager.loadPlugin(plugin) as! T
+            if let value = plugin {
+                return value
+            } else {
+                return FWPluginManager.loadPlugin(pluginProtocol) as! T
+            }
         }
         set {
-            FWPluginManager.registerPlugin(plugin, with: newValue)
+            plugin = newValue
         }
     }
 }
