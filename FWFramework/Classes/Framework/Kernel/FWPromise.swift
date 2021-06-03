@@ -24,18 +24,24 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 @objcMembers public class FWPromise: NSObject {
     private let operation: (@escaping (Any?) -> Void) -> Void
     
-    public init(operation: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
-        self.operation = operation
+    public init(block: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
+        self.operation = block
+    }
+    
+    public convenience init(_ block: @escaping (_ resolve: @escaping (Any?) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+        self.init(block: { completion in
+            block(completion, completion)
+        })
     }
     
     public convenience init(value: Any?) {
-        self.init(operation: { completion in
+        self.init(block: { completion in
             completion(value)
         })
     }
     
     public convenience init(error: Error) {
-        self.init(operation: { completion in
+        self.init(block: { completion in
             completion(error)
         })
     }
@@ -46,7 +52,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
-    public func done(_ done: @escaping (Any?) -> Void, catch: ((Error) -> Void)? = nil) {
+    public func done(_ done: @escaping (Any?) -> Void, catch: ((Error) -> Void)?) {
         self.done(done, catch: `catch`, finally: nil)
     }
     
