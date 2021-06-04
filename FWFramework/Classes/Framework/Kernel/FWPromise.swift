@@ -21,8 +21,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 }
 
 /// 框架约定类
-///
-/// 参考：https://github.com/AladinWay/PromisedFuture
 @objcMembers public class FWPromise: NSObject {
     private let operation: (@escaping (Any?) -> Void) -> Void
     
@@ -87,17 +85,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
-    /// 映射当前约定的结果并返回下一个约定
-    public func map(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
-        return FWPromise { completion in
-            self.done { value in
-                completion(block(value))
-            } catch: { error in
-                completion(error)
-            }
-        }
-    }
-    
     /// 仿协程异步执行方法
     @discardableResult
     public static func async(_ block: @escaping () throws -> Any?) -> FWPromise {
@@ -133,10 +120,54 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
         return result
     }
+}
+
+/// 常用约定方法
+@objc public extension FWPromise {
+    /// 映射当前约定的结果并返回下一个约定
+    func map(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
+        return FWPromise { completion in
+            self.done { value in
+                completion(block(value))
+            } catch: { error in
+                completion(error)
+            }
+        }
+    }
     
-    /// 约定竞速，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息
+    /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息
     @discardableResult
-    public static func race(_ promises: [FWPromise]) -> FWPromise {
+    static func all(_ promises: [FWPromise]) -> FWPromise {
+        return FWPromise { completion in
+            var finished = false
+            var values: [Any?] = []
+            let semaphore = DispatchSemaphore(value: 1)
+            for promise in promises {
+                promise.done { value in
+                    semaphore.wait()
+                    if !finished {
+                        values.append(value)
+                        if values.count == promises.count {
+                            finished = true
+                            completion(values)
+                        }
+                    }
+                    semaphore.signal()
+                } catch: { error in
+                    semaphore.wait()
+                    if !finished {
+                        finished = true
+                        completion(error)
+                    }
+                    semaphore.signal()
+                }
+            }
+        }
+    }
+    
+    /// 某个约定，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息
+    @discardableResult
+    static func any(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var finished = false
             var failedCount = 0
@@ -164,29 +195,18 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
-    /// 约定合集，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息
+    /// 约定竞速，返回最先结束的约定结果，不管成功或失败
     @discardableResult
-    public static func all(_ promises: [FWPromise]) -> FWPromise {
+    static func race(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var finished = false
-            var values: [Any?] = []
             let semaphore = DispatchSemaphore(value: 1)
             for promise in promises {
-                promise.done { value in
-                    semaphore.wait()
-                    if !finished {
-                        values.append(value)
-                        if values.count == promises.count {
-                            finished = true
-                            completion(values)
-                        }
-                    }
-                    semaphore.signal()
-                } catch: { error in
+                promise.done { result in
                     semaphore.wait()
                     if !finished {
                         finished = true
-                        completion(error)
+                        completion(result)
                     }
                     semaphore.signal()
                 }
