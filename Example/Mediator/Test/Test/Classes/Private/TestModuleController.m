@@ -82,6 +82,7 @@
               @[@"FWDynamicLayout+UITableView", @"TestTableDynamicLayoutViewController"],
               @[@"FWDynamicLayout+UICollectionView", @"TestCollectionDynamicLayoutViewController"],
               @[@"FWAdaptive", @"TestBarViewController"],
+              @[@"FWPromise", @"Test.TestPromiseViewController"],
               @[@"FWImage", @"TestImageViewController"],
               @[@"FWState", @"TestStateViewController"],
               @[@"FWAnnotation", @"Test.TestAnnotationViewController"],
