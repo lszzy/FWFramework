@@ -74,13 +74,34 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
-    /// 执行当前约定并返回下一个约定
-    public func then(_ block: @escaping (_ value: Any?) -> FWPromise) -> FWPromise {
+    /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
+    public func then(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
-                block(value).done(completion: completion)
+                let result = block(value)
+                if let promise = result as? FWPromise {
+                    promise.done(completion: completion)
+                } else {
+                    completion(result)
+                }
             } catch: { error in
                 completion(error)
+            }
+        }
+    }
+    
+    /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
+    func recover(_ block: @escaping (_ error: Error) -> Any?) -> FWPromise {
+        return FWPromise { completion in
+            self.done { value in
+                completion(value)
+            } catch: { error in
+                let result = block(error)
+                if let promise = result as? FWPromise {
+                    promise.done(completion: completion)
+                } else {
+                    completion(result)
+                }
             }
         }
     }
@@ -124,30 +145,22 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 
 /// 常用约定方法
 @objc public extension FWPromise {
-    /// 约定超时错误，可自定义
-    static var timeoutError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
-    /// 约定验证错误，可自定义
-    static var validationError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
+    /// 约定默认验证错误，可自定义
+    static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
+    /// 约定默认超时错误，可自定义
+    static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
     
-    /// 约定映射，当前约定成功时执行映射并返回下一个约定；失败时不执行映射
-    func map(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
+    /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
+    func validate(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
-                completion(block(value))
-            } catch: { error in
-                completion(error)
-            }
-        }
-    }
-    
-    /// 验证约定，当前约定失败或验证成功时返回相同结果；否则返回验证错误信息
-    func validate(_ block: @escaping (_ value: Any?) -> Bool) -> FWPromise {
-        return FWPromise { completion in
-            self.done { value in
-                if block(value) {
-                    completion(value)
-                } else {
+                let result = block(value)
+                if let error = result as? Error {
+                    completion(error)
+                } else if let valid = result as? Bool, !valid {
                     completion(FWPromise.validationError)
+                } else {
+                    completion(value)
                 }
             } catch: { error in
                 completion(error)
@@ -155,10 +168,10 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
-    /// 约定超时，当前约定未超时时返回相同结果；否则返回超时错误信息
-    func timeout(_ time: TimeInterval) -> FWPromise {
+    /// 约定超时，当前约定未超时时返回结果；否则返回超时错误信息
+    func timeout(_ time: TimeInterval, error: Error? = nil) -> FWPromise {
         return FWPromise.race([self, FWPromise.delay(time).then({ value in
-            return FWPromise(error: FWPromise.timeoutError)
+            return FWPromise(error: error ?? FWPromise.timeoutError)
         })])
     }
     
@@ -184,7 +197,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息
-    @discardableResult
     static func all(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var finished = false
@@ -214,7 +226,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 某个约定，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息
-    @discardableResult
     static func any(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var finished = false
@@ -244,7 +255,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 约定竞速，返回最先结束的约定结果，不管成功或失败
-    @discardableResult
     static func race(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var finished = false
