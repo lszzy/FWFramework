@@ -124,11 +124,59 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 
 /// 常用约定方法
 @objc public extension FWPromise {
-    /// 映射当前约定的结果并返回下一个约定
+    /// 约定超时错误，可自定义
+    static var timeoutError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
+    /// 约定验证错误，可自定义
+    static var validationError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
+    
+    /// 约定映射，当前约定成功时执行映射并返回下一个约定；失败时不执行映射
     func map(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
                 completion(block(value))
+            } catch: { error in
+                completion(error)
+            }
+        }
+    }
+    
+    /// 验证约定，当前约定失败或验证成功时返回相同结果；否则返回验证错误信息
+    func validate(_ block: @escaping (_ value: Any?) -> Bool) -> FWPromise {
+        return FWPromise { completion in
+            self.done { value in
+                if block(value) {
+                    completion(value)
+                } else {
+                    completion(FWPromise.validationError)
+                }
+            } catch: { error in
+                completion(error)
+            }
+        }
+    }
+    
+    /// 约定超时，当前约定未超时时返回相同结果；否则返回超时错误信息
+    func timeout(_ time: TimeInterval) -> FWPromise {
+        return FWPromise.race([self, FWPromise.delay(time).then({ value in
+            return FWPromise(error: FWPromise.timeoutError)
+        })])
+    }
+    
+    /// 约定延时，当前约定成功时延时返回相同的结果；失败时不执行延时
+    func delay(_ time: TimeInterval) -> FWPromise {
+        return FWPromise { completion in
+            self.done { value in
+                if let callingQueue = OperationQueue.current?.underlyingQueue {
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).asyncAfter(deadline: .now() + time) {
+                        callingQueue.async {
+                            completion(value)
+                        }
+                    }
+                } else {
+                    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
+                        completion(value)
+                    }
+                }
             } catch: { error in
                 completion(error)
             }
@@ -209,6 +257,23 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                         completion(result)
                     }
                     semaphore.signal()
+                }
+            }
+        }
+    }
+    
+    /// 延时约定，延时完成时必定成功
+    static func delay(_ time: TimeInterval) -> FWPromise {
+        return FWPromise { completion in
+            if let callingQueue = OperationQueue.current?.underlyingQueue {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).asyncAfter(deadline: .now() + time) {
+                    callingQueue.async {
+                        completion(time)
+                    }
+                }
+            } else {
+                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
+                    completion(time)
                 }
             }
         }
