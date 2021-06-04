@@ -39,6 +39,9 @@ extension TestPromiseViewController {
             ["all", "onAll"],
             ["any", "onAny"],
             ["race", "onRace"],
+            ["delay", "onDelay"],
+            ["validate", "onValidate"],
+            ["timeout", "onTimeout"],
         ])
     }
     
@@ -53,9 +56,13 @@ extension TestPromiseViewController {
     private static func failurePromise() -> FWPromise {
         return FWPromise { completion in
             delay(1) {
-                completion(NSError(domain: "test", code: 0, userInfo: nil))
+                completion(NSError(domain: "Test", code: 0, userInfo: nil))
             }
         }
+    }
+    
+    private static func randomPromise(_ value: Int = 0) -> FWPromise {
+        return [0, 1].randomElement() == 1 ? successPromise(value) : failurePromise()
     }
     
     private static func delay(_ time: TimeInterval, block: @escaping () -> ()) {
@@ -113,7 +120,7 @@ extension TestPromiseViewController {
     
     @objc func onAll() {
         Self.isLoading = true
-        FWPromise.all([Self.successPromise(), Self.successPromise(1), [0, 1].randomElement() == 1 ? Self.successPromise(2) : Self.failurePromise()])
+        FWPromise.all([Self.successPromise(), Self.successPromise(1), Self.randomPromise(2)])
             .done { value in
                 Self.showMessage("value: 6 => \(value.fwAsString)")
             } catch: { error in
@@ -145,5 +152,37 @@ extension TestPromiseViewController {
             } finally: {
                 Self.isLoading = false
             }
+    }
+    
+    @objc func onDelay() {
+        Self.isLoading = true
+        Self.randomPromise().map({ value in
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "delay")
+            }
+            return value
+        }).delay(1).done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
+    }
+    
+    @objc func onValidate() {
+        Self.isLoading = true
+        Self.randomPromise([0, 1].randomElement()!).validate { value in
+            return value.fwAsInt > 1
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
+    }
+    
+    @objc func onTimeout() {
+        Self.isLoading = true
+        let delayTime: TimeInterval = [0, 1].randomElement() == 1 ? 4 : 1
+        Self.randomPromise().delay(delayTime).timeout(3).done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
     }
 }
