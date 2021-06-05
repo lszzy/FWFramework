@@ -17,7 +17,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogTrace( format, ... ) \
-    [FWLog trace:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    [FWLog trace:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录调试日志
@@ -25,7 +25,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogDebug( format, ... ) \
-    [FWLog debug:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    [FWLog debug:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录信息日志
@@ -33,7 +33,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogInfo( format, ... ) \
-    [FWLog info:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    [FWLog info:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录警告日志
@@ -41,7 +41,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogWarn( format, ... ) \
-    [FWLog warn:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    [FWLog warn:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /*!
  @brief 记录错误日志
@@ -49,7 +49,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogError( format, ... ) \
-    [FWLog error:(@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    [FWLog error:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 #pragma mark - FWLog
 
