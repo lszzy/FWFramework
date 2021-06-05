@@ -34,6 +34,8 @@ import UIKit
 extension TestPromiseViewController {
     override func renderData() {
         tableData.addObjects(from: [
+            ["unsafe(Crash)", "onUnsafe"],
+            ["safe", "onSafe"],
             ["done", "onDone"],
             ["then", "onThen"],
             ["await", "onAwait"],
@@ -86,6 +88,48 @@ extension TestPromiseViewController {
         }
     }
     
+    @objc func onUnsafe() {
+        Self.isLoading = true
+        var values: [Int] = []
+        DispatchQueue.concurrentPerform(iterations: 10000) { index in
+            let last = values.last ?? 0
+            values.append(last + 1)
+        }
+        Self.isLoading = false
+        Self.showMessage("result: \(values.last.fwAsInt)")
+    }
+    
+    @objc func onSafe() {
+        Self.isLoading = true
+        var value: Int = 0
+        let index = [1, 2].randomElement()!
+        if index == 1 {
+            var values: [Int] = []
+            let semaphore = DispatchSemaphore(value: 1)
+            DispatchQueue.concurrentPerform(iterations: 10000) { index in
+                semaphore.wait()
+                let last = values.last ?? 0
+                values.append(last + 1)
+                semaphore.signal()
+            }
+            value = values.last.fwAsInt
+        } else {
+            var values: [Int] = []
+            let queue = DispatchQueue(label: "serial")
+            DispatchQueue.concurrentPerform(iterations: 10000) { index in
+                queue.async {
+                    let last = values.last ?? 0
+                    values.append(last + 1)
+                }
+            }
+            queue.sync {
+                value = values.last.fwAsInt
+            }
+        }
+        Self.isLoading = false
+        Self.showMessage("\(index).result: \(value)")
+    }
+    
     @objc func onDone() {
         Self.isLoading = true
         var value = 0
@@ -131,30 +175,32 @@ extension TestPromiseViewController {
     
     @objc func onAll() {
         Self.isLoading = true
-        FWPromise.all([Self.successPromise(),
-                       Self.successPromise(1),
-                       Self.randomPromise(2)])
-            .done { value in
-                Self.showMessage("value: 6 => \(value.fwAsString)")
-            } catch: { error in
-                Self.showMessage("error: \(error)")
-            } finally: {
-                Self.isLoading = false
-            }
+        var promises: [FWPromise] = []
+        for i in 0 ..< 10000 {
+            promises.append(i < 9999 ? Self.successPromise() : Self.randomPromise())
+        }
+        fw_async {
+            return try fw_await(FWPromise.all(promises).then { values in
+                return values.fwAsArray.count
+            })
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
     }
     
     @objc func onAny() {
         Self.isLoading = true
-        FWPromise.any([Self.successPromise(),
-                       Self.successPromise(1),
-                       Self.failurePromise()].shuffled())
-            .done { value in
-                Self.showMessage("value: \(value.fwAsString)")
-            } catch: { error in
-                Self.showMessage("error: \(error)")
-            } finally: {
-                Self.isLoading = false
-            }
+        var promises: [FWPromise] = []
+        for i in 0 ..< 10000 {
+            promises.append(i < 5000 ? Self.failurePromise() : Self.randomPromise(i))
+        }
+        fw_async {
+            return try fw_await(FWPromise.any(promises))
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
     }
     
     @objc func onRace() {
@@ -163,14 +209,12 @@ extension TestPromiseViewController {
         for i in 0 ..< 10000 {
             promises.append(Self.randomPromise(i))
         }
-        FWPromise.race(promises.shuffled())
-            .done { value in
-                Self.showMessage("value: \(value.fwAsString)")
-            } catch: { error in
-                Self.showMessage("error: \(error)")
-            } finally: {
-                Self.isLoading = false
-            }
+        fw_async {
+            return try fw_await(FWPromise.race(promises.shuffled()))
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
     }
     
     @objc func onDelay() {

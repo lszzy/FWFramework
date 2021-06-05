@@ -22,20 +22,36 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 
 /// 框架约定类
 @objcMembers public class FWPromise: NSObject {
+    // MARK: - Static
+    
+    /// 约定回调队列，默认main队列
+    public static var completionQueue: DispatchQueue = DispatchQueue.main
+    /// 约定默认验证错误，可自定义
+    public static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
+    /// 约定默认超时错误，可自定义
+    public static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
+    
+    // MARK: - Private
+    
     private let operation: (@escaping (Any?) -> Void) -> Void
     private var finished = false
-    fileprivate let semaphore = DispatchSemaphore(value: 1)
+    
+    private static func delay(_ time: TimeInterval, block: @escaping () -> Void) {
+        FWPromise.completionQueue.asyncAfter(deadline: .now() + time, execute: block)
+    }
     
     private func execute(completion: @escaping (Any?) -> Void) {
         self.operation() { result in
-            self.semaphore.wait()
-            if !self.finished {
-                self.finished = true
-                completion(result)
+            FWPromise.completionQueue.async {
+                if !self.finished {
+                    self.finished = true
+                    completion(result)
+                }
             }
-            self.semaphore.signal()
         }
     }
+    
+    // MARK: - Public
     
     /// 指定操作完成句柄初始化
     public init(operation: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
@@ -123,7 +139,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     @discardableResult
     public static func async(_ block: @escaping () throws -> Any?) -> FWPromise {
         return FWPromise { completion in
-            DispatchQueue(label: "FWPromise.async.queue", attributes: .concurrent).async {
+            DispatchQueue(label: "site.wuyong.FWPromise.asyncQueue", attributes: .concurrent).async {
                 do {
                     let value = try block()
                     completion(value)
@@ -154,25 +170,8 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
         return result
     }
-}
-
-/// 常用约定方法
-@objc extension FWPromise {
-    /// 约定默认验证错误，可自定义
-    public static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
-    /// 约定默认超时错误，可自定义
-    public static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
     
-    private static func delay(_ time: TimeInterval, block: @escaping () -> Void) {
-        let callingQueue = OperationQueue.current?.underlyingQueue
-        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
-            if let asyncQueue = callingQueue {
-                asyncQueue.async { block() }
-            } else {
-                block()
-            }
-        }
-    }
+    // MARK: - Extension
     
     /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
     public func validate(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
