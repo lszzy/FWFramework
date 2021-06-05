@@ -23,36 +23,49 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 /// 框架约定类
 @objcMembers public class FWPromise: NSObject {
     private let operation: (@escaping (Any?) -> Void) -> Void
+    private var finished = false
+    fileprivate let semaphore = DispatchSemaphore(value: 1)
     
-    /// 指定完成句柄初始化
-    public init(block: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
-        self.operation = block
+    private func execute(completion: @escaping (Any?) -> Void) {
+        self.operation() { result in
+            self.semaphore.wait()
+            if !self.finished {
+                self.finished = true
+                completion(result)
+            }
+            self.semaphore.signal()
+        }
     }
     
-    /// 指定成功和失败句柄初始化
-    public convenience init(_ block: @escaping (_ resolve: @escaping (Any?) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
-        self.init(block: { completion in
-            block(completion, completion)
+    /// 指定操作完成句柄初始化
+    public init(operation: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
+        self.operation = operation
+    }
+    
+    /// 指定操作成功和失败句柄初始化
+    public convenience init(_ operation: @escaping (_ resolve: @escaping (Any?) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+        self.init(operation: { completion in
+            operation(completion, completion)
         })
     }
     
     /// 快速创建成功实例
     public convenience init(value: Any?) {
-        self.init(block: { completion in
+        self.init(operation: { completion in
             completion(value)
         })
     }
     
     /// 快速创建失败实例
     public convenience init(error: Error) {
-        self.init(block: { completion in
+        self.init(operation: { completion in
             completion(error)
         })
     }
     
     /// 执行约定并回调完成句柄
     public func done(completion: @escaping (Any?) -> Void) {
-        self.operation() { result in
+        self.execute { result in
             completion(result)
         }
     }
@@ -64,7 +77,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
     public func done(_ done: @escaping (Any?) -> Void, catch: ((Error) -> Void)?, finally: (() -> Void)?) {
-        self.operation() { result in
+        self.execute { result in
             if let error = result as? Error {
                 `catch`?(error)
             } else {
@@ -91,7 +104,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    func recover(_ block: @escaping (_ error: Error) -> Any?) -> FWPromise {
+    public func recover(_ block: @escaping (_ error: Error) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
                 completion(value)
@@ -144,14 +157,25 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 }
 
 /// 常用约定方法
-@objc public extension FWPromise {
+@objc extension FWPromise {
     /// 约定默认验证错误，可自定义
-    static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
+    public static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
     /// 约定默认超时错误，可自定义
-    static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
+    public static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
+    
+    private static func delay(_ time: TimeInterval, block: @escaping () -> Void) {
+        let callingQueue = OperationQueue.current?.underlyingQueue
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
+            if let asyncQueue = callingQueue {
+                asyncQueue.async { block() }
+            } else {
+                block()
+            }
+        }
+    }
     
     /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
-    func validate(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
+    public func validate(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
                 let result = block(value)
@@ -169,26 +193,21 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 约定超时，当前约定未超时时返回结果；否则返回超时错误信息
-    func timeout(_ time: TimeInterval, error: Error? = nil) -> FWPromise {
-        return FWPromise.race([self, FWPromise.delay(time).then({ value in
-            return FWPromise(error: error ?? FWPromise.timeoutError)
-        })])
+    public func timeout(_ time: TimeInterval, error: Error? = nil) -> FWPromise {
+        let promise = FWPromise { completion in
+            FWPromise.delay(time) {
+                completion(error ?? FWPromise.timeoutError)
+            }
+        }
+        return FWPromise.race([self, promise])
     }
     
     /// 约定延时，当前约定成功时延时返回相同的结果；失败时不执行延时
-    func delay(_ time: TimeInterval) -> FWPromise {
+    public func delay(_ time: TimeInterval) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
-                if let callingQueue = OperationQueue.current?.underlyingQueue {
-                    DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).asyncAfter(deadline: .now() + time) {
-                        callingQueue.async {
-                            completion(value)
-                        }
-                    }
-                } else {
-                    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
-                        completion(value)
-                    }
+                FWPromise.delay(time) {
+                    completion(value)
                 }
             } catch: { error in
                 completion(error)
@@ -197,94 +216,55 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息
-    static func all(_ promises: [FWPromise]) -> FWPromise {
+    public static func all(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
-            var finished = false
             var values: [Any?] = []
-            let semaphore = DispatchSemaphore(value: 1)
             for promise in promises {
                 promise.done { value in
-                    semaphore.wait()
-                    if !finished {
-                        values.append(value)
-                        if values.count == promises.count {
-                            finished = true
-                            completion(values)
-                        }
+                    values.append(value)
+                    if values.count == promises.count {
+                        completion(values)
                     }
-                    semaphore.signal()
                 } catch: { error in
-                    semaphore.wait()
-                    if !finished {
-                        finished = true
-                        completion(error)
-                    }
-                    semaphore.signal()
+                    completion(error)
                 }
             }
         }
     }
     
     /// 某个约定，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息
-    static func any(_ promises: [FWPromise]) -> FWPromise {
+    public static func any(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
-            var finished = false
             var failedCount = 0
-            let semaphore = DispatchSemaphore(value: 1)
             for promise in promises {
                 promise.done { value in
-                    semaphore.wait()
-                    if !finished {
-                        finished = true
-                        completion(value)
-                    }
-                    semaphore.signal()
+                    completion(value)
                 } catch: { error in
-                    semaphore.wait()
-                    if !finished {
-                        failedCount += 1
-                        if failedCount == promises.count {
-                            finished = true
-                            completion(error)
-                        }
+                    failedCount += 1
+                    if failedCount == promises.count {
+                        completion(error)
                     }
-                    semaphore.signal()
                 }
             }
         }
     }
     
     /// 约定竞速，返回最先结束的约定结果，不管成功或失败
-    static func race(_ promises: [FWPromise]) -> FWPromise {
+    public static func race(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
-            var finished = false
-            let semaphore = DispatchSemaphore(value: 1)
             for promise in promises {
                 promise.done { result in
-                    semaphore.wait()
-                    if !finished {
-                        finished = true
-                        completion(result)
-                    }
-                    semaphore.signal()
+                    completion(result)
                 }
             }
         }
     }
     
     /// 延时约定，延时完成时必定成功
-    static func delay(_ time: TimeInterval) -> FWPromise {
+    public static func delay(_ time: TimeInterval) -> FWPromise {
         return FWPromise { completion in
-            if let callingQueue = OperationQueue.current?.underlyingQueue {
-                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).asyncAfter(deadline: .now() + time) {
-                    callingQueue.async {
-                        completion(time)
-                    }
-                }
-            } else {
-                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time) {
-                    completion(time)
-                }
+            FWPromise.delay(time) {
+                completion(time)
             }
         }
     }
