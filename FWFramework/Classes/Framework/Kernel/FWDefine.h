@@ -160,7 +160,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 /// 调试模式打开日志
 #define NSLog(format, ...) \
-    NSLog((@"(%@ #%d %s) " format), [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
+    NSLog((@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 #else
 
