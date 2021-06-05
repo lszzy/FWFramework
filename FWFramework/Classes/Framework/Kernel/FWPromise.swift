@@ -22,8 +22,6 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
 
 /// 框架约定类
 @objcMembers public class FWPromise: NSObject {
-    // MARK: - Static
-    
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = DispatchQueue.main
     /// 约定默认验证错误，可自定义
@@ -31,15 +29,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 约定默认超时错误，可自定义
     public static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
     
-    // MARK: - Private
-    
+    /// 约定内部属性
     private let operation: (@escaping (Any?) -> Void) -> Void
     private var finished = false
     
-    private static func delay(_ time: TimeInterval, block: @escaping () -> Void) {
-        FWPromise.completionQueue.asyncAfter(deadline: .now() + time, execute: block)
-    }
-    
+    /// 约定内部方法
     private func execute(completion: @escaping (Any?) -> Void) {
         self.operation() { result in
             FWPromise.completionQueue.async {
@@ -266,5 +260,10 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 completion(time)
             }
         }
+    }
+    
+    /// 约定内部延时方法
+    private static func delay(_ time: TimeInterval, block: @escaping () -> Void) {
+        FWPromise.completionQueue.asyncAfter(deadline: .now() + time, execute: block)
     }
 }
