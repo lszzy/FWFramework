@@ -45,6 +45,10 @@ extension TestPromiseViewController {
             ["delay", "onDelay"],
             ["validate", "onValidate"],
             ["timeout", "onTimeout"],
+            ["recover", "onRecover"],
+            ["reduce", "onReduce"],
+            ["retry", "onRetry"],
+            ["progress", "onProgress"],
         ])
     }
     
@@ -69,21 +73,15 @@ extension TestPromiseViewController {
     }
     
     private static func showMessage(_ text: String) {
-        DispatchQueue.main.async {
-            UIWindow.fwMain?.fwShowMessage(withText: text)
-        }
+        UIWindow.fwMain?.fwShowMessage(withText: text)
     }
     
     private static var isLoading: Bool = false {
         didSet {
             if isLoading {
-                DispatchQueue.main.async {
-                    UIWindow.fwMain?.fwShowLoading()
-                }
+                UIWindow.fwMain?.fwShowLoading()
             } else {
-                DispatchQueue.main.async {
-                    UIWindow.fwMain?.fwHideLoading()
-                }
+                UIWindow.fwMain?.fwHideLoading()
             }
         }
     }
@@ -247,5 +245,48 @@ extension TestPromiseViewController {
             Self.isLoading = false
             Self.showMessage("result: \(result.fwAsString)")
         }
+    }
+    
+    @objc func onRecover() {
+        Self.isLoading = true
+        Self.failurePromise().recover { error in
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "\(error)")
+            }
+            return 1
+        }.delay(1).then({ value in
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "\(value.fwAsInt)")
+            }
+            return Self.successPromise(value.fwAsInt)
+        }).validate { value in
+            return false
+        }.recover { error in
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "\(error)")
+            }
+            return Self.successPromise()
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
+    }
+    
+    @objc func onReduce() {
+        Self.isLoading = true
+        Self.randomPromise().reduce([2, 3, 4, 5]) { value, item in
+            return "\(value.fwAsString),\(FWSafeString(item))"
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
+        }
+    }
+    
+    @objc func onRetry() {
+        
+    }
+    
+    @objc func onProgress() {
+        
     }
 }

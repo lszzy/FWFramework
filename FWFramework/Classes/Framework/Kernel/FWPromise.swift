@@ -20,21 +20,26 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     return try FWPromise.await(promise)
 }
 
+/// 约定内置错误码枚举
+@objc public enum FWPromiseErrorCode: Int {
+    case `default`
+    case validation
+    case timeout
+}
+
 /// 框架约定类
 @objcMembers public class FWPromise: NSObject {
+    /// 约定内置错误域常量
+    public static let errorDomain: String = "site.wuyong.error.promise"
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = DispatchQueue.main
-    /// 约定默认验证错误，可自定义
-    public static var validationError: Error = NSError(domain: "FWPromise", code: 1, userInfo: nil)
-    /// 约定默认超时错误，可自定义
-    public static var timeoutError: Error = NSError(domain: "FWPromise", code: 2, userInfo: nil)
     
     /// 约定内部属性
-    private let operation: (@escaping (Any?) -> Void) -> Void
+    private let operation: (@escaping (_ result: Any?) -> Void) -> Void
     private var finished = false
     
     /// 约定内部方法
-    private func execute(completion: @escaping (Any?) -> Void) {
+    private func execute(completion: @escaping (_ result: Any?) -> Void) {
         self.operation() { result in
             FWPromise.completionQueue.async {
                 if !self.finished {
@@ -48,12 +53,12 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     // MARK: - Public
     
     /// 指定操作完成句柄初始化
-    public init(operation: @escaping (_ completion: @escaping (Any?) -> Void) -> Void) {
+    public init(operation: @escaping (_ completion: @escaping (_ result: Any?) -> Void) -> Void) {
         self.operation = operation
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init(_ operation: @escaping (_ resolve: @escaping (Any?) -> Void, _ reject: @escaping (Error) -> Void) -> Void) {
+    public convenience init(_ operation: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
         self.init(operation: { completion in
             operation(completion, completion)
         })
@@ -74,19 +79,19 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     }
     
     /// 执行约定并回调完成句柄
-    public func done(completion: @escaping (Any?) -> Void) {
+    public func done(completion: @escaping (_ result: Any?) -> Void) {
         self.execute { result in
             completion(result)
         }
     }
     
     /// 执行约定并分别回调成功、失败句柄
-    public func done(_ done: @escaping (Any?) -> Void, catch: ((Error) -> Void)?) {
+    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?) {
         self.done(done, catch: `catch`, finally: nil)
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (Any?) -> Void, catch: ((Error) -> Void)?, finally: (() -> Void)?) {
+    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)?) {
         self.execute { result in
             if let error = result as? Error {
                 `catch`?(error)
@@ -175,7 +180,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 if let error = result as? Error {
                     completion(error)
                 } else if let valid = result as? Bool, !valid {
-                    completion(FWPromise.validationError)
+                    completion(NSError(domain: FWPromise.errorDomain, code: FWPromiseErrorCode.validation.rawValue, userInfo: [NSLocalizedDescriptionKey: "Promise validation failed"]))
                 } else {
                     completion(value)
                 }
@@ -185,11 +190,26 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
+    /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
+    public func reduce(_ items: [Any], reducer: @escaping (_ value: Any?, _ item: Any) -> Any?) -> FWPromise {
+        var promise = self
+        for item in items {
+            promise = promise.then({ value in
+                return reducer(value, item)
+            })
+        }
+        return promise
+    }
+    
+    public func retry(_ times: Int = 1, delay: TimeInterval = 0) -> FWPromise {
+        return FWPromise(value: 1)
+    }
+    
     /// 约定超时，当前约定未超时时返回结果；否则返回超时错误信息
     public func timeout(_ time: TimeInterval, error: Error? = nil) -> FWPromise {
         let promise = FWPromise { completion in
             FWPromise.delay(time) {
-                completion(error ?? FWPromise.timeoutError)
+                completion(error ?? NSError(domain: FWPromise.errorDomain, code: FWPromiseErrorCode.timeout.rawValue, userInfo: [NSLocalizedDescriptionKey: "Promise timeout"]))
             }
         }
         return FWPromise.race([self, promise])
