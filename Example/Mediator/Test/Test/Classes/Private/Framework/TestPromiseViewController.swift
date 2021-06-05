@@ -60,9 +60,11 @@ extension TestPromiseViewController {
         }
     }
     
+    private static var failureCount: Int = 0
     private static func failurePromise() -> FWPromise {
         return FWPromise { completion in
             FWPromise.delay(1).done { _ in
+                failureCount += 1
                 completion(NSError(domain: "Test", code: 0, userInfo: nil))
             }
         }
@@ -283,7 +285,25 @@ extension TestPromiseViewController {
     }
     
     @objc func onRetry() {
-        
+        Self.isLoading = true
+        Self.failureCount = 0
+        let startTime = NSDate.fwCurrentTime
+        /*var count = 0*/
+        Self.failurePromise()/*.recover { error in
+            count += 1
+            if count < 5 {
+                DispatchQueue.main.async {
+                    UIWindow.fwMain?.fwShowLoading(withText: "failed: \(count)")
+                }
+                return error
+            } else {
+                return count
+            }
+        }*/.retry(4).done { result in
+            Self.isLoading = false
+            let endTime = NSDate.fwCurrentTime
+            Self.showMessage("result: \(Self.failureCount) => " + String(format: "%.1fs", endTime - startTime))
+        }
     }
     
     @objc func onProgress() {
