@@ -34,6 +34,7 @@ import UIKit
 extension TestPromiseViewController {
     override func renderData() {
         tableData.addObjects(from: [
+            ["done", "onDone"],
             ["then", "onThen"],
             ["await", "onAwait"],
             ["all", "onAll"],
@@ -47,7 +48,7 @@ extension TestPromiseViewController {
     
     private static func successPromise(_ value: Int = 0) -> FWPromise {
         return FWPromise { resolve, reject in
-            delay(1) {
+            FWPromise.delay(1).done { _ in
                 resolve(value + 1)
             }
         }
@@ -55,7 +56,7 @@ extension TestPromiseViewController {
     
     private static func failurePromise() -> FWPromise {
         return FWPromise { completion in
-            delay(1) {
+            FWPromise.delay(1).done { _ in
                 completion(NSError(domain: "Test", code: 0, userInfo: nil))
             }
         }
@@ -63,12 +64,6 @@ extension TestPromiseViewController {
     
     private static func randomPromise(_ value: Int = 0) -> FWPromise {
         return [0, 1].randomElement() == 1 ? successPromise(value) : failurePromise()
-    }
-    
-    private static func delay(_ time: TimeInterval, block: @escaping () -> ()) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-            block()
-        }
     }
     
     private static func showMessage(_ text: String) {
@@ -88,6 +83,22 @@ extension TestPromiseViewController {
                     UIWindow.fwMain?.fwHideLoading()
                 }
             }
+        }
+    }
+    
+    @objc func onDone() {
+        Self.isLoading = true
+        var value = 0
+        FWPromise { completion in
+            for i in 0 ..< 10000 {
+                Self.successPromise(i).done { _ in
+                    value += 1
+                    completion(value)
+                }
+            }
+        }.done { result in
+            Self.isLoading = false
+            Self.showMessage("result: \(result.fwAsString)")
         }
     }
     
@@ -120,7 +131,9 @@ extension TestPromiseViewController {
     
     @objc func onAll() {
         Self.isLoading = true
-        FWPromise.all([Self.successPromise(), Self.successPromise(1), Self.randomPromise(2)])
+        FWPromise.all([Self.successPromise(),
+                       Self.successPromise(1),
+                       Self.randomPromise(2)])
             .done { value in
                 Self.showMessage("value: 6 => \(value.fwAsString)")
             } catch: { error in
@@ -132,7 +145,9 @@ extension TestPromiseViewController {
     
     @objc func onAny() {
         Self.isLoading = true
-        FWPromise.any([Self.successPromise(), Self.successPromise(1), Self.failurePromise()].shuffled())
+        FWPromise.any([Self.successPromise(),
+                       Self.successPromise(1),
+                       Self.failurePromise()].shuffled())
             .done { value in
                 Self.showMessage("value: \(value.fwAsString)")
             } catch: { error in
@@ -144,7 +159,11 @@ extension TestPromiseViewController {
     
     @objc func onRace() {
         Self.isLoading = true
-        FWPromise.race([Self.successPromise(), Self.successPromise(1), Self.failurePromise()].shuffled())
+        var promises: [FWPromise] = []
+        for i in 0 ..< 10000 {
+            promises.append(Self.randomPromise(i))
+        }
+        FWPromise.race(promises.shuffled())
             .done { value in
                 Self.showMessage("value: \(value.fwAsString)")
             } catch: { error in
