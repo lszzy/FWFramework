@@ -36,15 +36,23 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     
     /// 约定内部属性
     private let operation: (@escaping (_ result: Any?) -> Void) -> Void
-    private var finished = false
+    private var finished: Bool = false
+    private var retry: (times: Int, delay: TimeInterval) = (times: 0, delay: 0)
     
     /// 约定内部方法
     private func execute(completion: @escaping (_ result: Any?) -> Void) {
         self.operation() { result in
             FWPromise.completionQueue.async {
-                if !self.finished {
+                if self.finished { return }
+                if self.retry.times < 1 || !(result is Error) {
                     self.finished = true
+                    self.retry.times = 0
                     completion(result)
+                } else {
+                    FWPromise.delay(self.retry.delay) {
+                        self.retry.times -= 1
+                        self.execute(completion: completion)
+                    }
                 }
             }
         }
@@ -201,8 +209,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         return promise
     }
     
+    /// 约定重试，当前约定失败时延迟指定时间后重试，直至成功或达到最大重试次数时停止
     public func retry(_ times: Int = 1, delay: TimeInterval = 0) -> FWPromise {
-        return FWPromise(value: 1)
+        self.retry.times = times > 0 ? times : 0
+        self.retry.delay = delay > 0 ? delay : 0
+        return self
     }
     
     /// 约定超时，当前约定未超时时返回结果；否则返回超时错误信息
