@@ -36,14 +36,19 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 约定内部属性
     private let operation: (@escaping (_ result: Any?) -> Void) -> Void
     private var finished: Bool = false
+    private struct Progress { var value: Double }
     
-    /// 约定内部方法
-    private func execute(completion: @escaping (_ result: Any?) -> Void) {
+    /// 约定内部执行方法
+    private func execute(progress: Bool, completion: @escaping (_ result: Any?) -> Void) {
         self.operation() { result in
             FWPromise.completionQueue.async {
                 if !self.finished {
-                    self.finished = true
-                    completion(result)
+                    if result is Progress {
+                        if progress { completion(result) }
+                    } else {
+                        self.finished = true
+                        completion(result)
+                    }
                 }
             }
         }
@@ -79,7 +84,9 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 指定操作成功、失败句柄和进度句柄初始化
     public convenience init(progress: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
         self.init(completion: { completion in
-            progress(completion, completion, completion)
+            progress(completion, completion, { value in
+                completion(Progress(value: value))
+            })
         })
     }
     
@@ -99,19 +106,12 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     
     /// 执行约定并回调完成句柄
     public func done(_ completion: @escaping (_ result: Any?) -> Void) {
-        self.execute { result in
-            completion(result)
-        }
+        self.execute(progress: false, completion: completion)
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
     public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
-        self.done(done, catch: `catch`, progress: nil, finally: finally)
-    }
-    
-    /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
-        self.execute { result in
+        self.execute(progress: false) { result in
             if let error = result as? Error {
                 `catch`?(error)
             } else {
@@ -121,18 +121,35 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         }
     }
     
+    /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
+    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
+        self.execute(progress: progress != nil) { result in
+            if progress != nil, let prog = result as? Progress {
+                progress?(prog.value)
+            } else if let error = result as? Error {
+                `catch`?(error)
+                finally?()
+            } else {
+                done(result)
+                finally?()
+            }
+        }
+    }
+    
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
     public func then(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
             self.done { value in
                 let result = block(value)
                 if let promise = result as? FWPromise {
-                    promise.done(completion)
+                    promise.execute(progress: true, completion: completion)
                 } else {
                     completion(result)
                 }
             } catch: { error in
                 completion(error)
+            } progress: { value in
+                completion(Progress(value: value))
             }
         }
     }
@@ -145,10 +162,12 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
             } catch: { error in
                 let result = block(error)
                 if let promise = result as? FWPromise {
-                    promise.done(completion)
+                    promise.execute(progress: true, completion: completion)
                 } else {
                     completion(result)
                 }
+            } progress: { value in
+                completion(Progress(value: value))
             }
         }
     }
@@ -167,6 +186,8 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 }
             } catch: { error in
                 completion(error)
+            } progress: { value in
+                completion(Progress(value: value))
             }
         }
     }
@@ -185,14 +206,20 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 约定延时，当前约定成功时延时返回结果；默认失败时不延时，可设置force强制失败时也延时
     public func delay(_ time: TimeInterval, force: Bool = false) -> FWPromise {
         return FWPromise { completion in
-            self.done { result in
-                if force || !(result is Error) {
+            self.done { value in
+                FWPromise.delay(time) {
+                    completion(value)
+                }
+            } catch: { error in
+                if force {
                     FWPromise.delay(time) {
-                        completion(result)
+                        completion(error)
                     }
                 } else {
-                    completion(result)
+                    completion(error)
                 }
+            } progress: { value in
+                completion(Progress(value: value))
             }
         }
     }
@@ -261,6 +288,8 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                     }
                 } catch: { error in
                     completion(error)
+                } progress: { value in
+                    completion(Progress(value: value))
                 }
             }
         }
@@ -278,6 +307,8 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                     if failedCount == promises.count {
                         completion(error)
                     }
+                } progress: { value in
+                    completion(Progress(value: value))
                 }
             }
         }
@@ -287,8 +318,12 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     public static func race(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             for promise in promises {
-                promise.done { result in
-                    completion(result)
+                promise.done { value in
+                    completion(value)
+                } catch: { error in
+                    completion(error)
+                } progress: { value in
+                    completion(Progress(value: value))
                 }
             }
         }

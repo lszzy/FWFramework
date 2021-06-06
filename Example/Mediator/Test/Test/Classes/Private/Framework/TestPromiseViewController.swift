@@ -45,11 +45,11 @@ extension TestPromiseViewController {
             ["-reduce", "onReduce"],
             ["-retry", "onRetry"],
             ["-progress", "onProgress"],
-            ["+retry", "onRetry2"],
             ["+await", "onAwait"],
             ["+all", "onAll"],
             ["+any", "onAny"],
             ["+race", "onRace"],
+            ["+retry", "onRetry2"],
         ])
     }
     
@@ -71,6 +71,31 @@ extension TestPromiseViewController {
     
     private static func randomPromise(_ value: Int = 0) -> FWPromise {
         return [0, 1].randomElement() == 1 ? successPromise(value) : failurePromise()
+    }
+    
+    private static func progressPromise() -> FWPromise {
+        return FWPromise { resolve, reject, progress in
+            DispatchQueue.global().async {
+                var value: Double = 0
+                while (value < 1) {
+                    value += 0.02
+                    let finish = value >= 1
+                    DispatchQueue.main.async {
+                        if (finish) {
+                            progress(1)
+                            if [0, 1].randomElement() == 1 {
+                                resolve(UIImage())
+                            } else {
+                                reject(FWPromise.defaultError)
+                            }
+                        } else {
+                            progress(value)
+                        }
+                    }
+                    usleep(50000)
+                }
+            }
+        }
     }
     
     private static func showMessage(_ text: String) {
@@ -327,35 +352,36 @@ extension TestPromiseViewController {
     }
     
     @objc func onProgress() {
-        UIWindow.fwMain?.fwShowProgress(withText: String(format: "下载中(%.0f%%)", 0 * 100), progress: 0)
-        FWPromise { resolve, reject, progress in
-            DispatchQueue.global().async {
-                var value: Double = 0
-                while (value < 1) {
-                    value += 0.02
-                    let finish = value >= 1
-                    DispatchQueue.main.async {
-                        if (finish) {
-                            if [0, 1].randomElement() == 1 {
-                                resolve(UIImage())
-                            } else {
-                                reject(FWPromise.defaultError)
-                            }
-                        } else {
-                            progress(value)
-                        }
-                    }
-                    usleep(finish ? 2000000 : 50000)
-                }
-            }
-        }.then { value in
-            return "下载成功"
-        }.done { value in
+        var promise: FWPromise?
+        let index = [1, 2, 3].randomElement()!
+        if index == 1 {
+            promise = Self.progressPromise().then({ value in
+                return Self.successPromise()
+            })
+        } else if index == 2 {
+            promise = Self.successPromise().then({ value in
+                return Self.progressPromise()
+            })
+        } else {
+            promise = Self.failurePromise().recover({ value in
+                return Self.progressPromise()
+            })
+        }
+        UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", 0 * 100), progress: 0)
+        promise?.validate({ value in
+            return false
+        }).recover({ error in
+            return FWPromise(value: "\(index)下载成功")
+        }).reduce([1, 2], reducer: { value, item in
+            return value
+        }).delay(1).timeout(30).retry(1, delay: 0, block: {
+            return Self.successPromise()
+        }).done { value in
             Self.showMessage("\(value.fwAsString)")
         } catch: { error in
             Self.showMessage("\(error)")
         } progress: { progress in
-            UIWindow.fwMain?.fwShowProgress(withText: String(format: "下载中(%.0f%%)", progress * 100), progress: CGFloat(progress))
+            UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", progress * 100), progress: CGFloat(progress))
         } finally: {
             UIWindow.fwMain?.fwHideProgress()
         }
