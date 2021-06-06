@@ -65,45 +65,52 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     
     // MARK: - Public
     /// 指定操作完成句柄初始化
-    public init(operation: @escaping (_ completion: @escaping (_ result: Any?) -> Void) -> Void) {
-        self.operation = operation
+    public init(completion: @escaping (_ completion: @escaping (_ result: Any?) -> Void) -> Void) {
+        self.operation = completion
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init(_ operation: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
-        self.init(operation: { completion in
-            operation(completion, completion)
+    public convenience init(block: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
+        self.init(completion: { completion in
+            block(completion, completion)
+        })
+    }
+    
+    /// 指定操作成功、失败句柄和进度句柄初始化
+    public convenience init(progress: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
+        self.init(completion: { completion in
+            progress(completion, completion, completion)
         })
     }
     
     /// 快速创建成功实例
     public convenience init(value: Any?) {
-        self.init(operation: { completion in
+        self.init(completion: { completion in
             completion(value)
         })
     }
     
     /// 快速创建失败实例
     public convenience init(error: Error) {
-        self.init(operation: { completion in
+        self.init(completion: { completion in
             completion(error)
         })
     }
     
     /// 执行约定并回调完成句柄
-    public func done(completion: @escaping (_ result: Any?) -> Void) {
+    public func done(_ completion: @escaping (_ result: Any?) -> Void) {
         self.execute { result in
             completion(result)
         }
     }
     
-    /// 执行约定并分别回调成功、失败句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?) {
-        self.done(done, catch: `catch`, finally: nil)
+    /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
+    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
+        self.done(done, catch: `catch`, progress: nil, finally: finally)
     }
     
-    /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)?) {
+    /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
+    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
         self.execute { result in
             if let error = result as? Error {
                 `catch`?(error)
@@ -120,7 +127,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
             self.done { value in
                 let result = block(value)
                 if let promise = result as? FWPromise {
-                    promise.done(completion: completion)
+                    promise.done(completion)
                 } else {
                     completion(result)
                 }
@@ -138,7 +145,7 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
             } catch: { error in
                 let result = block(error)
                 if let promise = result as? FWPromise {
-                    promise.done(completion: completion)
+                    promise.done(completion)
                 } else {
                     completion(result)
                 }
