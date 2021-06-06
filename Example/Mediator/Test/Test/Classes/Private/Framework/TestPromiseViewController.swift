@@ -50,6 +50,7 @@ extension TestPromiseViewController {
             ["+any", "onAny"],
             ["+race", "onRace"],
             ["+retry", "onRetry2"],
+            ["+progress", "onProgress2"],
         ])
     }
     
@@ -83,10 +84,10 @@ extension TestPromiseViewController {
                     DispatchQueue.main.async {
                         if (finish) {
                             progress(1)
-                            if [0, 1].randomElement() == 1 {
-                                resolve(UIImage())
-                            } else {
+                            if [0, 1, 2].randomElement() == 0 {
                                 reject(FWPromise.defaultError)
+                            } else {
+                                resolve(UIImage())
                             }
                         } else {
                             progress(value)
@@ -377,6 +378,31 @@ extension TestPromiseViewController {
         }).delay(1).timeout(30).retry(1, delay: 0, block: {
             return Self.successPromise()
         }).done { value in
+            Self.showMessage("\(value.fwAsString)")
+        } catch: { error in
+            Self.showMessage("\(error)")
+        } progress: { progress in
+            UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", progress * 100), progress: CGFloat(progress))
+        } finally: {
+            UIWindow.fwMain?.fwHideProgress()
+        }
+    }
+    
+    @objc func onProgress2() {
+        let promises = [Self.progressPromise(),
+                        FWPromise.delay(0.5).then({ _ in Self.progressPromise() }),
+                        FWPromise.delay(1.0).then({ _ in Self.progressPromise() })]
+        var promise: FWPromise?
+        let index = [1, 2, 3].randomElement()!
+        if index == 1 {
+            promise = FWPromise.all(promises)
+        } else if index == 2 {
+            promise = FWPromise.any(promises)
+        } else {
+            promise = FWPromise.race(promises)
+        }
+        UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", 0 * 100), progress: 0)
+        promise?.done { value in
             Self.showMessage("\(value.fwAsString)")
         } catch: { error in
             Self.showMessage("\(error)")

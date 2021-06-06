@@ -276,10 +276,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         return result
     }
     
-    /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息
+    /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息；约定进度为所有约定总进度
     public static func all(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var values: [Any?] = []
+            var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done { value in
                     values.append(value)
@@ -289,16 +290,19 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 } catch: { error in
                     completion(error)
                 } progress: { value in
-                    completion(Progress(value: value))
+                    progress[promise.hash] = value
+                    let sum = progress.values.reduce(0) { x, y in x + y }
+                    completion(Progress(value: sum / Double(promises.count)))
                 }
             }
         }
     }
     
-    /// 某个约定，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息
+    /// 某个约定，返回最先成功的约定结果；如果都失败了，返回最后一个错误信息；约定进度为最先成功的约定进度
     public static func any(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
             var failedCount = 0
+            var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done { value in
                     completion(value)
@@ -308,22 +312,25 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                         completion(error)
                     }
                 } progress: { value in
-                    completion(Progress(value: value))
+                    progress[promise.hash] = value
+                    completion(Progress(value: progress.values.max() ?? 0))
                 }
             }
         }
     }
     
-    /// 约定竞速，返回最先结束的约定结果，不管成功或失败
+    /// 约定竞速，返回最先结束的约定结果，不管成功或失败；约定进度为最先结束的约定进度
     public static func race(_ promises: [FWPromise]) -> FWPromise {
         return FWPromise { completion in
+            var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done { value in
                     completion(value)
                 } catch: { error in
                     completion(error)
                 } progress: { value in
-                    completion(Progress(value: value))
+                    progress[promise.hash] = value
+                    completion(Progress(value: progress.values.max() ?? 0))
                 }
             }
         }
