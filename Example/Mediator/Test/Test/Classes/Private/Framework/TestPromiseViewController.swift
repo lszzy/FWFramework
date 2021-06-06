@@ -36,19 +36,20 @@ extension TestPromiseViewController {
         tableData.addObjects(from: [
             ["unsafe(Crash)", "onUnsafe"],
             ["safe", "onSafe"],
-            ["done", "onDone"],
-            ["then", "onThen"],
-            ["await", "onAwait"],
-            ["all", "onAll"],
-            ["any", "onAny"],
-            ["race", "onRace"],
-            ["delay", "onDelay"],
-            ["validate", "onValidate"],
-            ["timeout", "onTimeout"],
-            ["recover", "onRecover"],
-            ["reduce", "onReduce"],
-            ["retry", "onRetry"],
-            ["progress", "onProgress"],
+            ["-done", "onDone"],
+            ["-then", "onThen"],
+            ["-delay", "onDelay"],
+            ["-validate", "onValidate"],
+            ["-timeout", "onTimeout"],
+            ["-recover", "onRecover"],
+            ["-reduce", "onReduce"],
+            ["-retry", "onRetry"],
+            ["-progress", "onProgress"],
+            ["+retry", "onRetry2"],
+            ["+await", "onAwait"],
+            ["+all", "onAll"],
+            ["+any", "onAny"],
+            ["+race", "onRace"],
         ])
     }
     
@@ -60,12 +61,10 @@ extension TestPromiseViewController {
         }
     }
     
-    private static var failureCount: Int = 0
     private static func failurePromise() -> FWPromise {
         return FWPromise { completion in
             FWPromise.delay(1).done { _ in
-                failureCount += 1
-                completion(NSError(domain: "Test", code: 0, userInfo: nil))
+                completion(NSError(domain: "Test", code: 0, userInfo: [NSLocalizedDescriptionKey: "Test failed"]))
             }
         }
     }
@@ -286,23 +285,44 @@ extension TestPromiseViewController {
     
     @objc func onRetry() {
         Self.isLoading = true
-        Self.failureCount = 0
         let startTime = NSDate.fwCurrentTime
-        /*var count = 0*/
-        Self.failurePromise()/*.recover { error in
+        var count = 0
+        Self.failurePromise().recover({ $0 }).retry(4, delay: 0) {
             count += 1
-            if count < 5 {
-                DispatchQueue.main.async {
-                    UIWindow.fwMain?.fwShowLoading(withText: "failed: \(count)")
-                }
-                return error
-            } else {
-                return count
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "retry: \(count)")
             }
-        }*/.retry(4).done { result in
+            if count < 4 {
+                return Self.failurePromise()
+            } else {
+                return Self.randomPromise(count)
+            }
+        }.done { result in
             Self.isLoading = false
             let endTime = NSDate.fwCurrentTime
-            Self.showMessage("result: \(Self.failureCount) => " + String(format: "%.1fs", endTime - startTime))
+            Self.showMessage("result: \(result.fwAsString) => " + String(format: "%.1fs", endTime - startTime))
+        }
+    }
+    
+    @objc func onRetry2() {
+        Self.isLoading = true
+        let startTime = NSDate.fwCurrentTime
+        var count = 0
+        FWPromise.retry(4, delay: 0) {
+            count += 1
+            if count == 1 { return Self.failurePromise() }
+            DispatchQueue.main.async {
+                UIWindow.fwMain?.fwShowLoading(withText: "retry: \(count - 1)")
+            }
+            if count < 5 {
+                return Self.failurePromise()
+            } else {
+                return Self.randomPromise(count - 1)
+            }
+        }.done { result in
+            Self.isLoading = false
+            let endTime = NSDate.fwCurrentTime
+            Self.showMessage("result: \(result.fwAsString) => " + String(format: "%.1fs", endTime - startTime))
         }
     }
     
