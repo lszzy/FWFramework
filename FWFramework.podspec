@@ -21,22 +21,11 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Framework' do |ss|
-    ss.source_files = 'FWFramework/Classes/FWFramework.h'
+    ss.source_files = [
+      'FWFramework/Classes/FWFramework.h',
+      'FWFramework/Classes/Framework/**/*.{h,m,swift}'
+    ]
     ss.resource = 'FWFramework/Assets/FWFramework.bundle'
-
-    ss.subspec 'Kernel' do |sss|
-      sss.source_files = 'FWFramework/Classes/Framework/Kernel/*.{h,m,swift}'
-    end
-
-    ss.subspec 'Service' do |sss|
-      sss.source_files = 'FWFramework/Classes/Framework/Service/*.{h,m,swift}'
-      sss.dependency 'FWFramework/Framework/Kernel'
-    end
-
-    ss.subspec 'Toolkit' do |sss|
-      sss.source_files = 'FWFramework/Classes/Framework/Toolkit/*.{h,m,swift}'
-      sss.dependency 'FWFramework/Framework/Kernel'
-    end
   end
 
   s.subspec 'Application' do |ss|
