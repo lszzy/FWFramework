@@ -433,8 +433,7 @@
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
                                FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
-                                   mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
-                                   NSArray *responseHandlers = [mergedTask.responseHandlers copy];
+                                   NSArray *responseHandlers = [strongSelf safelyGetResponseHandlers:URLIdentifier];
                                    for (FWImageDownloaderResponseHandler *handler in responseHandlers) {
                                        if (handler.progressBlock) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
@@ -628,6 +627,15 @@
         mergedTask = self.mergedTasks[URLIdentifier];
     });
     return mergedTask;
+}
+
+- (NSArray *)safelyGetResponseHandlers:(NSString *)URLIdentifier {
+    __block NSArray *responseHandlers;
+    dispatch_sync(self.synchronizationQueue, ^(){
+        FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
+        responseHandlers = [mergedTask.responseHandlers copy];
+    });
+    return responseHandlers;
 }
 
 - (FWImageDownloadReceipt *)activeImageDownloadReceipt:(id)object
