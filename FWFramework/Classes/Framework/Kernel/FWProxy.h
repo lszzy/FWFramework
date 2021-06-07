@@ -158,4 +158,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWMulticastDelegate
+
+/*!
+ @brief 多代理转发类
+ */
+@interface FWMulticastDelegate<__covariant T> : NSObject
+
+/// 是否是空，不包含delegate
+@property (nonatomic, assign, readonly) BOOL isEmpty;
+
+/// 初始化，是否强引用delegate，默认NO
+- (instancetype)initWithStrongReferences:(BOOL)strongReferences;
+
+/// 初始化，自定义引用选项
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options;
+
+/// 添加delegate
+- (void)addDelegate:(T)delegate;
+
+/// 移除delegate
+- (void)removeDelegate:(T)delegate;
+
+/// 移除所有delegate
+- (void)removeAllDelegates;
+
+/// 是否包含delegate
+- (BOOL)containsDelegate:(T)delegate;
+
+/// 调用所有delegates方法，忽略返回结果
+- (void)invokeDelegates:(void (NS_NOESCAPE ^)(T))block;
+
+/// 过滤执行delegates方法，filter返回是否继续执行；如果所有filter都返回YES，则为YES，否则为NO
+- (BOOL)filterDelegates:(BOOL (NS_NOESCAPE ^)(T))filter;
+
+@end
+
 NS_ASSUME_NONNULL_END

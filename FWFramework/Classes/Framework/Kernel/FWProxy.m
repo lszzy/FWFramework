@@ -402,3 +402,84 @@ typedef struct FWProxyBlock {
 }
 
 @end
+
+#pragma mark - FWMulticastDelegate
+
+@interface FWMulticastDelegate ()
+
+@property (nonatomic, strong) NSHashTable *delegates;
+
+@end
+
+@implementation FWMulticastDelegate
+
+- (instancetype)init
+{
+    return [self initWithStrongReferences:NO];
+}
+
+- (instancetype)initWithStrongReferences:(BOOL)strongReferences
+{
+    self = [super init];
+    if (self) {
+        if (strongReferences) {
+            _delegates = [[NSHashTable alloc] init];
+        } else {
+            _delegates = [NSHashTable weakObjectsHashTable];
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options
+{
+    self = [super init];
+    if (self) {
+        _delegates = [[NSHashTable alloc] initWithOptions:options capacity:0];
+    }
+    return self;
+}
+
+- (BOOL)isEmpty
+{
+    return self.delegates.allObjects.count < 1;
+}
+
+- (void)addDelegate:(id)delegate
+{
+    [self.delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id)delegate
+{
+    [self.delegates removeObject:delegate];
+}
+
+- (void)removeAllDelegates
+{
+    [self.delegates removeAllObjects];
+}
+
+- (BOOL)containsDelegate:(id)delegate
+{
+    return [self.delegates containsObject:delegate];
+}
+
+- (void)invokeDelegates:(void (NS_NOESCAPE ^)(id))block
+{
+    for (id delegate in self.delegates.allObjects) {
+        block(delegate);
+    }
+}
+
+- (BOOL)filterDelegates:(BOOL (NS_NOESCAPE ^)(id))filter
+{
+    BOOL result = YES;
+    for (id delegate in self.delegates.allObjects) {
+        result = filter(delegate);
+        if (!result) break;
+    }
+    return result;
+}
+
+@end
