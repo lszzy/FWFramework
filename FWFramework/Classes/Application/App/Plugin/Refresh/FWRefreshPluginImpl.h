@@ -11,55 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIScrollView+FWInfiniteScroll
-
-typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
-    FWInfiniteScrollStateStopped = 0,
-    FWInfiniteScrollStateTriggered,
-    FWInfiniteScrollStateLoading,
-    FWInfiniteScrollStateAll = 10
-};
-
-/*!
- @brief 上拉追加视图，默认高度60
- */
-@interface FWInfiniteScrollView : UIView
-
-@property (class, nonatomic, assign) CGFloat height;
-@property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
-@property (nonatomic, readwrite) BOOL enabled;
-@property (nonatomic, readwrite, assign) CGFloat preloadHeight;
-
-@property (nonatomic, readonly) FWInfiniteScrollState state;
-@property (nonatomic, assign, readonly) BOOL userTriggered;
-@property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
-@property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
-
-- (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
-
-- (void)startAnimating;
-- (void)stopAnimating;
-- (BOOL)isAnimating;
-
-@end
-
-/*!
- @brief UIScrollView+FWInfiniteScroll
- 
- @see https://github.com/samvermette/SVPullToRefresh
- */
-@interface UIScrollView (FWInfiniteScroll)
-
-- (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block;
-- (void)fwAddInfiniteScrollWithTarget:(id)target action:(SEL)action;
-- (void)fwTriggerInfiniteScroll;
-
-@property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fwInfiniteScrollView;
-@property (nonatomic, assign) CGFloat fwInfiniteScrollHeight;
-@property (nonatomic, assign) BOOL fwShowInfiniteScroll;
-
-@end
-
 #pragma mark - UIScrollView+FWPullRefresh
 
 typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
@@ -112,6 +63,55 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nullable, nonatomic, strong, readonly) FWPullRefreshView *fwPullRefreshView;
 @property (nonatomic, assign) CGFloat fwPullRefreshHeight;
 @property (nonatomic, assign) BOOL fwShowPullRefresh;
+
+@end
+
+#pragma mark - UIScrollView+FWInfiniteScroll
+
+typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
+    FWInfiniteScrollStateStopped = 0,
+    FWInfiniteScrollStateTriggered,
+    FWInfiniteScrollStateLoading,
+    FWInfiniteScrollStateAll = 10
+};
+
+/*!
+ @brief 上拉追加视图，默认高度60
+ */
+@interface FWInfiniteScrollView : UIView
+
+@property (class, nonatomic, assign) CGFloat height;
+@property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+@property (nonatomic, readwrite) BOOL enabled;
+@property (nonatomic, readwrite, assign) CGFloat preloadHeight;
+
+@property (nonatomic, readonly) FWInfiniteScrollState state;
+@property (nonatomic, assign, readonly) BOOL userTriggered;
+@property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
+@property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
+
+- (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
+
+- (void)startAnimating;
+- (void)stopAnimating;
+- (BOOL)isAnimating;
+
+@end
+
+/*!
+ @brief UIScrollView+FWInfiniteScroll
+ 
+ @see https://github.com/samvermette/SVPullToRefresh
+ */
+@interface UIScrollView (FWInfiniteScroll)
+
+- (void)fwAddInfiniteScrollWithBlock:(void (^)(void))block;
+- (void)fwAddInfiniteScrollWithTarget:(id)target action:(SEL)action;
+- (void)fwTriggerInfiniteScroll;
+
+@property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fwInfiniteScrollView;
+@property (nonatomic, assign) CGFloat fwInfiniteScrollHeight;
+@property (nonatomic, assign) BOOL fwShowInfiniteScroll;
 
 @end
 
