@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '1.6.0'
+  s.version               = '1.6.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -21,11 +21,25 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Framework' do |ss|
-    ss.source_files = [
-      'FWFramework/Classes/FWFramework.h',
-      'FWFramework/Classes/Framework/**/*.{h,m,swift}'
-    ]
-    ss.resource = 'FWFramework/Assets/FWFramework.bundle'
+    ss.source_files = 'FWFramework/Classes/FWFramework.h'
+    
+    ss.subspec 'Kernel' do |sss|
+      sss.source_files = 'FWFramework/Classes/Framework/Kernel/**/*.{h,m,swift}'
+    end
+    
+    ss.subspec 'Service' do |sss|
+      sss.source_files = 'FWFramework/Classes/Framework/Service/**/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Framework/Kernel'
+    end
+    
+    ss.subspec 'Toolkit' do |sss|
+      sss.source_files = 'FWFramework/Classes/Framework/Toolkit/**/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Framework/Kernel'
+    end
+    
+    ss.subspec 'Bundle' do |sss|
+      sss.resource_bundles = { 'FWFramework' => ['FWFramework/Assets/**/*.*'] }
+    end
   end
 
   s.subspec 'Application' do |ss|
