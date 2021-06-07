@@ -35,13 +35,6 @@ A brief description of the subspecs:
 	Application: application layer, AOP solution, no need to inherit, components can be replaced
 	Component: component layer, optional import, common functions, convenient for development
 
-### Carthage
-This framework supports Carthage, Cartfile example:
-
-	github "lszzy/FWFramework"
-
-Execute `carthage update` and copy `FWFramework.framework` to the project.
-
 ## Changelog
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 

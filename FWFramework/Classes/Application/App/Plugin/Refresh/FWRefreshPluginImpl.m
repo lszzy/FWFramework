@@ -122,6 +122,10 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             if (!self.scrollView.fwPullRefreshView || !self.scrollView.fwPullRefreshView.isAnimating) {
                 [self scrollViewDidScroll:contentOffset];
             }
+        } else {
+            if (self.state != FWInfiniteScrollStateStopped) {
+                self.state = FWInfiniteScrollStateStopped;
+            }
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
@@ -137,13 +141,13 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         }
         
-        CGFloat scrollOffsetThreshold = self.scrollView.contentSize.height - self.scrollView.bounds.size.height - self.preloadHeight;
+        CGFloat scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height - self.preloadHeight, 0);
         if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
             self.state = FWInfiniteScrollStateLoading;
         else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateStopped && self.scrollView.isDragging) {
             self.state = FWInfiniteScrollStateTriggered;
             self.userTriggered = YES;
-        } else if(contentOffset.y < scrollOffsetThreshold  && self.state != FWInfiniteScrollStateStopped)
+        } else if(contentOffset.y < scrollOffsetThreshold && self.state != FWInfiniteScrollStateStopped)
             self.state = FWInfiniteScrollStateStopped;
     }
 }
@@ -151,7 +155,11 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 - (void)scrollViewPanAction:(UIPanGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
-        self.state = FWInfiniteScrollStateLoading;
+        if (self.scrollView.contentOffset.y >= 0) {
+            self.state = FWInfiniteScrollStateLoading;
+        } else {
+            self.state = FWInfiniteScrollStateStopped;
+        }
     }
 }
 

@@ -35,13 +35,6 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	Application: 应用层，AOP方案，无需继承，组件可替换
 	Component: 组件层，可选引入，常用功能，方便开发
 
-### Carthage
-本框架支持Carthage，Cartfile示例：
-
-	github "lszzy/FWFramework"
-
-执行`carthage update`并拷贝`FWFramework.framework`到项目即可。
-
 ## 更新日志
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
