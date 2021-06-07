@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '1.5.6'
+  s.version               = '1.6.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -21,19 +21,20 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Framework' do |ss|
-    ss.source_files = 'FWFramework/FWFramework.h'
+    ss.source_files = 'FWFramework/Classes/FWFramework.h'
+    ss.resource = 'FWFramework/Assets/FWFramework.bundle'
 
     ss.subspec 'Kernel' do |sss|
-      sss.source_files = 'FWFramework/Framework/Kernel/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Framework/Kernel/*.{h,m,swift}'
     end
 
     ss.subspec 'Service' do |sss|
-      sss.source_files = 'FWFramework/Framework/Service/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Framework/Service/*.{h,m,swift}'
       sss.dependency 'FWFramework/Framework/Kernel'
     end
 
     ss.subspec 'Toolkit' do |sss|
-      sss.source_files = 'FWFramework/Framework/Toolkit/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Framework/Toolkit/*.{h,m,swift}'
       sss.dependency 'FWFramework/Framework/Kernel'
     end
   end
@@ -42,48 +43,48 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'App' do |sss|
-      sss.source_files = 'FWFramework/Application/App/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/App/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Controller' do |sss|
-      sss.source_files = 'FWFramework/Application/Controller/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Controller/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/App'
     end
 
     ss.subspec 'Model' do |sss|
-      sss.source_files = 'FWFramework/Application/Model/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Model/*.{h,m,swift}'
     end
 
     ss.subspec 'View' do |sss|
-      sss.source_files = 'FWFramework/Application/View/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/View/*.{h,m,swift}'
     end
 
     ss.subspec 'Cache' do |sss|
       sss.library = 'sqlite3'
-      sss.source_files = 'FWFramework/Application/Service/Cache/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Cache/*.{h,m,swift}'
     end
 
     ss.subspec 'Database' do |sss|
       sss.library = 'sqlite3'
-      sss.source_files = 'FWFramework/Application/Service/Database/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Database/*.{h,m,swift}'
     end
 
     ss.subspec 'Image' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Image/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Image/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
     end
 
     ss.subspec 'Network' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Network/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Network/*.{h,m,swift}'
     end
 
     ss.subspec 'Request' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Request/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Request/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
     end
 
     ss.subspec 'Socket' do |sss|
-      sss.source_files = 'FWFramework/Application/Service/Socket/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Socket/*.{h,m,swift}'
     end
   end
 
@@ -91,15 +92,15 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'Foundation' do |sss|
-      sss.source_files = 'FWFramework/Component/Foundation/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Component/Foundation/**/*.{h,m,swift}'
     end
 
     ss.subspec 'UIKit' do |sss|
-      sss.source_files = 'FWFramework/Component/UIKit/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Component/UIKit/**/*.{h,m,swift}'
     end
 
     ss.subspec 'SwiftUI' do |sss|
-      sss.source_files = 'FWFramework/Component/SwiftUI/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Component/SwiftUI/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Contacts' do |sss|
