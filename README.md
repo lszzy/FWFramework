@@ -35,18 +35,19 @@ A brief description of the subspecs:
 	Application: application layer, AOP solution, no need to inherit, components can be replaced
 	Component: component layer, optional import, common functions, convenient for development
 
-### Carthage
-This framework supports Carthage, Cartfile example:
-
-	github "lszzy/FWFramework"
-
-Execute `carthage update` and copy `FWFramework.framework` to the project.
-
 ## Changelog
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
+
+Version 1.6.0:
+
+	* Refactor the project directory structure and use the recommended method of pod
+	* Rewrite the FWPromise class to support OC and Swift calls
+	* Added FWMulticastDelegate multi-agent forwarding class
+	* Refactor FWLog method name
+	* Fixed occasional bugs in FWRefreshPlugin and FWWebImage plugins
 
 Version 1.5.6:
 
