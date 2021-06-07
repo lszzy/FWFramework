@@ -41,6 +41,14 @@ As this framework is constantly upgrading, optimizing and expanding new function
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
+Version 1.6.0:
+
+	* Refactor the project directory structure and use the recommended method of pod
+	* Rewrite the FWPromise class to support OC and Swift calls
+	* Added FWMulticastDelegate multi-agent forwarding class
+	* Refactor FWLog method name
+	* Fixed occasional bugs in FWRefreshPlugin and FWWebImage plugins
+
 Version 1.5.6:
 
 	* Fixed the issue of FWAnimatedTransition referencing presentationController circularly
