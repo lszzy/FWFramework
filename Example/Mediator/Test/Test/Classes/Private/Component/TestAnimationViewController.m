@@ -11,50 +11,102 @@
 @interface TestAnimationView : UIView
 
 @property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, assign) NSInteger transitionType;
 
 @end
 
 @implementation TestAnimationView
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithTransitionType:(NSInteger)transitionType
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:CGRectZero];
     if (self) {
+        self.transitionType = transitionType;
         self.backgroundColor = [UIColor fwColorWithHex:0x000000 alpha:0.5];
         
         self.bottomView = [UIView new];
         self.bottomView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.bottomView];
-        self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
-        
-        FWWeakifySelf();
-        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-            FWStrongifySelf();
-            [self hideAnimatedFromBottom:self.bottomView];
-        }];
+        if (self.transitionType == 3) {
+            self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
+        } else {
+            self.bottomView.fwLayoutChain.center().width(300).height(200);
+        }
     }
     return self;
 }
 
-- (void)showAnimatedFromBottom:(nullable UIView *)contentView
+- (void)showInViewController:(UIViewController *)viewController
 {
-    self.alpha = 0;
-    contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
-    [UIView animateWithDuration:0.25 animations:^{
-        contentView.transform = CGAffineTransformIdentity;
-        self.alpha = 1;
-    }];
+    [viewController fwAddTransitionView:self];
+    self.fwLayoutChain.edges();
+    // 初始化frame
+    [self.superview setNeedsLayout];
+    [self.superview layoutIfNeeded];
+    
+    FWWeakifySelf();
+    if (self.transitionType == 3) {
+        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            [self fwSetPresentTransition:FWAnimatedTransitionTypeDismiss contentView:self.bottomView completion:nil];
+        }];
+        [self fwSetPresentTransition:FWAnimatedTransitionTypePresent contentView:self.bottomView completion:nil];
+    } else if (self.transitionType == 4) {
+        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            [self fwSetAlertTransition:FWAnimatedTransitionTypeDismiss completion:nil];
+        }];
+        [self fwSetAlertTransition:FWAnimatedTransitionTypePresent completion:nil];
+    } else {
+        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            [self fwSetFadeTransition:FWAnimatedTransitionTypeDismiss completion:nil];
+        }];
+        [self fwSetFadeTransition:FWAnimatedTransitionTypePresent completion:nil];
+    }
 }
 
-- (void)hideAnimatedFromBottom:(nullable UIView *)contentView
+@end
+
+@interface TestAnimationChildController : UIViewController
+
+@property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, assign) NSInteger transitionType;
+
+@end
+
+@implementation TestAnimationChildController
+
+- (void)viewDidLoad
 {
-    [UIView animateWithDuration:0.25 animations:^{
-        contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
-        self.alpha = 0;
-    } completion:^(BOOL finished) {
-        contentView.transform = CGAffineTransformIdentity;
-        [self removeFromSuperview];
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor clearColor];
+    FWWeakifySelf();
+    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        [self dismissViewControllerAnimated:YES completion:nil];
     }];
+    
+    self.bottomView = [UIView new];
+    self.bottomView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.bottomView];
+    if (self.transitionType == 0) {
+        self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
+    } else {
+        self.bottomView.fwLayoutChain.center().width(300).height(200);
+    }
+}
+
+- (void)showInViewController:(UIViewController *)viewController
+{
+    if (self.transitionType == 0) {
+        [self fwSetPresentTransition:nil];
+    } else if (self.transitionType == 1) {
+        [self fwSetAlertTransition:nil];
+    } else {
+        [self fwSetFadeTransition:nil];
+    }
+    [viewController presentViewController:self animated:YES completion:nil];
 }
 
 @end
@@ -78,35 +130,35 @@ FWDefLazyProperty(UIView *, animationView, {
 - (void)renderView
 {
     UIButton *button = [Theme largeButton];
-    [button setTitle:@"切换拖动" forState:UIControlStateNormal];
-    [button fwAddTouchTarget:self action:@selector(onDrag:)];
+    [button setTitle:@"转场动画" forState:UIControlStateNormal];
+    [button fwAddTouchTarget:self action:@selector(onPresent)];
     [self.view addSubview:button];
     [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
     UIButton *button2 = [Theme largeButton];
-    [button2 setTitle:@"切换动画" forState:UIControlStateNormal];
-    [button2 fwAddTouchTarget:self action:@selector(onAnimation:)];
+    [button2 setTitle:@"切换拖动" forState:UIControlStateNormal];
+    [button2 fwAddTouchTarget:self action:@selector(onDrag:)];
     [self.view addSubview:button2];
     [button2 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button withOffset:-15];
     [button2 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+    
+    UIButton *button3 = [Theme largeButton];
+    [button3 setTitle:@"切换动画" forState:UIControlStateNormal];
+    [button3 fwAddTouchTarget:self action:@selector(onAnimation:)];
+    [self.view addSubview:button3];
+    [button3 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button2 withOffset:-15];
+    [button3 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }
 
 - (void)renderModel
 {
     if (@available(iOS 11.0, *)) {
         FWWeakifySelf();
-        [self fwSetRightBarItem:@("More") block:^(id  _Nonnull sender) {
+        [self fwSetRightBarItem:@("Animator") block:^(id  _Nonnull sender) {
             FWStrongifySelf();
-            [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"Animator", @"Present"] actionBlock:^(NSInteger index) {
-                FWStrongifySelf();
-                if (index == 0) {
-                    UIViewController *viewController = [NSClassFromString(@"Test.TestPropertyAnimatorViewController") new];
-                    [self.navigationController pushViewController:viewController animated:true];
-                } else {
-                    [self onPresent];
-                }
-            }];
+            UIViewController *viewController = [NSClassFromString(@"Test.TestPropertyAnimatorViewController") new];
+            [self.navigationController pushViewController:viewController animated:true];
         }];
     }
 }
@@ -115,12 +167,18 @@ FWDefLazyProperty(UIView *, animationView, {
 
 - (void)onPresent
 {
-    TestAnimationView *view = [TestAnimationView new];
-    [self.view addSubview:view];
-    view.fwLayoutChain.edges();
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    [view showAnimatedFromBottom:view.bottomView];
+    FWWeakifySelf();
+    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"VC present", @"VC alert", @"VC fade", @"view present", @"view alert", @"view fade"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index < 3) {
+            TestAnimationChildController *animationController = [TestAnimationChildController new];
+            animationController.transitionType = index;
+            [animationController showInViewController:self];
+        } else {
+            TestAnimationView *animationView = [[TestAnimationView alloc] initWithTransitionType:index];
+            [animationView showInViewController:self];
+        }
+    }];
 }
 
 - (void)onAnimation:(UIButton *)sender
