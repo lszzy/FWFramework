@@ -135,6 +135,7 @@
 @interface TestTableLayoutViewController () <FWTableViewController, FWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) FWPhotoBrowser *photoBrowser;
+@property (nonatomic, assign) BOOL isShort;
 
 @end
 
@@ -142,6 +143,7 @@
 
 - (void)renderView
 {
+    self.isShort = [@[@0, @1].fwRandomObject fwAsInteger] == 0;
     FWWeakifySelf();
     [self.tableView fwSetRefreshingBlock:^{
         FWStrongifySelf();
@@ -165,7 +167,7 @@
         
         [self onLoading];
     }];
-    self.tableView.fwInfiniteScrollView.preloadHeight = 200;
+    self.tableView.fwInfiniteScrollView.preloadHeight = self.isShort ? 0 : 200;
     self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
@@ -297,7 +299,7 @@
         NSLog(@"刷新完成");
         
         [self.tableData removeAllObjects];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < (self.isShort ? 1 : 4); i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
@@ -316,7 +318,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < (self.isShort ? 1 : 4); i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];
