@@ -756,7 +756,7 @@ static char UIScrollViewFWPullRefreshView;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != FWInfiniteScrollStateLoading && self.enabled) {
         if(self.progressBlock) {
-            CGFloat scrollHeight = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom;
+            CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom, self.scrollView.fwInfiniteScrollHeight);
             CGFloat progress = (self.scrollView.fwInfiniteScrollHeight + contentOffset.y - scrollHeight) / self.scrollView.fwInfiniteScrollHeight;
             self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         }
