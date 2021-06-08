@@ -692,6 +692,33 @@
     return modalTransition;
 }
 
+- (FWAnimatedTransition *)fwSetFadeTransition:(void (^)(FWPresentationController *))presentationBlock
+{
+    FWAnimatedTransition *modalTransition = [[FWAnimatedTransition alloc] init];
+    modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+        FWPresentationController *presentationController = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        if (presentationBlock) presentationBlock(presentationController);
+        return presentationController;
+    };
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.fwModalTransition = modalTransition;
+    return modalTransition;
+}
+
+- (UIView *)fwAddTransitionView:(UIView *)view
+{
+    UIView *containerView = nil;
+    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+        containerView = self.tabBarController.view;
+    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
+        containerView = self.navigationController.view;
+    } else {
+        containerView = self.view;
+    }
+    [containerView addSubview:view];
+    return containerView;
+}
+
 @end
 
 #pragma mark - UIView+FWTransition
@@ -733,6 +760,27 @@
         self.transform = CGAffineTransformMakeScale(1.1, 1.1);
         [UIView animateWithDuration:0.25 animations:^{
             self.transform = CGAffineTransformIdentity;
+            self.alpha = 1;
+        } completion:^(BOOL finished) {
+            if (completion) completion(finished);
+        }];
+    } else {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+            if (completion) completion(finished);
+        }];
+    }
+}
+
+- (void)fwSetFadeTransition:(FWAnimatedTransitionType)transitionType
+                 completion:(void (^)(BOOL))completion
+{
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    if (transitionIn) {
+        self.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
             self.alpha = 1;
         } completion:^(BOOL finished) {
             if (completion) completion(finished);
