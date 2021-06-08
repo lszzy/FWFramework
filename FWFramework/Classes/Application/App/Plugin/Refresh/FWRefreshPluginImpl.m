@@ -618,7 +618,7 @@ static char UIScrollViewFWPullRefreshView;
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"contentOffset"];
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"contentSize"];
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"frame"];
-            [self removeObserver:self.fwPullRefreshView forKeyPath:@"state"];
+            [self.panGestureRecognizer removeObserver:self.fwPullRefreshView forKeyPath:@"state"];
             [self.fwPullRefreshView resetScrollViewContentInset];
             self.fwPullRefreshView.isObserving = NO;
         }
