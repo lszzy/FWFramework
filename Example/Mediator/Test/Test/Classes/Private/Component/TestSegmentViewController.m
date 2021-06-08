@@ -166,7 +166,7 @@
     [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
     [self.segmentedControl fwSetDimension:NSLayoutAttributeHeight toSize:50];
     self.segmentedControl.sectionTitles = sectionTitles;
-    self.segmentedControl.selectedSegmentIndex = 1;
+    self.segmentedControl.selectedSegmentIndex = 5;
     FWWeakifySelf();
     self.segmentedControl.indexChangeBlock = ^(NSUInteger index) {
         FWStrongifySelf();
@@ -178,7 +178,7 @@
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.contentSize = CGSizeMake(FWScreenWidth * sectionTitles.count, 100);
     self.scrollView.delegate = self;
-    [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth, 0, FWScreenWidth, 100) animated:NO];
+    [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth * self.segmentedControl.selectedSegmentIndex, 0, FWScreenWidth, 100) animated:NO];
     [self.view addSubview:self.scrollView];
     [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeRight];
