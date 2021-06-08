@@ -101,12 +101,12 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     return self;
 }
 
-- (instancetype)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles {
+- (instancetype)initWithSectionTitles:(NSArray<NSString *> *)sectionTitles {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         [self commonInit];
-        self.sectionTitles = sectiontitles;
         self.type = FWSegmentedControlTypeText;
+        self.sectionTitles = sectionTitles;
     }
     return self;
 }
@@ -115,26 +115,26 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     self = [super initWithFrame:CGRectZero];
     if (self) {
         [self commonInit];
+        self.type = FWSegmentedControlTypeImages;
         self.sectionImages = sectionImages;
         self.sectionSelectedImages = sectionSelectedImages;
-        self.type = FWSegmentedControlTypeImages;
     }
     return self;
 }
 
-- (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles {
+- (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectionTitles {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         [self commonInit];
         
-        if (sectionImages.count != sectiontitles.count) {
-            [NSException raise:NSRangeException format:@"***%s: Images bounds (%ld) Don't match Title bounds (%ld)", sel_getName(_cmd), (unsigned long)sectionImages.count, (unsigned long)sectiontitles.count];
+        if (sectionImages.count != sectionTitles.count) {
+            [NSException raise:NSRangeException format:@"***%s: Images bounds (%ld) Don't match Title bounds (%ld)", sel_getName(_cmd), (unsigned long)sectionImages.count, (unsigned long)sectionTitles.count];
         }
         
+        self.type = FWSegmentedControlTypeTextImages;
         self.sectionImages = sectionImages;
         self.sectionSelectedImages = sectionSelectedImages;
-        self.sectionTitles = sectiontitles;
-        self.type = FWSegmentedControlTypeTextImages;
+        self.sectionTitles = sectionTitles;
     }
     return self;
 }
@@ -1039,7 +1039,9 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     } else {
         if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic &&
             [self sectionCount] != self.segmentWidthsArray.count) {
-            return;
+            // layoutIfNeeded if frame is zero
+            [self layoutIfNeeded];
+            if ([self sectionCount] != self.segmentWidthsArray.count) return;
         }
         
         [self scrollToSelectedSegmentIndex:animated];
