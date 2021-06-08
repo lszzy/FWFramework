@@ -303,9 +303,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fwInfiniteScrollView.isActive || contentOffset.y > 0) {
-            // 修复滚动视图不够高时，快速下拉上拉再下拉刷新视图不消失的问题
-            if (self.pullingPercent > 0 && self.scrollView.isDragging && self.state == FWPullRefreshStateStopped) {
-                self.pullingPercent = 0;
+            if (self.pullingPercent > 0) self.pullingPercent = 0;
+            if (self.state != FWPullRefreshStateStopped) {
+                self.state = FWPullRefreshStateStopped;
             }
         } else {
             [self scrollViewDidScroll:contentOffset];
