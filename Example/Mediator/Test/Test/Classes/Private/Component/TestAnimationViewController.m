@@ -22,46 +22,62 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.transitionType = transitionType;
-        self.backgroundColor = [UIColor fwColorWithHex:0x000000 alpha:0.5];
+        if (self.transitionType > 5) {
+            self.backgroundColor = [UIColor clearColor];
+        } else {
+            self.backgroundColor = [UIColor fwColorWithHex:0x000000 alpha:0.5];
+        }
         
         self.bottomView = [UIView new];
         self.bottomView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.bottomView];
-        if (self.transitionType == 3) {
+        if (self.transitionType == 3 || self.transitionType == 6) {
             self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
         } else {
             self.bottomView.fwLayoutChain.center().width(300).height(200);
         }
+        
+        FWWeakifySelf();
+        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            if (self.transitionType > 5) {
+                [self.fwViewController dismissViewControllerAnimated:YES completion:nil];
+                return;
+            }
+            
+            if (self.transitionType == 3) {
+                [self fwSetPresentTransition:FWAnimatedTransitionTypeDismiss contentView:self.bottomView completion:nil];
+            } else if (self.transitionType == 4) {
+                [self fwSetAlertTransition:FWAnimatedTransitionTypeDismiss completion:nil];
+            } else {
+                [self fwSetFadeTransition:FWAnimatedTransitionTypeDismiss completion:nil];
+            }
+        }];
     }
     return self;
 }
 
 - (void)showInViewController:(UIViewController *)viewController
 {
-    [viewController fwAddTransitionView:self];
-    self.fwLayoutChain.edges();
-    // 初始化frame
-    [self.superview setNeedsLayout];
-    [self.superview layoutIfNeeded];
+    if (self.transitionType > 5) {
+        UIViewController *wrappedController = [self fwWrappedTransitionController:YES];
+        if (self.transitionType == 6) {
+            [wrappedController fwSetPresentTransition:nil];
+        } else if (self.transitionType == 7) {
+            [wrappedController fwSetAlertTransition:nil];
+        } else {
+            [wrappedController fwSetFadeTransition:nil];
+        }
+        [viewController presentViewController:wrappedController animated:YES completion:nil];
+        return;
+    }
     
-    FWWeakifySelf();
+    [self fwTransitionToController:viewController pinEdges:YES];
     if (self.transitionType == 3) {
-        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-            FWStrongifySelf();
-            [self fwSetPresentTransition:FWAnimatedTransitionTypeDismiss contentView:self.bottomView completion:nil];
-        }];
         [self fwSetPresentTransition:FWAnimatedTransitionTypePresent contentView:self.bottomView completion:nil];
     } else if (self.transitionType == 4) {
-        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-            FWStrongifySelf();
-            [self fwSetAlertTransition:FWAnimatedTransitionTypeDismiss completion:nil];
-        }];
         [self fwSetAlertTransition:FWAnimatedTransitionTypePresent completion:nil];
     } else {
-        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-            FWStrongifySelf();
-            [self fwSetFadeTransition:FWAnimatedTransitionTypeDismiss completion:nil];
-        }];
         [self fwSetFadeTransition:FWAnimatedTransitionTypePresent completion:nil];
     }
 }
@@ -168,7 +184,7 @@ FWDefLazyProperty(UIView *, animationView, {
 - (void)onPresent
 {
     FWWeakifySelf();
-    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"VC present", @"VC alert", @"VC fade", @"view present", @"view alert", @"view fade"] actionBlock:^(NSInteger index) {
+    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"VC present", @"VC alert", @"VC fade", @"view present", @"view alert", @"view fade", @"wrapped present", @"wrapped alert", @"wrapped fade"] actionBlock:^(NSInteger index) {
         FWStrongifySelf();
         if (index < 3) {
             TestAnimationChildController *animationController = [TestAnimationChildController new];

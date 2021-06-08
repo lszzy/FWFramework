@@ -176,15 +176,18 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 /// 自定义控制器fade渐变转场(蒙层和内容渐变动画)，会设置fwModalTransition;
 - (FWAnimatedTransition *)fwSetFadeTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
 
-/// 添加转场视图(仅添加不布局)，自动返回转场父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
-- (UIView *)fwAddTransitionView:(UIView *)view;
-
 @end
 
 #pragma mark - UIView+FWTransition
 
 /// 自定义视图模拟转场分类
 @interface UIView (FWTransition)
+
+/// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
+- (UIView *)fwTransitionToController:(UIViewController *)viewController pinEdges:(BOOL)pinEdges;
+
+/// 包装到转场控制器(pinEdges占满父视图)，返回创建的控制器
+- (UIViewController *)fwWrappedTransitionController:(BOOL)pinEdges;
 
 /// 自定义视图模拟present系统转场(蒙层渐变，内容向上动画)
 - (void)fwSetPresentTransition:(FWAnimatedTransitionType)transitionType

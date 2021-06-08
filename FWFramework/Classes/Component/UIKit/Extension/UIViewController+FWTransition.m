@@ -9,6 +9,7 @@
 #import "UIViewController+FWTransition.h"
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIView+FWBorder.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAnimatedTransition
@@ -705,25 +706,42 @@
     return modalTransition;
 }
 
-- (UIView *)fwAddTransitionView:(UIView *)view
-{
-    UIView *containerView = nil;
-    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
-        containerView = self.tabBarController.view;
-    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
-        containerView = self.navigationController.view;
-    } else {
-        containerView = self.view;
-    }
-    [containerView addSubview:view];
-    return containerView;
-}
-
 @end
 
 #pragma mark - UIView+FWTransition
 
 @implementation UIView (FWTransition)
+
+- (UIView *)fwTransitionToController:(UIViewController *)viewController pinEdges:(BOOL)pinEdges
+{
+    UIView *containerView = nil;
+    if (viewController.tabBarController && !viewController.tabBarController.tabBar.hidden) {
+        containerView = viewController.tabBarController.view;
+    } else if (viewController.navigationController && !viewController.navigationController.navigationBarHidden) {
+        containerView = viewController.navigationController.view;
+    } else {
+        containerView = viewController.view;
+    }
+    [containerView addSubview:self];
+    if (pinEdges) {
+        [self fwPinEdgesToSuperview];
+        [containerView setNeedsLayout];
+        [containerView layoutIfNeeded];
+    }
+    return containerView;
+}
+
+- (UIViewController *)fwWrappedTransitionController:(BOOL)pinEdges
+{
+    UIViewController *viewController = [[UIViewController alloc] init];
+    [viewController.view addSubview:self];
+    if (pinEdges) {
+        [self fwPinEdgesToSuperview];
+        [viewController.view setNeedsLayout];
+        [viewController.view layoutIfNeeded];
+    }
+    return viewController;
+}
 
 - (void)fwSetPresentTransition:(FWAnimatedTransitionType)transitionType
                    contentView:(UIView *)contentView
