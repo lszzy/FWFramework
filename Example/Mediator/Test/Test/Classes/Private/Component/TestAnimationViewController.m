@@ -8,6 +8,57 @@
 
 #import "TestAnimationViewController.h"
 
+@interface TestAnimationView : UIView
+
+@property (nonatomic, strong) UIView *bottomView;
+
+@end
+
+@implementation TestAnimationView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor fwColorWithHex:0x000000 alpha:0.5];
+        
+        self.bottomView = [UIView new];
+        self.bottomView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:self.bottomView];
+        self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
+        
+        FWWeakifySelf();
+        [self fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            [self hideAnimatedFromBottom:self.bottomView];
+        }];
+    }
+    return self;
+}
+
+- (void)showAnimatedFromBottom:(nullable UIView *)contentView
+{
+    self.alpha = 0;
+    contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
+    [UIView animateWithDuration:0.25 animations:^{
+        contentView.transform = CGAffineTransformIdentity;
+        self.alpha = 1;
+    }];
+}
+
+- (void)hideAnimatedFromBottom:(nullable UIView *)contentView
+{
+    [UIView animateWithDuration:0.25 animations:^{
+        contentView.transform = CGAffineTransformMakeTranslation(0, contentView.frame.size.height);
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        contentView.transform = CGAffineTransformIdentity;
+        [self removeFromSuperview];
+    }];
+}
+
+@end
+
 @interface TestAnimationViewController ()
 
 FWLazyProperty(UIView *, animationView);
@@ -45,16 +96,32 @@ FWDefLazyProperty(UIView *, animationView, {
 {
     if (@available(iOS 11.0, *)) {
         FWWeakifySelf();
-        [self fwSetRightBarItem:@"Animator" block:^(id  _Nonnull sender) {
+        [self fwSetRightBarItem:@("More") block:^(id  _Nonnull sender) {
             FWStrongifySelf();
-            
-            UIViewController *viewController = [NSClassFromString(@"Test.TestPropertyAnimatorViewController") new];
-            [self.navigationController pushViewController:viewController animated:true];
+            [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"Animator", @"Present"] actionBlock:^(NSInteger index) {
+                FWStrongifySelf();
+                if (index == 0) {
+                    UIViewController *viewController = [NSClassFromString(@"Test.TestPropertyAnimatorViewController") new];
+                    [self.navigationController pushViewController:viewController animated:true];
+                } else {
+                    [self onPresent];
+                }
+            }];
         }];
     }
 }
 
 #pragma mark - Action
+
+- (void)onPresent
+{
+    TestAnimationView *view = [TestAnimationView new];
+    [self.view addSubview:view];
+    view.fwLayoutChain.edges();
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+    [view showAnimatedFromBottom:view.bottomView];
+}
 
 - (void)onAnimation:(UIButton *)sender
 {
