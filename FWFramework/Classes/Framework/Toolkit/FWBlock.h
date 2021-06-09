@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @brief CADisplayLink分类
+ @discussion 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
  */
 @interface CADisplayLink (FWBlock)
 

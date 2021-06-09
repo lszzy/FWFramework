@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// reloadItems禁用动画
 - (void)fwReloadItemsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
 
+/// 刷新高度等，不触发reload方式
+- (void)fwPerformUpdates:(void (NS_NOESCAPE ^ _Nullable)(void))updates;
+
 @end
 
 @interface UICollectionViewCell (FWFramework)
