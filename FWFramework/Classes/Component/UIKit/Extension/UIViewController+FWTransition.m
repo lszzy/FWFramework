@@ -9,6 +9,7 @@
 #import "UIViewController+FWTransition.h"
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIView+FWBorder.h"
+#import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWAnimatedTransition
@@ -692,11 +693,55 @@
     return modalTransition;
 }
 
+- (FWAnimatedTransition *)fwSetFadeTransition:(void (^)(FWPresentationController *))presentationBlock
+{
+    FWAnimatedTransition *modalTransition = [[FWAnimatedTransition alloc] init];
+    modalTransition.presentationBlock = ^UIPresentationController *(UIViewController *presented, UIViewController *presenting) {
+        FWPresentationController *presentationController = [[FWPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
+        if (presentationBlock) presentationBlock(presentationController);
+        return presentationController;
+    };
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.fwModalTransition = modalTransition;
+    return modalTransition;
+}
+
 @end
 
 #pragma mark - UIView+FWTransition
 
 @implementation UIView (FWTransition)
+
+- (UIView *)fwTransitionToController:(UIViewController *)viewController pinEdges:(BOOL)pinEdges
+{
+    UIView *containerView = nil;
+    if (viewController.tabBarController && !viewController.tabBarController.tabBar.hidden) {
+        containerView = viewController.tabBarController.view;
+    } else if (viewController.navigationController && !viewController.navigationController.navigationBarHidden) {
+        containerView = viewController.navigationController.view;
+    } else {
+        containerView = viewController.view;
+    }
+    [containerView addSubview:self];
+    if (pinEdges) {
+        [self fwPinEdgesToSuperview];
+        [containerView setNeedsLayout];
+        [containerView layoutIfNeeded];
+    }
+    return containerView;
+}
+
+- (UIViewController *)fwWrappedTransitionController:(BOOL)pinEdges
+{
+    UIViewController *viewController = [[UIViewController alloc] init];
+    [viewController.view addSubview:self];
+    if (pinEdges) {
+        [self fwPinEdgesToSuperview];
+        [viewController.view setNeedsLayout];
+        [viewController.view layoutIfNeeded];
+    }
+    return viewController;
+}
 
 - (void)fwSetPresentTransition:(FWAnimatedTransitionType)transitionType
                    contentView:(UIView *)contentView
@@ -733,6 +778,27 @@
         self.transform = CGAffineTransformMakeScale(1.1, 1.1);
         [UIView animateWithDuration:0.25 animations:^{
             self.transform = CGAffineTransformIdentity;
+            self.alpha = 1;
+        } completion:^(BOOL finished) {
+            if (completion) completion(finished);
+        }];
+    } else {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+            if (completion) completion(finished);
+        }];
+    }
+}
+
+- (void)fwSetFadeTransition:(FWAnimatedTransitionType)transitionType
+                 completion:(void (^)(BOOL))completion
+{
+    BOOL transitionIn = (transitionType == FWAnimatedTransitionTypePush || transitionType == FWAnimatedTransitionTypePresent);
+    if (transitionIn) {
+        self.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
             self.alpha = 1;
         } completion:^(BOOL finished) {
             if (completion) completion(finished);
