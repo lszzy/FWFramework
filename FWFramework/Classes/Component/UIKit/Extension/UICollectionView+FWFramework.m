@@ -51,6 +51,11 @@
     } completion:nil];
 }
 
+- (void)fwPerformUpdates:(void (NS_NOESCAPE ^)(void))updates
+{
+    [self performBatchUpdates:updates completion:nil];
+}
+
 @end
 
 @implementation UICollectionViewCell (FWFramework)
