@@ -202,7 +202,14 @@
             // 解决因为层级关系变化导致的badgeView被遮挡问题
             for (UIView *subview in selfObject.subviews) {
                 if ([subview isKindOfClass:[FWBadgeView class]]) {
-                    [selfObject bringSubviewToFront:subview];
+                    FWBadgeView *badgeView = (FWBadgeView *)subview;
+                    [selfObject bringSubviewToFront:badgeView];
+                    
+                    // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
+                    if (@available(iOS 13.0, *)) {
+                        UIView *imageView = [UITabBarItem fwImageView:selfObject];
+                        if (imageView) [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
+                    }
                     break;
                 }
             }
@@ -210,9 +217,8 @@
     });
 }
 
-- (UIImageView *)fwImageView
++ (UIImageView *)fwImageView:(UIView *)tabBarButton
 {
-    UIView *tabBarButton = [self fwView];
     if (!tabBarButton) return nil;
     
     UIView *superview = tabBarButton;
@@ -239,6 +245,12 @@
     return nil;
 }
 
+- (UIImageView *)fwImageView
+{
+    UIView *tabBarButton = [self fwView];
+    return [UITabBarItem fwImageView:tabBarButton];
+}
+
 - (void)fwShowBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
     [self fwHideBadgeView];
@@ -252,9 +264,7 @@
         badgeView.tag = 2041;
         [view addSubview:badgeView];
         [view bringSubviewToFront:badgeView];
-        
-        // x轴默认偏移，y轴固定偏移，类似系统布局
-        [badgeView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:imageView.superview withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
+        [badgeView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
         [badgeView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
     };
 }
