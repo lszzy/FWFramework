@@ -319,6 +319,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
         if (state == UIGestureRecognizerStateBegan) {
             self.isActive = NO;
+            self.scrollView.fwInfiniteScrollView.isActive = NO;
         }
     }
 }
@@ -743,6 +744,7 @@ static char UIScrollViewFWPullRefreshView;
         UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
         if (state == UIGestureRecognizerStateBegan) {
             self.isActive = NO;
+            self.scrollView.fwPullRefreshView.isActive = NO;
         } else if (state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
             if (self.scrollView.contentOffset.y >= 0) {
                 self.state = FWInfiniteScrollStateLoading;
