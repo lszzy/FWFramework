@@ -70,6 +70,17 @@
     }];
 }
 
+- (void)fwPerformUpdates:(void (NS_NOESCAPE ^)(void))updates
+{
+    if (@available(iOS 11.0, *)) {
+        [self performBatchUpdates:updates completion:nil];
+    } else {
+        [self beginUpdates];
+        if (updates) updates();
+        [self endUpdates];
+    }
+}
+
 @end
 
 @implementation UITableViewCell (FWFramework)

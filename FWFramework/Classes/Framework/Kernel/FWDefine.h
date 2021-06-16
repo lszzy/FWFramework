@@ -406,27 +406,10 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 /// 标记时间调试开始
 #define FWBenchmarkBegin( x ) \
-    [FWBenchmark benchmarkBegin:@(#x)];
+    [FWBenchmark begin:@(#x)];
 
 /// 标记时间调试结束并打印消耗时间
 #define FWBenchmarkEnd( x ) \
-    [FWBenchmark benchmarkEnd:@(#x)];
-
-NS_ASSUME_NONNULL_BEGIN
-
-/*!
- @brief 时间调试器
- */
-@interface FWBenchmark : NSObject
-
-/// 标记时间调试开始
-+ (void)benchmarkBegin:(NSString *)name;
-
-/// 标记时间调试结束并打印消耗时间
-+ (NSTimeInterval)benchmarkEnd:(NSString *)name;
-
-@end
-
-NS_ASSUME_NONNULL_END
+    [FWBenchmark end:@(#x)];
 
 #endif /* FWDefine_h */

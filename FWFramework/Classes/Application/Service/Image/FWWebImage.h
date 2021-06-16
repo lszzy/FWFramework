@@ -8,7 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FWImage.h"
 #import "FWAnimatedImage.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -100,14 +99,14 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
                             imageCache:(nullable id <FWImageRequestCache>)imageCache;
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
-                                                 options:(FWImageOptions)options
+                                                 options:(FWWebImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress *downloadProgress))progress;
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
                                            withReceiptID:(NSUUID *)receiptID
-                                                 options:(FWImageOptions)options
+                                                 options:(FWWebImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress *downloadProgress))progress;
@@ -118,7 +117,7 @@ typedef NS_ENUM(NSInteger, FWImageDownloadPrioritization) {
 
 - (void)downloadImageForObject:(id)object
                       imageURL:(nullable id)imageURL
-                       options:(FWImageOptions)options
+                       options:(FWWebImageOptions)options
                    placeholder:(nullable void (^)(void))placeholder
                     completion:(nullable void (^)(UIImage * _Nullable image, BOOL isCache, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;

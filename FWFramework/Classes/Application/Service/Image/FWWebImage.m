@@ -362,7 +362,7 @@
 }
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
-                                                 options:(FWImageOptions)options
+                                                 options:(FWWebImageOptions)options
                                                  success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
                                                  failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
@@ -371,7 +371,7 @@
 
 - (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
                                            withReceiptID:(nonnull NSUUID *)receiptID
-                                                 options:(FWImageOptions)options
+                                                 options:(FWWebImageOptions)options
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
@@ -403,7 +403,7 @@
             case NSURLRequestUseProtocolCachePolicy:
             case NSURLRequestReturnCacheDataElseLoad:
             case NSURLRequestReturnCacheDataDontLoad: {
-                if (!(options & FWImageOptionRefreshCached)) {
+                if (!(options & FWWebImageOptionRefreshCached)) {
                     UIImage *cachedImage = [self.imageCache imageforRequest:request withAdditionalIdentifier:nil];
                     if (cachedImage != nil) {
                         if (success) {
@@ -676,7 +676,7 @@
 
 - (void)downloadImageForObject:(id)object
                       imageURL:(id)url
-                       options:(FWImageOptions)options
+                       options:(FWWebImageOptions)options
                    placeholder:(void (^)(void))placeholder
                     completion:(void (^)(UIImage * _Nullable, BOOL, NSError * _Nullable))completion
                       progress:(void (^)(double))progress
@@ -703,7 +703,7 @@
     }
 
     UIImage *cachedImage = nil;
-    if (!(options & FWImageOptionRefreshCached)) {
+    if (!(options & FWWebImageOptionRefreshCached)) {
         id<FWImageRequestCache> imageCache = self.imageCache;
         cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
     }
@@ -792,9 +792,9 @@
     return [UIImageView class];
 }
 
-- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
+- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale];
+    return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale options:options];
 }
 
 - (NSURL *)fwImageURL:(UIImageView *)imageView
@@ -805,7 +805,7 @@
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
-            options:(FWImageOptions)options
+            options:(FWWebImageOptions)options
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
@@ -816,7 +816,7 @@
     [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options placeholder:^{
         imageView.image = placeholder;
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
-        BOOL autoSetImage = image && (!(options & FWImageOptionAvoidSetImage) || !completion);
+        BOOL autoSetImage = image && (!(options & FWWebImageOptionAvoidSetImage) || !completion);
         if (autoSetImage && FWImagePluginImpl.sharedInstance.fadeAnimated && !isCache) {
             NSString *originalOperationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
             [UIView transitionWithView:imageView duration:0 options:0 animations:^{
@@ -846,7 +846,7 @@
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
-              options:(FWImageOptions)options
+              options:(FWWebImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {

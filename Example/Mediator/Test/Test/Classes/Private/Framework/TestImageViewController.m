@@ -83,6 +83,8 @@
     FWImagePluginImpl.sharedInstance.fadeAnimated = YES;
     
     [self.tableData setArray:@[
+        @"test.svg",
+        @"test2.svg",
         @"progressive.jpg",
         @"animation.png",
         @"test.gif",
@@ -110,6 +112,8 @@
         @"https://s2.ax1x.com/2019/11/01/KHYIgJ.gif",
         @"https://raw.githubusercontent.com/icons8/flat-color-icons/master/pdf/stack_of_photos.pdf",
         @"https://nr-platform.s3.amazonaws.com/uploads/platform/published_extension/branding_icon/275/AmazonS3.png",
+        @"https://upload.wikimedia.org/wikipedia/commons/1/14/Mahuri.svg",
+        @"https://simpleicons.org/icons/github.svg",
         @"http://via.placeholder.com/200x200.jpg",
     ]];
     [self.tableView reloadData];
@@ -133,7 +137,7 @@
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (!fileName.fwIsFormatUrl) {
-        UIImage *image = [UIImage fwImageWithFile:fileName bundle:TestBundle.bundle];
+        UIImage *image = [UIImage fwImageWithFile:fileName bundle:TestBundle.bundle options:@{SDImageCoderDecodeThumbnailPixelSize: [NSValue valueWithCGSize:CGSizeMake(100, 100)]}];
         [cell.systemView fwSetImageWithURL:nil placeholderImage:image];
         [cell.animatedView fwSetImageWithURL:nil placeholderImage:image];
     } else {
