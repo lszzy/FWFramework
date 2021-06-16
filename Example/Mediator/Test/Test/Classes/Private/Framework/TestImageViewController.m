@@ -137,7 +137,7 @@
     NSString *fileName = [self.tableData objectAtIndex:indexPath.row];
     cell.nameLabel.text = [fileName lastPathComponent];
     if (!fileName.fwIsFormatUrl) {
-        UIImage *image = [UIImage fwImageWithFile:fileName bundle:TestBundle.bundle];
+        UIImage *image = [UIImage fwImageWithFile:fileName bundle:TestBundle.bundle options:@{SDImageCoderDecodeThumbnailPixelSize: [NSValue valueWithCGSize:CGSizeMake(100, 100)]}];
         [cell.systemView fwSetImageWithURL:nil placeholderImage:image];
         [cell.animatedView fwSetImageWithURL:nil placeholderImage:image];
     } else {

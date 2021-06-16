@@ -19,14 +19,17 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 /// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
 
+/// 本地图片解码选项，默认兼容SDWebImage
+typedef NSString * FWImageCoderOptions NS_TYPED_ENUM;
+
 /// 网络图片加载选项，默认兼容SDWebImage
-typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
+typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
     /// 空选项，默认值
-    FWImageOptionNone = 0,
+    FWWebImageOptionNone = 0,
     /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
-    FWImageOptionRefreshCached = 1 << 3,
+    FWWebImageOptionRefreshCached = 1 << 3,
     /// 禁止调用imageView.setImage:显示图片
-    FWImageOptionAvoidSetImage = 1 << 10,
+    FWWebImageOptionAvoidSetImage = 1 << 10,
 };
 
 /*!
@@ -46,11 +49,17 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 从图片文件从指定bundle加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
 + (nullable UIImage *)fwImageWithFile:(NSString *)path bundle:(nullable NSBundle *)bundle;
 
+/// 从图片文件从指定bundle加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图。支持设置图片解码选项
++ (nullable UIImage *)fwImageWithFile:(NSString *)path bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
+
 /// 从图片数据解码创建UIImage，scale为1，支持动图
 + (nullable UIImage *)fwImageWithData:(nullable NSData *)data;
 
 /// 从图片数据解码创建UIImage，指定scale，支持动图
 + (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
+
+/// 从图片数据解码创建UIImage，指定scale，支持动图。支持设置图片解码选项
++ (nullable UIImage *)fwImageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
 
 /// 下载网络图片并返回下载凭据
 + (nullable id)fwDownloadImage:(nullable id)url
@@ -59,7 +68,7 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 
 /// 下载网络图片并返回下载凭据，指定option
 + (nullable id)fwDownloadImage:(nullable id)url
-                       options:(FWImageOptions)options
+                       options:(FWWebImageOptions)options
                     completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
@@ -126,7 +135,7 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
 - (void)fwSetImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage
-                  options:(FWImageOptions)options
+                  options:(FWWebImageOptions)options
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                  progress:(nullable void (^)(double progress))progress;
 
@@ -149,7 +158,7 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
-            options:(FWImageOptions)options
+            options:(FWWebImageOptions)options
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
 
@@ -158,7 +167,7 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)fwDownloadImage:(nullable NSURL *)imageURL
-                       options:(FWImageOptions)options
+                       options:(FWWebImageOptions)options
                     completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
@@ -169,7 +178,7 @@ typedef NS_OPTIONS(NSUInteger, FWImageOptions) {
 - (Class)fwImageViewAnimatedClass;
 
 /// image本地解码插件方法，默认使用系统方法
-- (nullable UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale;
+- (nullable UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
 
 @end
 
