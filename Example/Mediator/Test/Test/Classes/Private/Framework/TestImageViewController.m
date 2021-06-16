@@ -83,6 +83,8 @@
     FWImagePluginImpl.sharedInstance.fadeAnimated = YES;
     
     [self.tableData setArray:@[
+        @"test.svg",
+        @"test2.svg",
         @"progressive.jpg",
         @"animation.png",
         @"test.gif",
