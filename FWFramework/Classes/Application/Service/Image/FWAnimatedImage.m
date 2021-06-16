@@ -373,7 +373,7 @@ static SEL FWImageWithCGSVGDocumentSEL = NULL;
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
+- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
     if (!data) return nil;
     
