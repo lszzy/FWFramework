@@ -239,6 +239,7 @@ FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJ
  - `image/heic`
  - `image/heif`
  - `image/webp`
+ - `image/svg+xml`
  */
 @interface FWImageResponseSerializer : FWHTTPResponseSerializer
 
