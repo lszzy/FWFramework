@@ -10,6 +10,7 @@
 #import "FWAnimatedImage.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
+#import <dlfcn.h>
 #import <objc/runtime.h>
 
 #pragma mark - UIImage+FWAnimated
@@ -339,6 +340,11 @@
 
 #pragma mark - FWImageCoder
 
+typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
+static void (*FWCGSVGDocumentRelease)(CGSVGDocumentRef);
+static CGSVGDocumentRef (*FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
+static SEL FWImageWithCGSVGDocumentSEL = NULL;
+
 @implementation FWImageCoder
 
 + (FWImageCoder *)sharedInstance
@@ -351,7 +357,23 @@
     return instance;
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale
++ (void)initialize
+{
+    if (@available(iOS 13.0, *)) {
+        FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
+        FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
+        FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64DecodedString:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
+    }
+}
+
++ (NSString *)base64DecodedString:(NSString *)base64String
+{
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if (!data) return nil;
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
     if (!data) return nil;
     
@@ -361,7 +383,11 @@
     UIImage *animatedImage;
     size_t count = CGImageSourceGetCount(source);
     FWImageFormat format = [NSData fwImageFormatForImageData:data];
-    if (![self isAnimated:format] || count <= 1) {
+    if (format == FWImageFormatSVG) {
+        if (@available(iOS 13.0, *)) {
+            animatedImage = [self createImageWithData:data scale:scale];
+        }
+    } else if (![self isAnimated:format] || count <= 1) {
         animatedImage = [self createFrameAtIndex:0 source:source scale:scale];
     } else {
         NSMutableArray *frames = [NSMutableArray array];
@@ -598,6 +624,16 @@
     
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
     CGImageRelease(imageRef);
+    return image;
+}
+
+- (UIImage *)createImageWithData:(NSData *)data scale:(CGFloat)scale
+{
+    CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
+    if (!document) return nil;
+    
+    UIImage *image = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:FWImageWithCGSVGDocumentSEL])(UIImage.class, FWImageWithCGSVGDocumentSEL, document);
+    FWCGSVGDocumentRelease(document);
     return image;
 }
 

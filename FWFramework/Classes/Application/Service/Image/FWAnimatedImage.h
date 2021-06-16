@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWImage.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,7 @@ static const FWImageFormat FWImageFormatWebP      = 4; //iOS14+
 static const FWImageFormat FWImageFormatHEIC      = 5; //iOS13+
 static const FWImageFormat FWImageFormatHEIF      = 6; //iOS13+
 static const FWImageFormat FWImageFormatPDF       = 7;
-static const FWImageFormat FWImageFormatSVG       = 8;
+static const FWImageFormat FWImageFormatSVG       = 8; //iOS13+
 
 /*!
  @brief UIImage+FWAnimated
@@ -107,7 +108,7 @@ static const FWImageFormat FWImageFormatSVG       = 8;
 @property (nonatomic, assign) BOOL heicsEnabled;
 
 /// 解析图片数据到Image，可指定scale
-- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data scale:(CGFloat)scale;
+- (nullable UIImage *)decodedImageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
 
 @end
 

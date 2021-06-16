@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// reloadRows禁用动画
 - (void)fwReloadRowsWithoutAnimation:(NSArray<NSIndexPath *> *)indexPaths;
 
+/// 刷新高度等，不触发reload方式
+- (void)fwPerformUpdates:(void (NS_NOESCAPE ^ _Nullable)(void))updates;
+
 @end
 
 @interface UITableViewCell (FWFramework)

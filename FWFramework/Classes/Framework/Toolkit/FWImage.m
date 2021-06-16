@@ -40,6 +40,11 @@ UIImage * FWImageFile(NSString *path) {
 
 + (UIImage *)fwImageWithFile:(NSString *)path bundle:(NSBundle *)bundle
 {
+    return [self fwImageWithFile:path bundle:bundle options:nil];
+}
+
++ (UIImage *)fwImageWithFile:(NSString *)path bundle:(NSBundle *)bundle options:(NSDictionary<FWImageCoderOptions,id> *)options
+{
     if (path.length < 1) return nil;
     
     NSString *imageFile = path;
@@ -52,7 +57,7 @@ UIImage * FWImageFile(NSString *path) {
         return [UIImage imageNamed:path inBundle:bundle compatibleWithTraitCollection:nil];
     }
     
-    return [self fwImageWithData:data scale:[UIScreen mainScreen].scale];
+    return [self fwImageWithData:data scale:[UIScreen mainScreen].scale options:options];
 }
 
 + (UIImage *)fwImageWithData:(NSData *)data
@@ -62,11 +67,16 @@ UIImage * FWImageFile(NSString *path) {
 
 + (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale
 {
+    return [self fwImageWithData:data scale:scale options:nil];
+}
+
++ (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
+{
     if (!data) return nil;
     
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
-    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:)]) {
-        return [imagePlugin fwImageDecode:data scale:scale];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:options:)]) {
+        return [imagePlugin fwImageDecode:data scale:scale options:options];
     }
     
     return [UIImage imageWithData:data scale:scale];
@@ -80,7 +90,7 @@ UIImage * FWImageFile(NSString *path) {
 }
 
 + (id)fwDownloadImage:(id)url
-              options:(FWImageOptions)options
+              options:(FWWebImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
@@ -279,7 +289,7 @@ UIImage * FWImageFile(NSString *path) {
 
 - (void)fwSetImageWithURL:(id)url
          placeholderImage:(UIImage *)placeholderImage
-                  options:(FWImageOptions)options
+                  options:(FWWebImageOptions)options
                completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
                  progress:(void (^)(double))progress
 {
@@ -344,9 +354,13 @@ UIImage * FWImageFile(NSString *path) {
     return [SDAnimatedImageView class];
 }
 
-- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale
+- (UIImage *)fwImageDecode:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    return [UIImage sd_imageWithData:data scale:scale];
+    SDImageCoderMutableOptions *coderOptions = [[NSMutableDictionary alloc] init];
+    coderOptions[SDImageCoderDecodeScaleFactor] = @(MAX(scale, 1));
+    coderOptions[SDImageCoderDecodeFirstFrameOnly] = @(NO);
+    if (options) [coderOptions addEntriesFromDictionary:options];
+    return [[SDImageCodersManager sharedManager] decodedImageWithData:data options:[coderOptions copy]];
 }
 
 - (NSURL *)fwImageURL:(UIImageView *)imageView
@@ -357,7 +371,7 @@ UIImage * FWImageFile(NSString *path) {
 - (void)fwImageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
-            options:(FWImageOptions)options
+            options:(FWWebImageOptions)options
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
@@ -394,7 +408,7 @@ UIImage * FWImageFile(NSString *path) {
 }
 
 - (id)fwDownloadImage:(NSURL *)imageURL
-              options:(FWImageOptions)options
+              options:(FWWebImageOptions)options
            completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
