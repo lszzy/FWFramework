@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIImage+FWImage
 
-/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
+/// 使用文件名方式加载UIImage，不支持动图，系统方式。会被系统缓存，适用于大量复用的小资源图
 FOUNDATION_EXPORT UIImage * _Nullable FWImageName(NSString *name);
 
-/// 从图片文件或应用资源路径加载UIImage，支持动图，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
-FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *path);
+/// 从应用资源路径加载UIImage，支持动图，失败时会尝试name方式，自定义方式。不会被系统缓存，适用于不被复用的图片，特别是大图
+FOUNDATION_EXPORT UIImage * _Nullable FWImageFile(NSString *name);
 
 /// 本地图片解码选项，默认兼容SDWebImage
 typedef NSString * FWImageCoderOptions NS_TYPED_ENUM;
@@ -37,20 +37,20 @@ typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
  */
 @interface UIImage (FWImage)
 
-/// 使用文件名方式加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
+/// 使用文件名方式加载UIImage，不支持动图，系统方式。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name;
 
-/// 使用文件名方式从指定bundle加载UIImage，不支持动图。会被系统缓存，适用于大量复用的小资源图
+/// 使用文件名方式从指定bundle加载UIImage，不支持动图，系统方式。会被系统缓存，适用于大量复用的小资源图
 + (nullable UIImage *)fwImageWithName:(NSString *)name bundle:(nullable NSBundle *)bundle;
 
-/// 从图片文件加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithFile:(NSString *)path;
+/// 从资源路径加载UIImage，支持动图，失败时会尝试name方式，自定义方式。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (nullable UIImage *)fwImageWithFile:(NSString *)name;
 
-/// 从图片文件从指定bundle加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图
-+ (nullable UIImage *)fwImageWithFile:(NSString *)path bundle:(nullable NSBundle *)bundle;
+/// 从bundle资源路径加载UIImage，支持动图，失败时会尝试name方式，自定义方式。不会被系统缓存，适用于不被复用的图片，特别是大图
++ (nullable UIImage *)fwImageWithFile:(NSString *)name bundle:(nullable NSBundle *)bundle;
 
-/// 从图片文件从指定bundle加载UIImage，支持动图，支持绝对路径和bundle路径，文件不存在时会尝试name方式。不会被系统缓存，适用于不被复用的图片，特别是大图。支持设置图片解码选项
-+ (nullable UIImage *)fwImageWithFile:(NSString *)path bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
+/// 从bundle资源路径加载UIImage，支持动图，失败时会尝试name方式，自定义方式。不会被系统缓存，适用于不被复用的图片，特别是大图。支持设置图片解码选项
++ (nullable UIImage *)fwImageWithFile:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
 
 /// 从图片数据解码创建UIImage，scale为1，支持动图
 + (nullable UIImage *)fwImageWithData:(nullable NSData *)data;

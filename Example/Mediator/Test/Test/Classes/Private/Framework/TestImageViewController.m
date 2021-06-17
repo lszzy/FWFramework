@@ -84,7 +84,7 @@
     
     [self.tableData setArray:@[
         @"test.svg",
-        @"test2.svg",
+        @"close.svg",
         @"progressive.jpg",
         @"animation.png",
         @"test.gif",
