@@ -822,7 +822,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         if ([imagePath.lowercaseString hasPrefix:@"http"]) {
             [cell.imageView fwSetImageWithURL:imagePath placeholderImage:self.placeholderImage];
         } else {
-            UIImage *image = [UIImage imageNamed:imagePath];
+            UIImage *image = [UIImage fwImageNamed:imagePath];
             cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {

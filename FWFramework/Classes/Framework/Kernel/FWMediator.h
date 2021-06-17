@@ -88,11 +88,8 @@ static const NSUInteger FWModulePriorityDefault = 100;
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
 
-/// 获取当前模块图片，指定名称，系统方式，不支持动图，支持主题
+/// 获取当前模块图片
 + (nullable UIImage *)imageNamed:(NSString *)name;
-
-/// 获取当前模块图片，指定文件名，自定义方式，支持动图，不支持主题
-+ (nullable UIImage *)imageFiled:(NSString *)file;
 
 /// 获取当前模块多语言
 + (NSString *)localizedString:(NSString *)key;
