@@ -14,11 +14,7 @@
 #pragma mark - UIImage+FWImage
 
 UIImage * FWImageNamed(NSString *name) {
-    return [UIImage fwImageWithName:name];
-}
-
-UIImage * FWImageFiled(NSString *file) {
-    return [UIImage fwImageWithFile:file];
+    return [UIImage fwImageNamed:name];
 }
 
 static NSArray *FWInnerBundlePreferredScales() {
@@ -59,42 +55,32 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 
 @implementation UIImage (FWImage)
 
-+ (UIImage *)fwImageWithName:(NSString *)name
++ (UIImage *)fwImageNamed:(NSString *)name
 {
-    return [UIImage imageNamed:name];
+    return [self fwImageNamed:name bundle:nil];
 }
 
-+ (UIImage *)fwImageWithName:(NSString *)name bundle:(NSBundle *)bundle
++ (UIImage *)fwImageNamed:(NSString *)name bundle:(NSBundle *)bundle
 {
-    return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+    return [self fwImageNamed:name bundle:bundle options:nil];
 }
 
-+ (UIImage *)fwImageWithFile:(NSString *)file
++ (UIImage *)fwImageNamed:(NSString *)name bundle:(NSBundle *)aBundle options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    return [self fwImageWithFile:file bundle:nil];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)file bundle:(NSBundle *)bundle
-{
-    return [self fwImageWithFile:file bundle:bundle options:nil];
-}
-
-+ (UIImage *)fwImageWithFile:(NSString *)file bundle:(NSBundle *)aBundle options:(NSDictionary<FWImageCoderOptions,id> *)options
-{
-    if (file.length < 1) return nil;
-    if ([file hasSuffix:@"/"]) return nil;
+    if (name.length < 1) return nil;
+    if ([name hasSuffix:@"/"]) return nil;
     
-    if ([file isAbsolutePath]) {
-        NSData *data = [NSData dataWithContentsOfFile:file];
-        CGFloat scale = FWInnerStringPathScale(file);
+    if ([name isAbsolutePath]) {
+        NSData *data = [NSData dataWithContentsOfFile:name];
+        CGFloat scale = FWInnerStringPathScale(name);
         return [self fwImageWithData:data scale:scale options:options];
     }
     
     NSString *path = nil;
     CGFloat scale = 1;
     NSBundle *bundle = aBundle ?: [NSBundle mainBundle];
-    NSString *res = file.stringByDeletingPathExtension;
-    NSString *ext = file.pathExtension;
+    NSString *res = name.stringByDeletingPathExtension;
+    NSString *ext = name.pathExtension;
     NSArray *exts = ext.length > 0 ? @[ext] : @[@"", @"png", @"jpeg", @"jpg", @"gif", @"webp", @"apng", @"svg"];
     NSArray *scales = FWInnerBundlePreferredScales();
     for (int s = 0; s < scales.count; s++) {
@@ -109,9 +95,16 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     
     NSData *data = path.length > 0 ? [NSData dataWithContentsOfFile:path] : nil;
     if (data.length < 1) {
-        return [UIImage imageNamed:file inBundle:bundle compatibleWithTraitCollection:nil];
+        return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
     }
     return [self fwImageWithData:data scale:scale options:options];
+}
+
++ (UIImage *)fwImageWithContentsOfFile:(NSString *)path
+{
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    CGFloat scale = FWInnerStringPathScale(path);
+    return [self fwImageWithData:data scale:scale];
 }
 
 + (UIImage *)fwImageWithData:(NSData *)data

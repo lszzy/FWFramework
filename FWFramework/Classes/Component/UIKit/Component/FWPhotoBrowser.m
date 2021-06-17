@@ -534,7 +534,7 @@
     } else {
         UIImage *image = nil;
         if ([urlString isKindOfClass:[NSString class]]) {
-            image = [UIImage imageNamed:urlString];
+            image = [UIImage fwImageNamed:urlString];
         } else if ([urlString isKindOfClass:[UIImage class]]) {
             image = (UIImage *)urlString;
         }
