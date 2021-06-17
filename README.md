@@ -44,8 +44,7 @@ As this framework is constantly upgrading, optimizing and expanding new function
 Version 1.6.3:
 
 	* Rename the FWImageName method to FWImageNamed
-	* Added FWImageFiled method to load image files
-	* FWModuleBundle adds imageFiled method to load image files
+	* FWModuleBundle uses the fwImageNamed image loading method
 
 Version 1.6.2:
 
