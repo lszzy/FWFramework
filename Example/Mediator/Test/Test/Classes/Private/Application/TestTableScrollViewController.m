@@ -116,11 +116,11 @@
     [self.tableView fwSetLoadingTarget:self action:@selector(onLoading)];
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    pullView.image = [UIImage fwImageWithFile:@"test.gif" bundle:TestBundle.bundle];
+    pullView.image = [TestBundle imageFiled:@"test.gif"];
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    infiniteView.image = [UIImage fwImageWithFile:@"LoadingPlaceholder.gif" bundle:TestBundle.bundle];
+    infiniteView.image = [TestBundle imageFiled:@"LoadingPlaceholder.gif"];
     [self.tableView.fwInfiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
 }
 
