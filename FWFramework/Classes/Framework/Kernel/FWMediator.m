@@ -269,6 +269,12 @@
 
 @end
 
+@interface UIImage ()
+
++ (UIImage *)fwImageWithFile:(NSString *)file bundle:(NSBundle *)bundle;
+
+@end
+
 @implementation FWModuleBundle
 
 + (NSBundle *)bundle
@@ -276,9 +282,24 @@
     return [NSBundle mainBundle];
 }
 
-+ (UIImage *)imageNamed:(NSString *)imageName
++ (UIImage *)imageNamed:(NSString *)name
 {
-    return [UIImage imageNamed:imageName inBundle:[self bundle] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+}
+
++ (UIImage *)imageFiled:(NSString *)file
+{
+    static BOOL imageHook = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        imageHook = [UIImage respondsToSelector:@selector(fwImageWithFile:bundle:)];
+    });
+    
+    if (imageHook) {
+        return [UIImage fwImageWithFile:file bundle:[self bundle]];
+    } else {
+        return [UIImage imageNamed:file inBundle:[self bundle] compatibleWithTraitCollection:nil];
+    }
 }
 
 + (NSString *)localizedString:(NSString *)key
