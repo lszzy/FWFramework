@@ -44,8 +44,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 1.6.3版本：
 
 	* 重命名FWImageName方法为FWImageNamed
-	* 新增FWImageFiled方法加载图片文件
-	* FWModuleBundle新增imageFiled方法加载图片文件
+	* FWModuleBundle使用fwImageNamed图片加载方法
 
 1.6.2版本：
 

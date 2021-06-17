@@ -271,7 +271,7 @@
 
 @interface UIImage ()
 
-+ (UIImage *)fwImageWithFile:(NSString *)file bundle:(NSBundle *)bundle;
++ (UIImage *)fwImageNamed:(NSString *)name bundle:(NSBundle *)bundle;
 
 @end
 
@@ -284,21 +284,16 @@
 
 + (UIImage *)imageNamed:(NSString *)name
 {
-    return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
-}
-
-+ (UIImage *)imageFiled:(NSString *)file
-{
     static BOOL imageHook = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        imageHook = [UIImage respondsToSelector:@selector(fwImageWithFile:bundle:)];
+        imageHook = [UIImage respondsToSelector:@selector(fwImageNamed:bundle:)];
     });
     
     if (imageHook) {
-        return [UIImage fwImageWithFile:file bundle:[self bundle]];
+        return [UIImage fwImageNamed:name bundle:[self bundle]];
     } else {
-        return [UIImage imageNamed:file inBundle:[self bundle] compatibleWithTraitCollection:nil];
+        return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }
 }
 
