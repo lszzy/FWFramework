@@ -87,7 +87,7 @@
 
 + (FWImageFormat)fwImageFormatForImageData:(NSData *)data
 {
-    if (!data) {
+    if (data.length < 1) {
         return FWImageFormatUndefined;
     }
     
@@ -375,7 +375,7 @@ static SEL FWImageWithCGSVGDocumentSEL = NULL;
 
 - (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    if (!data) return nil;
+    if (data.length < 1) return nil;
     
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     if (!source) return nil;

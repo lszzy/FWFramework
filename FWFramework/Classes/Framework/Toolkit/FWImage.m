@@ -17,8 +17,44 @@ UIImage * FWImageName(NSString *name) {
     return [UIImage fwImageWithName:name];
 }
 
-UIImage * FWImageFile(NSString *path) {
-    return [UIImage fwImageWithFile:path];
+UIImage * FWImageFile(NSString *name) {
+    return [UIImage fwImageWithFile:name];
+}
+
+static NSArray *FWInnerBundlePreferredScales() {
+    static NSArray *scales;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CGFloat screenScale = [UIScreen mainScreen].scale;
+        if (screenScale <= 1) {
+            scales = @[@1, @2, @3];
+        } else if (screenScale <= 2) {
+            scales = @[@2, @3, @1];
+        } else {
+            scales = @[@3, @2, @1];
+        }
+    });
+    return scales;
+}
+
+static NSString *FWInnerAppendingNameScale(NSString *string, CGFloat scale) {
+    if (!string) return nil;
+    if (fabs(scale - 1) <= __FLT_EPSILON__ || string.length == 0 || [string hasSuffix:@"/"]) return string.copy;
+    return [string stringByAppendingFormat:@"@%@x", @(scale)];
+}
+
+static CGFloat FWInnerStringPathScale(NSString *string) {
+    if (string.length == 0 || [string hasSuffix:@"/"]) return 1;
+    NSString *name = string.stringByDeletingPathExtension;
+    __block CGFloat scale = 1;
+    
+    NSRegularExpression *pattern = [NSRegularExpression regularExpressionWithPattern:@"@[0-9]+\\.?[0-9]*x$" options:NSRegularExpressionAnchorsMatchLines error:nil];
+    [pattern enumerateMatchesInString:name options:kNilOptions range:NSMakeRange(0, name.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        if (result.range.location >= 3) {
+            scale = [string substringWithRange:NSMakeRange(result.range.location + 1, result.range.length - 2)].doubleValue;
+        }
+    }];
+    return scale;
 }
 
 @implementation UIImage (FWImage)
@@ -33,31 +69,49 @@ UIImage * FWImageFile(NSString *path) {
     return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
 }
 
-+ (UIImage *)fwImageWithFile:(NSString *)path
++ (UIImage *)fwImageWithFile:(NSString *)name
 {
-    return [self fwImageWithFile:path bundle:nil];
+    return [self fwImageWithFile:name bundle:nil];
 }
 
-+ (UIImage *)fwImageWithFile:(NSString *)path bundle:(NSBundle *)bundle
++ (UIImage *)fwImageWithFile:(NSString *)name bundle:(NSBundle *)bundle
 {
-    return [self fwImageWithFile:path bundle:bundle options:nil];
+    return [self fwImageWithFile:name bundle:bundle options:nil];
 }
 
-+ (UIImage *)fwImageWithFile:(NSString *)path bundle:(NSBundle *)bundle options:(NSDictionary<FWImageCoderOptions,id> *)options
++ (UIImage *)fwImageWithFile:(NSString *)name bundle:(NSBundle *)aBundle options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    if (path.length < 1) return nil;
+    if (name.length < 1) return nil;
+    if ([name hasSuffix:@"/"]) return nil;
     
-    NSString *imageFile = path;
-    if (!path.isAbsolutePath) {
-        NSBundle *imageBundle = (bundle != nil) ? bundle : [NSBundle mainBundle];
-        imageFile = [imageBundle pathForResource:path ofType:nil];
-    }
-    NSData *data = [NSData dataWithContentsOfFile:imageFile];
-    if (!data) {
-        return [UIImage imageNamed:path inBundle:bundle compatibleWithTraitCollection:nil];
+    if ([name isAbsolutePath]) {
+        NSData *data = [NSData dataWithContentsOfFile:name];
+        CGFloat scale = FWInnerStringPathScale(name);
+        return [self fwImageWithData:data scale:scale options:options];
     }
     
-    return [self fwImageWithData:data scale:[UIScreen mainScreen].scale options:options];
+    NSString *path = nil;
+    CGFloat scale = 1;
+    NSBundle *bundle = aBundle ?: [NSBundle mainBundle];
+    NSString *res = name.stringByDeletingPathExtension;
+    NSString *ext = name.pathExtension;
+    NSArray *exts = ext.length > 0 ? @[ext] : @[@"", @"png", @"jpeg", @"jpg", @"gif", @"webp", @"apng", @"svg"];
+    NSArray *scales = FWInnerBundlePreferredScales();
+    for (int s = 0; s < scales.count; s++) {
+        scale = ((NSNumber *)scales[s]).floatValue;
+        NSString *scaledName = FWInnerAppendingNameScale(res, scale);
+        for (NSString *e in exts) {
+            path = [bundle pathForResource:scaledName ofType:e];
+            if (path) break;
+        }
+        if (path) break;
+    }
+    
+    NSData *data = path.length > 0 ? [NSData dataWithContentsOfFile:path] : nil;
+    if (data.length < 1) {
+        return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+    }
+    return [self fwImageWithData:data scale:scale options:options];
 }
 
 + (UIImage *)fwImageWithData:(NSData *)data
@@ -72,7 +126,7 @@ UIImage * FWImageFile(NSString *path) {
 
 + (UIImage *)fwImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
 {
-    if (!data) return nil;
+    if (data.length < 1) return nil;
     
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(fwImageDecode:scale:options:)]) {
