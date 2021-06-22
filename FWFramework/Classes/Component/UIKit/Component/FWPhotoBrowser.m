@@ -151,7 +151,7 @@
 - (void)dismiss {
     CGFloat x = [UIScreen mainScreen].bounds.size.width * 0.5;
     CGFloat y = [UIScreen mainScreen].bounds.size.height * 0.5;
-    CGRect rect = CGRectMake(x, y, 0, 0);
+    CGRect rect = CGRectMake(x - 0.5, y - 0.5, 1, 1);
     UIView *endView = _fromView;
     if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
         endView = [_delegate photoBrowser:self viewForIndex:_currentPage];
@@ -165,9 +165,9 @@
     // 取到当前显示的 photoView
     FWPhotoView *photoView = [[_photoViews filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"index == %d", _currentPage]] firstObject];
     // 取消所有的下载
-    for (FWPhotoView *photoView in _photoViews) {
-        [photoView.imageView fwCancelImageRequest];
-    }
+    [_photoViews enumerateObjectsUsingBlock:^(FWPhotoView *obj, NSUInteger idx, BOOL *stop) {
+        [obj.imageView fwCancelImageRequest];
+    }];
     
     // 显示状态栏
     if (self.statusBarHidden) {

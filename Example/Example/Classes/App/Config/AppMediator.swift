@@ -8,6 +8,7 @@
 
 import Foundation
 import SDWebImage
+import SDWebImageWebPCoder
 import SDWebImageSVGKitPlugin
 #if DEBUG
 import FWDebug
@@ -39,6 +40,7 @@ class AppModule: NSObject, AppService {
         }
         #endif
         
+        SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
         SDImageCodersManager.shared.addCoder(SDImageSVGKCoder.shared)
         
         DispatchQueue.main.async {

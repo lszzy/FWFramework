@@ -366,7 +366,8 @@
     NSInteger currentIndex = [self.photoBrowser.pictureUrls indexOfObject:fromImageUrl];
     self.photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
     [self photoBrowser:self.photoBrowser scrollToIndex:self.photoBrowser.currentIndex];
-    [self.photoBrowser showFromView:cell.myImageView];
+    // [self.photoBrowser showFromView:cell.myImageView];
+    [self.photoBrowser show];
 }
 
 #pragma mark - FWPhotoBrowserDelegate
