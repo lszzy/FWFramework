@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FWPhotoBrowser;
 @class FWPhotoView;
 
@@ -24,7 +26,7 @@
  
  @return 图片的 url 字符串或UIImage
  */
-- (id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
+- (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
 
 /**
  获取对应索引的视图
@@ -34,7 +36,7 @@
  
  @return 视图
  */
-- (UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index;
+- (nullable UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index;
 
 /**
  获取对应索引的图片大小
@@ -54,7 +56,7 @@
  
  @return 图片
  */
-- (UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser placeholderImageForIndex:(NSInteger)index;
+- (nullable UIImage *)photoBrowser:(FWPhotoBrowser *)photoBrowser placeholderImageForIndex:(NSInteger)index;
 
 /**
  滚动到指定页时会调用该方法
@@ -113,7 +115,7 @@
 /**
  必须参数，与picturesCount二选一，图片地址列表，自动设置图片张数
  */
-@property (nonatomic, copy) NSArray *pictureUrls;
+@property (nonatomic, copy, nullable) NSArray *pictureUrls;
 
 /**
  当前选中索引，默认0
@@ -123,7 +125,7 @@
 /**
  事件代理，可选
  */
-@property (nonatomic, weak) id<FWPhotoBrowserDelegate> delegate;
+@property (nonatomic, weak, nullable) id<FWPhotoBrowserDelegate> delegate;
 
 /**
  是否隐藏状态栏，默认YES
@@ -138,7 +140,7 @@
 /**
  页数文字标签，只读，方便外部布局
  */
-@property (nonatomic, weak, readonly) UILabel *pageTextLabel;
+@property (nonatomic, strong, readonly) UILabel *pageTextLabel;
 
 /**
  页数文字中心点，默认：居中，中心 y 距离底部 20+安全区域高度
@@ -158,14 +160,14 @@
 /**
  长按图片要执行的事件，将长按图片索引回调
  */
-@property (nonatomic, copy) void(^longPressBlock)(NSInteger index);
+@property (nonatomic, copy, nullable) void(^longPressBlock)(NSInteger index);
 
 /**
  显示图片浏览器
  
  @param fromView 用户点击的视图
  */
-- (void)showFromView:(UIView *)fromView;
+- (void)showFromView:(nullable UIView *)fromView;
 
 /**
  显示图片浏览器，居中显示
@@ -198,15 +200,15 @@
 // 图片的大小
 @property (nonatomic, assign) CGSize pictureSize;
 // 显示的默认图片
-@property (nonatomic, strong) UIImage *placeholderImage;
+@property (nonatomic, strong, nullable) UIImage *placeholderImage;
 // 图片的地址，支持NSString和UIImage
-@property (nonatomic, strong) id urlString;
+@property (nonatomic, strong, nullable) id urlString;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
 // 图片事件代理
-@property (nonatomic, weak) id<FWPhotoViewDelegate> pictureDelegate;
+@property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
 
 /**
  动画显示
@@ -215,7 +217,7 @@
  @param animationBlock  附带的动画信息
  @param completionBlock 结束的回调
  */
-- (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void(^)(void))animationBlock completionBlock:(void(^)(void))completionBlock;
+- (void)animationShowWithFromRect:(CGRect)rect animationBlock:(nullable void(^)(void))animationBlock completionBlock:(nullable void(^)(void))completionBlock;
 
 /**
  动画消失
@@ -224,6 +226,8 @@
  @param animationBlock  附带的动画信息
  @param completionBlock 结束的回调
  */
-- (void)animationDismissWithToRect:(CGRect)rect animationBlock:(void(^)(void))animationBlock completionBlock:(void(^)(void))completionBlock;
+- (void)animationDismissWithToRect:(CGRect)rect animationBlock:(nullable void(^)(void))animationBlock completionBlock:(nullable void(^)(void))completionBlock;
 
 @end
+
+NS_ASSUME_NONNULL_END

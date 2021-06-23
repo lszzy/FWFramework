@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @brief FWMarqueeLabel
  @discussion 简易的跑马灯 label 控件，在文字超过 label 可视区域时会自动开启跑马灯效果展示文字，文字滚动时是首尾连接的效果（参考播放音乐时系统锁屏界面顶部的音乐标题）。
@@ -61,3 +63,5 @@
 - (BOOL)requestToStopAnimation;
 
 @end
+
+NS_ASSUME_NONNULL_END

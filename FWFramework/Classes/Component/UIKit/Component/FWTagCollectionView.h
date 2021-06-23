@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FWTagCollectionView;
 
 /**
@@ -62,8 +64,8 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
  @see https://github.com/zekunyan/TTGTagCollectionView
  */
 @interface FWTagCollectionView : UIView
-@property (nonatomic, weak) id <FWTagCollectionViewDataSource> dataSource;
-@property (nonatomic, weak) id <FWTagCollectionViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id <FWTagCollectionViewDataSource> dataSource;
+@property (nonatomic, weak, nullable) id <FWTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
@@ -100,9 +102,9 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 @property (nonatomic, assign) BOOL showsVerticalScrollIndicator;
 
 // Tap blank area callback
-@property (nonatomic, copy) void (^onTapBlankArea)(CGPoint location);
+@property (nonatomic, copy, nullable) void (^onTapBlankArea)(CGPoint location);
 // Tap all area callback
-@property (nonatomic, copy) void (^onTapAllArea)(CGPoint location);
+@property (nonatomic, copy, nullable) void (^onTapAllArea)(CGPoint location);
 
 /**
  * Reload all tag cells
@@ -174,7 +176,7 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 @property (nonatomic, assign) CGFloat exactHeight;
 
 // Extra data. You can use this to bind any object you want to each tag.
-@property (nonatomic, strong) NSObject *extraData;
+@property (nonatomic, strong, nullable) NSObject *extraData;
 
 @end
 
@@ -203,7 +205,7 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 
 @interface FWTextTagCollectionView : UIView
 // Delegate
-@property (weak, nonatomic) id <FWTextTagCollectionViewDelegate> delegate;
+@property (weak, nonatomic, nullable) id <FWTextTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
@@ -249,9 +251,9 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 @property (nonatomic, assign) BOOL showsVerticalScrollIndicator;
 
 // Tap blank area callback
-@property (nonatomic, copy) void (^onTapBlankArea)(CGPoint location);
+@property (nonatomic, copy, nullable) void (^onTapBlankArea)(CGPoint location);
 // Tap all area callback
-@property (nonatomic, copy) void (^onTapAllArea)(CGPoint location);
+@property (nonatomic, copy, nullable) void (^onTapAllArea)(CGPoint location);
 
 // Reload
 - (void)reload;
@@ -292,12 +294,12 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 - (void)setTagsInRange:(NSRange)range withConfig:(FWTextTagConfig *)config;
 
 // Get tag
-- (NSString *)getTagAtIndex:(NSUInteger)index;
+- (nullable NSString *)getTagAtIndex:(NSUInteger)index;
 
 - (NSArray <NSString *> *)getTagsInRange:(NSRange)range;
 
 // Get tag config
-- (FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
+- (nullable FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
 
 - (NSArray <FWTextTagConfig *> *)getConfigsInRange:(NSRange)range;
 
@@ -315,3 +317,5 @@ typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
 - (NSInteger)indexOfTagAt:(CGPoint)point;
 
 @end
+
+NS_ASSUME_NONNULL_END
