@@ -252,7 +252,7 @@ static BOOL isExpanded = NO;
     cell.imageClicked = ^(TestTableDynamicLayoutObject *object) {
         FWStrongifySelf();
         FWStrongify(cell);
-        [self onPhotoBrowser:cell];
+        [self onPhotoBrowser:cell indexPath:indexPath];
     };
     cell.object = [self.tableData objectAtIndex:indexPath.row];
     return cell;
@@ -350,29 +350,26 @@ static BOOL isExpanded = NO;
                                  ]];
         
         [randomArray addObject:@[
-                                 @"",
                                  @"public_icon",
                                  @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
                                  @"http://littlesvr.ca/apng/images/SteamEngine.webp",
                                  @"public_picture",
-                                 @"http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-                                 @"http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
-                                 @"http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
+                                 @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
+                                 @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
+                                 @"test.gif",
+                                 @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
                                  @"https://pic3.zhimg.com/b471eb23a_im.jpg",
-                                 @"http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-                                 @"http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-                                 @"http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                 @"http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+                                 @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
+                                 @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
+                                 @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
+                                 @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
                                  ]];
     });
     
     TestTableDynamicLayoutObject *object = [TestTableDynamicLayoutObject new];
     object.title = [[randomArray objectAtIndex:0] fwRandomObject];
     object.text = [[randomArray objectAtIndex:1] fwRandomObject];
-    NSString *imageName =[[randomArray objectAtIndex:2] fwRandomObject];
-    if (imageName.length > 0) {
-        object.imageUrl = imageName;
-    }
+    object.imageUrl =[[randomArray objectAtIndex:2] fwRandomObject];
     return object;
 }
 
@@ -414,7 +411,7 @@ static BOOL isExpanded = NO;
 
 #pragma mark - FWPhotoBrowserDelegate
 
-- (void)onPhotoBrowser:(TestTableDynamicLayoutCell *)cell
+- (void)onPhotoBrowser:(TestTableDynamicLayoutCell *)cell indexPath:(NSIndexPath *)indexPath
 {
     // 移除所有缓存
     [[FWImageDownloader defaultInstance].imageCache removeAllImages];
@@ -425,39 +422,29 @@ static BOOL isExpanded = NO;
         FWPhotoBrowser *photoBrowser = [FWPhotoBrowser new];
         self.photoBrowser = photoBrowser;
         photoBrowser.delegate = self;
-        photoBrowser.pictureUrls = @[
-                                     @"http://ww2.sinaimg.cn/bmiddle/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-                                     @"http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif",
-                                     @"http://ww4.sinaimg.cn/bmiddle/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-                                     [TestBundle imageNamed:@"public_picture"],
-                                     @"http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
-                                     @"http://littlesvr.ca/apng/images/SteamEngine.webp",
-                                     @"https://pic3.zhimg.com/b471eb23a_im.jpg",
-                                     @"http://ww4.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-                                     [TestBundle imageNamed:@"public_icon"],
-                                     @"http://ww3.sinaimg.cn/bmiddle/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-                                     @"http://ww2.sinaimg.cn/bmiddle/677febf5gw1erma104rhyj20k03dz16y.jpg",
-                                     [TestBundle imageNamed:@"test.gif"],
-                                     @"http://ww4.sinaimg.cn/bmiddle/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
-                                     ];
         photoBrowser.longPressBlock = ^(NSInteger index) {
             NSLog(@"%zd", index);
         };
     }
     
-    // 设置打开Index
-    NSString *fromImageUrl = [cell.object.imageUrl stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
-    NSInteger currentIndex = [self.photoBrowser.pictureUrls indexOfObject:fromImageUrl];
-    self.photoBrowser.currentIndex = currentIndex != NSNotFound ? currentIndex : 0;
+    NSMutableArray *pictureUrls = [NSMutableArray array];
+    NSInteger count = 0;
+    for (TestTableDynamicLayoutObject *object in self.tableData) {
+        NSString *imageUrl = object.imageUrl;
+        imageUrl.fwTempObject = @(count++);
+        [pictureUrls addObject:imageUrl];
+    }
+    self.photoBrowser.pictureUrls = pictureUrls;
+    self.photoBrowser.currentIndex = indexPath.row;
     [self.photoBrowser showFromView:cell.myImageView];
 }
 
 #pragma mark - FWPhotoBrowserDelegate
 
-/*
 - (UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index {
-    return self.fromView;
-}*/
+    TestTableDynamicLayoutCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+    return cell.myImageView;
+}
 
 /*
  - (CGSize)photoBrowser:(FWPhotoBrowser *)photoBrowser imageSizeForIndex:(NSInteger)index {

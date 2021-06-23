@@ -22,7 +22,7 @@
 /// 界面子控件
 @property (nonatomic, weak) UIScrollView *scrollView;
 /// 页码文字控件
-@property (nonatomic, weak) UILabel *pageTextLabel;
+@property (nonatomic, strong) UILabel *pageTextLabel;
 /// 消失的 tap 手势
 @property (nonatomic, weak) UITapGestureRecognizer *dismissTapGes;
 /// 来源视图，默认dismiss位置，delegate可覆盖
@@ -278,7 +278,7 @@
         view.pictureSize = image != nil ? image.size : defaultSize;
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
         UIView *v = [_delegate photoBrowser:self viewForIndex:index];
-        if ([v isKindOfClass:[UIImageView class]]) {
+        if (v && [v isKindOfClass:[UIImageView class]]) {
             UIImage *image = ((UIImageView *)v).image;
             view.pictureSize = image != nil ? image.size : defaultSize;
             // 并且设置占位图片

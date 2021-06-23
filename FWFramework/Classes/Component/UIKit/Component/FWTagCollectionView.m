@@ -1033,15 +1033,13 @@
 }
 
 - (NSArray<NSString *> *)getTagsInRange:(NSRange)range {
+    NSMutableArray *tags = [NSMutableArray new];
     if (NSMaxRange(range) <= _tagLabels.count) {
-        NSMutableArray *tags = [NSMutableArray new];
         for (FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
             [tags addObject:[label.label.text copy]];
         }
-        return [tags copy];
-    } else {
-        return nil;
     }
+    return [tags copy];
 }
 
 - (FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index {
@@ -1053,15 +1051,13 @@
 }
 
 - (NSArray<FWTextTagConfig *> *)getConfigsInRange:(NSRange)range {
+    NSMutableArray *configs = [NSMutableArray new];
     if (NSMaxRange(range) <= _tagLabels.count) {
-        NSMutableArray *configs = [NSMutableArray new];
         for (FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
             [configs addObject:[label.config copy]];
         }
-        return [configs copy];
-    } else {
-        return nil;
     }
+    return [configs copy];
 }
 
 - (NSArray <NSString *> *)allTags {
@@ -1122,7 +1118,7 @@
         FWTextTagLabel *label = _tagLabels[index];
         
         if ([self.delegate respondsToSelector:@selector(textTagCollectionView:canTapTag:atIndex:currentSelected:tagConfig:)]) {
-            return [self.delegate textTagCollectionView:self canTapTag:label.label.text atIndex:index currentSelected:label.selected tagConfig:label.config];
+            return [self.delegate textTagCollectionView:self canTapTag:(label.label.text ?: @"") atIndex:index currentSelected:label.selected tagConfig:label.config];
         } else {
             return YES;
         }
@@ -1149,7 +1145,7 @@
         }
         
         if ([_delegate respondsToSelector:@selector(textTagCollectionView:didTapTag:atIndex:selected:tagConfig:)]) {
-            [_delegate textTagCollectionView:self didTapTag:label.label.text atIndex:index selected:label.selected tagConfig:label.config];
+            [_delegate textTagCollectionView:self didTapTag:(label.label.text ?: @"") atIndex:index selected:label.selected tagConfig:label.config];
         }
     }
 }

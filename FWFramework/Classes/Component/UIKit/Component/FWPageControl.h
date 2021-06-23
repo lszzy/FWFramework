@@ -9,6 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark - FWPageControl
 
 @class FWPageControl;
@@ -31,17 +33,17 @@
 /**
  *  The Class of your custom UIView, make sure to implement FWDotViewProtocol, default FWDotView.
  */
-@property (nonatomic) Class dotViewClass;
+@property (nonatomic, nullable) Class dotViewClass;
 
 /**
  *  UIImage to represent a dot.
  */
-@property (nonatomic) UIImage *dotImage;
+@property (nonatomic, nullable) UIImage *dotImage;
 
 /**
  *  UIImage to represent current page dot.
  */
-@property (nonatomic) UIImage *currentDotImage;
+@property (nonatomic, nullable) UIImage *currentDotImage;
 
 /**
  *  Dot size for dot views. Default is 8 by 8.
@@ -51,12 +53,12 @@
 /**
  *  UIColor to represent a dot.
  */
-@property (nonatomic, strong) UIColor *dotColor;
+@property (nonatomic, strong, nullable) UIColor *dotColor;
 
 /**
  *  UIColor to represent current page dot.
  */
-@property (nonatomic, strong) UIColor *currentDotColor;
+@property (nonatomic, strong, nullable) UIColor *currentDotColor;
 
 /**
  *  Spacing between two dot views. Default is 8.
@@ -66,7 +68,7 @@
 /**
  * Delegate for FWPageControl
  */
-@property(nonatomic,assign) id<FWPageControlDelegate> delegate;
+@property(nonatomic,assign,nullable) id<FWPageControlDelegate> delegate;
 
 /**
  *  Number of pages for control. Default is 0.
@@ -127,3 +129,5 @@
 @interface FWBorderDotView : FWDotView
 
 @end
+
+NS_ASSUME_NONNULL_END
