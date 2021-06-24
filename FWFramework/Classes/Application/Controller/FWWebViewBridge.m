@@ -113,6 +113,9 @@ static int logMaxLength = 500;
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+                if (self.errorHandler) {
+                    self.errorHandler(message);
+                }
                 continue;
             }
             
@@ -278,6 +281,10 @@ static int logMaxLength = 500;
     [_base.messageHandlers removeObjectForKey:handlerName];
 }
 
+- (void)setErrorHandler:(void (^)(FWJsBridgeMessage *))handler {
+    _base.errorHandler = handler;
+}
+
 - (void)reset {
     [_base reset];
 }
@@ -431,6 +438,7 @@ NSString * FWWebViewJsBridge_js() {
     window.WebViewJavascriptBridge = {
         registerHandler: registerHandler,
         callHandler: callHandler,
+        errorHandler: errorHandler,
         disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
         _fetchQueue: _fetchQueue,
         _handleMessageFromObjC: _handleMessageFromObjC
@@ -449,6 +457,10 @@ NSString * FWWebViewJsBridge_js() {
 
     function registerHandler(handlerName, handler) {
         messageHandlers[handlerName] = handler;
+    }
+    
+    function errorHandler(message) {
+        console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
     }
     
     function callHandler(handlerName, data, responseCallback) {
@@ -487,7 +499,6 @@ NSString * FWWebViewJsBridge_js() {
         
         function _doDispatchMessageFromObjC() {
             var message = JSON.parse(messageJSON);
-            var messageHandler;
             var responseCallback;
 
             if (message.responseId) {
@@ -507,7 +518,9 @@ NSString * FWWebViewJsBridge_js() {
                 
                 var handler = messageHandlers[message.handlerName];
                 if (!handler) {
-                    console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+                    if (WebViewJavascriptBridge.errorHandler) {
+                        WebViewJavascriptBridge.errorHandler(message);
+                    }
                 } else {
                     handler(message.data, responseCallback);
                 }
