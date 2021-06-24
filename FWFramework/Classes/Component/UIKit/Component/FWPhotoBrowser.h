@@ -29,14 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
 
 /**
- 获取对应索引的视图
+ 获取对应索引的视图或相对于window的位置NSValue
  
  @param photoBrowser 图片浏览器
  @param index          索引
  
- @return 视图
+ @return 视图或位置NSValue
  */
-- (nullable UIView *)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index;
+- (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser viewForIndex:(NSInteger)index;
 
 /**
  获取对应索引的图片大小

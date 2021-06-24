@@ -154,7 +154,11 @@
     CGRect rect = CGRectMake(x - 0.5, y - 0.5, 1, 1);
     UIView *endView = _fromView;
     if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
-        endView = [_delegate photoBrowser:self viewForIndex:_currentPage];
+        id v = [_delegate photoBrowser:self viewForIndex:_currentPage];
+        endView = [v isKindOfClass:[UIView class]] ? (UIView *)v : nil;
+        if ([v isKindOfClass:[NSValue class]]) {
+            rect = [((NSValue *)v) CGRectValue];
+        }
     }
     if (endView.superview != nil) {
         rect = [endView convertRect:endView.bounds toView:nil];
@@ -277,7 +281,7 @@
         // 2. 如果没有实现，判断是否有默认图片，获取默认图片大小
         view.pictureSize = image != nil ? image.size : defaultSize;
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
-        UIView *v = [_delegate photoBrowser:self viewForIndex:index];
+        id v = [_delegate photoBrowser:self viewForIndex:index];
         if (v && [v isKindOfClass:[UIImageView class]]) {
             UIImage *image = ((UIImageView *)v).image;
             view.pictureSize = image != nil ? image.size : defaultSize;
