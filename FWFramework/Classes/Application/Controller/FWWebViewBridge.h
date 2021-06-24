@@ -27,7 +27,7 @@ typedef NSDictionary FWJsBridgeMessage;
 @property (strong, nonatomic, nullable) NSMutableArray *startupMessageQueue;
 @property (strong, nonatomic, nullable) NSMutableDictionary *responseCallbacks;
 @property (strong, nonatomic, nullable) NSMutableDictionary *messageHandlers;
-@property (strong, nonatomic) FWJsBridgeHandler messageHandler;
+@property (copy, nonatomic, nullable) void (^errorHandler)(FWJsBridgeMessage *message);
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
@@ -60,6 +60,7 @@ typedef NSDictionary FWJsBridgeMessage;
 - (void)callHandler:(NSString *)handlerName;
 - (void)callHandler:(NSString *)handlerName data:(nullable id)data;
 - (void)callHandler:(NSString *)handlerName data:(nullable id)data responseCallback:(nullable FWJsBridgeResponseCallback)responseCallback;
+- (void)setErrorHandler:(nullable void (^)(FWJsBridgeMessage *message))handler;
 - (void)reset;
 - (void)setWebViewDelegate:(nullable id)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
