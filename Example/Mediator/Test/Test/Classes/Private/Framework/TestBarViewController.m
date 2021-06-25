@@ -288,7 +288,7 @@ FWPropertyAssign(BOOL, hideToast);
 - (void)onDismiss
 {
     FWWeakifySelf();
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self fwDismissAnimated:YES completion:^{
         FWStrongifySelf();
         NSLog(@"self: %@", self);
     }];
