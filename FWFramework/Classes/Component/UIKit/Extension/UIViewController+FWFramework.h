@@ -40,37 +40,43 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style;
 
 /*!
- @brief 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效
+ @brief 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发
  @discussion 手工dismiss不会触发，iOS12及以下也不会触发(会触发生命周期方法)。会自动设置presentationController.delegate
  */
 @property (nullable, nonatomic, copy) void (^fwPresentationDidDismiss)(void);
 
 /*!
- @brief 设置手工dismiss完成回调block，优先级presented大于self，viewController大于navigationController
+ @brief 设置手工dismiss完成回调block，优先级presented大于self，viewController大于navigationController，需调用fwDismissAnimated:手工触发
  @discussion 仅当控制器自身被dismiss时才会触发，如果有presented控制器，会触发presented控制器的对应block。iOS13默认present手势下拉dismiss时不会触发
  */
 @property (nullable, nonatomic, copy) void (^fwDismissBlock)(void);
 
+/*!
+ @brief 手工调用dismiss，自动判断并调用fwDismissBlock
+ @discussion 无法通过交换dismissViewControllerAnimated:completion:自动调用，因为iOS13默认present手势下拉开始时也会触发该方法导致重复调用
+ */
+- (void)fwDismissAnimated:(BOOL)animated completion:(nullable void(^)(void))completion;
+
 #pragma mark - Child
 
-// 获取当前显示的子控制器，解决不能触发viewWillAppear等的bug
+/// 获取当前显示的子控制器，解决不能触发viewWillAppear等的bug
 - (nullable UIViewController *)fwChildViewController;
 
-// 设置当前显示的子控制器，解决不能触发viewWillAppear等的bug
+/// 设置当前显示的子控制器，解决不能触发viewWillAppear等的bug
 - (void)fwSetChildViewController:(UIViewController *)viewController;
 
-// 移除子控制器，解决不能触发viewWillAppear等的bug
+/// 移除子控制器，解决不能触发viewWillAppear等的bug
 - (void)fwRemoveChildViewController:(UIViewController *)viewController;
 
-// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
+/// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
 - (void)fwAddChildViewController:(UIViewController *)viewController;
 
-// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
+/// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
 - (void)fwAddChildViewController:(UIViewController *)viewController inView:(UIView *)view;
 
 #pragma mark - Previous
 
-// 获取和自身处于同一个UINavigationController里的上一个UIViewController
+/// 获取和自身处于同一个UINavigationController里的上一个UIViewController
 @property(nullable, nonatomic, weak, readonly) UIViewController *fwPreviousViewController;
 
 @end

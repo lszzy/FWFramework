@@ -108,23 +108,21 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 
 - (void)setFwDismissBlock:(void (^)(void))fwDismissBlock
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIViewController, @selector(dismissViewControllerAnimated:completion:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated, void (^completion)(void)), FWSwizzleCode({
-            UIViewController *viewController = selfObject.presentedViewController ?: selfObject;
-            void (^dismissBlock)(void) = viewController.fwDismissBlock ?: viewController.navigationController.fwDismissBlock;
-            if (dismissBlock) {
-                FWSwizzleOriginal(animated, ^{
-                    if (completion) completion();
-                    if (dismissBlock) dismissBlock();
-                });
-            } else {
-                FWSwizzleOriginal(animated, completion);
-            }
-        }));
-    });
-    
     objc_setAssociatedObject(self, @selector(fwDismissBlock), fwDismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (void)fwDismissAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    UIViewController *viewController = self.presentedViewController ?: self;
+    void (^dismissBlock)(void) = viewController.fwDismissBlock ?: viewController.navigationController.fwDismissBlock;
+    if (dismissBlock) {
+        [self dismissViewControllerAnimated:animated completion:^{
+            if (completion) completion();
+            if (dismissBlock) dismissBlock();
+        }];
+    } else {
+        [self dismissViewControllerAnimated:animated completion:completion];
+    }
 }
 
 #pragma mark - Child
