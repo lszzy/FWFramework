@@ -6,7 +6,7 @@
 //  Copyright © 2021 site.wuyong. All rights reserved.
 //
 
-import Foundation
+import FWFramework
 
 extension UITabBarController: UITabBarControllerDelegate {
     // MARK: - Static
@@ -41,14 +41,14 @@ extension UITabBarController: UITabBarControllerDelegate {
         let homeController = HomeViewController()
         homeController.hidesBottomBarWhenPushed = false
         let homeNav = UINavigationController(rootViewController: homeController)
-        homeNav.tabBarItem.image = UIImage(named: "tabbarHome")
+        homeNav.tabBarItem.image = FWIconImage("fa-home", 26)
         homeNav.tabBarItem.title = FWLocalizedString("homeTitle")
         homeNav.tabBarItem.fwShow(FWBadgeView(badgeStyle: .small), badgeValue: "1")
         
         let testController = Mediator.testModule.testViewController()
         testController.hidesBottomBarWhenPushed = false
         let testNav = UINavigationController(rootViewController: testController)
-        testNav.tabBarItem.image = UIImage(named: "tabbarTest")
+        testNav.tabBarItem.image = FWIcon.iconImage("fa-file-text", size: 26)
         testNav.tabBarItem.title = FWLocalizedString("testTitle")
         
         let settingsControlelr = SettingsViewController()
@@ -64,7 +64,7 @@ extension UITabBarController: UITabBarControllerDelegate {
             let badgeView = FWBadgeView(badgeStyle: .dot)
             settingsNav.tabBarItem.fwShow(badgeView, badgeValue: nil)
         }
-        settingsNav.tabBarItem.image = UIImage(named: "tabbarSettings")
+        settingsNav.tabBarItem.image = FWIconNamed("fa-wrench", 26)?.image
         settingsNav.tabBarItem.title = FWLocalizedString("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
         
