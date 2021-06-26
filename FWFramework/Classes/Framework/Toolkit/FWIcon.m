@@ -8,16 +8,21 @@
  */
 
 #import "FWIcon.h"
+#import "FWLoader.h"
 #import <CoreText/CoreText.h>
 
 FWIcon * FWIconNamed(NSString *name, CGFloat size) {
     return [FWIcon iconNamed:name size:size];
 }
 
+UIImage * FWIconImage(NSString *name, CGFloat size) {
+    return [FWIcon iconImage:name size:size];
+}
+
 @interface FWIcon ()
 
 @property (nonatomic, strong) NSMutableAttributedString *mutableAttributedString;
-@property (nonatomic, copy) FWIcon * (^iconRouter)(NSString *name, CGFloat size);
+@property (nonatomic, strong) FWLoader<NSString *, Class> *iconLoader;
 
 @end
 
@@ -31,29 +36,15 @@ FWIcon * FWIconNamed(NSString *name, CGFloat size) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[FWIcon alloc] init];
+        instance.iconLoader = [[FWLoader<NSString *, Class> alloc] init];
     });
     return instance;
 }
 
-+ (FWIcon * (^)(NSString *, CGFloat))iconRouter
++ (FWLoader<NSString *,Class> *)sharedLoader
 {
-    return [self sharedInstance].iconRouter;
+    return [self sharedInstance].iconLoader;
 }
-
-+ (void)setIconRouter:(FWIcon * (^)(NSString *, CGFloat))iconRouter
-{
-    [self sharedInstance].iconRouter = iconRouter;
-}
-
-+ (FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size
-{
-    if ([self sharedInstance].iconRouter) {
-        return [self sharedInstance].iconRouter(name, size);
-    }
-    return nil;
-}
-
-#pragma mark - Lifecycle
 
 + (BOOL)registerIconFont:(NSURL *)url
 {
@@ -68,18 +59,35 @@ FWIcon * FWIconNamed(NSString *name, CGFloat size) {
     return result;
 }
 
-+ (instancetype)iconWithCode:(NSString *)code size:(CGFloat)size
++ (FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size
 {
-    FWIcon *icon = [[FWIcon alloc] init];
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[self iconFontWithSize:size], NSFontAttributeName, nil];
-    icon.mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:code attributes:attrs];
-    return icon;
+    Class iconClass = [[self sharedInstance].iconLoader load:name];
+    if (!iconClass || ![iconClass isSubclassOfClass:[FWIcon class]]) return nil;
+    return [[iconClass alloc] initWithName:name size:size];
 }
 
-+ (instancetype)iconWithName:(NSString *)name size:(CGFloat)size
++ (UIImage *)iconImage:(NSString *)name size:(CGFloat)size
 {
-    NSString *code = [[self allIcons] objectForKey:name];
-    return code ? [self iconWithCode:code size:size] : nil;
+    return [self iconNamed:name size:size].image;
+}
+
+#pragma mark - Lifecycle
+
+- (instancetype)initWithCode:(NSString *)code size:(CGFloat)size
+{
+    self = [super init];
+    if (self) {
+        UIFont *font = [[self class] iconFontWithSize:size];
+        _mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:code attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
+    }
+    return self;
+}
+
+- (instancetype)initWithName:(NSString *)name size:(CGFloat)size
+{
+    NSString *code = [[[self class] allIcons] objectForKey:name];
+    if (!code) return nil;
+    return [self initWithCode:code size:size];
 }
 
 - (CGFloat)fontSize
@@ -113,7 +121,13 @@ FWIcon * FWIconNamed(NSString *name, CGFloat size) {
 
 - (NSString *)iconName
 {
-    NSString *name = [[self class] allIcons][self.characterCode];
+    __block NSString *name = nil;
+    [[[self class] allIcons] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+        if ([obj isEqualToString:self.characterCode]) {
+            name = key;
+            *stop = YES;
+        }
+    }];
     return name ?: @"";
 }
 

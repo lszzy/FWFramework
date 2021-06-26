@@ -12,9 +12,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWIcon;
+@class FWLoader<InputType, OutputType>;
 
-/// 指定名称和大小初始化FWIcon，需先设置图标路由句柄
+/// 指定名称和大小初始化图标对象，需先初始化加载器
 FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size);
+
+/// 指定名称和大小初始化图标图像，需先初始化加载器
+FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
 
 /*!
  @brief 字体图标抽象基类，子类需继承
@@ -30,22 +34,25 @@ FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size);
 
 #pragma mark - Static
 
-/// 自定义图标路由句柄
-@property (class, nonatomic, copy, nullable) FWIcon * _Nullable (^iconRouter)(NSString *name, CGFloat size);
-
-/// 指定名称和大小初始化FWIcon，需先设置路由句柄
-+ (nullable FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size;
-
-#pragma mark - Lifecycle
+/// 字体类加载器，参数为字体名称，block返回值必须为FWIcon子类
+@property (class, nonatomic, readonly) FWLoader<NSString *, Class> *sharedLoader;
 
 /// 注册图标字体，返回注册结果
 + (BOOL)registerIconFont:(NSURL *)url;
 
+/// 指定名称和大小初始化图标对象，需先初始化加载器
++ (nullable FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size;
+
+/// 指定名称和大小初始化图标图像，需先初始化加载器
++ (nullable UIImage *)iconImage:(NSString *)name size:(CGFloat)size;
+
+#pragma mark - Lifecycle
+
 /// 根据字符编码和大小创建图标对象
-+ (instancetype)iconWithCode:(NSString *)code size:(CGFloat)size;
+- (instancetype)initWithCode:(NSString *)code size:(CGFloat)size;
 
 /// 根据图标名称和大小创建图标对象
-+ (nullable instancetype)iconWithName:(NSString *)name size:(CGFloat)size;
+- (nullable instancetype)initWithName:(NSString *)name size:(CGFloat)size;
 
 /// 图标自定义偏移
 @property (nonatomic, assign) UIOffset positionAdjustment;
