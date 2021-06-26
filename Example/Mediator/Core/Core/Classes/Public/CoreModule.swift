@@ -15,6 +15,10 @@ import FWFramework
     public override class func bundle() -> Bundle {
         return sharedBundle
     }
+    
+    public class func iconNamed(_ name: String, size: CGFloat) -> UIImage? {
+        return FWIconNamed(name, size)?.image
+    }
 }
 
 @objc protocol CoreService: FWModuleProtocol {}
@@ -36,6 +40,7 @@ class CoreModule: NSObject, CoreService {
     
     func setup() {
         Theme.setupTheme()
+        FWIcon.setupIcon()
     }
 }
 
