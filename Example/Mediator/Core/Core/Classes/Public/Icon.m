@@ -10,35 +10,31 @@
 #import "Icon.h"
 #import <Core/Core-Swift.h>
 
-@implementation FWIcon (Core)
+@implementation Octicons
 
 + (void)setupIcon
 {
-    FWIcon.iconRouter = ^FWIcon * (NSString *name, CGFloat size) {
+    [FWIcon.sharedLoader addBlock:^Class (NSString *name) {
         if ([name hasPrefix:@"octicon-"]) {
-            return [Octicons iconWithName:name size:size];
+            return [Octicons class];
         } else if ([name hasPrefix:@"zmdi-"]) {
-            return [MaterialIcons iconWithName:name size:size];
+            return [MaterialIcons class];
         } else if ([name hasPrefix:@"fa-"]) {
-            return [FontAwesome iconWithName:name size:size];
+            return [FontAwesome class];
         } else if ([name hasPrefix:@"fi-"]) {
-            return [FoundationIcons iconWithName:name size:size];
+            return [FoundationIcons class];
         } else if ([name hasPrefix:@"ion-"]) {
-            return [IonIcons iconWithName:name size:size];
+            return [IonIcons class];
         }
-        return nil;
-    };
+        return NULL;
+    }];
 }
-
-@end
-
-@implementation Octicons
 
 + (UIFont *)iconFontWithSize:(CGFloat)size
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self registerIconFont:[CoreBundle.bundle URLForResource:@"Octicons" withExtension:@"ttf"]];
+        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Octicons" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Octicons" size:size];
@@ -265,7 +261,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self registerIconFont:[CoreBundle.bundle URLForResource:@"Material-Design-Iconic-Font" withExtension:@"ttf"]];
+        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Material-Design-Iconic-Font" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Material-Design-Iconic-Font" size:size];
@@ -1030,7 +1026,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self registerIconFont:[CoreBundle.bundle URLForResource:@"FontAwesome" withExtension:@"otf"]];
+        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"FontAwesome" withExtension:@"otf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"FontAwesome" size:size];
@@ -1837,7 +1833,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self registerIconFont:[CoreBundle.bundle URLForResource:@"fontcustom" withExtension:@"ttf"]];
+        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"fontcustom" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"fontcustom" size:size];
@@ -2141,7 +2137,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self registerIconFont:[CoreBundle.bundle URLForResource:@"Ionicons" withExtension:@"ttf"]];
+        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Ionicons" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Ionicons" size:size];
