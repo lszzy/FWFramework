@@ -120,14 +120,27 @@
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image" bundle:TestBundle.bundle];
     [self.view.layer addSublayer:layer];
     
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
+    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:Theme.textColor];
+    [self.view addSubview:imageView];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
+    UIImage *colorImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"tabbar_settings"] dark:[TestBundle imageNamed:@"tabbar_test"]];
+    imageView.fwThemeImage = [colorImage fwThemeImageWithColor:Theme.textColor];
+    [self.view addSubview:imageView];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 300, 50, 50)];
+    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:[UIColor redColor]];
+    [self.view addSubview:imageView];
+    
     UILabel *themeLabel = [UILabel new];
-    themeLabel.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeLabel.frame = CGRectMake(0, 370, FWScreenWidth, 50);
     themeLabel.textAlignment = NSTextAlignmentCenter;
     themeLabel.attributedText = [NSAttributedString fwAttributedString:@"我是AttributedString" withFont:FWFontSize(16).fwBoldFont textColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]]];
     [self.view addSubview:themeLabel];
     
     UIButton *themeButton = [UIButton new];
-    themeButton.frame = CGRectMake(0, 370, FWScreenWidth, 50);
+    themeButton.frame = CGRectMake(0, 440, FWScreenWidth, 50);
     themeButton.titleLabel.font = FWFontRegular(16);
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
     

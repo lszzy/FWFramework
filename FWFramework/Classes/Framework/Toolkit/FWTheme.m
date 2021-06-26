@@ -8,6 +8,7 @@
  */
 
 #import "FWTheme.h"
+#import "FWImage.h"
 #import "FWRouter.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
@@ -300,6 +301,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
 {
     objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor
+{
+    return [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
+        UIImage *image = [self fwThemeImage:style];
+        UIColor *tintColor = [themeColor fwThemeColor:style];
+        return [image fwImageWithTintColor:tintColor];
+    }];
 }
 
 @end
