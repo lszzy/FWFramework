@@ -100,6 +100,20 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     [self addAttribute:NSFontAttributeName value:[[self iconFont] fontWithSize:fontSize]];
 }
 
+- (UIColor *)backgroundColor
+{
+    return [self attribute:NSBackgroundColorAttributeName];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (backgroundColor) {
+        [self addAttribute:NSBackgroundColorAttributeName value:backgroundColor];
+    } else {
+        [self removeAttribute:NSBackgroundColorAttributeName];
+    }
+}
+
 - (UIColor *)foregroundColor
 {
     return [self attribute:NSForegroundColorAttributeName];
@@ -147,18 +161,22 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    // backgroundColor为整个图片背景色
+    NSMutableAttributedString *attributedString = self.mutableAttributedString;
     if (self.backgroundColor) {
         [self.backgroundColor setFill];
         CGContextFillRect(context, CGRectMake(0, 0, imageSize.width, imageSize.height));
+        attributedString = [self.mutableAttributedString mutableCopy];
+        [attributedString removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [attributedString length])];
     }
     
-    CGSize iconSize = [self.mutableAttributedString size];
+    CGSize iconSize = [attributedString size];
     CGFloat xOffset = (imageSize.width - iconSize.width) / 2.0;
-    xOffset += self.positionAdjustment.horizontal;
+    xOffset += self.imageOffset.horizontal;
     CGFloat yOffset = (imageSize.height - iconSize.height) / 2.0;
-    yOffset += self.positionAdjustment.vertical;
+    yOffset += self.imageOffset.vertical;
     CGRect drawRect = CGRectMake(xOffset, yOffset, iconSize.width, iconSize.height);
-    [self.mutableAttributedString drawInRect:drawRect];
+    [attributedString drawInRect:drawRect];
     
     UIImage *iconImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -172,7 +190,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     return [self.mutableAttributedString copy];
 }
 
-- (void)setAttributes:(NSDictionary *)attrs
+- (void)setAttributes:(NSDictionary<NSAttributedStringKey,id> *)attrs
 {
     if (!attrs[NSFontAttributeName]) {
         NSMutableDictionary *mutableAttrs = [attrs mutableCopy];
@@ -182,27 +200,27 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     [self.mutableAttributedString setAttributes:attrs range:NSMakeRange(0, [self.mutableAttributedString length])];
 }
 
-- (void)addAttribute:(NSString *)name value:(id)value
+- (void)addAttribute:(NSAttributedStringKey)name value:(id)value
 {
     [self.mutableAttributedString addAttribute:name value:value range:NSMakeRange(0, [self.mutableAttributedString length])];
 }
 
-- (void)addAttributes:(NSDictionary *)attrs
+- (void)addAttributes:(NSDictionary<NSAttributedStringKey,id> *)attrs
 {
     [self.mutableAttributedString addAttributes:attrs range:NSMakeRange(0, [self.mutableAttributedString length])];
 }
 
-- (void)removeAttribute:(NSString *)name
+- (void)removeAttribute:(NSAttributedStringKey)name
 {
     [self.mutableAttributedString removeAttribute:name range:NSMakeRange(0, [self.mutableAttributedString length])];
 }
 
-- (NSDictionary *)attributes
+- (NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     return [self.mutableAttributedString attributesAtIndex:0 effectiveRange:NULL];
 }
 
-- (id)attribute:(NSString *)name
+- (id)attribute:(NSAttributedStringKey)name
 {
     return [self.mutableAttributedString attribute:name atIndex:0 effectiveRange:NULL];
 }

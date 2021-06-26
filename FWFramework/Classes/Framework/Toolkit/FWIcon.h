@@ -54,16 +54,13 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
 /// 根据图标名称和大小创建图标对象
 - (nullable instancetype)initWithName:(NSString *)name size:(CGFloat)size;
 
-/// 图标自定义偏移
-@property (nonatomic, assign) UIOffset positionAdjustment;
-
-/// 图标自定义字体大小
+/// 自定义字体大小
 @property (nonatomic, assign) CGFloat fontSize;
 
-/// 图标自定义背景色
+/// 自定义背景色
 @property (nonatomic, strong, nullable) UIColor *backgroundColor;
 
-/// 图标自定义前景色
+/// 自定义前景色
 @property (nonatomic, strong, nullable) UIColor *foregroundColor;
 
 /// 获取图标字符编码
@@ -74,6 +71,9 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
 
 /// 返回图标字体
 @property (nonatomic, strong, readonly) UIFont *iconFont;
+
+/// 自定义图片偏移位置，仅创建Image时生效
+@property (nonatomic, assign) UIOffset imageOffset;
 
 /// 返回字体相同大小的图标Image
 @property (nonatomic, strong, readonly) UIImage *image;
@@ -87,22 +87,22 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
 @property (nonatomic, copy, readonly) NSAttributedString *attributedString;
 
 /// 设置图标属性，注意不要设置NSFontAttributeName为其他字体
-- (void)setAttributes:(NSDictionary *)attrs;
+- (void)setAttributes:(NSDictionary<NSAttributedStringKey, id> *)attrs;
 
 /// 添加某个图标属性
-- (void)addAttribute:(NSString *)name value:(id)value;
+- (void)addAttribute:(NSAttributedStringKey)name value:(id)value;
 
 /// 批量添加属性
-- (void)addAttributes:(NSDictionary *)attrs;
+- (void)addAttributes:(NSDictionary<NSAttributedStringKey, id> *)attrs;
 
 /// 移除指定名称属性
-- (void)removeAttribute:(NSString *)name;
+- (void)removeAttribute:(NSAttributedStringKey)name;
 
 /// 返回图标所有属性
-- (NSDictionary *)attributes;
+- (NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 /// 返回图标指定属性
-- (nullable id)attribute:(NSString *)name;
+- (nullable id)attribute:(NSAttributedStringKey)name;
 
 #pragma mark - Protected
 
