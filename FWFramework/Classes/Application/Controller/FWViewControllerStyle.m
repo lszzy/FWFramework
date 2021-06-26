@@ -529,7 +529,7 @@
     }
     
     if (self.fwThemeBackgroundImage != nil) {
-        UIImage *image = self.fwThemeBackgroundImage.fwThemeImage ?: [UIImage new];
+        UIImage *image = self.fwThemeBackgroundImage.fwImage ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
@@ -615,7 +615,7 @@
     }
     
     if (self.fwThemeBackgroundImage != nil) {
-        self.backgroundImage = self.fwThemeBackgroundImage.fwThemeImage;
+        self.backgroundImage = self.fwThemeBackgroundImage.fwImage;
         self.shadowImage = [UIImage new];
     }
 }

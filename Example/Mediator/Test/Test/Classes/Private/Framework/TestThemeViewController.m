@@ -58,7 +58,7 @@
     UIImage *themeImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"theme_image_light"] dark:[TestBundle imageNamed:@"theme_image_dark"]];
     imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = themeImage.fwThemeImage;
+        imageView.image = themeImage.fwImage;
     }];
     [self.view addSubview:imageView];
     
@@ -75,10 +75,10 @@
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    layer.backgroundColor = [themeColor fwThemeColor:FWThemeManager.sharedInstance.style].CGColor;
+    layer.backgroundColor = [themeColor fwColor:FWThemeManager.sharedInstance.style].CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = [themeColor fwThemeColor:style].CGColor;
+        layer.backgroundColor = [themeColor fwColor:style].CGColor;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -102,7 +102,7 @@
     layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.contents = (id)layerImage.fwThemeImage.CGImage;
+        layer.contents = (id)layerImage.fwImage.CGImage;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -150,10 +150,10 @@
         NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],
     }];
     
-    [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
+    [themeButton setImage:buttonImage.fwImage forState:UIControlStateNormal];
     [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     [themeLabel fwAddThemeListener:^(FWThemeStyle style) {
-        [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
+        [themeButton setImage:buttonImage.fwImage forState:UIControlStateNormal];
         [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     }];
     [self.view addSubview:themeButton];
