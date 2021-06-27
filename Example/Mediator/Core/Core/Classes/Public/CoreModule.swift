@@ -36,7 +36,12 @@ class CoreModule: NSObject, CoreService {
     
     func setup() {
         Theme.setupTheme()
-        Octicons.setupIcon()
+        
+        FWIcon.registerClass(Octicons.self)
+        FWIcon.registerClass(FontAwesome.self)
+        FWIcon.registerClass(FoundationIcons.self)
+        FWIcon.registerClass(IonIcons.self)
+        FWIcon.registerClass(MaterialIcons.self)
     }
 }
 
