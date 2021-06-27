@@ -22,7 +22,9 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 @interface FWIcon ()
 
 @property (nonatomic, strong) NSMutableAttributedString *mutableAttributedString;
+
 @property (nonatomic, strong) FWLoader<NSString *, Class> *iconLoader;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, Class> *iconMapper;
 
 @end
 
@@ -37,6 +39,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     dispatch_once(&onceToken, ^{
         instance = [[FWIcon alloc] init];
         instance.iconLoader = [[FWLoader<NSString *, Class> alloc] init];
+        instance.iconMapper = [[NSMutableDictionary<NSString *, Class> alloc] init];
     });
     return instance;
 }
@@ -46,29 +49,40 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     return [self sharedInstance].iconLoader;
 }
 
-+ (BOOL)registerIconFont:(NSURL *)url
++ (BOOL)registerClass:(Class)iconClass
 {
-    if (!url || !url.isFileURL) return NO;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]) return NO;
-    
-    CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)url);
-    CGFontRef newFont = CGFontCreateWithDataProvider(dataProvider);
-    CGDataProviderRelease(dataProvider);
-    BOOL result = CTFontManagerRegisterGraphicsFont(newFont, NULL);
-    CGFontRelease(newFont);
-    return result;
+    if (!iconClass || ![iconClass isSubclassOfClass:[FWIcon class]]) return NO;
+    [[iconClass iconMapper] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+        [FWIcon sharedInstance].iconMapper[key] = iconClass;
+    }];
+    return YES;
 }
 
 + (FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size
 {
-    Class iconClass = [[self sharedInstance].iconLoader load:name];
-    if (!iconClass || ![iconClass isSubclassOfClass:[FWIcon class]]) return nil;
+    Class iconClass = [[self sharedInstance].iconMapper objectForKey:name];
+    if (!iconClass) {
+        iconClass = [[self sharedInstance].iconLoader load:name];
+        if (!iconClass || ![self registerClass:iconClass]) return nil;
+    }
     return [[iconClass alloc] initWithName:name size:size];
 }
 
 + (UIImage *)iconImage:(NSString *)name size:(CGFloat)size
 {
     return [self iconNamed:name size:size].image;
+}
+
++ (BOOL)installIconFont:(NSURL *)fileURL
+{
+    if (!fileURL || ![[NSFileManager defaultManager] fileExistsAtPath:[fileURL path]]) return NO;
+    
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)fileURL);
+    CGFontRef newFont = CGFontCreateWithDataProvider(dataProvider);
+    CGDataProviderRelease(dataProvider);
+    BOOL result = CTFontManagerRegisterGraphicsFont(newFont, NULL);
+    CGFontRelease(newFont);
+    return result;
 }
 
 #pragma mark - Lifecycle
@@ -85,7 +99,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 - (instancetype)initWithName:(NSString *)name size:(CGFloat)size
 {
-    NSString *code = [[[self class] allIcons] objectForKey:name];
+    NSString *code = [[[self class] iconMapper] objectForKey:name];
     if (!code) return nil;
     return [self initWithCode:code size:size];
 }
@@ -136,7 +150,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 - (NSString *)iconName
 {
     __block NSString *name = nil;
-    [[[self class] allIcons] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+    [[[self class] iconMapper] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         if ([obj isEqualToString:self.characterCode]) {
             name = key;
             *stop = YES;
@@ -227,7 +241,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 #pragma mark - Protected
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     @throw [NSException exceptionWithName:@"FWFramework"
                                    reason:@"You need to implement this method in subclass."

@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Octicons : FWIcon
 
-+ (void)setupIcon;
-
 @end
 
 @interface MaterialIcons : FWIcon

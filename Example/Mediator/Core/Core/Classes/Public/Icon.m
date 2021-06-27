@@ -12,36 +12,18 @@
 
 @implementation Octicons
 
-+ (void)setupIcon
-{
-    [FWIcon.sharedLoader addBlock:^Class (NSString *name) {
-        if ([name hasPrefix:@"octicon-"]) {
-            return [Octicons class];
-        } else if ([name hasPrefix:@"zmdi-"]) {
-            return [MaterialIcons class];
-        } else if ([name hasPrefix:@"fa-"]) {
-            return [FontAwesome class];
-        } else if ([name hasPrefix:@"fi-"]) {
-            return [FoundationIcons class];
-        } else if ([name hasPrefix:@"ion-"]) {
-            return [IonIcons class];
-        }
-        return NULL;
-    }];
-}
-
 + (UIFont *)iconFontWithSize:(CGFloat)size
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Octicons" withExtension:@"ttf"]];
+        [FWIcon installIconFont:[CoreBundle.bundle URLForResource:@"Octicons" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Octicons" size:size];
     return font;
 }
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     return @{
         @"octicon-alert" : @"\uf02d",
@@ -261,14 +243,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Material-Design-Iconic-Font" withExtension:@"ttf"]];
+        [FWIcon installIconFont:[CoreBundle.bundle URLForResource:@"Material-Design-Iconic-Font" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Material-Design-Iconic-Font" size:size];
     return font;
 }
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     return @{
         @"zmdi-var-3d-rotation" : @"\uf101",
@@ -1026,14 +1008,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"FontAwesome" withExtension:@"otf"]];
+        [FWIcon installIconFont:[CoreBundle.bundle URLForResource:@"FontAwesome" withExtension:@"otf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"FontAwesome" size:size];
     return font;
 }
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     return @{
         @"fa-500px" : @"\uf26e",
@@ -1833,14 +1815,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"fontcustom" withExtension:@"ttf"]];
+        [FWIcon installIconFont:[CoreBundle.bundle URLForResource:@"fontcustom" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"fontcustom" size:size];
     return font;
 }
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     return @{
         @"fi-address-book" : @"\uf100",
@@ -2137,14 +2119,14 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWIcon registerIconFont:[CoreBundle.bundle URLForResource:@"Ionicons" withExtension:@"ttf"]];
+        [FWIcon installIconFont:[CoreBundle.bundle URLForResource:@"Ionicons" withExtension:@"ttf"]];
     });
     
     UIFont *font = [UIFont fontWithName:@"Ionicons" size:size];
     return font;
 }
 
-+ (NSDictionary<NSString *,NSString *> *)allIcons
++ (NSDictionary<NSString *,NSString *> *)iconMapper
 {
     return @{
         @"ion-alert" : @"\uf101",
