@@ -177,7 +177,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             color = [color resolvedColorWithTraitCollection:traitCollection];
         }
         if (!color) {
-            color = fwStaticNameColors[name];
+            color = [fwStaticNameColors[name] fwColor:style];
             if (!color) {
                 if (@available(iOS 11.0, *)) {
                     color = bundle ? [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIColor colorNamed:name];
@@ -251,7 +251,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             image = [image imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
-            image = fwStaticNameImages[name].fwImage;
+            image = [fwStaticNameImages[name] fwImage:style];
             if (!image) image = bundle ? [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIImage imageNamed:name];
         }
         return image;
