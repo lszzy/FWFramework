@@ -111,7 +111,8 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief UIImage主题分类
- @discussion 注意UIImage只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化
+ @discussion 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
+ 为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
  */
 @interface UIImage (FWTheme)
 
@@ -133,10 +134,10 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
-/// 获取当前主题样式对应静态图片
+/// 获取当前主题样式对应静态图片用于显示
 @property (nullable, nonatomic, readonly) UIImage *fwImage;
 
-/// 指定主题样式获取对应静态图片
+/// 指定主题样式获取对应静态图片用于显示
 - (nullable UIImage *)fwImage:(FWThemeStyle)style;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
