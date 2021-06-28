@@ -12,6 +12,7 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
+#import "FWIcon.h"
 #import "FWImage.h"
 #import "FWTheme.h"
 
