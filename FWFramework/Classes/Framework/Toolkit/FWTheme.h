@@ -143,7 +143,13 @@ extern NSString *const FWThemeChangedNotification;
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
 @property (nonatomic, assign, readonly) BOOL fwIsThemeImage;
 
-/// 指定主题颜色，快速转换当前图片为主题图片
+/// 图片默认主题色，未设置时为浅色=>黑色、深色=>白色
+@property (class, nonatomic, strong) UIColor *fwThemeColor;
+
+/// 快速生成当前图片对应的默认主题图片
+@property (nonatomic, strong, readonly) UIImage *fwThemeImage;
+
+/// 指定主题颜色，快速生成当前图片对应的主题图片
 - (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor;
 
 @end
