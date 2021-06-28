@@ -505,7 +505,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    UIImage *image = backgroundImage ?: [UIImage new];
+    UIImage *image = backgroundImage.fwImage ?: [UIImage new];
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
 }
@@ -601,7 +601,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.backgroundImage = image;
+    self.backgroundImage = image.fwImage;
     self.shadowImage = [UIImage new];
 }
 
