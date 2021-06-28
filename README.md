@@ -45,7 +45,7 @@ Version 1.7.0:
 
 	* Refactored UIImage.fwTheme theme image creation method to avoid memory leaks
 	* Refactor the static image method of UIImage.fwThemeImage to fwImage
-	* Added UIImage.fwThemeImageWithColor method
+	* Added methods such as UIImage.fwThemeImageWithColor
 	* Added FWIcon icon font class, supporting loading by name
 
 Version 1.6.6:
