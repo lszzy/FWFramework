@@ -45,7 +45,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 
 	* 重构UIImage.fwTheme主题图片创建方法，避免内存泄漏
 	* 重构UIImage.fwThemeImage静态图片方法为fwImage
-	* 新增UIImage.fwThemeImageWithColor方法
+	* 新增UIImage.fwThemeImageWithColor等方法
 	* 新增FWIcon图标字体类，支持name方式加载
 
 1.6.6版本：
