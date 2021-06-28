@@ -126,7 +126,7 @@
     [self.view.layer addSublayer:layer];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
-    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:Theme.textColor];
+    imageView.fwThemeImage = [TestBundle imageNamed:@"close.svg"].fwThemeImage;
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
