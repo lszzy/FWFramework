@@ -231,7 +231,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIImage *)fwThemeImage:(UIImage * (^)(FWThemeStyle))provider
 {
-    UIImage *image = provider(FWThemeManager.sharedInstance.style) ?: [UIImage new];
+    UIImage *image = [UIImage new];
     image.fwThemeObject = [FWThemeObject<UIImage *> objectWithProvider:provider];
     return image;
 }
@@ -251,7 +251,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             image = [image imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
-            image = fwStaticNameImages[name];
+            image = fwStaticNameImages[name].fwImage;
             if (!image) image = bundle ? [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIImage imageNamed:name];
         }
         return image;
@@ -270,6 +270,16 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 + (void)fwSetThemeImages:(NSDictionary<NSString *,UIImage *> *)nameImages
 {
     [fwStaticNameImages addEntriesFromDictionary:nameImages];
+}
+
+- (FWThemeObject<UIImage *> *)fwThemeObject
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeObject));
+}
+
+- (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
+{
+    objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIImage *)fwImage
@@ -291,16 +301,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (BOOL)fwIsThemeImage
 {
     return self.fwThemeObject ? YES : NO;
-}
-
-- (FWThemeObject<UIImage *> *)fwThemeObject
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeObject));
-}
-
-- (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
-{
-    objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor
@@ -466,7 +466,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeImage:(UIImage *)fwThemeImage
 {
     objc_setAssociatedObject(self, @selector(fwThemeImage), fwThemeImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.image = fwThemeImage;
+    self.image = fwThemeImage.fwImage;
 }
 
 - (void)fwThemeChanged:(FWThemeStyle)style
@@ -523,7 +523,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeContents:(UIImage *)fwThemeContents
 {
     objc_setAssociatedObject(self, @selector(fwThemeContents), fwThemeContents, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.contents = (id)fwThemeContents.CGImage;
+    self.contents = (id)fwThemeContents.fwImage.CGImage;
 }
 
 - (void)fwThemeChanged:(FWThemeStyle)style
