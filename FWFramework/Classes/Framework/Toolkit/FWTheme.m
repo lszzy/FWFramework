@@ -8,6 +8,7 @@
  */
 
 #import "FWTheme.h"
+#import "FWImage.h"
 #import "FWRouter.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
@@ -201,7 +202,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
 }
 
-- (UIColor *)fwThemeColor:(FWThemeStyle)style
+- (UIColor *)fwColor:(FWThemeStyle)style
 {
     if (@available(iOS 13, *)) {
         UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
@@ -271,7 +272,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     [fwStaticNameImages addEntriesFromDictionary:nameImages];
 }
 
-- (UIImage *)fwThemeImage
+- (UIImage *)fwImage
 {
     if (self.fwThemeObject) {
         return self.fwThemeObject.object;
@@ -279,7 +280,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return self;
 }
 
-- (UIImage *)fwThemeImage:(FWThemeStyle)style
+- (UIImage *)fwImage:(FWThemeStyle)style
 {
     if (self.fwThemeObject) {
         return [self.fwThemeObject object:style];
@@ -300,6 +301,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
 {
     objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor
+{
+    return [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
+        UIImage *image = [self fwImage:style];
+        UIColor *color = [themeColor fwColor:style];
+        return [image fwImageWithTintColor:color];
+    }];
 }
 
 @end
@@ -464,7 +474,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     [super fwThemeChanged:style];
     
     if (self.fwThemeImage != nil) {
-        self.image = self.fwThemeImage.fwThemeImage;
+        self.image = self.fwThemeImage.fwImage;
     }
 }
 
@@ -530,7 +540,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
         self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
     if (self.fwThemeContents != nil) {
-        self.contents = (id)self.fwThemeContents.fwThemeImage.CGImage;
+        self.contents = (id)self.fwThemeContents.fwImage.CGImage;
     }
 }
 

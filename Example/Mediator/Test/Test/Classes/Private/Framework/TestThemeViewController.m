@@ -58,7 +58,7 @@
     UIImage *themeImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"theme_image_light"] dark:[TestBundle imageNamed:@"theme_image_dark"]];
     imageView.image = themeImage;
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = themeImage.fwThemeImage;
+        imageView.image = themeImage.fwImage;
     }];
     [self.view addSubview:imageView];
     
@@ -75,10 +75,10 @@
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    layer.backgroundColor = [themeColor fwThemeColor:FWThemeManager.sharedInstance.style].CGColor;
+    layer.backgroundColor = [themeColor fwColor:FWThemeManager.sharedInstance.style].CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = [themeColor fwThemeColor:style].CGColor;
+        layer.backgroundColor = [themeColor fwColor:style].CGColor;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -102,7 +102,7 @@
     layer.contents = (id)layerImage.CGImage;
     layer.fwThemeContext = self.view;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.contents = (id)layerImage.fwThemeImage.CGImage;
+        layer.contents = (id)layerImage.fwImage.CGImage;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -120,14 +120,27 @@
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image" bundle:TestBundle.bundle];
     [self.view.layer addSublayer:layer];
     
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
+    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:Theme.textColor];
+    [self.view addSubview:imageView];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
+    UIImage *colorImage = [UIImage fwThemeLight:[TestBundle imageNamed:@"tabbar_settings"] dark:[TestBundle imageNamed:@"tabbar_test"]];
+    imageView.fwThemeImage = [colorImage fwThemeImageWithColor:Theme.textColor];
+    [self.view addSubview:imageView];
+    
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 300, 50, 50)];
+    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:[UIColor redColor]];
+    [self.view addSubview:imageView];
+    
     UILabel *themeLabel = [UILabel new];
-    themeLabel.frame = CGRectMake(0, 300, FWScreenWidth, 50);
+    themeLabel.frame = CGRectMake(0, 370, FWScreenWidth, 50);
     themeLabel.textAlignment = NSTextAlignmentCenter;
     themeLabel.attributedText = [NSAttributedString fwAttributedString:@"我是AttributedString" withFont:FWFontSize(16).fwBoldFont textColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]]];
     [self.view addSubview:themeLabel];
     
     UIButton *themeButton = [UIButton new];
-    themeButton.frame = CGRectMake(0, 370, FWScreenWidth, 50);
+    themeButton.frame = CGRectMake(0, 440, FWScreenWidth, 50);
     themeButton.titleLabel.font = FWFontRegular(16);
     [themeButton setTitleColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forState:UIControlStateNormal];
     
@@ -137,10 +150,10 @@
         NSForegroundColorAttributeName: [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]],
     }];
     
-    [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
+    [themeButton setImage:buttonImage.fwImage forState:UIControlStateNormal];
     [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     [themeLabel fwAddThemeListener:^(FWThemeStyle style) {
-        [themeButton setImage:buttonImage.fwThemeImage forState:UIControlStateNormal];
+        [themeButton setImage:buttonImage.fwImage forState:UIControlStateNormal];
         [themeButton setAttributedTitle:themeString.object forState:UIControlStateNormal];
     }];
     [self.view addSubview:themeButton];

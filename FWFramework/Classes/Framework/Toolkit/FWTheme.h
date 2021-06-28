@@ -100,7 +100,7 @@ extern NSString *const FWThemeChangedNotification;
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
 /// 指定主题样式获取对应静态颜色
-- (UIColor *)fwThemeColor:(FWThemeStyle)style;
+- (UIColor *)fwColor:(FWThemeStyle)style;
 
 /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
 @property (nonatomic, assign, readonly) BOOL fwIsThemeColor;
@@ -134,13 +134,16 @@ extern NSString *const FWThemeChangedNotification;
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
 /// 获取当前主题样式对应静态图片
-@property (nullable, nonatomic, readonly) UIImage *fwThemeImage;
+@property (nullable, nonatomic, readonly) UIImage *fwImage;
 
 /// 指定主题样式获取对应静态图片
-- (nullable UIImage *)fwThemeImage:(FWThemeStyle)style;
+- (nullable UIImage *)fwImage:(FWThemeStyle)style;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
 @property (nonatomic, assign, readonly) BOOL fwIsThemeImage;
+
+/// 指定主题颜色，快速转换当前图片为主题图片
+- (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor;
 
 @end
 
