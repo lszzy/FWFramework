@@ -172,15 +172,13 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
         UIColor *color = nil;
         if (@available(iOS 13, *)) {
-            UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
-            color = bundle ? [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIColor colorNamed:name];
-            color = [color resolvedColorWithTraitCollection:traitCollection];
+            color = [[UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] fwColor:style];
         }
         if (!color) {
             color = [fwStaticNameColors[name] fwColor:style];
             if (!color) {
                 if (@available(iOS 11.0, *)) {
-                    color = bundle ? [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIColor colorNamed:name];
+                    color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
                 }
             }
         }
