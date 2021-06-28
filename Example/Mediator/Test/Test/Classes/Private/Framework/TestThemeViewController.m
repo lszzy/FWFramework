@@ -49,11 +49,11 @@
     [self.view addSubview:colorView];
     
     colorView = [[UIView alloc] initWithFrame:CGRectMake(160, 20, 50, 50)];
-    [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] forName:@"dynamic_color"];
+    [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]] forName:@"dynamic_color"];
     UIColor *dynamicColor = [UIColor fwThemeNamed:@"dynamic_color"];
-    colorView.backgroundColor = [dynamicColor fwColor:FWThemeManager.sharedInstance.style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
+    colorView.backgroundColor = [dynamicColor fwColor:FWThemeManager.sharedInstance.style];
     [colorView fwAddThemeListener:^(FWThemeStyle style) {
-        colorView.backgroundColor = [dynamicColor fwColor:style == FWThemeStyleDark ? FWThemeStyleLight : FWThemeStyleDark];
+        colorView.backgroundColor = [dynamicColor fwColor:style];
     }];
     [self.view addSubview:colorView];
     
@@ -126,7 +126,7 @@
     [self.view.layer addSublayer:layer];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
-    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:Theme.textColor];
+    imageView.fwThemeImage = [TestBundle imageNamed:@"close.svg"].fwThemeImage;
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
