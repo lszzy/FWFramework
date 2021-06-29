@@ -50,8 +50,8 @@ extern NSString *const FWThemeChangedNotification;
 /// 当前全局主题样式
 @property (nonatomic, readonly) FWThemeStyle style;
 
-/// 指定traitCollection的主题样式，传nil时为全局样式
-- (FWThemeStyle)style:(nullable UITraitCollection *)traitCollection;
+/// 指定traitCollection的实际显示样式，传nil时为全局样式
+- (FWThemeStyle)styleForTraitCollection:(nullable UITraitCollection *)traitCollection;
 
 @end
 
@@ -70,7 +70,7 @@ extern NSString *const FWThemeChangedNotification;
 @property (nullable, nonatomic, readonly) ObjectType object;
 
 /// 指定主题样式获取对应静态对象
-- (nullable ObjectType)object:(FWThemeStyle)style;
+- (nullable ObjectType)objectForStyle:(FWThemeStyle)style;
 
 @end
 
@@ -100,7 +100,7 @@ extern NSString *const FWThemeChangedNotification;
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
 /// 指定主题样式获取对应静态颜色
-- (UIColor *)fwColor:(FWThemeStyle)style;
+- (UIColor *)fwColorForStyle:(FWThemeStyle)style;
 
 /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
 @property (nonatomic, assign, readonly) BOOL fwIsThemeColor;
@@ -138,7 +138,7 @@ extern NSString *const FWThemeChangedNotification;
 @property (nullable, nonatomic, readonly) UIImage *fwImage;
 
 /// 指定主题样式获取对应静态图片用于显示
-- (nullable UIImage *)fwImage:(FWThemeStyle)style;
+- (nullable UIImage *)fwImageForStyle:(FWThemeStyle)style;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
 @property (nonatomic, assign, readonly) BOOL fwIsThemeImage;

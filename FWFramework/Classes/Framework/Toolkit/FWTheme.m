@@ -84,10 +84,10 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 - (FWThemeStyle)style
 {
-    return [self style:nil];
+    return [self styleForTraitCollection:nil];
 }
 
-- (FWThemeStyle)style:(UITraitCollection *)traitCollection
+- (FWThemeStyle)styleForTraitCollection:(UITraitCollection *)traitCollection
 {
     if (self.mode == FWThemeModeSystem) {
         if (@available(iOS 13, *)) {
@@ -130,7 +130,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return self.provider ? self.provider(FWThemeManager.sharedInstance.style) : nil;
 }
 
-- (id)object:(FWThemeStyle)style
+- (id)objectForStyle:(FWThemeStyle)style
 {
     return self.provider ? self.provider(style) : nil;
 }
@@ -153,7 +153,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     UIColor *color = nil;
     if (@available(iOS 13, *)) {
         color = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return provider([FWThemeManager.sharedInstance style:traitCollection]);
+            return provider([FWThemeManager.sharedInstance styleForTraitCollection:traitCollection]);
         }];
     } else {
         color = provider(FWThemeManager.sharedInstance.style);
@@ -172,10 +172,10 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
         UIColor *color = nil;
         if (@available(iOS 13, *)) {
-            color = [[UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] fwColor:style];
+            color = [[UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil] fwColorForStyle:style];
         }
         if (!color) {
-            color = [fwStaticNameColors[name] fwColor:style];
+            color = [fwStaticNameColors[name] fwColorForStyle:style];
             if (!color) {
                 if (@available(iOS 11.0, *)) {
                     color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
@@ -200,7 +200,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     [fwStaticNameColors addEntriesFromDictionary:nameColors];
 }
 
-- (UIColor *)fwColor:(FWThemeStyle)style
+- (UIColor *)fwColorForStyle:(FWThemeStyle)style
 {
     if (@available(iOS 13, *)) {
         UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
@@ -249,7 +249,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             image = [image imageWithConfiguration:traitCollection.imageConfiguration];
         }
         if (!image) {
-            image = [fwStaticNameImages[name] fwImage:style];
+            image = [fwStaticNameImages[name] fwImageForStyle:style];
             if (!image) image = bundle ? [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil] : [UIImage imageNamed:name];
         }
         return image;
@@ -288,10 +288,10 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     return self;
 }
 
-- (UIImage *)fwImage:(FWThemeStyle)style
+- (UIImage *)fwImageForStyle:(FWThemeStyle)style
 {
     if (self.fwThemeObject) {
-        return [self.fwThemeObject object:style];
+        return [self.fwThemeObject objectForStyle:style];
     }
     return self;
 }
@@ -320,8 +320,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 - (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor
 {
     return [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
-        UIImage *image = [self fwImage:style];
-        UIColor *color = [themeColor fwColor:style];
+        UIImage *image = [self fwImageForStyle:style];
+        UIColor *color = [themeColor fwColorForStyle:style];
         return [image fwImageWithTintColor:color];
     }];
 }
@@ -358,8 +358,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
             originalMSG(selfObject, originalCMD, traitCollection);
             
             if (![selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:traitCollection]) return;
-            FWThemeStyle style = [FWThemeManager.sharedInstance style:selfObject.traitCollection];
-            FWThemeStyle oldStyle = [FWThemeManager.sharedInstance style:traitCollection];
+            FWThemeStyle style = [FWThemeManager.sharedInstance styleForTraitCollection:selfObject.traitCollection];
+            FWThemeStyle oldStyle = [FWThemeManager.sharedInstance styleForTraitCollection:traitCollection];
             if (style == oldStyle) return;
             
             [selfObject fwThemeChanged:style];

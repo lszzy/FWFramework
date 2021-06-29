@@ -48,7 +48,7 @@ extension Theme {
         defaultAppearance.foregroundColor = Theme.textColor
         defaultAppearance.backgroundColor = Theme.barColor
         let whiteAppearance = FWNavigationBarAppearance()
-        whiteAppearance.foregroundColor = Theme.textColor.fwColor(.light)
+        whiteAppearance.foregroundColor = Theme.textColor.fwColor(forStyle: .light)
         whiteAppearance.backgroundColor = .white
         let transparentAppearance = FWNavigationBarAppearance()
         transparentAppearance.foregroundColor = Theme.textColor
