@@ -35,6 +35,7 @@ extern NSString *const FWThemeChangedNotification;
 /*!
  @brief 主题管理器，iOS13+可跟随系统改变
  @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
+ 注意事项：如果要支持iOS13以下主题切换，请勿使用静态主题颜色属性等，因为初始化后不会改变，可使用block方式配置
  */
 @interface FWThemeManager : NSObject
 
@@ -50,8 +51,11 @@ extern NSString *const FWThemeChangedNotification;
 /// 当前全局主题样式
 @property (nonatomic, readonly) FWThemeStyle style;
 
-/// 指定traitCollection的主题样式，传nil时为全局样式
-- (FWThemeStyle)style:(nullable UITraitCollection *)traitCollection;
+/// 指定traitCollection的实际显示样式，传nil时为全局样式
+- (FWThemeStyle)styleForTraitCollection:(nullable UITraitCollection *)traitCollection;
+
+/// 指定主题样式的实际显示样式
+- (FWThemeStyle)styleForSpecifiedStyle:(FWThemeStyle)specifiedStyle;
 
 @end
 
@@ -66,11 +70,11 @@ extern NSString *const FWThemeChangedNotification;
 /// 创建主题动态对象，指定提供句柄
 + (instancetype)objectWithProvider:(ObjectType _Nullable (^)(FWThemeStyle style))provider;
 
-/// 获取当前主题静态对象
+/// 获取当前主题静态对象，iOS13+可跟随系统改变
 @property (nullable, nonatomic, readonly) ObjectType object;
 
-/// 指定主题样式获取对应静态对象
-- (nullable ObjectType)object:(FWThemeStyle)style;
+/// 指定主题样式获取对应静态对象，iOS13+可跟随系统改变
+- (nullable ObjectType)objectForStyle:(FWThemeStyle)style;
 
 @end
 
@@ -99,8 +103,11 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
-/// 指定主题样式获取对应静态颜色
-- (UIColor *)fwColor:(FWThemeStyle)style;
+/// 获取当前主题样式对应静态颜色，iOS13+可跟随系统改变
+@property (nonatomic, readonly) UIColor *fwColor;
+
+/// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
+- (UIColor *)fwColorForStyle:(FWThemeStyle)style;
 
 /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
 @property (nonatomic, assign, readonly) BOOL fwIsThemeColor;
@@ -134,20 +141,14 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题图像，未配置主题图像时可使用本方式
 + (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
-/// 获取当前主题样式对应静态图片用于显示
+/// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
 @property (nullable, nonatomic, readonly) UIImage *fwImage;
 
-/// 指定主题样式获取对应静态图片用于显示
-- (nullable UIImage *)fwImage:(FWThemeStyle)style;
+/// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
+- (nullable UIImage *)fwImageForStyle:(FWThemeStyle)style;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
 @property (nonatomic, assign, readonly) BOOL fwIsThemeImage;
-
-/// 图片默认主题色，未设置时为浅色=>黑色、深色=>白色
-@property (class, nonatomic, strong) UIColor *fwThemeColor;
-
-/// 快速生成当前图片对应的默认主题图片
-@property (nonatomic, strong, readonly) UIImage *fwThemeImage;
 
 /// 指定主题颜色，快速生成当前图片对应的主题图片
 - (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor;
