@@ -101,6 +101,19 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     }
 }
 
+- (FWThemeStyle)styleForSpecifiedStyle:(FWThemeStyle)specifiedStyle
+{
+    if (self.mode == FWThemeModeSystem) {
+        if (@available(iOS 13, *)) {
+            return specifiedStyle;
+        } else {
+            return FWThemeStyleLight;
+        }
+    } else {
+        return (FWThemeStyle)self.mode;
+    }
+}
+
 @end
 
 @interface FWThemeObject ()
@@ -153,7 +166,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
     UIColor *color = nil;
     if (@available(iOS 13, *)) {
         color = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
-            return provider([FWThemeManager.sharedInstance styleForTraitCollection:traitCollection]);
+            return provider(FWThemeManager.sharedInstance.style);
         }];
     } else {
         color = provider(FWThemeManager.sharedInstance.style);
@@ -300,6 +313,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     return self.fwThemeObject ? YES : NO;
 }
+
+#pragma mark - Color
 
 + (UIColor *)fwThemeColor
 {
