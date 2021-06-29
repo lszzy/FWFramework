@@ -51,9 +51,9 @@
     colorView = [[UIView alloc] initWithFrame:CGRectMake(160, 20, 50, 50)];
     [UIColor fwSetThemeColor:[UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]] forName:@"dynamic_color"];
     UIColor *dynamicColor = [UIColor fwThemeNamed:@"dynamic_color"];
-    colorView.backgroundColor = [dynamicColor fwColor:FWThemeManager.sharedInstance.style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
+    colorView.backgroundColor = [dynamicColor fwColorForStyle:FWThemeManager.sharedInstance.style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
     [colorView fwAddThemeListener:^(FWThemeStyle style) {
-        colorView.backgroundColor = [dynamicColor fwColor:style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
+        colorView.backgroundColor = [dynamicColor fwColorForStyle:style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
     }];
     [self.view addSubview:colorView];
     
@@ -71,19 +71,19 @@
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 90, 50, 50)];
     UIImage *reverseImage = [UIImage fwThemeNamed:@"theme_image_reverse" bundle:TestBundle.bundle];
-    imageView.image = [reverseImage fwImage:FWThemeManager.sharedInstance.style == FWThemeStyleDark ? FWThemeStyleLight : FWThemeStyleDark];
+    imageView.image = [reverseImage fwImageForStyle:FWThemeManager.sharedInstance.style == FWThemeStyleDark ? FWThemeStyleLight : FWThemeStyleDark];
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = [reverseImage fwImage:style == FWThemeStyleDark ? FWThemeStyleLight : FWThemeStyleDark];
+        imageView.image = [reverseImage fwImageForStyle:style == FWThemeStyleDark ? FWThemeStyleLight : FWThemeStyleDark];
     }];
     [self.view addSubview:imageView];
     
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
     UIColor *themeColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
-    layer.backgroundColor = [themeColor fwColor:FWThemeManager.sharedInstance.style].CGColor;
+    layer.backgroundColor = [themeColor fwColorForStyle:FWThemeManager.sharedInstance.style].CGColor;
     layer.fwThemeContext = self;
     [layer fwAddThemeListener:^(FWThemeStyle style) {
-        layer.backgroundColor = [themeColor fwColor:style].CGColor;
+        layer.backgroundColor = [themeColor fwColorForStyle:style].CGColor;
     }];
     [self.view.layer addSublayer:layer];
     
@@ -149,9 +149,9 @@
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 370, 50, 50)];
     [UIImage fwSetThemeImage:[UIImage fwThemeLight:[[TestBundle imageNamed:@"tabbar_settings"] fwImageWithTintColor:[UIColor redColor]] dark:[TestBundle imageNamed:@"tabbar_settings"]] forName:@"dynamic_image"];
     UIImage *dynamicImage = [UIImage fwThemeNamed:@"dynamic_image"];
-    imageView.image = [dynamicImage fwImage:FWThemeManager.sharedInstance.style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
+    imageView.image = [dynamicImage fwImageForStyle:FWThemeManager.sharedInstance.style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
     [imageView fwAddThemeListener:^(FWThemeStyle style) {
-        imageView.image = [dynamicImage fwImage:style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
+        imageView.image = [dynamicImage fwImageForStyle:style == FWThemeStyleLight ? FWThemeStyleDark : FWThemeStyleLight];
     }];
     [self.view addSubview:imageView];
     
