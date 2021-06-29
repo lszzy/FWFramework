@@ -63,8 +63,8 @@
     if (attributes != nil) {
         UIColor *textColor = attributes[NSForegroundColorAttributeName];
         if (textColor != nil) {
-            lightAttributes[NSForegroundColorAttributeName] = [textColor fwColor:FWThemeStyleLight];
-            darkAttributes[NSForegroundColorAttributeName] = [textColor fwColor:FWThemeStyleDark];
+            lightAttributes[NSForegroundColorAttributeName] = [textColor fwColorForStyle:FWThemeStyleLight];
+            darkAttributes[NSForegroundColorAttributeName] = [textColor fwColorForStyle:FWThemeStyleDark];
         }
         UIFont *font = attributes[NSFontAttributeName];
         if (font != nil) {
