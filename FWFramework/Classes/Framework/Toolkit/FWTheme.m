@@ -18,8 +18,8 @@
 
 NSString *const FWThemeChangedNotification = @"FWThemeChangedNotification";
 
-static NSMutableDictionary<NSString *, UIColor *> *fwStaticNameColors = nil;
-static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
+static NSMutableDictionary<NSString *, UIColor *> *fwStaticThemeColors = nil;
+static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 @implementation FWThemeManager
 
@@ -163,17 +163,17 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle))provider
 {
-    UIColor *color = nil;
     if (@available(iOS 13, *)) {
-        color = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
+        UIColor *color = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traitCollection) {
             return provider([FWThemeManager.sharedInstance styleForTraitCollection:traitCollection]);
         }];
+        objc_setAssociatedObject(color, @selector(fwIsThemeColor), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return color;
     } else {
-        color = [provider(FWThemeManager.sharedInstance.style) copy];
+        UIColor *color = [provider(FWThemeManager.sharedInstance.style) copy];
         color.fwThemeObject = [FWThemeObject<UIColor *> objectWithProvider:provider];
+        return color;
     }
-    objc_setAssociatedObject(color, @selector(fwIsThemeColor), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return color;
 }
 
 + (UIColor *)fwThemeNamed:(NSString *)name
@@ -183,34 +183,37 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIColor *)fwThemeNamed:(NSString *)name bundle:(NSBundle *)bundle
 {
+    UIColor *themeColor = fwStaticThemeColors[name];
+    if (themeColor) return themeColor;
+    
     return [self fwThemeColor:^UIColor *(FWThemeStyle style) {
-        UIColor *color = fwStaticNameColors[name];
         if (@available(iOS 13, *)) {
-            if (!color) color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            UIColor *color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            if (!color) return UIColor.clearColor;
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
-            color = [color resolvedColorWithTraitCollection:traitCollection];
+            return [color resolvedColorWithTraitCollection:traitCollection];
         } else {
             if (@available(iOS 11.0, *)) {
-                if (!color) color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+                UIColor *color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+                if (color) return color;
             }
-            if (color.fwThemeObject) color = [color.fwThemeObject objectForStyle:style];
+            return UIColor.clearColor;
         }
-        return color ?: UIColor.clearColor;
     }];
 }
 
 + (void)fwSetThemeColor:(UIColor *)color forName:(NSString *)name
 {
     if (color) {
-        [fwStaticNameColors setObject:color forKey:name];
+        [fwStaticThemeColors setObject:color forKey:name];
     } else {
-        [fwStaticNameColors removeObjectForKey:name];
+        [fwStaticThemeColors removeObjectForKey:name];
     }
 }
 
 + (void)fwSetThemeColors:(NSDictionary<NSString *,UIColor *> *)nameColors
 {
-    [fwStaticNameColors addEntriesFromDictionary:nameColors];
+    [fwStaticThemeColors addEntriesFromDictionary:nameColors];
 }
 
 - (FWThemeObject<UIColor *> *)fwThemeObject
@@ -274,15 +277,14 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 
 + (UIImage *)fwThemeNamed:(NSString *)name bundle:(NSBundle *)bundle
 {
+    UIImage *themeImage = fwStaticThemeImages[name];
+    if (themeImage) return themeImage;
+
     return [self fwThemeImage:^UIImage * (FWThemeStyle style) {
-        UIImage *image = fwStaticNameImages[name];
-        if (image) {
-            return image.fwThemeObject ? [image.fwThemeObject objectForStyle:style] : image;
-        }
-        image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+        UIImage *image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
         if (@available(iOS 13, *)) {
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
-            return [image imageWithConfiguration:traitCollection.imageConfiguration];
+            image = [image imageWithConfiguration:traitCollection.imageConfiguration];
         }
         return image;
     }];
@@ -291,15 +293,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 + (void)fwSetThemeImage:(UIImage *)image forName:(NSString *)name
 {
     if (image) {
-        [fwStaticNameImages setObject:image forKey:name];
+        [fwStaticThemeImages setObject:image forKey:name];
     } else {
-        [fwStaticNameImages removeObjectForKey:name];
+        [fwStaticThemeImages removeObjectForKey:name];
     }
 }
 
 + (void)fwSetThemeImages:(NSDictionary<NSString *,UIImage *> *)nameImages
 {
-    [fwStaticNameImages addEntriesFromDictionary:nameImages];
+    [fwStaticThemeImages addEntriesFromDictionary:nameImages];
 }
 
 - (FWThemeObject<UIImage *> *)fwThemeObject
@@ -364,8 +366,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticNameImages = nil;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        fwStaticNameColors = [NSMutableDictionary new];
-        fwStaticNameImages = [NSMutableDictionary new];
+        fwStaticThemeColors = [NSMutableDictionary new];
+        fwStaticThemeImages = [NSMutableDictionary new];
         
         if (@available(iOS 13, *)) {
             [self fwThemeSwizzleClass:[UIScreen class]];
