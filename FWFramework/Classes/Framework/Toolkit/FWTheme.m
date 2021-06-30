@@ -101,19 +101,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     }
 }
 
-- (FWThemeStyle)styleForSpecifiedStyle:(FWThemeStyle)specifiedStyle
-{
-    if (self.mode == FWThemeModeSystem) {
-        if (@available(iOS 13, *)) {
-            return specifiedStyle;
-        } else {
-            return FWThemeStyleLight;
-        }
-    } else {
-        return (FWThemeStyle)self.mode;
-    }
-}
-
 @end
 
 @interface FWThemeObject ()
@@ -543,7 +530,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 - (void)setFwThemeBackgroundColor:(UIColor *)fwThemeBackgroundColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), fwThemeBackgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.backgroundColor = fwThemeBackgroundColor.fwColor.CGColor;
+    self.backgroundColor = fwThemeBackgroundColor.CGColor;
 }
 
 - (UIColor *)fwThemeBorderColor
@@ -554,7 +541,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 - (void)setFwThemeBorderColor:(UIColor *)fwThemeBorderColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeBorderColor), fwThemeBorderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.borderColor = fwThemeBorderColor.fwColor.CGColor;
+    self.borderColor = fwThemeBorderColor.CGColor;
 }
 
 - (UIColor *)fwThemeShadowColor
@@ -565,7 +552,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 - (void)setFwThemeShadowColor:(UIColor *)fwThemeShadowColor
 {
     objc_setAssociatedObject(self, @selector(fwThemeShadowColor), fwThemeShadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.shadowColor = fwThemeShadowColor.fwColor.CGColor;
+    self.shadowColor = fwThemeShadowColor.CGColor;
 }
 
 - (UIImage *)fwThemeContents
@@ -584,13 +571,13 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     [super fwThemeChanged:style];
     
     if (self.fwThemeBackgroundColor != nil) {
-        self.backgroundColor = self.fwThemeBackgroundColor.fwColor.CGColor;
+        self.backgroundColor = self.fwThemeBackgroundColor.CGColor;
     }
     if (self.fwThemeBorderColor != nil) {
-        self.borderColor = self.fwThemeBorderColor.fwColor.CGColor;
+        self.borderColor = self.fwThemeBorderColor.CGColor;
     }
     if (self.fwThemeShadowColor != nil) {
-        self.shadowColor = self.fwThemeShadowColor.fwColor.CGColor;
+        self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
     if (self.fwThemeContents != nil) {
         self.contents = (id)self.fwThemeContents.fwImage.CGImage;
@@ -614,7 +601,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     if (fwThemeColors != nil) {
         colors = [NSMutableArray new];
         for (UIColor *color in fwThemeColors) {
-            [colors addObject:(id)color.fwColor.CGColor];
+            [colors addObject:(id)color.CGColor];
         }
     }
     self.colors = colors.copy;
@@ -627,7 +614,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     if (self.fwThemeColors != nil) {
         NSMutableArray *colors = [NSMutableArray new];
         for (UIColor *color in self.fwThemeColors) {
-            [colors addObject:(id)color.fwColor.CGColor];
+            [colors addObject:(id)color.CGColor];
         }
         self.colors = colors.copy;
     }
