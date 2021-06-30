@@ -247,7 +247,11 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 - (BOOL)fwIsThemeColor
 {
-    return [objc_getAssociatedObject(self, @selector(fwIsThemeColor)) boolValue];
+    if (@available(iOS 13, *)) {
+        return [objc_getAssociatedObject(self, @selector(fwIsThemeColor)) boolValue];
+    } else {
+        return self.fwThemeObject ? YES : NO;
+    }
 }
 
 @end
