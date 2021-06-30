@@ -34,8 +34,8 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief 主题管理器，iOS13+可跟随系统改变
- @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
- 注意事项：如果要支持iOS13以下主题切换，请勿使用静态主题颜色属性等，因为初始化后不会改变，可使用block方式配置
+ @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效。
+ 注意事项：iOS13以下系统，主题颜色初始化之后不会改变，如果要支持主题切换，请使用fwColor等方法
  */
 @interface FWThemeManager : NSObject
 
@@ -149,6 +149,14 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
 @property (nonatomic, assign, readonly) BOOL fwIsThemeImage;
+
+#pragma mark - Color
+
+/// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
+@property (class, nonatomic, strong) UIColor *fwThemeImageColor;
+
+/// 快速生成当前图片对应的默认主题图片
+@property (nonatomic, strong, readonly) UIImage *fwThemeImage;
 
 /// 指定主题颜色，快速生成当前图片对应的主题图片
 - (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor;
