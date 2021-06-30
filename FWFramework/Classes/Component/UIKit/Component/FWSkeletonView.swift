@@ -267,7 +267,7 @@ import UIKit
     
     func setupView() {
         animationLayers.append(layer as! CAGradientLayer)
-        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor
+        backgroundColor = FWSkeletonAppearance.appearance.skeletonColor.fw
     }
     
     /// 解析视图样式
@@ -338,7 +338,7 @@ import UIKit
         
         for layerIndex in 0 ..< layerCount {
             let lineLayer = CAGradientLayer()
-            lineLayer.backgroundColor = lineColor.cgColor
+            lineLayer.backgroundColor = lineColor.fw.cgColor
             var layerWidth = bounds.width - contentInsets.left - contentInsets.right
             if layerCount > 1 && layerIndex == (layerCount - 1) {
                 layerWidth = layerWidth * lastLinePercent
@@ -392,7 +392,7 @@ import UIKit
     }
     
     override func setupView() {
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor.fw
     }
     
     /// 设置相对滚动视图，实现跟随下拉刷新等效果。block参数为contentOffset.y(不大于0)，默认设置顶部布局跟随滚动
@@ -616,8 +616,8 @@ import UIKit
     }
     
     override func setupView() {
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-        tableView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor.fw
+        tableView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor.fw
         
         addSubview(tableView)
         tableView.fwPinEdgesToSuperview()
@@ -771,8 +771,8 @@ import UIKit
     }
     
     override func setupView() {
-        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
-        collectionView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor
+        backgroundColor = FWSkeletonAppearance.appearance.backgroundColor.fw
+        collectionView.backgroundColor = FWSkeletonAppearance.appearance.backgroundColor.fw
         
         addSubview(collectionView)
         collectionView.fwPinEdgesToSuperview()
