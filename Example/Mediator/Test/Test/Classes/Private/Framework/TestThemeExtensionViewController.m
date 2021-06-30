@@ -85,8 +85,12 @@ static const FWThemeStyle FWThemeStyleRed = 3;
 - (void)renderModel
 {
     FWThemeMode mode = FWThemeManager.sharedInstance.mode;
-    NSArray *themes = @[@"系统", @"浅色", @"深色", @"红色"];
-    NSString *title = [themes fwObjectAtIndex:mode];
+    NSMutableArray *themes = [NSMutableArray arrayWithArray:@[@"系统", @"浅色"]];
+    if (@available(iOS 13, *)) {
+        [themes addObject:@"深色"];
+    }
+    NSString *title = [themes fwObjectAtIndex:mode] ?: @"红色";
+    [themes addObject:@"红色"];
     FWWeakifySelf();
     [self fwSetRightBarItem:title block:^(id  _Nonnull sender) {
         FWStrongifySelf();
@@ -94,7 +98,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
         [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:themes actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
-            FWThemeManager.sharedInstance.mode = (index == 3) ? FWThemeStyleRed : index;
+            FWThemeManager.sharedInstance.mode = (index == themes.count - 1) ? FWThemeStyleRed : index;
             [self renderModel];
             [TestTabBarViewController refreshController];
         }];

@@ -34,8 +34,8 @@ extern NSString *const FWThemeChangedNotification;
 
 /*!
  @brief 主题管理器，iOS13+可跟随系统改变
- @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效。
- 注意事项：iOS13以下系统，主题颜色初始化之后不会改变，如果要支持主题切换，请使用fwColor等方法
+ @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
+ 注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法
  */
 @interface FWThemeManager : NSObject
 
@@ -53,9 +53,6 @@ extern NSString *const FWThemeChangedNotification;
 
 /// 指定traitCollection的实际显示样式，传nil时为全局样式
 - (FWThemeStyle)styleForTraitCollection:(nullable UITraitCollection *)traitCollection;
-
-/// 指定主题样式的实际显示样式
-- (FWThemeStyle)styleForSpecifiedStyle:(FWThemeStyle)specifiedStyle;
 
 @end
 
@@ -103,7 +100,7 @@ extern NSString *const FWThemeChangedNotification;
 /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
 + (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
 
-/// 获取当前主题样式对应静态颜色，iOS13+可跟随系统改变
+/// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
 @property (nonatomic, readonly) UIColor *fwColor;
 
 /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变

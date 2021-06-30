@@ -103,11 +103,17 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onTheme() {
-        fwShowSheet(withTitle: FWLocalizedString("themeTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [FWLocalizedString("systemTitle"), FWLocalizedString("themeLight"), FWLocalizedString("themeDark"), FWLocalizedString("changeTitle")]) { (index) in
+        var actions = [FWLocalizedString("systemTitle"), FWLocalizedString("themeLight")]
+        if #available(iOS 13.0, *) {
+            actions.append(FWLocalizedString("themeDark"))
+        }
+        actions.append(FWLocalizedString("changeTitle"))
+        
+        fwShowSheet(withTitle: FWLocalizedString("themeTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: actions) { (index) in
             var mode = FWThemeMode(index)
-            if index > 2 {
+            if index > actions.count - 2 {
                 let currentMode = FWThemeManager.sharedInstance.mode
-                mode = currentMode == .system ? .light : (currentMode == .light ? .dark : .system)
+                mode = currentMode == .system ? .light : (currentMode == .light && actions.count > 3 ? .dark : .system)
             }
             FWThemeManager.sharedInstance.mode = mode
             UITabBarController.refreshController()
