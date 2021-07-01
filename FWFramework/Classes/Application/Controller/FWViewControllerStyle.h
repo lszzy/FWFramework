@@ -143,6 +143,12 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UINavigationBar (FWStyle)
 
+/// 导航栏iOS13+样式对象，用于自定义样式
+@property (nonatomic, strong, readonly) UINavigationBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+
+/// 手工更新导航栏样式
+- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
@@ -169,6 +175,12 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  @brief 标签栏视图分类，全局设置用[UITabBar appearance]
  */
 @interface UITabBar (FWStyle)
+
+/// 标签栏iOS13+样式对象，用于自定义样式
+@property (nonatomic, strong, readonly) UITabBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+
+/// 手工更新标签栏样式
+- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
