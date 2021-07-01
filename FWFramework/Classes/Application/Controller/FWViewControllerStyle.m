@@ -357,8 +357,7 @@
             backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
         }
         self.navigationItem.backBarButtonItem = backItem;
-        self.navigationController.navigationBar.backIndicatorImage = nil;
-        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
+        self.navigationController.navigationBar.fwBackImage = nil;
         return;
     }
     
@@ -378,8 +377,7 @@
     }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
-    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
+    self.navigationController.navigationBar.fwBackImage = indicatorImage;
 }
 
 - (BOOL)fwPopBackBarItem
@@ -454,6 +452,26 @@
     self.standardAppearance = self.fwAppearance;
     self.compactAppearance = self.fwAppearance;
     self.scrollEdgeAppearance = self.fwAppearance;
+}
+
+- (UIImage *)fwBackImage
+{
+    if (@available(iOS 13.0, *)) {
+        return self.fwAppearance.backIndicatorImage;
+    } else {
+        return self.backIndicatorImage;
+    }
+}
+
+- (void)setFwBackImage:(UIImage *)image
+{
+    if (@available(iOS 13.0, *)) {
+        [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
+        [self fwUpdateAppearance];
+    } else {
+        self.backIndicatorImage = image;
+        self.backIndicatorTransitionMaskImage = image;
+    }
 }
 
 - (UIColor *)fwForegroundColor

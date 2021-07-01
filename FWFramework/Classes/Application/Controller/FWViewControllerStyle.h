@@ -149,6 +149,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 手工更新导航栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
+/// 设置返回按钮图片，包含图片和转场Mask图片
+@property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
+
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
