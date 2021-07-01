@@ -126,7 +126,11 @@
     [self.view.layer addSublayer:layer];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
-    imageView.fwThemeImage = [[TestBundle imageNamed:@"close.svg"] fwThemeImageWithColor:Theme.textColor];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UIImage.fwThemeImageColor = Theme.textColor;
+    });
+    imageView.fwThemeImage = [TestBundle imageNamed:@"close.svg"].fwThemeImage;
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
@@ -189,7 +193,11 @@
     [self fwSetRightBarItem:title block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"系统", @"浅色", @"深色"] actionBlock:^(NSInteger index) {
+        NSMutableArray *actions = [NSMutableArray arrayWithArray:@[@"系统", @"浅色"]];
+        if (@available(iOS 13.0, *)) {
+            [actions addObject:@"深色"];
+        }
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:actions actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
             FWThemeManager.sharedInstance.mode = index;
