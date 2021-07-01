@@ -631,6 +631,7 @@
     UITabBarAppearance *appearance = objc_getAssociatedObject(self, _cmd);
     if (!appearance) {
         appearance = [[UITabBarAppearance alloc] init];
+        [appearance configureWithTransparentBackground];
         objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
