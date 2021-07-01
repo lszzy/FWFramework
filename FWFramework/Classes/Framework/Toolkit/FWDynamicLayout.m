@@ -295,11 +295,10 @@
                           configuration:(FWCellConfigurationBlock)configuration {
     UIView *view = [self fwDynamicViewWithCellClass:clazz];
     CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0) {
+    if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        UIView *layoutView = self.superview ? self.superview : self;
-        [layoutView setNeedsLayout];
-        [layoutView layoutIfNeeded];
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
         width = CGRectGetWidth(self.frame);
     }
 
@@ -399,11 +398,10 @@
     NSString *identifier = [NSString stringWithFormat:@"%@", @(type)];
     UIView *view = [self fwDynamicViewWithHeaderFooterViewClass:clazz identifier:identifier];
     CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0) {
+    if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        UIView *layoutView = self.superview ? self.superview : self;
-        [layoutView setNeedsLayout];
-        [layoutView layoutIfNeeded];
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
         width = CGRectGetWidth(self.frame);
     }
 
@@ -814,11 +812,10 @@
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
         width = CGRectGetWidth(self.frame);
-        if (width <= 0) {
+        if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            UIView *layoutView = self.superview ? self.superview : self;
-            [layoutView setNeedsLayout];
-            [layoutView layoutIfNeeded];
+            [self.superview setNeedsLayout];
+            [self.superview layoutIfNeeded];
             width = CGRectGetWidth(self.frame);
         }
     }
@@ -982,11 +979,10 @@
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
         width = CGRectGetWidth(self.frame);
-        if (width <= 0) {
+        if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            UIView *layoutView = self.superview ? self.superview : self;
-            [layoutView setNeedsLayout];
-            [layoutView layoutIfNeeded];
+            [self.superview setNeedsLayout];
+            [self.superview layoutIfNeeded];
             width = CGRectGetWidth(self.frame);
         }
     }
