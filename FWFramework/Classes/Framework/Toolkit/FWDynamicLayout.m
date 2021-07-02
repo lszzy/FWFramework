@@ -292,16 +292,17 @@
 }
 
 - (CGFloat)fwDynamicHeightWithCellClass:(Class)clazz
-                          configuration:(FWCellConfigurationBlock)configuration {
+                          configuration:(FWCellConfigurationBlock)configuration
+                            shouldCache:(BOOL *)shouldCache {
     UIView *view = [self fwDynamicViewWithCellClass:clazz];
     CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0) {
+    if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        UIView *layoutView = self.superview ? self.superview : self;
-        [layoutView setNeedsLayout];
-        [layoutView layoutIfNeeded];
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
         width = CGRectGetWidth(self.frame);
     }
+    if (shouldCache) *shouldCache = width > 0;
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, 0.0);
@@ -351,7 +352,7 @@
 
 - (CGFloat)fwHeightWithCellClass:(Class)clazz
                    configuration:(FWCellConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithCellClass:clazz configuration:configuration];
+    return [self fwDynamicHeightWithCellClass:clazz configuration:configuration shouldCache:NULL];
 }
 
 - (CGFloat)fwHeightWithCellClass:(Class)clazz
@@ -366,8 +367,9 @@
     if (key && self.fwDynamicLayoutHeightCache.heightDictionary[key]) {
         return self.fwDynamicLayoutHeightCache.heightDictionary[key].doubleValue;
     }
-    CGFloat cellHeight = [self fwDynamicHeightWithCellClass:clazz configuration:configuration];
-    if (key) {
+    BOOL shouldCache = YES;
+    CGFloat cellHeight = [self fwDynamicHeightWithCellClass:clazz configuration:configuration shouldCache:&shouldCache];
+    if (key && shouldCache) {
         self.fwDynamicLayoutHeightCache.heightDictionary[key] = @(cellHeight);
     }
     return cellHeight;
@@ -395,17 +397,18 @@
 
 - (CGFloat)fwDynamicHeightWithHeaderFooterViewClass:(Class)clazz
                                                type:(FWHeaderFooterViewType)type
-                                      configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+                                      configuration:(FWHeaderFooterViewConfigurationBlock)configuration
+                                        shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@", @(type)];
     UIView *view = [self fwDynamicViewWithHeaderFooterViewClass:clazz identifier:identifier];
     CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0) {
+    if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        UIView *layoutView = self.superview ? self.superview : self;
-        [layoutView setNeedsLayout];
-        [layoutView layoutIfNeeded];
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
         width = CGRectGetWidth(self.frame);
     }
+    if (shouldCache) *shouldCache = width > 0;
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, 0.0);
@@ -457,7 +460,7 @@
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
                                         type:(FWHeaderFooterViewType)type
                                configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
+    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:NULL];
 }
 
 - (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
@@ -475,8 +478,9 @@
         if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
-        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
-        if (key) {
+        BOOL shouldCache = YES;
+        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
+        if (key && shouldCache) {
             self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(viewHeight);
         }
         return viewHeight;
@@ -484,8 +488,9 @@
         if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
             return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
-        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration];
-        if (key) {
+        BOOL shouldCache = YES;
+        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
+        if (key && shouldCache) {
             self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(viewHeight);
         }
         return viewHeight;
@@ -807,21 +812,22 @@
 - (CGSize)fwDynamicSizeWithCellClass:(Class)clazz
                                width:(CGFloat)fixedWidth
                               height:(CGFloat)fixedHeight
-                       configuration:(FWCollectionCellConfigurationBlock)configuration {
+                       configuration:(FWCollectionCellConfigurationBlock)configuration
+                         shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@-%@", @(fixedWidth), @(fixedHeight)];
     UIView *view = [self fwDynamicViewWithCellClass:clazz identifier:identifier];
     CGFloat width = fixedWidth;
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
         width = CGRectGetWidth(self.frame);
-        if (width <= 0) {
+        if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            UIView *layoutView = self.superview ? self.superview : self;
-            [layoutView setNeedsLayout];
-            [layoutView layoutIfNeeded];
+            [self.superview setNeedsLayout];
+            [self.superview layoutIfNeeded];
             width = CGRectGetWidth(self.frame);
         }
     }
+    if (shouldCache) *shouldCache = fixedHeight > 0 || width > 0;
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, height);
@@ -879,19 +885,19 @@
 
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:0 height:0 configuration:configuration];
+    return [self fwDynamicSizeWithCellClass:clazz width:0 height:0 configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:width height:0 configuration:configuration];
+    return [self fwDynamicSizeWithCellClass:clazz width:width height:0 configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:0 height:height configuration:configuration];
+    return [self fwDynamicSizeWithCellClass:clazz width:0 height:height configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithCellClass:(Class)clazz
@@ -944,8 +950,9 @@
     if (cacheKey && self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey]) {
         return self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey].CGSizeValue;
     }
-    CGSize cellSize = [self fwDynamicSizeWithCellClass:clazz width:width height:height configuration:configuration];
-    if (cacheKey) {
+    BOOL shouldCache = YES;
+    CGSize cellSize = [self fwDynamicSizeWithCellClass:clazz width:width height:height configuration:configuration shouldCache:&shouldCache];
+    if (cacheKey && shouldCache) {
         self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey] = [NSValue valueWithCGSize:cellSize];
     }
     return cellSize;
@@ -975,21 +982,22 @@
                                        width:(CGFloat)fixedWidth
                                       height:(CGFloat)fixedHeight
                                         kind:(NSString *)kind
-                               configuration:(FWReusableViewConfigurationBlock)configuration {
+                               configuration:(FWReusableViewConfigurationBlock)configuration
+                                 shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@-%@-%@", kind, @(fixedWidth), @(fixedHeight)];
     UIView *view = [self fwDynamicViewWithReusableViewClass:clazz identifier:identifier];
     CGFloat width = fixedWidth;
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
         width = CGRectGetWidth(self.frame);
-        if (width <= 0) {
+        if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            UIView *layoutView = self.superview ? self.superview : self;
-            [layoutView setNeedsLayout];
-            [layoutView layoutIfNeeded];
+            [self.superview setNeedsLayout];
+            [self.superview layoutIfNeeded];
             width = CGRectGetWidth(self.frame);
         }
     }
+    if (shouldCache) *shouldCache = fixedHeight > 0 || width > 0;
 
     // 设置 Frame
     view.frame = CGRectMake(0.0, 0.0, width, height);
@@ -1048,21 +1056,21 @@
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:0 kind:kind configuration:configuration];
+    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:width height:0 kind:kind configuration:configuration];
+    return [self fwDynamicSizeWithReusableViewClass:clazz width:width height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:height kind:kind configuration:configuration];
+    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:height kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fwSizeWithReusableViewClass:(Class)clazz
@@ -1126,8 +1134,9 @@
         if (cacheKey && self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey]) {
             return self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey].CGSizeValue;
         }
-        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration];
-        if (cacheKey) {
+        BOOL shouldCache = YES;
+        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
+        if (cacheKey && shouldCache) {
             self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
         }
         return viewSize;
@@ -1135,8 +1144,9 @@
         if (cacheKey && self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey]) {
             return self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey].CGSizeValue;
         }
-        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration];
-        if (cacheKey) {
+        BOOL shouldCache = YES;
+        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
+        if (cacheKey && shouldCache) {
             self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
         }
         return viewSize;
