@@ -116,8 +116,8 @@ platform :ios do
   lane :testflight_test do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Test",
-      configuration: "Release-Test",
+      scheme: "Example",
+      configuration: "Release",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
