@@ -138,8 +138,10 @@
 
 - (void)onLoadingWindow
 {
+    self.view.window.fwToastInsets = UIEdgeInsetsMake(FWTopBarHeight, 0, 0, 0);
     [self.view.window fwShowLoadingWithText:@"加载中"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.view.window.fwToastInsets = UIEdgeInsetsZero;
         [self.view.window fwHideLoading];
     });
 }
