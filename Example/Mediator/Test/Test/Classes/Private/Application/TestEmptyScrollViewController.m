@@ -81,6 +81,7 @@
 {
     FWWeakifySelf();
     scrollView.fwOverlayView.backgroundColor = Theme.tableColor;
+    scrollView.fwOverlayView.fwEmptyInsets = UIEdgeInsetsMake(35 + 50, 0, 0, 0);
     [scrollView fwShowEmptyViewWithText:nil detail:nil image:nil action:nil block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         
