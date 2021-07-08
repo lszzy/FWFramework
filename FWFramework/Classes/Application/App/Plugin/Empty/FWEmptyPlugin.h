@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FWEmptyPluginView <NSObject>
 @required
 
+/// 设置空界面外间距，默认zero
+@property (nonatomic, assign) UIEdgeInsets fwEmptyInsets;
+
 /// 显示空界面
 - (void)fwShowEmptyView;
 

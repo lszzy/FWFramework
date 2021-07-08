@@ -53,6 +53,9 @@ static const FWToastStyle FWToastStyleFailure = 2;
 @protocol FWToastPluginView <NSObject>
 @required
 
+/// 设置吐司外间距，默认zero
+@property (nonatomic, assign) UIEdgeInsets fwToastInsets;
+
 /// 显示加载吐司，需手工隐藏，默认文本
 - (void)fwShowLoading;
 
