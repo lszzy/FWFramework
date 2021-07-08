@@ -10,10 +10,22 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWToastPluginView
 
 @implementation UIView (FWToastPluginView)
+
+- (UIEdgeInsets)fwToastInsets
+{
+    NSValue *insets = objc_getAssociatedObject(self, @selector(fwToastInsets));
+    return insets ? [insets UIEdgeInsetsValue] : UIEdgeInsetsZero;
+}
+
+- (void)setFwToastInsets:(UIEdgeInsets)fwToastInsets
+{
+    objc_setAssociatedObject(self, @selector(fwToastInsets), [NSValue valueWithUIEdgeInsets:fwToastInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (void)fwShowLoading
 {
@@ -90,6 +102,16 @@
 @end
 
 @implementation UIViewController (FWToastPluginView)
+
+- (UIEdgeInsets)fwToastInsets
+{
+    return self.view.fwToastInsets;
+}
+
+- (void)setFwToastInsets:(UIEdgeInsets)fwToastInsets
+{
+    self.view.fwToastInsets = fwToastInsets;
+}
 
 - (void)fwShowLoading
 {
