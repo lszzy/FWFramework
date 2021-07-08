@@ -18,6 +18,17 @@
 
 @implementation UIView (FWEmptyPluginView)
 
+- (UIEdgeInsets)fwEmptyInsets
+{
+    NSValue *insets = objc_getAssociatedObject(self, @selector(fwEmptyInsets));
+    return insets ? [insets UIEdgeInsetsValue] : UIEdgeInsetsZero;
+}
+
+- (void)setFwEmptyInsets:(UIEdgeInsets)fwEmptyInsets
+{
+    objc_setAssociatedObject(self, @selector(fwEmptyInsets), [NSValue valueWithUIEdgeInsets:fwEmptyInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)fwShowEmptyView
 {
     [self fwShowEmptyViewWithText:nil];
@@ -88,6 +99,16 @@
 @end
 
 @implementation UIViewController (FWEmptyPluginView)
+
+- (UIEdgeInsets)fwEmptyInsets
+{
+    return self.view.fwEmptyInsets;
+}
+
+- (void)setFwEmptyInsets:(UIEdgeInsets)fwEmptyInsets
+{
+    self.view.fwEmptyInsets = fwEmptyInsets;
+}
 
 - (void)fwShowEmptyView
 {
