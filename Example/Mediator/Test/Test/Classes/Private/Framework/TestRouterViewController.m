@@ -245,7 +245,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     FWLogDebug(@"fwUrlEncodeComponent: %@", [url fwUrlEncodeComponent]);
     FWLogDebug(@"fwUrlDecodeComponent: %@", [[url fwUrlEncodeComponent] fwUrlDecodeComponent]);
     
-    url = @"app://test/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2";
+    url = @"app://test/1?value=2&name=name2&title=我是字符串100%&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2";
     FWLogDebug(@"string.fwQueryDecode: %@", [url fwQueryDecode]);
     FWLogDebug(@"string.fwQueryEncode: %@", [NSString fwQueryEncode:[url fwQueryDecode]]);
     NSURL *nsurl = [NSURL fwURLWithString:url];
@@ -397,7 +397,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onRewrite2
 {
-    [FWRouter openURL:@"https://www.baidu.com/wildcard/原子弹"];
+    [FWRouter openURL:@"https://www.baidu.com/wildcard/原子弹?title=我是字符串100%"];
 }
 
 - (void)onRewrite3
