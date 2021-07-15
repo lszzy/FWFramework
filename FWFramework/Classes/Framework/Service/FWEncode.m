@@ -642,8 +642,9 @@ NSURL * FWSafeURL(id value) {
         urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         urlComponents = [[NSURLComponents alloc] initWithString:urlString];
     }
+    // queryItems.value会自动进行URL参数解码
     [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
-        dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
+        dict[obj.name] = obj.value;
     }];
     return [dict copy];
 }
