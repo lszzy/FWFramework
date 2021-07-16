@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 #import "FWURLResponseSerialization.h"
+#import "FWEncode.h"
 #import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -246,6 +247,16 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     NSError *serializationError = nil;
     
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:self.readingOptions error:&serializationError];
+    
+    // 兼容\uD800-\uDFFF引起JSON解码报错3840问题
+    if (serializationError && serializationError.code == 3840) {
+        NSString *escapeString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSData *escapeData = [[escapeString fwEscapeJson] dataUsingEncoding:NSUTF8StringEncoding];
+        if (escapeData && escapeData.length != data.length) {
+            serializationError = nil;
+            responseObject = [NSJSONSerialization JSONObjectWithData:escapeData options:self.readingOptions error:&serializationError];
+        }
+    }
 
     if (!responseObject)
     {

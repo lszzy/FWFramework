@@ -149,14 +149,20 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
     TestModelObj *obj = [TestModelObj fwModelWithJson:jsonDict];
     self.textView.text = [NSString stringWithFormat:@"obj: %@\ndict: %@", obj, [obj fwModelToJsonObject]];
     
-    // 测试\udf36字符会导致json解码失败问题
+    // 测试\udf36|\udd75等字符会导致json解码失败问题
     NSString *jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\\\udf36\\ufe0f\"}";
     id jsonObject = [jsonString fwJsonDecode];
     self.textView.text = [NSString stringWithFormat:@"%@\nname: %@\njson: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
     
-    jsonString = @"{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\udf36\\ufe0f\"}";
+    jsonString = @"{\"name\": \"Test1\\udd75Test2\\ud83dTest3\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\udf36\\ufe0f\"}";
     jsonObject = [jsonString fwJsonDecode];
     self.textView.text = [NSString stringWithFormat:@"%@\nname2: %@\njson2: %@", self.textView.text, [jsonObject objectForKey:@"name"], [NSString fwJsonEncode:jsonObject]];
+    
+    // 测试%导致stringByRemovingPercentEncoding返回nil问题
+    NSString *queryValue = @"我是字符串100%测试";
+    self.textView.text = [NSString stringWithFormat:@"%@\nquery: %@", self.textView.text, [queryValue stringByRemovingPercentEncoding]];
+    queryValue = @"%E6%88%91%E6%98%AF%E5%AD%97%E7%AC%A6%E4%B8%B2100%25%E6%B5%8B%E8%AF%95";
+    self.textView.text = [NSString stringWithFormat:@"%@\nquery2: %@", self.textView.text, [queryValue stringByRemovingPercentEncoding]];
 }
 
 @end

@@ -50,8 +50,9 @@
         NSURL *nsurl = [FWRouterContext URLWithString:self.URL];
         if (nsurl) {
             NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+            // queryItems.value会自动进行URL参数解码
             for (NSURLQueryItem *item in queryItems) {
-                parameters[item.name] = [item.value stringByRemovingPercentEncoding];
+                parameters[item.name] = item.value;
             }
         }
         _URLParameters = [parameters copy];
@@ -545,8 +546,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSURL *nsurl = [FWRouterContext URLWithString:url];
     if (nsurl) {
         NSArray<NSURLQueryItem *> *queryItems = [[NSURLComponents alloc] initWithURL:nsurl resolvingAgainstBaseURL:false].queryItems;
+        // queryItems.value会自动进行URL参数解码
         for (NSURLQueryItem *item in queryItems) {
-            parameters[item.name] = [item.value stringByRemovingPercentEncoding];
+            parameters[item.name] = item.value;
         }
     }
     
