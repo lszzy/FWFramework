@@ -17,33 +17,18 @@
 
 + (NSString *)fwJsonEncode:(id)object
 {
-    if (!object) {
-        return nil;
-    }
+    NSData *data = [NSData fwJsonEncode:object];
+    if (!data) return nil;
     
-    NSError *err = nil;
-    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
-    if (err) {
-        return nil;
-    }
-    
-    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return str;
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 - (id)fwJsonDecode
 {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data) {
-        return nil;
-    }
+    if (!data) return nil;
     
-    NSError *err = nil;
-    id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-    if (err) {
-        return nil;
-    }
-    return obj;
+    return [data fwJsonDecode];
 }
 
 #pragma mark - Base64
@@ -51,23 +36,18 @@
 - (NSString *)fwBase64Encode
 {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data) {
-        return nil;
-    }
+    if (!data) return nil;
     
     data = [data base64EncodedDataWithOptions:0];
-    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return ret;
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 - (NSString *)fwBase64Decode
 {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    if (!data) {
-        return nil;
-    }
-    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return ret;
+    if (!data) return nil;
+    
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark - Unicode
@@ -75,7 +55,7 @@
 - (NSUInteger)fwUnicodeLength
 {
     NSUInteger strLength = 0;
-    
+
     for (int i = 0; i < self.length; i++) {
         if ([self characterAtIndex:i] > 0xff) {
             strLength += 2;
@@ -222,9 +202,7 @@
 - (NSString *)fwMd5EncodeFile
 {
     NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self];
-    if (!handle) {
-        return nil;
-    }
+    if (!handle) return nil;
     
     CC_MD5_CTX md5;
     CC_MD5_Init(&md5);
@@ -261,25 +239,22 @@
 
 + (NSData *)fwJsonEncode:(id)object
 {
-    if (!object) {
-        return nil;
-    }
+    if (!object) return nil;
     
-    NSError *err = nil;
-    id data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&err];
-    if (err) {
-        return nil;
-    }
-    return data;
+    return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
 }
 
 - (id)fwJsonDecode
 {
-    NSError *err = nil;
-    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&err];
-    if (err) {
-        return nil;
-    }
+    NSError *error = nil;
+    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&error];
+    if (!error || error.code != 3840) return obj;
+    
+    NSString *string = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+    NSData *data = [[string fwEscapeJson] dataUsingEncoding:NSUTF8StringEncoding];
+    if (!data || data.length == self.length) return nil;
+    
+    obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
     return obj;
 }
 
@@ -554,6 +529,24 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
+- (NSString *)fwEscapeJson
+{
+    NSString *string = self;
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+    int count = (int)matches.count;
+    if (count < 1) return string;
+    
+    // 倒序循环，避免replace越界
+    for (int i = count - 1; i >= 0; i--) {
+        NSRange range = [matches objectAtIndex:i].range;
+        NSString *substr = [[string substringWithRange:range] uppercaseString];
+        if (range.length == 12 && [substr characterAtIndex:3] <= 'B' && [substr characterAtIndex:9] > 'B') continue;
+        string = [string stringByReplacingCharactersInRange:range withString:@""];
+    }
+    return string;
+}
+
 - (NSString *)fwSubstringFromIndex:(NSInteger)from
 {
     if (from < 0) {
@@ -649,8 +642,9 @@ NSURL * FWSafeURL(id value) {
         urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         urlComponents = [[NSURLComponents alloc] initWithString:urlString];
     }
+    // queryItems.value会自动进行URL参数解码
     [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
-        dict[obj.name] = [obj.value stringByRemovingPercentEncoding];
+        dict[obj.name] = obj.value;
     }];
     return [dict copy];
 }
