@@ -193,7 +193,7 @@
 
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
-    if (!self.fwNavigationBar) return;
+    if (!self.navigationController) return;
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
     NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
     NSNumber *hidden = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
