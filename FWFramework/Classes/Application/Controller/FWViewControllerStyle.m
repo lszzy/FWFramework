@@ -173,9 +173,14 @@
     }
 }
 
+- (UINavigationBar *)fwNavigationBar
+{
+    return self.navigationController.navigationBar;
+}
+
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
-    if (!self.navigationController) return;
+    if (!self.fwNavigationBar) return;
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
     NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
     NSNumber *hidden = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
@@ -193,28 +198,28 @@
         [self.navigationController setNavigationBarHidden:isHidden animated:animated];
     }
     if (isTransparent) {
-        [self.navigationController.navigationBar fwSetBackgroundTransparent];
+        [self.fwNavigationBar fwSetBackgroundTransparent];
     }
     
     if (appearance.backgroundColor) {
         if (appearance.backgroundColor.fwIsThemeColor) {
-            self.navigationController.navigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
+            self.fwNavigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
         } else {
-            self.navigationController.navigationBar.fwBackgroundColor = appearance.backgroundColor;
+            self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
         }
     }
     if (appearance.backgroundImage) {
         if (appearance.backgroundImage.fwIsThemeImage) {
-            self.navigationController.navigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
+            self.fwNavigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
         } else {
-            self.navigationController.navigationBar.fwBackgroundImage = appearance.backgroundImage;
+            self.fwNavigationBar.fwBackgroundImage = appearance.backgroundImage;
         }
     }
     if (appearance.foregroundColor) {
-        self.navigationController.navigationBar.fwForegroundColor = appearance.foregroundColor;
+        self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
     }
     if (appearance.appearanceBlock) {
-        appearance.appearanceBlock(self.navigationController.navigationBar);
+        appearance.appearanceBlock(self.fwNavigationBar);
     }
 }
 
@@ -357,8 +362,8 @@
             backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
         }
         self.navigationItem.backBarButtonItem = backItem;
-        self.navigationController.navigationBar.backIndicatorImage = nil;
-        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
+        self.fwNavigationBar.backIndicatorImage = nil;
+        self.fwNavigationBar.backIndicatorTransitionMaskImage = nil;
         return;
     }
     
@@ -378,8 +383,8 @@
     }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
-    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
+    self.fwNavigationBar.backIndicatorImage = indicatorImage;
+    self.fwNavigationBar.backIndicatorTransitionMaskImage = indicatorImage;
 }
 
 - (BOOL)fwPopBackBarItem
