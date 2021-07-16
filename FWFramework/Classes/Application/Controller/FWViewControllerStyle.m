@@ -48,6 +48,13 @@
 
 @implementation UIViewController (FWStyle)
 
+#pragma mark - View
+
+- (UIView *)fwView
+{
+    return self.view;
+}
+
 #pragma mark - Bar
 
 + (void)load
@@ -138,8 +145,6 @@
 {
     objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(fwNavigationBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
-    // [self.navigationController setNavigationBarHidden:hidden animated:animated];
     if (self.isViewLoaded && self.view.window) {
         [self fwUpdateNavigationBarStyle:NO];
     }
@@ -173,6 +178,19 @@
     }
 }
 
+- (UINavigationBar *)fwNavigationBar
+{
+    return self.navigationController.navigationBar;
+}
+
+- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
+    if (self.navigationController.navigationBarHidden != hidden) {
+        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    }
+}
+
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.fwNavigationBar) return;
@@ -189,9 +207,7 @@
         isTransparent = (style.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     }
     
-    if (self.navigationController.navigationBarHidden != isHidden) {
-        [self.navigationController setNavigationBarHidden:isHidden animated:animated];
-    }
+    [self fwSetNavigationBarHidden:isHidden animated:animated];
     if (isTransparent) {
         [self.fwNavigationBar fwSetBackgroundTransparent];
     }
@@ -249,18 +265,6 @@
 {
     self.edgesForExtendedLayout = edge;
     self.extendedLayoutIncludesOpaqueBars = YES;
-}
-
-#pragma mark - View
-
-- (UINavigationBar *)fwNavigationBar
-{
-    return self.navigationController.navigationBar;
-}
-
-- (UIView *)fwView
-{
-    return self.view;
 }
 
 #pragma mark - Item
