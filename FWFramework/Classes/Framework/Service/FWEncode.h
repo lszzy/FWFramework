@@ -165,9 +165,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSData *)fwJsonEncode:(id)object;
 
 /**
- *  json数据解码为Foundation对象
- *
- *  @return Foundation对象
+ @brief json数据解码为Foundation对象
+
+ @return Foundation对象
  */
 - (nullable id)fwJsonDecode;
 
@@ -367,6 +367,16 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
  @return trim字符串
  */
 @property (nonatomic, copy, readonly) NSString *fwTrimString;
+
+/*!
+ @brief 过滤JSON解码特殊字符
+ @discussion 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
+ 规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
+ 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
+ 
+ @return JSON过滤字符串
+ */
+@property (nonatomic, copy, readonly) NSString *fwEscapeJson;
 
 /*!
  @brief 转换为UTF8编码数据
