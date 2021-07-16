@@ -30,7 +30,7 @@
 - (void)scrollViewControllerLoadView:(UIViewController<FWScrollViewController> *)viewController
 {
     UIScrollView *scrollView = [viewController scrollView];
-    [viewController.view addSubview:scrollView];
+    [viewController.fwView addSubview:scrollView];
     
     UIView *contentView = [viewController contentView];
     [scrollView addSubview:contentView];

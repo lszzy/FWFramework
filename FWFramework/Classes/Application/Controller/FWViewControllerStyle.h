@@ -77,9 +77,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 当前导航栏设置，优先级高于style和hidden，设置后会在viewWillAppear:自动应用生效
 @property (nullable, nonatomic, strong) FWNavigationBarAppearance *fwNavigationBarAppearance;
 
-/// 当前导航栏，默认navigationController.navigationBar，兼容FWNavigationView
-@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
-
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
 
@@ -88,6 +85,14 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
+
+#pragma mark - View
+
+/// 当前导航栏，默认navigationController.navigationBar，用于兼容FWNavigationView
+@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
+
+/// 当前视图，默认view，用于兼容FWNavigationView
+@property (nonatomic, strong, readonly) UIView *fwView;
 
 #pragma mark - Item
 

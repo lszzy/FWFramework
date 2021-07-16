@@ -173,11 +173,6 @@
     }
 }
 
-- (UINavigationBar *)fwNavigationBar
-{
-    return self.navigationController.navigationBar;
-}
-
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.fwNavigationBar) return;
@@ -254,6 +249,18 @@
 {
     self.edgesForExtendedLayout = edge;
     self.extendedLayoutIncludesOpaqueBars = YES;
+}
+
+#pragma mark - View
+
+- (UINavigationBar *)fwNavigationBar
+{
+    return self.navigationController.navigationBar;
+}
+
+- (UIView *)fwView
+{
+    return self.view;
 }
 
 #pragma mark - Item
