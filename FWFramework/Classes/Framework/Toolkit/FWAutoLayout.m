@@ -826,6 +826,14 @@ static BOOL fwStaticAutoLayoutRTL = NO;
     };
 }
 
+- (FWLayoutChain * (^)(BOOL))hiddenCollapse
+{
+    return ^id(BOOL hiddenCollapse) {
+        self.view.fwHiddenCollapse = hiddenCollapse;
+        return self;
+    };
+}
+
 #pragma mark - Axis
 
 - (FWLayoutChain * (^)(void))center

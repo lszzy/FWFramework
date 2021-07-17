@@ -59,6 +59,7 @@
         textLabel.numberOfLines = 0;
         textLabel.font = [UIFont fwFontOfSize:13];
         textLabel.textColor = [Theme textColor];
+        textLabel.fwHiddenCollapse = YES;
         self.myTextLabel = textLabel;
         [self.contentView addSubview:textLabel]; {
             [textLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
@@ -87,13 +88,9 @@
     // 自动收缩
     self.myTitleLabel.text = object.title;
     self.myImageView.image = object.image;
-    // 手工收缩
+    // 隐藏时自动收缩
     self.myTextLabel.text = object.text;
-    if (object.text.length > 0) {
-        self.myTextLabel.fwCollapsed = NO;
-    } else {
-        self.myTextLabel.fwCollapsed = YES;
-    }
+    self.myTextLabel.hidden = object.text.length < 1;
 }
 
 @end

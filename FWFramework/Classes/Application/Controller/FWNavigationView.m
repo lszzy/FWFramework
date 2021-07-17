@@ -8,6 +8,7 @@
  */
 
 #import "FWNavigationView.h"
+#import "FWAutoLayout.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWAdaptive.h"
@@ -28,29 +29,66 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) [self setupView];
+    if (self) {
+        [self setupView];
+    }
     return self;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
-    if (self) [self setupView];
+    if (self) {
+        [self setupView];
+    }
     return self;
 }
 
 - (void)setupView
 {
+    _topBarHeight = self.frame.size.height;
+    _navigationBarHeight = FWNavigationBarHeight;
     _navigationItem = [[UINavigationItem alloc] init];
-    _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, self.frame.size.height - FWNavigationBarHeight, self.frame.size.width, FWNavigationBarHeight)];
+    _navigationBar = [[UINavigationBar alloc] init];
     _navigationBar.items = @[_navigationItem];
     [self addSubview:_navigationBar];
+    [self updateLayout:NO];
+}
+
+- (void)updateLayout:(BOOL)refresh
+{
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.hidden ? 0 : self.topBarHeight);
+    self.navigationBar.frame = CGRectMake(0, self.topBarHeight - self.navigationBarHeight, self.frame.size.width, self.navigationBarHeight);
+    if (refresh) [self invalidateIntrinsicContentSize];
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+    [super setHidden:hidden];
+    [self updateLayout:YES];
+}
+
+- (void)setTopBarHeight:(CGFloat)topBarHeight
+{
+    _topBarHeight = topBarHeight;
+    [self updateLayout:YES];
+}
+
+- (void)setNavigationBarHeight:(CGFloat)navigationBarHeight
+{
+    _navigationBarHeight = navigationBarHeight;
+    [self updateLayout:YES];
+}
+
+- (CGSize)intrinsicContentSize
+{
+    return self.bounds.size;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.navigationBar.frame = CGRectMake(0, self.frame.size.height - self.navigationBar.frame.size.height, self.frame.size.width, self.navigationBar.frame.size.height);
+    [self updateLayout:NO];
 }
 
 @end
@@ -120,27 +158,25 @@
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
+            if (@available(iOS 13.0, *)) {
+                BOOL isPageSheet = selfObject.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || selfObject.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
+                isPageSheet = isPageSheet && selfObject.navigationController.presentingViewController != nil;
+                if (isPageSheet) {
+                    selfObject.fwNavigationView.navigationBarHeight = selfObject.navigationController.navigationBar.frame.size.height;
+                    selfObject.fwNavigationView.topBarHeight = selfObject.navigationController.navigationBar.frame.size.height;
+                }
+            }
+            
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController;
             selfObject.fwNavigationView.hidden = hidden;
-            [selfObject fwNavigationViewUpdateLayout];
+            
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwContainerView];
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            if (!selfObject.fwNavigationViewEnabled) return;
-            
-            [selfObject fwNavigationViewUpdateLayout];
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(viewWillTransitionToSize:withTransitionCoordinator:), FWSwizzleReturn(void), FWSwizzleArgs(CGSize size, id<UIViewControllerTransitionCoordinator> coordinator), FWSwizzleCode({
-            FWSwizzleOriginal(size, coordinator);
-            if (!selfObject.fwNavigationViewEnabled) return;
-            
-            [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-                [selfObject fwNavigationViewUpdateLayout];
-            } completion:nil];
+            [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+            [selfObject.fwContainerView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+            [selfObject.fwContainerView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            [selfObject.view setNeedsLayout];
+            [selfObject.view layoutIfNeeded];
         }));
         
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"fwSetNavigationBarHidden:animated:"), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
@@ -148,7 +184,6 @@
             
             FWSwizzleOriginal(YES, animated);
             selfObject.fwNavigationView.hidden = hidden;
-            [selfObject fwNavigationViewUpdateLayout];
             
             if (selfObject.navigationItem.leftBarButtonItem && selfObject.navigationItem.leftBarButtonItem != selfObject.navigationItem.backBarButtonItem) return;
             if (selfObject.navigationController.viewControllers.firstObject == selfObject) {
@@ -192,28 +227,6 @@
 - (void)setFwNavigationViewEnabled:(BOOL)enabled
 {
     objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwNavigationViewUpdateLayout
-{
-    UINavigationBar *navigationBar = self.navigationController.navigationBar;
-    CGFloat barHeight = navigationBar.frame.size.height;
-    if (!navigationBar || barHeight < 1) {
-        CGFloat topHeight = self.fwNavigationView.isHidden ? 0 : self.fwNavigationView.bounds.size.height;
-        self.fwContainerView.frame = CGRectMake(0, topHeight, self.view.bounds.size.width, self.view.bounds.size.height - topHeight);
-        return;
-    }
-    
-    CGFloat staticHeight = FWTopBarHeight;
-    if (@available(iOS 13.0, *)) {
-        BOOL isPageSheet = self.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
-        isPageSheet = isPageSheet && self.navigationController.presentingViewController != nil;
-        if (isPageSheet) staticHeight = barHeight;
-    }
-    self.fwNavigationView.frame = CGRectMake(self.fwNavigationView.frame.origin.x, self.fwNavigationView.frame.origin.y, navigationBar.frame.size.width, staticHeight);
-    self.fwNavigationView.navigationBar.frame = CGRectMake(0, staticHeight - barHeight, navigationBar.frame.size.width, barHeight);
-    CGFloat topHeight = self.fwNavigationView.isHidden ? 0 : staticHeight;
-    self.fwContainerView.frame = CGRectMake(0, topHeight, self.view.bounds.size.width, self.view.bounds.size.height - topHeight);
 }
 
 @end
