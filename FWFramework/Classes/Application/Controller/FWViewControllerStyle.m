@@ -172,6 +172,11 @@
     }
 }
 
+- (UINavigationBar *)fwNavigationBar
+{
+    return self.navigationController.navigationBar;
+}
+
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
     // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
@@ -442,6 +447,11 @@
 #pragma mark - UINavigationBar+FWStyle
 
 @implementation UINavigationBar (FWStyle)
+
+- (UIView *)fwBackgroundView
+{
+    return [self fwPerformPropertySelector:@"_backgroundView"];
+}
 
 - (UIColor *)fwForegroundColor
 {

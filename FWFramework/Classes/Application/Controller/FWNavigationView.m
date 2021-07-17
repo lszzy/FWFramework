@@ -9,6 +9,7 @@
 
 #import "FWNavigationView.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import "FWAdaptive.h"
 #import "FWBlock.h"
 #import "FWRouter.h"
@@ -66,7 +67,7 @@
             FWSwizzleOriginal();
             
             if ([selfObject.superview isKindOfClass:[FWNavigationView class]]) {
-                UIView *backgroundView = [selfObject fwPerformPropertySelector:@"_backgroundView"];
+                UIView *backgroundView = selfObject.fwBackgroundView;
                 backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -(selfObject.superview.bounds.size.height - backgroundView.frame.size.height), backgroundView.frame.size.width, selfObject.superview.bounds.size.height);
             }
         }));
@@ -84,6 +85,26 @@
         FWSwizzleClass(UIViewController, @selector(navigationItem), FWSwizzleReturn(UINavigationItem *), FWSwizzleArgs(), FWSwizzleCode({
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             return selfObject.fwNavigationView.navigationItem;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(fwNavigationBarHeight), FWSwizzleReturn(CGFloat), FWSwizzleArgs(), FWSwizzleCode({
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
+            
+            if (selfObject.fwNavigationView.isHidden) {
+                return 0.0;
+            } else {
+                return selfObject.fwNavigationView.navigationBar.frame.size.height;
+            }
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(fwTopBarHeight), FWSwizzleReturn(CGFloat), FWSwizzleArgs(), FWSwizzleCode({
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
+            
+            if (selfObject.fwNavigationView.isHidden) {
+                return 0.0;
+            } else {
+                return selfObject.fwNavigationView.frame.size.height;
+            }
         }));
         
         FWSwizzleClass(UIViewController, @selector(setFwBackBarItem:), FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
