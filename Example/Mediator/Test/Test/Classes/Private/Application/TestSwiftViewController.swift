@@ -55,17 +55,17 @@ import FWFramework
     func renderState(_ state: FWViewControllerState, with object: Any?) {
         switch state {
         case .success:
-            view.fwShowEmpty(withText: object as? String)
+            fwView.fwShowEmpty(withText: object as? String)
         case .failure:
-            view.fwShowEmpty(withText: (object as? NSError)?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
-                self?.view.fwHideEmpty()
+            fwView.fwShowEmpty(withText: (object as? NSError)?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
+                self?.fwView.fwHideEmpty()
                 
                 self?.renderState(.loading, with: nil)
             }
         case .loading:
-            view.fwShowLoading(withText: "开始加载")
+            fwView.fwShowLoading(withText: "开始加载")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                self?.view.fwHideLoading()
+                self?.fwView.fwHideLoading()
                 
                 if [0, 1].randomElement() == 1 {
                     self?.renderState(.success, with: "加载成功")
@@ -172,7 +172,7 @@ import FWFramework
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item < collectionData.count {
-            view.fwShowMessage(withText: "点击section: \(indexPath.section) item: \(indexPath.item)")
+            fwView.fwShowMessage(withText: "点击section: \(indexPath.section) item: \(indexPath.item)")
         }
     }
     

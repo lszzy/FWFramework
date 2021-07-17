@@ -10,6 +10,7 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWToastPluginView
@@ -105,57 +106,57 @@
 
 - (UIEdgeInsets)fwToastInsets
 {
-    return self.view.fwToastInsets;
+    return self.fwView.fwToastInsets;
 }
 
 - (void)setFwToastInsets:(UIEdgeInsets)fwToastInsets
 {
-    self.view.fwToastInsets = fwToastInsets;
+    self.fwView.fwToastInsets = fwToastInsets;
 }
 
 - (void)fwShowLoading
 {
-    [self.view fwShowLoading];
+    [self.fwView fwShowLoading];
 }
 
 - (void)fwShowLoadingWithText:(id)text
 {
-    [self.view fwShowLoadingWithText:text];
+    [self.fwView fwShowLoadingWithText:text];
 }
 
 - (void)fwHideLoading
 {
-    [self.view fwHideLoading];
+    [self.fwView fwHideLoading];
 }
 
 - (void)fwShowProgressWithText:(id)text progress:(CGFloat)progress
 {
-    [self.view fwShowProgressWithText:text progress:progress];
+    [self.fwView fwShowProgressWithText:text progress:progress];
 }
 
 - (void)fwHideProgress
 {
-    [self.view fwHideProgress];
+    [self.fwView fwHideProgress];
 }
 
 - (void)fwShowMessageWithText:(id)text
 {
-    [self.view fwShowMessageWithText:text];
+    [self.fwView fwShowMessageWithText:text];
 }
 
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style
 {
-    [self.view fwShowMessageWithText:text style:style];
+    [self.fwView fwShowMessageWithText:text style:style];
 }
 
 - (void)fwShowMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    [self.view fwShowMessageWithText:text style:style completion:completion];
+    [self.fwView fwShowMessageWithText:text style:style completion:completion];
 }
 
 - (void)fwHideMessage
 {
-    [self.view fwHideMessage];
+    [self.fwView fwHideMessage];
 }
 
 @end

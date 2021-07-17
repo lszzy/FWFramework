@@ -82,43 +82,43 @@
 
 - (void)onIndicator
 {
-    [self.view fwShowLoadingWithText:@""];
+    [self fwShowLoadingWithText:@""];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self fwHideLoading];
     });
 }
 
 - (void)onIndicator2
 {
-    [self.view fwShowLoading];
+    [self fwShowLoading];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self fwHideLoading];
     });
 }
 
 - (void)onIndicator3
 {
-    [self.view fwShowLoadingWithText:@"我是很长很长很长很长很长很长很长很长很长很长的加载文案"];
+    [self fwShowLoadingWithText:@"我是很长很长很长很长很长很长很长很长很长很长的加载文案"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self fwHideLoading];
     });
 }
 
 - (void)onLoading
 {
-    [self.view fwShowLoadingWithText:@"加载中\n请耐心等待"];
+    [self fwShowLoadingWithText:@"加载中\n请耐心等待"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.view fwHideLoading];
+        [self fwHideLoading];
     });
 }
 
 - (void)onProgress
 {
-    [self.view fwShowProgressWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", 0.0f] progress:0];
+    [self fwShowProgressWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", 0.0f] progress:0];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self mockProgress];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwHideProgress];
+            [self fwHideProgress];
         });
     });
 }
@@ -130,7 +130,7 @@
         progress += 0.02f;
         BOOL finish = progress >= 1.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view fwShowProgressWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100] progress:progress];
+            [self fwShowProgressWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100] progress:progress];
         });
         usleep(finish ? 2000000 : 50000);
     }
@@ -174,14 +174,14 @@
 {
     self.view.tag = 100;
     static int count = 0;
-    [self.view fwShowMessageWithText:[NSString stringWithFormat:@"吐司消息%@", @(++count)]];
+    [self fwShowMessageWithText:[NSString stringWithFormat:@"吐司消息%@", @(++count)]];
 }
 
 - (void)onToast2
 {
     NSString *text = @"我是很长很长很长很长很长很长很长很长很长很长很长的吐司消息";
     FWWeakifySelf();
-    [self.view fwShowMessageWithText:text style:FWToastStyleDefault completion:^{
+    [self fwShowMessageWithText:text style:FWToastStyleDefault completion:^{
         FWStrongifySelf();
         [self onToast];
     }];
