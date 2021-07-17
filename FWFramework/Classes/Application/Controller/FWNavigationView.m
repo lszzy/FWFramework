@@ -10,6 +10,8 @@
 #import "FWNavigationView.h"
 #import "FWSwizzle.h"
 #import "FWAdaptive.h"
+#import "FWBlock.h"
+#import "FWRouter.h"
 #import "FWViewControllerStyle.h"
 #import <objc/runtime.h>
 
@@ -84,6 +86,23 @@
             return selfObject.fwNavigationView.navigationItem;
         }));
         
+        FWSwizzleClass(UIViewController, @selector(setFwBackBarItem:), FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
+            if (![selfObject fwNavigationViewEnabled]) {
+                FWSwizzleOriginal(object);
+                return;
+            }
+            
+            UIBarButtonItem *backItem;
+            if (!object) {
+                backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+            } else if ([object isKindOfClass:[UIBarButtonItem class]]) {
+                backItem = (UIBarButtonItem *)object;
+            } else {
+                backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
+            }
+            selfObject.navigationItem.backBarButtonItem = backItem;
+        }));
+        
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"fwSetNavigationBarHidden:animated:"), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
             if (![selfObject fwNavigationViewEnabled]) return FWSwizzleOriginal(hidden, animated);
             
@@ -91,6 +110,17 @@
             selfObject.fwNavigationView.hidden = hidden;
             CGFloat navigationHeight = hidden ? 0 : selfObject.fwNavigationView.bounds.size.height;
             selfObject.fwContainerView.frame = CGRectMake(0, navigationHeight, selfObject.view.bounds.size.width, selfObject.view.bounds.size.height - navigationHeight);
+            
+            if (selfObject.navigationItem.leftBarButtonItem && selfObject.navigationItem.leftBarButtonItem != selfObject.navigationItem.backBarButtonItem) return;
+            if (selfObject.navigationController.viewControllers.firstObject == selfObject) {
+                selfObject.navigationItem.leftBarButtonItem = nil;
+            } else if (selfObject.navigationItem.leftBarButtonItem != selfObject.navigationItem.backBarButtonItem) {
+                [selfObject.navigationItem.backBarButtonItem fwSetBlock:^(id sender) {
+                    if (![selfObject fwPopBackBarItem]) return;
+                    [selfObject fwCloseViewControllerAnimated:YES];
+                }];
+                selfObject.navigationItem.leftBarButtonItem = selfObject.navigationItem.backBarButtonItem;
+            }
         }));
         
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
