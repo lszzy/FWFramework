@@ -12,6 +12,7 @@
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyPluginView
@@ -102,47 +103,47 @@
 
 - (UIEdgeInsets)fwEmptyInsets
 {
-    return self.view.fwEmptyInsets;
+    return self.fwView.fwEmptyInsets;
 }
 
 - (void)setFwEmptyInsets:(UIEdgeInsets)fwEmptyInsets
 {
-    self.view.fwEmptyInsets = fwEmptyInsets;
+    self.fwView.fwEmptyInsets = fwEmptyInsets;
 }
 
 - (void)fwShowEmptyView
 {
-    [self.view fwShowEmptyView];
+    [self.fwView fwShowEmptyView];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text
 {
-    [self.view fwShowEmptyViewWithText:text];
+    [self.fwView fwShowEmptyViewWithText:text];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail
 {
-    [self.view fwShowEmptyViewWithText:text detail:detail];
+    [self.fwView fwShowEmptyViewWithText:text detail:detail];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
 {
-    [self.view fwShowEmptyViewWithText:text detail:detail image:image];
+    [self.fwView fwShowEmptyViewWithText:text detail:detail image:image];
 }
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
-    [self.view fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
+    [self.fwView fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
 }
 
 - (void)fwHideEmptyView
 {
-    [self.view fwHideEmptyView];
+    [self.fwView fwHideEmptyView];
 }
 
 - (BOOL)fwHasEmptyView
 {
-    return [self.view fwHasEmptyView];
+    return [self.fwView fwHasEmptyView];
 }
 
 @end

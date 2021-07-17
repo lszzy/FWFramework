@@ -112,7 +112,7 @@ FWDefDynamicWeak(UIViewController *, weakController, setWeakController);
 {
     TestModelRequest *request = [TestModelRequest new];
     [request startWithCompletionBlockWithSuccess:^(TestModelRequest *request) {
-        [self.view fwShowMessageWithText:[NSString stringWithFormat:@"json请求成功: \n%@", request.responseName]];
+        [self fwShowMessageWithText:[NSString stringWithFormat:@"json请求成功: \n%@", request.responseName]];
     } failure:^(TestModelRequest *request) {
         [self fwShowAlertWithTitle:@"json请求失败" message:[NSString stringWithFormat:@"%@", request.error] cancel:FWLocalizedString(@"关闭") cancelBlock:nil];
     }];

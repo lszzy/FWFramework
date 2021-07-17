@@ -13,6 +13,7 @@
 #import "FWTheme.h"
 #import "FWBlock.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWNavigationBarAppearance
@@ -47,13 +48,6 @@
 #pragma mark - UIViewController+FWStyle
 
 @implementation UIViewController (FWStyle)
-
-#pragma mark - View
-
-- (UIView *)fwView
-{
-    return self.view;
-}
 
 #pragma mark - Bar
 
@@ -176,11 +170,6 @@
     if (self.isViewLoaded && self.view.window) {
         [self fwUpdateNavigationBarStyle:NO];
     }
-}
-
-- (UINavigationBar *)fwNavigationBar
-{
-    return self.navigationController.navigationBar;
 }
 
 - (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated

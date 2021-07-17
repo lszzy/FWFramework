@@ -958,12 +958,12 @@ import UIKit
 @objc extension UIViewController {
     /// 显示view骨架屏，指定布局代理
     open func fwShowSkeleton(delegate: FWSkeletonViewDelegate? = nil) {
-        view.fwShowSkeleton(delegate: delegate)
+        fwView.fwShowSkeleton(delegate: delegate)
     }
     
     /// 显示view骨架屏，指定布局句柄
     open func fwShowSkeleton(block: ((FWSkeletonLayout) -> Void)? = nil) {
-        view.fwShowSkeleton(block: block)
+        fwView.fwShowSkeleton(block: block)
     }
     
     /// 显示view骨架屏，默认布局代理为self
@@ -973,7 +973,7 @@ import UIKit
     
     /// 隐藏view骨架屏
     open func fwHideSkeleton() {
-        view.fwHideSkeleton()
+        fwView.fwHideSkeleton()
     }
 }
 

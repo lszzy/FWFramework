@@ -25,7 +25,7 @@
 {
     _selectedIndex = selectedIndex;
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:selectedIndex] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [self.view fwShowMessageWithText:[NSString stringWithFormat:@"跳转到测试section: %@", @(selectedIndex)]];
+    [self fwShowMessageWithText:[NSString stringWithFormat:@"跳转到测试section: %@", @(selectedIndex)]];
 }
 
 - (UISearchBar *)searchBar
