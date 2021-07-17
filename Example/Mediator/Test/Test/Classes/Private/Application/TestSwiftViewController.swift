@@ -114,7 +114,7 @@ import FWFramework
     }
     
     func renderCollectionLayout() {
-        view.addSubview(contentView)
+        fwView.addSubview(contentView)
         contentView.fwLayoutChain.edges(excludingEdge: .bottom).height(200)
         
         collectionView.removeFromSuperview()

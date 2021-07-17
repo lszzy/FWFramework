@@ -45,7 +45,7 @@
     if (hasHeader) {
         containerView = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4 * 3, self.view.fwWidth, ViewHeight)];
         containerView.backgroundColor = [UIColor grayColor];
-        [self.view addSubview:containerView];
+        [self.fwView addSubview:containerView];
     } else {
         containerView = self.view;
     }
@@ -90,11 +90,11 @@
     
     UIView *redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 4, self.view.fwWidth, 1)];
     redLine.backgroundColor = [UIColor redColor];
-    [self.view addSubview:redLine];
+    [self.fwView addSubview:redLine];
     
     redLine = [[UIView alloc] initWithFrame:CGRectMake(0, ViewHeight / 2, self.view.fwWidth, 1)];
     redLine.backgroundColor = [UIColor redColor];
-    [self.view addSubview:redLine];
+    [self.fwView addSubview:redLine];
     
     CGFloat fromPosition = 0;
     CGFloat toPosition = ViewHeight / 4 * 3;
@@ -126,7 +126,7 @@
     scrollView.contentSize = CGSizeMake(self.view.fwWidth, 2000);
     scrollView.contentInset = UIEdgeInsetsMake(100, 0, 50, 0);
     scrollView.contentOffset = CGPointMake(0, 2000 - ViewHeight + 50);
-    [self.view addSubview:scrollView];
+    [self.fwView addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.fwWidth, 2000)];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 1950, self.view.fwWidth, 50)];
@@ -174,7 +174,7 @@
     scrollView.contentSize = CGSizeMake(2000, ViewHeight);
     scrollView.contentInset = UIEdgeInsetsMake(0, 50, 0, 100);
     scrollView.contentOffset = CGPointMake(-50, 0);
-    [self.view addSubview:scrollView];
+    [self.fwView addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2000, ViewHeight)];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, ViewHeight)];
@@ -222,7 +222,7 @@
     scrollView.contentSize = CGSizeMake(2000, ViewHeight);
     scrollView.contentInset = UIEdgeInsetsMake(0, 100, 0, 50);
     scrollView.contentOffset = CGPointMake(2000 - FWScreenWidth + 50, 0);
-    [self.view addSubview:scrollView];
+    [self.fwView addSubview:scrollView];
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2000, ViewHeight)];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(1950, 0, 50, ViewHeight)];

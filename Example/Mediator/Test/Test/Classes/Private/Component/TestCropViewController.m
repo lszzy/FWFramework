@@ -240,7 +240,7 @@
     self.imageView = [[UIImageView alloc] init];
     self.imageView.userInteractionEnabled = YES;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:self.imageView];
+    [self.fwView addSubview:self.imageView];
     
     if (@available(iOS 11.0, *)) {
         self.imageView.accessibilityIgnoresInvertColors = YES;

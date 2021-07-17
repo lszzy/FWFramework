@@ -183,7 +183,7 @@
         headerView.fwViewModel = @"我是Footer\n我是Footer\n我是Footer";
     };
     
-    [self.view addSubview:self.collectionView];
+    [self.fwView addSubview:self.collectionView];
     [self.collectionView fwPinEdgesToSuperview];
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];

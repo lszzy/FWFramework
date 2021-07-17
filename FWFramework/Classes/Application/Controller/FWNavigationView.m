@@ -72,22 +72,22 @@
         }));
         
         FWSwizzleClass(UIViewController, @selector(fwView), FWSwizzleReturn(UIView *), FWSwizzleArgs(), FWSwizzleCode({
-            if (![selfObject fwNavigationViewEnabled]) return FWSwizzleOriginal();
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             return selfObject.fwContainerView;
         }));
         
         FWSwizzleClass(UIViewController, @selector(fwNavigationBar), FWSwizzleReturn(UINavigationBar *), FWSwizzleArgs(), FWSwizzleCode({
-            if (![selfObject fwNavigationViewEnabled]) return FWSwizzleOriginal();
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             return selfObject.fwNavigationView.navigationBar;
         }));
         
         FWSwizzleClass(UIViewController, @selector(navigationItem), FWSwizzleReturn(UINavigationItem *), FWSwizzleArgs(), FWSwizzleCode({
-            if (![selfObject fwNavigationViewEnabled]) return FWSwizzleOriginal();
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             return selfObject.fwNavigationView.navigationItem;
         }));
         
         FWSwizzleClass(UIViewController, @selector(setFwBackBarItem:), FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
-            if (![selfObject fwNavigationViewEnabled]) {
+            if (!selfObject.fwNavigationViewEnabled) {
                 FWSwizzleOriginal(object);
                 return;
             }
@@ -104,7 +104,7 @@
         }));
         
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"fwSetNavigationBarHidden:animated:"), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
-            if (![selfObject fwNavigationViewEnabled]) return FWSwizzleOriginal(hidden, animated);
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal(hidden, animated);
             
             FWSwizzleOriginal(YES, animated);
             selfObject.fwNavigationView.hidden = hidden;
@@ -125,7 +125,7 @@
         
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
-            if (![selfObject fwNavigationViewEnabled]) return;
+            if (!selfObject.fwNavigationViewEnabled) return;
             
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController;
             selfObject.fwNavigationView.hidden = hidden;
@@ -159,7 +159,12 @@
 
 - (BOOL)fwNavigationViewEnabled
 {
-    return NO;
+    return [objc_getAssociatedObject(self, @selector(fwNavigationViewEnabled)) boolValue];
+}
+
+- (void)setFwNavigationViewEnabled:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
