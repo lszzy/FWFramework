@@ -58,6 +58,14 @@ static BOOL fwStaticAutoLayoutRTL = NO;
                 }
             }
         }));
+        
+        FWSwizzleClass(UIView, @selector(setHidden:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+            FWSwizzleOriginal(hidden);
+            
+            if (selfObject.fwHiddenCollapse && selfObject.fwInnerCollapseConstraints.count > 0) {
+                selfObject.fwCollapsed = hidden;
+            }
+        }));
     });
 }
 
@@ -212,6 +220,16 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (void)setFwAutoCollapse:(BOOL)fwAutoCollapse
 {
     objc_setAssociatedObject(self, @selector(fwAutoCollapse), @(fwAutoCollapse), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fwHiddenCollapse
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFwHiddenCollapse:(BOOL)fwHiddenCollapse
+{
+    objc_setAssociatedObject(self, @selector(fwHiddenCollapse), @(fwHiddenCollapse), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint
