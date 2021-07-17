@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 控制器自定义导航栏
  *
- * 注意：优先用系统导航栏，不满足时才使用自定义导航栏
- * 启用自定义导航栏后，虽然兼容FWViewControllerStyle方法，但有几点不同，列举如下：
+ * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
+ * 注意：启用自定义导航栏后，虽然兼容FWViewControllerStyle方法，但有几点不同，列举如下：
  * 1. fwNavigationView位于VC.view顶部；fwContainerView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 2. VC容器视图为fwContainerView，所有子视图应该添加到fwContainerView；可使用fwView兼容两种方式
  * 3. VC返回按钮会使用自身的backBarButtonItem，方便使用；而系统VC返会使用前一个控制器的backBarButtonItem

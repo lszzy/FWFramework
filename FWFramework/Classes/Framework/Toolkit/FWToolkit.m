@@ -529,9 +529,4 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     return self.view;
 }
 
-- (UINavigationBar *)fwNavigationBar
-{
-    return self.navigationController.navigationBar;
-}
-
 @end
