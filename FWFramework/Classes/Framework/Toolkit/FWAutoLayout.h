@@ -675,6 +675,7 @@ NS_SWIFT_UNAVAILABLE("")
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^collapsed)(BOOL collapsed);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^autoCollapse)(BOOL autoCollapse);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^hiddenCollapse)(BOOL hiddenCollapse);
 
 #pragma mark - Axis
 
