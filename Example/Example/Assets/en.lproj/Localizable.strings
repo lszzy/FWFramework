@@ -18,7 +18,12 @@
 "systemTitle" = "System";
 "themeLight" = "Light";
 "themeDark" = "Dark";
-"rootTitle" = "Root";
+"rootTitle" = "Controller";
+"optionTitle" = "Option";
+"loginRequired" = "Login required";
+"loginOptional" = "No Login required";
+"navBarSystem" = "System NavigationBar";
+"navBarCustom" = "Custom NavigationBar";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
 "backTitle" = "Welcome back, dear";
 "logoutConfirm" = "Are you sure you want to log out?";

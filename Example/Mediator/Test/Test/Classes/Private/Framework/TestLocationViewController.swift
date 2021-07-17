@@ -44,10 +44,10 @@ import FWFramework
     }()
     
     override func renderView() {
-        view.addSubview(startButton)
-        view.addSubview(stopButton)
-        view.addSubview(configButton)
-        view.addSubview(resultLabel)
+        fwView.addSubview(startButton)
+        fwView.addSubview(stopButton)
+        fwView.addSubview(configButton)
+        fwView.addSubview(resultLabel)
     }
     
     override func renderModel() {

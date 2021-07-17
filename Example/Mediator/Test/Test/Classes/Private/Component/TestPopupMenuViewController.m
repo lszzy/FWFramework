@@ -26,22 +26,22 @@
 {
     UIButton *button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     button.fwLayoutChain.leftWithInset(10).topWithInset(10).size(CGSizeMake(44, 44));
     
     button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     button.fwLayoutChain.rightWithInset(10).topWithInset(10).size(CGSizeMake(44, 44));
     
     button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     button.fwLayoutChain.leftWithInset(10).bottomWithInset(10).size(CGSizeMake(44, 44));
     
     button = [UIButton fwButtonWithImage:[TestBundle imageNamed:@"icon_scan"]];
     [button fwAddTouchTarget:self action:@selector(onPopupClick:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     button.fwLayoutChain.rightWithInset(10).bottomWithInset(10).size(CGSizeMake(44, 44));
     
     UITextField *textField = [UITextField new];
@@ -50,13 +50,13 @@
     [textField fwSetBorderColor:[Theme borderColor] width:0.5 cornerRadius:5];
     _textField = textField;
     textField.delegate = self;
-    [self.view addSubview:textField];
+    [self.fwView addSubview:textField];
     textField.fwLayoutChain.leftWithInset(50).rightWithInset(50).topWithInset(200).height(45);
     
     UILabel *customLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:16] textColor:[Theme textColor] text:@"我是自定义标签"];
     _customCellView = customLabel;
     customLabel.backgroundColor = [Theme cellColor];
-    [self.view addSubview:customLabel];
+    [self.fwView addSubview:customLabel];
     customLabel.fwLayoutChain.centerX().topToBottomOfViewWithOffset(textField, 50).size(CGSizeMake(200, 50));
     
     [self.view setNeedsLayout];

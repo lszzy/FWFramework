@@ -24,7 +24,7 @@
     self.floatLayoutView.minimumItemSize = CGSizeMake(69, 29);// 以2个字的按钮作为最小宽度
     self.floatLayoutView.layer.borderWidth = 0.5;
     self.floatLayoutView.layer.borderColor = [Theme textColor].CGColor;
-    [self.view addSubview:self.floatLayoutView];
+    [self.fwView addSubview:self.floatLayoutView];
     self.floatLayoutView.fwLayoutChain.leftWithInset(24).rightWithInset(24).topWithInset(36);
     
     NSArray<NSString *> *suggestions = @[@"东野圭吾\n多行文本", @"三体", @"爱", @"红楼梦", @"", @"理智与情感\n多行文本", @"读书热榜", @"免费榜"];

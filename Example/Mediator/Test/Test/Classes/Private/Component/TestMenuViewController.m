@@ -70,7 +70,7 @@
         [self fwCloseViewControllerAnimated:YES];
     }];
     [contentView addSubview:closeLabel];
-    [self.view addSubview:contentView];
+    [self.fwView addSubview:contentView];
     
     [contentView fwDrawerView:UISwipeGestureRecognizerDirectionRight
                     positions:@[@(-FWScreenWidth / 2.0), @(0)]
@@ -80,7 +80,7 @@
     UIImageView *imageView = [UIImageView new];
     _imageView = imageView;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:imageView];
+    [self.fwView addSubview:imageView];
     imageView.fwLayoutChain.center().size(CGSizeMake(200, 200));
 }
 

@@ -23,7 +23,7 @@
     self.loginButton = loginButton;
     [loginButton addTarget:self action:@selector(onMediator) forControlEvents:UIControlEventTouchUpInside];
     loginButton.frame = CGRectMake(self.view.frame.size.width / 2 - 75, 20, 150, 30);
-    [self.view addSubview:loginButton];
+    [self.fwView addSubview:loginButton];
     [self.view fwAddTapGestureWithTarget:self action:@selector(onClose)];
 }
 

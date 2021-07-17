@@ -16,7 +16,7 @@ import FWFramework
         let label = UILabel()
         label.textColor = Theme.textColor
         label.text = "我是父控制器"
-        view.addSubview(label)
+        fwView.addSubview(label)
         label.fwLayoutChain.center()
         
         let childController = TestChildSubViewController()
@@ -42,7 +42,7 @@ import FWFramework
         let label = UILabel()
         label.textColor = Theme.textColor
         label.text = "我是子控制器"
-        view.addSubview(label)
+        fwView.addSubview(label)
         label.fwLayoutChain.center()
     }
     

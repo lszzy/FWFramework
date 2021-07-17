@@ -30,7 +30,7 @@
     label.backgroundColor = [Theme cellColor];
     label.font = [UIFont systemFontOfSize:16];
     label.numberOfLines = 0;
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     label.fwLayoutChain.leftWithInset(10).rightWithInset(10).topWithInset(10);
     
     UILabel *label2 = [UILabel new];
@@ -38,7 +38,7 @@
     label2.backgroundColor = [Theme cellColor];
     label2.font = [UIFont systemFontOfSize:16];
     label2.numberOfLines = 0;
-    [self.view addSubview:label2];
+    [self.fwView addSubview:label2];
     label2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(label, 10);
     
     FWAttributedLabel *attrLabel = [FWAttributedLabel new];
@@ -46,7 +46,7 @@
     attrLabel.backgroundColor = [Theme cellColor];
     attrLabel.font = [UIFont systemFontOfSize:16];
     attrLabel.textColor = Theme.textColor;
-    [self.view addSubview:attrLabel];
+    [self.fwView addSubview:attrLabel];
     attrLabel.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(label2, 10);
     
     FWAttributedLabel *attrLabel2 = [FWAttributedLabel new];
@@ -57,7 +57,7 @@
     attrLabel2.font = [UIFont systemFontOfSize:16];
     attrLabel2.lineBreakMode = kCTLineBreakByCharWrapping;
     attrLabel2.lineSpacing = 8 - attrLabel.font.fwSpaceHeight;
-    [self.view addSubview:attrLabel2];
+    [self.fwView addSubview:attrLabel2];
     attrLabel2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(attrLabel, 10);
     
     UITextView *textView = [UITextView new];
@@ -65,7 +65,7 @@
     textView.editable = NO;
     textView.backgroundColor = [Theme cellColor];
     textView.font = [UIFont systemFontOfSize:16];
-    [self.view addSubview:textView];
+    [self.fwView addSubview:textView];
     textView.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(attrLabel2, 10).height(120);
     
     UITextView *textView2 = [UITextView new];
@@ -74,7 +74,7 @@
     textView2.backgroundColor = [Theme cellColor];
     textView2.textColor = Theme.textColor;
     textView2.font = [UIFont systemFontOfSize:16];
-    [self.view addSubview:textView2];
+    [self.fwView addSubview:textView2];
     textView2.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(textView, 10).height(120);
     
     UILabel *resultLabel = [UILabel new];
@@ -82,7 +82,7 @@
     resultLabel.backgroundColor = [Theme cellColor];
     resultLabel.numberOfLines = 0;
     resultLabel.font = [UIFont systemFontOfSize:16];
-    [self.view addSubview:resultLabel];
+    [self.fwView addSubview:resultLabel];
     resultLabel.fwLayoutChain.leftToView(label).rightToView(label).topToBottomOfViewWithOffset(textView2, 10);
 }
 

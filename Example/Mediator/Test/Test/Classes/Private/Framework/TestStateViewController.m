@@ -28,14 +28,14 @@
     self.label = label;
     label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:label]; {
+    [self.fwView addSubview:label]; {
         [label fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(10, 10, 10, 10) excludingEdge:NSLayoutAttributeBottom];
     }
     
     UIButton *button = [Theme largeButton];
     self.button = button;
     [button fwAddTouchTarget:self action:@selector(onClick:)];
-    [self.view addSubview:button]; {
+    [self.fwView addSubview:button]; {
         [button fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:label withOffset:10];
         [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     }
