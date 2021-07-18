@@ -78,6 +78,9 @@ typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
 /// 从颜色创建UIImage，指定尺寸
 + (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
 
+/// 从当前图片创建指定透明度的图片
+- (nullable UIImage *)fwImageWithAlpha:(CGFloat)alpha;
+
 /// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
 - (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor;
 

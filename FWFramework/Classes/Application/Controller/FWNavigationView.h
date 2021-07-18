@@ -57,4 +57,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWNavigationButton
+
+/**
+ * 自定义导航栏按钮，兼容系统customView方式和自定义方式
+ */
+@interface FWNavigationButton : UIButton
+
+/// UIBarButtonItem 默认都是跟随 tintColor 的，所以这里声明是否让图片也是用 AlwaysTemplate 模式，默认YES
+@property(nonatomic, assign) BOOL adjustsTintColor;
+
+/// 初始化方法，指定标题
+- (instancetype)initWithTitle:(nullable NSString *)title;
+
+/// 初始化方法，指定图片
+- (instancetype)initWithImage:(nullable UIImage *)image;
+
+@end
+
 NS_ASSUME_NONNULL_END
