@@ -64,13 +64,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWNavigationButton : UIButton
 
-/// UIBarButtonItem 默认都是跟随 tintColor 的，所以这里声明是否让图片也是用 AlwaysTemplate 模式，默认YES
-@property(nonatomic, assign) BOOL adjustsTintColor;
+/// UIBarButtonItem默认都是跟随tintColor的，指定让图片也使用AlwaysTemplate模式，默认YES
+@property (nonatomic, assign) BOOL adjustsTintColor;
 
-/// 初始化方法，指定标题
+/// 初始化标题类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithTitle:(nullable NSString *)title;
 
-/// 初始化方法，指定图片
+/// 初始化图片类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithImage:(nullable UIImage *)image;
 
 @end
