@@ -13,6 +13,7 @@
 #import "FWToolkit.h"
 #import "FWAdaptive.h"
 #import "FWBlock.h"
+#import "FWImage.h"
 #import "FWRouter.h"
 #import "FWViewControllerStyle.h"
 #import <objc/runtime.h>
@@ -247,6 +248,118 @@
     }
     self.fwNavigationView.topBarHeight = topBarHeight;
     self.fwNavigationView.navigationBarHeight = navigationBarHeight;
+}
+
+@end
+
+#pragma mark - FWNavigationButton
+
+@interface FWNavigationButton()
+
+@property (nonatomic, assign) BOOL isImage;
+@property (nonatomic, strong) UIImage *highlightedImage;
+@property (nonatomic, strong) UIImage *disabledImage;
+
+@end
+
+@implementation FWNavigationButton
+
+- (instancetype)init
+{
+    return [self initWithTitle:nil];
+}
+
+- (instancetype)initWithTitle:(NSString *)title
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        self.isImage = NO;
+        [self setTitle:title forState:UIControlStateNormal];
+        [self renderButtonStyle];
+        [self sizeToFit];
+    }
+    return self;
+}
+
+- (instancetype)initWithImage:(UIImage *)image
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        self.isImage = YES;
+        [self setTitle:nil forState:UIControlStateNormal];
+        [self renderButtonStyle];
+        [self setImage:image forState:UIControlStateNormal];
+        [self sizeToFit];
+    }
+    return self;
+}
+
+- (void)renderButtonStyle
+{
+    self.titleLabel.font = [UIFont systemFontOfSize:17];
+    self.titleLabel.backgroundColor = [UIColor clearColor];
+    self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.contentMode = UIViewContentModeCenter;
+    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.adjustsTintColor = YES;
+    self.adjustsImageWhenHighlighted = NO;
+    self.adjustsImageWhenDisabled = NO;
+    self.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
+}
+
+- (void)setImage:(UIImage *)image forState:(UIControlState)state
+{
+    if (image && self.adjustsTintColor) {
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    
+    if (image && [self imageForState:state] != image) {
+        if (state == UIControlStateNormal) {
+            self.highlightedImage = [[image fwImageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
+            [self setImage:self.highlightedImage forState:UIControlStateHighlighted];
+            self.disabledImage = [[image fwImageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
+            [self setImage:self.disabledImage forState:UIControlStateDisabled];
+        } else {
+            if (image != self.highlightedImage && image != self.disabledImage) {
+                if ([self imageForState:UIControlStateHighlighted] == self.highlightedImage && state != UIControlStateHighlighted) {
+                    [self setImage:nil forState:UIControlStateHighlighted];
+                }
+                if ([self imageForState:UIControlStateDisabled] == self.disabledImage && state != UIControlStateDisabled) {
+                    [self setImage:nil forState:UIControlStateDisabled];
+                }
+            }
+        }
+    }
+    
+    [super setImage:image forState:state];
+}
+
+- (void)setAdjustsTintColor:(BOOL)adjustsTintColor
+{
+    if (_adjustsTintColor == adjustsTintColor) return;
+    _adjustsTintColor = adjustsTintColor;
+    if (!self.currentImage) return;
+    
+    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateSelected), @(UIControlStateSelected | UIControlStateHighlighted), @(UIControlStateDisabled)];
+    for (NSNumber *number in states) {
+        UIImage *image = [self imageForState:number.unsignedIntegerValue];
+        if (!image) return;
+
+        if (self.adjustsTintColor) {
+            [self setImage:image forState:[number unsignedIntegerValue]];
+        } else {
+            [self setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:[number unsignedIntegerValue]];
+        }
+    }
+}
+
+- (void)tintColorDidChange
+{
+    [super tintColorDidChange];
+    [self setTitleColor:self.tintColor forState:UIControlStateNormal];
+    [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateHighlighted];
+    [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateDisabled];
 }
 
 @end

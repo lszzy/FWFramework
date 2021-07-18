@@ -142,9 +142,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 圆角图片
 - (nullable UIImage *)fwImageWithCornerRadius:(CGFloat)radius;
 
-// 透明图片
-- (nullable UIImage *)fwImageWithAlpha:(CGFloat)alpha;
-
 // 装饰图片
 - (nullable UIImage *)fwImageWithMaskImage:(UIImage *)maskImage;
 
