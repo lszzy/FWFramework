@@ -64,8 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWNavigationButton : UIButton
 
-/// UIBarButtonItem默认都是跟随tintColor的，指定让图片也使用AlwaysTemplate模式，默认YES
+/// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
 @property (nonatomic, assign) BOOL adjustsTintColor;
+
+/// UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8，所以这里声明是否让内容自动偏移，默认YES
+@property (nonatomic, assign) BOOL adjustsContentInsets;
 
 /// 初始化标题类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithTitle:(nullable NSString *)title;
