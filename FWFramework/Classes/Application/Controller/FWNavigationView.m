@@ -256,13 +256,58 @@
 
 @interface FWNavigationButton()
 
-@property (nonatomic, assign) BOOL isImage;
+@property (nonatomic, assign) BOOL isImageType;
 @property (nonatomic, strong) UIImage *highlightedImage;
 @property (nonatomic, strong) UIImage *disabledImage;
+@property (nonatomic, assign) UIControlContentHorizontalAlignment positionAlignment;
 
 @end
 
 @implementation FWNavigationButton
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UINavigationItem, @selector(setLeftBarButtonItem:animated:), FWSwizzleReturn(void), FWSwizzleArgs(UIBarButtonItem *item, BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(item, animated);
+            if (!item.customView || ![item.customView isKindOfClass:[FWNavigationButton class]]) return;
+            
+            FWNavigationButton *navigationButton = (FWNavigationButton *)item.customView;
+            navigationButton.positionAlignment = UIControlContentHorizontalAlignmentLeft;
+        }));
+        
+        FWSwizzleClass(UINavigationItem, @selector(setLeftBarButtonItems:animated:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<UIBarButtonItem *> *items, BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(items, animated);
+            
+            [items enumerateObjectsUsingBlock:^(UIBarButtonItem *item, NSUInteger idx, BOOL *stop) {
+                if (!item.customView || ![item.customView isKindOfClass:[FWNavigationButton class]]) return;
+                
+                FWNavigationButton *navigationButton = (FWNavigationButton *)item.customView;
+                navigationButton.positionAlignment = idx == 0 ? UIControlContentHorizontalAlignmentLeft : UIControlContentHorizontalAlignmentCenter;
+            }];
+        }));
+        
+        FWSwizzleClass(UINavigationItem, @selector(setRightBarButtonItem:animated:), FWSwizzleReturn(void), FWSwizzleArgs(UIBarButtonItem *item, BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(item, animated);
+            if (![item.customView isKindOfClass:[FWNavigationButton class]]) return;
+            
+            FWNavigationButton *navigationButton = (FWNavigationButton *)item.customView;
+            navigationButton.positionAlignment = UIControlContentHorizontalAlignmentRight;
+        }));
+        
+        FWSwizzleClass(UINavigationItem, @selector(setRightBarButtonItems:animated:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<UIBarButtonItem *> *items, BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(items, animated);
+            
+            [items enumerateObjectsUsingBlock:^(UIBarButtonItem *item, NSUInteger idx, BOOL *stop) {
+                if (!item.customView || ![item.customView isKindOfClass:[FWNavigationButton class]]) return;
+                
+                FWNavigationButton *navigationButton = (FWNavigationButton *)item.customView;
+                navigationButton.positionAlignment = idx == 0 ? UIControlContentHorizontalAlignmentRight : UIControlContentHorizontalAlignmentCenter;
+            }];
+        }));
+    });
+}
 
 - (instancetype)init
 {
@@ -273,7 +318,7 @@
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
-        self.isImage = NO;
+        self.isImageType = NO;
         [self setTitle:title forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self sizeToFit];
@@ -285,7 +330,7 @@
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
-        self.isImage = YES;
+        self.isImageType = YES;
         [self setTitle:nil forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self setImage:image forState:UIControlStateNormal];
@@ -303,6 +348,9 @@
     self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.adjustsTintColor = YES;
+    if (@available(iOS 11, *)) {
+        if (self.isImageType) self.translatesAutoresizingMaskIntoConstraints = NO;
+    }
     self.adjustsImageWhenHighlighted = NO;
     self.adjustsImageWhenDisabled = NO;
     self.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
@@ -360,6 +408,17 @@
     [self setTitleColor:self.tintColor forState:UIControlStateNormal];
     [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateHighlighted];
     [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateDisabled];
+}
+
+- (UIEdgeInsets)alignmentRectInsets
+{
+    UIEdgeInsets edgeInsets = [super alignmentRectInsets];
+    if (self.positionAlignment == UIControlContentHorizontalAlignmentLeft) {
+        edgeInsets.left = 8;
+    } else if (self.positionAlignment == UIControlContentHorizontalAlignmentRight) {
+        edgeInsets.right = 8;
+    }
+    return edgeInsets;
 }
 
 @end
