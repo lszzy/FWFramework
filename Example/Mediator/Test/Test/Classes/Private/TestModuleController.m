@@ -104,6 +104,7 @@
               @[@"FWAsyncSocket", @"TestSocketViewController"],
               @[@"FWViewController", @"Test.TestSwiftViewController"],
               @[@"FWScrollViewController", @"TestControllerViewController"],
+              @[@"FWNavigationView", @"TestNavigationTitleViewController"],
               @[@"FWTabBarController", @"TestTabBarViewController"],
               @[@"FWCache", @"TestCacheViewController"],
               ]],
