@@ -649,6 +649,16 @@ NSURL * FWSafeURL(id value) {
     return [dict copy];
 }
 
+- (NSString *)fwPathURI
+{
+    NSString *URLString = self.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
+    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
+        return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
+    }
+    return nil;
+}
+
 + (instancetype)fwURLWithString:(NSString *)URLString
 {
     if (!URLString) return nil;
