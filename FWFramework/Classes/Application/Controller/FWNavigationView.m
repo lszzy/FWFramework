@@ -84,7 +84,7 @@
 - (FWNavigationTitleView *)titleView
 {
     UIView *titleView = self.navigationItem.titleView;
-    if (titleView && [titleView isKindOfClass:[FWNavigationTitleView class]]) {
+    if ([titleView isKindOfClass:[FWNavigationTitleView class]]) {
         return (FWNavigationTitleView *)titleView;
     }
     return nil;
@@ -292,14 +292,10 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWNavigationTitleView *titleView = (FWNavigationTitleView *)selfObject.topItem.titleView;
-            if (![titleView isKindOfClass:[FWNavigationTitleView class]]) {
+            UIView *titleView = selfObject.topItem.titleView;
+            if (![titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
                 FWSwizzleOriginal();
                 return;
-            }
-            
-            if (titleView.adjustsNavigationBar) {
-                titleView.tintColor = selfObject.tintColor;
             }
             
             CGFloat titleViewMaximumWidth = CGRectGetWidth(titleView.bounds);
@@ -325,23 +321,23 @@
         FWSwizzleClass(UIViewController, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
             FWSwizzleOriginal(title);
             
-            if ([selfObject.navigationItem.titleView isKindOfClass:FWNavigationTitleView.class]) {
-                ((FWNavigationTitleView *)selfObject.navigationItem.titleView).title = title;
+            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
+                ((id<FWNavigationTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
             }
         }));
         
         FWSwizzleClass(UINavigationItem, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
             FWSwizzleOriginal(title);
             
-            if ([selfObject.titleView isKindOfClass:FWNavigationTitleView.class]) {
-                ((FWNavigationTitleView *)selfObject.titleView).title = title;
+            if ([selfObject.titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
+                ((id<FWNavigationTitleViewProtocol>)selfObject.titleView).title = title;
             }
         }));
         
-        FWSwizzleClass(UINavigationItem, @selector(setTitleView:), FWSwizzleReturn(void), FWSwizzleArgs(FWNavigationTitleView *titleView), FWSwizzleCode({
+        FWSwizzleClass(UINavigationItem, @selector(setTitleView:), FWSwizzleReturn(void), FWSwizzleArgs(id<FWNavigationTitleViewProtocol> titleView), FWSwizzleCode({
             FWSwizzleOriginal(titleView);
             
-            if ([titleView isKindOfClass:FWNavigationTitleView.class]) {
+            if ([titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
                 if (titleView.title.length <= 0) {
                     titleView.title = selfObject.title;
                 }
@@ -353,7 +349,6 @@
 + (void)setDefaultAppearance {
     FWNavigationTitleView *appearance = [FWNavigationTitleView appearance];
     appearance.adjustsTintColor = YES;
-    appearance.adjustsNavigationBar = YES;
     appearance.maximumWidth = CGFLOAT_MAX;
     appearance.loadingViewSize = CGSizeMake(18, 18);
     appearance.loadingViewSpacing = 3;
@@ -370,7 +365,6 @@
 + (void)applyAppearance:(FWNavigationTitleView *)titleView {
     FWNavigationTitleView *appearance = FWNavigationTitleView.appearance;
     titleView.adjustsTintColor = appearance.adjustsTintColor;
-    titleView.adjustsNavigationBar = appearance.adjustsNavigationBar;
     titleView.maximumWidth = appearance.maximumWidth;
     titleView.loadingViewSize = appearance.loadingViewSize;
     titleView.loadingViewSpacing = appearance.loadingViewSpacing;

@@ -17,9 +17,21 @@
 
 @implementation TestNavigationTitleViewController
 
+- (BOOL)fwNavigationViewEnabled
+{
+    return YES;
+}
+
 - (UITableViewStyle)renderTableStyle
 {
     return UITableViewStylePlain;
+}
+
+- (FWNavigationBarAppearance *)fwNavigationBarAppearance
+{
+    FWNavigationBarAppearance *app = [FWNavigationBarAppearance new];
+    app.foregroundColor = [UIColor redColor];
+    return app;
 }
 
 - (void)renderView
