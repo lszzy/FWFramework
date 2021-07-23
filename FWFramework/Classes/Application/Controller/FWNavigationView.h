@@ -66,6 +66,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWNavigationTitleView;
 
+/// 自定义titleView协议
+@protocol FWNavigationTitleViewProtocol <NSObject>
+
+@required
+
+/// 当前标题文字，自动兼容VC.title和navigationItem.title调用
+@property(nonatomic, copy, nullable) NSString *title;
+
+@end
+
 /// 自定义titleView事件代理
 @protocol FWNavigationTitleViewDelegate <NSObject>
 
@@ -102,7 +112,7 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
  *
  *  @see https://github.com/Tencent/QMUI_iOS
  */
-@interface FWNavigationTitleView : UIControl
+@interface FWNavigationTitleView : UIControl <FWNavigationTitleViewProtocol>
 
 /// 事件代理
 @property(nonatomic, weak, nullable) id<FWNavigationTitleViewDelegate> delegate;
@@ -130,9 +140,6 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 
 /// 是否适应tintColor变化，影响titleLabel、subtitleLabel、loadingView，默认YES
 @property(nonatomic, assign) BOOL adjustsTintColor UI_APPEARANCE_SELECTOR;
-
-/// 是否适应navigationBar.tintColor颜色变化，默认YES
-@property(nonatomic, assign) BOOL adjustsNavigationBar UI_APPEARANCE_SELECTOR;
 
 /// 水平布局下的标题字体，默认为 加粗17
 @property(nonatomic, strong) UIFont *horizontalTitleFont UI_APPEARANCE_SELECTOR;
