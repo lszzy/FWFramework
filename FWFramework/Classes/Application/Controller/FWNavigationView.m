@@ -173,7 +173,7 @@
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            [selfObject fwNavigationViewUpdateLayout];
+            [selfObject fwNavigationViewLayout];
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController;
             selfObject.fwNavigationView.hidden = hidden;
             
@@ -191,7 +191,7 @@
             if (!selfObject.fwNavigationViewEnabled) return;
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                [selfObject fwNavigationViewUpdateLayout];
+                [selfObject fwNavigationViewLayout];
             } completion:nil];
         }));
         
@@ -245,7 +245,7 @@
     objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwNavigationViewUpdateLayout
+- (void)fwNavigationViewLayout
 {
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
     if (!navigationBar || navigationBar.frame.size.height < 1) return;
