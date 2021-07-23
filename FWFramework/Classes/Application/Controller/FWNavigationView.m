@@ -303,7 +303,7 @@
             titleViewSize.height = ceil(titleViewSize.height);
             
             if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
-                CGFloat titleViewMinY = (CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0));
+                CGFloat titleViewMinY = FWFlatValue(CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0));
                 titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleViewMaximumWidth, titleViewSize.width), titleViewSize.height);
             }
             
@@ -751,7 +751,7 @@
         CGFloat secondLineWidth = [self secondLineWidthInVerticalStyle];
         size.width = MAX(firstLineWidth, secondLineWidth);
         size.height = self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom) + self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom);
-        return size;
+        return CGSizeMake(FWFlatValue(size.width), FWFlatValue(size.height));
     } else {
         CGSize size = CGSizeZero;
         size.width = self.titleLabelSize.width + (self.titleEdgeInsetsIfShowingTitleLabel.left + self.titleEdgeInsetsIfShowingTitleLabel.right) + self.subtitleLabelSize.width + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.left + self.subtitleEdgeInsetsIfShowingSubtitleLabel.right);
@@ -759,7 +759,7 @@
         size.height = MAX(self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom), self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom));
         size.height = MAX(size.height, [self loadingViewSpacingSizeIfNeedsPlaceholder].height);
         size.height = MAX(size.height, [self accessorySpacingSizeIfNeedesPlaceholder].height);
-        return size;
+        return CGSizeMake(FWFlatValue(size.width), FWFlatValue(size.height));
     }
 }
 
