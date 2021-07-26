@@ -35,14 +35,14 @@
     self.label = [[UILabel alloc] init];
     self.label.numberOfLines = 0;
     self.label.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.label];
+    [self.fwView addSubview:self.label];
     [self.label fwAlignCenterToSuperviewWithOffset:CGPointMake(0, -50)];
     [self.label fwPinEdgesToSuperviewHorizontal];
     
     self.label2 = [[UILabel alloc] init];
     self.label2.numberOfLines = 0;
     self.label2.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.label2];
+    [self.fwView addSubview:self.label2];
     [self.label2 fwAlignCenterToSuperviewWithOffset:CGPointMake(0, 50)];
     [self.label2 fwPinEdgesToSuperviewHorizontal];
 }

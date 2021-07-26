@@ -22,7 +22,7 @@ class HomeViewController: UIViewController, FWViewController {
         // FIXME: hotfix
         edgesForExtendedLayout = []
         // TODO: feature
-        view.addSubview(loginButton)
+        fwView.addSubview(loginButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {

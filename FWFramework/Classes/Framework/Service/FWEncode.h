@@ -463,6 +463,9 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 /// 获取当前query的参数字典，不含空值
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fwQueryDictionary;
 
+/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
+@property (nonatomic, copy, readonly, nullable) NSString *fwPathURI;
+
 /// 生成URL，中文自动URL编码
 + (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;
 

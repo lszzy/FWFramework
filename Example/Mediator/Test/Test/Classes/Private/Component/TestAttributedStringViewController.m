@@ -23,7 +23,7 @@
     _label = label;
     label.backgroundColor = [Theme cellColor];
     label.numberOfLines = 0;
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     [label fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsMake(15, 15, 15, 15) excludingEdge:NSLayoutAttributeBottom];
 }
 

@@ -188,6 +188,15 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     return [UIImage fwImageWithColor:color size:CGSizeMake(1.0f, 1.0f)];
 }
 
+- (UIImage *)fwImageWithAlpha:(CGFloat)alpha
+{
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:alpha];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 + (UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size
 {
     if (!color || size.width <= 0 || size.height <= 0) return nil;

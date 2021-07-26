@@ -105,7 +105,7 @@
     
     self.bottomView = [UIView new];
     self.bottomView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.bottomView];
+    [self.fwView addSubview:self.bottomView];
     if (self.transitionType == 0) {
         self.bottomView.fwLayoutChain.left().right().bottom().height(FWScreenHeight / 2);
     } else {
@@ -140,7 +140,7 @@ FWLazyProperty(UIView *, animationView);
 FWDefLazyProperty(UIView *, animationView, {
     _animationView = [[UIView alloc] initWithFrame:CGRectMake(FWScreenWidth / 2.0 - 75.0, 20, 150, 200)];
     _animationView.backgroundColor = [UIColor redColor];
-    [self.view addSubview:_animationView];
+    [self.fwView addSubview:_animationView];
 });
 
 - (void)renderView
@@ -148,21 +148,21 @@ FWDefLazyProperty(UIView *, animationView, {
     UIButton *button = [Theme largeButton];
     [button setTitle:@"转场动画" forState:UIControlStateNormal];
     [button fwAddTouchTarget:self action:@selector(onPresent)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
     UIButton *button2 = [Theme largeButton];
     [button2 setTitle:@"切换拖动" forState:UIControlStateNormal];
     [button2 fwAddTouchTarget:self action:@selector(onDrag:)];
-    [self.view addSubview:button2];
+    [self.fwView addSubview:button2];
     [button2 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button withOffset:-15];
     [button2 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     
     UIButton *button3 = [Theme largeButton];
     [button3 setTitle:@"切换动画" forState:UIControlStateNormal];
     [button3 fwAddTouchTarget:self action:@selector(onAnimation:)];
-    [self.view addSubview:button3];
+    [self.fwView addSubview:button3];
     [button3 fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:button2 withOffset:-15];
     [button3 fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }

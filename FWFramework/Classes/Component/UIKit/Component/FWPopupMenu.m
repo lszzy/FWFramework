@@ -472,14 +472,14 @@ UITableViewDataSource
 - (void)dismiss
 {
     [self.orientationManager endMonitorDeviceOrientation];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenuBeganDismiss:)]) {
-        [self.delegate FWPopupMenuBeganDismiss:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuBeganDismiss:)]) {
+        [self.delegate popupMenuBeganDismiss:self];
     }
     __weak typeof(self) weakSelf = self;
     [self.animationManager displayDismissAnimationCompletion:^{
         __strong typeof(weakSelf)self = weakSelf;
-        if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenuDidDismiss:)]) {
-            [self.delegate FWPopupMenuDidDismiss:self];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuDidDismiss:)]) {
+            [self.delegate popupMenuDidDismiss:self];
         }
         self.delegate = nil;
         [self removeFromSuperview];
@@ -496,8 +496,8 @@ UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * tableViewCell = nil;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenu:cellForRowAtIndex:)]) {
-        tableViewCell = [self.delegate FWPopupMenu:self cellForRowAtIndex:indexPath.row];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenu:cellForRowAtIndex:)]) {
+        tableViewCell = [self.delegate popupMenu:self cellForRowAtIndex:indexPath.row];
     }
     
     if (tableViewCell) {
@@ -549,8 +549,8 @@ UITableViewDataSource
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (_dismissOnSelected) [self dismiss];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenu:didSelectedAtIndex:)]) {
-        [self.delegate FWPopupMenu:self didSelectedAtIndex:indexPath.row];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenu:didSelectedAtIndex:)]) {
+        [self.delegate popupMenu:self didSelectedAtIndex:indexPath.row];
     }
 }
 
@@ -588,8 +588,8 @@ UITableViewDataSource
     [self updateUI];
     [UIWindow.fwMainWindow addSubview:_menuBackView];
     [UIWindow.fwMainWindow addSubview:self];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenuBeganShow:)]) {
-        [self.delegate FWPopupMenuBeganShow:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuBeganShow:)]) {
+        [self.delegate popupMenuBeganShow:self];
     }
     if ([[self getLastVisibleCell] isKindOfClass:[FWPopupMenuCell class]]) {
         FWPopupMenuCell *cell = [self getLastVisibleCell];
@@ -599,8 +599,8 @@ UITableViewDataSource
     [self.animationManager displayShowAnimationCompletion:^{
         __strong typeof(weakSelf)self = weakSelf;
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(FWPopupMenuDidShow:)]) {
-            [self.delegate FWPopupMenuDidShow:self];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuDidShow:)]) {
+            [self.delegate popupMenuDidShow:self];
         }
     }];
 }

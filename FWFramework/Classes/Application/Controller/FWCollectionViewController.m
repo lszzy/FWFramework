@@ -9,6 +9,7 @@
 
 #import "FWCollectionViewController.h"
 #import "FWAutoLayout.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWCollectionViewController
@@ -33,7 +34,7 @@
     UICollectionView *collectionView = [viewController collectionView];
     collectionView.dataSource = viewController;
     collectionView.delegate = viewController;
-    [viewController.view addSubview:collectionView];
+    [viewController.fwView addSubview:collectionView];
     
     if ([viewController respondsToSelector:@selector(renderCollectionView)]) {
         [viewController renderCollectionView];

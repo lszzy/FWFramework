@@ -22,7 +22,7 @@
     UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:deviceText];
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.numberOfLines = 0;
-    [self.view addSubview:textLabel];
+    [self.fwView addSubview:textLabel];
     [textLabel fwAlignCenterToSuperview];
     [textLabel fwPinEdgesToSuperviewHorizontal];
 }

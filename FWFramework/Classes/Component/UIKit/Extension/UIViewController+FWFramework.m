@@ -9,6 +9,7 @@
 #import "UIViewController+FWFramework.h"
 #import "FWAutoLayout.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerPresentationTarget
@@ -153,7 +154,7 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 
 - (void)fwAddChildViewController:(UIViewController *)viewController
 {
-    [self fwAddChildViewController:viewController inView:self.view];
+    [self fwAddChildViewController:viewController inView:self.fwView];
 }
 
 - (void)fwAddChildViewController:(UIViewController *)viewController inView:(UIView *)view
