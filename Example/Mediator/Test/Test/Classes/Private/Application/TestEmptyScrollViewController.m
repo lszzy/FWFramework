@@ -92,7 +92,7 @@
 
 - (void)fwHideEmptyView:(UIScrollView *)scrollView
 {
-    [self.view fwHideEmptyView];
+    [self fwHideEmptyView];
 }
 
 @end

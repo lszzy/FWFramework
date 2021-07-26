@@ -645,18 +645,6 @@
     return image;
 }
 
-- (UIImage *)fwImageWithAlpha:(CGFloat)alpha
-{
-    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
-    
-    // 绘制透明度
-    [self drawAtPoint:CGPointZero blendMode:kCGBlendModeNormal alpha:alpha];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
 - (UIImage *)fwImageWithMaskImage:(UIImage *)maskImage
 {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);

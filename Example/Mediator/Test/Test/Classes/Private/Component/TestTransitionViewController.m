@@ -154,7 +154,7 @@ FWDealloc();
     UIView *contentView = [UIView fwAutoLayoutView];
     _contentView = contentView;
     contentView.backgroundColor = Theme.cellColor;
-    [self.view addSubview:contentView];
+    [self.fwView addSubview:contentView];
     contentView.fwLayoutChain.center();
     
     UIView *childView = [UIView fwAutoLayoutView];
@@ -230,7 +230,7 @@ FWDealloc();
     contentView.layer.masksToBounds = YES;
     contentView.layer.cornerRadius = 10;
     contentView.backgroundColor = Theme.cellColor;
-    [self.view addSubview:contentView];
+    [self.fwView addSubview:contentView];
     contentView.fwLayoutChain.center();
     
     UIView *childView = [UIView fwAutoLayoutView];

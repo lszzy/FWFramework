@@ -150,6 +150,19 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 当前屏幕高度缩放比例
 #define FWScaleFactorHeight [UIScreen fwScaleFactorHeight]
 
+/// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
+CG_INLINE CGFloat FWFlatScale(CGFloat floatValue, CGFloat scale) {
+    floatValue = (floatValue == CGFLOAT_MIN) ? 0 : floatValue;
+    scale = scale ?: [UIScreen mainScreen].scale;
+    CGFloat flattedValue = ceil(floatValue * scale) / scale;
+    return flattedValue;
+}
+
+/// 基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整
+CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
+    return FWFlatScale(floatValue, 0);
+}
+
 /*!
  @brief UIScreen+FWAdaptive
  */

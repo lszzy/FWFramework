@@ -77,6 +77,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 当前导航栏设置，优先级高于style和hidden，设置后会在viewWillAppear:自动应用生效
 @property (nullable, nonatomic, strong) FWNavigationBarAppearance *fwNavigationBarAppearance;
 
+/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
+@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
+
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
 
@@ -142,6 +145,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  @brief 导航栏视图分类，全局设置用[UINavigationBar appearance]
  */
 @interface UINavigationBar (FWStyle)
+
+/// 导航栏背景视图，显示背景色和背景图片等
+@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;

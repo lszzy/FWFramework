@@ -313,20 +313,14 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 - (CGFloat)fwStatusBarHeight
 {
-    if (UIApplication.sharedApplication.statusBarHidden) {
-        return 0.0;
-    } else {
-        return [UIApplication sharedApplication].statusBarFrame.size.height;
-    }
+    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+    return [UIApplication sharedApplication].statusBarFrame.size.height;
 }
 
 - (CGFloat)fwNavigationBarHeight
 {
-    if (self.navigationController.navigationBarHidden) {
-        return 0.0;
-    } else {
-        return self.navigationController.navigationBar.frame.size.height;
-    }
+    if (self.navigationController.navigationBarHidden) return 0.0;
+    return self.navigationController.navigationBar.frame.size.height;
 }
 
 - (CGFloat)fwTopBarHeight
@@ -335,29 +329,20 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
     }
     
-    if (self.navigationController.navigationBarHidden) {
-        return [self fwStatusBarHeight];
-    } else {
-        return self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height;
-    }
+    if (self.navigationController.navigationBarHidden) return [self fwStatusBarHeight];
+    return self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height;
 }
 
 - (CGFloat)fwTabBarHeight
 {
-    if (self.tabBarController.tabBar.hidden) {
-        return 0.0;
-    } else {
-        return self.tabBarController.tabBar.frame.size.height;
-    }
+    if (self.tabBarController.tabBar.hidden) return 0.0;
+    return self.tabBarController.tabBar.frame.size.height;
 }
 
 - (CGFloat)fwToolBarHeight
 {
-    if (self.navigationController.toolbarHidden) {
-        return 0.0;
-    } else {
-        return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
-    }
+    if (self.navigationController.toolbarHidden) return 0.0;
+    return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
 }
 
 @end

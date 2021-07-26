@@ -89,6 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL fwAutoCollapse;
 
 /*!
+ @brief 设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
+ */
+@property (nonatomic, assign) BOOL fwHiddenCollapse;
+
+/*!
  @brief 添加视图的收缩常量，必须先添加才能生效
  
  @see https://github.com/forkingdog/UIView-FDCollapsibleConstraints
@@ -670,6 +675,7 @@ NS_SWIFT_UNAVAILABLE("")
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^collapsed)(BOOL collapsed);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^autoCollapse)(BOOL autoCollapse);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^hiddenCollapse)(BOOL hiddenCollapse);
 
 #pragma mark - Axis
 

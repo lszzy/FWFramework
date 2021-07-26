@@ -58,9 +58,9 @@ class TestRouter {
     }()
     
     override func renderView() {
-        view.addSubview(pluginButton)
-        view.addSubview(routerButton)
-        view.addSubview(objectButton)
+        fwView.addSubview(pluginButton)
+        fwView.addSubview(routerButton)
+        fwView.addSubview(objectButton)
         pluginButton.fwLayoutChain.centerX().top(50).size(CGSize(width: 100, height: 50))
         routerButton.fwLayoutChain.centerX().top(150).size(CGSize(width: 100, height: 50))
         objectButton.fwLayoutChain.centerX().top(250).size(CGSize(width: 100, height: 50))

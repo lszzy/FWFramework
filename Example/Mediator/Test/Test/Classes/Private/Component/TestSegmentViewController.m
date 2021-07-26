@@ -36,7 +36,7 @@
     UIImageView *imageView = [UIImageView new];
     _gifImageView = imageView;
     imageView.backgroundColor = [Theme cellColor];
-    [self.view addSubview:imageView];
+    [self.fwView addSubview:imageView];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.layer.masksToBounds = YES;
     [imageView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
@@ -67,7 +67,7 @@
     activityView.color = Theme.textColor;
     [activityView fwSetIndicatorSize:activitySize];
     [activityView startAnimating];
-    [self.view addSubview:activityView];
+    [self.fwView addSubview:activityView];
     [activityView fwAlignAxis:NSLayoutAttributeCenterX toView:self.view];
     [activityView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:imageView withOffset:10];
     [activityView fwSetDimensionsToSize:activitySize];
@@ -75,7 +75,7 @@
     UILabel *textLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:nil];
     textLabel.numberOfLines = 0;
     textLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:textLabel];
+    [self.fwView addSubview:textLabel];
     [textLabel fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
     [textLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:activityView withOffset:10];
     
@@ -108,7 +108,7 @@
     label.font = [UIFont systemFontOfSize:15];
     label.textColor = [Theme textColor];
     label.textAlignment = kCTTextAlignmentCenter;
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     [label fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [label fwPinEdgeToSuperview:NSLayoutAttributeRight];
     [label fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
@@ -128,7 +128,7 @@
     _tagCollectionView = tagCollectionView;
     tagCollectionView.verticalSpacing = 5;
     tagCollectionView.horizontalSpacing = 5;
-    [self.view addSubview:tagCollectionView];
+    [self.fwView addSubview:tagCollectionView];
     [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
     [tagCollectionView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
     [tagCollectionView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:label withOffset:10];
@@ -140,7 +140,7 @@
     }
     
     FWMarqueeLabel *marqueeLabel = [FWMarqueeLabel fwLabelWithFont:FWFontRegular(16) textColor:[Theme textColor] text:@"FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动"];
-    [self.view addSubview:marqueeLabel];
+    [self.fwView addSubview:marqueeLabel];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:10];
     [marqueeLabel fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:10];
     [marqueeLabel fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.tagCollectionView withOffset:10];
@@ -160,7 +160,7 @@
     self.segmentedControl.selectionIndicatorCornerRadius = 2.5f;
     self.segmentedControl.titleTextAttributes = @{NSFontAttributeName: [UIFont fwFontOfSize:16], NSForegroundColorAttributeName: Theme.textColor};
     self.segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont fwBoldFontOfSize:16], NSForegroundColorAttributeName: Theme.textColor};
-    [self.view addSubview:self.segmentedControl];
+    [self.fwView addSubview:self.segmentedControl];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.segmentedControl fwPinEdgeToSuperview:NSLayoutAttributeRight];
     [self.segmentedControl fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:marqueeLabel withOffset:10];
@@ -179,7 +179,7 @@
     self.scrollView.contentSize = CGSizeMake(FWScreenWidth * sectionTitles.count, 100);
     self.scrollView.delegate = self;
     [self.scrollView scrollRectToVisible:CGRectMake(FWScreenWidth * self.segmentedControl.selectedSegmentIndex, 0, FWScreenWidth, 100) animated:NO];
-    [self.view addSubview:self.scrollView];
+    [self.fwView addSubview:self.scrollView];
     [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeLeft];
     [self.scrollView fwPinEdgeToSuperview:NSLayoutAttributeRight];
     [self.scrollView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.segmentedControl];

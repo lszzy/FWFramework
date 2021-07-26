@@ -54,10 +54,11 @@ platform :ios do
       CHANGELOG_TEXT = prompt(text: "Changelog:", multi_line_end_keyword: "END")
     end
 
+    CURRENT_DATE = Time.new.strftime("%Y-%m-%d")
     if "#{lane}".include? "test"
-      CHANGELOG_TEXT = "测试环境版本#{BUILD_NUMBER}，更新内容：\n#{CHANGELOG_TEXT}"
+      CHANGELOG_TEXT = "[#{BUILD_NUMBER}-test] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
     else
-      CHANGELOG_TEXT = "正式环境版本#{BUILD_NUMBER}，更新内容：\n#{CHANGELOG_TEXT}"
+      CHANGELOG_TEXT = "[#{BUILD_NUMBER}-prod] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
     end
 
     puts "Changelog: #{CHANGELOG_TEXT}"

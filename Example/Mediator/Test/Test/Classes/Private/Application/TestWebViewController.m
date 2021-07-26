@@ -84,7 +84,7 @@
 
 - (void)loadRequestUrl
 {
-    [self.view fwHideEmptyView];
+    [self fwHideEmptyView];
     
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
     urlRequest.timeoutInterval = 30;
@@ -107,7 +107,7 @@
     [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(loadRequestUrl)];
     
     FWWeakifySelf();
-    [self.view fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {
+    [self fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self loadRequestUrl];
     }];

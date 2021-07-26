@@ -509,7 +509,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.fwHeight = FWScreenHeight - FWTopBarHeight;
     self.barrageManager = [[FWBarrageManager alloc] init];
-    [self.view addSubview:self.barrageManager.renderView];
+    [self.fwView addSubview:self.barrageManager.renderView];
     self.barrageManager.renderView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 //    self.barrageManager.renderView.center = self.view.center;
     self.barrageManager.renderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -524,7 +524,7 @@
     [button addTarget:self action:@selector(startBarrage) forControlEvents:UIControlEventTouchUpInside];
     button.frame= CGRectMake(0.0, originY, 50.0, 50.0);
     button.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     
     UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button2 setTitle:@"暂停" forState:UIControlStateNormal];
@@ -532,7 +532,7 @@
     [button2 addTarget:self action:@selector(pasueBarrage) forControlEvents:UIControlEventTouchUpInside];
     button2.frame= CGRectMake(55.0, originY, 50.0, 50.0);
     button2.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
-    [self.view addSubview:button2];
+    [self.fwView addSubview:button2];
     
     UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button3 setTitle:@"继续" forState:UIControlStateNormal];
@@ -540,7 +540,7 @@
     [button3 addTarget:self action:@selector(resumeBarrage) forControlEvents:UIControlEventTouchUpInside];
     button3.frame= CGRectMake(110.0, originY, 50.0, 50.0);
     button3.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
-    [self.view addSubview:button3];
+    [self.fwView addSubview:button3];
     
     UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
     [button4 setTitle:@"停止" forState:UIControlStateNormal];
@@ -548,7 +548,7 @@
     [button4 addTarget:self action:@selector(stopBarrage) forControlEvents:UIControlEventTouchUpInside];
     button4.frame= CGRectMake(165.0, originY, 50.0, 50.0);
     button4.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.2];
-    [self.view addSubview:button4];
+    [self.fwView addSubview:button4];
     
     [self.barrageManager start];
 }

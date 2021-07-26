@@ -13,6 +13,7 @@
 #import "FWTheme.h"
 #import "FWBlock.h"
 #import "FWRouter.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWNavigationBarAppearance
@@ -138,8 +139,6 @@
 {
     objc_setAssociatedObject(self, @selector(fwNavigationBarHidden), @(fwNavigationBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
-    // [self.navigationController setNavigationBarHidden:hidden animated:animated];
     if (self.isViewLoaded && self.view.window) {
         [self fwUpdateNavigationBarStyle:NO];
     }
@@ -173,6 +172,19 @@
     }
 }
 
+- (UINavigationBar *)fwNavigationBar
+{
+    return self.navigationController.navigationBar;
+}
+
+- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
+    if (self.navigationController.navigationBarHidden != hidden) {
+        [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    }
+}
+
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.navigationController) return;
@@ -189,32 +201,30 @@
         isTransparent = (style.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     }
     
-    if (self.navigationController.navigationBarHidden != isHidden) {
-        [self.navigationController setNavigationBarHidden:isHidden animated:animated];
-    }
+    [self fwSetNavigationBarHidden:isHidden animated:animated];
     if (isTransparent) {
-        [self.navigationController.navigationBar fwSetBackgroundTransparent];
+        [self.fwNavigationBar fwSetBackgroundTransparent];
     }
     
     if (appearance.backgroundColor) {
         if (appearance.backgroundColor.fwIsThemeColor) {
-            self.navigationController.navigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
+            self.fwNavigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
         } else {
-            self.navigationController.navigationBar.fwBackgroundColor = appearance.backgroundColor;
+            self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
         }
     }
     if (appearance.backgroundImage) {
         if (appearance.backgroundImage.fwIsThemeImage) {
-            self.navigationController.navigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
+            self.fwNavigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
         } else {
-            self.navigationController.navigationBar.fwBackgroundImage = appearance.backgroundImage;
+            self.fwNavigationBar.fwBackgroundImage = appearance.backgroundImage;
         }
     }
     if (appearance.foregroundColor) {
-        self.navigationController.navigationBar.fwForegroundColor = appearance.foregroundColor;
+        self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
     }
     if (appearance.appearanceBlock) {
-        appearance.appearanceBlock(self.navigationController.navigationBar);
+        appearance.appearanceBlock(self.fwNavigationBar);
     }
 }
 
@@ -357,8 +367,8 @@
             backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
         }
         self.navigationItem.backBarButtonItem = backItem;
-        self.navigationController.navigationBar.backIndicatorImage = nil;
-        self.navigationController.navigationBar.backIndicatorTransitionMaskImage = nil;
+        self.fwNavigationBar.backIndicatorImage = nil;
+        self.fwNavigationBar.backIndicatorTransitionMaskImage = nil;
         return;
     }
     
@@ -378,8 +388,8 @@
     }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.backIndicatorImage = indicatorImage;
-    self.navigationController.navigationBar.backIndicatorTransitionMaskImage = indicatorImage;
+    self.fwNavigationBar.backIndicatorImage = indicatorImage;
+    self.fwNavigationBar.backIndicatorTransitionMaskImage = indicatorImage;
 }
 
 - (BOOL)fwPopBackBarItem
@@ -437,6 +447,11 @@
 #pragma mark - UINavigationBar+FWStyle
 
 @implementation UINavigationBar (FWStyle)
+
+- (UIView *)fwBackgroundView
+{
+    return [self fwPerformPropertySelector:@"_backgroundView"];
+}
 
 - (UIColor *)fwForegroundColor
 {

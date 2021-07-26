@@ -112,16 +112,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIGestureRecognizer (FWBlock)
 
-// 从事件句柄初始化
+/// 从事件句柄初始化
 + (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;
 
-// 添加事件句柄，返回唯一标志
+/// 添加事件句柄，返回唯一标志
 - (NSString *)fwAddBlock:(void (^)(id sender))block;
 
-// 根据唯一标志移除事件句柄
+/// 根据唯一标志移除事件句柄
 - (void)fwRemoveBlock:(nullable NSString *)identifier;
 
-// 移除所有事件句柄
+/// 移除所有事件句柄
 - (void)fwRemoveAllBlocks;
 
 @end
@@ -130,16 +130,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView (FWBlock)
 
-// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
+/// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
 - (void)fwAddTapGestureWithTarget:(id)target action:(SEL)action;
 
-// 添加点击手势句柄，同上
+/// 添加点击手势句柄，同上
 - (NSString *)fwAddTapGestureWithBlock:(void (^)(id sender))block;
 
-// 根据唯一标志移除点击手势句柄
+/// 根据唯一标志移除点击手势句柄
 - (void)fwRemoveTapGesture:(nullable NSString *)identifier;
 
-// 移除所有点击手势
+/// 移除所有点击手势
 - (void)fwRemoveAllTapGestures;
 
 @end
@@ -148,22 +148,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIControl (FWBlock)
 
-// 添加事件句柄
+/// 添加事件句柄
 - (NSString *)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents;
 
-// 根据唯一标志移除事件句柄
+/// 根据唯一标志移除事件句柄
 - (void)fwRemoveBlock:(nullable NSString *)identifier forControlEvents:(UIControlEvents)controlEvents;
 
-// 移除所有事件句柄
+/// 移除所有事件句柄
 - (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents;
 
-// 添加点击事件
+/// 添加点击事件
 - (void)fwAddTouchTarget:(id)target action:(SEL)action;
 
-// 添加点击句柄
+/// 添加点击句柄
 - (NSString *)fwAddTouchBlock:(void (^)(id sender))block;
 
-// 根据唯一标志移除点击句柄
+/// 根据唯一标志移除点击句柄
 - (void)fwRemoveTouchBlock:(nullable NSString *)identifier;
 
 @end
@@ -175,11 +175,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIBarButtonItem (FWBlock)
 
-// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber等
+/// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber等
 + (instancetype)fwBarItemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
-// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等
+/// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等
 + (instancetype)fwBarItemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
+
+/// 设置当前Item触发句柄，nil时清空句柄
+- (void)fwSetBlock:(nullable void (^)(id sender))block;
 
 @end
 

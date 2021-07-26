@@ -282,7 +282,7 @@
     [headerView fwAutoLayoutSubviews];
     [footerView fwAutoLayoutSubviews];
     
-    [self.view addSubview:self.tableView];
+    [self.fwView addSubview:self.tableView];
     [self.tableView fwPinEdgesToSuperview];
     
     [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
