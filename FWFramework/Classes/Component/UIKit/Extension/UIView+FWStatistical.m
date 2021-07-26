@@ -437,7 +437,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 - (NSString *)fwStatisticalExposureIdentifier
 {
     NSIndexPath *indexPath = nil;
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionView class]]) {
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
         indexPath = [(UITableViewCell *)self fwIndexPath];
     }
     
