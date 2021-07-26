@@ -24,7 +24,7 @@ import Core
         button.fwAddTouch { [weak self] (sender) in
             self?.dismiss(animated: true, completion: self?.completion)
         }
-        self.view.addSubview(button)
+        fwView.addSubview(button)
         button.fwLayoutChain.center()
     }
 }

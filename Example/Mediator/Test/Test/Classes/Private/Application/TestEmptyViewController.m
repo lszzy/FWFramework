@@ -24,7 +24,7 @@
     FWWeakifySelf();
     [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        [self.view fwHideEmptyView];
+        [self fwHideEmptyView];
         [self.tableView reloadData];
     }];
 }
@@ -32,7 +32,7 @@
 #pragma mark - TableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.view.fwHasEmptyView ? 0 : 4;
+    return self.fwView.fwHasEmptyView ? 0 : 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -56,16 +56,16 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger row = indexPath.row;
     if (row == 0) {
-        [self.view fwShowEmptyViewWithText:@"联系人为空"];
+        [self fwShowEmptyViewWithText:@"联系人为空"];
     } else if (row == 1) {
-        [self.view fwShowEmptyViewWithText:@"联系人为空" detail:@"请到设置-隐私查看你的联系人权限设置"];
+        [self fwShowEmptyViewWithText:@"联系人为空" detail:@"请到设置-隐私查看你的联系人权限设置"];
     } else if (row == 2) {
-        [self.view fwShowEmptyViewWithText:@"暂无数据" detail:nil image:[UIImage fwImageWithAppIcon]];
+        [self fwShowEmptyViewWithText:@"暂无数据" detail:nil image:[UIImage fwImageWithAppIcon]];
     } else if (row == 3) {
         FWWeakifySelf();
-        [self.view fwShowEmptyViewWithText:@"请求失败" detail:@"请检查网络连接" image:nil action:@"重试" block:^(id  _Nonnull sender) {
+        [self fwShowEmptyViewWithText:@"请求失败" detail:@"请检查网络连接" image:nil action:@"重试" block:^(id  _Nonnull sender) {
             FWStrongifySelf();
-            [self.view fwHideEmptyView];
+            [self fwHideEmptyView];
             [self.tableView reloadData];
         }];
     }

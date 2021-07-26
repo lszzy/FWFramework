@@ -16,70 +16,70 @@
     UIButton *button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button重复点击"];
     button.frame = CGRectMake(20, 20, 200, 50);
     [button fwAddTouchTarget:self action:@selector(onClick1:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     
     UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"View重复点击"];
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
     label.frame = CGRectMake(20, 90, 200, 50);
     [label fwAddTapGestureWithTarget:self action:@selector(onClick2:)];
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     
     button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button不可重复点击"];
     button.frame = CGRectMake(20, 160, 200, 50);
     [button fwAddTouchTarget:self action:@selector(onClick3:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     
     label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"View不可重复点击"];
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
     label.frame = CGRectMake(20, 230, 200, 50);
     [label fwAddTapGestureWithTarget:self action:@selector(onClick4:)];
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     
     button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button1秒内不可重复点击"];
     button.fwTouchEventInterval = 1;
     button.frame = CGRectMake(20, 300, 200, 50);
     [button fwAddTouchTarget:self action:@selector(onClick5:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     
     UIView *view = [UIView new];
     view.backgroundColor = [Theme textColor];
     view.frame = CGRectMake(30, 370, 70, 70);
-    [self.view addSubview:view];
+    [self.fwView addSubview:view];
     
     button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = [Theme textColor];
     button.frame = CGRectMake(50, 390, 30, 30);
     button.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     [button fwAddTouchTarget:self action:@selector(onClick6:)];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     
     view = [UIView new];
     view.backgroundColor = [Theme textColor];
     view.frame = CGRectMake(130, 370, 70, 70);
-    [self.view addSubview:view];
+    [self.fwView addSubview:view];
     
     view = [UIView new];
     view.backgroundColor = [Theme textColor];
     view.frame = CGRectMake(150, 390, 30, 30);
     view.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     [view fwAddTapGestureWithTarget:self action:@selector(onClick6:)];
-    [self.view addSubview:view];
+    [self.fwView addSubview:view];
     
     UIButton *timerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     timerButton.frame = CGRectMake(30, 460, 80, 30);
     timerButton.titleLabel.font = [UIFont fwFontOfSize:15];
     [timerButton setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [timerButton setTitle:@"=>" forState:UIControlStateNormal];
-    [self.view addSubview:timerButton];
+    [self.fwView addSubview:timerButton];
     
     UIButton *timerButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
     timerButton1.frame = CGRectMake(120, 460, 80, 30);
     timerButton1.titleLabel.font = [UIFont fwFontOfSize:15];
     [timerButton1 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [timerButton1 setTitle:@"=>" forState:UIControlStateNormal];
-    [self.view addSubview:timerButton1];
+    [self.fwView addSubview:timerButton1];
     
     UIButton *timerButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
     timerButton2.frame = CGRectMake(220, 460, 80, 30);
@@ -104,7 +104,7 @@
         } repeats:YES];
         [timer2 fire];
     }];
-    [self.view addSubview:timerButton2];
+    [self.fwView addSubview:timerButton2];
 }
 
 #pragma mark - Action

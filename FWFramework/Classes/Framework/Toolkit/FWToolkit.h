@@ -204,4 +204,16 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
+#pragma mark - UIViewController+FWToolkit
+
+/*!
+ @brief UIViewController+FWToolkit
+ */
+@interface UIViewController (FWToolkit)
+
+/// 当前视图，默认view，用于兼容自定义导航栏
+@property (nonatomic, strong, readonly) UIView *fwView;
+
+@end
+
 NS_ASSUME_NONNULL_END

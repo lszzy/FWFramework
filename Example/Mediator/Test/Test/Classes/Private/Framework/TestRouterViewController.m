@@ -204,7 +204,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
     UILabel *label = [UILabel fwAutoLayoutView];
     label.numberOfLines = 0;
     label.text = [NSString stringWithFormat:@"URL: %@\n\nparameters: %@", self.context.URL, self.context.parameters];
-    [self.view addSubview:label];
+    [self.fwView addSubview:label];
     [label fwAlignCenterToSuperview];
     [label fwSetDimension:NSLayoutAttributeWidth toSize:FWScreenWidth - 40];
     

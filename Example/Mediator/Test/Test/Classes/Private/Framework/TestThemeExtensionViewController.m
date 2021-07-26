@@ -39,7 +39,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
             return [UIColor redColor];
         }
     }];
-    [self.view addSubview:colorView];
+    [self.fwView addSubview:colorView];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 90, 50, 50)];
     imageView.fwThemeImage = [UIImage fwThemeImage:^UIImage *(FWThemeStyle style) {
@@ -51,7 +51,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
             return [[TestBundle imageNamed:@"theme_image_dark"] fwImageWithTintColor:[UIColor redColor]];
         }
     }];
-    [self.view addSubview:imageView];
+    [self.fwView addSubview:imageView];
     
     CALayer *layer = [CALayer new];
     layer.frame = CGRectMake(20, 160, 50, 50);
@@ -79,7 +79,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
         }
     }];
     themeLabel.attributedText = [NSAttributedString fwAttributedString:@"我是AttributedString" withFont:FWFontSize(16).fwBoldFont textColor:textColor];
-    [self.view addSubview:themeLabel];
+    [self.fwView addSubview:themeLabel];
 }
 
 - (void)renderModel

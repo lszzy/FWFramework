@@ -18,7 +18,12 @@
 "systemTitle" = "系统";
 "themeLight" = "浅色";
 "themeDark" = "深色";
-"rootTitle" = "根控制器";
+"rootTitle" = "控制器";
+"optionTitle" = "选项";
+"loginRequired" = "需要登录";
+"loginOptional" = "不需要登录";
+"navBarSystem" = "系统导航栏";
+"navBarCustom" = "自定义导航栏";
 "welcomeTitle" = "你知道我在等你吗？";
 "backTitle" = "欢迎回来，亲";
 "logoutConfirm" = "确定要退出当前账号吗?";

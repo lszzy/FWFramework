@@ -35,8 +35,8 @@
             [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
         } else {
             [self setupScanManager];
-            [self.view addSubview:self.scanView];
-            [self.view addSubview:self.promptLabel];
+            [self.fwView addSubview:self.scanView];
+            [self.fwView addSubview:self.promptLabel];
             
             // 由于异步授权，viewWillAppear时可能未完成，此处调用start
             [self startScanManager];
@@ -122,7 +122,7 @@
     self.scanManager.scanBrightnessBlock = ^(CGFloat brightness) {
         FWStrongifySelf();
         if (brightness < -1) {
-            [self.view addSubview:self.flashlightBtn];
+            [self.fwView addSubview:self.flashlightBtn];
         } else {
             if (self.flashlightSelected == NO) {
                 [self removeFlashlightBtn];

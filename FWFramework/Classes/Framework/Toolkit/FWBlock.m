@@ -332,14 +332,11 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
         barItem = [[self alloc] initWithCustomView:object];
         barItem.target = target;
         barItem.action = action;
-        // 目标动作存在，则添加点击手势，可设置target为空取消响应
-        if (barItem.target && barItem.action) {
-            // 进行self转发，模拟实际action回调参数
-            if ([object isKindOfClass:[UIControl class]]) {
-                [(UIControl *)object fwAddTouchTarget:barItem action:@selector(fwInnerTargetAction:)];
-            } else {
-                [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
-            }
+        // 进行self转发，模拟实际action回调参数
+        if ([object isKindOfClass:[UIControl class]]) {
+            [(UIControl *)object fwAddTouchTarget:barItem action:@selector(fwInnerTargetAction:)];
+        } else {
+            [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
         }
     // Other
     } else {
@@ -352,6 +349,13 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
 
 + (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id))block
 {
+    UIBarButtonItem *barItem = [self fwBarItemWithObject:object target:nil action:nil];
+    [barItem fwSetBlock:block];
+    return barItem;
+}
+
+- (void)fwSetBlock:(void (^)(id))block
+{
     FWInnerBlockTarget *target = nil;
     SEL action = NULL;
     if (block) {
@@ -360,12 +364,10 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
         action = @selector(invoke:);
     }
     
-    UIBarButtonItem *barItem = [self fwBarItemWithObject:object target:target action:action];
-    if (target) {
-        // 设置target为强引用，因为self.target为弱引用
-        objc_setAssociatedObject(barItem, kUIBarButtonItemFWBlockKey, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return barItem;
+    self.target = target;
+    self.action = action;
+    // 设置target为强引用，因为self.target为弱引用
+    objc_setAssociatedObject(self, kUIBarButtonItemFWBlockKey, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fwInnerTargetAction:(id)sender

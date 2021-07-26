@@ -274,7 +274,7 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 - (void)showToast:(NSString *)toast
 {
-    [self.view fwShowMessageWithText:toast];
+    [self fwShowMessageWithText:toast];
 }
 
 - (void)clickHandler:(NSInteger)index

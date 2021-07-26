@@ -304,14 +304,14 @@ FWPropertyWeak(UIButton *, snapshotButton);
 - (void)renderView
 {
     TestLayerView *layerView = [[TestLayerView alloc] initWithFrame:self.view.bounds];
-    [self.view addSubview:layerView];
+    [self.fwView addSubview:layerView];
     
     UIButton *button = [Theme largeButton];
     self.snapshotButton = button;
     [button setTitle:@"截屏" forState:UIControlStateNormal];
     // TouchDown事件，按钮还未highlighted
     [button addTarget:self action:@selector(onSnapshot) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:button];
+    [self.fwView addSubview:button];
     [button fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
     [button fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
 }

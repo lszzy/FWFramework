@@ -68,6 +68,12 @@ public class FWLayoutChain {
         view?.fwAutoCollapse = autoCollapse
         return self
     }
+    
+    @discardableResult
+    public func hiddenCollapse(_ hiddenCollapse: Bool) -> FWLayoutChain {
+        view?.fwHiddenCollapse = hiddenCollapse
+        return self
+    }
 
     // MARK: - Axis
 
