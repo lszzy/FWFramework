@@ -9,6 +9,7 @@
 
 #import "FWWebViewController.h"
 #import "FWViewControllerStyle.h"
+#import "FWToolkit.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
@@ -38,7 +39,7 @@
 {
     FWWebView *webView = [viewController webView];
     webView.delegate = viewController;
-    [viewController.view addSubview:webView];
+    [viewController.fwView addSubview:webView];
     
     __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {

@@ -8,6 +8,9 @@
 import FWFramework
 
 @objcMembers public class Theme: NSObject {
+    @FWUserDefaultAnnotation("isNavBarCustom", defaultValue: false)
+    public static var isNavBarCustom: Bool
+    
     public static var backgroundColor: UIColor {
         UIColor.fwThemeLight(.white, dark: .black)
     }
@@ -116,7 +119,9 @@ extension Theme {
         viewController.extendedLayoutIncludesOpaqueBars = true
         viewController.automaticallyAdjustsScrollViewInsets = false
         viewController.hidesBottomBarWhenPushed = true
+        viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
         viewController.fwNavigationBarStyle = .default
+        viewController.fwForcePopGesture = true
     }
     
     func viewControllerLoadView(_ viewController: UIViewController) {

@@ -32,8 +32,6 @@
 
 @interface UINavigationBar (FWBarTransition)
 
-@property (nonatomic, weak, readonly) UIView *fwBackgroundView;
-
 @property (nonatomic, assign) BOOL fwIsFakeBar;
 
 - (void)fwReplaceStyleWithNavigationBar:(UINavigationBar *)navigationBar;
@@ -41,11 +39,6 @@
 @end
 
 @implementation UINavigationBar (FWBarTransition)
-
-- (UIView *)fwBackgroundView
-{
-    return [self fwPerformPropertySelector:@"_backgroundView"];
-}
 
 - (BOOL)fwIsFakeBar
 {

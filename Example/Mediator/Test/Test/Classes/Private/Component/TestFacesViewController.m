@@ -52,7 +52,7 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
     [imageView fwSetCornerRadius:5];
     imageView.backgroundColor = [Theme backgroundColor];
-    [self.view addSubview:imageView];
+    [self.fwView addSubview:imageView];
     return imageView;
 }
 

@@ -61,6 +61,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
         tableData.add([FWLocalizedString("languageTitle"), "onLanguage"])
         tableData.add([FWLocalizedString("themeTitle"), "onTheme"])
         tableData.add([FWLocalizedString("rootTitle"), "onRoot"])
+        tableData.add([FWLocalizedString("optionTitle"), "onOption"])
         tableView.reloadData()
     }
     
@@ -121,7 +122,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onRoot() {
-        fwShowSheet(withTitle: FWLocalizedString("rootTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: ["UITabBar+Navigation", "FWTabBar+Navigation", "Navigation+UITabBar", "Navigation+FWTabBar", AppConfig.isRootLogin ? "Login required" : "No Login required"]) { (index) in
+        fwShowSheet(withTitle: FWLocalizedString("rootTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: ["UITabBar+Navigation", "FWTabBar+Navigation", "Navigation+UITabBar", "Navigation+FWTabBar"]) { (index) in
             switch index {
             case 0:
                 AppConfig.isRootNavigation = false
@@ -136,7 +137,21 @@ class SettingsViewController: UIViewController, FWTableViewController {
                 AppConfig.isRootNavigation = true
                 AppConfig.isRootCustom = true
             default:
+                break
+            }
+            UITabBarController.refreshController()
+        }
+    }
+    
+    @objc func onOption() {
+        fwShowSheet(withTitle: FWLocalizedString("optionTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [AppConfig.isRootLogin ? FWLocalizedString("loginOptional") : FWLocalizedString("loginRequired"), Theme.isNavBarCustom ? FWLocalizedString("navBarSystem") : FWLocalizedString("navBarCustom")]) { (index) in
+            switch index {
+            case 0:
                 AppConfig.isRootLogin = !AppConfig.isRootLogin
+            case 1:
+                Theme.isNavBarCustom = !Theme.isNavBarCustom
+            default:
+                break
             }
             UITabBarController.refreshController()
         }
@@ -175,6 +190,8 @@ extension SettingsViewController {
                 root = AppConfig.isRootCustom ? "FWTabBar+Navigation" : "UITabBar+Navigation"
             }
             cell.detailTextLabel?.text = root
+        } else if "onOption" == action {
+            cell.detailTextLabel?.text = Theme.isNavBarCustom ? FWLocalizedString("navBarCustom") : FWLocalizedString("navBarSystem")
         } else {
             cell.detailTextLabel?.text = ""
         }

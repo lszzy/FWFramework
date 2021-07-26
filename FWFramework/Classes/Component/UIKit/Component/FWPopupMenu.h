@@ -142,15 +142,15 @@ typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
 
 @optional
 
-- (void)FWPopupMenuBeganDismiss:(FWPopupMenu *)FWPopupMenu;
-- (void)FWPopupMenuDidDismiss:(FWPopupMenu *)FWPopupMenu;
-- (void)FWPopupMenuBeganShow:(FWPopupMenu *)FWPopupMenu;
-- (void)FWPopupMenuDidShow:(FWPopupMenu *)FWPopupMenu;
+- (void)popupMenuBeganDismiss:(FWPopupMenu *)popupMenu;
+- (void)popupMenuDidDismiss:(FWPopupMenu *)popupMenu;
+- (void)popupMenuBeganShow:(FWPopupMenu *)popupMenu;
+- (void)popupMenuDidShow:(FWPopupMenu *)popupMenu;
 
 /**
  点击事件回调
  */
-- (void)FWPopupMenu:(FWPopupMenu *)FWPopupMenu didSelectedAtIndex:(NSInteger)index;
+- (void)popupMenu:(FWPopupMenu *)popupMenu didSelectedAtIndex:(NSInteger)index;
 
 /**
  自定义cell
@@ -159,7 +159,7 @@ typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
  cell 的高度是根据 itemHeight 的，直接设置无效
  建议cell 背景色设置为透明色，不然切的圆角显示不出来
  */
-- (UITableViewCell *)FWPopupMenu:(FWPopupMenu *)FWPopupMenu cellForRowAtIndex:(NSInteger)index;
+- (UITableViewCell *)popupMenu:(FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index;
 
 @end
 

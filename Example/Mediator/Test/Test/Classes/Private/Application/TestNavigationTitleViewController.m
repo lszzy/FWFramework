@@ -1,0 +1,195 @@
+//
+//  TestNavigationTitleViewController.m
+//  Example
+//
+//  Created by wuyong on 2020/2/22.
+//  Copyright © 2020 wuyong.site. All rights reserved.
+//
+
+#import "TestNavigationTitleViewController.h"
+
+@interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate, FWPopupMenuDelegate>
+
+@property(nullable, nonatomic, strong) FWNavigationTitleView *titleView;
+@property(nonatomic, assign) UIControlContentHorizontalAlignment horizontalAlignment;
+
+@end
+
+@implementation TestNavigationTitleViewController
+
+- (UITableViewStyle)renderTableStyle
+{
+    return UITableViewStylePlain;
+}
+
+- (void)renderView
+{
+    self.titleView = [[FWNavigationTitleView alloc] init];
+    self.titleView.showsLoadingView = YES;
+    self.titleView.title = self.title;
+    self.navigationItem.titleView = self.titleView;
+    self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+    
+    FWNavigationButton *backButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
+    FWNavigationButton *rightButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
+    FWNavigationButton *shareButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
+    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:backButton block:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:rightButton block:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    UIBarButtonItem *shareItem = [UIBarButtonItem fwBarItemWithObject:shareButton block:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    self.navigationItem.leftBarButtonItem = backItem;
+    self.navigationItem.rightBarButtonItems = @[rightItem, shareItem];
+}
+
+- (void)renderData
+{
+    self.tableView.backgroundColor = Theme.tableColor;
+    [self.tableData addObjectsFromArray:@[@"显示左边的loading",
+                                          @"显示右边的accessoryView",
+                                          @"显示副标题",
+                                          @"切换为上下两行显示",
+                                          @"水平方向的对齐方式",
+                                          @"模拟标题的loading状态切换",
+                                          @"标题点击效果"]];
+}
+
+- (void)dealloc
+{
+    self.titleView.delegate = nil;
+}
+
+- (UIImage *)accessoryImage
+{
+    UIBezierPath *bezierPath = [UIBezierPath fwShapeTriangle:CGRectMake(0, 0, 8, 5) direction:UISwipeGestureRecognizerDirectionDown];
+    UIImage *accessoryImage = [[bezierPath fwShapeImage:CGSizeMake(8, 5) strokeWidth:0 strokeColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1] fillColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    return accessoryImage;
+}
+
+#pragma mark - TableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableData.count;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.titleView.userInteractionEnabled = NO;
+    self.titleView.delegate = nil;
+    
+    switch (indexPath.row) {
+        case 0:
+            self.titleView.loadingViewHidden = !self.titleView.loadingViewHidden;
+            break;
+        case 1: {
+            self.titleView.accessoryImage = self.titleView.accessoryImage ? nil : [self accessoryImage];
+            break;
+        }
+        case 2:
+            self.titleView.subtitle = self.titleView.subtitle ? nil : @"(副标题)";
+            break;
+        case 3:
+            self.titleView.style = self.titleView.style == FWNavigationTitleViewStyleHorizontal ? FWNavigationTitleViewStyleVertical : FWNavigationTitleViewStyleHorizontal;
+            self.titleView.subtitle = self.titleView.style == FWNavigationTitleViewStyleVertical ? @"(副标题)" : self.titleView.subtitle;
+            break;
+        case 4:
+        {
+            FWWeakifySelf();
+            [self fwShowSheetWithTitle:@"水平对齐方式" message:nil cancel:@"取消" actions:@[@"左对齐", @"居中对齐", @"右对齐"] actionBlock:^(NSInteger index) {
+                FWStrongifySelf();
+                if (index == 0) {
+                    self.titleView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                    self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+                    [self.tableView reloadData];
+                } else if (index == 1) {
+                    self.titleView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                    self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+                    [self.tableView reloadData];
+                } else {
+                    self.titleView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+                    self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+                    [self.tableView reloadData];
+                }
+            }];
+        }
+            break;
+        case 5:
+        {
+            self.titleView.loadingViewHidden = NO;
+            self.titleView.showsLoadingPlaceholder = NO;
+            self.titleView.title = @"加载中...";
+            self.titleView.subtitle = nil;
+            self.titleView.style = FWNavigationTitleViewStyleHorizontal;
+            self.titleView.accessoryImage = nil;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.titleView.showsLoadingPlaceholder = YES;
+                self.titleView.loadingViewHidden = YES;
+                self.titleView.title = @"主标题";
+            });
+        }
+            break;
+        case 6:
+        {
+            self.titleView.userInteractionEnabled = YES;
+            self.titleView.title = @"点我展开分类";
+            self.titleView.accessoryImage = [self accessoryImage];
+            self.titleView.delegate = self;
+        }
+            break;
+    }
+    
+    [tableView reloadData];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView style:UITableViewCellStyleValue1];
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.detailTextLabel.text = nil;
+    
+    switch (indexPath.row) {
+        case 0:
+            cell.textLabel.text = self.titleView.loadingViewHidden ? @"显示左边的loading" : @"隐藏左边的loading";
+            break;
+        case 1:
+            cell.textLabel.text = self.titleView.accessoryImage == nil ? @"显示右边的accessoryView" : @"去掉右边的accessoryView";
+            break;
+        case 2:
+            cell.textLabel.text = self.titleView.subtitle ? @"去掉副标题" : @"显示副标题";
+            break;
+        case 3:
+            cell.textLabel.text = self.titleView.style == FWNavigationTitleViewStyleHorizontal ? @"切换为上下两行显示" : @"切换为水平一行显示";
+            break;
+        case 4:
+            cell.textLabel.text = [self.tableData fwObjectAtIndex:indexPath.row];
+            cell.detailTextLabel.text = (self.horizontalAlignment == UIControlContentHorizontalAlignmentLeft ? @"左对齐" : (self.horizontalAlignment == UIControlContentHorizontalAlignmentRight ? @"右对齐" : @"居中对齐"));
+            break;
+        default:
+            cell.textLabel.text = [self.tableData fwObjectAtIndex:indexPath.row];
+            break;
+    }
+    return cell;
+}
+
+#pragma mark - FWNavigationTitleViewDelegate
+
+- (void)didChangedActive:(BOOL)active forTitleView:(FWNavigationTitleView *)titleView {
+    if (!active) return;
+    
+    [FWPopupMenu showRelyOnView:titleView titles:@[@"菜单1", @"菜单2"] icons:nil menuWidth:120 otherSettings:^(FWPopupMenu *popupMenu) {
+        popupMenu.delegate = self;
+    }];
+}
+
+#pragma mark - FWPopupMenuDelegate
+
+- (void)popupMenuDidDismiss:(FWPopupMenu *)popupMenu {
+    self.titleView.active = NO;
+}
+
+@end

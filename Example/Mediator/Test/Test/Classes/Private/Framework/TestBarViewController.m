@@ -101,7 +101,7 @@ FWPropertyAssign(BOOL, hideToast);
     frameLabel.textColor = [Theme textColor];
     frameLabel.font = [UIFont fwFontOfSize:15];
     frameLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:frameLabel]; {
+    [self.fwView addSubview:frameLabel]; {
         frameLabel.fwLayoutChain.leftWithInset(10).rightWithInset(10)
             .bottomWithInset(FWTabBarHeight + 10);
     }

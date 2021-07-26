@@ -9,6 +9,7 @@
 
 #import "FWTableViewController.h"
 #import "FWAutoLayout.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWTableViewController
@@ -33,7 +34,7 @@
     UITableView *tableView = [viewController tableView];
     tableView.dataSource = viewController;
     tableView.delegate = viewController;
-    [viewController.view addSubview:tableView];
+    [viewController.fwView addSubview:tableView];
     
     if ([viewController respondsToSelector:@selector(renderTableView)]) {
         [viewController renderTableView];

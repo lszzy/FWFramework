@@ -352,13 +352,13 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
         self.pagerView = [[FWPagingView alloc] initWithDelegate:self listContainerType:FWPagingListContainerTypeScrollView];
     }
     self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
-    [self.view addSubview:self.pagerView];
+    [self.fwView addSubview:self.pagerView];
     [self.pagerView fwPinEdgesToSuperview];
     
     UIView *cartView = [UIView fwAutoLayoutView];
     _cartView = cartView;
     cartView.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:cartView];
+    [self.fwView addSubview:cartView];
     [cartView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
     [cartView fwSetDimension:NSLayoutAttributeHeight toSize:CartViewHeight];
     UILabel *cartLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是购物车"];
