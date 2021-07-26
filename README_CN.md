@@ -44,6 +44,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 1.7.5版本：
 
 	* 新增自定义导航栏FWNavigationView组件
+	* 重构FWPopupMenuDelegate方法名称
 
 1.7.4版本：
 

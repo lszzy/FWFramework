@@ -8,7 +8,7 @@
 
 #import "TestNavigationTitleViewController.h"
 
-@interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate>
+@interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate, FWPopupMenuDelegate>
 
 @property(nullable, nonatomic, strong) FWNavigationTitleView *titleView;
 @property(nonatomic, assign) UIControlContentHorizontalAlignment horizontalAlignment;
@@ -65,7 +65,7 @@
 
 - (UIImage *)accessoryImage
 {
-    UIBezierPath *bezierPath = [UIBezierPath fwShapeTriangle:CGRectMake(0, 0, 8, 5) direction:UISwipeGestureRecognizerDirectionUp];
+    UIBezierPath *bezierPath = [UIBezierPath fwShapeTriangle:CGRectMake(0, 0, 8, 5) direction:UISwipeGestureRecognizerDirectionDown];
     UIImage *accessoryImage = [[bezierPath fwShapeImage:CGSizeMake(8, 5) strokeWidth:0 strokeColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1] fillColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     return accessoryImage;
 }
@@ -179,7 +179,17 @@
 #pragma mark - FWNavigationTitleViewDelegate
 
 - (void)didChangedActive:(BOOL)active forTitleView:(FWNavigationTitleView *)titleView {
-    [self fwShowMessageWithText:[NSString stringWithFormat:@"active: %@", @(active)]];
+    if (!active) return;
+    
+    [FWPopupMenu showRelyOnView:titleView titles:@[@"菜单1", @"菜单2"] icons:nil menuWidth:120 otherSettings:^(FWPopupMenu *popupMenu) {
+        popupMenu.delegate = self;
+    }];
+}
+
+#pragma mark - FWPopupMenuDelegate
+
+- (void)popupMenuDidDismiss:(FWPopupMenu *)popupMenu {
+    self.titleView.active = NO;
 }
 
 @end

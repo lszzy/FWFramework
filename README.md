@@ -44,6 +44,7 @@ As this framework is constantly upgrading, optimizing and expanding new function
 Version 1.7.5:
 
 	* Added custom navigation bar FWNavigationView component
+	* Refactored FWPopupMenuDelegate method name
 
 Version 1.7.4:
 

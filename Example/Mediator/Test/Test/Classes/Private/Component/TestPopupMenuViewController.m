@@ -119,26 +119,26 @@
 }
 
 #pragma mark - FWPopupMenuDelegate
-- (void)FWPopupMenu:(FWPopupMenu *)FWPopupMenu didSelectedAtIndex:(NSInteger)index
+- (void)popupMenu:(FWPopupMenu *)popupMenu didSelectedAtIndex:(NSInteger)index
 {
     //推荐回调
-    NSLog(@"点击了 %@ 选项",FWPopupMenu.titles[index]);
+    NSLog(@"点击了 %@ 选项",popupMenu.titles[index]);
 }
 
-- (void)FWPopupMenuBeganDismiss:(FWPopupMenu *)FWPopupMenu
+- (void)popupMenuBeganDismiss:(FWPopupMenu *)popupMenu
 {
     if (self.textField.isFirstResponder) {
         [self.textField resignFirstResponder];
     }
 }
 
-- (UITableViewCell *)FWPopupMenu:(FWPopupMenu *)FWPopupMenu cellForRowAtIndex:(NSInteger)index
+- (UITableViewCell *)popupMenu:(FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index
 {
-    if (FWPopupMenu.tag != 100) {
+    if (popupMenu.tag != 100) {
         return nil;
     }
     static NSString * identifier = @"customCell";
-    UITableViewCell * cell = [FWPopupMenu.tableView dequeueReusableCellWithIdentifier:identifier];
+    UITableViewCell * cell = [popupMenu.tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"customCell"];
     }
