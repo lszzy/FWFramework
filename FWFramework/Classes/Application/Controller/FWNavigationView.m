@@ -20,6 +20,13 @@
 
 #pragma mark - FWNavigationView
 
+@interface FWNavigationView ()
+
+@property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
+
+@end
+
 @implementation FWNavigationView
 
 - (instancetype)init
@@ -47,52 +54,34 @@
 
 - (void)setupView
 {
-    _topBarHeight = self.frame.size.height;
-    _navigationBarHeight = FWNavigationBarHeight;
+    _height = self.frame.size.height;
+    _barHeight = FWNavigationBarHeight;
     _navigationItem = [[UINavigationItem alloc] init];
     _navigationBar = [[UINavigationBar alloc] init];
     _navigationBar.items = @[_navigationItem];
     [self addSubview:_navigationBar];
-    [self updateLayout:NO];
-}
-
-- (void)updateLayout:(BOOL)refresh
-{
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.hidden ? 0 : self.topBarHeight);
-    self.navigationBar.frame = CGRectMake(0, self.topBarHeight - self.navigationBarHeight, self.frame.size.width, self.navigationBarHeight);
-    if (refresh) [self invalidateIntrinsicContentSize];
+    self.heightConstraint = [self fwSetDimension:NSLayoutAttributeHeight toSize:self.height];
+    self.barHeightConstraint = [self.navigationBar fwSetDimension:NSLayoutAttributeHeight toSize:self.barHeight];
+    [self.navigationBar fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
 }
 
 - (void)setHidden:(BOOL)hidden
 {
     if (hidden == self.isHidden) return;
     [super setHidden:hidden];
-    [self updateLayout:YES];
+    self.heightConstraint.constant = hidden ? 0 : self.height;
 }
 
-- (void)setTopBarHeight:(CGFloat)topBarHeight
+- (void)setHeight:(CGFloat)height
 {
-    if (topBarHeight == _topBarHeight) return;
-    _topBarHeight = topBarHeight;
-    [self updateLayout:YES];
+    _height = height;
+    self.heightConstraint.constant = self.isHidden ? 0 : self.height;
 }
 
-- (void)setNavigationBarHeight:(CGFloat)navigationBarHeight
+- (void)setBarHeight:(CGFloat)barHeight
 {
-    if (navigationBarHeight == _navigationBarHeight) return;
-    _navigationBarHeight = navigationBarHeight;
-    [self updateLayout:YES];
-}
-
-- (CGSize)intrinsicContentSize
-{
-    return self.bounds.size;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [self updateLayout:NO];
+    _barHeight = barHeight;
+    self.barHeightConstraint.constant = barHeight;
 }
 
 @end
@@ -239,18 +228,18 @@
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
     if (!navigationBar || navigationBar.frame.size.height < 1) return;
     
-    CGFloat topBarHeight = FWTopBarHeight;
-    CGFloat navigationBarHeight = FWNavigationBarHeight;
+    CGFloat height = FWTopBarHeight;
+    CGFloat barHeight = FWNavigationBarHeight;
     if (@available(iOS 13.0, *)) {
         BOOL isPageSheet = self.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
         isPageSheet = isPageSheet && self.navigationController.presentingViewController != nil;
         if (isPageSheet) {
-            topBarHeight = navigationBar.frame.size.height;
-            navigationBarHeight = navigationBar.frame.size.height;
+            height = navigationBar.frame.size.height;
+            barHeight = navigationBar.frame.size.height;
         }
     }
-    self.fwNavigationView.topBarHeight = topBarHeight;
-    self.fwNavigationView.navigationBarHeight = navigationBarHeight;
+    self.fwNavigationView.height = height;
+    self.fwNavigationView.barHeight = barHeight;
 }
 
 @end

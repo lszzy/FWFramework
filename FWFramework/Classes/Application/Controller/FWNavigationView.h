@@ -25,10 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
 /// 自定义总高度，隐藏时自动收起，默认FWTopBarHeight
-@property (nonatomic, assign) CGFloat topBarHeight;
+@property (nonatomic, assign) CGFloat height;
 
 /// 自定义导航栏高度，默认FWNavigationBarHeight
-@property (nonatomic, assign) CGFloat navigationBarHeight;
+@property (nonatomic, assign) CGFloat barHeight;
 
 @end
 

@@ -17,9 +17,6 @@ import Core
         fwSetLeftBarItem(CoreBundle.imageNamed("close")) { [weak self] (sender) in
             self?.fwClose(animated: true)
         }
-        fwView.fwAddTapGesture { [weak self] sender in
-            self?.fwClose(animated: true)
-        }
         
         let button = UIButton(type: .system)
         button.setTitle(UserBundle.localizedString("loginButton"), for: .normal)
