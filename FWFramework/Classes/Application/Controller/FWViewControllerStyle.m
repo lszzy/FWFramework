@@ -367,8 +367,7 @@
             backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
         }
         self.fwNavigationItem.backBarButtonItem = backItem;
-        self.fwNavigationBar.backIndicatorImage = nil;
-        self.fwNavigationBar.backIndicatorTransitionMaskImage = nil;
+        self.fwNavigationBar.fwBackImage = nil;
         return;
     }
     
@@ -388,8 +387,7 @@
     }
     
     self.fwNavigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.fwNavigationBar.backIndicatorImage = indicatorImage;
-    self.fwNavigationBar.backIndicatorTransitionMaskImage = indicatorImage;
+    self.fwNavigationBar.fwBackImage = indicatorImage;
 }
 
 - (BOOL)fwPopBackBarItem
@@ -451,6 +449,17 @@
 - (UIView *)fwBackgroundView
 {
     return [self fwPerformPropertySelector:@"_backgroundView"];
+}
+
+- (UIImage *)fwBackImage
+{
+    return self.backIndicatorImage;
+}
+
+- (void)setFwBackImage:(UIImage *)image
+{
+    self.backIndicatorImage = image;
+    self.backIndicatorTransitionMaskImage = image;
 }
 
 - (UIColor *)fwForegroundColor
