@@ -24,6 +24,7 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
+@property (nonatomic, assign) BOOL itemUpdated;
 
 @end
 
@@ -82,6 +83,43 @@
 {
     _barHeight = barHeight;
     self.barHeightConstraint.constant = barHeight;
+}
+
+- (void)updateLayout:(UIViewController *)viewController
+{
+    if (!viewController.navigationController) return;
+    
+    CGFloat height = FWTopBarHeight;
+    CGFloat barHeight = FWNavigationBarHeight;
+    if (@available(iOS 13.0, *)) {
+        BOOL isPageSheet = viewController.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || viewController.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
+        isPageSheet = isPageSheet && viewController.navigationController.presentingViewController != nil;
+        if (isPageSheet) {
+            barHeight = viewController.navigationController.navigationBar.frame.size.height;
+            height = barHeight;
+        }
+    }
+    self.height = height;
+    self.barHeight = barHeight;
+}
+
+- (void)updateItems:(UIViewController *)viewController
+{
+    // 只自动更新items一次。iOS14+调用多级pop方法触发viewWillAppear:时，导航栏VC堆栈顺序不对
+    if (self.itemUpdated) return;
+    self.itemUpdated = YES;
+    
+    UINavigationItem *navigationItem = self.navigationItem;
+    if (navigationItem.leftBarButtonItem && navigationItem.leftBarButtonItem != navigationItem.backBarButtonItem) return;
+    if ([viewController fwIsRoot]) {
+        navigationItem.leftBarButtonItem = nil;
+    } else if (navigationItem.leftBarButtonItem != navigationItem.backBarButtonItem) {
+        [navigationItem.backBarButtonItem fwSetBlock:^(id sender) {
+            if (![viewController fwPopBackBarItem]) return;
+            [viewController fwCloseViewControllerAnimated:YES];
+        }];
+        navigationItem.leftBarButtonItem = navigationItem.backBarButtonItem;
+    }
 }
 
 @end
@@ -151,7 +189,7 @@
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            [selfObject fwNavigationViewLayout];
+            [selfObject.fwNavigationView updateLayout:selfObject];
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController || selfObject.fwIsChild;
             selfObject.fwNavigationView.hidden = hidden;
             
@@ -169,7 +207,7 @@
             if (!selfObject.fwNavigationViewEnabled) return;
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                [selfObject fwNavigationViewLayout];
+                [selfObject.fwNavigationView updateLayout:selfObject];
             } completion:nil];
         }));
         
@@ -178,17 +216,7 @@
             
             FWSwizzleOriginal(YES, animated);
             selfObject.fwNavigationView.hidden = hidden;
-            
-            if (selfObject.fwNavigationItem.leftBarButtonItem && selfObject.fwNavigationItem.leftBarButtonItem != selfObject.fwNavigationItem.backBarButtonItem) return;
-            if (selfObject.navigationController.viewControllers.firstObject == selfObject) {
-                selfObject.fwNavigationItem.leftBarButtonItem = nil;
-            } else if (selfObject.fwNavigationItem.leftBarButtonItem != selfObject.fwNavigationItem.backBarButtonItem) {
-                [selfObject.fwNavigationItem.backBarButtonItem fwSetBlock:^(id sender) {
-                    if (![selfObject fwPopBackBarItem]) return;
-                    [selfObject fwCloseViewControllerAnimated:YES];
-                }];
-                selfObject.fwNavigationItem.leftBarButtonItem = selfObject.fwNavigationItem.backBarButtonItem;
-            }
+            [selfObject.fwNavigationView updateItems:selfObject];
         }));
     });
 }
@@ -221,25 +249,6 @@
 - (void)setFwNavigationViewEnabled:(BOOL)enabled
 {
     objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwNavigationViewLayout
-{
-    UINavigationBar *navigationBar = self.navigationController.navigationBar;
-    if (!navigationBar || navigationBar.frame.size.height < 1) return;
-    
-    CGFloat height = FWTopBarHeight;
-    CGFloat barHeight = FWNavigationBarHeight;
-    if (@available(iOS 13.0, *)) {
-        BOOL isPageSheet = self.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
-        isPageSheet = isPageSheet && self.navigationController.presentingViewController != nil;
-        if (isPageSheet) {
-            height = navigationBar.frame.size.height;
-            barHeight = navigationBar.frame.size.height;
-        }
-    }
-    self.fwNavigationView.height = height;
-    self.fwNavigationView.barHeight = barHeight;
 }
 
 @end
