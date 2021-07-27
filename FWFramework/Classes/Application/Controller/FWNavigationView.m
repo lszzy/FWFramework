@@ -152,7 +152,7 @@
             if (!selfObject.fwNavigationViewEnabled) return;
             
             [selfObject fwNavigationViewLayout];
-            BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController;
+            BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController || selfObject.fwIsChild;
             selfObject.fwNavigationView.hidden = hidden;
             
             [selfObject.view addSubview:selfObject.fwNavigationView];

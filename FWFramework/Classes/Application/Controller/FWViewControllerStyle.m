@@ -187,7 +187,7 @@
 
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
-    if (!self.navigationController) return;
+    if (!self.navigationController || self.fwIsChild) return;
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
     NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
     NSNumber *hidden = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
@@ -276,6 +276,16 @@
 - (BOOL)fwIsRoot
 {
     return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
+}
+
+- (BOOL)fwIsChild
+{
+    UIViewController *parentController = self.parentViewController;
+    if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
+        ![parentController isKindOfClass:[UITabBarController class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (id)fwBarTitle
