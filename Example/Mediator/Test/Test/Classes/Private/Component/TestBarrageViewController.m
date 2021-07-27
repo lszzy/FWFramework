@@ -697,7 +697,7 @@
 
 - (void)updateTitle {
     NSInteger barrageCount = self.barrageManager.renderView.animatingCells.count;
-    self.navigationItem.title = [NSString stringWithFormat:@"现在有 %ld 条弹幕", (unsigned long)barrageCount];
+    self.fwNavigationItem.title = [NSString stringWithFormat:@"现在有 %ld 条弹幕", (unsigned long)barrageCount];
 }
 
 - (void)pasueBarrage {

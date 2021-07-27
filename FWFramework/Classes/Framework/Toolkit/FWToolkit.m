@@ -529,4 +529,9 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     return self.view;
 }
 
+- (UINavigationItem *)fwNavigationItem
+{
+    return self.navigationItem;
+}
+
 @end

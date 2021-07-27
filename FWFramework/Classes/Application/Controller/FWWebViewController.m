@@ -43,7 +43,7 @@
     
     __weak __typeof(viewController) weakController = viewController;
     [webView fwObserveProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
-        weakController.navigationItem.title = webView.title;
+        weakController.fwNavigationItem.title = webView.title;
     }];
     
     if ([viewController respondsToSelector:@selector(renderWebView)]) {
@@ -102,15 +102,15 @@
         viewController.navigationController.presentingViewController.presentedViewController != viewController.navigationController) {
         showClose = NO;
     }
-    viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+    viewController.fwNavigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
     // 如需自定义fwForcePopGesture，重写该属性getter即可
     viewController.fwForcePopGesture = YES;
     [viewController.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
         weakController.fwForcePopGesture = !webView.canGoBack;
         if (webView.canGoBack) {
-            weakController.navigationItem.leftBarButtonItems = [leftItems copy];
+            weakController.fwNavigationItem.leftBarButtonItems = [leftItems copy];
         } else {
-            weakController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
+            weakController.fwNavigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
         }
     }];
     

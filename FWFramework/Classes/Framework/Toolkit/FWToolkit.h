@@ -214,6 +214,9 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 当前视图，默认view，用于兼容自定义导航栏
 @property (nonatomic, strong, readonly) UIView *fwView;
 
+/// 当前导航项，默认navigationItem，用于兼容自定义导航栏
+@property (nonatomic, strong, readonly) UINavigationItem *fwNavigationItem;
+
 @end
 
 NS_ASSUME_NONNULL_END

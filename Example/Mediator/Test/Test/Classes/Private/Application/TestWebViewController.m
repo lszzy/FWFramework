@@ -27,7 +27,7 @@
 
 - (NSArray *)webItems
 {
-    if (self.navigationItem.leftBarButtonItem) {
+    if (self.fwNavigationItem.leftBarButtonItem) {
         return nil;
     } else {
         return @[

@@ -46,7 +46,7 @@ FWPropertyAssign(BOOL, canScroll);
     textFieldAppearance.fwKeyboardScrollView = keyboardScrollView ? self.scrollView : nil;
     textViewAppearance.fwKeyboardScrollView = keyboardScrollView ? self.scrollView : nil;
     if (keyboardScrollView) {
-        self.navigationItem.title = @"UIScrollView+FWKeyboard";
+        self.fwNavigationItem.title = @"UIScrollView+FWKeyboard";
     }
     keyboardScrollView = !keyboardScrollView;
     

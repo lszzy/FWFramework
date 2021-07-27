@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWNavigationView
 
-@class FWNavigationTitleView;
-
 /**
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
  */
@@ -31,9 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义导航栏高度，默认FWNavigationBarHeight
 @property (nonatomic, assign) CGFloat navigationBarHeight;
-
-/// 自定义标题栏，快速访问navigationItem.titleView
-@property (nonatomic, strong, nullable) FWNavigationTitleView *titleView;
 
 @end
 

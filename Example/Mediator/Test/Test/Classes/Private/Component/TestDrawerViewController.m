@@ -19,7 +19,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.hidesBackButton = YES;
+    self.fwNavigationItem.hidesBackButton = YES;
     
     FWWeakifySelf();
     [self fwSetLeftBarItem:[CoreBundle imageNamed:@"back"] block:^(id sender) {

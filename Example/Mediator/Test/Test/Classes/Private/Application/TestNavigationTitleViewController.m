@@ -27,7 +27,7 @@
     self.titleView = [[FWNavigationTitleView alloc] init];
     self.titleView.showsLoadingView = YES;
     self.titleView.title = self.title;
-    self.navigationItem.titleView = self.titleView;
+    self.fwNavigationItem.titleView = self.titleView;
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
     
     FWNavigationButton *backButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
@@ -42,8 +42,8 @@
     UIBarButtonItem *shareItem = [UIBarButtonItem fwBarItemWithObject:shareButton block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    self.navigationItem.leftBarButtonItem = backItem;
-    self.navigationItem.rightBarButtonItems = @[rightItem, shareItem];
+    self.fwNavigationItem.leftBarButtonItem = backItem;
+    self.fwNavigationItem.rightBarButtonItems = @[rightItem, shareItem];
 }
 
 - (void)renderData
