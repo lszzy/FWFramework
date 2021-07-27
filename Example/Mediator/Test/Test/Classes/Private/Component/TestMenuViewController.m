@@ -42,7 +42,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar fwSetBackgroundTransparent];
+    [self.fwNavigationBar fwSetBackgroundTransparent];
 }
 
 - (void)renderView

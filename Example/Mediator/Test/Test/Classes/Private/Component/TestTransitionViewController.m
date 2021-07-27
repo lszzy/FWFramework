@@ -86,10 +86,10 @@
     }];
     
     // 设置背景(present时透明，push时不透明)
-    self.view.backgroundColor = self.navigationController ? [Theme tableColor] : [[Theme tableColor] colorWithAlphaComponent:0.9];
+    self.fwView.backgroundColor = self.navigationController ? [Theme tableColor] : [[Theme tableColor] colorWithAlphaComponent:0.9];
     
     // 点击背景关闭，默认子视图也会响应，解决方法：子视图设为UIButton或子视图添加空手势事件
-    [self.view fwAddTapGestureWithBlock:^(id sender) {
+    [self.fwView fwAddTapGestureWithBlock:^(id sender) {
         FWStrongifySelf();
         [self fwCloseViewControllerAnimated:!self.noAnimate];
     }];
@@ -101,7 +101,7 @@
     
     self.frameLabel.text = NSStringFromCGRect(self.view.frame);
     if (!self.fwIsPresented) {
-        [self.navigationController setNavigationBarHidden:YES animated:animated];
+        self.fwNavigationBarHidden = YES;
     }
 }
 
@@ -238,8 +238,8 @@ FWDealloc();
     childView.fwLayoutChain.edges().size(CGSizeMake(300, 250));
     
     FWWeakifySelf();
-    self.view.backgroundColor = [[Theme backgroundColor] colorWithAlphaComponent:0.5];
-    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+    self.fwView.backgroundColor = [[Theme backgroundColor] colorWithAlphaComponent:0.5];
+    [self.fwView fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self dismiss];
     }];
@@ -282,7 +282,7 @@ FWDealloc();
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    self.fwNavigationBarHidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
