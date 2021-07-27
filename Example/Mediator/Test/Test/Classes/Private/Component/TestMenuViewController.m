@@ -36,7 +36,7 @@
     
     UIBarButtonItem *systemItem = [UIBarButtonItem fwBarItemWithObject:@"系统" target:self action:@selector(onSystemSheet:)];
     UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:@"自定义" target:self action:@selector(onPhotoSheet:)];
-    self.navigationItem.rightBarButtonItems = @[systemItem, customItem];
+    self.fwNavigationItem.rightBarButtonItems = @[systemItem, customItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated

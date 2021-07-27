@@ -280,30 +280,30 @@
 
 - (id)fwBarTitle
 {
-    return self.navigationItem.titleView ?: self.navigationItem.title;
+    return self.fwNavigationItem.titleView ?: self.fwNavigationItem.title;
 }
 
 - (void)setFwBarTitle:(id)title
 {
     if ([title isKindOfClass:[UIView class]]) {
-        self.navigationItem.titleView = title;
+        self.fwNavigationItem.titleView = title;
     } else {
-        self.navigationItem.title = title;
+        self.fwNavigationItem.title = title;
     }
 }
 
 - (id)fwLeftBarItem
 {
-    return self.navigationItem.leftBarButtonItem;
+    return self.fwNavigationItem.leftBarButtonItem;
 }
 
 - (void)setFwLeftBarItem:(id)object
 {
     if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
-        self.navigationItem.leftBarButtonItem = object;
+        self.fwNavigationItem.leftBarButtonItem = object;
     } else {
         __weak __typeof__(self) self_weak_ = self;
-        self.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
+        self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
             __typeof__(self) self = self_weak_;
             [self fwCloseViewControllerAnimated:YES];
         }];
@@ -312,16 +312,16 @@
 
 - (id)fwRightBarItem
 {
-    return self.navigationItem.rightBarButtonItem;
+    return self.fwNavigationItem.rightBarButtonItem;
 }
 
 - (void)setFwRightBarItem:(id)object
 {
     if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
-        self.navigationItem.rightBarButtonItem = object;
+        self.fwNavigationItem.rightBarButtonItem = object;
     } else {
         __weak __typeof__(self) self_weak_ = self;
-        self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
+        self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
             __typeof__(self) self = self_weak_;
             [self fwCloseViewControllerAnimated:YES];
         }];
@@ -330,29 +330,29 @@
 
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action
 {
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
+    self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
 }
 
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block
 {
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
+    self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
 }
 
 - (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action
 {
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
+    self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
 }
 
 - (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
 {
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
+    self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
 }
 
 #pragma mark - Back
 
 - (id)fwBackBarItem
 {
-    return self.navigationItem.backBarButtonItem;
+    return self.fwNavigationItem.backBarButtonItem;
 }
 
 - (void)setFwBackBarItem:(id)object
@@ -366,7 +366,7 @@
         } else {
             backItem = [UIBarButtonItem fwBarItemWithObject:object target:nil action:nil];
         }
-        self.navigationItem.backBarButtonItem = backItem;
+        self.fwNavigationItem.backBarButtonItem = backItem;
         self.fwNavigationBar.backIndicatorImage = nil;
         self.fwNavigationBar.backIndicatorTransitionMaskImage = nil;
         return;
@@ -387,7 +387,7 @@
         UIGraphicsEndImageContext();
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.fwNavigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     self.fwNavigationBar.backIndicatorImage = indicatorImage;
     self.fwNavigationBar.backIndicatorTransitionMaskImage = indicatorImage;
 }

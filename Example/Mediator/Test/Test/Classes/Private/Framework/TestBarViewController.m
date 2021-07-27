@@ -19,7 +19,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
+    self.fwNavigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
     if (self.index < 2) {
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;

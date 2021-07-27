@@ -65,34 +65,23 @@
 
 - (void)setHidden:(BOOL)hidden
 {
+    if (hidden == self.isHidden) return;
     [super setHidden:hidden];
     [self updateLayout:YES];
 }
 
 - (void)setTopBarHeight:(CGFloat)topBarHeight
 {
+    if (topBarHeight == _topBarHeight) return;
     _topBarHeight = topBarHeight;
     [self updateLayout:YES];
 }
 
 - (void)setNavigationBarHeight:(CGFloat)navigationBarHeight
 {
+    if (navigationBarHeight == _navigationBarHeight) return;
     _navigationBarHeight = navigationBarHeight;
     [self updateLayout:YES];
-}
-
-- (FWNavigationTitleView *)titleView
-{
-    UIView *titleView = self.navigationItem.titleView;
-    if ([titleView isKindOfClass:[FWNavigationTitleView class]]) {
-        return (FWNavigationTitleView *)titleView;
-    }
-    return nil;
-}
-
-- (void)setTitleView:(FWNavigationTitleView *)titleView
-{
-    self.navigationItem.titleView = titleView;
 }
 
 - (CGSize)intrinsicContentSize
@@ -135,7 +124,7 @@
             return selfObject.fwNavigationView.navigationBar;
         }));
         
-        FWSwizzleClass(UIViewController, @selector(navigationItem), FWSwizzleReturn(UINavigationItem *), FWSwizzleArgs(), FWSwizzleCode({
+        FWSwizzleClass(UIViewController, @selector(fwNavigationItem), FWSwizzleReturn(UINavigationItem *), FWSwizzleArgs(), FWSwizzleCode({
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             return selfObject.fwNavigationView.navigationItem;
         }));
@@ -166,7 +155,7 @@
             } else {
                 backItem = [UIBarButtonItem fwBarItemWithObject:(object ?: [UIImage new]) target:nil action:nil];
             }
-            selfObject.navigationItem.backBarButtonItem = backItem;
+            selfObject.fwNavigationItem.backBarButtonItem = backItem;
         }));
         
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
@@ -201,15 +190,15 @@
             FWSwizzleOriginal(YES, animated);
             selfObject.fwNavigationView.hidden = hidden;
             
-            if (selfObject.navigationItem.leftBarButtonItem && selfObject.navigationItem.leftBarButtonItem != selfObject.navigationItem.backBarButtonItem) return;
+            if (selfObject.fwNavigationItem.leftBarButtonItem && selfObject.fwNavigationItem.leftBarButtonItem != selfObject.fwNavigationItem.backBarButtonItem) return;
             if (selfObject.navigationController.viewControllers.firstObject == selfObject) {
-                selfObject.navigationItem.leftBarButtonItem = nil;
-            } else if (selfObject.navigationItem.leftBarButtonItem != selfObject.navigationItem.backBarButtonItem) {
-                [selfObject.navigationItem.backBarButtonItem fwSetBlock:^(id sender) {
+                selfObject.fwNavigationItem.leftBarButtonItem = nil;
+            } else if (selfObject.fwNavigationItem.leftBarButtonItem != selfObject.fwNavigationItem.backBarButtonItem) {
+                [selfObject.fwNavigationItem.backBarButtonItem fwSetBlock:^(id sender) {
                     if (![selfObject fwPopBackBarItem]) return;
                     [selfObject fwCloseViewControllerAnimated:YES];
                 }];
-                selfObject.navigationItem.leftBarButtonItem = selfObject.navigationItem.backBarButtonItem;
+                selfObject.fwNavigationItem.leftBarButtonItem = selfObject.fwNavigationItem.backBarButtonItem;
             }
         }));
     });
@@ -321,8 +310,8 @@
         FWSwizzleClass(UIViewController, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
             FWSwizzleOriginal(title);
             
-            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
-                ((id<FWNavigationTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
+            if ([selfObject.fwNavigationItem.titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
+                ((id<FWNavigationTitleViewProtocol>)selfObject.fwNavigationItem.titleView).title = title;
             }
         }));
         

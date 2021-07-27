@@ -155,7 +155,7 @@
 {
     [super viewDidLoad];
     
-    [self.searchBar fwAddToNavigationItem:self.navigationItem];
+    [self.searchBar fwAddToNavigationItem:self.fwNavigationItem];
 }
 
 #pragma mark - UISearchBar
@@ -242,7 +242,7 @@
     
     Class controllerClass = NSClassFromString([rowData objectAtIndex:1]);
     UIViewController *viewController = [[controllerClass alloc] init];
-    viewController.navigationItem.title = [rowData objectAtIndex:0];
+    viewController.fwNavigationItem.title = [rowData objectAtIndex:0];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

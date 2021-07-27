@@ -27,14 +27,14 @@
         self.step = 1;
     }
     
-    self.navigationItem.title = [NSString stringWithFormat:@"工作流-%ld", self.step];
+    self.fwNavigationItem.title = [NSString stringWithFormat:@"工作流-%ld", self.step];
     
     if (self.step < 3) {
         [self fwSetRightBarItem:@"下一步" target:self action:@selector(onNext)];
     } else {
         UIBarButtonItem *item1 = [UIBarButtonItem fwBarItemWithObject:@"退出" target:self action:@selector(onExit)];
         UIBarButtonItem *item2 = [UIBarButtonItem fwBarItemWithObject:@"重来" target:self action:@selector(onOpen)];
-        self.navigationItem.rightBarButtonItems = @[item1, item2];
+        self.fwNavigationItem.rightBarButtonItems = @[item1, item2];
     }
 }
 
