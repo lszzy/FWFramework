@@ -14,21 +14,24 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWNavigationView
 
 /**
- * 自定义导航栏视图，隐藏时自动收起
+ * 自定义导航栏视图，高度自动布局，隐藏时自动收起
  */
 @interface FWNavigationView : UIView
 
-/// 自定义导航栏，底部对齐，可隐藏
+/// 自定义导航栏，默认高度自适应，可隐藏
 @property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
 
 /// 自定义导航项，可设置标题、按钮等
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 自定义总高度，隐藏时自动收起，默认FWTopBarHeight
-@property (nonatomic, assign) CGFloat height;
+/// 自定义状态栏高度，隐藏时自动收起，默认FWStatusBarHeight
+@property (nonatomic, assign) CGFloat statusBarHeight;
 
-/// 自定义导航栏高度，默认FWNavigationBarHeight
-@property (nonatomic, assign) CGFloat barHeight;
+/// 自定义导航栏高度，隐藏时自动收起，默认0自适应
+@property (nonatomic, assign) CGFloat navigationBarHeight;
+
+/// 自定义附加高度，隐藏时自动收起，默认0
+@property (nonatomic, assign) CGFloat addtionalHeight;
 
 @end
 
@@ -42,7 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
- * 4. 暂不支持largeTitles显示，如有此需求，请使用系统导航栏
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)

@@ -22,6 +22,10 @@
 
 @interface FWNavigationView ()
 
+@property (nonatomic, strong) NSLayoutConstraint *statusBarConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *navigationBarConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *additionalConstraint;
+
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
 @property (nonatomic, assign) BOOL backItemInitialized;
@@ -50,32 +54,44 @@
 
 - (void)setupView
 {
-    _height = self.frame.size.height > 0 ? self.frame.size.height : FWTopBarHeight;
-    _barHeight = FWNavigationBarHeight;
+    _statusBarHeight = FWStatusBarHeight;
+    _navigationBarHeight = 0;
+    _addtionalHeight = 0;
     _navigationItem = [[UINavigationItem alloc] init];
     _navigationBar = [[UINavigationBar alloc] init];
     _navigationBar.items = @[_navigationItem];
     [self addSubview:_navigationBar];
-    [self updateLayout];
+    
+    self.statusBarConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.statusBarHeight];
+    [self.navigationBar fwPinEdgesToSuperviewHorizontal];
+    self.navigationBarConstraint = [self.navigationBar fwSetDimension:NSLayoutAttributeHeight toSize:self.navigationBarHeight];
+    self.navigationBarConstraint.active = self.navigationBarHeight > 0;
+    self.additionalConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.addtionalHeight];
 }
 
 - (void)updateLayout
 {
-    CGFloat width = self.frame.size.width > 0 ? self.frame.size.width : FWScreenWidth;
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, width, self.isHidden ? 0 : self.height);
-    self.navigationBar.frame = CGRectMake(0, self.height - self.barHeight, width, self.barHeight);
-    [self invalidateIntrinsicContentSize];
+    self.statusBarConstraint.constant = self.isHidden ? 0 : self.statusBarHeight;
+    self.navigationBarConstraint.constant = self.isHidden ? 0 : self.navigationBarHeight;
+    self.navigationBarConstraint.active = self.navigationBarHeight > 0;
+    self.additionalConstraint.constant = self.isHidden ? 0 : self.addtionalHeight;
 }
 
-- (void)setHeight:(CGFloat)height
+- (void)setStatusBarHeight:(CGFloat)statusBarHeight
 {
-    _height = height;
+    _statusBarHeight = statusBarHeight;
     [self updateLayout];
 }
 
-- (void)setBarHeight:(CGFloat)barHeight
+- (void)setNavigationBarHeight:(CGFloat)navigationBarHeight
 {
-    _barHeight = barHeight;
+    _navigationBarHeight = navigationBarHeight;
+    [self updateLayout];
+}
+
+- (void)setAddtionalHeight:(CGFloat)addtionalHeight
+{
+    _addtionalHeight = addtionalHeight;
     [self updateLayout];
 }
 
@@ -84,11 +100,6 @@
     if (hidden == self.isHidden) return;
     [super setHidden:hidden];
     [self updateLayout];
-}
-
-- (CGSize)intrinsicContentSize
-{
-    return CGSizeMake(self.bounds.size.width, self.isHidden ? 0 : self.height);
 }
 
 @end
@@ -263,18 +274,13 @@
 
 - (void)fwNavigationViewLayout
 {
-    CGFloat height = FWTopBarHeight;
-    CGFloat barHeight = FWNavigationBarHeight;
+    CGFloat statusBarHeight = FWStatusBarHeight;
     if (@available(iOS 13.0, *)) {
         BOOL isPageSheet = self.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
         isPageSheet = isPageSheet && self.navigationController.presentingViewController != nil;
-        if (isPageSheet) {
-            barHeight = self.navigationController.navigationBar.frame.size.height;
-            height = barHeight;
-        }
+        if (isPageSheet) statusBarHeight = 0;
     }
-    self.fwNavigationView.barHeight = barHeight;
-    self.fwNavigationView.height = height;
+    self.fwNavigationView.statusBarHeight = statusBarHeight;
 }
 
 @end
