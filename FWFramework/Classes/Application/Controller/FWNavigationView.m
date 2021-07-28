@@ -922,52 +922,10 @@
 @property (nonatomic, assign) BOOL isImageType;
 @property (nonatomic, strong) UIImage *highlightedImage;
 @property (nonatomic, strong) UIImage *disabledImage;
-@property (nonatomic, assign) UIControlContentHorizontalAlignment buttonPosition;
 
 @end
 
 @implementation FWNavigationButton
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // 自动查找FWNavigationButton并设置位置偏移
-        FWSwizzleMethod(objc_getClass("_UIButtonBarStackView"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            [FWNavigationButton layoutButtons:selfObject];
-        }));
-    });
-}
-
-+ (void)layoutButtons:(UIView *)stackView
-{
-    if (stackView.frame.origin.x < 1) return;
-    
-    BOOL reverse = stackView.frame.origin.x > FWScreenWidth / 3.f;
-    [self layoutView:stackView reverse:reverse block:^BOOL(UIView *view) {
-        if (![view isKindOfClass:[FWNavigationButton class]]) return NO;
-        
-        FWNavigationButton *navigationButton = (FWNavigationButton *)view;
-        [navigationButton updateContentInsets:reverse];
-        return YES;
-    }];
-}
-
-+ (BOOL)layoutView:(UIView *)layoutView reverse:(BOOL)reverse block:(BOOL (^)(UIView *view))block
-{
-    if (block(layoutView)) return YES;
-    
-    __block BOOL isSuccess = NO;
-    NSArray<UIView *> *layoutSubviews = layoutView.subviews;
-    [layoutSubviews enumerateObjectsWithOptions:reverse ? NSEnumerationReverse : 0 usingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
-        isSuccess = [self layoutView:obj reverse:reverse block:block];
-        if (isSuccess) *stop = YES;
-    }];
-    return isSuccess;
-}
-
-#pragma mark - Lifecycle
 
 - (instancetype)init
 {
@@ -1008,23 +966,9 @@
     self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.adjustsTintColor = YES;
-    self.adjustsContentInsets = YES;
     self.adjustsImageWhenHighlighted = NO;
     self.adjustsImageWhenDisabled = NO;
     self.contentEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
-}
-
-- (void)updateContentInsets:(BOOL)reverse
-{
-    if (!self.adjustsContentInsets) return;
-    UIEdgeInsets contentInsets = self.contentEdgeInsets;
-    if (reverse) {
-        contentInsets.right = 0;
-    } else {
-        contentInsets.left = 0;
-    }
-    self.contentEdgeInsets = contentInsets;
-    [self sizeToFit];
 }
 
 - (void)setImage:(UIImage *)image forState:(UIControlState)state
@@ -1079,6 +1023,33 @@
     [self setTitleColor:self.tintColor forState:UIControlStateNormal];
     [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateHighlighted];
     [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateDisabled];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    Class stackClass = objc_getClass("_UIButtonBarStackView");
+    if (!stackClass) return;
+    
+    UIView *stackView = nil;
+    UIView *superView = self.superview;
+    while (superView != nil) {
+        if ([superView isKindOfClass:stackClass]) {
+            stackView = superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    if (!stackView) return;
+    
+    CGRect stackFrame = stackView.frame;
+    if (stackFrame.origin.x == 16) {
+        stackFrame.origin.x = 8;
+        stackView.frame = stackFrame;
+    } else if (stackFrame.origin.x + stackFrame.size.width + 16 == UIScreen.mainScreen.bounds.size.width) {
+        stackFrame.origin.x += 8;
+        stackView.frame = stackFrame;
+    }
 }
 
 @end
