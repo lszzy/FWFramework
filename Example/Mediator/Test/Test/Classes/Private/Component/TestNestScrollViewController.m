@@ -354,9 +354,6 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     self.pagerView.pinSectionHeaderVerticalOffset = FWTopBarHeight;
     [self.view addSubview:self.pagerView];
     [self.pagerView fwPinEdgesToSuperview];
-    if (self.fwView != self.view) {
-        [self.view bringSubviewToFront:self.fwNavigationView];
-    }
     
     UIView *cartView = [UIView fwAutoLayoutView];
     _cartView = cartView;
