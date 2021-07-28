@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWNavigationView
 
 /**
- * 自定义导航栏视图，高度自动布局，隐藏时自动收起
+ * 自定义导航栏视图，隐藏时自动收起
  */
 @interface FWNavigationView : UIView
 
-/// 自定义导航栏，可隐藏，底部对齐
+/// 自定义导航栏，底部对齐，可隐藏
 @property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
 
 /// 自定义导航项，可设置标题、按钮等
