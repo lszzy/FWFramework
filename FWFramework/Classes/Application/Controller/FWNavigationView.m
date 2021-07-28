@@ -73,8 +73,8 @@
 {
     self.statusBarConstraint.constant = self.isHidden ? 0 : self.statusBarHeight;
     self.navigationBarConstraint.constant = self.isHidden ? 0 : self.navigationBarHeight;
-    self.navigationBarConstraint.active = self.navigationBarHeight > 0;
-    self.additionalConstraint.constant = self.isHidden ? 0 : self.addtionalHeight;
+    self.navigationBarConstraint.active = self.isHidden || self.navigationBarHeight > 0;
+    self.additionalConstraint.constant = self.isHidden ? 0 : -self.addtionalHeight;
 }
 
 - (void)setStatusBarHeight:(CGFloat)statusBarHeight
@@ -121,9 +121,10 @@
         FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             
-            if ([selfObject.superview isKindOfClass:[FWNavigationView class]]) {
+            FWNavigationView *navigationView = (FWNavigationView *)selfObject.superview;
+            if ([navigationView isKindOfClass:[FWNavigationView class]]) {
                 UIView *backgroundView = selfObject.fwBackgroundView;
-                backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -(selfObject.superview.bounds.size.height - backgroundView.frame.size.height), backgroundView.frame.size.width, selfObject.superview.bounds.size.height);
+                backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -navigationView.statusBarHeight, backgroundView.frame.size.width, navigationView.bounds.size.height);
             }
         }));
         
