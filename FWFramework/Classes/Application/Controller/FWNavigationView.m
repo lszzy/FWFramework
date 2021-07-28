@@ -215,8 +215,16 @@
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal(hidden, animated);
             
             FWSwizzleOriginal(YES, animated);
+            [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
             selfObject.fwNavigationView.hidden = hidden;
             [selfObject.fwNavigationView updateItems:selfObject];
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            if (!selfObject.fwNavigationViewEnabled) return;
+            
+            [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
         }));
     });
 }
