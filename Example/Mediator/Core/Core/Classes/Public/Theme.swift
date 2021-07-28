@@ -11,6 +11,9 @@ import FWFramework
     @FWUserDefaultAnnotation("isNavBarCustom", defaultValue: false)
     public static var isNavBarCustom: Bool
     
+    @FWUserDefaultAnnotation("isLargeTitles", defaultValue: false)
+    public static var isLargeTitles: Bool
+    
     public static var backgroundColor: UIColor {
         UIColor.fwThemeLight(.white, dark: .black)
     }
@@ -130,5 +133,8 @@ extension Theme {
     
     func viewControllerViewDidLoad(_ viewController: UIViewController) {
         viewController.fwBackBarItem = CoreBundle.imageNamed("back")
+        if #available(iOS 11.0, *) {
+            viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
+        }
     }
 }
