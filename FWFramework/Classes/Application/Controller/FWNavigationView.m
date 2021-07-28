@@ -146,7 +146,7 @@
         
         FWSwizzleClass(UIViewController, @selector(fwView), FWSwizzleReturn(UIView *), FWSwizzleArgs(), FWSwizzleCode({
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            return selfObject.fwContainerView;
+            return [selfObject fwNavigationContentView];
         }));
         
         FWSwizzleClass(UIViewController, @selector(fwNavigationBar), FWSwizzleReturn(UINavigationBar *), FWSwizzleArgs(), FWSwizzleCode({
@@ -198,12 +198,12 @@
             
             BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
-            [selfObject.view addSubview:selfObject.fwContainerView];
+            [selfObject.view addSubview:selfObject.fwNavigationContentView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-            [selfObject.fwContainerView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwContainerView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            [selfObject.fwNavigationContentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
             selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
-            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwContainerView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdgeToSuperview:NSLayoutAttributeTop];
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
@@ -255,14 +255,14 @@
     return navigationView;
 }
 
-- (UIView *)fwContainerView
+- (UIView *)fwNavigationContentView
 {
-    UIView *containerView = objc_getAssociatedObject(self, _cmd);
-    if (!containerView) {
-        containerView = [[UIView alloc] init];
-        objc_setAssociatedObject(self, _cmd, containerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIView *contentView = objc_getAssociatedObject(self, _cmd);
+    if (!contentView) {
+        contentView = [[UIView alloc] init];
+        objc_setAssociatedObject(self, _cmd, contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return containerView;
+    return contentView;
 }
 
 - (BOOL)fwNavigationViewEnabled
