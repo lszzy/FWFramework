@@ -20,10 +20,12 @@
 "themeDark" = "Dark";
 "rootTitle" = "Controller";
 "optionTitle" = "Option";
-"loginRequired" = "Login required";
-"loginOptional" = "No Login required";
+"loginRequired" = "Login Required";
+"loginOptional" = "Login Optional";
 "navBarSystem" = "System NavigationBar";
 "navBarCustom" = "Custom NavigationBar";
+"normalTitles" = "Normal Titles";
+"largeTitles" = "Large Titles";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
 "backTitle" = "Welcome back, dear";
 "logoutConfirm" = "Are you sure you want to log out?";
