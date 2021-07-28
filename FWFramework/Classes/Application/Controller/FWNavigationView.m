@@ -1063,27 +1063,29 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    Class stackClass = objc_getClass("_UIButtonBarStackView");
-    if (!stackClass) return;
     
-    UIView *stackView = nil;
+    UIView *navigationBar = nil;
     UIView *superView = self.superview;
     while (superView != nil) {
-        if ([superView isKindOfClass:stackClass]) {
-            stackView = superView;
+        if ([superView isKindOfClass:[UINavigationBar class]]) {
+            navigationBar = superView;
             break;
         }
         superView = superView.superview;
     }
-    if (!stackView) return;
+    if (!navigationBar) return;
     
-    CGRect stackFrame = stackView.frame;
-    if (stackFrame.origin.x == 16) {
-        stackFrame.origin.x = 8;
-        stackView.frame = stackFrame;
-    } else if (stackFrame.origin.x + stackFrame.size.width + 16 == UIScreen.mainScreen.bounds.size.width) {
-        stackFrame.origin.x += 8;
-        stackView.frame = stackFrame;
+    CGRect convertFrame = [self.superview convertRect:self.frame toView:navigationBar];
+    if (CGRectGetMinX(convertFrame) == 16) {
+        UIEdgeInsets edgeInsets = self.contentEdgeInsets;
+        edgeInsets.left = 0;
+        self.contentEdgeInsets = edgeInsets;
+        [self sizeToFit];
+    } else if (CGRectGetMaxX(convertFrame) + 16 == CGRectGetWidth(navigationBar.bounds)) {
+        UIEdgeInsets edgeInsets = self.contentEdgeInsets;
+        edgeInsets.right = 0;
+        self.contentEdgeInsets = edgeInsets;
+        [self sizeToFit];
     }
 }
 
