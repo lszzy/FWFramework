@@ -27,6 +27,7 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
+@property (nonatomic, assign) UIRectEdge edgesForExtendedLayout;
 @property (nonatomic, assign) BOOL backItemInitialized;
 
 @end
@@ -88,6 +89,14 @@
     self.barHeightConstraint.constant = barHeight;
 }
 
+- (void)setEdgesForExtendedLayout:(UIRectEdge)edges
+{
+    _edgesForExtendedLayout = edges;
+    BOOL topEdges = (edges & UIRectEdgeTop) == UIRectEdgeTop;
+    self.noneEdgeConstraint.active = !topEdges;
+    self.topEdgeConstraint.active = topEdges;
+}
+
 - (void)updateLayout:(UIViewController *)viewController
 {
     if (!viewController.navigationController) return;
@@ -109,6 +118,12 @@
 @end
 
 #pragma mark - UIViewController+FWNavigationView
+
+@interface UIViewController ()
+
+- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
+
+@end
 
 @implementation UIViewController (FWNavigationView)
 
@@ -177,32 +192,36 @@
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController || selfObject.fwIsChild;
             selfObject.fwNavigationView.hidden = hidden;
             
-            BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwNavigationContentView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
             [selfObject.fwNavigationContentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
-            selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
             selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdgeToSuperview:NSLayoutAttributeTop];
-            selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
+            selfObject.fwNavigationView.topEdgeConstraint.active = NO;
+            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            selfObject.edgesForExtendedLayout = selfObject.edgesForExtendedLayout;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
         }));
         
-        FWSwizzleClass(UIViewController, @selector(setEdgesForExtendedLayout:), FWSwizzleReturn(void), FWSwizzleArgs(UIRectEdge edge), FWSwizzleCode({
-            FWSwizzleOriginal(edge);
-            if (!selfObject.fwNavigationViewEnabled) return;
+        FWSwizzleClass(UIViewController, @selector(setEdgesForExtendedLayout:), FWSwizzleReturn(void), FWSwizzleArgs(UIRectEdge edges), FWSwizzleCode({
+            if (!selfObject.fwNavigationViewEnabled) {
+                FWSwizzleOriginal(edges);
+                return;
+            }
             
-            BOOL topEdges = (edge & UIRectEdgeTop) == UIRectEdgeTop;
-            selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
-            selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
+            FWSwizzleOriginal(edges | UIRectEdgeTop);
+            selfObject.fwNavigationView.edgesForExtendedLayout = edges;
         }));
         
-        FWSwizzleClass(UIViewController, NSSelectorFromString(@"fwSetNavigationBarHidden:animated:"), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal(hidden, animated);
+        FWSwizzleClass(UIViewController, @selector(fwSetNavigationBarHidden:animated:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
+            if (!selfObject.fwNavigationViewEnabled) {
+                [selfObject.navigationController.view bringSubviewToFront:selfObject.navigationController.navigationBar];
+                return FWSwizzleOriginal(hidden, animated);
+            }
             
-            FWSwizzleOriginal(YES, animated);
+            FWSwizzleOriginal(NO, animated);
+            [selfObject.navigationController.view sendSubviewToBack:selfObject.navigationController.navigationBar];
             [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
             selfObject.fwNavigationView.hidden = hidden;
             
