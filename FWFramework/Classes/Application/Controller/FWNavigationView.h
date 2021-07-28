@@ -202,14 +202,13 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 
 /**
  * 自定义导航栏按钮，兼容系统customView方式和自定义方式
+ *
+ * 系统自定义导航栏时最左和最右间距为16，而默认导航栏时为8；FWNavigationButton作为customView使用时，会自动调整按钮容器偏移位置，和系统表现一致
  */
 @interface FWNavigationButton : UIButton
 
 /// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
 @property (nonatomic, assign) BOOL adjustsTintColor;
-
-/// UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8，所以这里声明是否让内容自动偏移，默认YES
-@property (nonatomic, assign) BOOL adjustsContentInsets;
 
 /// 初始化标题类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithTitle:(nullable NSString *)title;
