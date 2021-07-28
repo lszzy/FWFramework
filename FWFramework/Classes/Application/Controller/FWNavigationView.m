@@ -26,6 +26,9 @@
 @property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
 @property (nonatomic, assign) BOOL itemUpdated;
 
+@property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
+
 @end
 
 @implementation FWNavigationView
@@ -193,13 +196,26 @@
             BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController || selfObject.fwIsChild;
             selfObject.fwNavigationView.hidden = hidden;
             
+            BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwContainerView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
             [selfObject.fwContainerView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-            [selfObject.fwContainerView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwContainerView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
+            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwContainerView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(setEdgesForExtendedLayout:), FWSwizzleReturn(void), FWSwizzleArgs(UIRectEdge edge), FWSwizzleCode({
+            FWSwizzleOriginal(edge);
+            if (!selfObject.fwNavigationViewEnabled) return;
+            
+            BOOL topEdges = (edge & UIRectEdgeTop) == UIRectEdgeTop;
+            selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
+            selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillTransitionToSize:withTransitionCoordinator:), FWSwizzleReturn(void), FWSwizzleArgs(CGSize size, id<UIViewControllerTransitionCoordinator> coordinator), FWSwizzleCode({
