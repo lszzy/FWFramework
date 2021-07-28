@@ -24,10 +24,10 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *heightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *barHeightConstraint;
-@property (nonatomic, assign) BOOL itemUpdated;
 
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
+@property (nonatomic, assign) BOOL backItemInitialized;
 
 @end
 
@@ -104,25 +104,6 @@
     }
     self.height = height;
     self.barHeight = barHeight;
-}
-
-- (void)updateItems:(UIViewController *)viewController
-{
-    // 只自动更新items一次。iOS14+调用多级pop方法触发viewWillAppear:时，导航栏VC堆栈顺序不对
-    if (self.itemUpdated) return;
-    self.itemUpdated = YES;
-    
-    UINavigationItem *navigationItem = self.navigationItem;
-    if (navigationItem.leftBarButtonItem && navigationItem.leftBarButtonItem != navigationItem.backBarButtonItem) return;
-    if ([viewController fwIsRoot]) {
-        navigationItem.leftBarButtonItem = nil;
-    } else if (navigationItem.leftBarButtonItem != navigationItem.backBarButtonItem) {
-        [navigationItem.backBarButtonItem fwSetBlock:^(id sender) {
-            if (![viewController fwPopBackBarItem]) return;
-            [viewController fwCloseViewControllerAnimated:YES];
-        }];
-        navigationItem.leftBarButtonItem = navigationItem.backBarButtonItem;
-    }
 }
 
 @end
@@ -218,22 +199,24 @@
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
         }));
         
-        FWSwizzleClass(UIViewController, @selector(viewWillTransitionToSize:withTransitionCoordinator:), FWSwizzleReturn(void), FWSwizzleArgs(CGSize size, id<UIViewControllerTransitionCoordinator> coordinator), FWSwizzleCode({
-            FWSwizzleOriginal(size, coordinator);
-            if (!selfObject.fwNavigationViewEnabled) return;
-            
-            [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                [selfObject.fwNavigationView updateLayout:selfObject];
-            } completion:nil];
-        }));
-        
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"fwSetNavigationBarHidden:animated:"), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal(hidden, animated);
             
             FWSwizzleOriginal(YES, animated);
             [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
             selfObject.fwNavigationView.hidden = hidden;
-            [selfObject.fwNavigationView updateItems:selfObject];
+            
+            // 只初始化backItem一次，iOS14+调用多级pop方法触发viewWillAppear:时，导航栏VC堆栈顺序不对
+            if (selfObject.fwNavigationView.backItemInitialized) return;
+            selfObject.fwNavigationView.backItemInitialized = YES;
+            if (selfObject.navigationController.viewControllers.count < 2) return;
+            UINavigationItem *navigationItem = selfObject.fwNavigationView.navigationItem;
+            if (navigationItem.leftBarButtonItem || !navigationItem.backBarButtonItem) return;
+            [navigationItem.backBarButtonItem fwSetBlock:^(id sender) {
+                if (![selfObject fwPopBackBarItem]) return;
+                [selfObject fwCloseViewControllerAnimated:YES];
+            }];
+            navigationItem.leftBarButtonItem = navigationItem.backBarButtonItem;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
@@ -241,6 +224,15 @@
             if (!selfObject.fwNavigationViewEnabled) return;
             
             [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewWillTransitionToSize:withTransitionCoordinator:), FWSwizzleReturn(void), FWSwizzleArgs(CGSize size, id<UIViewControllerTransitionCoordinator> coordinator), FWSwizzleCode({
+            FWSwizzleOriginal(size, coordinator);
+            if (!selfObject.fwNavigationViewEnabled) return;
+            
+            [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                [selfObject.fwNavigationView updateLayout:selfObject];
+            } completion:nil];
         }));
     });
 }
