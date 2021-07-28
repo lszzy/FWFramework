@@ -39,8 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
  * 注意：启用自定义导航栏后，虽然兼容FWViewControllerStyle方法，但有几点不同，列举如下：
- * 1. fwNavigationView位于VC.view顶部；fwContainerView位于VC.view底部，顶部对齐fwNavigationView.底部
- * 2. VC容器视图为fwContainerView，所有子视图应该添加到fwContainerView；可使用fwView兼容两种方式
+ * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
+ * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
@@ -48,9 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效
 @property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
-
-/// 自定义容器视图，fwNavigationViewEnabled为YES时生效
-@property (nonatomic, strong, readonly) UIView *fwContainerView;
 
 /// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
 @property (nonatomic, assign) BOOL fwNavigationViewEnabled;
