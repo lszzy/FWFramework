@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
+ * 4. 支持切换largeTitles样式，但需手工处理滚动时的动画效果
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)
