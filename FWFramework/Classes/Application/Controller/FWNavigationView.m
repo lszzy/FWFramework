@@ -16,7 +16,7 @@
 #import "FWBlock.h"
 #import "FWImage.h"
 #import "FWRouter.h"
-#import "FWViewControllerStyle.h"
+#import "FWNavigationStyle.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWNavigationView
@@ -76,7 +76,7 @@
 
 - (void)updateLayout
 {
-    self.statusBarConstraint.constant = self.isHidden ? 0 : self.statusBarHeight;
+    self.statusBarConstraint.constant = self.isHidden ? 0 : (self.statusBarHeight);
     self.navigationBarConstraint.constant = self.isHidden ? 0 : self.navigationBarHeight;
     self.navigationBarConstraint.active = self.isHidden || self.navigationBarHeight > 0;
     self.additionalConstraint.constant = self.isHidden ? 0 : -self.addtionalHeight;
@@ -87,6 +87,12 @@
 - (void)setStatusBarHeight:(CGFloat)statusBarHeight
 {
     _statusBarHeight = statusBarHeight;
+    [self updateLayout];
+}
+
+- (void)setStatusBarHidden:(BOOL)statusBarHidden
+{
+    _statusBarHidden = statusBarHidden;
     [self updateLayout];
 }
 
@@ -236,6 +242,13 @@
             BOOL topEdges = (edges & UIRectEdgeTop) == UIRectEdgeTop;
             selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(setFwStatusBarHidden:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+            FWSwizzleOriginal(hidden);
+            if (!selfObject.fwNavigationViewEnabled) return;
+            
+            selfObject.fwNavigationView.statusBarHidden = hidden;
         }));
         
         FWSwizzleClass(UIViewController, @selector(fwSetNavigationBarHidden:animated:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
