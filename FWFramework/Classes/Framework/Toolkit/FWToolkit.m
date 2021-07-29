@@ -519,24 +519,3 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 }
 
 @end
-
-#pragma mark - UIViewController+FWToolkit
-
-@implementation UIViewController (FWToolkit)
-
-- (UIView *)fwView
-{
-    return self.view;
-}
-
-- (UINavigationItem *)fwNavigationItem
-{
-    return self.navigationItem;
-}
-
-- (UINavigationBar *)fwNavigationBar
-{
-    return self.navigationController.navigationBar;
-}
-
-@end

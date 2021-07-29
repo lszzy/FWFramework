@@ -9,7 +9,7 @@
 
 #import "FWWebViewController.h"
 #import "FWNavigationStyle.h"
-#import "FWToolkit.h"
+#import "FWNavigationView.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"

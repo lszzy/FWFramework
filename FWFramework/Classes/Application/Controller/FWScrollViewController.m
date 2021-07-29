@@ -9,7 +9,7 @@
 
 #import "FWScrollViewController.h"
 #import "FWAutoLayout.h"
-#import "FWToolkit.h"
+#import "FWNavigationView.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWScrollViewController

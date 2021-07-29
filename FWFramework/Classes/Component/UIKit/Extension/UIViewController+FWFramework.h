@@ -32,6 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL fwIsDataLoaded;
 
+/*!
+ @brief Component模块内部使用，控制器代理视图，默认view，用于兼容自定义导航栏
+ */
+@property (nonatomic, strong, readonly) UIView *fwProxyView;
+
 #pragma mark - Present
 
 /*!

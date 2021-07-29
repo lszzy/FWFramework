@@ -170,21 +170,6 @@
             }
         }));
         
-        FWSwizzleClass(UIViewController, @selector(fwView), FWSwizzleReturn(UIView *), FWSwizzleArgs(), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            return [selfObject fwNavigationContentView];
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(fwNavigationBar), FWSwizzleReturn(UINavigationBar *), FWSwizzleArgs(), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            return selfObject.fwNavigationView.navigationBar;
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(fwNavigationItem), FWSwizzleReturn(UINavigationItem *), FWSwizzleArgs(), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            return selfObject.fwNavigationView.navigationItem;
-        }));
-        
         FWSwizzleClass(UIViewController, @selector(fwNavigationBarHeight), FWSwizzleReturn(CGFloat), FWSwizzleArgs(), FWSwizzleCode({
             if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
             
@@ -292,6 +277,16 @@
     });
 }
 
+- (BOOL)fwNavigationViewEnabled
+{
+    return [objc_getAssociatedObject(self, @selector(fwNavigationViewEnabled)) boolValue];
+}
+
+- (void)setFwNavigationViewEnabled:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (FWNavigationView *)fwNavigationView
 {
     FWNavigationView *navigationView = objc_getAssociatedObject(self, _cmd);
@@ -312,16 +307,6 @@
     return contentView;
 }
 
-- (BOOL)fwNavigationViewEnabled
-{
-    return [objc_getAssociatedObject(self, @selector(fwNavigationViewEnabled)) boolValue];
-}
-
-- (void)setFwNavigationViewEnabled:(BOOL)enabled
-{
-    objc_setAssociatedObject(self, @selector(fwNavigationViewEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (void)fwNavigationViewLayout
 {
     CGFloat statusBarHeight = FWStatusBarHeight;
@@ -331,6 +316,24 @@
         if (isPageSheet) statusBarHeight = 0;
     }
     self.fwNavigationView.statusBarHeight = statusBarHeight;
+}
+
+- (UINavigationBar *)fwNavigationBar
+{
+    if (!self.fwNavigationViewEnabled) return self.navigationController.navigationBar;
+    return self.fwNavigationView.navigationBar;
+}
+
+- (UINavigationItem *)fwNavigationItem
+{
+    if (!self.fwNavigationViewEnabled) return self.navigationItem;
+    return self.fwNavigationView.navigationItem;
+}
+
+- (UIView *)fwView
+{
+    if (!self.fwNavigationViewEnabled) return self.view;
+    return [self fwNavigationContentView];
 }
 
 @end
