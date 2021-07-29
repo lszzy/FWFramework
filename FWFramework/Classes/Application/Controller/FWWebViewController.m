@@ -8,7 +8,7 @@
  */
 
 #import "FWWebViewController.h"
-#import "FWViewControllerStyle.h"
+#import "FWNavigationStyle.h"
 #import "FWToolkit.h"
 #import "FWMessage.h"
 #import "FWAutoLayout.h"

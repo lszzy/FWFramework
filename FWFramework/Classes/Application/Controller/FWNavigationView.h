@@ -40,6 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 绑定scrollView，自动处理iOS11以上largeTitles动画，默认nil
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
+@property (nonatomic, assign) BOOL statusBarHidden;
+@property (nonatomic, assign) BOOL navigationBarHidden;
+
 #pragma mark - View
 
 @property (nonatomic, strong, readonly) UIView *contentView;
@@ -52,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 控制器自定义导航栏
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
- * 注意：启用自定义导航栏后，虽然兼容FWViewControllerStyle方法，但有几点不同，列举如下：
+ * 注意：启用自定义导航栏后，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
