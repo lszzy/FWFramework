@@ -122,6 +122,7 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
                                          @[@"导航栏样式", @"onNavigationStyle"],
+                                         @[@"大标题切换", @"onLargeTitle"],
                                          @[@"标签栏切换", @"onTabBar"],
                                          @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
@@ -219,6 +220,13 @@ FWPropertyAssign(BOOL, hideToast);
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
     }
     [self refreshBarFrame];
+}
+
+- (void)onLargeTitle
+{
+    if (@available(iOS 11.0, *)) {
+        self.fwNavigationBar.prefersLargeTitles = !self.fwNavigationBar.prefersLargeTitles;
+    }
 }
 
 - (void)onTabBar
