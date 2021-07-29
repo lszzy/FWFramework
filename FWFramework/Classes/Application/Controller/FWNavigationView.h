@@ -64,11 +64,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIViewController (FWNavigationView)
 
+/// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
+@property (nonatomic, assign) BOOL fwNavigationViewEnabled;
+
 /// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效
 @property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
 
-/// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
-@property (nonatomic, assign) BOOL fwNavigationViewEnabled;
+/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
+@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
+
+/// 当前导航项，默认navigationItem，用于兼容自定义导航栏
+@property (nonatomic, strong, readonly) UINavigationItem *fwNavigationItem;
+
+/// 当前视图，默认view，用于兼容自定义导航栏
+@property (nonatomic, strong, readonly) UIView *fwView;
 
 @end
 

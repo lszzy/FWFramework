@@ -8,12 +8,12 @@
  */
 
 #import "FWNavigationStyle.h"
+#import "FWNavigationView.h"
 #import "FWSwizzle.h"
 #import "FWImage.h"
 #import "FWTheme.h"
 #import "FWBlock.h"
 #import "FWRouter.h"
-#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWNavigationBarAppearance
