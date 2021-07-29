@@ -41,9 +41,10 @@ As this framework is constantly upgrading, optimizing and expanding new function
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
-Version 1.7.5:
+Version 1.8.0:
 
 	* Added custom navigation bar FWNavigationView component
+	* Refactored the implementation of FWNavigationStyle, compatible with custom navigation bars
 	* Refactored FWPopupMenuDelegate method name
 
 Version 1.7.4:
