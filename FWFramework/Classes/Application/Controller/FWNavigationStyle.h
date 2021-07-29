@@ -97,7 +97,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
 @property (nonatomic, assign, readonly) BOOL fwIsChild;
 
-/// 快捷设置导航栏标题文字或试图
+/// 快捷设置导航栏标题文字或视图
 @property (nonatomic, strong, nullable) id fwBarTitle;
 
 /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
@@ -117,6 +117,8 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 快捷设置导航栏右侧按钮，block事件
 - (void)fwSetRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// TODO fwAddLeftBarItem|fwAddRightBarItem;
 
 #pragma mark - Back
 
