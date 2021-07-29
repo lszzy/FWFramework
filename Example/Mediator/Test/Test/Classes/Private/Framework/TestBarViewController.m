@@ -59,6 +59,7 @@ FWPropertyAssign(BOOL, hideToast);
 {
     [super viewDidLoad];
     
+    self.fwNavigationView.scrollView = self.tableView;
     self.fwTabBarHidden = YES;
     [self refreshBarFrame];
     [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];

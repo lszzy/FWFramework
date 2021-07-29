@@ -10,6 +10,7 @@
 #import "FWNavigationView.h"
 #import "FWAutoLayout.h"
 #import "FWSwizzle.h"
+#import "FWMessage.h"
 #import "FWToolkit.h"
 #import "FWAdaptive.h"
 #import "FWBlock.h"
@@ -34,6 +35,8 @@
 
 @implementation FWNavigationView
 
+#pragma mark - Lifecycle
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -51,6 +54,8 @@
     }
     return self;
 }
+
+#pragma mark - Private
 
 - (void)setupView
 {
@@ -77,6 +82,8 @@
     self.additionalConstraint.constant = self.isHidden ? 0 : -self.addtionalHeight;
 }
 
+#pragma mark - Accessor
+
 - (void)setStatusBarHeight:(CGFloat)statusBarHeight
 {
     _statusBarHeight = statusBarHeight;
@@ -101,6 +108,35 @@
     [super setHidden:hidden];
     [self updateLayout];
 }
+
+#pragma mark - Bar
+
+- (void)setScrollView:(UIScrollView *)scrollView
+{
+    if (@available(iOS 11.0, *)) {} else { return; }
+    if (!self.superview) return;
+    if (scrollView == _scrollView) return;
+    
+    if (_scrollView) [_scrollView fwUnobserveProperty:@"contentOffset" target:self action:@selector(scrollView:change:)];
+    _scrollView = scrollView;
+    if (scrollView) [scrollView fwObserveProperty:@"contentOffset" target:self action:@selector(scrollView:change:)];
+}
+
+- (void)scrollView:(UIScrollView *)scrollView change:(NSDictionary *)change
+{
+    if (@available(iOS 11.0, *)) {
+        if (!self.navigationBar.prefersLargeTitles) return;
+        UIView *largeTitleView = self.navigationBar.fwLargeTitleView;
+        if (!largeTitleView || largeTitleView.frame.origin.y <= 0) return;
+        
+        CGFloat minHeight = largeTitleView.frame.origin.y;
+        CGFloat maxHeight = minHeight + UINavigationBar.fwLargeTitleHeight;
+        CGFloat height = MIN(MAX(minHeight, maxHeight - scrollView.contentOffset.y), maxHeight);
+        self.navigationBarHeight = height;
+    }
+}
+
+#pragma mark - View
 
 @end
 
