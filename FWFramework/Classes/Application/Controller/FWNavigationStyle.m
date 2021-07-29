@@ -283,6 +283,10 @@
     return NO;
 }
 
+#pragma mark - TODO
+
+// - (nullable UIView<FWNavigationViewProtocol> *)fwNavigationProxyView;
+
 - (id)fwBarTitle
 {
     return self.fwNavigationItem.titleView ?: self.fwNavigationItem.title;

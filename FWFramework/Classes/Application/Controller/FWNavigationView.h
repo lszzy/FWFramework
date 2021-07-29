@@ -13,6 +13,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWNavigationView
 
+@class FWNavigationBarAppearance;
+
+/// 自定义导航栏视图协议
+@protocol FWNavigationViewProtocol <NSObject>
+
+@required
+
+/// 状态栏是否隐藏改变钩子方法
+- (void)statusBarHiddenChanged:(BOOL)hidden;
+
+/// 导航栏是否隐藏改变钩子方法
+- (void)navigationBarHiddenChanged:(BOOL)hidden;
+
+/// 导航栏样式改变通知
+- (void)navigationBarAppearanceChanged:(FWNavigationBarAppearance *)appearance;
+
+/// 视图布局Bar延伸类型改变钩子方法
+- (void)extendedLayoutEdgeChanged:(UIRectEdge)edges;
+
+/// 导航栏标题文字或视图改变钩子方法
+- (void)barTitleChanged:(nullable id)title;
+
+/// 导航栏左侧按钮数组改变方法
+- (void)leftBarItemsChanged:(nullable NSArray *)items;
+
+/// 导航栏右侧按钮数组改变方法
+- (void)rightBarItemsChanged:(nullable NSArray *)items;
+
+/// 导航栏返回按钮改变钩子方法
+- (void)backBarItemChanged:(nullable id)object;
+
+@end
+
 /**
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
  */
