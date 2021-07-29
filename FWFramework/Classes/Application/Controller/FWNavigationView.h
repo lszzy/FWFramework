@@ -18,11 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FWNavigationView : UIView
 
-/// 自定义导航栏，默认高度自适应，可隐藏
-@property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
-
-/// 自定义导航项，可设置标题、按钮等
-@property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
+#pragma mark - Height
 
 /// 自定义状态栏高度，隐藏时自动收起，默认FWStatusBarHeight
 @property (nonatomic, assign) CGFloat statusBarHeight;
@@ -32,6 +28,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义附加高度，隐藏时自动收起，默认0
 @property (nonatomic, assign) CGFloat addtionalHeight;
+
+#pragma mark - Bar
+
+/// 自定义导航栏，默认高度自适应，可隐藏
+@property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
+
+/// 自定义导航项，可设置标题、按钮等
+@property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
+
+/// 绑定scrollView，自动处理iOS11以上largeTitles动画，默认nil
+@property (nonatomic, weak, nullable) UIScrollView *scrollView;
+
+#pragma mark - View
+
+@property (nonatomic, strong, readonly) UIView *contentView;
 
 @end
 
@@ -45,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
- * 4. 支持切换largeTitles样式，但需手工处理滚动时的动画效果
+ * 4. 支持切换largeTitles样式，但默认不支持动画效果；可手工处理或绑定scrollView自动处理
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)

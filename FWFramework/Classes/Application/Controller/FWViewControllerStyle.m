@@ -451,11 +451,6 @@
 
 @implementation UINavigationBar (FWStyle)
 
-- (UIView *)fwBackgroundView
-{
-    return [self fwPerformPropertySelector:@"_backgroundView"];
-}
-
 - (UIImage *)fwBackImage
 {
     return self.backIndicatorImage;
@@ -562,6 +557,28 @@
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
+}
+
+#pragma mark - View
+
+- (UIView *)fwBackgroundView
+{
+    return [self fwPerformPropertySelector:@"_backgroundView"];
+}
+
+- (UIView *)fwLargeTitleView
+{
+    for (UIView *subview in self.subviews) {
+        if ([NSStringFromClass(subview.class) hasSuffix:@"LargeTitleView"]) {
+            return subview;
+        }
+    }
+    return nil;
+}
+
++ (CGFloat)fwLargeTitleHeight
+{
+    return 52;
 }
 
 @end

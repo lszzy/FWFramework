@@ -146,9 +146,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UINavigationBar (FWStyle)
 
-/// 导航栏背景视图，显示背景色和背景图片等
-@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
-
 /// 设置返回按钮图片，包含图片和转场Mask图片
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
 
@@ -169,6 +166,17 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
+
+#pragma mark - View
+
+/// 导航栏背景视图，显示背景色和背景图片等
+@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
+
+/// 导航栏大标题视图，大标题显示时才有值
+@property (nonatomic, readonly, nullable) UIView *fwLargeTitleView;
+
+/// 导航栏大标题高度，与是否隐藏无关
+@property (class, nonatomic, readonly, assign) CGFloat fwLargeTitleHeight;
 
 @end
 
