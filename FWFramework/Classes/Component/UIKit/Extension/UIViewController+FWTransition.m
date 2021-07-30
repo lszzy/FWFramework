@@ -639,6 +639,50 @@
 
 @end
 
+#pragma mark - FWPresentationTarget
+
+@interface FWPresentationTarget : NSObject <UIPopoverPresentationControllerDelegate>
+
+@property (nonatomic, assign) BOOL isPopover;
+@property (nonatomic, assign) BOOL shouldDismiss;
+
+@end
+
+@implementation FWPresentationTarget
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _shouldDismiss = YES;
+    }
+    return self;
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return self.isPopover ? UIModalPresentationNone : controller.presentationStyle;
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    return self.shouldDismiss;
+}
+
+- (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presentationController
+{
+    return self.shouldDismiss;
+}
+
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
+{
+    if (presentationController.presentedViewController.fwPresentationDidDismiss) {
+        presentationController.presentedViewController.fwPresentationDidDismiss();
+    }
+}
+
+@end
+
 #pragma mark - UIViewController+FWTransition
 
 @implementation UIViewController (FWTransition)
@@ -704,6 +748,40 @@
     self.modalPresentationStyle = UIModalPresentationCustom;
     self.fwModalTransition = modalTransition;
     return modalTransition;
+}
+
+- (void (^)(void))fwPresentationDidDismiss
+{
+    return objc_getAssociatedObject(self, @selector(fwPresentationDidDismiss));
+}
+
+- (void)setFwPresentationDidDismiss:(void (^)(void))fwPresentationDidDismiss
+{
+    objc_setAssociatedObject(self, @selector(fwPresentationDidDismiss), fwPresentationDidDismiss, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (@available(iOS 13.0, *)) {
+        self.presentationController.delegate = [self fwPresentationTarget];
+    }
+}
+
+- (void)fwSetPopoverPresentation:(void (NS_NOESCAPE ^)(UIPopoverPresentationController *))presentationBlock shouldDismiss:(BOOL)shouldDismiss
+{
+    self.modalPresentationStyle = UIModalPresentationPopover;
+    [self fwPresentationTarget].isPopover = YES;
+    [self fwPresentationTarget].shouldDismiss = shouldDismiss;
+    self.popoverPresentationController.delegate = [self fwPresentationTarget];
+    if (self.popoverPresentationController && presentationBlock) {
+        presentationBlock(self.popoverPresentationController);
+    }
+}
+
+- (FWPresentationTarget *)fwPresentationTarget
+{
+    FWPresentationTarget *target = objc_getAssociatedObject(self, _cmd);
+    if (!target) {
+        target = [[FWPresentationTarget alloc] init];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
 }
 
 @end

@@ -176,6 +176,12 @@ typedef NS_ENUM(NSInteger, FWAnimatedTransitionType) {
 /// 自定义控制器fade渐变转场(蒙层和内容渐变动画)，会设置fwModalTransition;
 - (FWAnimatedTransition *)fwSetFadeTransition:(nullable void (^)(FWPresentationController *))presentationBlock;
 
+/// 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发，手工dismiss不会触发。会自动设置presentationController.delegate
+@property (nonatomic, copy, nullable) void (^fwPresentationDidDismiss)(void);
+
+/// 自定义控制器popover弹出效果(preferredContentSize设置大小)，会自动设置modalPresentationStyle和popoverPresentationController.delegate
+- (void)fwSetPopoverPresentation:(void (NS_NOESCAPE ^ _Nullable)(UIPopoverPresentationController *))presentationBlock shouldDismiss:(BOOL)shouldDismiss;
+
 @end
 
 #pragma mark - UIView+FWTransition
