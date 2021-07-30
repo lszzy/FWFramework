@@ -86,20 +86,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
-#pragma mark - Judge
-
-/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsPresented;
-
-/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsRoot;
-
-/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsChild;
-
-/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
-
 #pragma mark - Item
 
 /// 快捷设置导航栏标题文字或视图
