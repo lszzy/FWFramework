@@ -34,6 +34,8 @@ class HomeViewController: UIViewController, FWViewController {
     func renderData() {
         #if APP_PRODUCTION
         let envTitle = FWLocalizedString("envProduction")
+        #elseif APP_STAGING
+        let envTitle = FWLocalizedString("envStaging")
         #elseif APP_TESTING
         let envTitle = FWLocalizedString("envTesting")
         #else
