@@ -256,7 +256,7 @@
     self.extendedLayoutIncludesOpaqueBars = YES;
 }
 
-#pragma mark - Item
+#pragma mark - Judge
 
 - (BOOL)fwIsPresented
 {
@@ -283,9 +283,18 @@
     return NO;
 }
 
-#pragma mark - TODO
+- (BOOL)fwIsPageSheet
+{
+    if (@available(iOS 13.0, *)) {
+        UIViewController *controller = self.navigationController ?: self;
+        if (!controller.presentingViewController) return NO;
+        UIModalPresentationStyle style = controller.modalPresentationStyle;
+        if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
+    }
+    return NO;
+}
 
-// - (nullable UIView<FWNavigationViewProtocol> *)fwNavigationProxyView;
+#pragma mark - Item
 
 - (id)fwBarTitle
 {
@@ -355,6 +364,38 @@
 - (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
 {
     self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
+}
+
+- (void)fwAddLeftBarItem:(id)object target:(id)target action:(SEL)action
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
+    NSMutableArray *items = self.fwNavigationItem.leftBarButtonItems ? [self.fwNavigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.fwNavigationItem.leftBarButtonItems = [items copy];
+}
+
+- (void)fwAddLeftBarItem:(id)object block:(void (^)(id sender))block
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
+    NSMutableArray *items = self.fwNavigationItem.leftBarButtonItems ? [self.fwNavigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.fwNavigationItem.leftBarButtonItems = [items copy];
+}
+
+- (void)fwAddRightBarItem:(id)object target:(id)target action:(SEL)action
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
+    NSMutableArray *items = self.fwNavigationItem.rightBarButtonItems ? [self.fwNavigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.fwNavigationItem.rightBarButtonItems = [items copy];
+}
+
+- (void)fwAddRightBarItem:(id)object block:(void (^)(id sender))block
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
+    NSMutableArray *items = self.fwNavigationItem.rightBarButtonItems ? [self.fwNavigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.fwNavigationItem.rightBarButtonItems = [items copy];
 }
 
 #pragma mark - Back
