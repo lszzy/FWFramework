@@ -213,16 +213,21 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
  */
 @interface UIViewController (FWAdaptive)
 
-/// 当前状态栏高度，隐藏为0，推荐使用
+/// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
-/// 当前导航栏高度，隐藏为0，推荐使用
+/// 当前导航栏布局和可见高度，隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
-/// 当前顶部栏高度，包含状态栏、导航栏，隐藏为0，推荐使用
+/// 当前顶部栏布局高度，导航栏隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
-/// 当前标签栏高度，隐藏为0，推荐使用
+/// 当前标签栏布局和可见高度，隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;
-/// 当前工具栏高度，隐藏为0，推荐使用
+/// 当前工具栏布局和可见高度，隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
+
+/// 当前状态栏安全高度，状态栏隐藏时为0
+@property (nonatomic, assign, readonly) CGFloat fwSafeStatusBarHeight;
+/// 当前顶部栏安全高度，状态栏和导航栏全部隐藏时为0
+@property (nonatomic, assign, readonly) CGFloat fwSafeTopBarHeight;
 
 @end
 
