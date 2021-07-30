@@ -31,4 +31,5 @@
 "logoutConfirm" = "确定要退出当前账号吗?";
 "envDevelopment" = "开发";
 "envTesting" = "测试";
+"envStaging" = "模拟";
 "envProduction" = "正式";

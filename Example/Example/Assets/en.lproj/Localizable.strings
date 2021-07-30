@@ -31,4 +31,5 @@
 "logoutConfirm" = "Are you sure you want to log out?";
 "envDevelopment" = "Development";
 "envTesting" = "Testing";
-"envProduction" = "Prod";
+"envStaging" = "Staging";
+"envProduction" = "Production";
