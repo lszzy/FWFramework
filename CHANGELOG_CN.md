@@ -99,13 +99,13 @@
 ## [1.5.5] - 2021-05-25
 
 ### Added
-	* 新增Swift常用类型fwAs安全转换方法
+* 新增Swift常用类型fwAs安全转换方法
 
 ### Changed
-	* 修改FWRouterContext属性名称和声明
+* 修改FWRouterContext属性名称和声明
 
 ### Fixed
-	* 修复fwTouchEventInterval不生效问题
+* 修复fwTouchEventInterval不生效问题
 
 ## [1.5.4] - 2021-05-24
 
@@ -142,8 +142,8 @@
 ## [1.4.3] - 2021-04-27
 
 ### Changed
-	* FWRouter移除isObjectURL判断方法，兼容scheme:path格式URL
-	* FWEmptyPluginConfig新增customBlock配置
+* FWRouter移除isObjectURL判断方法，兼容scheme:path格式URL
+* FWEmptyPluginConfig新增customBlock配置
 
 ## [1.4.2] - 2021-04-25
 
