@@ -55,26 +55,26 @@ platform :ios do
     end
 
     CURRENT_DATE = Time.new.strftime("%Y-%m-%d")
-    if "#{lane}".include? "test"
-      CHANGELOG_TEXT = "[#{BUILD_NUMBER}-test] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
+    if "#{lane}".include? "testing"
+      CHANGELOG_TEXT = "[#{BUILD_NUMBER}+testing] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
     else
-      CHANGELOG_TEXT = "[#{BUILD_NUMBER}-prod] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
+      CHANGELOG_TEXT = "[#{BUILD_NUMBER}+production] - #{CURRENT_DATE}\n\n#{CHANGELOG_TEXT}"
     end
 
     puts "Changelog: #{CHANGELOG_TEXT}"
     cocoapods(repo_update: true, clean_install: true, use_bundle_exec: false)
   end
 
-  desc "Push a new test build to Pgyer"
-  lane :pgyer_test do |options|
+  desc "Push a new testing build to Pgyer"
+  lane :pgyer_testing do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Test",
-      configuration: "Release-Test",
+      scheme: "Example-Testing",
+      configuration: "Release-Testing",
       export_method: "ad-hoc",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
-      output_name: "Example_pgyer_test.ipa",
+      output_name: "Example_pgyer_testing.ipa",
       include_symbols: false,
       include_bitcode: false,
       silent: true,
@@ -89,16 +89,16 @@ platform :ios do
     )
   end
 
-  desc "Push a new prod build to Pgyer"
-  lane :pgyer_prod do |options|
+  desc "Push a new production build to Pgyer"
+  lane :pgyer_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Prod",
-      configuration: "Release-Prod",
+      scheme: "Example-Production",
+      configuration: "Release-Production",
       export_method: "ad-hoc",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
-      output_name: "Example_pgyer_prod.ipa",
+      output_name: "Example_pgyer_production.ipa",
       include_symbols: false,
       include_bitcode: false,
       silent: true,
@@ -113,16 +113,16 @@ platform :ios do
     )
   end
 
-  desc "Push a new test build to TestFlight"
-  lane :testflight_test do |options|
+  desc "Push a new testing build to TestFlight"
+  lane :testflight_testing do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Test",
-      configuration: "Release-Test",
+      scheme: "Example-Testing",
+      configuration: "Release-Testing",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
-      output_name: "Example_testflight_test.ipa",
+      output_name: "Example_testflight_testing.ipa",
       silent: true,
       clean: true
     )
@@ -141,16 +141,16 @@ platform :ios do
     end
   end
 
-  desc "Push a new prod build to TestFlight"
-  lane :testflight_prod do |options|
+  desc "Push a new production build to TestFlight"
+  lane :testflight_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Prod",
-      configuration: "Release-Prod",
+      scheme: "Example-Production",
+      configuration: "Release-Production",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
-      output_name: "Example_testflight_prod.ipa",
+      output_name: "Example_testflight_production.ipa",
       silent: true,
       clean: true
     )
@@ -169,16 +169,16 @@ platform :ios do
     end
   end
 
-  desc "Push a new prod build to the App Store"
-  lane :appstore_prod do |options|
+  desc "Push a new production build to the App Store"
+  lane :appstore_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Prod",
-      configuration: "Release-Prod",
+      scheme: "Example-Production",
+      configuration: "Release-Production",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
-      output_name: "Example_appstore_prod.ipa",
+      output_name: "Example_appstore_production.ipa",
       silent: true,
       clean: true
     )
