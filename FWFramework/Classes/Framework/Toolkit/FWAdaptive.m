@@ -8,7 +8,7 @@
  */
 
 #import "FWAdaptive.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWToolkit.h"
 
 @implementation UIApplication (FWAdaptive)

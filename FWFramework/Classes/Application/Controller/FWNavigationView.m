@@ -15,7 +15,7 @@
 #import "FWAdaptive.h"
 #import "FWBlock.h"
 #import "FWImage.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWNavigationStyle.h"
 #import <objc/runtime.h>
 
