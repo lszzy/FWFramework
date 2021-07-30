@@ -34,9 +34,8 @@
         [drawerView setPosition:position animated:YES];
     }];
     
-    UIBarButtonItem *systemItem = [UIBarButtonItem fwBarItemWithObject:@"系统" target:self action:@selector(onSystemSheet:)];
-    UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:@"自定义" target:self action:@selector(onPhotoSheet:)];
-    self.fwNavigationItem.rightBarButtonItems = @[systemItem, customItem];
+    [self fwAddRightBarItem:@"系统" target:self action:@selector(onSystemSheet:)];
+    [self fwAddRightBarItem:@"自定义" target:self action:@selector(onPhotoSheet:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated

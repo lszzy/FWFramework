@@ -32,9 +32,8 @@
     if (self.step < 3) {
         [self fwSetRightBarItem:@"下一步" target:self action:@selector(onNext)];
     } else {
-        UIBarButtonItem *item1 = [UIBarButtonItem fwBarItemWithObject:@"退出" target:self action:@selector(onExit)];
-        UIBarButtonItem *item2 = [UIBarButtonItem fwBarItemWithObject:@"重来" target:self action:@selector(onOpen)];
-        self.fwNavigationItem.rightBarButtonItems = @[item1, item2];
+        [self fwAddRightBarItem:@"退出" target:self action:@selector(onExit)];
+        [self fwAddRightBarItem:@"重来" target:self action:@selector(onOpen)];
     }
 }
 

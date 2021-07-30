@@ -86,7 +86,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
-#pragma mark - Item
+#pragma mark - Judge
 
 /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
 @property (nonatomic, assign, readonly) BOOL fwIsPresented;
@@ -96,6 +96,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
 @property (nonatomic, assign, readonly) BOOL fwIsChild;
+
+/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
+
+#pragma mark - Item
 
 /// 快捷设置导航栏标题文字或视图
 @property (nonatomic, strong, nullable) id fwBarTitle;
@@ -118,7 +123,17 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 快捷设置导航栏右侧按钮，block事件
 - (void)fwSetRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
-/// TODO fwAddLeftBarItem|fwAddRightBarItem;
+/// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)fwAddLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)fwAddLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏右侧按钮
+- (void)fwAddRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏右侧按钮，block事件
+- (void)fwAddRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
 #pragma mark - Back
 
@@ -174,7 +189,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 导航栏背景视图，显示背景色和背景图片等
 @property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
 
-/// 导航栏大标题视图，大标题显示时才有值
+/// 导航栏大标题视图，显示时才有值。如果要设置背景色，可使用fwBackgroundView.backgroundColor
 @property (nonatomic, readonly, nullable) UIView *fwLargeTitleView;
 
 /// 导航栏大标题高度，与是否隐藏无关

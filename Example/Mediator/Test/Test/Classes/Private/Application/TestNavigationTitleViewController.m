@@ -30,20 +30,13 @@
     self.fwNavigationItem.titleView = self.titleView;
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
     
-    FWNavigationButton *backButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
-    FWNavigationButton *rightButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
-    FWNavigationButton *shareButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
-    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:backButton block:^(id  _Nonnull sender) {
+    self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:rightButton block:^(id  _Nonnull sender) {
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    UIBarButtonItem *shareItem = [UIBarButtonItem fwBarItemWithObject:shareButton block:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
-    self.fwNavigationItem.leftBarButtonItem = backItem;
-    self.fwNavigationItem.rightBarButtonItems = @[rightItem, shareItem];
 }
 
 - (void)renderData
