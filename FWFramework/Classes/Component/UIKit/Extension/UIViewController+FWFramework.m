@@ -12,25 +12,6 @@
 #import "FWToolkit.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWInnerPresentationTarget
-
-@interface FWInnerPresentationTarget : NSObject <UIAdaptivePresentationControllerDelegate>
-
-@end
-
-@implementation FWInnerPresentationTarget
-
-#pragma mark - UIAdaptivePresentationControllerDelegate
-
-- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
-{
-    if (presentationController.presentedViewController.fwPresentationDidDismiss) {
-        presentationController.presentedViewController.fwPresentationDidDismiss();
-    }
-}
-
-@end
-
 #pragma mark - UIViewController+FWFramework
 
 API_AVAILABLE(ios(13.0))
@@ -88,29 +69,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
         });
         fwStaticModalPresentationStyle = style;
     }
-}
-
-- (void (^)(void))fwPresentationDidDismiss
-{
-    return objc_getAssociatedObject(self, @selector(fwPresentationDidDismiss));
-}
-
-- (void)setFwPresentationDidDismiss:(void (^)(void))fwPresentationDidDismiss
-{
-    objc_setAssociatedObject(self, @selector(fwPresentationDidDismiss), fwPresentationDidDismiss, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
-        self.presentationController.delegate = self.fwInnerPresentationTarget;
-    }
-}
-
-- (FWInnerPresentationTarget *)fwInnerPresentationTarget
-{
-    FWInnerPresentationTarget *target = objc_getAssociatedObject(self, _cmd);
-    if (!target) {
-        target = [[FWInnerPresentationTarget alloc] init];
-        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return target;
 }
 
 - (void (^)(void))fwDismissBlock

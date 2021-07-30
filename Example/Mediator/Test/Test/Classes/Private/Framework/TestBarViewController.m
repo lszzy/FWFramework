@@ -60,6 +60,7 @@ FWPropertyAssign(BOOL, hideToast);
     [super viewDidLoad];
     
     self.fwNavigationView.scrollView = self.tableView;
+    self.fwNavigationBar.fwBackgroundView.backgroundColor = Theme.backgroundColor;
     self.fwTabBarHidden = YES;
     [self refreshBarFrame];
     [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];
@@ -133,6 +134,7 @@ FWPropertyAssign(BOOL, hideToast);
         [self.tableData addObject:@[@"Present(FullScreen)", @"onPresent2"]];
         [self.tableData addObject:@[@"Present(PageSheet)", @"onPresent3"]];
         [self.tableData addObject:@[@"Present(默认带导航栏)", @"onPresent4"]];
+        [self.tableData addObject:@[@"Present(Popover)", @"onPresent5:"]];
     } else {
         [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
@@ -161,7 +163,7 @@ FWPropertyAssign(BOOL, hideToast);
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
-        [self performSelector:selector];
+        [self performSelector:selector withObject:indexPath];
         FWIgnoredEnd();
     }
 }
@@ -296,6 +298,31 @@ FWPropertyAssign(BOOL, hideToast);
         [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
     };
     [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)onPresent5:(NSIndexPath *)indexPath
+{
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    viewController.preferredContentSize = CGSizeMake(FWScreenWidth / 2, FWScreenHeight / 2);
+    [viewController fwSetPopoverPresentation:^(UIPopoverPresentationController *controller) {
+        controller.barButtonItem = self.fwNavigationItem.rightBarButtonItem;
+        controller.permittedArrowDirections = UIPopoverArrowDirectionUp;
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        controller.passthroughViews = [NSArray arrayWithObjects:cell, nil];
+    } shouldDismiss:[@[@0, @1].fwRandomObject fwAsBool]];
+    viewController.fwPresentationDidDismiss = ^{
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwPresentationDidDismiss"];
+    };
+    viewController.fwDismissBlock = ^{
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
+    };
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)onDismiss
