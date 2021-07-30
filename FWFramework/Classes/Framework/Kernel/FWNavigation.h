@@ -54,6 +54,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIViewController (FWNavigation)
 
+/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsRoot;
+
+/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsChild;
+
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsPresented;
+
+/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
+
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
 - (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
