@@ -9,7 +9,7 @@
 
 #import "FWTheme.h"
 #import "FWImage.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>

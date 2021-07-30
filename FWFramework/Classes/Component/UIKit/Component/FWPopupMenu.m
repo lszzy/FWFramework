@@ -9,7 +9,7 @@
 
 #import "FWPopupMenu.h"
 #import "FWAdaptive.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 
 #pragma mark - FWPopupMenuPath
 

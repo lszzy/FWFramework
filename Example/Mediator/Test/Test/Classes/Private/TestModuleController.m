@@ -74,7 +74,8 @@
     [self.tableData addObjectsFromArray:@[
         @[@"Framework", @[
               @[@"FWRouter", @"TestRouterViewController"],
-              @[@"FWRouter+Navigation", @"TestWindowViewController"],
+              @[@"FWNavigation", @"TestWindowViewController"],
+              @[@"FWWorkflow", @"TestWorkflowViewController"],
               @[@"FWEncode", @"TestCrashViewController"],
               @[@"FWLayoutChain", @"TestChainViewController"],
               @[@"FWTheme", @"TestThemeViewController"],
@@ -122,7 +123,6 @@
               @[@"NSAttributedString+FWOption", @"TestAttributedStringViewController"],
               @[@"UITableView+Hover", @"TestScrollViewController"],
               @[@"UIViewController+FWTransition", @"TestTransitionViewController"],
-              @[@"UIViewController+FWWorkflow", @"TestWorkflowViewController"],
               @[@"UIViewController+FWFramework", @"Test.TestChildViewController"],
               @[@"UITextField+FWKeyboard", @"TestKeyboardViewController"],
               @[@"UILabel+FWFramework", @"TestLabelViewController"],

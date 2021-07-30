@@ -8,7 +8,7 @@
  */
 
 #import "FWToolkit.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>

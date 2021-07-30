@@ -13,7 +13,7 @@
 #import "FWImage.h"
 #import "FWTheme.h"
 #import "FWBlock.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWNavigationBarAppearance
