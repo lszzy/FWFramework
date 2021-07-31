@@ -42,13 +42,24 @@
 - (void)renderData
 {
     self.tableView.backgroundColor = Theme.tableColor;
-    [self.tableData addObjectsFromArray:@[@"显示左边的loading",
-                                          @"显示右边的accessoryView",
-                                          @"显示副标题",
-                                          @"切换为上下两行显示",
-                                          @"水平方向的对齐方式",
-                                          @"模拟标题的loading状态切换",
-                                          @"标题点击效果"]];
+    [self.tableData addObjectsFromArray:@[
+        @"显示左边的loading",
+        @"显示右边的accessoryView",
+        @"显示副标题",
+        @"切换为上下两行显示",
+        @"水平方向的对齐方式",
+        @"模拟标题的loading状态切换",
+        @"标题点击效果",
+    ]];
+    if (self.fwNavigationViewEnabled) {
+        [self.tableData addObjectsFromArray:@[
+            @"导航栏顶部视图切换",
+            @"导航栏自定义视图切换",
+            @"导航栏底部视图切换",
+            @"导航栏绑定控制器切换",
+            @"导航栏固定高度切换",
+        ]];
+    }
 }
 
 - (void)dealloc
@@ -132,6 +143,34 @@
             self.titleView.title = @"点我展开分类";
             self.titleView.accessoryImage = [self accessoryImage];
             self.titleView.delegate = self;
+        }
+            break;
+        case 7:
+        {
+            self.fwNavigationView.topView.backgroundColor = UIColor.greenColor;
+            self.fwNavigationView.topHidden = !self.fwNavigationView.topHidden;
+        }
+            break;
+        case 8:
+        {
+            self.fwNavigationView.navigationView.backgroundColor = UIColor.redColor;
+            self.fwNavigationView.style = self.fwNavigationView.style == FWNavigationViewStyleDefault ? FWNavigationViewStyleCustom : FWNavigationViewStyleDefault;
+        }
+            break;
+        case 9:
+        {
+            self.fwNavigationView.bottomView.backgroundColor = UIColor.brownColor;
+            self.fwNavigationView.bottomHeight = self.fwNavigationView.bottomHeight ? 0 : 44;
+        }
+            break;
+        case 10:
+        {
+            self.fwNavigationView.viewController = self.fwNavigationView.viewController ? nil : self;
+        }
+            break;
+        case 11:
+        {
+            self.fwNavigationView.navigationHeight = self.fwNavigationView.navigationHeight == 100 ? 0 : 100;
         }
             break;
     }
