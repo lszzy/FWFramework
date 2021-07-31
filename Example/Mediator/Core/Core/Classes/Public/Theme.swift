@@ -35,11 +35,14 @@ import FWFramework
     public static var borderColor: UIColor {
         UIColor.fwThemeLight(.fwColor(withHex: 0xDDDDDD), dark: .fwColor(withHex: 0x303030))
     }
+    public static var buttonColor: UIColor {
+        UIColor.fwThemeLight(.fwColor(withHex: 0x017AFF), dark: .fwColor(withHex: 0x0A84FF))
+    }
     
     public static func largeButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
-        button.setBackgroundImage(UIImage.fwImage(with: UIColor.fwThemeLight(.fwColor(withHex: 0x017AFF), dark: .fwColor(withHex: 0x0A84FF))), for: .normal)
+        button.setBackgroundImage(UIImage.fwImage(with: Theme.buttonColor), for: .normal)
         button.titleLabel?.font = .fwBoldFont(ofSize: 17)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true

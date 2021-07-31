@@ -125,6 +125,7 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
                                          @[@"导航栏样式", @"onNavigationStyle"],
+                                         @[@"标题栏颜色", @"onTitleColor"],
                                          @[@"大标题切换", @"onLargeTitle"],
                                          @[@"标签栏切换", @"onTabBar"],
                                          @[@"工具栏切换", @"onToolBar"],
@@ -224,6 +225,11 @@ FWPropertyAssign(BOOL, hideToast);
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
     }
     [self refreshBarFrame];
+}
+
+- (void)onTitleColor
+{
+    self.fwNavigationBar.fwTitleColor = self.fwNavigationBar.fwTitleColor ? nil : Theme.buttonColor;
 }
 
 - (void)onLargeTitle

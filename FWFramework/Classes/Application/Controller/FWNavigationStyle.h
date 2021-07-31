@@ -23,6 +23,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 @interface FWNavigationBarAppearance : NSObject
 
 @property (nullable, nonatomic, strong) UIColor *foregroundColor;
+@property (nullable, nonatomic, strong) UIColor *titleColor;
 @property (nullable, nonatomic, strong) UIColor *backgroundColor;
 @property (nullable, nonatomic, strong) UIImage *backgroundImage;
 @property (nonatomic, assign) BOOL isHidden;
@@ -154,6 +155,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
+
+/// 单独设置标题颜色，nil时显示前景颜色
+@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
 
 /// 设置背景颜色(nil时透明)并隐藏底部线条，自动清空主题背景
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
