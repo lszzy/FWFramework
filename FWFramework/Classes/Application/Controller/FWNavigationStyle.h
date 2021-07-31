@@ -87,6 +87,29 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
+#pragma mark - Height
+
+/// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
+
+/// 当前导航栏布局和可见高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
+
+/// 当前顶部栏布局高度，导航栏隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
+
+/// 当前标签栏布局和可见高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;
+
+/// 当前工具栏布局和可见高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
+
+/// 当前状态栏安全高度，状态栏隐藏时为0
+@property (nonatomic, assign, readonly) CGFloat fwSafeStatusBarHeight;
+
+/// 当前顶部栏安全高度，状态栏和导航栏全部隐藏时为0
+@property (nonatomic, assign, readonly) CGFloat fwSafeTopBarHeight;
+
 #pragma mark - Item
 
 /// 快捷设置导航栏标题文字或视图
@@ -134,6 +157,18 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 @property (nonatomic, copy, nullable) BOOL (^fwBackBarBlock)(void);
 
 #pragma mark - State
+
+/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsRoot;
+
+/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsChild;
+
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsPresented;
+
+/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
 
 /// 当前生命周期状态，默认Default
 @property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;
