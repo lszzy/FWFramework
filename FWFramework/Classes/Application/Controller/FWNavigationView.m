@@ -147,7 +147,6 @@
 
 - (void)setHidden:(BOOL)hidden
 {
-    if (hidden == self.isHidden) return;
     [super setHidden:hidden];
     [self updateLayout];
 }
@@ -162,7 +161,8 @@
 {
     if (self.isHidden) return 0;
     if (_navigationHeight > 0) return _navigationHeight;
-    return self.navigationBar.frame.size.height;
+    if (self.navigationBar.frame.size.height <= 0) [self.navigationBar sizeToFit];
+    return self.navigationBar.frame.size.height ?: [UIScreen fwNavigationBarHeight];
 }
 
 - (CGFloat)bottomHeight
