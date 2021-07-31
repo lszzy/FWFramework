@@ -31,9 +31,9 @@
 @property (nonatomic, strong) NSLayoutConstraint *navigationConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
-@property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
+@property (nonatomic, strong) NSNumber *statusBarHidden;
 @property (nonatomic, assign) BOOL backItemInitialized;
 
 @end
@@ -121,9 +121,9 @@
     [self updateLayout];
 }
 
-- (void)setTopViewHidden:(BOOL)topViewHidden
+- (void)setTopHidden:(BOOL)topHidden
 {
-    _topViewHidden = topViewHidden;
+    _topHidden = topHidden;
     [self updateLayout];
 }
 
@@ -139,9 +139,9 @@
     [self updateLayout];
 }
 
-- (void)setBottomViewHidden:(BOOL)bottomViewHidden
+- (void)setBottomHidden:(BOOL)bottomHidden
 {
-    _bottomViewHidden = bottomViewHidden;
+    _bottomHidden = bottomHidden;
     [self updateLayout];
 }
 
@@ -154,7 +154,8 @@
 
 - (CGFloat)topHeight
 {
-    return self.isHidden || self.topViewHidden ? 0 : _topHeight;
+    BOOL topHidden = self.statusBarHidden ? [self.statusBarHidden boolValue] : self.topHidden;
+    return self.isHidden || topHidden ? 0 : _topHeight;
 }
 
 - (CGFloat)navigationHeight
@@ -166,7 +167,7 @@
 
 - (CGFloat)bottomHeight
 {
-    return self.isHidden || self.bottomViewHidden ? 0 : _bottomHeight;
+    return self.isHidden || self.bottomHidden ? 0 : _bottomHeight;
 }
 
 - (CGFloat)height
@@ -192,16 +193,36 @@
     self.navigationConstraint = [self.navigationBar fwSetDimension:NSLayoutAttributeHeight toSize:_navigationHeight];
     self.navigationConstraint.active = _navigationHeight > 0;
     self.bottomConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:_bottomHeight];
-    [self.navigationBar sizeToFit];
 }
 
 - (void)updateLayout
 {
-    self.topConstraint.constant = self.isHidden || self.topViewHidden ? 0 : _topHeight;
+    // 绑定控制器时，先同步状态栏变化，再更新布局。导航栏无需同步，为0时自适应
+    _statusBarHidden = nil;
+    if (self.viewController) {
+        // 1. 导航栏不存在时顶部高度始终为0
+        if (!self.viewController.navigationController) {
+            _topHeight = 0;
+            _statusBarHidden = @(YES);
+        // 2. 竖屏且为iOS13+弹出pageSheet样式时顶部高度为0
+        } else if (![UIDevice fwIsLandscape] && self.viewController.fwIsPageSheet) {
+            _topHeight = 0;
+            _statusBarHidden = @(YES);
+        // 3. 竖屏且异形屏，无论导航栏是否显示，顶部高度固定
+        } else if (![UIDevice fwIsLandscape] && [UIScreen fwIsNotchedScreen]) {
+            _topHeight = [UIScreen fwStatusBarHeight];
+            _statusBarHidden = @(NO);
+        // 4. 其他情况顶部高度固定，状态栏显示时高度存在，隐藏时高度为0
+        } else {
+            _topHeight = [UIScreen fwStatusBarHeight];
+            _statusBarHidden = @(UIApplication.sharedApplication.statusBarHidden);
+        }
+    }
+    
+    self.topConstraint.constant = self.topHeight;
+    self.bottomConstraint.constant = self.bottomHeight;
     self.navigationConstraint.constant = self.isHidden ? 0 : _navigationHeight;
     self.navigationConstraint.active = self.isHidden || _navigationHeight > 0;
-    self.bottomConstraint.constant = self.isHidden || self.bottomViewHidden ? 0 : -_bottomHeight;
-    [self.navigationBar sizeToFit];
 }
 
 #pragma mark - Public
@@ -209,12 +230,9 @@
 - (void)setViewController:(UIViewController *)viewController
 {
     _viewController = viewController;
-    if (viewController.navigationController) {
-        self.topHeight = viewController.fwIsPageSheet ? 0 : FWStatusBarHeight;
-        [self updateLayout];
-    }
-    BOOL hidden = viewController.fwNavigationBarHidden || !viewController.navigationController || viewController.fwIsChild;
-    self.hidden = hidden;
+    BOOL isHidden = viewController.fwNavigationBarHidden ||
+        !viewController.navigationController || viewController.fwIsChild;
+    self.hidden = isHidden;
 }
 
 - (void)setScrollView:(UIScrollView *)scrollView
@@ -269,12 +287,12 @@
             selfObject.fwNavigationView.viewController = selfObject;
             BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
-            [selfObject.view addSubview:selfObject.fwNavigationContentView];
+            [selfObject.view addSubview:selfObject.fwView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-            [selfObject.fwNavigationContentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            [selfObject.fwView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
             selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
-            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwNavigationContentView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwView fwPinEdgeToSuperview:NSLayoutAttributeTop];
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
@@ -320,7 +338,6 @@
             if (!selfObject.navigationController) return;
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                selfObject.fwNavigationView.topHeight = selfObject.fwIsPageSheet ? 0 : FWStatusBarHeight;
                 [selfObject.fwNavigationView updateLayout];
             } completion:nil];
         }));
@@ -347,16 +364,6 @@
     return navigationView;
 }
 
-- (UIView *)fwNavigationContentView
-{
-    UIView *contentView = objc_getAssociatedObject(self, _cmd);
-    if (!contentView) {
-        contentView = [[UIView alloc] init];
-        objc_setAssociatedObject(self, _cmd, contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return contentView;
-}
-
 - (UINavigationBar *)fwNavigationBar
 {
     if (!self.fwNavigationViewEnabled) return self.navigationController.navigationBar;
@@ -372,7 +379,13 @@
 - (UIView *)fwView
 {
     if (!self.fwNavigationViewEnabled) return self.view;
-    return [self fwNavigationContentView];
+    
+    UIView *view = objc_getAssociatedObject(self, _cmd);
+    if (!view) {
+        view = [[UIView alloc] init];
+        objc_setAssociatedObject(self, _cmd, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return view;
 }
 
 @end
