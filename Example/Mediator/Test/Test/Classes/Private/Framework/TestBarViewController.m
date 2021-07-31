@@ -79,8 +79,6 @@ FWPropertyAssign(BOOL, hideToast);
 {
     [super viewWillAppear:animated];
     
-    [self refreshBarFrame];
-    
     if (!self.hideToast) {
         [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"viewWillAppear:%@", @(animated)]];
     }
@@ -93,6 +91,12 @@ FWPropertyAssign(BOOL, hideToast);
     if (!self.hideToast) {
         [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]];
     }
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self refreshBarFrame];
 }
 
 - (UITableViewStyle)renderTableStyle
@@ -170,6 +174,11 @@ FWPropertyAssign(BOOL, hideToast);
     }
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self refreshBarFrame];
+}
+
 #pragma mark - Protected
 
 - (BOOL)prefersStatusBarHidden
@@ -186,12 +195,12 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)refreshBarFrame
 {
-    self.frameLabel.text = [NSString stringWithFormat:@"状态栏：全局-%@ 当前-%@ 安全-%@\n导航栏：全局-%@ 当前-%@ 安全-%@\n顶部栏：全局-%@ 当前-%@ 安全-%@\n标签栏：全局-%@ 当前-%@\n工具栏：全局-%@ 当前-%@\n安全区域：全局-%@",
-                            @([UIScreen fwStatusBarHeight]), @([self fwStatusBarHeight]), @([self fwSafeStatusBarHeight]),
-                            @([UIScreen fwNavigationBarHeight]), @([self fwNavigationBarHeight]), @([self fwNavigationBarHeight]),
-                            @([UIScreen fwTopBarHeight]), @([self fwTopBarHeight]), @([self fwSafeTopBarHeight]),
-                            @([UIScreen fwTabBarHeight]), @([self fwTabBarHeight]),
-                            @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight]),
+    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：%@",
+                            [UIScreen fwStatusBarHeight], [self fwStatusBarHeight],
+                            [UIScreen fwNavigationBarHeight], [self fwNavigationBarHeight],
+                            [UIScreen fwTopBarHeight], [self fwTopBarHeight],
+                            [UIScreen fwTabBarHeight], [self fwTabBarHeight],
+                            [UIScreen fwToolBarHeight], [self fwToolBarHeight],
                             NSStringFromUIEdgeInsets([UIScreen fwSafeAreaInsets])];
 }
 
