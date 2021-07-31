@@ -9,6 +9,7 @@
 
 #import "FWNavigationStyle.h"
 #import "FWNavigationView.h"
+#import "FWAdaptive.h"
 #import "FWSwizzle.h"
 #import "FWImage.h"
 #import "FWTheme.h"
@@ -259,6 +260,73 @@
     self.extendedLayoutIncludesOpaqueBars = YES;
 }
 
+#pragma mark - Height
+
+- (CGFloat)fwStatusBarHeight
+{
+    // 1. 导航栏隐藏时不占用布局高度始终为0
+    if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
+    
+    if (![UIDevice fwIsLandscape]) {
+        // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
+        if (self.fwIsPageSheet) return 0.0;
+        
+        // 3. 竖屏且异形屏，导航栏显示时布局高度固定
+        if ([UIScreen fwIsNotchedScreen]) {
+            return CGRectGetMinY(self.navigationController.navigationBar.frame);
+        }
+    }
+    
+    // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0
+    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+    return [UIApplication sharedApplication].statusBarFrame.size.height;
+}
+
+- (CGFloat)fwNavigationBarHeight
+{
+    if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
+    return self.navigationController.navigationBar.frame.size.height;
+}
+
+- (CGFloat)fwTopBarHeight
+{
+    // 通常情况下导航栏显示时可以这样计算：CGRectGetMaxY(self.navigationController.navigationBar.frame)
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+}
+
+- (CGFloat)fwTabBarHeight
+{
+    if (!self.tabBarController || self.tabBarController.tabBar.hidden) return 0.0;
+    return self.tabBarController.tabBar.frame.size.height;
+}
+
+- (CGFloat)fwToolBarHeight
+{
+    if (!self.navigationController || self.navigationController.toolbarHidden) return 0.0;
+    return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
+}
+
+- (CGFloat)fwSafeStatusBarHeight
+{
+    // 1. 竖屏且为iOS13+弹出pageSheet样式时安全高度为0
+    if (![UIDevice fwIsLandscape] && self.fwIsPageSheet) return 0.0;
+    
+    // 2. 其他情况状态栏显示时安全高度固定，隐藏时安全高度为0
+    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+    return [UIApplication sharedApplication].statusBarFrame.size.height;
+}
+
+- (CGFloat)fwSafeTopBarHeight
+{
+    // 1. 导航栏隐藏时和状态栏安全高度相同
+    if (!self.navigationController || self.navigationController.navigationBarHidden) {
+        return [self fwSafeStatusBarHeight];
+    }
+    
+    // 2. 导航栏显示时和顶部栏布局高度相同
+    return [self fwTopBarHeight];
+}
+
 #pragma mark - Item
 
 - (id)fwBarTitle
@@ -430,6 +498,42 @@
 }
 
 #pragma mark - State
+
+- (BOOL)fwIsRoot
+{
+    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
+}
+
+- (BOOL)fwIsChild
+{
+    UIViewController *parentController = self.parentViewController;
+    if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
+        ![parentController isKindOfClass:[UITabBarController class]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fwIsPresented
+{
+    UIViewController *viewController = self;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.firstObject != self) return NO;
+        viewController = self.navigationController;
+    }
+    return viewController.presentingViewController.presentedViewController == viewController;
+}
+
+- (BOOL)fwIsPageSheet
+{
+    if (@available(iOS 13.0, *)) {
+        UIViewController *controller = self.navigationController ?: self;
+        if (!controller.presentingViewController) return NO;
+        UIModalPresentationStyle style = controller.modalPresentationStyle;
+        if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
+    }
+    return NO;
+}
 
 - (FWViewControllerVisibleState)fwVisibleState
 {
