@@ -259,19 +259,15 @@
 {
     self.edgesForExtendedLayout = edge;
     self.extendedLayoutIncludesOpaqueBars = YES;
-    
-    // 自定义导航栏
-    if (self.fwNavigationViewEnabled) {
-        self.fwNavigationView.extendedLayoutTop = (edge & UIRectEdgeTop) == UIRectEdgeTop;
-    }
 }
 
 #pragma mark - Height
 
 - (CGFloat)fwStatusBarHeight
 {
+    // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
-        
+        return self.fwNavigationView.topHeight;
     }
     
     // 1. 导航栏隐藏时不占用布局高度始终为0
@@ -290,26 +286,50 @@
     // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0
     if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
     return [UIApplication sharedApplication].statusBarFrame.size.height;
+    
+    /*
+     // 系统状态栏可见高度算法：
+     // 1. 竖屏且为iOS13+弹出pageSheet样式时安全高度为0
+     if (![UIDevice fwIsLandscape] && self.fwIsPageSheet) return 0.0;
+     
+     // 2. 其他情况状态栏显示时安全高度固定，隐藏时安全高度为0
+     if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+     return [UIApplication sharedApplication].statusBarFrame.size.height;
+     */
 }
 
 - (CGFloat)fwNavigationBarHeight
 {
+    // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
-        
+        return self.fwNavigationView.navigationHeight;
     }
     
+    // 系统导航栏
     if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
     return self.navigationController.navigationBar.frame.size.height;
 }
 
 - (CGFloat)fwTopBarHeight
 {
+    // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
-        
+        return self.fwNavigationView.height;
     }
     
     // 通常情况下导航栏显示时可以这样计算：CGRectGetMaxY(self.navigationController.navigationBar.frame)
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+    
+    /*
+     // 系统顶部栏可见高度算法：
+     // 1. 导航栏隐藏时和状态栏安全高度相同
+     if (!self.navigationController || self.navigationController.navigationBarHidden) {
+         return [self fwSafeStatusBarHeight];
+     }
+     
+     // 2. 导航栏显示时和顶部栏布局高度相同
+     return [self fwTopBarHeight];
+     */
 }
 
 - (CGFloat)fwTabBarHeight
@@ -322,35 +342,6 @@
 {
     if (!self.navigationController || self.navigationController.toolbarHidden) return 0.0;
     return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
-}
-
-- (CGFloat)fwSafeStatusBarHeight
-{
-    if (self.fwNavigationViewEnabled) {
-        
-    }
-    
-    // 1. 竖屏且为iOS13+弹出pageSheet样式时安全高度为0
-    if (![UIDevice fwIsLandscape] && self.fwIsPageSheet) return 0.0;
-    
-    // 2. 其他情况状态栏显示时安全高度固定，隐藏时安全高度为0
-    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
-    return [UIApplication sharedApplication].statusBarFrame.size.height;
-}
-
-- (CGFloat)fwSafeTopBarHeight
-{
-    if (self.fwNavigationViewEnabled) {
-        
-    }
-    
-    // 1. 导航栏隐藏时和状态栏安全高度相同
-    if (!self.navigationController || self.navigationController.navigationBarHidden) {
-        return [self fwSafeStatusBarHeight];
-    }
-    
-    // 2. 导航栏显示时和顶部栏布局高度相同
-    return [self fwTopBarHeight];
 }
 
 #pragma mark - Item

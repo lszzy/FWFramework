@@ -23,17 +23,26 @@
 
 @interface FWNavigationView ()
 
-@property (nonatomic, strong) NSLayoutConstraint *statusBarConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *navigationBarConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *additionalConstraint;
+@property (nonatomic, strong) UIView *topView;
+@property (nonatomic, strong) UIView *navigationView;
+@property (nonatomic, strong) UIView *bottomView;
 
+@property (nonatomic, strong) NSLayoutConstraint *topConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *navigationConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
+
+@property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
 @property (nonatomic, assign) BOOL backItemInitialized;
 
 @end
 
-@implementation FWNavigationView
+@implementation FWNavigationView {
+    CGFloat _topHeight;
+    CGFloat _navigationHeight;
+    CGFloat _bottomHeight;
+}
 
 #pragma mark - Lifecycle
 
@@ -55,56 +64,84 @@
     return self;
 }
 
-#pragma mark - Private
-
-- (void)setupView
-{
-    _statusBarHeight = FWStatusBarHeight;
-    _navigationBarHeight = 0;
-    _addtionalHeight = 0;
-    _navigationItem = [[UINavigationItem alloc] init];
-    _navigationBar = [[UINavigationBar alloc] init];
-    _navigationBar.items = @[_navigationItem];
-    [self addSubview:_navigationBar];
-    
-    self.statusBarConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.statusBarHeight];
-    [self.navigationBar fwPinEdgesToSuperviewHorizontal];
-    self.navigationBarConstraint = [self.navigationBar fwSetDimension:NSLayoutAttributeHeight toSize:self.navigationBarHeight];
-    self.navigationBarConstraint.active = self.navigationBarHeight > 0;
-    self.additionalConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.addtionalHeight];
-}
-
-- (void)updateLayout
-{
-    self.statusBarConstraint.constant = self.isHidden ? 0 : (self.statusBarHeight);
-    self.navigationBarConstraint.constant = self.isHidden ? 0 : self.navigationBarHeight;
-    self.navigationBarConstraint.active = self.isHidden || self.navigationBarHeight > 0;
-    self.additionalConstraint.constant = self.isHidden ? 0 : -self.addtionalHeight;
-}
-
 #pragma mark - Accessor
 
-- (void)setStatusBarHeight:(CGFloat)statusBarHeight
+- (UIView *)topView
 {
-    _statusBarHeight = statusBarHeight;
+    if (!_topView) {
+        _topView = [[UIView alloc] init];
+        [self addSubview:_topView];
+        [_topView fwPinEdgesToSuperviewHorizontal];
+        [_topView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+        [_topView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:self.navigationBar];
+    }
+    return _topView;
+}
+
+- (UIView *)navigationView
+{
+    if (!_navigationView) {
+        _navigationView = [[UIView alloc] init];
+        [self addSubview:_navigationView];
+        [_navigationView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:self.navigationBar];
+        [_navigationView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeLeft ofView:self.navigationBar];
+        [_navigationView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:self.navigationBar];
+        [_navigationView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:self.navigationBar];
+    }
+    return _navigationView;
+}
+
+- (UIView *)bottomView
+{
+    if (!_bottomView) {
+        _bottomView = [[UIView alloc] init];
+        [self addSubview:_bottomView];
+        [_bottomView fwPinEdgesToSuperviewHorizontal];
+        [_bottomView fwPinEdgeToSuperview:NSLayoutAttributeBottom];
+        [_bottomView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.navigationBar];
+    }
+    return _bottomView;
+}
+
+- (void)setStyle:(FWNavigationViewStyle)style
+{
+    _style = style;
+    if (style == FWNavigationViewStyleDefault) {
+        self.navigationView.hidden = YES;
+        self.navigationBar.hidden = NO;
+    } else {
+        self.navigationBar.hidden = YES;
+        self.navigationView.hidden = NO;
+    }
+}
+
+- (void)setTopHeight:(CGFloat)topHeight
+{
+    _topHeight = topHeight;
     [self updateLayout];
 }
 
-- (void)setStatusBarHidden:(BOOL)statusBarHidden
+- (void)setTopViewHidden:(BOOL)topViewHidden
 {
-    _statusBarHidden = statusBarHidden;
+    _topViewHidden = topViewHidden;
     [self updateLayout];
 }
 
-- (void)setNavigationBarHeight:(CGFloat)navigationBarHeight
+- (void)setNavigationHeight:(CGFloat)navigationHeight
 {
-    _navigationBarHeight = navigationBarHeight;
+    _navigationHeight = navigationHeight;
     [self updateLayout];
 }
 
-- (void)setAddtionalHeight:(CGFloat)addtionalHeight
+- (void)setBottomHeight:(CGFloat)bottomHeight
 {
-    _addtionalHeight = addtionalHeight;
+    _bottomHeight = bottomHeight;
+    [self updateLayout];
+}
+
+- (void)setBottomViewHidden:(BOOL)bottomViewHidden
+{
+    _bottomViewHidden = bottomViewHidden;
     [self updateLayout];
 }
 
@@ -115,7 +152,70 @@
     [self updateLayout];
 }
 
-#pragma mark - Bar
+- (CGFloat)topHeight
+{
+    return self.isHidden || self.topViewHidden ? 0 : _topHeight;
+}
+
+- (CGFloat)navigationHeight
+{
+    if (self.isHidden) return 0;
+    if (_navigationHeight > 0) return _navigationHeight;
+    return self.navigationBar.frame.size.height;
+}
+
+- (CGFloat)bottomHeight
+{
+    return self.isHidden || self.bottomViewHidden ? 0 : _bottomHeight;
+}
+
+- (CGFloat)height
+{
+    return self.topHeight + self.navigationHeight + self.bottomHeight;
+}
+
+#pragma mark - Private
+
+- (void)setupView
+{
+    _style = FWNavigationViewStyleDefault;
+    _topHeight = FWStatusBarHeight;
+    _navigationHeight = 0;
+    _bottomHeight = 0;
+    _navigationItem = [[UINavigationItem alloc] init];
+    _navigationBar = [[UINavigationBar alloc] init];
+    _navigationBar.items = @[_navigationItem];
+    [self addSubview:_navigationBar];
+    
+    self.topConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:_topHeight];
+    [self.navigationBar fwPinEdgesToSuperviewHorizontal];
+    self.navigationConstraint = [self.navigationBar fwSetDimension:NSLayoutAttributeHeight toSize:_navigationHeight];
+    self.navigationConstraint.active = _navigationHeight > 0;
+    self.bottomConstraint = [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:_bottomHeight];
+    [self.navigationBar sizeToFit];
+}
+
+- (void)updateLayout
+{
+    self.topConstraint.constant = self.isHidden || self.topViewHidden ? 0 : _topHeight;
+    self.navigationConstraint.constant = self.isHidden ? 0 : _navigationHeight;
+    self.navigationConstraint.active = self.isHidden || _navigationHeight > 0;
+    self.bottomConstraint.constant = self.isHidden || self.bottomViewHidden ? 0 : -_bottomHeight;
+    [self.navigationBar sizeToFit];
+}
+
+#pragma mark - Public
+
+- (void)setViewController:(UIViewController *)viewController
+{
+    _viewController = viewController;
+    if (viewController.navigationController) {
+        self.topHeight = viewController.fwIsPageSheet ? 0 : FWStatusBarHeight;
+        [self updateLayout];
+    }
+    BOOL hidden = viewController.fwNavigationBarHidden || !viewController.navigationController || viewController.fwIsChild;
+    self.hidden = hidden;
+}
 
 - (void)setScrollView:(UIScrollView *)scrollView
 {
@@ -138,21 +238,13 @@
         CGFloat minHeight = largeTitleView.frame.origin.y;
         CGFloat maxHeight = minHeight + UINavigationBar.fwLargeTitleHeight;
         CGFloat height = MIN(MAX(minHeight, maxHeight - scrollView.contentOffset.y), maxHeight);
-        self.navigationBarHeight = height;
+        self.navigationHeight = height;
     }
 }
-
-#pragma mark - View
 
 @end
 
 #pragma mark - UIViewController+FWNavigationView
-
-@interface UIViewController ()
-
-- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
-
-@end
 
 @implementation UIViewController (FWNavigationView)
 
@@ -166,47 +258,15 @@
             FWNavigationView *navigationView = (FWNavigationView *)selfObject.superview;
             if ([navigationView isKindOfClass:[FWNavigationView class]]) {
                 UIView *backgroundView = selfObject.fwBackgroundView;
-                backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -navigationView.statusBarHeight, backgroundView.frame.size.width, navigationView.bounds.size.height);
+                backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -navigationView.topHeight, backgroundView.frame.size.width, navigationView.bounds.size.height);
             }
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(fwNavigationBarHeight), FWSwizzleReturn(CGFloat), FWSwizzleArgs(), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            
-            if (selfObject.fwNavigationView.isHidden) return 0.0;
-            return selfObject.fwNavigationView.navigationBar.frame.size.height;
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(fwTopBarHeight), FWSwizzleReturn(CGFloat), FWSwizzleArgs(), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
-            
-            if (selfObject.fwNavigationView.isHidden) return 0.0;
-            return selfObject.fwNavigationView.frame.size.height;
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(setFwBackBarItem:), FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) {
-                FWSwizzleOriginal(object);
-                return;
-            }
-            
-            UIBarButtonItem *backItem;
-            if ([object isKindOfClass:[UIBarButtonItem class]]) {
-                backItem = (UIBarButtonItem *)object;
-            } else {
-                backItem = [UIBarButtonItem fwBarItemWithObject:(object ?: [UIImage new]) target:nil action:nil];
-            }
-            selfObject.fwNavigationItem.backBarButtonItem = backItem;
         }));
         
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            if (selfObject.navigationController) [selfObject fwNavigationViewLayout];
-            BOOL hidden = selfObject.fwNavigationBarHidden || !selfObject.navigationController || selfObject.fwIsChild;
-            selfObject.fwNavigationView.hidden = hidden;
-            
+            selfObject.fwNavigationView.viewController = selfObject;
             BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwNavigationContentView];
@@ -229,22 +289,11 @@
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
         }));
         
-        FWSwizzleClass(UIViewController, @selector(setFwStatusBarHidden:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
-            FWSwizzleOriginal(hidden);
+        FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            selfObject.fwNavigationView.statusBarHidden = hidden;
-        }));
-        
-        FWSwizzleClass(UIViewController, @selector(fwSetNavigationBarHidden:animated:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden, BOOL animated), FWSwizzleCode({
-            if (!selfObject.fwNavigationViewEnabled) {
-                return FWSwizzleOriginal(hidden, animated);
-            }
-            
-            FWSwizzleOriginal(YES, animated);
             [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
-            selfObject.fwNavigationView.hidden = hidden;
-            
             // 只初始化backItem一次，iOS14+调用多级pop方法触发viewWillAppear:时，导航栏VC堆栈顺序不对
             if (selfObject.fwNavigationView.backItemInitialized) return;
             selfObject.fwNavigationView.backItemInitialized = YES;
@@ -271,7 +320,8 @@
             if (!selfObject.navigationController) return;
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                [selfObject fwNavigationViewLayout];
+                selfObject.fwNavigationView.topHeight = selfObject.fwIsPageSheet ? 0 : FWStatusBarHeight;
+                [selfObject.fwNavigationView updateLayout];
             } completion:nil];
         }));
     });
@@ -305,17 +355,6 @@
         objc_setAssociatedObject(self, _cmd, contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return contentView;
-}
-
-- (void)fwNavigationViewLayout
-{
-    CGFloat statusBarHeight = FWStatusBarHeight;
-    if (@available(iOS 13.0, *)) {
-        BOOL isPageSheet = self.navigationController.modalPresentationStyle == UIModalPresentationAutomatic || self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet;
-        isPageSheet = isPageSheet && self.navigationController.presentingViewController != nil;
-        if (isPageSheet) statusBarHeight = 0;
-    }
-    self.fwNavigationView.statusBarHeight = statusBarHeight;
 }
 
 - (UINavigationBar *)fwNavigationBar

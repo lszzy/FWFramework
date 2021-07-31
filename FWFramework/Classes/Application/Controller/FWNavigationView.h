@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 顶部：延迟加载topView，高度为topHeight，可设置topViewHidden显示或隐藏
  * 中间：navigationBar | 延迟加载navigationView，高度为navigationHeight，请勿调用显示或隐藏
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomViewHidden显示或隐藏
- * 整体高度为height，隐藏后为0；绑定控制器后高度会跟随变化，兼容系统导航栏，可取消绑定
+ * 整体高度为height，隐藏时为0；默认导航栏高度为0跟随控制器改变，自定义后固定高度
  */
 @interface FWNavigationView : UIView
 
@@ -67,12 +67,6 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 /// 当前总高度，自动计算实际显示高度
 @property (nonatomic, assign, readonly) CGFloat height;
-
-/// 绑定视图控制器，绑定后高度会自动跟随视图控制器变化，设为nil取消绑定
-@property (nonatomic, weak, nullable) UIViewController *viewController;
-
-/// 绑定控制器的内容视图是否延伸到顶部，被自定义导航栏视图覆盖，绑定后自动设置，默认NO
-@property (nonatomic, assign) BOOL extendedLayoutTop;
 
 /// 绑定scrollView，default样式时生效，自动处理iOS11以上largeTitles动画，默认nil
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;

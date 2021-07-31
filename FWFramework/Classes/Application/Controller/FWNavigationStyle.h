@@ -104,12 +104,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 当前工具栏布局和可见高度，隐藏时为0，推荐使用
 @property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
 
-/// 当前状态栏安全高度，状态栏隐藏时为0
-@property (nonatomic, assign, readonly) CGFloat fwSafeStatusBarHeight;
-
-/// 当前顶部栏安全高度，状态栏和导航栏全部隐藏时为0
-@property (nonatomic, assign, readonly) CGFloat fwSafeTopBarHeight;
-
 #pragma mark - Item
 
 /// 快捷设置导航栏标题文字或视图
