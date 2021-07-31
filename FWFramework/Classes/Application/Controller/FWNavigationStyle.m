@@ -218,6 +218,9 @@
     if (appearance.foregroundColor) {
         self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
     }
+    if (appearance.titleColor) {
+        self.fwNavigationBar.fwTitleColor = appearance.titleColor;
+    }
     if (appearance.appearanceBlock) {
         appearance.appearanceBlock(self.fwNavigationBar);
     }
@@ -477,9 +480,30 @@
 - (void)setFwForegroundColor:(UIColor *)color
 {
     self.tintColor = color;
-    self.titleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
+    [self fwUpdateTitleColor];
+}
+
+- (UIColor *)fwTitleColor
+{
+    return objc_getAssociatedObject(self, @selector(fwTitleColor));
+}
+
+- (void)setFwTitleColor:(UIColor *)fwTitleColor
+{
+    objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwUpdateTitleColor];
+}
+
+- (void)fwUpdateTitleColor
+{
+    UIColor *titleColor = self.fwTitleColor ?: self.tintColor;
+    NSMutableDictionary *titleAttrs = self.titleTextAttributes ? [self.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
+    titleAttrs[NSForegroundColorAttributeName] = titleColor;
+    self.titleTextAttributes = [titleAttrs copy];
     if (@available(iOS 11.0, *)) {
-        self.largeTitleTextAttributes = color ? @{NSForegroundColorAttributeName: color} : nil;
+        NSMutableDictionary *largeTitleAttrs = self.largeTitleTextAttributes ? [self.largeTitleTextAttributes mutableCopy] : [NSMutableDictionary new];
+        largeTitleAttrs[NSForegroundColorAttributeName] = titleColor;
+        self.largeTitleTextAttributes = [largeTitleAttrs copy];
     }
 }
 
