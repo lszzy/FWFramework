@@ -13,79 +13,76 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWNavigationView
 
-@class FWNavigationBarAppearance;
-
-/// 自定义导航栏视图协议
-@protocol FWNavigationViewProtocol <NSObject>
-
-@required
-
-/// 状态栏是否隐藏改变钩子方法
-- (void)statusBarHiddenChanged:(BOOL)hidden;
-
-/// 导航栏是否隐藏改变钩子方法
-- (void)navigationBarHiddenChanged:(BOOL)hidden;
-
-/// 导航栏样式改变通知
-- (void)navigationBarAppearanceChanged:(FWNavigationBarAppearance *)appearance;
-
-/// 视图布局Bar延伸类型改变钩子方法
-- (void)extendedLayoutEdgeChanged:(UIRectEdge)edges;
-
-/// 导航栏标题文字或视图改变钩子方法
-- (void)barTitleChanged:(nullable id)title;
-
-/// 导航栏左侧按钮数组改变方法
-- (void)leftBarItemsChanged:(nullable NSArray *)items;
-
-/// 导航栏右侧按钮数组改变方法
-- (void)rightBarItemsChanged:(nullable NSArray *)items;
-
-/// 导航栏返回按钮改变钩子方法
-- (void)backBarItemChanged:(nullable id)object;
-
-@end
+/// 自定义导航栏样式
+typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
+    /// 默认样式，UINavigationBar实现，兼容FWNavigationStyle相关方法
+    FWNavigationViewStyleDefault = 0,
+    /// 完全自定义样式，提供navigationView容器视图，自行处理布局
+    FWNavigationViewStyleCustom,
+};
 
 /**
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
+ *
+ * 自定义导航栏视图结构如下：
+ * 顶部：延迟加载topView，高度为topHeight，可设置topViewHidden显示或隐藏
+ * 中间：navigationBar | 延迟加载navigationView，高度为navigationHeight，请勿调用显示或隐藏
+ * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomViewHidden显示或隐藏
+ * 整体高度为height，隐藏后为0；绑定控制器后高度会跟随变化，兼容系统导航栏，可取消绑定
  */
 @interface FWNavigationView : UIView
 
-#pragma mark - Height
+/// 当前导航栏样式，默认default，设置后自动显示navigationBar或navigationView
+@property (nonatomic, assign) FWNavigationViewStyle style;
 
-/// 自定义状态栏高度，隐藏时自动收起，默认FWStatusBarHeight
-@property (nonatomic, assign) CGFloat statusBarHeight;
+/// 顶部视图，延迟加载，默认不加载
+@property (nonatomic, strong, readonly) UIView *topView;
 
-/// 自定义导航栏高度，隐藏时自动收起，默认0自适应
-@property (nonatomic, assign) CGFloat navigationBarHeight;
+/// 顶部视图是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL topViewHidden;
 
-/// 自定义附加高度，隐藏时自动收起，默认0
-@property (nonatomic, assign) CGFloat addtionalHeight;
+/// 自定义顶部视图高度，隐藏时自动收起，默认FWStatusBarHeight
+@property (nonatomic, assign) CGFloat topHeight;
 
-#pragma mark - Bar
-
-/// 自定义导航栏，默认高度自适应，可隐藏
+/// 自定义导航栏，默认高度自适应，default样式时显示
 @property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
 
 /// 自定义导航项，可设置标题、按钮等
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 绑定scrollView，自动处理iOS11以上largeTitles动画，默认nil
+/// 自定义导航视图，延迟加载，高度与navigationBar一致，custom样式时显示
+@property (nonatomic, strong, readonly) UIView *navigationView;
+
+/// 自定义导航视图高度，隐藏时自动收起，默认0自适应
+@property (nonatomic, assign) CGFloat navigationHeight;
+
+/// 底部视图，延迟加载，默认不加载
+@property (nonatomic, strong, readonly) UIView *bottomView;
+
+/// 底部视图是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL bottomViewHidden;
+
+/// 自定义底部视图高度，隐藏时自动收起，默认0
+@property (nonatomic, assign) CGFloat bottomHeight;
+
+/// 当前总高度，自动计算实际显示高度
+@property (nonatomic, assign, readonly) CGFloat height;
+
+/// 绑定视图控制器，绑定后高度会自动跟随视图控制器变化，设为nil取消绑定
+@property (nonatomic, weak, nullable) UIViewController *viewController;
+
+/// 绑定控制器的内容视图是否延伸到顶部，被自定义导航栏视图覆盖，绑定后自动设置，默认NO
+@property (nonatomic, assign) BOOL extendedLayoutTop;
+
+/// 绑定scrollView，default样式时生效，自动处理iOS11以上largeTitles动画，默认nil
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
-
-@property (nonatomic, assign) BOOL statusBarHidden;
-@property (nonatomic, assign) BOOL navigationBarHidden;
-
-#pragma mark - View
-
-@property (nonatomic, strong, readonly) UIView *contentView;
 
 @end
 
 #pragma mark - UIViewController+FWNavigationView
 
 /**
- * 控制器自定义导航栏
+ * 控制器自定义导航栏分类
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
  * 注意：启用自定义导航栏后，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
@@ -100,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
 @property (nonatomic, assign) BOOL fwNavigationViewEnabled;
 
-/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效
+/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效。默认自动绑定控制器，高度跟随变化
 @property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
 
 /// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
