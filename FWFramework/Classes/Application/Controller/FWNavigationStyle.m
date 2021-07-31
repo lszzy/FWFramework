@@ -76,32 +76,27 @@
         
         FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
-            
             selfObject.fwVisibleState = FWViewControllerVisibleStateDidLoad;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            
             selfObject.fwVisibleState = FWViewControllerVisibleStateWillAppear;
             [selfObject fwUpdateNavigationBarStyle:animated];
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            
             selfObject.fwVisibleState = FWViewControllerVisibleStateDidAppear;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            
             selfObject.fwVisibleState = FWViewControllerVisibleStateWillDisappear;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            
             selfObject.fwVisibleState = FWViewControllerVisibleStateDidDisappear;
         }));
     });
@@ -115,8 +110,12 @@
 - (void)setFwStatusBarHidden:(BOOL)fwStatusBarHidden
 {
     objc_setAssociatedObject(self, @selector(fwStatusBarHidden), @(fwStatusBarHidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    // 自定义导航栏
+    if (self.fwNavigationViewEnabled) {
+        self.fwNavigationView.topViewHidden = fwStatusBarHidden;
+    }
 }
 
 - (UIStatusBarStyle)fwStatusBarStyle
@@ -127,7 +126,6 @@
 - (void)setFwStatusBarStyle:(UIStatusBarStyle)fwStatusBarStyle
 {
     objc_setAssociatedObject(self, @selector(fwStatusBarStyle), @(fwStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
@@ -173,14 +171,6 @@
     }
 }
 
-- (void)fwSetNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
-{
-    // 动态切换导航栏显示隐藏，切换动画不突兀，一般在viewWillAppear:中调用，立即生效
-    if (self.navigationController.navigationBarHidden != hidden) {
-        [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    }
-}
-
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
     if (!self.navigationController || self.fwIsChild) return;
@@ -197,11 +187,22 @@
         isTransparent = (style.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     }
     
-    [self fwSetNavigationBarHidden:isHidden animated:animated];
+    // 自定义导航栏，隐藏系统默认导航栏，切换自定义导航栏显示状态
+    if ([self fwNavigationViewEnabled]) {
+        if (self.navigationController.navigationBarHidden != YES) {
+            [self.navigationController setNavigationBarHidden:YES animated:animated];
+        }
+        self.fwNavigationView.hidden = isHidden;
+    // 系统导航栏，动态切换动画不突兀，一般在viewWillAppear:中调用，立即生效
+    } else {
+        if (self.navigationController.navigationBarHidden != isHidden) {
+            [self.navigationController setNavigationBarHidden:isHidden animated:animated];
+        }
+    }
+    
     if (isTransparent) {
         [self.fwNavigationBar fwSetBackgroundTransparent];
     }
-    
     if (appearance.backgroundColor) {
         if (appearance.backgroundColor.fwIsThemeColor) {
             self.fwNavigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
@@ -258,12 +259,21 @@
 {
     self.edgesForExtendedLayout = edge;
     self.extendedLayoutIncludesOpaqueBars = YES;
+    
+    // 自定义导航栏
+    if (self.fwNavigationViewEnabled) {
+        self.fwNavigationView.extendedLayoutTop = (edge & UIRectEdgeTop) == UIRectEdgeTop;
+    }
 }
 
 #pragma mark - Height
 
 - (CGFloat)fwStatusBarHeight
 {
+    if (self.fwNavigationViewEnabled) {
+        
+    }
+    
     // 1. 导航栏隐藏时不占用布局高度始终为0
     if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
     
@@ -284,12 +294,20 @@
 
 - (CGFloat)fwNavigationBarHeight
 {
+    if (self.fwNavigationViewEnabled) {
+        
+    }
+    
     if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
     return self.navigationController.navigationBar.frame.size.height;
 }
 
 - (CGFloat)fwTopBarHeight
 {
+    if (self.fwNavigationViewEnabled) {
+        
+    }
+    
     // 通常情况下导航栏显示时可以这样计算：CGRectGetMaxY(self.navigationController.navigationBar.frame)
     return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
 }
@@ -308,6 +326,10 @@
 
 - (CGFloat)fwSafeStatusBarHeight
 {
+    if (self.fwNavigationViewEnabled) {
+        
+    }
+    
     // 1. 竖屏且为iOS13+弹出pageSheet样式时安全高度为0
     if (![UIDevice fwIsLandscape] && self.fwIsPageSheet) return 0.0;
     
@@ -318,6 +340,10 @@
 
 - (CGFloat)fwSafeTopBarHeight
 {
+    if (self.fwNavigationViewEnabled) {
+        
+    }
+    
     // 1. 导航栏隐藏时和状态栏安全高度相同
     if (!self.navigationController || self.navigationController.navigationBarHidden) {
         return [self fwSafeStatusBarHeight];
@@ -440,6 +466,19 @@
 
 - (void)setFwBackBarItem:(id)object
 {
+    // 自定义导航栏
+    if (self.fwNavigationViewEnabled) {
+        UIBarButtonItem *backItem;
+        if ([object isKindOfClass:[UIBarButtonItem class]]) {
+            backItem = (UIBarButtonItem *)object;
+        } else {
+            backItem = [UIBarButtonItem fwBarItemWithObject:(object ?: [UIImage new]) target:nil action:nil];
+        }
+        self.fwNavigationItem.backBarButtonItem = backItem;
+        return;
+    }
+    
+    // 系统导航栏
     if (![object isKindOfClass:[UIImage class]]) {
         UIBarButtonItem *backItem;
         if (!object) {
