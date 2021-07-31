@@ -70,6 +70,7 @@
 {
     if (!_topView) {
         _topView = [[UIView alloc] init];
+        _topView.hidden = self.topHidden;
         [self addSubview:_topView];
         [_topView fwPinEdgesToSuperviewHorizontal];
         [_topView fwPinEdgeToSuperview:NSLayoutAttributeTop];
@@ -82,6 +83,7 @@
 {
     if (!_navigationView) {
         _navigationView = [[UIView alloc] init];
+        _navigationView.hidden = (self.style == FWNavigationViewStyleDefault);
         [self addSubview:_navigationView];
         [_navigationView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:self.navigationBar];
         [_navigationView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeLeft ofView:self.navigationBar];
@@ -95,6 +97,7 @@
 {
     if (!_bottomView) {
         _bottomView = [[UIView alloc] init];
+        _bottomView.hidden = self.bottomHidden;
         [self addSubview:_bottomView];
         [_bottomView fwPinEdgesToSuperviewHorizontal];
         [_bottomView fwPinEdgeToSuperview:NSLayoutAttributeBottom];
@@ -107,7 +110,7 @@
 {
     _style = style;
     if (style == FWNavigationViewStyleDefault) {
-        self.navigationView.hidden = YES;
+        _navigationView.hidden = YES;
         self.navigationBar.hidden = NO;
     } else {
         self.navigationBar.hidden = YES;
@@ -124,6 +127,7 @@
 - (void)setTopHidden:(BOOL)topHidden
 {
     _topHidden = topHidden;
+    _topView.hidden = topHidden;
     [self updateLayout];
 }
 
@@ -142,6 +146,7 @@
 - (void)setBottomHidden:(BOOL)bottomHidden
 {
     _bottomHidden = bottomHidden;
+    _bottomView.hidden = bottomHidden;
     [self updateLayout];
 }
 
@@ -220,7 +225,7 @@
     }
     
     self.topConstraint.constant = self.topHeight;
-    self.bottomConstraint.constant = self.bottomHeight;
+    self.bottomConstraint.constant = -self.bottomHeight;
     self.navigationConstraint.constant = self.isHidden ? 0 : _navigationHeight;
     self.navigationConstraint.active = self.isHidden || _navigationHeight > 0;
 }
@@ -230,6 +235,8 @@
 - (void)setViewController:(UIViewController *)viewController
 {
     _viewController = viewController;
+    if (!viewController) return;
+    
     BOOL isHidden = viewController.fwNavigationBarHidden ||
         !viewController.navigationController || viewController.fwIsChild;
     self.hidden = isHidden;
