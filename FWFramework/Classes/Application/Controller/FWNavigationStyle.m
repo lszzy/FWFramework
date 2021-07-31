@@ -114,7 +114,7 @@
     
     // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
-        self.fwNavigationView.topViewHidden = fwStatusBarHidden;
+        self.fwNavigationView.topHidden = fwStatusBarHidden;
     }
 }
 
@@ -273,14 +273,14 @@
     // 1. 导航栏隐藏时不占用布局高度始终为0
     if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
     
-    if (![UIDevice fwIsLandscape]) {
-        // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
-        if (self.fwIsPageSheet) return 0.0;
-        
-        // 3. 竖屏且异形屏，导航栏显示时布局高度固定
-        if ([UIScreen fwIsNotchedScreen]) {
-            return CGRectGetMinY(self.navigationController.navigationBar.frame);
-        }
+    // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
+    BOOL isPortrait = ![UIDevice fwIsLandscape];
+    if (isPortrait && self.fwIsPageSheet) return 0.0;
+    
+    // 3. 竖屏且异形屏，导航栏显示时布局高度固定
+    if (isPortrait && [UIScreen fwIsNotchedScreen]) {
+        // 也可以这样计算：CGRectGetMinY(self.navigationController.navigationBar.frame)
+        return [UIScreen fwStatusBarHeight];
     }
     
     // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0

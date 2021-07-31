@@ -25,10 +25,10 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
  *
  * 自定义导航栏视图结构如下：
- * 顶部：延迟加载topView，高度为topHeight，可设置topViewHidden显示或隐藏
+ * 顶部：延迟加载topView，高度为topHeight，可设置topHidden显示或隐藏
  * 中间：navigationBar | 延迟加载navigationView，高度为navigationHeight，请勿调用显示或隐藏
- * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomViewHidden显示或隐藏
- * 整体高度为height，隐藏时为0；默认导航栏高度为0跟随控制器改变，自定义后固定高度
+ * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
+ * 整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定
  */
 @interface FWNavigationView : UIView
 
@@ -38,10 +38,10 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 顶部视图，延迟加载，默认不加载
 @property (nonatomic, strong, readonly) UIView *topView;
 
-/// 顶部视图是否隐藏，隐藏后自动收起，默认NO
-@property (nonatomic, assign) BOOL topViewHidden;
+/// 顶部是否隐藏，隐藏后自动收起，默认NO。绑定控制器后自动跟随系统导航栏变化
+@property (nonatomic, assign) BOOL topHidden;
 
-/// 自定义顶部视图高度，隐藏时自动收起，默认FWStatusBarHeight
+/// 自定义顶部高度，隐藏时自动收起，默认FWStatusBarHeight。绑定控制器后自动跟随系统导航栏变化
 @property (nonatomic, assign) CGFloat topHeight;
 
 /// 自定义导航栏，默认高度自适应，default样式时显示
@@ -59,14 +59,17 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 底部视图，延迟加载，默认不加载
 @property (nonatomic, strong, readonly) UIView *bottomView;
 
-/// 底部视图是否隐藏，隐藏后自动收起，默认NO
-@property (nonatomic, assign) BOOL bottomViewHidden;
+/// 底部是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL bottomHidden;
 
-/// 自定义底部视图高度，隐藏时自动收起，默认0
+/// 自定义底部高度，隐藏时自动收起，默认0
 @property (nonatomic, assign) CGFloat bottomHeight;
 
 /// 当前总高度，自动计算实际显示高度
 @property (nonatomic, assign, readonly) CGFloat height;
+
+/// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
+@property (nonatomic, weak, nullable) UIViewController *viewController;
 
 /// 绑定scrollView，default样式时生效，自动处理iOS11以上largeTitles动画，默认nil
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
@@ -79,7 +82,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 控制器自定义导航栏分类
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
- * 注意：启用自定义导航栏后，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
+ * 注意：启用自定义导航栏后，自动绑定控制器，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
@@ -91,7 +94,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
 @property (nonatomic, assign) BOOL fwNavigationViewEnabled;
 
-/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效。默认自动绑定控制器，高度跟随变化
+/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效。默认自动绑定控制器，导航栏状态跟随变化
 @property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
 
 /// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
