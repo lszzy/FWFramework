@@ -8,7 +8,7 @@
 
 import Foundation
 
-@main
+@UIApplicationMain
 class AppDelegate: FWAppDelegate {
     // MARK: - UISceneSession
     @available(iOS 13.0, *)
