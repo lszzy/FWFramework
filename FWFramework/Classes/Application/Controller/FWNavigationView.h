@@ -28,7 +28,9 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 顶部：延迟加载topView，高度为topHeight，可设置topHidden显示或隐藏
  * 中间：navigationBar | 延迟加载navigationView，高度为navigationHeight，请勿调用显示或隐藏
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
- * 整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定
+ *
+ * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
+ * iOS11以下暂不支持自定义高度，因为自定义高度后导航菜单位置靠下，顶部留白不好看；而iOS11以上导航菜单位置靠上，底部留白正常，类似largeTitles显示
  */
 @interface FWNavigationView : UIView
 
@@ -53,7 +55,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义导航视图，延迟加载，高度与navigationBar一致，custom样式时显示
 @property (nonatomic, strong, readonly) UIView *navigationView;
 
-/// 自定义导航视图高度，隐藏时自动收起，默认0自适应
+/// 自定义导航视图高度，隐藏时自动收起，默认0自适应。iOS11以下暂不支持自定义高度
 @property (nonatomic, assign) CGFloat navigationHeight;
 
 /// 底部视图，延迟加载，默认不加载

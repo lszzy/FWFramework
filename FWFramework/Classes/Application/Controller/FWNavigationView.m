@@ -133,8 +133,10 @@
 
 - (void)setNavigationHeight:(CGFloat)navigationHeight
 {
-    _navigationHeight = navigationHeight;
-    [self updateLayout];
+    if (@available(iOS 11.0, *)) {
+        _navigationHeight = navigationHeight;
+        [self updateLayout];
+    }
 }
 
 - (void)setBottomHeight:(CGFloat)bottomHeight
