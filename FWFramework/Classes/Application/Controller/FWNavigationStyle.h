@@ -205,6 +205,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 #pragma mark - View
 
+/// 导航栏内容视图，iOS11+才存在，显示item和titleView等
+@property (nonatomic, readonly, nullable) UIView *fwContentView;
+
 /// 导航栏背景视图，显示背景色和背景图片等
 @property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
 

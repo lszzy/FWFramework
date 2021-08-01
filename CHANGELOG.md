@@ -6,8 +6,10 @@
 * Added custom navigation bar FWNavigationView component
 
 ### Changed
+* Modify the minimum compatible iOS version to iOS10
 * Refactored the implementation of FWNavigationStyle, compatible with custom navigation bars
 * Refactored FWPopupMenuDelegate method name
+* Refactored UIViewController navigation bar height acquisition method
 
 ## [1.7.4] - 2021-07-14
 

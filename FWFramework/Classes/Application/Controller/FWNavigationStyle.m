@@ -726,6 +726,11 @@
 
 #pragma mark - View
 
+- (UIView *)fwContentView
+{
+    return [self valueForKeyPath:@"visualProvider.contentView"];
+}
+
 - (UIView *)fwBackgroundView
 {
     return [self fwPerformPropertySelector:@"_backgroundView"];
@@ -734,9 +739,7 @@
 - (UIView *)fwLargeTitleView
 {
     for (UIView *subview in self.subviews) {
-        if ([NSStringFromClass(subview.class) hasSuffix:@"LargeTitleView"]) {
-            return subview;
-        }
+        if ([NSStringFromClass(subview.class) hasSuffix:@"LargeTitleView"]) return subview;
     }
     return nil;
 }

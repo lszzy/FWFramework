@@ -18,7 +18,7 @@ It is recommended to use CocoaPods to install and automatically manage dependenc
 ### CocoaPods
 This framework supports CocoaPods, Podfile example:
 
-	platform :ios, '9.0'
+	platform :ios, '10.0'
 	use_frameworks!
 
 	target 'Example' do

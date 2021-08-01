@@ -18,7 +18,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 ### CocoaPods
 本框架支持CocoaPods，Podfile示例：
 
-	platform :ios, '9.0'
+	platform :ios, '10.0'
 	use_frameworks!
 
 	target 'Example' do
