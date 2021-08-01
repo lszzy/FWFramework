@@ -147,8 +147,11 @@
             break;
         case 7:
         {
-            self.fwNavigationView.topView.backgroundColor = UIColor.greenColor;
-            self.fwNavigationView.topHidden = !self.fwNavigationView.topHidden;
+            if (self.fwNavigationView.topView.backgroundColor != UIColor.greenColor) {
+                self.fwNavigationView.topView.backgroundColor = UIColor.greenColor;
+            } else {
+                self.fwNavigationView.topHidden = !self.fwNavigationView.topHidden;
+            }
         }
             break;
         case 8:
