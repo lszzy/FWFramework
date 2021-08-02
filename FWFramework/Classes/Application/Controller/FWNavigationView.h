@@ -21,21 +21,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
     FWNavigationViewStyleCustom,
 };
 
-@class FWNavigationView;
 @class FWNavigationContentView;
-
-/// 自定义导航栏事件代理
-@protocol FWNavigationViewDelegate <NSObject>
-
-@optional
-
-/// 绑定scrollView后bottomView自动滚动时回调方法
-- (void)navigationViewDidScroll:(FWNavigationView *)navigationView;
-
-/// 绑定scrollView后是否允许自动处理iOS11以上largeTitles滚动效果，默认YES
-- (BOOL)navigationViewShouldScrollLargeTitles:(FWNavigationView *)navigationView;
-
-@end
 
 /**
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
@@ -48,15 +34,12 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
  *
  * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
- * iOS11+支持largeTitles显示样式，但需手工处理或绑定scrollView自动处理largeTitles动画效果
+ * iOS11+支持largeTitles显示样式，但需手工处理largeTitles滚动动画效果
  */
 @interface FWNavigationView : UIView
 
 /// 当前导航栏样式，默认default，设置后自动显示navigationBar或contentView
 @property (nonatomic, assign) FWNavigationViewStyle style;
-
-/// 事件代理
-@property (nonatomic, weak, nullable) id<FWNavigationViewDelegate> delegate;
 
 /// 顶部视图，延迟加载，默认不加载
 @property (nonatomic, strong, readonly) UIView *topView;
@@ -100,14 +83,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
-/**
- * 绑定scrollView，处理默认滚动动画效果；如果滚动效果与需求不一致，可自行实现，无需绑定。
- *
- * 1. 如果为default样式且开启了navigationBar.prefersLargeTitles显示，会自动处理iOS11以上largeTitles滚动效果。
- *   绑定后导航栏高度不再自适应，变为固定高度，且要求scrollView内容要大于小标题时显示高度。
- *   如果不想要该效果，可通过delegate关闭该行为，统一处理bottomView滚动效果。
- * 2. 默认处理bottomView滚动效果，自动改变bottomHeight，并回调delegate
- */
+/// 绑定scrollView，绑定后自动处理bottomView动画效果，自动更新bottomHeight
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
 @end
@@ -122,7 +98,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
- * 4. 支持切换largeTitles样式，但默认不支持动画效果；可手工处理或绑定scrollView自动处理
+ * 4. 支持切换largeTitles样式，但默认不支持动画效果，需手工处理
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)
