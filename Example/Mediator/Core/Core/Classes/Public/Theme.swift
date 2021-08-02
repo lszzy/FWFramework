@@ -11,6 +11,9 @@ import FWFramework
     @FWUserDefaultAnnotation("isNavBarCustom", defaultValue: false)
     public static var isNavBarCustom: Bool
     
+    @FWUserDefaultAnnotation("isNavStyleCustom", defaultValue: false)
+    public static var isNavStyleCustom: Bool
+    
     @FWUserDefaultAnnotation("isLargeTitles", defaultValue: false)
     public static var isLargeTitles: Bool
     
@@ -126,6 +129,7 @@ extension Theme {
         viewController.automaticallyAdjustsScrollViewInsets = false
         viewController.hidesBottomBarWhenPushed = true
         viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
+        viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
         viewController.fwNavigationBarStyle = .default
         viewController.fwForcePopGesture = true
     }

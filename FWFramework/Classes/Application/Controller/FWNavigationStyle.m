@@ -209,6 +209,11 @@
         } else {
             self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
         }
+        
+        // 自定义导航栏
+        if (self.fwNavigationViewEnabled) {
+            self.fwNavigationView.backgroundColor = appearance.backgroundColor;
+        }
     }
     if (appearance.backgroundImage) {
         if (appearance.backgroundImage.fwIsThemeImage) {
@@ -219,9 +224,19 @@
     }
     if (appearance.foregroundColor) {
         self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
+        
+        // 自定义导航栏
+        if (self.fwNavigationViewEnabled) {
+            self.fwNavigationView.contentView.tintColor = appearance.foregroundColor;
+        }
     }
     if (appearance.titleColor) {
         self.fwNavigationBar.fwTitleColor = appearance.titleColor;
+        
+        // 自定义导航栏
+        if (self.fwNavigationViewEnabled) {
+            self.fwNavigationView.contentView.titleView.tintColor = appearance.titleColor;
+        }
     }
     if (appearance.appearanceBlock) {
         appearance.appearanceBlock(self.fwNavigationBar);
@@ -362,17 +377,30 @@
 
 - (id)fwLeftBarItem
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        return self.fwNavigationView.contentView.leftButton;
+    }
+    
     return self.fwNavigationItem.leftBarButtonItem;
 }
 
 - (void)setFwLeftBarItem:(id)object
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        self.fwNavigationView.contentView.leftButton = [self fwBarButtonWithObject:object close:YES];
+        self.fwNavigationView.contentView.leftMoreButton = nil;
+        return;
+    }
+    
     if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
         self.fwNavigationItem.leftBarButtonItem = object;
     } else {
         __weak __typeof__(self) self_weak_ = self;
         self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
             __typeof__(self) self = self_weak_;
+            if (![self fwPopBackBarItem]) return;
             [self fwCloseViewControllerAnimated:YES];
         }];
     }
@@ -380,17 +408,30 @@
 
 - (id)fwRightBarItem
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        return self.fwNavigationView.contentView.rightButton;
+    }
+    
     return self.fwNavigationItem.rightBarButtonItem;
 }
 
 - (void)setFwRightBarItem:(id)object
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        self.fwNavigationView.contentView.rightButton = [self fwBarButtonWithObject:object close:YES];
+        self.fwNavigationView.contentView.rightMoreButton = nil;
+        return;
+    }
+    
     if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
         self.fwNavigationItem.rightBarButtonItem = object;
     } else {
         __weak __typeof__(self) self_weak_ = self;
         self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:^(id  _Nonnull sender) {
             __typeof__(self) self = self_weak_;
+            if (![self fwPopBackBarItem]) return;
             [self fwCloseViewControllerAnimated:YES];
         }];
     }
@@ -398,26 +439,75 @@
 
 - (void)fwSetLeftBarItem:(id)object target:(id)target action:(SEL)action
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchTarget:target action:action];
+        self.fwNavigationView.contentView.leftButton = button;
+        self.fwNavigationView.contentView.leftMoreButton = nil;
+        return;
+    }
+    
     self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
 }
 
 - (void)fwSetLeftBarItem:(id)object block:(void (^)(id sender))block
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchBlock:block];
+        self.fwNavigationView.contentView.leftButton = button;
+        self.fwNavigationView.contentView.leftMoreButton = nil;
+        return;
+    }
+    
     self.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
 }
 
 - (void)fwSetRightBarItem:(id)object target:(id)target action:(SEL)action
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchTarget:target action:action];
+        self.fwNavigationView.contentView.rightButton = button;
+        self.fwNavigationView.contentView.rightMoreButton = nil;
+        return;
+    }
+    
     self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
 }
 
 - (void)fwSetRightBarItem:(id)object block:(void (^)(id sender))block
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchBlock:block];
+        self.fwNavigationView.contentView.rightButton = button;
+        self.fwNavigationView.contentView.rightMoreButton = nil;
+        return;
+    }
+    
     self.fwNavigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
 }
 
 - (void)fwAddLeftBarItem:(id)object target:(id)target action:(SEL)action
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchTarget:target action:action];
+        if (!button) return;
+        if (!self.fwNavigationView.contentView.leftButton) {
+            self.fwNavigationView.contentView.leftButton = button;
+        } else if (!self.fwNavigationView.contentView.leftMoreButton) {
+            self.fwNavigationView.contentView.leftMoreButton = button;
+        }
+        return;
+    }
+    
     UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     NSMutableArray *items = self.fwNavigationItem.leftBarButtonItems ? [self.fwNavigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
     [items addObject:barItem];
@@ -426,6 +516,19 @@
 
 - (void)fwAddLeftBarItem:(id)object block:(void (^)(id sender))block
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchBlock:block];
+        if (!button) return;
+        if (!self.fwNavigationView.contentView.leftButton) {
+            self.fwNavigationView.contentView.leftButton = button;
+        } else if (!self.fwNavigationView.contentView.leftMoreButton) {
+            self.fwNavigationView.contentView.leftMoreButton = button;
+        }
+        return;
+    }
+    
     UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
     NSMutableArray *items = self.fwNavigationItem.leftBarButtonItems ? [self.fwNavigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
     [items addObject:barItem];
@@ -434,6 +537,19 @@
 
 - (void)fwAddRightBarItem:(id)object target:(id)target action:(SEL)action
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchTarget:target action:action];
+        if (!button) return;
+        if (!self.fwNavigationView.contentView.rightButton) {
+            self.fwNavigationView.contentView.rightButton = button;
+        } else if (!self.fwNavigationView.contentView.rightMoreButton) {
+            self.fwNavigationView.contentView.rightMoreButton = button;
+        }
+        return;
+    }
+    
     UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object target:target action:action];
     NSMutableArray *items = self.fwNavigationItem.rightBarButtonItems ? [self.fwNavigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
     [items addObject:barItem];
@@ -442,16 +558,67 @@
 
 - (void)fwAddRightBarItem:(id)object block:(void (^)(id sender))block
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+        [button fwAddTouchBlock:block];
+        if (!button) return;
+        if (!self.fwNavigationView.contentView.rightButton) {
+            self.fwNavigationView.contentView.rightButton = button;
+        } else if (!self.fwNavigationView.contentView.rightMoreButton) {
+            self.fwNavigationView.contentView.rightMoreButton = button;
+        }
+        return;
+    }
+    
     UIBarButtonItem *barItem = [UIBarButtonItem fwBarItemWithObject:object block:block];
     NSMutableArray *items = self.fwNavigationItem.rightBarButtonItems ? [self.fwNavigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
     [items addObject:barItem];
     self.fwNavigationItem.rightBarButtonItems = [items copy];
 }
 
+- (FWNavigationButton *)fwBarButtonWithObject:(id)object close:(BOOL)close
+{
+    if (!object || [object isKindOfClass:[FWNavigationButton class]]) {
+        return object;
+    } else {
+        FWNavigationButton *button = [FWNavigationButton buttonWithObject:object];
+        if (button && close) {
+            __weak __typeof__(self) self_weak_ = self;
+            [button fwAddTouchBlock:^(id sender) {
+                __typeof__(self) self = self_weak_;
+                if (![self fwPopBackBarItem]) return;
+                [self fwCloseViewControllerAnimated:YES];
+            }];
+        }
+        return button;
+    }
+}
+
+- (UIBarButtonItem *)fwCloseBarItemWithObject:(id)object
+{
+    if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
+        return object;
+    } else {
+        __weak __typeof__(self) self_weak_ = self;
+        UIBarButtonItem *item = [UIBarButtonItem fwBarItemWithObject:object block:^(id sender) {
+            __typeof__(self) self = self_weak_;
+            if (![self fwPopBackBarItem]) return;
+            [self fwCloseViewControllerAnimated:YES];
+        }];
+        return item;
+    }
+}
+
 #pragma mark - Back
 
 - (id)fwBackBarItem
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        return self.fwNavigationView.contentView.backButton;
+    }
+    
     return self.fwNavigationItem.backBarButtonItem;
 }
 
@@ -459,6 +626,14 @@
 {
     // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
+        // custom样式
+        if (self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+            FWNavigationButton *button = [self fwBarButtonWithObject:object close:NO];
+            self.fwNavigationView.contentView.backButton = button;
+            return;
+        }
+        
+        // default样式
         UIBarButtonItem *backItem;
         if ([object isKindOfClass:[UIBarButtonItem class]]) {
             backItem = (UIBarButtonItem *)object;

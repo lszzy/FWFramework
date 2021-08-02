@@ -24,6 +24,8 @@
 "loginOptional" = "不需要登录";
 "navBarSystem" = "系统导航栏";
 "navBarCustom" = "自定义导航栏";
+"navStyleDefault" = "默认样式";
+"navStyleCustom" = "自定义样式";
 "normalTitles" = "非大标题";
 "largeTitles" = "大标题";
 "welcomeTitle" = "你知道我在等你吗？";
