@@ -185,7 +185,13 @@
             break;
         case 11:
         {
-            self.fwNavigationView.middleHeight = self.fwNavigationView.middleHeight == 100 ? 0 : 100;
+            if (self.fwNavigationView.middleHeight == 100) {
+                self.fwNavigationView.middleHeight = 0;
+                self.fwNavigationView.middleView.backgroundColor = nil;
+            } else {
+                self.fwNavigationView.middleHeight = 100;
+                self.fwNavigationView.middleView.backgroundColor = [UIColor orangeColor];
+            }
         }
         case 12:
         {

@@ -151,7 +151,7 @@
 
 - (FWNavigationContentView *)contentView
 {
-    if (_contentView) {
+    if (!_contentView) {
         _contentView = [[FWNavigationContentView alloc] init];
         _contentView.clipsToBounds = YES;
         _contentView.hidden = (self.style == FWNavigationViewStyleDefault);
@@ -191,18 +191,15 @@
 
 - (void)setMiddleHeight:(CGFloat)middleHeight
 {
+    _middleHeight = middleHeight;
     // iOS11+系统UINavigationBar自带contentView，内容固定显示在上方，可直接设置
     UIView *relativeView = [self.navigationBar fwContentView];
-    if (relativeView) {
-        _middleHeight = middleHeight;
-        [self updateLayout];
-    // iOS11以下UINavigationBar不带contentView，内容固定显示在下方，手工兼容之
-    } else {
-        _middleHeight = middleHeight;
-        // TODO: 计算底部间距
-        CGFloat bottomInset = 0;
+    if (!relativeView) {
+        // iOS11以下UINavigationBar不带contentView，默认内容固定显示在下方，需要手工布局到上方
+        CGFloat bottomInset = middleHeight > 0 ? middleHeight - self.contentHeight : 0;
         [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:bottomInset];
     }
+    [self updateLayout];
 }
 
 - (void)setBottomHeight:(CGFloat)bottomHeight
