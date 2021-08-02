@@ -29,7 +29,7 @@
     self.titleView.title = self.title;
     self.fwNavigationItem.titleView = self.titleView;
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 200)];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 300)];
     
     self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
     [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]] block:^(id  _Nonnull sender) {
@@ -39,11 +39,29 @@
         [FWRouter closeViewControllerAnimated:YES];
     }];
     
-    self.fwNavigationView.bottomView.backgroundColor = Theme.backgroundColor;
-    self.fwNavigationView.bottomHidden = YES;
-    UILabel *titleLabel = [UILabel fwLabelWithFont:FWFontBold(18) textColor:Theme.textColor text:@"FWNavigationView"];
-    [self.fwNavigationView.bottomView addSubview:titleLabel];
+    FWNavigationView *navigationView = self.fwNavigationView;
+    navigationView.bottomView.backgroundColor = UIColor.brownColor;
+    navigationView.bottomHidden = YES;
+    UILabel *titleLabel = [UILabel fwLabelWithFont:FWFontBold(18) textColor:UIColor.whiteColor text:@"FWNavigationView"];
+    [navigationView.bottomView addSubview:titleLabel];
     titleLabel.fwLayoutChain.leftWithInset(15).bottomWithInset(15);
+    
+    FWNavigationContentView *contentView = navigationView.contentView;
+    FWNavigationButton *leftButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
+    [leftButton fwAddTouchBlock:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    contentView.leftButton = leftButton;
+    FWNavigationButton *rightMoreButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
+    [rightMoreButton fwAddTouchBlock:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    contentView.rightMoreButton = rightMoreButton;
+    FWNavigationButton *rightButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
+    [rightButton fwAddTouchBlock:^(id  _Nonnull sender) {
+        [FWRouter closeViewControllerAnimated:YES];
+    }];
+    contentView.rightButton = rightButton;
 }
 
 - (void)renderData
