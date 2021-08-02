@@ -59,7 +59,6 @@ FWPropertyAssign(BOOL, hideToast);
 {
     [super viewDidLoad];
     
-    self.fwNavigationView.scrollView = self.tableView;
     self.fwNavigationBar.fwBackgroundView.backgroundColor = Theme.backgroundColor;
     self.fwTabBarHidden = YES;
     [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];
@@ -176,6 +175,18 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (!self.fwNavigationViewEnabled) return;
+    if (@available(iOS 11.0, *)) {
+        if (!self.fwNavigationBar.prefersLargeTitles) return;
+    } else { return; }
+    
+    UIView *largeTitleView = self.fwNavigationBar.fwLargeTitleView;
+    if (!largeTitleView || largeTitleView.frame.origin.y <= 0) return;
+    CGFloat minHeight = largeTitleView.frame.origin.y;
+    CGFloat maxHeight = minHeight + UINavigationBar.fwLargeTitleHeight;
+    CGFloat height = MIN(MAX(minHeight, maxHeight - scrollView.contentOffset.y), maxHeight);
+    self.fwNavigationView.middleHeight = height;
+    
     [self refreshBarFrame];
 }
 

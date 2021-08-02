@@ -36,6 +36,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
 @property (nonatomic, strong) NSNumber *statusBarHidden;
 @property (nonatomic, assign) BOOL backItemInitialized;
+@property (nonatomic, assign) CGFloat bottomMaxHeight;
 
 @end
 
@@ -124,6 +125,7 @@
 {
     if (!_topView) {
         _topView = [[UIView alloc] init];
+        _topView.clipsToBounds = YES;
         _topView.hidden = self.topHidden;
         [self addSubview:_topView];
         [_topView fwPinEdgesToSuperviewHorizontal];
@@ -137,6 +139,7 @@
 {
     if (!_bottomView) {
         _bottomView = [[UIView alloc] init];
+        _bottomView.clipsToBounds = YES;
         _bottomView.hidden = self.bottomHidden;
         [self addSubview:_bottomView];
         [_bottomView fwPinEdgesToSuperviewHorizontal];
@@ -150,6 +153,7 @@
 {
     if (_contentView) {
         _contentView = [[FWNavigationContentView alloc] init];
+        _contentView.clipsToBounds = YES;
         _contentView.hidden = (self.style == FWNavigationViewStyleDefault);
         [self.middleView addSubview:_contentView];
         [_contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
@@ -204,6 +208,7 @@
 - (void)setBottomHeight:(CGFloat)bottomHeight
 {
     _bottomHeight = bottomHeight;
+    _bottomMaxHeight = bottomHeight;
     [self updateLayout];
 }
 
@@ -268,27 +273,21 @@
 
 - (void)setScrollView:(UIScrollView *)scrollView
 {
-    if (@available(iOS 11.0, *)) {} else { return; }
-    if (!self.superview) return;
     if (scrollView == _scrollView) return;
     
-    if (_scrollView) [_scrollView fwUnobserveProperty:@"contentOffset" target:self action:@selector(scrollView:change:)];
+    if (_scrollView) [_scrollView fwUnobserveProperty:@"contentOffset" target:self action:@selector(scrollView:offsetChanged:)];
     _scrollView = scrollView;
-    if (scrollView) [scrollView fwObserveProperty:@"contentOffset" target:self action:@selector(scrollView:change:)];
+    if (scrollView) [scrollView fwObserveProperty:@"contentOffset" target:self action:@selector(scrollView:offsetChanged:)];
 }
 
-- (void)scrollView:(UIScrollView *)scrollView change:(NSDictionary *)change
+- (void)scrollView:(UIScrollView *)scrollView offsetChanged:(NSDictionary *)change
 {
-    if (@available(iOS 11.0, *)) {
-        if (!self.navigationBar.prefersLargeTitles) return;
-        UIView *largeTitleView = self.navigationBar.fwLargeTitleView;
-        if (!largeTitleView || largeTitleView.frame.origin.y <= 0) return;
-        
-        CGFloat minHeight = largeTitleView.frame.origin.y;
-        CGFloat maxHeight = minHeight + UINavigationBar.fwLargeTitleHeight;
-        CGFloat height = MIN(MAX(minHeight, maxHeight - scrollView.contentOffset.y), maxHeight);
-        self.middleHeight = height;
-    }
+    CGFloat maxHeight = self.bottomMaxHeight;
+    if (maxHeight <= 0) return;
+    
+    CGFloat bottomHeight = MIN(MAX(0, maxHeight - scrollView.contentOffset.y), maxHeight);
+    _bottomHeight = bottomHeight;
+    [self updateLayout];
 }
 
 @end

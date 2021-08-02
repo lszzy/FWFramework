@@ -29,6 +29,7 @@
     self.titleView.title = self.title;
     self.fwNavigationItem.titleView = self.titleView;
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 200)];
     
     self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
     [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]] block:^(id  _Nonnull sender) {
@@ -37,6 +38,12 @@
     [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
+    
+    self.fwNavigationView.bottomView.backgroundColor = Theme.backgroundColor;
+    self.fwNavigationView.bottomHidden = YES;
+    UILabel *titleLabel = [UILabel fwLabelWithFont:FWFontBold(18) textColor:Theme.textColor text:@"FWNavigationView"];
+    [self.fwNavigationView.bottomView addSubview:titleLabel];
+    titleLabel.fwLayoutChain.leftWithInset(15).bottomWithInset(15);
 }
 
 - (void)renderData
@@ -80,11 +87,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.tableData.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 60;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -172,8 +174,8 @@
             break;
         case 9:
         {
-            self.fwNavigationView.bottomView.backgroundColor = UIColor.brownColor;
-            self.fwNavigationView.bottomHeight = self.fwNavigationView.bottomHeight ? 0 : 100;
+            self.fwNavigationView.bottomHidden = !self.fwNavigationView.bottomHidden;
+            self.fwNavigationView.bottomHeight = UINavigationBar.fwLargeTitleHeight;
         }
             break;
         case 10:
@@ -223,6 +225,14 @@
             break;
     }
     return cell;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!self.fwNavigationViewEnabled) return;
+    
+    CGFloat progress = 1.0 - (self.fwNavigationView.bottomHeight / UINavigationBar.fwLargeTitleHeight);
+    self.titleView.tintColor = [Theme.textColor colorWithAlphaComponent:progress];
 }
 
 #pragma mark - FWNavigationTitleViewDelegate
