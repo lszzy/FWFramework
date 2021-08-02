@@ -58,6 +58,7 @@
             @"导航栏底部视图切换",
             @"导航栏绑定控制器切换",
             @"导航栏固定高度切换",
+            @"导航栏滚动效果切换",
         ]];
     }
 }
@@ -79,6 +80,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.tableData.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -156,14 +162,18 @@
             break;
         case 8:
         {
-            self.fwNavigationView.navigationView.backgroundColor = UIColor.redColor;
-            self.fwNavigationView.style = self.fwNavigationView.style == FWNavigationViewStyleDefault ? FWNavigationViewStyleCustom : FWNavigationViewStyleDefault;
+            if (self.fwNavigationView.style == FWNavigationViewStyleDefault) {
+                self.fwNavigationView.style = FWNavigationViewStyleCustom;
+                self.fwNavigationView.contentView.backgroundColor = UIColor.yellowColor;
+            } else {
+                self.fwNavigationView.style = FWNavigationViewStyleDefault;
+            }
         }
             break;
         case 9:
         {
             self.fwNavigationView.bottomView.backgroundColor = UIColor.brownColor;
-            self.fwNavigationView.bottomHeight = self.fwNavigationView.bottomHeight ? 0 : 44;
+            self.fwNavigationView.bottomHeight = self.fwNavigationView.bottomHeight ? 0 : 100;
         }
             break;
         case 10:
@@ -173,7 +183,11 @@
             break;
         case 11:
         {
-            self.fwNavigationView.navigationHeight = self.fwNavigationView.navigationHeight == 100 ? 0 : 100;
+            self.fwNavigationView.middleHeight = self.fwNavigationView.middleHeight == 100 ? 0 : 100;
+        }
+        case 12:
+        {
+            self.fwNavigationView.scrollView = self.fwNavigationView.scrollView ? nil : tableView;
         }
             break;
     }

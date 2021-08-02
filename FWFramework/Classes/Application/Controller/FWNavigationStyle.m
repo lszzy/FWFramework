@@ -302,7 +302,7 @@
 {
     // 自定义导航栏
     if (self.fwNavigationViewEnabled) {
-        return self.fwNavigationView.navigationHeight;
+        return self.fwNavigationView.middleHeight;
     }
     
     // 系统导航栏
@@ -728,7 +728,10 @@
 
 - (UIView *)fwContentView
 {
-    return [self valueForKeyPath:@"visualProvider.contentView"];
+    for (UIView *subview in self.subviews) {
+        if ([NSStringFromClass(subview.class) hasSuffix:@"ContentView"]) return subview;
+    }
+    return nil;
 }
 
 - (UIView *)fwBackgroundView
