@@ -488,20 +488,6 @@
     _titleView = titleView;
     if (titleView) [self addSubview:titleView];
     [self setNeedsUpdateConstraints];
-    
-    FWNavigationView *navigationView = (FWNavigationView *)self.superview.superview;
-    if (![navigationView isKindOfClass:[FWNavigationView class]]) return;
-    id<FWNavigationTitleViewProtocol> protocolView = (id<FWNavigationTitleViewProtocol>)titleView;
-    if (![protocolView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) return;
-    if (protocolView.title.length <= 0) {
-        protocolView.title = navigationView.navigationItem.title;
-    }
-}
-
-- (void)setTitleMaximumWidth:(CGFloat)titleMaximumWidth
-{
-    _titleMaximumWidth = titleMaximumWidth;
-    [self setNeedsUpdateConstraints];
 }
 
 - (NSString *)title
@@ -573,22 +559,19 @@
     if (titleView) {
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
-        if (self.titleMaximumWidth > 0) {
-            [subviewContraints addObject:[titleView fwSetDimension:NSLayoutAttributeWidth toSize:self.titleMaximumWidth relation:NSLayoutRelationLessThanOrEqual]];
+        
+        UIView *titleLeftButton = leftMoreButton ?: leftButton;
+        if (titleLeftButton) {
+            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:titleLeftButton withOffset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
         } else {
-            UIView *titleLeftButton = leftMoreButton ?: leftButton;
-            if (titleLeftButton) {
-                [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:titleLeftButton withOffset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
-            } else {
-                [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
-            }
-            
-            UIView *titleRightButton = rightMoreButton ?: rightButton;
-            if (titleRightButton) {
-                [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:titleRightButton withOffset:-8 relation:NSLayoutRelationLessThanOrEqual]];
-            } else {
-                [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
-            }
+            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        }
+        
+        UIView *titleRightButton = rightMoreButton ?: rightButton;
+        if (titleRightButton) {
+            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:titleRightButton withOffset:-8 relation:NSLayoutRelationLessThanOrEqual]];
+        } else {
+            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         }
     }
     self.subviewContraints = subviewContraints;
@@ -994,6 +977,7 @@
     UINavigationBar *navigationBar = [self searchNavigationBar:self];
     if (navigationBar) [navigationBar setNeedsLayout];
     [self setNeedsLayout];
+    [self invalidateIntrinsicContentSize];
 }
 
 - (UINavigationBar *)searchNavigationBar:(UIView *)subview {
@@ -1103,6 +1087,10 @@
     CGSize resultSize = [self contentSize];
     resultSize.width = MIN(resultSize.width, self.maximumWidth);
     return resultSize;
+}
+
+- (CGSize)intrinsicContentSize {
+    return [self sizeThatFits:CGSizeZero];
 }
 
 - (void)layoutSubviews {

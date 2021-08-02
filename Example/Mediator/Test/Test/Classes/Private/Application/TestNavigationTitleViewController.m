@@ -27,7 +27,7 @@
     self.titleView = [[FWNavigationTitleView alloc] init];
     self.titleView.showsLoadingView = YES;
     self.titleView.title = self.title;
-    self.fwNavigationItem.titleView = self.titleView;
+    self.fwBarTitle = self.titleView;
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 300)];
     
@@ -45,23 +45,6 @@
     UILabel *titleLabel = [UILabel fwLabelWithFont:FWFontBold(18) textColor:UIColor.whiteColor text:@"FWNavigationView"];
     [navigationView.bottomView addSubview:titleLabel];
     titleLabel.fwLayoutChain.leftWithInset(15).bottomWithInset(15);
-    
-    FWNavigationContentView *contentView = navigationView.contentView;
-    FWNavigationButton *leftButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
-    [leftButton fwAddTouchBlock:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
-    contentView.leftButton = leftButton;
-    FWNavigationButton *rightMoreButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
-    [rightMoreButton fwAddTouchBlock:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
-    contentView.rightMoreButton = rightMoreButton;
-    FWNavigationButton *rightButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
-    [rightButton fwAddTouchBlock:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
-    contentView.rightButton = rightButton;
 }
 
 - (void)renderData
