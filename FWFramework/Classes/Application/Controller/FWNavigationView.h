@@ -109,10 +109,10 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效。默认自动绑定控制器，导航栏状态跟随变化
 @property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
 
-/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
+/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏，仅default样式时生效
 @property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
 
-/// 当前导航项，默认navigationItem，用于兼容自定义导航栏
+/// 当前导航项，默认navigationItem，用于兼容自定义导航栏，仅default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *fwNavigationItem;
 
 /// 当前视图，默认view，用于兼容自定义导航栏
@@ -124,8 +124,15 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 @class FWNavigationTitleView;
 
-/// 自定义导航栏内容视图，支持完全自定义
+/**
+ * 自定义导航栏内容视图，支持完全自定义
+ *
+ * 默认最多只支持左右各两个按钮，如需更多按钮，请自行添加并布局即可
+ */
 @interface FWNavigationContentView : UIView
+
+/// 自定义返回按钮，自定义导航栏使用时会自动设置为左侧按钮
+@property (nonatomic, strong, nullable) __kindof UIView *backButton;
 
 /// 自定义左侧按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
 @property (nonatomic, strong, nullable) __kindof UIView *leftButton;
@@ -133,8 +140,14 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义左侧更多按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
 @property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
 
-/// 自定义标题视图，设置后才显示，居中显示，自动布局
-@property (nonatomic, strong, nullable) FWNavigationTitleView *titleView;
+/// 自定义标题视图，居中显示，自动布局。默认初始化FWNavigationTitleView，设为nil可清空
+@property (nonatomic, strong, nullable) __kindof UIView *titleView;
+
+/// 设置标题视图最大宽度，默认0未自定义时标题视图离左右最小距离为8，自定义可按需控制
+@property (nonatomic, assign) CGFloat titleMaximumWidth;
+
+/// 快速设置标题，titleView类型为FWNavigationTitleViewProtocol时才生效
+@property (nonatomic, copy, nullable) NSString *title;
 
 /// 自定义右侧更多按钮，设置后才显示，右侧间距为8，同系统一致。建议使用FWNavigationButton
 @property (nonatomic, strong, nullable) __kindof UIView *rightMoreButton;
@@ -300,6 +313,9 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 
 /// 初始化图片类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithImage:(nullable UIImage *)image;
+
+/// 使用指定对象创建按钮，支持UIImage|NSString等，不支持时返回nil
++ (nullable instancetype)buttonWithObject:(nullable id)object;
 
 @end
 

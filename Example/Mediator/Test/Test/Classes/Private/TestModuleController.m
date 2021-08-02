@@ -155,7 +155,11 @@
 {
     [super viewDidLoad];
     
-    [self.searchBar fwAddToNavigationItem:self.fwNavigationItem];
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        self.fwNavigationView.contentView.titleView = self.searchBar;
+    } else {
+        [self.searchBar fwAddToNavigationItem:self.fwNavigationItem];
+    }
 }
 
 #pragma mark - UISearchBar
