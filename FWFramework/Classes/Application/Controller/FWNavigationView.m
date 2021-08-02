@@ -421,9 +421,110 @@
 
 @interface FWNavigationContentView ()
 
+@property (nonatomic, strong) NSMutableArray *subviewContraints;
+
 @end
 
 @implementation FWNavigationContentView
+
+- (void)setLeftButton:(__kindof UIView *)leftButton
+{
+    if (leftButton == _leftButton) return;
+    if (_leftButton) [_leftButton removeFromSuperview];
+    _leftButton = leftButton;
+    if (leftButton) [self addSubview:leftButton];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setLeftMoreButton:(__kindof UIView *)leftMoreButton
+{
+    if (leftMoreButton == _leftMoreButton) return;
+    if (_leftMoreButton) [_leftMoreButton removeFromSuperview];
+    _leftMoreButton = leftMoreButton;
+    if (leftMoreButton) [self addSubview:leftMoreButton];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setTitleView:(FWNavigationTitleView *)titleView
+{
+    if (titleView == _titleView) return;
+    if (_titleView) [_titleView removeFromSuperview];
+    _titleView = titleView;
+    if (titleView) [self addSubview:titleView];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setRightMoreButton:(__kindof UIView *)rightMoreButton
+{
+    if (rightMoreButton == _rightMoreButton) return;
+    if (_rightMoreButton) [_rightMoreButton removeFromSuperview];
+    _rightMoreButton = rightMoreButton;
+    if (rightMoreButton) [self addSubview:rightMoreButton];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setRightButton:(__kindof UIView *)rightButton
+{
+    if (rightButton == _rightButton) return;
+    if (_rightButton) [_rightButton removeFromSuperview];
+    _rightButton = rightButton;
+    if (rightButton) [self addSubview:rightButton];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)updateConstraints
+{
+    [super updateConstraints];
+    
+    if (self.subviewContraints) {
+        [NSLayoutConstraint deactivateConstraints:self.subviewContraints];
+        self.subviewContraints = nil;
+    }
+    
+    NSMutableArray *subviewContraints = [NSMutableArray array];
+    UIView *leftButton = self.leftButton ?: self.leftMoreButton;
+    UIView *leftMoreButton = self.leftButton && self.leftMoreButton ? self.leftMoreButton : nil;
+    if (leftButton) {
+        [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:8]];
+        [subviewContraints addObject:[leftButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+    }
+    if (leftMoreButton) {
+        [subviewContraints addObject:[leftMoreButton fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton withOffset:8]];
+        [subviewContraints addObject:[leftMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+    }
+    
+    UIView *rightButton = self.rightButton ?: self.rightMoreButton;
+    UIView *rightMoreButton = self.rightButton && self.rightMoreButton ? self.rightMoreButton : nil;
+    if (rightButton) {
+        [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:8]];
+        [subviewContraints addObject:[rightButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+    }
+    if (rightMoreButton) {
+        [subviewContraints addObject:[rightMoreButton fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton withOffset:-8]];
+        [subviewContraints addObject:[rightMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+    }
+    
+    UIView *titleView = self.titleView;
+    if (titleView) {
+        [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
+        [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        
+        UIView *titleLeftButton = leftMoreButton ?: leftButton;
+        if (titleLeftButton) {
+            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:titleLeftButton withOffset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
+        } else {
+            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:16 relation:NSLayoutRelationGreaterThanOrEqual]];
+        }
+        
+        UIView *titleRightButton = rightMoreButton ?: rightButton;
+        if (titleRightButton) {
+            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:titleRightButton withOffset:-8 relation:NSLayoutRelationLessThanOrEqual]];
+        } else {
+            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:16 relation:NSLayoutRelationGreaterThanOrEqual]];
+        }
+    }
+    self.subviewContraints = subviewContraints;
+}
 
 @end
 

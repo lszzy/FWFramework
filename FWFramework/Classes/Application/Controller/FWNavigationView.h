@@ -122,14 +122,29 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 #pragma mark - FWNavigationContentView
 
-/// 自定义导航栏内容视图，方便快速生成菜单
+@class FWNavigationTitleView;
+
+/// 自定义导航栏内容视图，支持完全自定义
 @interface FWNavigationContentView : UIView
+
+/// 自定义左侧按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *leftButton;
+
+/// 自定义左侧更多按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
+
+/// 自定义标题视图，设置后才显示，居中显示，自动布局
+@property (nonatomic, strong, nullable) FWNavigationTitleView *titleView;
+
+/// 自定义右侧更多按钮，设置后才显示，右侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *rightMoreButton;
+
+/// 自定义右侧按钮，设置后才显示，右侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *rightButton;
 
 @end
 
 #pragma mark - FWNavigationTitleView
-
-@class FWNavigationTitleView;
 
 /// 自定义titleView协议
 @protocol FWNavigationTitleViewProtocol <NSObject>
