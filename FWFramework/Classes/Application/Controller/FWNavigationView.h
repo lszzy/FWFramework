@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 };
 
 @class FWNavigationView;
+@class FWNavigationContentView;
 
 /// 自定义导航栏事件代理
 @protocol FWNavigationViewDelegate <NSObject>
@@ -42,10 +43,8 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 自定义导航栏视图结构如下：
  * 顶部：延迟加载topView，高度为topHeight，可设置topHidden显示或隐藏
  * 中间：初始加载middleView，高度为middelHeight，请勿调用显示或隐藏
- *     navigationBar: 高度同middleHeight，default样式时显示
- *     contentView: 高度为contentHeight，和navigationBar顶部对齐，根据style返回不同视图
- *         default样式：为navigationBar.fwContentView视图，可用于布局参考，请勿添加子视图
- *         custom样式：为自定义内容视图，可添加子视图，内容完全自定义
+ *     navigationBar: 高度同middleHeight，default样式时显示，兼容FWNavigationStyle方法
+ *     contentView: 高度为contentHeight，custom样式时显示，内容完全自定义
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
  *
  * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
@@ -80,10 +79,10 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义导航项，可设置标题、按钮等，default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 内容视图，随style不同而不同，与middleView顶部对齐。custom样式时为自定义内容容器视图
-@property (nonatomic, strong, readonly) UIView *contentView;
+/// 内容视图，延迟加载，custom样式时显示，与middleView顶部对齐
+@property (nonatomic, strong, readonly) FWNavigationContentView *contentView;
 
-/// 内容视图高度，只读。绑定控制器后自动跟随系统导航栏变化
+/// 内容视图高度，只读，与是否隐藏无关。绑定控制器后自动跟随系统导航栏变化
 @property (nonatomic, assign, readonly) CGFloat contentHeight;
 
 /// 底部视图，延迟加载，默认不加载
@@ -95,7 +94,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义底部高度，隐藏时自动收起，默认0
 @property (nonatomic, assign) CGFloat bottomHeight;
 
-/// 当前总高度，自动计算实际显示高度
+/// 当前总高度，自动计算实际显示高度，隐藏时为0
 @property (nonatomic, assign, readonly) CGFloat height;
 
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
@@ -104,9 +103,10 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /**
  * 绑定scrollView，处理默认滚动动画效果；如果滚动效果与需求不一致，可自行实现，无需绑定。
  *
- * 1. 如果为default样式且开启了navigationBar.prefersLargeTitles显示，自动处理iOS11以上largeTitles滚动效果；
- * 如果不想要该效果，可通过delegate关闭该行为，统一处理bottomView滚动效果。
- * 2. 默认处理bottomView滚动效果，并回调delegate
+ * 1. 如果为default样式且开启了navigationBar.prefersLargeTitles显示，会自动处理iOS11以上largeTitles滚动效果。
+ *   绑定后导航栏高度不再自适应，变为固定高度，且要求scrollView内容要大于小标题时显示高度。
+ *   如果不想要该效果，可通过delegate关闭该行为，统一处理bottomView滚动效果。
+ * 2. 默认处理bottomView滚动效果，自动改变bottomHeight，并回调delegate
  */
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
@@ -141,6 +141,13 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 /// 当前视图，默认view，用于兼容自定义导航栏
 @property (nonatomic, strong, readonly) UIView *fwView;
+
+@end
+
+#pragma mark - FWNavigationContentView
+
+/// 自定义导航栏内容视图，方便快速生成菜单
+@interface FWNavigationContentView : UIView
 
 @end
 
