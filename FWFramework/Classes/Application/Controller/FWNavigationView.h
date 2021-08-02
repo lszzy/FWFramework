@@ -143,9 +143,6 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义标题视图，居中显示，自动布局。默认初始化FWNavigationTitleView，设为nil可清空
 @property (nonatomic, strong, nullable) __kindof UIView *titleView;
 
-/// 设置标题视图最大宽度，默认0未自定义时标题视图离左右最小距离为8，自定义可按需控制
-@property (nonatomic, assign) CGFloat titleMaximumWidth;
-
 /// 快速设置标题，titleView类型为FWNavigationTitleViewProtocol时才生效
 @property (nonatomic, copy, nullable) NSString *title;
 

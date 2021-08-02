@@ -363,11 +363,33 @@
 
 - (id)fwBarTitle
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        return self.fwNavigationView.contentView.titleView ?: self.fwNavigationItem.title;
+    }
+    
     return self.fwNavigationItem.titleView ?: self.fwNavigationItem.title;
 }
 
 - (void)setFwBarTitle:(id)title
 {
+    // 自定义导航栏custom样式
+    if (self.fwNavigationViewEnabled && self.fwNavigationView.style == FWNavigationViewStyleCustom) {
+        if ([title isKindOfClass:[UIView class]]) {
+            self.fwNavigationView.contentView.titleView = (UIView *)title;
+            
+            id<FWNavigationTitleViewProtocol> titleView = (id<FWNavigationTitleViewProtocol>)title;
+            if ([titleView conformsToProtocol:@protocol(FWNavigationTitleViewProtocol)]) {
+                if (titleView.title.length <= 0) {
+                    titleView.title = self.fwNavigationItem.title;
+                }
+            }
+        } else {
+            self.fwNavigationItem.title = title;
+        }
+        return;
+    }
+    
     if ([title isKindOfClass:[UIView class]]) {
         self.fwNavigationItem.titleView = title;
     } else {
