@@ -63,6 +63,7 @@
         [self.tableData addObjectsFromArray:@[
             @"导航栏顶部视图切换",
             @"导航栏自定义视图切换",
+            @"导航栏中间视图切换",
             @"导航栏底部视图切换",
             @"导航栏绑定控制器切换",
             @"导航栏固定高度切换",
@@ -175,16 +176,21 @@
             break;
         case 9:
         {
-            self.fwNavigationView.bottomHidden = !self.fwNavigationView.bottomHidden;
-            self.fwNavigationView.bottomHeight = UINavigationBar.fwLargeTitleHeight;
+            self.fwNavigationView.middleHidden = !self.fwNavigationView.middleHidden;
         }
             break;
         case 10:
         {
-            self.fwNavigationView.viewController = self.fwNavigationView.viewController ? nil : self;
+            self.fwNavigationView.bottomHidden = !self.fwNavigationView.bottomHidden;
+            self.fwNavigationView.bottomHeight = UINavigationBar.fwLargeTitleHeight;
         }
             break;
         case 11:
+        {
+            self.fwNavigationView.viewController = self.fwNavigationView.viewController ? nil : self;
+        }
+            break;
+        case 12:
         {
             if (self.fwNavigationView.middleHeight == 100) {
                 self.fwNavigationView.middleHeight = 0;
@@ -194,7 +200,7 @@
                 self.fwNavigationView.middleView.backgroundColor = [UIColor orangeColor];
             }
         }
-        case 12:
+        case 13:
         {
             self.fwNavigationView.scrollView = self.fwNavigationView.scrollView ? nil : tableView;
         }

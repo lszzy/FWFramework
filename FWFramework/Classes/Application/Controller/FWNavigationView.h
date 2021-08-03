@@ -317,8 +317,8 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 /// 初始化图片类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithImage:(nullable UIImage *)image;
 
-/// 使用指定对象创建按钮，支持UIImage|NSString等，不支持时返回nil
-+ (nullable instancetype)buttonWithObject:(nullable id)object;
+/// 使用指定对象创建按钮，支持UIImage|NSString，不支持时返回nil
+- (nullable instancetype)initWithObject:(nullable id)object;
 
 @end
 
