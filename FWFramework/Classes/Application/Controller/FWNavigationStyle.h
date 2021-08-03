@@ -186,7 +186,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
 /// 单独设置标题颜色，nil时显示前景颜色
-@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
+@property (nonatomic, strong, nullable) UIColor *fwTitleColor UI_APPEARANCE_SELECTOR;
 
 /// 设置背景颜色(nil时透明)并隐藏底部线条，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
