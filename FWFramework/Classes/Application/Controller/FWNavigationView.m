@@ -93,14 +93,18 @@
 {
     if (!barItem) return nil;
     
-    // TODO: 兼容customView
+    // 指定customView时只支持FWNavigationButton
+    id object = nil;
     if (barItem.customView) {
-        
-        return barItem.customView;
+        FWNavigationButton *customButton = (FWNavigationButton *)barItem.customView;
+        if (![customButton isKindOfClass:[FWNavigationButton class]]) return nil;
+        object = customButton.object;
+    } else {
+        object = barItem.fwObject;
     }
     
-    // 直接触发barItem的响应事件即可
-    UIButton *button = [[FWNavigationButton alloc] initWithObject:barItem.fwObject];
+    // 创建新的按钮，直接触发barItem的响应事件即可
+    UIButton *button = [[FWNavigationButton alloc] initWithObject:object];
     [button fwAddTouchTarget:barItem.target action:barItem.action];
     return button;
 }
@@ -115,18 +119,6 @@
 
 @implementation FWNavigationBar
 
-- (void)setFwBackgroundColor:(UIColor *)color
-{
-    [super setFwBackgroundColor:color];
-    self.navigationView.backgroundView.backgroundColor = color;
-}
-
-- (void)setFwBackgroundImage:(UIImage *)image
-{
-    [super setFwBackgroundImage:image];
-    self.navigationView.backgroundView.fwThemeImage = image;
-}
-
 - (void)setFwForegroundColor:(UIColor *)color
 {
     [super setFwForegroundColor:color];
@@ -137,6 +129,27 @@
 {
     [super setFwTitleColor:color];
     self.navigationView.contentView.titleView.tintColor = color;
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    [super setFwBackgroundColor:color];
+    self.navigationView.backgroundView.fwThemeImage = nil;
+    self.navigationView.backgroundView.backgroundColor = color;
+}
+
+- (void)setFwBackgroundImage:(UIImage *)image
+{
+    [super setFwBackgroundImage:image];
+    self.navigationView.backgroundView.fwThemeImage = image;
+    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
+}
+
+- (void)fwSetBackgroundTransparent
+{
+    [super fwSetBackgroundTransparent];
+    self.navigationView.backgroundView.fwThemeImage = nil;
+    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
 }
 
 - (void)layoutSubviews
@@ -164,8 +177,8 @@
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
 @property (nonatomic, strong) NSNumber *statusBarHidden;
-@property (nonatomic, assign) BOOL backItemInitialized;
 @property (nonatomic, assign) CGFloat bottomMaxHeight;
+@property (nonatomic, assign) BOOL issetBackItem;
 
 @end
 
@@ -482,8 +495,8 @@
             
             [selfObject.view bringSubviewToFront:selfObject.fwNavigationView];
             // 只初始化backItem一次，iOS14+调用多级pop方法触发viewWillAppear:时，导航栏VC堆栈顺序不对
-            if (selfObject.fwNavigationView.backItemInitialized) return;
-            selfObject.fwNavigationView.backItemInitialized = YES;
+            if (selfObject.fwNavigationView.issetBackItem) return;
+            selfObject.fwNavigationView.issetBackItem = YES;
             if (selfObject.navigationController.viewControllers.count < 2) return;
             
             UINavigationItem *navigationItem = selfObject.fwNavigationView.navigationItem;
@@ -1406,6 +1419,7 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.isImageType = NO;
+        self.object = title;
         [self setTitle:title forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self sizeToFit];
@@ -1418,6 +1432,7 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.isImageType = YES;
+        self.object = image;
         [self setTitle:nil forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self setImage:image forState:UIControlStateNormal];
