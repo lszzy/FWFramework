@@ -114,6 +114,7 @@
 @interface FWNavigationBar : UINavigationBar
 
 @property (nonatomic, weak) FWNavigationView *navigationView;
+@property (nonatomic, assign) BOOL contentLayout;
 
 @end
 
@@ -156,6 +157,15 @@
 {
     [super layoutSubviews];
     if (!self.navigationView) return;
+    
+    if (!self.contentLayout) {
+        self.contentLayout = YES;
+        [self.navigationView.contentView fwRemoveAllConstraints];
+        [self.navigationView.contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+        // iOS11+和自带contentView底部对齐，iOS11以下和navigationBar对齐
+        UIView *relativeView = self.navigationView.navigationBar.fwContentView ?: self.navigationView.navigationBar;
+        [self.navigationView.contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:relativeView];
+    }
     
     UIView *backgroundView = self.fwBackgroundView;
     backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -self.navigationView.topHeight, backgroundView.frame.size.width, self.navigationView.bounds.size.height);
@@ -294,10 +304,6 @@
         _contentView.clipsToBounds = YES;
         _contentView.hidden = (self.style == FWNavigationViewStyleDefault);
         [self.middleView addSubview:_contentView];
-        [_contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-        // iOS11+和自带contentView底部对齐，iOS11以下和navigationBar对齐
-        UIView *relativeView = self.navigationBar.fwContentView ?: self.navigationBar;
-        [_contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:relativeView];
     }
     return _contentView;
 }
