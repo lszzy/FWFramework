@@ -513,7 +513,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeImage != nil) {
+    if (self.fwThemeImage && self.fwThemeImage.fwIsThemeImage) {
         self.image = self.fwThemeImage.fwImage;
     }
 }
@@ -579,7 +579,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     if (self.fwThemeShadowColor != nil) {
         self.shadowColor = self.fwThemeShadowColor.CGColor;
     }
-    if (self.fwThemeContents != nil) {
+    if (self.fwThemeContents && self.fwThemeContents.fwIsThemeImage) {
         self.contents = (id)self.fwThemeContents.fwImage.CGImage;
     }
 }

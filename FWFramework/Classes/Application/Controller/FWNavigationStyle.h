@@ -188,17 +188,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 单独设置标题颜色，nil时显示前景颜色
 @property (nonatomic, strong, nullable) UIColor *fwTitleColor;
 
-/// 设置背景颜色(nil时透明)并隐藏底部线条，自动清空主题背景
+/// 设置背景颜色(nil时透明)并隐藏底部线条，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景图片(nil时透明)并隐藏底部线条，自动清空主题背景
+/// 设置背景图片(nil时透明)并隐藏底部线条，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
-
-/// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
-
-/// 设置主题背景图片(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
@@ -229,17 +223,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色并隐藏顶部线条，自动清空主题背景
+/// 设置背景颜色并隐藏顶部线条，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置背景图片并隐藏顶部线条，自动清空主题背景
+/// 设置背景图片并隐藏顶部线条，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
-
-/// 设置主题背景色并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
-
-/// 设置主题背景图片并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 @end
 

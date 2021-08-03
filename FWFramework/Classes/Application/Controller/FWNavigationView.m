@@ -79,6 +79,11 @@
         _middleHeight = 0;
         _bottomHeight = 0;
         
+        _backgroundView = [[UIImageView alloc] init];
+        _backgroundView.hidden = YES;
+        [self addSubview:_backgroundView];
+        [_backgroundView fwPinEdgesToSuperview];
+        
         _navigationItem = [[UINavigationItem alloc] init];
         _navigationItem.fwNavigationView = self;
         _navigationBar = [[UINavigationBar alloc] init];
@@ -178,10 +183,12 @@
     _style = style;
     if (style == FWNavigationViewStyleDefault) {
         _contentView.hidden = YES;
+        self.backgroundView.hidden = YES;
         self.navigationBar.hidden = NO;
     } else {
-        self.navigationBar.hidden = YES;
         self.contentView.hidden = NO;
+        self.backgroundView.hidden = NO;
+        self.navigationBar.hidden = YES;
     }
 }
 
