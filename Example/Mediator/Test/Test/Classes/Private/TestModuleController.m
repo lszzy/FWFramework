@@ -51,6 +51,17 @@
     return _searchBar;
 }
 
+- (UIView *)titleView
+{
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
+    [titleView fwSetDimension:NSLayoutAttributeHeight toSize:FWNavigationBarHeight];
+    titleView.fwIntrinsicContentSize = UILayoutFittingExpandedSize;
+    titleView.backgroundColor = [UIColor clearColor];
+    [titleView addSubview:self.searchBar];
+    [self.searchBar fwPinEdgesToSuperview];
+    return titleView;
+}
+
 - (NSArray *)displayData
 {
     return self.isSearch ? self.searchResult : self.tableData;
@@ -154,7 +165,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.fwBarTitle = self.searchBar;
+    self.fwBarTitle = [self titleView];
 }
 
 #pragma mark - UISearchBar

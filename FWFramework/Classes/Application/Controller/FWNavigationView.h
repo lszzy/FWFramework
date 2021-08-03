@@ -86,6 +86,9 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 当前总高度，自动计算实际显示高度，隐藏时为0
 @property (nonatomic, assign, readonly) CGFloat height;
 
+/// 设置标题视图，default样式使用navigationBar，custom样式使用contentView，不支持style动态切换
+@property (nonatomic, weak, nullable) UIView *titleView;
+
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
@@ -146,7 +149,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义左侧更多按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
 @property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
 
-/// 自定义标题视图，居中显示，自动布局。默认初始化FWNavigationTitleView，设为nil可清空
+/// 自定义标题视图，居中显示，需支持自动布局，左右最大间距为0。默认初始化FWNavigationTitleView，设为nil可清空
 @property (nonatomic, strong, nullable) __kindof UIView *titleView;
 
 /// 快速设置标题，titleView类型为FWNavigationTitleViewProtocol时才生效

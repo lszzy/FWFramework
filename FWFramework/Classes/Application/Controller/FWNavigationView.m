@@ -58,25 +58,51 @@
 - (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
 {
     [super setLeftBarButtonItems:items animated:animated];
+    self.navigationView.contentView.leftButton = nil;
+    self.navigationView.contentView.leftMoreButton = nil;
+    
+    for (UIBarButtonItem *item in items) {
+        UIView *button = [self buttonWithBarItem:item];
+        if (!button) continue;
+        if (!self.navigationView.contentView.leftButton) {
+            self.navigationView.contentView.leftButton = button;
+        } else if (!self.navigationView.contentView.leftMoreButton) {
+            self.navigationView.contentView.leftMoreButton = button;
+        }
+    }
 }
 
 - (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
 {
     [super setRightBarButtonItems:items animated:animated];
+    self.navigationView.contentView.rightButton = nil;
+    self.navigationView.contentView.rightMoreButton = nil;
+    
+    for (UIBarButtonItem *item in items) {
+        UIView *button = [self buttonWithBarItem:item];
+        if (!button) continue;
+        if (!self.navigationView.contentView.rightButton) {
+            self.navigationView.contentView.rightButton = button;
+        } else if (!self.navigationView.contentView.rightMoreButton) {
+            self.navigationView.contentView.rightMoreButton = button;
+        }
+    }
 }
 
 - (UIView *)buttonWithBarItem:(UIBarButtonItem *)barItem
 {
     if (!barItem) return nil;
-    // TODO: 兼容customView
-    if (barItem.customView) return barItem.customView;
-    // TODO: 事件处理
-    return [[FWNavigationButton alloc] initWithObject:barItem.fwObject];
-}
-
-- (void)updateLayout
-{
     
+    // TODO: 兼容customView
+    if (barItem.customView) {
+        
+        return barItem.customView;
+    }
+    
+    // 直接触发barItem的响应事件即可
+    UIButton *button = [[FWNavigationButton alloc] initWithObject:barItem.fwObject];
+    [button fwAddTouchTarget:barItem.target action:barItem.action];
+    return button;
 }
 
 @end
@@ -174,7 +200,6 @@
         _navigationBar.delegate = self;
         _navigationBar.items = @[_navigationItem];
         _middleView = [[UIView alloc] init];
-        _middleView.clipsToBounds = YES;
         [_middleView addSubview:_navigationBar];
         [_navigationBar fwPinEdgesToSuperview];
         [self addSubview:_middleView];
@@ -271,12 +296,10 @@
         _contentView.hidden = YES;
         self.backgroundView.hidden = YES;
         self.navigationBar.hidden = NO;
-        [(FWNavigationItem *)self.navigationItem updateLayout];
     } else {
         self.contentView.hidden = NO;
         self.backgroundView.hidden = NO;
         self.navigationBar.hidden = YES;
-        [(FWNavigationItem *)self.navigationItem updateLayout];
     }
 }
 
@@ -368,6 +391,17 @@
 }
 
 #pragma mark - Public
+
+- (void)setTitleView:(UIView *)titleView
+{
+    _titleView = titleView;
+    
+    if (self.style == FWNavigationBarStyleDefault) {
+        self.navigationItem.titleView = titleView;
+    } else {
+        self.contentView.titleView = titleView;
+    }
+}
 
 - (void)setViewController:(UIViewController *)viewController
 {
@@ -621,10 +655,14 @@
     if (leftButton) {
         [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:8]];
         [subviewContraints addObject:[leftButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
     }
     if (leftMoreButton) {
         [subviewContraints addObject:[leftMoreButton fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton withOffset:8]];
         [subviewContraints addObject:[leftMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
     }
     
     UIView *rightButton = self.rightButton ?: self.rightMoreButton;
@@ -632,16 +670,22 @@
     if (rightButton) {
         [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:8]];
         [subviewContraints addObject:[rightButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
     }
     if (rightMoreButton) {
         [subviewContraints addObject:[rightMoreButton fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton withOffset:-8]];
         [subviewContraints addObject:[rightMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
     }
     
     UIView *titleView = self.titleView;
     if (titleView) {
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
+        [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         
         UIView *titleLeftButton = leftMoreButton ?: leftButton;
         if (titleLeftButton) {
