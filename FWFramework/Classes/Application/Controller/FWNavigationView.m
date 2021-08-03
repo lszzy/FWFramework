@@ -114,7 +114,6 @@
 @interface FWNavigationBar : UINavigationBar
 
 @property (nonatomic, weak) FWNavigationView *navigationView;
-@property (nonatomic, assign) BOOL contentLayout;
 
 @end
 
@@ -156,16 +155,6 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    if (!self.navigationView) return;
-    
-    if (!self.contentLayout) {
-        self.contentLayout = YES;
-        [self.navigationView.contentView fwRemoveAllConstraints];
-        [self.navigationView.contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-        // iOS11+和自带contentView底部对齐，iOS11以下和navigationBar对齐
-        UIView *relativeView = self.navigationView.navigationBar.fwContentView ?: self.navigationView.navigationBar;
-        [self.navigationView.contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:relativeView];
-    }
     
     UIView *backgroundView = self.fwBackgroundView;
     backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -self.navigationView.topHeight, backgroundView.frame.size.width, self.navigationView.bounds.size.height);
@@ -183,12 +172,14 @@
 @property (nonatomic, strong) NSLayoutConstraint *topConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *middleConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *contentConstraint;
 
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
 @property (nonatomic, strong) NSNumber *statusBarHidden;
 @property (nonatomic, assign) CGFloat bottomMaxHeight;
 @property (nonatomic, assign) BOOL issetBackItem;
+@property (nonatomic, assign) BOOL issetContentLayout;
 
 @end
 
@@ -265,6 +256,34 @@
     BOOL middleHidden = self.isHidden || self.middleHidden;
     self.middleConstraint.constant = middleHidden ? 0 : _middleHeight;
     self.middleConstraint.active = middleHidden || _middleHeight > 0;
+    [self updateContent:NO];
+}
+
+- (void)updateContent:(BOOL)forceLayout
+{
+    if (!_contentView) return;
+    if (forceLayout) [self.contentView setNeedsUpdateConstraints];
+    if (self.issetContentLayout) return;
+    
+    // iOS11+获取到contentView时和自带contentView底部对齐
+    UIView *relativeView = self.navigationBar.fwContentView;
+    if (relativeView) {
+        self.issetContentLayout = YES;
+        self.contentConstraint.active = NO;
+        self.contentConstraint = nil;
+        self.contentView.frame = relativeView.bounds;
+        [self.contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:relativeView];
+        return;
+    }
+    
+    // iOS11以下或者contentView还未初始化时和navigationBar对齐
+    if (@available(iOS 11.0, *)) {
+        if (self.contentConstraint) return;
+    } else {
+        self.issetContentLayout = YES;
+    }
+    self.contentView.frame = self.navigationBar.bounds;
+    self.contentConstraint = [self.contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:self.navigationBar];
 }
 
 #pragma mark - Accessor
@@ -304,6 +323,8 @@
         _contentView.clipsToBounds = YES;
         _contentView.hidden = (self.style == FWNavigationViewStyleDefault);
         [self.middleView addSubview:_contentView];
+        [_contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+        [self updateContent:NO];
     }
     return _contentView;
 }
@@ -481,7 +502,6 @@
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            selfObject.fwNavigationView.viewController = selfObject;
             BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwView];
@@ -493,6 +513,8 @@
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
+            
+            selfObject.fwNavigationView.viewController = selfObject;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
@@ -529,6 +551,7 @@
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                 [selfObject.fwNavigationView updateLayout];
+                [selfObject.fwNavigationView updateContent:YES];
             } completion:nil];
         }));
     });
@@ -668,6 +691,11 @@
         self.subviewContraints = nil;
     }
     
+    CGFloat leftWidth = 0;
+    CGFloat rightWidth = 0;
+    CGSize fitsSize = CGSizeMake(self.bounds.size.width ?: UIScreen.mainScreen.bounds.size.width, CGFLOAT_MAX);
+    BOOL hasTitleView = [self.titleView isKindOfClass:[FWNavigationTitleView class]];
+    
     NSMutableArray *subviewContraints = [NSMutableArray array];
     UIView *leftButton = self.leftButton ?: self.leftMoreButton;
     UIView *leftMoreButton = self.leftButton && self.leftMoreButton ? self.leftMoreButton : nil;
@@ -676,12 +704,20 @@
         [subviewContraints addObject:[leftButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        if (hasTitleView) {
+            CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
+            leftWidth += 8 + buttonWidth + 8;
+        }
     }
     if (leftMoreButton) {
         [subviewContraints addObject:[leftMoreButton fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton withOffset:8]];
         [subviewContraints addObject:[leftMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        if (hasTitleView) {
+            CGFloat buttonWidth = leftMoreButton.frame.size.width ?: [leftMoreButton sizeThatFits:fitsSize].width;
+            leftWidth += buttonWidth + 8;
+        }
     }
     
     UIView *rightButton = self.rightButton ?: self.rightMoreButton;
@@ -691,15 +727,23 @@
         [subviewContraints addObject:[rightButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        if (hasTitleView) {
+            CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
+            rightWidth += 8 + buttonWidth + 8;
+        }
     }
     if (rightMoreButton) {
         [subviewContraints addObject:[rightMoreButton fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton withOffset:-8]];
         [subviewContraints addObject:[rightMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        if (hasTitleView) {
+            CGFloat buttonWidth = rightMoreButton.frame.size.width ?: [rightMoreButton sizeThatFits:fitsSize].width;
+            rightWidth += 8 + buttonWidth;
+        }
     }
     
-    UIView *titleView = self.titleView;
+    FWNavigationTitleView *titleView = (FWNavigationTitleView *)self.titleView;
     if (titleView) {
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
@@ -718,6 +762,11 @@
             [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:titleRightButton withOffset:-8 relation:NSLayoutRelationLessThanOrEqual]];
         } else {
             [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+        }
+        
+        // 仅FWNavigationTitleView必须设置最大宽度，其它自定义视图使用自动布局方式即可
+        if (hasTitleView) {
+            titleView.maximumWidth = fitsSize.width - MAX(leftWidth, rightWidth) * 2;
         }
     }
     self.subviewContraints = subviewContraints;
@@ -1234,8 +1283,8 @@
 }
 
 - (void)layoutSubviews {
-    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) return;
     [super layoutSubviews];
+    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) return;
     self.contentView.frame = self.bounds;
     
     BOOL alignLeft = self.contentHorizontalAlignment == UIControlContentHorizontalAlignmentLeft;

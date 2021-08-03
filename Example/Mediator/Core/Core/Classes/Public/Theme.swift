@@ -129,13 +129,13 @@ extension Theme {
         viewController.automaticallyAdjustsScrollViewInsets = false
         viewController.hidesBottomBarWhenPushed = true
         viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
-        viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
         viewController.fwNavigationBarStyle = .default
         viewController.fwForcePopGesture = true
     }
     
     func viewControllerLoadView(_ viewController: UIViewController) {
         viewController.view.backgroundColor = Theme.tableColor
+        viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
     }
     
     func viewControllerViewDidLoad(_ viewController: UIViewController) {
