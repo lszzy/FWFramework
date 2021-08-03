@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  *
  * 自定义导航栏视图结构如下：
  * 顶部：延迟加载topView，高度为topHeight，可设置topHidden显示或隐藏
- * 中间：初始加载middleView，高度为middelHeight，请勿调用显示或隐藏
+ * 中间：初始加载middleView，高度为middelHeight，可设置middleHidden显示或隐藏
  *     navigationBar: 高度同middleHeight，default样式时显示，兼容FWNavigationStyle方法
  *     contentView: 高度为contentHeight，custom样式时显示，内容完全自定义
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
@@ -41,6 +41,9 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 当前导航栏样式，默认default，设置后自动显示navigationBar或contentView
 @property (nonatomic, assign) FWNavigationViewStyle style;
 
+/// 背景视图，仅custom样式时显示，default样式请使用navigationBar设置背景
+@property (nonatomic, strong, readonly) UIImageView *backgroundView;
+
 /// 顶部视图，延迟加载，默认不加载
 @property (nonatomic, strong, readonly) UIView *topView;
 
@@ -52,6 +55,9 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 /// 中间视图，初始加载，默认高度跟随navigationBar自适应
 @property (nonatomic, strong, readonly) UIView *middleView;
+
+/// 中间视图是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL middleHidden;
 
 /// 中间视图高度，隐藏时自动收起，默认0自适应，非0时固定高度。绑定控制器后自动跟随系统导航栏变化
 @property (nonatomic, assign) CGFloat middleHeight;

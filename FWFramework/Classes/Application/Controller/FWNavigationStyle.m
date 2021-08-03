@@ -204,11 +204,7 @@
         [self.fwNavigationBar fwSetBackgroundTransparent];
     }
     if (appearance.backgroundColor) {
-        if (appearance.backgroundColor.fwIsThemeColor) {
-            self.fwNavigationBar.fwThemeBackgroundColor = appearance.backgroundColor;
-        } else {
-            self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
-        }
+        self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
         
         // 自定义导航栏
         if (self.fwNavigationViewEnabled) {
@@ -216,11 +212,7 @@
         }
     }
     if (appearance.backgroundImage) {
-        if (appearance.backgroundImage.fwIsThemeImage) {
-            self.fwNavigationBar.fwThemeBackgroundImage = appearance.backgroundImage;
-        } else {
-            self.fwNavigationBar.fwBackgroundImage = appearance.backgroundImage;
-        }
+        self.fwNavigationBar.fwBackgroundImage = appearance.backgroundImage;
     }
     if (appearance.foregroundColor) {
         self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
@@ -845,8 +837,7 @@
 
 - (void)setFwBackgroundColor:(UIColor *)color
 {
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
@@ -860,37 +851,8 @@
 
 - (void)setFwBackgroundImage:(UIImage *)backgroundImage
 {
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    UIImage *image = backgroundImage ?: [UIImage new];
-    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
-    [self setShadowImage:[UIImage new]];
-}
-
-- (UIColor *)fwThemeBackgroundColor
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
-}
-
-- (void)setFwThemeBackgroundColor:(UIColor *)color
-{
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
-    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
-    [self setShadowImage:[UIImage new]];
-}
-
-- (UIImage *)fwThemeBackgroundImage
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
-}
-
-- (void)setFwThemeBackgroundImage:(UIImage *)backgroundImage
-{
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = backgroundImage.fwImage ?: [UIImage new];
     [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
@@ -898,8 +860,8 @@
 
 - (void)fwSetBackgroundTransparent
 {
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:[UIImage new]];
 }
@@ -908,14 +870,14 @@
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeBackgroundColor != nil) {
-        UIImage *image = [UIImage fwImageWithColor:self.fwThemeBackgroundColor] ?: [UIImage new];
+    if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
+        UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
     
-    if (self.fwThemeBackgroundImage != nil) {
-        UIImage *image = self.fwThemeBackgroundImage.fwImage ?: [UIImage new];
+    if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
+        UIImage *image = self.fwBackgroundImage.fwImage ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
@@ -972,8 +934,7 @@
 
 - (void)setFwBackgroundColor:(UIColor *)color
 {
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.backgroundImage = [UIImage fwImageWithColor:color];
     self.shadowImage = [UIImage new];
@@ -986,35 +947,8 @@
 
 - (void)setFwBackgroundImage:(UIImage *)image
 {
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.backgroundImage = image;
-    self.shadowImage = [UIImage new];
-}
-
-- (UIColor *)fwThemeBackgroundColor
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundColor));
-}
-
-- (void)setFwThemeBackgroundColor:(UIColor *)color
-{
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.backgroundImage = [UIImage fwImageWithColor:color];
-    self.shadowImage = [UIImage new];
-}
-
-- (UIImage *)fwThemeBackgroundImage
-{
-    return objc_getAssociatedObject(self, @selector(fwThemeBackgroundImage));
-}
-
-- (void)setFwThemeBackgroundImage:(UIImage *)image
-{
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwThemeBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.backgroundImage = image.fwImage;
     self.shadowImage = [UIImage new];
 }
@@ -1023,13 +957,13 @@
 {
     [super fwThemeChanged:style];
     
-    if (self.fwThemeBackgroundColor != nil) {
-        self.backgroundImage = [UIImage fwImageWithColor:self.fwThemeBackgroundColor];
+    if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
+        self.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
         self.shadowImage = [UIImage new];
     }
     
-    if (self.fwThemeBackgroundImage != nil) {
-        self.backgroundImage = self.fwThemeBackgroundImage.fwImage;
+    if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
+        self.backgroundImage = self.fwBackgroundImage.fwImage;
         self.shadowImage = [UIImage new];
     }
 }
