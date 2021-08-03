@@ -340,11 +340,27 @@
 
 - (id)fwBarTitle
 {
+    // 自定义导航栏
+    if (self.fwNavigationViewEnabled) {
+        return self.fwNavigationView.titleView ?: self.fwNavigationItem.title;
+    }
+    
+    // 系统导航栏
     return self.fwNavigationItem.titleView ?: self.fwNavigationItem.title;
 }
 
 - (void)setFwBarTitle:(id)title
 {
+    // 自定义导航栏
+    if (self.fwNavigationViewEnabled) {
+        if ([title isKindOfClass:[UIView class]]) {
+            self.fwNavigationView.titleView = title;
+        } else {
+            self.fwNavigationItem.title = title;
+        }
+        return;
+    }
+    
     if ([title isKindOfClass:[UIView class]]) {
         self.fwNavigationItem.titleView = title;
     } else {
