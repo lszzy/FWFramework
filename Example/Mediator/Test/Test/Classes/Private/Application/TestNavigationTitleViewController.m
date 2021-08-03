@@ -166,11 +166,11 @@
             break;
         case 8:
         {
-            if (self.fwNavigationView.style == FWNavigationViewStyleDefault) {
-                self.fwNavigationView.style = FWNavigationViewStyleCustom;
+            if (self.fwNavigationView.contentView.backgroundColor != UIColor.yellowColor) {
                 self.fwNavigationView.contentView.backgroundColor = UIColor.yellowColor;
+                self.fwNavigationView.style = FWNavigationViewStyleCustom;
             } else {
-                self.fwNavigationView.style = FWNavigationViewStyleDefault;
+                self.fwNavigationView.style = self.fwNavigationView.style == FWNavigationViewStyleDefault ? FWNavigationViewStyleCustom : FWNavigationViewStyleDefault;
             }
         }
             break;
@@ -182,7 +182,7 @@
         case 10:
         {
             self.fwNavigationView.bottomHidden = !self.fwNavigationView.bottomHidden;
-            self.fwNavigationView.bottomHeight = UINavigationBar.fwLargeTitleHeight;
+            self.fwNavigationView.bottomHeight = 100;
         }
             break;
         case 11:

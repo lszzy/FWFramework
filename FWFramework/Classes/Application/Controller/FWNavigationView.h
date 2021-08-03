@@ -100,7 +100,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 #pragma mark - UIViewController+FWNavigationView
 
 /**
- * 控制器自定义导航栏分类
+ * 控制器自定义导航栏分类，建议loadView之后再调用fwNavigationView相关属性
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
  * 注意：启用自定义导航栏后，自动绑定控制器，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
