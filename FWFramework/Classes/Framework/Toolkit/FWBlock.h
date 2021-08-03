@@ -181,6 +181,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等
 + (instancetype)fwBarItemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
 
+/// 返回使用object方式创建Item的实际对象，不支持UIView(请使用customView)，默认nil
+@property (nonatomic, strong, readonly, nullable) id fwObject;
+
 /// 设置当前Item触发句柄，nil时清空句柄
 - (void)fwSetBlock:(nullable void (^)(id sender))block;
 
