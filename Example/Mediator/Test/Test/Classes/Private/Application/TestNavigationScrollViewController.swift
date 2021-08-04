@@ -46,6 +46,7 @@ class TestNavigationTitleLabel: UILabel, FWNavigationTitleViewProtocol {
     
     override func renderView() {
         tableView.backgroundColor = Theme.tableColor
+        tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top
         tableView.fwSetRefreshingTarget(self, action: #selector(onRefreshing))
     }
     
@@ -103,7 +104,7 @@ class TestNavigationTitleLabel: UILabel, FWNavigationTitleViewProtocol {
     // MARK: - Action
     @objc func onRefreshing() {
         NSLog("开始刷新")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             NSLog("刷新完成")
             self?.tableView.reloadData()
             self?.tableView.fwEndRefreshing()
