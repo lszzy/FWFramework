@@ -516,12 +516,14 @@ NSString * FWWebViewJsBridge_js() {
                     responseCallback = function(responseData) {
                         _doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
                     };
+                } else {
+                    responseCallback = function(ignoreResponseData) {};
                 }
                 
                 var handler = messageHandlers[message.handlerName];
                 if (!handler) {
                     console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
-                    if (!!errorHandler) {
+                    if (errorHandler) {
                         errorHandler(message.handlerName, message.data, responseCallback);
                     }
                 } else {
