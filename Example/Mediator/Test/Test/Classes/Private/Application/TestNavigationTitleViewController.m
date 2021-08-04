@@ -10,7 +10,7 @@
 
 @interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate, FWPopupMenuDelegate>
 
-@property(nullable, nonatomic, strong) FWNavigationTitleView *titleView;
+@property(nonatomic, strong) FWNavigationTitleView *titleView;
 @property(nonatomic, assign) UIControlContentHorizontalAlignment horizontalAlignment;
 
 @end
@@ -24,10 +24,11 @@
 
 - (void)renderView
 {
-    self.titleView = [[FWNavigationTitleView alloc] init];
-    self.titleView.showsLoadingView = YES;
-    self.titleView.title = self.title;
-    self.fwBarTitle = self.titleView;
+    FWNavigationTitleView *titleView = [[FWNavigationTitleView alloc] init];
+    self.titleView = titleView;
+    titleView.showsLoadingView = YES;
+    self.fwBarTitle = titleView;
+    self.fwNavigationItem.title = @"我是很长很长要多长有多长长得不得了的按钮";
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 300)];
     
@@ -70,11 +71,6 @@
             @"导航栏滚动效果切换",
         ]];
     }
-}
-
-- (void)dealloc
-{
-    self.titleView.delegate = nil;
 }
 
 - (UIImage *)accessoryImage
