@@ -257,6 +257,7 @@
     self.middleConstraint.constant = middleHidden ? 0 : _middleHeight;
     self.middleConstraint.active = middleHidden || _middleHeight > 0;
     [self updateContent:NO];
+    [self invalidateIntrinsicContentSize];
 }
 
 - (void)updateContent:(BOOL)forceLayout
@@ -284,6 +285,17 @@
     }
     self.contentView.frame = self.navigationBar.bounds;
     self.contentConstraint = [self.contentView fwPinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:self.navigationBar];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    return CGSizeMake(size.width, self.height);
+}
+
+- (CGSize)intrinsicContentSize
+{
+    CGFloat width = CGRectGetWidth(self.bounds) ?: UIScreen.mainScreen.bounds.size.width;
+    return [self sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
 }
 
 #pragma mark - Accessor
