@@ -314,9 +314,6 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 /// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
 @property (nonatomic, assign) BOOL adjustsTintColor;
 
-/// 获取创建按钮时的实际对象，默认nil
-@property (nonatomic, strong, nullable) id object;
-
 /// 初始化标题类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithTitle:(nullable NSString *)title;
 
