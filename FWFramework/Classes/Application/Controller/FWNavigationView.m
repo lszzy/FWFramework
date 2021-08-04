@@ -27,139 +27,9 @@
 
 @end
 
-@implementation FWNavigationItem
-
-- (void)setTitle:(NSString *)title
-{
-    [super setTitle:title];
-    self.navigationView.contentView.title = title;
-}
-
-- (void)setBackBarButtonItem:(UIBarButtonItem *)item
-{
-    [super setBackBarButtonItem:item];
-    self.navigationView.contentView.backButton = [self buttonWithBarItem:item];
-}
-
-- (void)setLeftBarButtonItem:(UIBarButtonItem *)item
-{
-    [super setLeftBarButtonItem:item];
-    self.navigationView.contentView.leftButton = [self buttonWithBarItem:item];
-    self.navigationView.contentView.leftMoreButton = nil;
-}
-
-- (void)setRightBarButtonItem:(UIBarButtonItem *)item
-{
-    [super setRightBarButtonItem:item];
-    self.navigationView.contentView.rightButton = [self buttonWithBarItem:item];
-    self.navigationView.contentView.rightMoreButton = nil;
-}
-
-- (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
-{
-    [super setLeftBarButtonItems:items animated:animated];
-    self.navigationView.contentView.leftButton = nil;
-    self.navigationView.contentView.leftMoreButton = nil;
-    
-    for (UIBarButtonItem *item in items) {
-        UIView *button = [self buttonWithBarItem:item];
-        if (!button) continue;
-        if (!self.navigationView.contentView.leftButton) {
-            self.navigationView.contentView.leftButton = button;
-        } else if (!self.navigationView.contentView.leftMoreButton) {
-            self.navigationView.contentView.leftMoreButton = button;
-        }
-    }
-}
-
-- (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
-{
-    [super setRightBarButtonItems:items animated:animated];
-    self.navigationView.contentView.rightButton = nil;
-    self.navigationView.contentView.rightMoreButton = nil;
-    
-    for (UIBarButtonItem *item in items) {
-        UIView *button = [self buttonWithBarItem:item];
-        if (!button) continue;
-        if (!self.navigationView.contentView.rightButton) {
-            self.navigationView.contentView.rightButton = button;
-        } else if (!self.navigationView.contentView.rightMoreButton) {
-            self.navigationView.contentView.rightMoreButton = button;
-        }
-    }
-}
-
-- (UIView *)buttonWithBarItem:(UIBarButtonItem *)barItem
-{
-    if (!barItem) return nil;
-    
-    // 指定customView时只支持UIButton
-    id object = nil;
-    if (barItem.customView) {
-        UIButton *customButton = (UIButton *)barItem.customView;
-        if (![customButton isKindOfClass:[UIButton class]]) return nil;
-        object = [customButton imageForState:UIControlStateNormal] ?: [customButton titleForState:UIControlStateNormal];
-    // 未指定customView时支持image和title
-    } else {
-        object = barItem.image ?: barItem.title;
-    }
-    
-    // 创建新的按钮，直接触发barItem的响应事件即可
-    UIButton *button = [[FWNavigationButton alloc] initWithObject:object];
-    [button fwAddTouchTarget:barItem.target action:barItem.action];
-    return button;
-}
-
-@end
-
 @interface FWNavigationBar : UINavigationBar
 
 @property (nonatomic, weak) FWNavigationView *navigationView;
-
-@end
-
-@implementation FWNavigationBar
-
-- (void)setFwForegroundColor:(UIColor *)color
-{
-    [super setFwForegroundColor:color];
-    self.navigationView.contentView.tintColor = color;
-}
-
-- (void)setFwTitleColor:(UIColor *)color
-{
-    [super setFwTitleColor:color];
-    self.navigationView.contentView.titleView.tintColor = color;
-}
-
-- (void)setFwBackgroundColor:(UIColor *)color
-{
-    [super setFwBackgroundColor:color];
-    self.navigationView.backgroundView.fwThemeImage = nil;
-    self.navigationView.backgroundView.backgroundColor = color;
-}
-
-- (void)setFwBackgroundImage:(UIImage *)image
-{
-    [super setFwBackgroundImage:image];
-    self.navigationView.backgroundView.fwThemeImage = image;
-    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
-}
-
-- (void)fwSetBackgroundTransparent
-{
-    [super fwSetBackgroundTransparent];
-    self.navigationView.backgroundView.fwThemeImage = nil;
-    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    UIView *backgroundView = self.fwBackgroundView;
-    backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -self.navigationView.topHeight, backgroundView.frame.size.width, self.navigationView.bounds.size.height);
-}
 
 @end
 
@@ -257,7 +127,6 @@
     BOOL middleHidden = self.isHidden || self.middleHidden;
     self.middleConstraint.constant = middleHidden ? 0 : _middleHeight;
     self.middleConstraint.active = middleHidden || _middleHeight > 0;
-    [self updateContent:NO];
     [self invalidateIntrinsicContentSize];
 }
 
@@ -483,6 +352,137 @@
     CGFloat bottomHeight = MIN(MAX(0, maxHeight - scrollView.contentOffset.y), maxHeight);
     _bottomHeight = bottomHeight;
     [self updateLayout];
+}
+
+@end
+
+@implementation FWNavigationItem
+
+- (void)setTitle:(NSString *)title
+{
+    [super setTitle:title];
+    self.navigationView.contentView.title = title;
+}
+
+- (void)setBackBarButtonItem:(UIBarButtonItem *)item
+{
+    [super setBackBarButtonItem:item];
+    self.navigationView.contentView.backButton = [self buttonWithBarItem:item];
+}
+
+- (void)setLeftBarButtonItem:(UIBarButtonItem *)item
+{
+    [super setLeftBarButtonItem:item];
+    self.navigationView.contentView.leftButton = [self buttonWithBarItem:item];
+    self.navigationView.contentView.leftMoreButton = nil;
+}
+
+- (void)setRightBarButtonItem:(UIBarButtonItem *)item
+{
+    [super setRightBarButtonItem:item];
+    self.navigationView.contentView.rightButton = [self buttonWithBarItem:item];
+    self.navigationView.contentView.rightMoreButton = nil;
+}
+
+- (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
+{
+    [super setLeftBarButtonItems:items animated:animated];
+    self.navigationView.contentView.leftButton = nil;
+    self.navigationView.contentView.leftMoreButton = nil;
+    
+    for (UIBarButtonItem *item in items) {
+        UIView *button = [self buttonWithBarItem:item];
+        if (!button) continue;
+        if (!self.navigationView.contentView.leftButton) {
+            self.navigationView.contentView.leftButton = button;
+        } else if (!self.navigationView.contentView.leftMoreButton) {
+            self.navigationView.contentView.leftMoreButton = button;
+        }
+    }
+}
+
+- (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)items animated:(BOOL)animated
+{
+    [super setRightBarButtonItems:items animated:animated];
+    self.navigationView.contentView.rightButton = nil;
+    self.navigationView.contentView.rightMoreButton = nil;
+    
+    for (UIBarButtonItem *item in items) {
+        UIView *button = [self buttonWithBarItem:item];
+        if (!button) continue;
+        if (!self.navigationView.contentView.rightButton) {
+            self.navigationView.contentView.rightButton = button;
+        } else if (!self.navigationView.contentView.rightMoreButton) {
+            self.navigationView.contentView.rightMoreButton = button;
+        }
+    }
+}
+
+- (UIView *)buttonWithBarItem:(UIBarButtonItem *)barItem
+{
+    if (!barItem) return nil;
+    
+    // 指定customView时只支持UIButton
+    id object = nil;
+    if (barItem.customView) {
+        UIButton *customButton = (UIButton *)barItem.customView;
+        if (![customButton isKindOfClass:[UIButton class]]) return nil;
+        object = [customButton imageForState:UIControlStateNormal] ?: [customButton titleForState:UIControlStateNormal];
+    // 未指定customView时支持image和title
+    } else {
+        object = barItem.image ?: barItem.title;
+    }
+    
+    // 创建新的按钮，直接触发barItem的响应事件即可
+    UIButton *button = [[FWNavigationButton alloc] initWithObject:object];
+    [button fwAddTouchTarget:barItem.target action:barItem.action];
+    return button;
+}
+
+@end
+
+@implementation FWNavigationBar
+
+- (void)setFwForegroundColor:(UIColor *)color
+{
+    [super setFwForegroundColor:color];
+    self.navigationView.contentView.tintColor = color;
+}
+
+- (void)setFwTitleColor:(UIColor *)color
+{
+    [super setFwTitleColor:color];
+    self.navigationView.contentView.titleView.tintColor = color;
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    [super setFwBackgroundColor:color];
+    self.navigationView.backgroundView.fwThemeImage = nil;
+    self.navigationView.backgroundView.backgroundColor = color;
+}
+
+- (void)setFwBackgroundImage:(UIImage *)image
+{
+    [super setFwBackgroundImage:image];
+    self.navigationView.backgroundView.fwThemeImage = image;
+    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
+}
+
+- (void)fwSetBackgroundTransparent
+{
+    [super fwSetBackgroundTransparent];
+    self.navigationView.backgroundView.fwThemeImage = nil;
+    self.navigationView.backgroundView.backgroundColor = UIColor.clearColor;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self.navigationView updateContent:NO];
+    
+    UIView *backgroundView = self.fwBackgroundView;
+    backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -self.navigationView.topHeight, backgroundView.frame.size.width, self.navigationView.bounds.size.height);
 }
 
 @end
