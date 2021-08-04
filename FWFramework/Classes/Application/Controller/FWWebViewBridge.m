@@ -114,7 +114,7 @@ static int logMaxLength = 500;
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
                 if (self.errorHandler) {
-                    self.errorHandler(message);
+                    self.errorHandler(message[@"handlerName"], message[@"data"], responseCallback);
                 }
                 continue;
             }
@@ -281,7 +281,7 @@ static int logMaxLength = 500;
     [_base.messageHandlers removeObjectForKey:handlerName];
 }
 
-- (void)setErrorHandler:(void (^)(FWJsBridgeMessage *))handler {
+- (void)setErrorHandler:(FWJsBridgeErrorHandler)handler {
     _base.errorHandler = handler;
 }
 
