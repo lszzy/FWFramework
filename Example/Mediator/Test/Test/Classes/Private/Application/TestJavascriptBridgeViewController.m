@@ -13,8 +13,10 @@
 
 - (void)renderWebBridge:(FWWebViewJsBridge *)bridge {
     [FWWebViewJsBridge enableLogging];
-    [bridge setErrorHandler:^(FWJsBridgeMessage * _Nonnull message) {
-        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"handler undefined: %@", message]];
+    [bridge setErrorHandler:^(NSString *handlerName, id data, FWJsBridgeResponseCallback responseCallback) {
+        [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"handler %@ undefined: %@", handlerName, data] style:FWToastStyleDefault completion:^{
+            responseCallback(@"Response from errorHandler");
+        }];
     }];
     [bridge registerHandler:@"testObjcCallback" handler:^(id data, FWJsBridgeResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
