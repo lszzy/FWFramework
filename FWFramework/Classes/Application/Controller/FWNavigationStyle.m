@@ -476,6 +476,7 @@
             backItem = [UIBarButtonItem fwBarItemWithObject:(object ?: [UIImage new]) target:nil action:nil];
         }
         self.fwNavigationItem.backBarButtonItem = backItem;
+        self.fwNavigationBar.fwBackImage = nil;
         return;
     }
     
