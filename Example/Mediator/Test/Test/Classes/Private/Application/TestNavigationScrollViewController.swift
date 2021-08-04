@@ -8,12 +8,29 @@
 
 import FWFramework
 
+class TestNavigationTitleLabel: UILabel, FWNavigationTitleViewProtocol {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        font = UIFont.boldSystemFont(ofSize: 17)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var title: String? {
+        get { return text }
+        set { text = newValue }
+    }
+}
+
 @objcMembers class TestNavigationScrollViewController: TestViewController, FWTableViewController {
     private lazy var navigationView: FWNavigationView = {
         let navigationView = FWNavigationView()
         navigationView.style = .custom
-        navigationView.contentView.title = "FWNavigationView+Scroll"
         navigationView.backgroundColor = Theme.barColor
+        navigationView.contentView.titleView = TestNavigationTitleLabel()
+        navigationView.contentView.title = "我是很长很长要多长有多长长得不得了的按钮"
         navigationView.contentView.tintColor = Theme.textColor
         let leftButton = FWNavigationButton(image: CoreBundle.imageNamed("back"))
         leftButton.fwAddTouch { sender in

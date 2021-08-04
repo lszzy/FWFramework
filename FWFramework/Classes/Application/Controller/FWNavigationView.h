@@ -131,8 +131,6 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 #pragma mark - FWNavigationContentView
 
-@class FWNavigationTitleView;
-
 /**
  * 自定义导航栏内容视图，支持完全自定义
  *
@@ -174,6 +172,8 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 @property(nonatomic, copy, nullable) NSString *title;
 
 @end
+
+@class FWNavigationTitleView;
 
 /// 自定义titleView事件代理
 @protocol FWNavigationTitleViewDelegate <NSObject>

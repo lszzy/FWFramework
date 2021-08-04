@@ -289,13 +289,13 @@
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-    return CGSizeMake(size.width, self.height);
+    CGFloat maxWidth = CGRectGetWidth(self.bounds) ?: UIScreen.mainScreen.bounds.size.width;
+    return CGSizeMake(MIN(size.width, maxWidth), self.height);
 }
 
 - (CGSize)intrinsicContentSize
 {
-    CGFloat width = CGRectGetWidth(self.bounds) ?: UIScreen.mainScreen.bounds.size.width;
-    return [self sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
+    return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
 }
 
 #pragma mark - Accessor
@@ -703,12 +703,9 @@
         self.subviewContraints = nil;
     }
     
-    CGFloat leftWidth = 0;
-    CGFloat rightWidth = 0;
-    CGSize fitsSize = CGSizeMake(self.bounds.size.width ?: UIScreen.mainScreen.bounds.size.width, CGFLOAT_MAX);
-    BOOL hasTitleView = [self.titleView isKindOfClass:[FWNavigationTitleView class]];
-    
     NSMutableArray *subviewContraints = [NSMutableArray array];
+    CGSize fitsSize = CGSizeMake(self.bounds.size.width ?: UIScreen.mainScreen.bounds.size.width, CGFLOAT_MAX);
+    CGFloat leftWidth = 0;
     UIView *leftButton = self.leftButton ?: self.leftMoreButton;
     UIView *leftMoreButton = self.leftButton && self.leftMoreButton ? self.leftMoreButton : nil;
     if (leftButton) {
@@ -716,22 +713,19 @@
         [subviewContraints addObject:[leftButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[leftButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        if (hasTitleView) {
-            CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
-            leftWidth += 8 + buttonWidth + 8;
-        }
+        CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
+        leftWidth += 8 + buttonWidth + 8;
     }
     if (leftMoreButton) {
         [subviewContraints addObject:[leftMoreButton fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton withOffset:8]];
         [subviewContraints addObject:[leftMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[leftMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        if (hasTitleView) {
-            CGFloat buttonWidth = leftMoreButton.frame.size.width ?: [leftMoreButton sizeThatFits:fitsSize].width;
-            leftWidth += buttonWidth + 8;
-        }
+        CGFloat buttonWidth = leftMoreButton.frame.size.width ?: [leftMoreButton sizeThatFits:fitsSize].width;
+        leftWidth += buttonWidth + 8;
     }
     
+    CGFloat rightWidth = 0;
     UIView *rightButton = self.rightButton ?: self.rightMoreButton;
     UIView *rightMoreButton = self.rightButton && self.rightMoreButton ? self.rightMoreButton : nil;
     if (rightButton) {
@@ -739,47 +733,26 @@
         [subviewContraints addObject:[rightButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[rightButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        if (hasTitleView) {
-            CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
-            rightWidth += 8 + buttonWidth + 8;
-        }
+        CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
+        rightWidth += 8 + buttonWidth + 8;
     }
     if (rightMoreButton) {
         [subviewContraints addObject:[rightMoreButton fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton withOffset:-8]];
         [subviewContraints addObject:[rightMoreButton fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[rightMoreButton fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        if (hasTitleView) {
-            CGFloat buttonWidth = rightMoreButton.frame.size.width ?: [rightMoreButton sizeThatFits:fitsSize].width;
-            rightWidth += 8 + buttonWidth;
-        }
+        CGFloat buttonWidth = rightMoreButton.frame.size.width ?: [rightMoreButton sizeThatFits:fitsSize].width;
+        rightWidth += 8 + buttonWidth;
     }
     
-    FWNavigationTitleView *titleView = (FWNavigationTitleView *)self.titleView;
+    UIView *titleView = self.titleView;
     if (titleView) {
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterX]];
         [subviewContraints addObject:[titleView fwAlignAxisToSuperview:NSLayoutAttributeCenterY]];
         [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
         [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        
-        UIView *titleLeftButton = leftMoreButton ?: leftButton;
-        if (titleLeftButton) {
-            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:titleLeftButton withOffset:8 relation:NSLayoutRelationGreaterThanOrEqual]];
-        } else {
-            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        }
-        
-        UIView *titleRightButton = rightMoreButton ?: rightButton;
-        if (titleRightButton) {
-            [subviewContraints addObject:[titleView fwPinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:titleRightButton withOffset:-8 relation:NSLayoutRelationLessThanOrEqual]];
-        } else {
-            [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-        }
-        
-        // 仅FWNavigationTitleView必须设置最大宽度，其它自定义视图使用自动布局方式即可
-        if (hasTitleView) {
-            titleView.maximumWidth = fitsSize.width - MAX(leftWidth, rightWidth) * 2;
-        }
+        [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftWidth relation:NSLayoutRelationGreaterThanOrEqual]];
+        [subviewContraints addObject:[titleView fwPinEdgeToSuperview:NSLayoutAttributeRight withInset:rightWidth relation:NSLayoutRelationGreaterThanOrEqual]];
     }
     self.subviewContraints = subviewContraints;
 }
@@ -818,13 +791,13 @@
                 return;
             }
             
-            CGFloat titleViewMaximumWidth = CGRectGetWidth(titleView.bounds);
-            CGSize titleViewSize = [titleView sizeThatFits:CGSizeMake(titleViewMaximumWidth, CGFLOAT_MAX)];
+            CGFloat titleMaximumWidth = CGRectGetWidth(titleView.bounds);
+            CGSize titleViewSize = [titleView sizeThatFits:CGSizeMake(titleMaximumWidth, CGFLOAT_MAX)];
             titleViewSize.height = ceil(titleViewSize.height);
             
             if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
                 CGFloat titleViewMinY = FWFlatValue(CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0));
-                titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleViewMaximumWidth, titleViewSize.width), titleViewSize.height);
+                titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
             }
             
             if (@available(iOS 11, *)) {
@@ -1291,7 +1264,7 @@
 }
 
 - (CGSize)intrinsicContentSize {
-    return [self sizeThatFits:CGSizeZero];
+    return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
 }
 
 - (void)layoutSubviews {
