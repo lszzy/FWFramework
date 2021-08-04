@@ -56,7 +56,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 #pragma mark - UIViewController+FWStyle
 
 /*!
- @brief 视图控制器样式分类
+ @brief 视图控制器样式分类，兼容系统导航栏和自定义导航栏(default和custom样式)
  @discussion 需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
  */
 @interface UIViewController (FWStyle)

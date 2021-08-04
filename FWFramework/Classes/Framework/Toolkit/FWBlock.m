@@ -321,15 +321,12 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
     // NSString
     if ([object isKindOfClass:[NSString class]]) {
         barItem = [[self alloc] initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
-        barItem.fwObject = object;
     // UIImage
     } else if ([object isKindOfClass:[UIImage class]]) {
         barItem = [[self alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
-        barItem.fwObject = object;
     // NSNumber
     } else if ([object isKindOfClass:[NSNumber class]]) {
         barItem = [[self alloc] initWithBarButtonSystemItem:[object integerValue] target:target action:action];
-        barItem.fwObject = object;
     // UIView
     } else if ([object isKindOfClass:[UIView class]]) {
         barItem = [[self alloc] initWithCustomView:object];
@@ -355,16 +352,6 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
     UIBarButtonItem *barItem = [self fwBarItemWithObject:object target:nil action:nil];
     [barItem fwSetBlock:block];
     return barItem;
-}
-
-- (id)fwObject
-{
-    return objc_getAssociatedObject(self, @selector(fwObject));
-}
-
-- (void)setFwObject:(id)object
-{
-    objc_setAssociatedObject(self, @selector(fwObject), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fwSetBlock:(void (^)(id))block

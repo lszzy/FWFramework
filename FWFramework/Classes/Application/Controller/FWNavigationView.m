@@ -93,14 +93,15 @@
 {
     if (!barItem) return nil;
     
-    // 指定customView时只支持FWNavigationButton
+    // 指定customView时只支持UIButton
     id object = nil;
     if (barItem.customView) {
-        FWNavigationButton *customButton = (FWNavigationButton *)barItem.customView;
-        if (![customButton isKindOfClass:[FWNavigationButton class]]) return nil;
-        object = customButton.object;
+        UIButton *customButton = (UIButton *)barItem.customView;
+        if (![customButton isKindOfClass:[UIButton class]]) return nil;
+        object = [customButton imageForState:UIControlStateNormal] ?: [customButton titleForState:UIControlStateNormal];
+    // 未指定customView时支持image和title
     } else {
-        object = barItem.fwObject;
+        object = barItem.image ?: barItem.title;
     }
     
     // 创建新的按钮，直接触发barItem的响应事件即可
@@ -1459,7 +1460,6 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.isImageType = NO;
-        self.object = title;
         [self setTitle:title forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self sizeToFit];
@@ -1472,7 +1472,6 @@
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.isImageType = YES;
-        self.object = image;
         [self setTitle:nil forState:UIControlStateNormal];
         [self renderButtonStyle];
         [self setImage:image forState:UIControlStateNormal];
