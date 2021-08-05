@@ -12,7 +12,7 @@
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
-#import "FWNavigationView.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyPluginView

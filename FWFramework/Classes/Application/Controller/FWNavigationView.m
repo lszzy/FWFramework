@@ -518,12 +518,12 @@
             
             BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
             [selfObject.view addSubview:selfObject.fwNavigationView];
-            [selfObject.view addSubview:selfObject.fwView];
+            [selfObject.view addSubview:selfObject.fwContainerView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-            [selfObject.fwView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
+            [selfObject.fwContainerView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.noneEdgeConstraint = [selfObject.fwContainerView fwPinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:selfObject.fwNavigationView];
             selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
-            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwView fwPinEdgeToSuperview:NSLayoutAttributeTop];
+            selfObject.fwNavigationView.topEdgeConstraint = [selfObject.fwContainerView fwPinEdgeToSuperview:NSLayoutAttributeTop];
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
             [selfObject.view setNeedsLayout];
             [selfObject.view layoutIfNeeded];
@@ -602,16 +602,14 @@
     return self.fwNavigationView.navigationItem;
 }
 
-- (UIView *)fwView
+- (UIView *)fwContainerView
 {
-    if (!self.fwNavigationViewEnabled) return self.view;
-    
-    UIView *view = objc_getAssociatedObject(self, _cmd);
-    if (!view) {
-        view = [[UIView alloc] init];
-        objc_setAssociatedObject(self, _cmd, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIView *containerView = objc_getAssociatedObject(self, _cmd);
+    if (!containerView) {
+        containerView = [[UIView alloc] init];
+        objc_setAssociatedObject(self, _cmd, containerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return view;
+    return containerView;
 }
 
 @end

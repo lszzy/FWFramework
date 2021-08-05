@@ -170,8 +170,10 @@
     if ([self respondsToSelector:aSelector]) {
         char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
         if (type && *type == 'v') {
+            free(type);
             [self performSelector:aSelector];
         } else {
+            free(type);
             return [self performSelector:aSelector];
         }
     }
@@ -186,8 +188,10 @@
     if ([self respondsToSelector:aSelector]) {
         char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
         if (type && *type == 'v') {
+            free(type);
             [self performSelector:aSelector withObject:object];
         } else {
+            free(type);
             return [self performSelector:aSelector withObject:object];
         }
     }
