@@ -48,9 +48,7 @@
 
 - (void)registerNotificationHandler
 {
-    if (@available(iOS 10.0, *)) {
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    }
+    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
 }
 
 - (void)handleRemoteNotification:(id)notification
@@ -61,12 +59,10 @@
     if ([notification isKindOfClass:[NSDictionary class]]) {
         userInfo = notification;
     } else {
-        if (@available(iOS 10.0, *)) {
-            if ([notification isKindOfClass:[UNNotificationResponse class]]) {
-                userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
-            } else if ([notification isKindOfClass:[UNNotification class]]) {
-                userInfo = ((UNNotification *)notification).request.content.userInfo;
-            }
+        if ([notification isKindOfClass:[UNNotificationResponse class]]) {
+            userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
+        } else if ([notification isKindOfClass:[UNNotification class]]) {
+            userInfo = ((UNNotification *)notification).request.content.userInfo;
         }
     }
     
@@ -81,15 +77,10 @@
     if ([notification isKindOfClass:[NSDictionary class]]) {
         userInfo = notification;
     } else {
-        if (@available(iOS 10.0, *)) {
-            if ([notification isKindOfClass:[UNNotificationResponse class]]) {
-                userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
-            } else if ([notification isKindOfClass:[UNNotification class]]) {
-                userInfo = ((UNNotification *)notification).request.content.userInfo;
-            }
-        }
-        if ([notification isKindOfClass:[UILocalNotification class]]) {
-            userInfo = ((UILocalNotification *)notification).userInfo;
+        if ([notification isKindOfClass:[UNNotificationResponse class]]) {
+            userInfo = ((UNNotificationResponse *)notification).notification.request.content.userInfo;
+        } else if ([notification isKindOfClass:[UNNotification class]]) {
+            userInfo = ((UNNotification *)notification).request.content.userInfo;
         }
     }
     
@@ -99,7 +90,7 @@
 #pragma mark - UNUserNotificationCenterDelegate
 
 // 前台收到推送
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler API_AVAILABLE(ios(10.0))
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {
     // 远程推送
     if ([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
@@ -111,7 +102,7 @@
 }
 
 // 后台收到推送
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler API_AVAILABLE(ios(10.0))
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler
 {
     // 远程推送
     if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
@@ -128,95 +119,31 @@
 
 - (void)registerLocalNotification:(NSString *)identifier title:(NSString *)title subtitle:(NSString *)subtitle body:(NSString *)body userInfo:(NSDictionary *)userInfo badge:(NSInteger)badge soundName:(NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats
 {
-    if (@available(iOS 10.0, *)) {
-        UNMutableNotificationContent *notification = [[UNMutableNotificationContent alloc] init];
-        if (title) notification.title = title;
-        if (subtitle) notification.subtitle = subtitle;
-        if (body) notification.body = body;
-        if (userInfo) notification.userInfo = userInfo;
-        notification.badge = badge > 0 ? [NSNumber numberWithInteger:badge] : nil;
-        if (soundName) {
-            notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
-        }
-        
-        UNNotificationTrigger *trigger = timeInterval > 0 ? [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeats] : nil;
-        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:notification trigger:trigger];
-        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
-    } else {
-        UILocalNotification *notification = [[UILocalNotification alloc] init];
-        notification.category = identifier;
-        if (@available(iOS 8.2, *)) {
-            notification.alertTitle = title ?: subtitle;
-        }
-        notification.alertBody = body;
-        notification.userInfo = userInfo;
-        notification.applicationIconBadgeNumber = badge;
-        if (soundName) {
-            notification.soundName = [@"default" isEqualToString:soundName] ? UILocalNotificationDefaultSoundName : soundName;
-        }
-        if (timeInterval > 0) {
-            notification.timeZone = [NSTimeZone defaultTimeZone];
-            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
-            
-            // UILocalNotification只支持NSCalendarUnit级别的重复，否则不生效
-            if (repeats) {
-                switch (timeInterval) {
-                    case 60:
-                        notification.repeatInterval = NSCalendarUnitMinute;
-                        break;
-                    case 900:
-                        notification.repeatInterval = NSCalendarUnitQuarter;
-                        break;
-                    case 3600:
-                        notification.repeatInterval = NSCalendarUnitHour;
-                        break;
-                    case 86400:
-                        notification.repeatInterval = NSCalendarUnitDay;
-                        break;
-                    case 86400 * 7:
-                        notification.repeatInterval = NSCalendarUnitWeekday;
-                        break;
-                    case 86400 * 30:
-                        notification.repeatInterval = NSCalendarUnitMonth;
-                        break;
-                    case 86400 * 365:
-                        notification.repeatInterval = NSCalendarUnitYear;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            
-            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
-        } else {
-            [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-        }
+    UNMutableNotificationContent *notification = [[UNMutableNotificationContent alloc] init];
+    if (title) notification.title = title;
+    if (subtitle) notification.subtitle = subtitle;
+    if (body) notification.body = body;
+    if (userInfo) notification.userInfo = userInfo;
+    notification.badge = badge > 0 ? [NSNumber numberWithInteger:badge] : nil;
+    if (soundName) {
+        notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
     }
+    
+    UNNotificationTrigger *trigger = timeInterval > 0 ? [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeats] : nil;
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:notification trigger:trigger];
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
 }
 
 - (void)removeLocalNotification:(NSArray<NSString *> *)identifiers
 {
-    if (@available(iOS 10.0, *)) {
-        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:identifiers];
-        [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:identifiers];
-    } else {
-        NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
-        for (UILocalNotification *notification in notifications) {
-            if (notification.category && [identifiers containsObject:notification.category]) {
-                [[UIApplication sharedApplication] cancelLocalNotification:notification];
-            }
-        }
-    }
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:identifiers];
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:identifiers];
 }
 
 - (void)removeAllLocalNotifications
 {
-    if (@available(iOS 10.0, *)) {
-        [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
-        [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
-    } else {
-        [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    }
+    [[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
+    [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
 }
 
 @end

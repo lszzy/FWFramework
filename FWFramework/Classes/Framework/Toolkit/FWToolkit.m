@@ -150,26 +150,13 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 + (void)fwOpenURL:(id)url completionHandler:(void (^)(BOOL success))completion
 {
     NSURL *nsurl = [self fwNSURLWithURL:url];
-    if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
-    } else {
-        BOOL success = [[UIApplication sharedApplication] openURL:nsurl];
-        if (completion) {
-            completion(success);
-        }
-    }
+    [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
 }
 
 + (void)fwOpenUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
 {
     NSURL *nsurl = [self fwNSURLWithURL:url];
-    if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
-    } else {
-        if (completion) {
-            completion(NO);
-        }
-    }
+    [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
 }
 
 + (void)fwOpenAppStore:(NSString *)appId

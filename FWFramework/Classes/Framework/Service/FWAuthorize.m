@@ -387,13 +387,10 @@
 
 #pragma mark - FWAuthorizeNotifications
 
-// Xcode8+导入UserNotifications框架
 #import <UserNotifications/UserNotifications.h>
 
-// iOS10+使用UNUserNotificationCenter，iOS8+使用UIUserNotificationSettings
+// iOS10+使用UNUserNotificationCenter
 @interface FWAuthorizeNotifications : NSObject <FWAuthorizeProtocol>
-
-@property (nonatomic, copy) void (^completionBlock)(FWAuthorizeStatus status);
 
 @end
 
@@ -401,124 +398,65 @@
 
 - (FWAuthorizeStatus)authorizeStatus
 {
-    if (@available(iOS 10.0, *)) {
-        __block FWAuthorizeStatus status = FWAuthorizeStatusNotDetermined;
-        // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
-        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            switch (settings.authorizationStatus) {
-                case UNAuthorizationStatusDenied:
-                    status = FWAuthorizeStatusDenied;
-                    break;
-                case UNAuthorizationStatusAuthorized:
-                case UNAuthorizationStatusProvisional:
-                    status = FWAuthorizeStatusAuthorized;
-                    break;
-                case UNAuthorizationStatusNotDetermined:
-                default:
-                    status = FWAuthorizeStatusNotDetermined;
-                    break;
-            }
-            dispatch_semaphore_signal(semaphore);
-        }];
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        return status;
-    }
-    
-    FWAuthorizeStatus status = FWAuthorizeStatusAuthorized;
-    UIUserNotificationType types = [[UIApplication sharedApplication] currentUserNotificationSettings].types;
-    if (types == UIUserNotificationTypeNone) {
-        NSNumber *isAuthorized = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWAuthorizeNotifications"];
-        status = (isAuthorized != nil) ? FWAuthorizeStatusDenied : FWAuthorizeStatusNotDetermined;
-    }
+    __block FWAuthorizeStatus status = FWAuthorizeStatusNotDetermined;
+    // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+        switch (settings.authorizationStatus) {
+            case UNAuthorizationStatusDenied:
+                status = FWAuthorizeStatusDenied;
+                break;
+            case UNAuthorizationStatusAuthorized:
+            case UNAuthorizationStatusProvisional:
+                status = FWAuthorizeStatusAuthorized;
+                break;
+            case UNAuthorizationStatusNotDetermined:
+            default:
+                status = FWAuthorizeStatusNotDetermined;
+                break;
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     return status;
 }
 
 - (void)authorizeStatus:(void (^)(FWAuthorizeStatus))completion
 {
-    if (@available(iOS 10.0, *)) {
-        [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            FWAuthorizeStatus status;
-            switch (settings.authorizationStatus) {
-                case UNAuthorizationStatusDenied:
-                    status = FWAuthorizeStatusDenied;
-                    break;
-                case UNAuthorizationStatusAuthorized:
-                case UNAuthorizationStatusProvisional:
-                    status = FWAuthorizeStatusAuthorized;
-                    break;
-                case UNAuthorizationStatusNotDetermined:
-                default:
-                    status = FWAuthorizeStatusNotDetermined;
-                    break;
-            }
-            
-            if (completion) {
-                completion(status);
-            }
-        }];
-        return;
-    }
-    
-    FWAuthorizeStatus status = FWAuthorizeStatusAuthorized;
-    UIUserNotificationType types = [[UIApplication sharedApplication] currentUserNotificationSettings].types;
-    if (types == UIUserNotificationTypeNone) {
-        NSNumber *isAuthorized = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWAuthorizeNotifications"];
-        status = (isAuthorized != nil) ? FWAuthorizeStatusDenied : FWAuthorizeStatusNotDetermined;
-    }
-    if (completion) {
-        completion(status);
-    }
+    [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+        FWAuthorizeStatus status;
+        switch (settings.authorizationStatus) {
+            case UNAuthorizationStatusDenied:
+                status = FWAuthorizeStatusDenied;
+                break;
+            case UNAuthorizationStatusAuthorized:
+            case UNAuthorizationStatusProvisional:
+                status = FWAuthorizeStatusAuthorized;
+                break;
+            case UNAuthorizationStatusNotDetermined:
+            default:
+                status = FWAuthorizeStatusNotDetermined;
+                break;
+        }
+        
+        if (completion) {
+            completion(status);
+        }
+    }];
 }
 
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion
 {
-    if (@available(iOS 10.0, *)) {
-        UNAuthorizationOptions options = (UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert);
-        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(status);
-                });
-            }
-        }];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-        return;
-    }
-    
-    self.completionBlock = completion;
-    
-    // 由于无法收到回调，监听点击结果事件
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    // 请求推送通知授权
-    UIUserNotificationType types = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound | UIUserNotificationTypeBadge);
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    UNAuthorizationOptions options = (UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert);
+    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(status);
+            });
+        }
+    }];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    
-    // 标记已授权
-    [[NSUserDefaults standardUserDefaults] setObject:@(1) forKey:@"FWAuthorizeNotifications"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)onActive:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    // 主线程回调，仅一次
-    if (self.completionBlock) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.completionBlock(self.authorizeStatus);
-            self.completionBlock = nil;
-        });
-    }
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
