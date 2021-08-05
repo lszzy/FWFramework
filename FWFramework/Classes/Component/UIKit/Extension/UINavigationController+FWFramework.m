@@ -17,19 +17,22 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug
-        if (@available(iOS 14.0, *)) {
+        // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
+        if (@available(iOS 14.2, *)) {} else if (@available(iOS 14.0, *)) {
             FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
                 if (animated && selfObject.tabBarController && !viewController.hidesBottomBarWhenPushed) {
                     BOOL systemShouldHideTabBar = NO;
-                    NSArray<UIViewController *> *viewControllers = [selfObject.viewControllers subarrayWithRange:NSMakeRange(0, [selfObject.viewControllers indexOfObject:viewController] + 1)];
-                    for (UIViewController *vc in viewControllers) {
-                        if (vc.hidesBottomBarWhenPushed) {
-                            systemShouldHideTabBar = YES;
+                    NSUInteger index = [selfObject.viewControllers indexOfObject:viewController];
+                    if (index != NSNotFound) {
+                        NSArray<UIViewController *> *viewControllers = [selfObject.viewControllers subarrayWithRange:NSMakeRange(0, index + 1)];
+                        for (UIViewController *vc in viewControllers) {
+                            if (vc.hidesBottomBarWhenPushed) {
+                                systemShouldHideTabBar = YES;
+                            }
                         }
-                    }
-                    if (!systemShouldHideTabBar) {
-                        selfObject.fwShouldBottomBarBeHidden = YES;
+                        if (!systemShouldHideTabBar) {
+                            selfObject.fwShouldBottomBarBeHidden = YES;
+                        }
                     }
                 }
                 

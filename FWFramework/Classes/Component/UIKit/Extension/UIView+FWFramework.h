@@ -12,7 +12,6 @@
 #import "UIView+FWBorder.h"
 #import "UIView+FWDrag.h"
 #import "UIView+FWDrawerView.h"
-#import "UIView+FWFrame.h"
 #import "UIView+FWLayer.h"
 #import "UIView+FWStatistical.h"
 

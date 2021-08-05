@@ -63,6 +63,7 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 /// 事件触发次数，可配置仅触发一次
 @property (nonatomic, assign) BOOL triggerOnce;
 @property (nonatomic, assign, readonly) NSInteger triggerCount;
+@property (nonatomic, assign) BOOL triggerIgnored;
 
 // 曝光遮挡视图，被遮挡时不计曝光
 @property (nonatomic, weak, nullable) UIView *shieldView;

@@ -1,14 +1,143 @@
 /*!
- @header     UINavigationController+FWWorkflow.m
+ @header     FWNavigation.m
  @indexgroup FWFramework
- @brief      导航控制器工作流分类
+ @brief      FWNavigation
  @author     wuyong
- @copyright  Copyright © 2020 wuyong.site. All rights reserved.
- @updated    2020/9/7
+ @copyright  Copyright © 2018 wuyong.site. All rights reserved.
+ @updated    2018/11/29
  */
 
-#import "UINavigationController+FWWorkflow.h"
+#import "FWNavigation.h"
 #import <objc/runtime.h>
+
+#pragma mark - UIWindow+FWNavigation
+
+@implementation UIWindow (FWNavigation)
+
++ (UIWindow *)fwMainWindow
+{
+    UIWindow *mainWindow = UIApplication.sharedApplication.keyWindow;
+    if (!mainWindow) {
+        for (UIWindow *window in UIApplication.sharedApplication.windows) {
+            if (window.isKeyWindow) { mainWindow = window; break; }
+        }
+    }
+    
+#ifdef DEBUG
+    // DEBUG模式时兼容FLEX、FWDebug等组件
+    if ([mainWindow isKindOfClass:NSClassFromString(@"FLEXWindow")] &&
+        [mainWindow respondsToSelector:NSSelectorFromString(@"previousKeyWindow")]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        mainWindow = [mainWindow performSelector:NSSelectorFromString(@"previousKeyWindow")];
+#pragma clang diagnostic pop
+    }
+#endif
+    return mainWindow;
+}
+
++ (UIWindowScene *)fwMainScene
+{
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if (scene.activationState == UISceneActivationStateForegroundActive &&
+            [scene isKindOfClass:[UIWindowScene class]]) {
+            return (UIWindowScene *)scene;
+        }
+    }
+    return nil;
+}
+
++ (UIViewController *)fwTopViewController:(UIViewController *)viewController
+{
+    if ([viewController isKindOfClass:[UITabBarController class]]) {
+        UIViewController *topController = [(UITabBarController *)viewController selectedViewController];
+        if (topController) return [self fwTopViewController:topController];
+    }
+    
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        UIViewController *topController = [(UINavigationController *)viewController topViewController];
+        if (topController) return [self fwTopViewController:topController];
+    }
+    
+    return viewController;
+}
+
+- (UIViewController *)fwTopViewController
+{
+    return [UIWindow fwTopViewController:[self fwTopPresentedController]];
+}
+
+- (UINavigationController *)fwTopNavigationController
+{
+    return [self fwTopViewController].navigationController;
+}
+
+- (UIViewController *)fwTopPresentedController
+{
+    UIViewController *presentedController = self.rootViewController;
+    
+    while ([presentedController presentedViewController]) {
+        presentedController = [presentedController presentedViewController];
+    }
+    
+    return presentedController;
+}
+
+- (BOOL)fwPushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    UINavigationController *navigationController = [self fwTopNavigationController];
+    if (navigationController) {
+        [navigationController pushViewController:viewController animated:animated];
+        return YES;
+    }
+    return NO;
+}
+
+- (void)fwPresentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [[self fwTopPresentedController] presentViewController:viewController animated:animated completion:completion];
+}
+
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[self fwTopViewController] fwOpenViewController:viewController animated:animated];
+}
+
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated
+{
+    return [[self fwTopViewController] fwCloseViewControllerAnimated:animated];
+}
+
+@end
+
+#pragma mark - UIViewController+FWNavigation
+
+@implementation UIViewController (FWNavigation)
+
+- (void)fwOpenViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
+        [self presentViewController:viewController animated:animated completion:nil];
+    } else {
+        [self.navigationController pushViewController:viewController animated:animated];
+    }
+}
+
+- (BOOL)fwCloseViewControllerAnimated:(BOOL)animated
+{
+    if (self.navigationController) {
+        if ([self.navigationController popViewControllerAnimated:animated]) return YES;
+    }
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
+        return YES;
+    }
+    return NO;
+}
+
+@end
+
+#pragma mark - UINavigationController+FWWorkflow
 
 @implementation UIViewController (FWWorkflow)
 

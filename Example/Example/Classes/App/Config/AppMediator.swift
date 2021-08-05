@@ -10,7 +10,7 @@ import Foundation
 import SDWebImage
 import SDWebImageWebPCoder
 import SDWebImageSVGKitPlugin
-#if DEBUG || APP_TEST
+#if DEBUG
 import FWDebug
 #endif
 
@@ -30,7 +30,7 @@ class AppModule: NSObject, AppService {
     }
     
     func setup() {
-        #if DEBUG || APP_TEST
+        #if DEBUG
         FWDebugManager.sharedInstance().openUrl = { (url) in
             if let scheme = NSURL.fwURL(with: url)?.scheme, scheme.count > 0 {
                 FWRouter.openURL(url)

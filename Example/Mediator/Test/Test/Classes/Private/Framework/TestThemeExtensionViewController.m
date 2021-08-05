@@ -19,7 +19,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
 
 - (void)renderView
 {
-    self.view.backgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
+    self.fwView.backgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
         if (style == FWThemeStyleDark) {
             return [UIColor blackColor];
         } else if (style == FWThemeStyleLight) {
@@ -65,7 +65,7 @@ static const FWThemeStyle FWThemeStyleRed = 3;
             return [UIColor redColor];
         }
     }];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     UILabel *themeLabel = [UILabel new];
     themeLabel.frame = CGRectMake(20, 230, FWScreenWidth, 50);

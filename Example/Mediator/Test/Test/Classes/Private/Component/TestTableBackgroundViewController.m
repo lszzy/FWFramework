@@ -29,7 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar fwSetBackgroundTransparent];
+    [self.fwNavigationBar fwSetBackgroundTransparent];
 }
 
 - (UITableViewStyle)renderTableStyle
@@ -47,7 +47,8 @@
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWScreenHeight)];
     _bgView = bgView;
     bgView.backgroundColor = [UIColor fwRandomColor];
-    [self.view insertSubview:bgView atIndex:0];
+    [self.fwView insertSubview:bgView atIndex:0];
+    self.fwView.clipsToBounds = YES;
     
     UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(0, FWScreenHeight / 2, FWScreenWidth, FWScreenHeight / 2)];
     subView.backgroundColor = [UIColor fwRandomColor];

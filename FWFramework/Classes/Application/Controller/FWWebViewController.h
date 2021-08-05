@@ -14,6 +14,7 @@
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
 #import "FWNavigationController.h"
+#import "FWNavigationStyle.h"
 #import "FWNavigationView.h"
 
 NS_ASSUME_NONNULL_BEGIN

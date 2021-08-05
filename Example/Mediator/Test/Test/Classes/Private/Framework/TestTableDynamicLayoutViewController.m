@@ -186,12 +186,12 @@ static BOOL isExpanded = NO;
     self.tableView.fwPullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
         FWStrongifySelf();
         
-        self.navigationItem.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
+        self.fwNavigationItem.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
     };
     self.tableView.fwPullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.navigationItem.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
+        self.fwNavigationItem.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
     };
     
     FWInfiniteScrollView.height = 64;
@@ -204,12 +204,12 @@ static BOOL isExpanded = NO;
     self.tableView.fwInfiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
-        self.navigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
+        self.fwNavigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
     };
     self.tableView.fwInfiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
         FWStrongifySelf();
         
-        self.navigationItem.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
+        self.fwNavigationItem.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
     };
 }
 
@@ -388,7 +388,7 @@ static BOOL isExpanded = NO;
         self.tableView.fwShowRefreshing = self.tableData.count < 20 ? YES : NO;
         [self.tableView fwEndRefreshing];
         if (!self.tableView.fwShowRefreshing) {
-            self.navigationItem.rightBarButtonItem = nil;
+            self.fwNavigationItem.rightBarButtonItem = nil;
         }
     });
 }

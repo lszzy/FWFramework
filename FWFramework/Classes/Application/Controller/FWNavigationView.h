@@ -13,58 +13,163 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWNavigationView
 
-@class FWNavigationTitleView;
+/// 自定义导航栏样式
+typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
+    /// 默认样式，UINavigationBar实现，兼容FWNavigationStyle相关方法
+    FWNavigationViewStyleDefault = 0,
+    /// 完全自定义样式，提供navigationView容器视图，自行处理布局
+    FWNavigationViewStyleCustom,
+};
+
+@class FWNavigationContentView;
 
 /**
  * 自定义导航栏视图，高度自动布局，隐藏时自动收起
+ *
+ * 自定义导航栏视图结构如下：
+ * 顶部：延迟加载topView，高度为topHeight，可设置topHidden显示或隐藏
+ * 中间：初始加载middleView，高度为middelHeight，可设置middleHidden显示或隐藏
+ *     navigationBar: 高度同middleHeight，default样式时显示，兼容FWNavigationStyle方法
+ *     contentView: 高度为contentHeight，custom样式时显示，内容完全自定义
+ * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
+ *
+ * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
+ * custom样式不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
  */
 @interface FWNavigationView : UIView
 
-/// 自定义导航栏，可隐藏，底部对齐
+/// 当前导航栏样式，默认default，设置后自动显示navigationBar或contentView
+@property (nonatomic, assign) FWNavigationViewStyle style;
+
+/// 背景视图，仅custom样式时显示，default样式请使用navigationBar设置背景
+@property (nonatomic, strong, readonly) UIImageView *backgroundView;
+
+/// 顶部视图，延迟加载，默认不加载
+@property (nonatomic, strong, readonly) UIView *topView;
+
+/// 顶部是否隐藏，隐藏后自动收起，默认NO。绑定控制器后自动跟随系统导航栏变化
+@property (nonatomic, assign) BOOL topHidden;
+
+/// 自定义顶部高度，隐藏时自动收起，默认FWStatusBarHeight。绑定控制器后自动跟随系统导航栏变化
+@property (nonatomic, assign) CGFloat topHeight;
+
+/// 中间视图，初始加载，默认高度跟随navigationBar自适应
+@property (nonatomic, strong, readonly) UIView *middleView;
+
+/// 中间视图是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL middleHidden;
+
+/// 中间视图高度，隐藏时自动收起，默认0自适应，非0时固定高度。绑定控制器后自动跟随系统导航栏变化
+@property (nonatomic, assign) CGFloat middleHeight;
+
+/// 自定义导航栏，默认高度自适应，default样式时显示
 @property (nonatomic, strong, readonly) UINavigationBar *navigationBar;
 
-/// 自定义导航项，可设置标题、按钮等
+/// 自定义导航项，可设置标题、按钮等，default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 自定义总高度，隐藏时自动收起，默认FWTopBarHeight
-@property (nonatomic, assign) CGFloat topBarHeight;
+/// 内容视图，初始加载，custom样式时显示，与navigationBar布局相同
+@property (nonatomic, strong, readonly) FWNavigationContentView *contentView;
 
-/// 自定义导航栏高度，默认FWNavigationBarHeight
-@property (nonatomic, assign) CGFloat navigationBarHeight;
+/// 内容视图内间距，支持navigationBar和contentView，默认zero
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
 
-/// 自定义标题栏，快速访问navigationItem.titleView
-@property (nonatomic, strong, nullable) FWNavigationTitleView *titleView;
+/// 内容视图高度，只读，与是否隐藏无关。绑定控制器后自动跟随系统导航栏变化
+@property (nonatomic, assign, readonly) CGFloat contentHeight;
+
+/// 底部视图，延迟加载，默认不加载
+@property (nonatomic, strong, readonly) UIView *bottomView;
+
+/// 底部是否隐藏，隐藏后自动收起，默认NO
+@property (nonatomic, assign) BOOL bottomHidden;
+
+/// 自定义底部高度，隐藏时自动收起，默认0
+@property (nonatomic, assign) CGFloat bottomHeight;
+
+/// 当前总高度，自动计算实际显示高度，隐藏时为0
+@property (nonatomic, assign, readonly) CGFloat height;
+
+/// 设置标题视图，default样式使用navigationBar，custom样式使用contentView，不支持style动态切换
+@property (nonatomic, weak, nullable) UIView *titleView;
+
+/// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
+@property (nonatomic, weak, nullable) UIViewController *viewController;
+
+/**
+ * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度，要求scrollView内容足够高
+ *
+ * 1. 如果bottomHeight > 0，则滚动bottomView并更新bottomHeight，不执行2
+ * 2. 如果为default样式且为竖屏并开启了iOS11+largeTitles效果，则滚动大标题并更新middleHeight(自动变为固定高度)
+ */
+@property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
 @end
 
 #pragma mark - UIViewController+FWNavigationView
 
 /**
- * 控制器自定义导航栏
+ * 控制器自定义导航栏分类，建议loadView之后再调用fwNavigationView相关属性
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
- * 注意：启用自定义导航栏后，虽然兼容FWViewControllerStyle方法，但有几点不同，列举如下：
- * 1. fwNavigationView位于VC.view顶部；fwContainerView位于VC.view底部，顶部对齐fwNavigationView.底部
- * 2. VC容器视图为fwContainerView，所有子视图应该添加到fwContainerView；可使用fwView兼容两种方式
+ * 注意：启用自定义导航栏后，自动绑定控制器，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
+ * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
+ * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
+ * 4. 不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)
 
-/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效
-@property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
-
-/// 自定义容器视图，fwNavigationViewEnabled为YES时生效
-@property (nonatomic, strong, readonly) UIView *fwContainerView;
-
 /// 是否启用自定义导航栏，需在init中设置或子类重写，默认NO
 @property (nonatomic, assign) BOOL fwNavigationViewEnabled;
+
+/// 自定义导航栏视图，fwNavigationViewEnabled为YES时生效。默认自动绑定控制器，导航栏状态跟随变化
+@property (nonatomic, strong, readonly) FWNavigationView *fwNavigationView;
+
+/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏，仅default样式时生效
+@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
+
+/// 当前导航项，默认navigationItem，用于兼容自定义导航栏，仅default样式时生效
+@property (nonatomic, strong, readonly) UINavigationItem *fwNavigationItem;
+
+/// 当前视图，默认view，用于兼容自定义导航栏
+@property (nonatomic, strong, readonly) UIView *fwView;
+
+@end
+
+#pragma mark - FWNavigationContentView
+
+/**
+ * 自定义导航栏内容视图，支持完全自定义
+ *
+ * 默认最多只支持左右各两个按钮，如需更多按钮，请自行添加并布局即可
+ */
+@interface FWNavigationContentView : UIView
+
+/// 自定义返回按钮，自定义导航栏使用时会自动设置为左侧按钮
+@property (nonatomic, strong, nullable) __kindof UIView *backButton;
+
+/// 自定义左侧按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *leftButton;
+
+/// 自定义左侧更多按钮，设置后才显示，左侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
+
+/// 自定义标题视图，居中显示，需支持自动布局，左右最大间距为0。默认初始化FWNavigationTitleView，设为nil可清空
+@property (nonatomic, strong, nullable) __kindof UIView *titleView;
+
+/// 快速设置标题，titleView类型为FWNavigationTitleViewProtocol时才生效
+@property (nonatomic, copy, nullable) NSString *title;
+
+/// 自定义右侧更多按钮，设置后才显示，右侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *rightMoreButton;
+
+/// 自定义右侧按钮，设置后才显示，右侧间距为8，同系统一致。建议使用FWNavigationButton
+@property (nonatomic, strong, nullable) __kindof UIView *rightButton;
 
 @end
 
 #pragma mark - FWNavigationTitleView
-
-@class FWNavigationTitleView;
 
 /// 自定义titleView协议
 @protocol FWNavigationTitleViewProtocol <NSObject>
@@ -75,6 +180,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *title;
 
 @end
+
+@class FWNavigationTitleView;
 
 /// 自定义titleView事件代理
 @protocol FWNavigationTitleViewDelegate <NSObject>
@@ -207,20 +314,22 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 
 /**
  * 自定义导航栏按钮，兼容系统customView方式和自定义方式
+ *
+ * UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8；FWNavigationButton作为customView使用时，会自动调整按钮内间距，和系统表现一致
  */
 @interface FWNavigationButton : UIButton
 
 /// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
 @property (nonatomic, assign) BOOL adjustsTintColor;
 
-/// UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8，所以这里声明是否让内容自动偏移，默认YES
-@property (nonatomic, assign) BOOL adjustsContentInsets;
-
 /// 初始化标题类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithTitle:(nullable NSString *)title;
 
 /// 初始化图片类型按钮，默认内间距：{8, 8, 8, 8}，可自定义
 - (instancetype)initWithImage:(nullable UIImage *)image;
+
+/// 使用指定对象创建按钮，支持UIImage|NSString，不支持时返回nil
+- (nullable instancetype)initWithObject:(nullable id)object;
 
 @end
 

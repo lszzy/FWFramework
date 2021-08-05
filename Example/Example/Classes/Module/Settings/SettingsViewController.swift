@@ -30,6 +30,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
     
     func renderTableView() {
         tableView.backgroundColor = Theme.tableColor
+        fwNavigationView.scrollView = tableView
         
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: FWScreenWidth, height: 90))
         tableView.tableFooterView = footerView
@@ -144,12 +145,16 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onOption() {
-        fwShowSheet(withTitle: FWLocalizedString("optionTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [AppConfig.isRootLogin ? FWLocalizedString("loginOptional") : FWLocalizedString("loginRequired"), Theme.isNavBarCustom ? FWLocalizedString("navBarSystem") : FWLocalizedString("navBarCustom")]) { (index) in
+        fwShowSheet(withTitle: FWLocalizedString("optionTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [AppConfig.isRootLogin ? FWLocalizedString("loginOptional") : FWLocalizedString("loginRequired"), Theme.isNavBarCustom ? FWLocalizedString("navBarSystem") : FWLocalizedString("navBarCustom"), Theme.isNavStyleCustom ? FWLocalizedString("navStyleDefault") : FWLocalizedString("navStyleCustom"), Theme.isLargeTitles ? FWLocalizedString("normalTitles") : FWLocalizedString("largeTitles")]) { (index) in
             switch index {
             case 0:
                 AppConfig.isRootLogin = !AppConfig.isRootLogin
             case 1:
                 Theme.isNavBarCustom = !Theme.isNavBarCustom
+            case 2:
+                Theme.isNavStyleCustom = !Theme.isNavStyleCustom
+            case 3:
+                Theme.isLargeTitles = !Theme.isLargeTitles
             default:
                 break
             }

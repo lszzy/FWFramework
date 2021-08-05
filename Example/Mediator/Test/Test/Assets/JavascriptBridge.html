@@ -38,9 +38,12 @@
             console.log(uniqueId++ + '. ' + message + ':\n' + json)
 		}
         
-        bridge.errorHandler = function(message) {
-            alert("handler undefined: " + JSON.stringify(message));
-        }
+        bridge.setErrorHandler(function(handlerName, data, responseCallback) {
+            alert("handler " + handlerName + " undefined: " + JSON.stringify(data))
+            var responseData = { 'Javascript Says':'Error Handler!' }
+            log('JS responding with', responseData)
+            responseCallback(responseData)
+        })
 
 		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
 			log('ObjC called testJavascriptHandler with', data)

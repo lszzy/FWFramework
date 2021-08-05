@@ -13,7 +13,7 @@ import Core
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = UserBundle.localizedString("loginButton")
+        fwNavigationItem.title = UserBundle.localizedString("loginButton")
         fwSetLeftBarItem(CoreBundle.imageNamed("close")) { [weak self] (sender) in
             self?.fwClose(animated: true)
         }
