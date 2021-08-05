@@ -7,7 +7,7 @@
 //
 
 import Foundation
-#if DEBUG || APP_TEST
+#if DEBUG
 import FWDebug
 #endif
 
@@ -42,7 +42,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
     func renderData() {
         fwBarTitle = FWLocalizedString("settingTitle")
         
-        #if DEBUG || APP_TEST
+        #if DEBUG
         fwSetRightBarItem(FWLocalizedString("debugButton")) { (sender) in
             if FWDebugManager.sharedInstance().isHidden {
                 FWDebugManager.sharedInstance().show()
