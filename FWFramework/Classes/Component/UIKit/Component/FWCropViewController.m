@@ -2023,9 +2023,6 @@ typedef NS_ENUM(NSInteger, FWCropViewOverlayEdge) {
 @property (nonatomic, assign) CGPoint originalContentOffset; /* Save the original content offset so we can tell if it's been scrolled. */
 @property (nonatomic, assign, readwrite) BOOL canBeReset;
 
-/* In iOS 9, a new dynamic blur effect became available. */
-@property (nonatomic, assign) BOOL dynamicBlurEffect;
-
 /* If restoring to a previous crop setting, these properties hang onto the
  values until the view is configured for the first time. */
 @property (nonatomic, assign) NSInteger restoreAngle;
@@ -2075,10 +2072,6 @@ typedef NS_ENUM(NSInteger, FWCropViewOverlayEdge) {
     self.cropAdjustingDelay = kFWCropTimerDuration;
     self.cropViewPadding = kFWCropViewPadding;
     self.maximumZoomScale = kFWMaximumZoomScale;
-    
-    /* Dynamic animation blurring is only possible on iOS 9, however since the API was available on iOS 8,
-     we'll need to manually check the system version to ensure that it's available. */
-    self.dynamicBlurEffect = ([[[UIDevice currentDevice] systemVersion] compare:@"9.0" options:NSNumericSearch] != NSOrderedAscending);
     
     //Scroll View properties
     self.scrollView = [[FWCropScrollView alloc] initWithFrame:self.bounds];
@@ -2683,12 +2676,7 @@ typedef NS_ENUM(NSInteger, FWCropViewOverlayEdge) {
 
 - (void)toggleTranslucencyViewVisible:(BOOL)visible
 {
-    if (self.dynamicBlurEffect == NO) {
-        self.translucencyView.alpha = visible ? 1.0f : 0.0f;
-    }
-    else {
-        [(UIVisualEffectView *)self.translucencyView setEffect:visible ? self.translucencyEffect : nil];
-    }
+    [(UIVisualEffectView *)self.translucencyView setEffect:visible ? self.translucencyEffect : nil];
 }
 
 - (void)updateToImageCropFrame:(CGRect)imageCropframe
