@@ -1005,7 +1005,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             }
             if (url)
             {
-                [[UIApplication sharedApplication] openURL:url];
+                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
             }
         }
         return YES;

@@ -76,11 +76,7 @@
     NSURL *storeUrl = [NSURL URLWithString:storeString];
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (@available(iOS 10.0, *)) {
-            [[UIApplication sharedApplication] openURL:storeUrl options:@{} completionHandler:nil];
-        } else {
-            [[UIApplication sharedApplication] openURL:storeUrl];
-        }
+        [[UIApplication sharedApplication] openURL:storeUrl options:@{} completionHandler:nil];
     });
 }
 

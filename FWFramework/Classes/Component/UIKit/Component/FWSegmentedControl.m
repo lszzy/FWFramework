@@ -371,9 +371,6 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = rect;
             titleLayer.alignmentMode = kCAAlignmentCenter;
-            if ([UIDevice currentDevice].systemVersion.floatValue < 10.0 ) {
-                titleLayer.truncationMode = kCATruncationEnd;
-            }
             titleLayer.string = [self attributedTitleAtIndex:idx];
             titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             
@@ -562,9 +559,6 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             titleLayer.frame = textRect;
             titleLayer.alignmentMode = kCAAlignmentCenter;
             titleLayer.string = [self attributedTitleAtIndex:idx];
-            if ([UIDevice currentDevice].systemVersion.floatValue < 10.0 ) {
-                titleLayer.truncationMode = kCATruncationEnd;
-            }
             CALayer *imageLayer = [CALayer layer];
             imageLayer.frame = imageRect;
             
