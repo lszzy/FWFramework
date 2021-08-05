@@ -1401,13 +1401,7 @@ static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
     self.backgroundView.backgroundColor = [UIColor colorWithWhite:0.12f alpha:1.0f];
     [self addSubview:self.backgroundView];
     
-    // On iOS 9, we can use the new layout features to determine whether we're in an 'Arabic' style language mode
-    if (@available(iOS 9.0, *)) {
-        self.reverseContentLayout = ([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft);
-    }
-    else {
-        self.reverseContentLayout = [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"ar"];
-    }
+    self.reverseContentLayout = ([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft);
     
     _doneTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_doneTextButton setTitle: _doneTextButtonTitle ?

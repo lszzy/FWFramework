@@ -287,14 +287,12 @@
         alertController.fwAttributedMessage = [[NSAttributedString alloc] initWithString:alertController.message attributes:messageAttributes];
     }
     
-    if (@available(iOS 9.0, *)) {
-        [alertController fwObserveProperty:@"preferredAction" block:^(UIAlertController *object, NSDictionary *change) {
-            [object.actions enumerateObjectsUsingBlock:^(UIAlertAction *obj, NSUInteger idx, BOOL *stop) {
-                if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
-            }];
-            object.preferredAction.fwIsPreferred = YES;
+    [alertController fwObserveProperty:@"preferredAction" block:^(UIAlertController *object, NSDictionary *change) {
+        [object.actions enumerateObjectsUsingBlock:^(UIAlertAction *obj, NSUInteger idx, BOOL *stop) {
+            if (obj.fwIsPreferred) obj.fwIsPreferred = NO;
         }];
-    }
+        object.preferredAction.fwIsPreferred = YES;
+    }];
     
     return alertController;
 }
@@ -415,9 +413,7 @@
     if (FWAlertAppearance.appearance.preferredActionBlock && alertController.actions.count > 0) {
         UIAlertAction *preferredAction = FWAlertAppearance.appearance.preferredActionBlock(alertController);
         if (preferredAction) {
-            if (@available(iOS 9.0, *)) {
-                alertController.preferredAction = preferredAction;
-            }
+            alertController.preferredAction = preferredAction;
         }
     }
     

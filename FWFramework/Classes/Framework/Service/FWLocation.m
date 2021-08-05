@@ -110,9 +110,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         [self.locationManager requestWhenInUseAuthorization];
     }
     if (self.backgroundLocation) {
-        if (@available(iOS 9.0, *)) {
-            [self.locationManager setAllowsBackgroundLocationUpdates:YES];
-        }
+        [self.locationManager setAllowsBackgroundLocationUpdates:YES];
     }
     
     [self.locationManager startUpdatingLocation];
@@ -128,9 +126,7 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
     }
     
     if (self.backgroundLocation) {
-        if (@available(iOS 9.0, *)) {
-            [self.locationManager setAllowsBackgroundLocationUpdates:NO];
-        }
+        [self.locationManager setAllowsBackgroundLocationUpdates:NO];
     }
     
     if (self.headingEnabled) {
