@@ -166,6 +166,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (@available(iOS 11.0, *)) {
+        self.fwNavigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
     self.fwBarTitle = [self titleView];
 }
 

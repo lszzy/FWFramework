@@ -60,7 +60,6 @@ FWPropertyAssign(BOOL, hideToast);
     [super viewDidLoad];
     
     self.fwNavigationBar.fwBackgroundView.backgroundColor = Theme.backgroundColor;
-    self.fwNavigationView.scrollView = self.tableView;
     self.fwTabBarHidden = YES;
     [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];
     
