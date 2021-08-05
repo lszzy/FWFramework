@@ -1,15 +1,17 @@
 # 更新日志
 
-## [1.8.0] - 2021-08-01
+## [1.8.0] - 2021-08-05
 
 ### Added
 * 新增自定义导航栏FWNavigationView组件
+* 新增控制器快捷弹出popover控制器方法
 
 ### Changed
 * 修改最低兼容iOS版本为iOS10
 * 重构FWNavigationStyle实现方案，兼容自定义导航栏
 * 重构FWPopupMenuDelegate方法名称
 * 重构UIViewController导航栏高度获取方法
+* 修改Web容器JS桥接调用出错时支持回调
 
 ## [1.7.4] - 2021-07-14
 
