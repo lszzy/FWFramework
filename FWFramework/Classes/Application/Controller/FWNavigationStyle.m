@@ -11,6 +11,7 @@
 #import "FWNavigationView.h"
 #import "FWAdaptive.h"
 #import "FWSwizzle.h"
+#import "FWToolkit.h"
 #import "FWImage.h"
 #import "FWTheme.h"
 #import "FWBlock.h"
@@ -539,42 +540,6 @@
 }
 
 #pragma mark - State
-
-- (BOOL)fwIsRoot
-{
-    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
-}
-
-- (BOOL)fwIsChild
-{
-    UIViewController *parentController = self.parentViewController;
-    if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
-        ![parentController isKindOfClass:[UITabBarController class]]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)fwIsPresented
-{
-    UIViewController *viewController = self;
-    if (self.navigationController) {
-        if (self.navigationController.viewControllers.firstObject != self) return NO;
-        viewController = self.navigationController;
-    }
-    return viewController.presentingViewController.presentedViewController == viewController;
-}
-
-- (BOOL)fwIsPageSheet
-{
-    if (@available(iOS 13.0, *)) {
-        UIViewController *controller = self.navigationController ?: self;
-        if (!controller.presentingViewController) return NO;
-        UIModalPresentationStyle style = controller.modalPresentationStyle;
-        if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
-    }
-    return NO;
-}
 
 - (FWViewControllerVisibleState)fwVisibleState
 {
