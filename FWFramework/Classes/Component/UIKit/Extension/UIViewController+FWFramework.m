@@ -17,12 +17,6 @@
 API_AVAILABLE(ios(13.0))
 static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresentationAutomatic;
 
-@interface UIViewController ()
-
-@property (nonatomic, strong, readonly) UIView *fwView;
-
-@end
-
 @implementation UIViewController (FWFramework)
 
 - (BOOL)fwIsViewVisible
@@ -38,11 +32,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 - (void)setFwIsDataLoaded:(BOOL)fwIsDataLoaded
 {
     objc_setAssociatedObject(self, @selector(fwIsDataLoaded), @(fwIsDataLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIView *)fwProxyView
-{
-    return [self respondsToSelector:@selector(fwView)] ? self.fwView : self.view;
 }
 
 #pragma mark - Present
@@ -123,7 +112,7 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 
 - (void)fwAddChildViewController:(UIViewController *)viewController
 {
-    [self fwAddChildViewController:viewController inView:self.fwProxyView];
+    [self fwAddChildViewController:viewController inView:self.fwView];
 }
 
 - (void)fwAddChildViewController:(UIViewController *)viewController inView:(UIView *)view

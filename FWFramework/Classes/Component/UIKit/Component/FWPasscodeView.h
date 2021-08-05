@@ -287,7 +287,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
 /**
  textContentType，描述: 你可以设置为 'nil' 或者 'UITextContentTypeOneTimeCode' 来自动获取短信验证码，默认: nil
  */
-@property (null_unspecified,nonatomic,copy) UITextContentType textContentType NS_AVAILABLE_IOS(10_0);
+@property (null_unspecified,nonatomic,copy) UITextContentType textContentType;
 
 /**
  占位字符填充值，在对应的输入框没有内容时，会显示该值。默认：nil

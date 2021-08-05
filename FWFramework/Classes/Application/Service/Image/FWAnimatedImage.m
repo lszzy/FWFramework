@@ -65,11 +65,8 @@
     if (value) {
         return [value integerValue];
     }
-    if (@available(iOS 9.0, *)) {
-        CFStringRef uttype = CGImageGetUTType(self.CGImage);
-        return [NSData fwImageFormatFromUTType:uttype];
-    }
-    return FWImageFormatUndefined;
+    CFStringRef uttype = CGImageGetUTType(self.CGImage);
+    return [NSData fwImageFormatFromUTType:uttype];
 }
 
 - (void)setFwImageFormat:(FWImageFormat)fwImageFormat
