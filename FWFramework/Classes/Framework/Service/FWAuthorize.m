@@ -14,9 +14,8 @@
 #if FWCOMPONENT_CONTACTS_ENABLED
 
 #import <Contacts/Contacts.h>
-#import <AddressBook/AddressBook.h>
 
-// iOS9+使用Contacts，其它使用AddressBook
+// iOS9+使用Contacts
 @interface FWAuthorizeContacts : NSObject <FWAuthorizeProtocol>
 
 @end
@@ -25,63 +24,30 @@
 
 - (FWAuthorizeStatus)authorizeStatus
 {
-    if (@available(iOS 9.0, *)) {
-        CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
-        switch (status) {
-            case CNAuthorizationStatusRestricted:
-                return FWAuthorizeStatusRestricted;
-            case CNAuthorizationStatusDenied:
-                return FWAuthorizeStatusDenied;
-            case CNAuthorizationStatusAuthorized:
-                return FWAuthorizeStatusAuthorized;
-            case CNAuthorizationStatusNotDetermined:
-            default:
-                return FWAuthorizeStatusNotDetermined;
-        }
-    } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
-        switch (status) {
-            case kABAuthorizationStatusRestricted:
-                return FWAuthorizeStatusRestricted;
-            case kABAuthorizationStatusDenied:
-                return FWAuthorizeStatusDenied;
-            case kABAuthorizationStatusAuthorized:
-                return FWAuthorizeStatusAuthorized;
-            case kABAuthorizationStatusNotDetermined:
-            default:
-                return FWAuthorizeStatusNotDetermined;
-        }
-#pragma clang diagnostic pop
+    CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
+    switch (status) {
+        case CNAuthorizationStatusRestricted:
+            return FWAuthorizeStatusRestricted;
+        case CNAuthorizationStatusDenied:
+            return FWAuthorizeStatusDenied;
+        case CNAuthorizationStatusAuthorized:
+            return FWAuthorizeStatusAuthorized;
+        case CNAuthorizationStatusNotDetermined:
+        default:
+            return FWAuthorizeStatusNotDetermined;
     }
 }
 
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion
 {
-    if (@available(iOS 9.0, *)) {
-        [[CNContactStore new] requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(status);
-                });
-            }
-        }];
-    } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-            FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(status);
-                });
-            }
-        });
-#pragma clang diagnostic pop
-    }
+    [[CNContactStore new] requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        FWAuthorizeStatus status = granted ? FWAuthorizeStatusAuthorized : FWAuthorizeStatusDenied;
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(status);
+            });
+        }
+    }];
 }
 
 @end
@@ -390,46 +356,29 @@
 
 - (FWAuthorizeStatus)authorizeStatus
 {
-    // iOS9.3+需要授权
-    if (@available(iOS 9.3, *)) {
-        MPMediaLibraryAuthorizationStatus status = [MPMediaLibrary authorizationStatus];
-        switch (status) {
-            case MPMediaLibraryAuthorizationStatusRestricted:
-                return FWAuthorizeStatusRestricted;
-            case MPMediaLibraryAuthorizationStatusDenied:
-                return FWAuthorizeStatusDenied;
-            case MPMediaLibraryAuthorizationStatusAuthorized:
-                return FWAuthorizeStatusAuthorized;
-            case MPMediaLibraryAuthorizationStatusNotDetermined:
-            default:
-                return FWAuthorizeStatusNotDetermined;
-        }
+    MPMediaLibraryAuthorizationStatus status = [MPMediaLibrary authorizationStatus];
+    switch (status) {
+        case MPMediaLibraryAuthorizationStatusRestricted:
+            return FWAuthorizeStatusRestricted;
+        case MPMediaLibraryAuthorizationStatusDenied:
+            return FWAuthorizeStatusDenied;
+        case MPMediaLibraryAuthorizationStatusAuthorized:
+            return FWAuthorizeStatusAuthorized;
+        case MPMediaLibraryAuthorizationStatusNotDetermined:
+        default:
+            return FWAuthorizeStatusNotDetermined;
     }
-    
-    // iOS9.3以前不需要授权
-    return FWAuthorizeStatusAuthorized;
 }
 
 - (void)authorize:(void (^)(FWAuthorizeStatus status))completion
 {
-    // iOS9.3+需要授权
-    if (@available(iOS 9.3, *)) {
-        [MPMediaLibrary requestAuthorization:^(MPMediaLibraryAuthorizationStatus status) {
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(self.authorizeStatus);
-                });
-            }
-        }];
-        return;
-    }
-    
-    // iOS9.3以前不需要授权
-    if (completion) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(self.authorizeStatus);
-        });
-    }
+    [MPMediaLibrary requestAuthorization:^(MPMediaLibraryAuthorizationStatus status) {
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(self.authorizeStatus);
+            });
+        }
+    }];
 }
 
 @end

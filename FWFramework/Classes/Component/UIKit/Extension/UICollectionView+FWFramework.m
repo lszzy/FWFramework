@@ -83,10 +83,8 @@
 
 - (void)fwHoverWithHeader:(BOOL)header footer:(BOOL)footer
 {
-    if (@available(iOS 9.0, *)) {
-        self.sectionHeadersPinToVisibleBounds = header;
-        self.sectionFootersPinToVisibleBounds = footer;
-    }
+    self.sectionHeadersPinToVisibleBounds = header;
+    self.sectionFootersPinToVisibleBounds = footer;
 }
 
 @end
