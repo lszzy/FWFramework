@@ -177,13 +177,13 @@ extension TestPromiseViewController {
             return Self.successPromise(value.fwAsInt)
         }.then({ value in
             return value.fwAsInt + 1
-        }).done { value in
+        }).done({ value in
             Self.showMessage("done: 3 => \(value.fwAsInt)")
-        } catch: { error in
+        }, catch: { error in
             Self.showMessage("error: \(error)")
-        } finally: {
+        }, finally: {
             Self.isLoading = false
-        }
+        })
     }
     
     @objc func onAwait() {
@@ -377,15 +377,15 @@ extension TestPromiseViewController {
             return value
         }).delay(1).timeout(30).retry(1, delay: 0, block: {
             return Self.successPromise()
-        }).done { value in
+        }).done({ value in
             Self.showMessage("\(value.fwAsString)")
-        } catch: { error in
+        }, catch: { error in
             Self.showMessage("\(error)")
-        } progress: { progress in
+        }, progress: { progress in
             UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", progress * 100), progress: CGFloat(progress))
-        } finally: {
+        }, finally: {
             UIWindow.fwMain?.fwHideProgress()
-        }
+        })
     }
     
     @objc func onProgress2() {
@@ -402,14 +402,14 @@ extension TestPromiseViewController {
             promise = FWPromise.race(promises)
         }
         UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", 0 * 100), progress: 0)
-        promise?.done { value in
+        promise?.done({ value in
             Self.showMessage("\(value.fwAsString)")
-        } catch: { error in
+        }, catch: { error in
             Self.showMessage("\(error)")
-        } progress: { progress in
+        }, progress: { progress in
             UIWindow.fwMain?.fwShowProgress(withText: String(format: "\(index)下载中(%.0f%%)", progress * 100), progress: CGFloat(progress))
-        } finally: {
+        }, finally: {
             UIWindow.fwMain?.fwHideProgress()
-        }
+        })
     }
 }

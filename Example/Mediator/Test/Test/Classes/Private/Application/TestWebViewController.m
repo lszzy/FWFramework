@@ -27,7 +27,7 @@
 
 - (NSArray *)webItems
 {
-    if (self.navigationItem.leftBarButtonItem) {
+    if (self.fwNavigationItem.leftBarButtonItem) {
         return nil;
     } else {
         return @[
@@ -59,7 +59,7 @@
 
 - (void)renderWebView
 {
-    self.view.backgroundColor = [Theme tableColor];
+    self.fwView.backgroundColor = [Theme tableColor];
     self.webView.scrollView.backgroundColor = [UIColor clearColor];
     self.webView.scrollView.showsVerticalScrollIndicator = NO;
     self.webView.scrollView.showsHorizontalScrollIndicator = NO;
@@ -68,7 +68,7 @@
     UILabel *tipLabel = [UILabel new];
     tipLabel.font = [UIFont systemFontOfSize:12];
     tipLabel.textColor = [Theme detailColor];
-    [self.view insertSubview:tipLabel belowSubview:self.webView];
+    [self.fwView insertSubview:tipLabel belowSubview:self.webView];
     tipLabel.fwLayoutChain.centerX().topWithInset(10);
     [self.webView fwObserveProperty:@"URL" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
         if (webView.URL.host.length > 0) {

@@ -9,9 +9,7 @@
 
 #import "UISearchBar+FWFramework.h"
 #import "FWSwizzle.h"
-#import "UIView+FWFramework.h"
 #import "FWMessage.h"
-#import "FWAutoLayout.h"
 #import "FWAdaptive.h"
 #import "FWImage.h"
 #import <objc/runtime.h>
@@ -172,20 +170,6 @@
     } else {
         [self.fwCancelButton fwUnobserveProperty:@"enabled"];
     }
-}
-
-#pragma mark - Navigation
-
-- (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem
-{
-    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
-    titleView.fwIntrinsicContentSize = UILayoutFittingExpandedSize;
-    titleView.backgroundColor = [UIColor clearColor];
-    [titleView addSubview:self];
-    [self fwPinEdgesToSuperview];
-    
-    navigationItem.titleView = titleView;
-    return titleView;
 }
 
 @end

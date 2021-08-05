@@ -8,7 +8,7 @@
  */
 
 #import "FWNavigationController.h"
-#import "FWViewControllerStyle.h"
+#import "FWNavigationStyle.h"
 #import "FWSwizzle.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>

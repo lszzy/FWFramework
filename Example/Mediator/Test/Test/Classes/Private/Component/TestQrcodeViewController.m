@@ -26,8 +26,8 @@
     [super viewDidLoad];
     self.fwNavigationBarStyle = FWNavigationBarStyleTransparent;
     self.fwExtendedLayoutEdge = UIRectEdgeTop;
-    self.navigationItem.title = @"扫一扫";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStyleDone target:self action:@selector(onPhotoLibrary)];
+    self.fwNavigationItem.title = @"扫一扫";
+    self.fwNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStyleDone target:self action:@selector(onPhotoLibrary)];
     
     // 相机授权
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {

@@ -230,6 +230,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
     if (!object) object = [FWStatisticalObject new];
     object.view = self;
     object.indexPath = indexPath;
+    if (object.triggerIgnored) return;
     NSInteger triggerCount = [self fwStatisticalClickCount:indexPath];
     if (triggerCount > 1 && object.triggerOnce) return;
     object.triggerCount = triggerCount;
@@ -295,6 +296,7 @@ NSString *const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTr
 {
     FWStatisticalObject *object = self.fwStatisticalChanged ?: [FWStatisticalObject new];
     object.view = self;
+    if (object.triggerIgnored) return;
     NSInteger triggerCount = [self fwStatisticalChangedCount];
     if (triggerCount > 1 && object.triggerOnce) return;
     object.triggerCount = triggerCount;
@@ -437,7 +439,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 - (NSString *)fwStatisticalExposureIdentifier
 {
     NSIndexPath *indexPath = nil;
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionView class]]) {
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
         indexPath = [(UITableViewCell *)self fwIndexPath];
     }
     
@@ -650,6 +652,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     if (!object) object = [FWStatisticalObject new];
     object.view = self;
     object.indexPath = indexPath;
+    if (object.triggerIgnored) return;
     NSInteger triggerCount = [self fwStatisticalExposureCount:indexPath];
     if (triggerCount > 1 && object.triggerOnce) return;
     object.triggerCount = triggerCount;

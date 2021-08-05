@@ -9,7 +9,7 @@
 
 #import "UIApplication+FWFramework.h"
 #import "FWEncode.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWToolkit.h"
 #import <StoreKit/StoreKit.h>
 
@@ -124,7 +124,7 @@
 {
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     activityController.excludedActivityTypes = excludedTypes;
-    [FWRouter presentViewController:activityController animated:YES completion:nil];
+    [[UIWindow fwMainWindow] fwPresentViewController:activityController animated:YES completion:nil];
 }
 
 + (void)fwSendEmail:(NSString *)email

@@ -24,7 +24,7 @@
     
     [self fwSetLeftBarItem:[CoreBundle imageNamed:@"back"] target:self action:@selector(onClose)];
     FWBadgeView *badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleDot];
-    [self.navigationItem.leftBarButtonItem fwShowBadgeView:badgeView badgeValue:nil];
+    [self.fwNavigationItem.leftBarButtonItem fwShowBadgeView:badgeView badgeValue:nil];
     
     UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
@@ -35,7 +35,7 @@
     UIBarButtonItem *customItem = [UIBarButtonItem fwBarItemWithObject:customView target:self action:@selector(onClick:)];
     badgeView = [[FWBadgeView alloc] initWithBadgeStyle:FWBadgeStyleSmall];
     [customItem fwShowBadgeView:badgeView badgeValue:@"1"];
-    self.navigationItem.rightBarButtonItems = @[rightItem, customItem];
+    self.fwNavigationItem.rightBarButtonItems = @[rightItem, customItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated

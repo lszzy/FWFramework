@@ -40,11 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
 @property (nonatomic, assign) BOOL fwForceCancelButtonEnabled;
 
-#pragma mark - Navigation
-
-// 添加到导航栏titleView。不能直接设置为titleView，需要包裹一层再添加
-- (UIView *)fwAddToNavigationItem:(UINavigationItem *)navigationItem;
-
 @end
 
 NS_ASSUME_NONNULL_END

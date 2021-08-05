@@ -77,7 +77,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
             if (success) return;
             
             TestWebViewController *viewController = [TestWebViewController new];
-            viewController.navigationItem.title = context.URL;
+            viewController.fwNavigationItem.title = context.URL;
             viewController.requestUrl = context.URL;
             [FWRouter pushViewController:viewController animated:YES];
         }];
@@ -238,7 +238,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)renderModel
 {
-    self.navigationItem.title = @"FWRouter";
+    self.fwNavigationItem.title = @"FWRouter";
     NSString *url = @"http://test.com?id=我是中文";
     FWLogDebug(@"fwUrlEncode: %@", [url fwUrlEncode]);
     FWLogDebug(@"fwUrlDecode: %@", [[url fwUrlEncode] fwUrlDecode]);
@@ -505,7 +505,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 - (void)onOpen14
 {
     TestViewController *viewController = [TestViewController new];
-    viewController.navigationItem.title = @"iOS14 bug";
+    viewController.fwNavigationItem.title = @"iOS14 bug";
     FWWeakifySelf();
     viewController.fwBackBarBlock = ^BOOL{
         FWStrongifySelf();

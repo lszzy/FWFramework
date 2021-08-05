@@ -199,20 +199,44 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
  */
 @interface UIView (FWToolkit)
 
+/// 顶部纵坐标，frame.origin.y
+@property (nonatomic, assign) CGFloat fwTop;
+
+/// 底部纵坐标，frame.origin.y + frame.size.height
+@property (nonatomic, assign) CGFloat fwBottom;
+
+/// 左边横坐标，frame.origin.x
+@property (nonatomic, assign) CGFloat fwLeft;
+
+/// 右边横坐标，frame.origin.x + frame.size.width
+@property (nonatomic, assign) CGFloat fwRight;
+
+/// 宽度，frame.size.width
+@property (nonatomic, assign) CGFloat fwWidth;
+
+/// 高度，frame.size.height
+@property (nonatomic, assign) CGFloat fwHeight;
+
+/// 中心横坐标，center.x
+@property (nonatomic, assign) CGFloat fwCenterX;
+
+/// 中心纵坐标，center.y
+@property (nonatomic, assign) CGFloat fwCenterY;
+
+/// 起始横坐标，frame.origin.x
+@property (nonatomic, assign) CGFloat fwX;
+
+/// 起始纵坐标，frame.origin.y
+@property (nonatomic, assign) CGFloat fwY;
+
+/// 起始坐标，frame.origin
+@property (nonatomic, assign) CGPoint fwOrigin;
+
+/// 大小，frame.size
+@property (nonatomic, assign) CGSize fwSize;
+
 /// 获取响应的视图控制器
 @property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
-
-@end
-
-#pragma mark - UIViewController+FWToolkit
-
-/*!
- @brief UIViewController+FWToolkit
- */
-@interface UIViewController (FWToolkit)
-
-/// 当前视图，默认view，用于兼容自定义导航栏
-@property (nonatomic, strong, readonly) UIView *fwView;
 
 @end
 
