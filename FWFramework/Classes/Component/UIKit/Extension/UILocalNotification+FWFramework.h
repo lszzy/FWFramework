@@ -13,25 +13,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
- @brief UILocalNotification+FWFramework
- */
-@interface UILocalNotification (FWFramework)
-
-// 创建本地通知，badge为0时不显示，soundName为default时为默认声音，timeInterval为距离当前时间戳，repeatInterval为0时不重复
-+ (instancetype)fwLocalNotificationWithTitle:(nullable NSString *)title body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo category:(nullable NSString *)category badge:(NSInteger)badge soundName:(nullable NSString *)soundName fireDate:(nullable NSDate *)fireDate repeatInterval:(NSCalendarUnit)repeatInterval;
-
-// 注册本地通知，scheduled为NO时立即触发，iOS8+
-+ (void)fwRegisterLocalNotification:(UILocalNotification *)notification scheduled:(BOOL)scheduled;
-
-// 删除已安排的本地通知，iOS8+
-+ (void)fwRemoveLocalNotification:(UILocalNotification *)notification;
-
-// 删除所有已安排的本地通知，iOS8+
-+ (void)fwRemoveAllLocalNotifications;
-
-@end
-
-/*!
  @brief UNUserNotificationCenter+FWFramework
  */
 @interface UNUserNotificationCenter (FWFramework)

@@ -9,7 +9,7 @@
 
 #import "FWCollectionViewController.h"
 #import "FWAutoLayout.h"
-#import "FWNavigationView.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWViewControllerManager+FWCollectionViewController

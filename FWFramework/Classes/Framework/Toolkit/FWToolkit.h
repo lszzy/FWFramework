@@ -240,4 +240,28 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
+#pragma mark - UIViewController+FWToolkit
+
+/*!
+ @brief UIViewController+FWToolkit
+ */
+@interface UIViewController (FWToolkit)
+
+/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsRoot;
+
+/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsChild;
+
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsPresented;
+
+/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
+
+/// 当前内容视图，默认view，用于兼容自定义导航栏等方案
+@property (nonatomic, strong, readonly) UIView *fwView;
+
+@end
+
 NS_ASSUME_NONNULL_END

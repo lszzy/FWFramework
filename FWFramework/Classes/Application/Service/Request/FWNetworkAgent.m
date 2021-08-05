@@ -68,9 +68,7 @@
         // Take over the status code validation
         _manager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _manager.completionQueue = _processingQueue;
-        if (@available(iOS 10, *)) {
-            [_manager setTaskDidFinishCollectingMetricsBlock:_config.collectingMetricsBlock];
-        }
+        [_manager setTaskDidFinishCollectingMetricsBlock:_config.collectingMetricsBlock];
     }
     return self;
 }

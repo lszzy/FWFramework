@@ -188,9 +188,7 @@ open class FWPagingListContainerView: UIView {
             collectionView.dataSource = self
             collectionView.delegate = self
             collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-            if #available(iOS 10.0, *) {
-                collectionView.isPrefetchingEnabled = false
-            }
+            collectionView.isPrefetchingEnabled = false
             if #available(iOS 11.0, *) {
                 self.collectionView.contentInsetAdjustmentBehavior = .never
             }
@@ -1204,9 +1202,7 @@ open class FWPagingSmoothView: UIView {
         listCollectionView.showsHorizontalScrollIndicator = false
         listCollectionView.scrollsToTop = false
         listCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        if #available(iOS 10.0, *) {
-            listCollectionView.isPrefetchingEnabled = false
-        }
+        listCollectionView.isPrefetchingEnabled = false
         if #available(iOS 11.0, *) {
             listCollectionView.contentInsetAdjustmentBehavior = .never
         }
