@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
 /**
- * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度
+ * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度，要求scrollView内容足够高
  *
  * 1. 如果bottomHeight > 0，则滚动bottomView并更新bottomHeight
  * 2. 如果bottomHeight为0，且middleHeight > contentHeight，则滚动middleView并更新middleHeight(变为固定高度)
