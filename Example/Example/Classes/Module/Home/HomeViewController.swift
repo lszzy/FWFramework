@@ -32,12 +32,14 @@ class HomeViewController: UIViewController, FWViewController {
     }
     
     func renderData() {
-        #if APP_PROD
-        let envTitle = FWLocalizedString("envProd")
-        #elseif APP_TEST
-        let envTitle = FWLocalizedString("envTest")
+        #if APP_PRODUCTION
+        let envTitle = FWLocalizedString("envProduction")
+        #elseif APP_STAGING
+        let envTitle = FWLocalizedString("envStaging")
+        #elseif APP_TESTING
+        let envTitle = FWLocalizedString("envTesting")
         #else
-        let envTitle = FWLocalizedString("envDev")
+        let envTitle = FWLocalizedString("envDevelopment")
         #endif
         fwBarTitle = "\(FWLocalizedString("homeTitle")) - \(envTitle)"
         

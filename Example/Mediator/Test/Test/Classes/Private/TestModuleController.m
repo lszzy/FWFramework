@@ -51,6 +51,17 @@
     return _searchBar;
 }
 
+- (UIView *)titleView
+{
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWNavigationBarHeight)];
+    [titleView fwSetDimension:NSLayoutAttributeHeight toSize:FWNavigationBarHeight];
+    titleView.fwIntrinsicContentSize = UILayoutFittingExpandedSize;
+    titleView.backgroundColor = [UIColor clearColor];
+    [titleView addSubview:self.searchBar];
+    [self.searchBar fwPinEdgesToSuperview];
+    return titleView;
+}
+
 - (NSArray *)displayData
 {
     return self.isSearch ? self.searchResult : self.tableData;
@@ -74,7 +85,8 @@
     [self.tableData addObjectsFromArray:@[
         @[@"Framework", @[
               @[@"FWRouter", @"TestRouterViewController"],
-              @[@"FWRouter+Navigation", @"TestWindowViewController"],
+              @[@"FWNavigation", @"TestWindowViewController"],
+              @[@"FWWorkflow", @"TestWorkflowViewController"],
               @[@"FWEncode", @"TestCrashViewController"],
               @[@"FWLayoutChain", @"TestChainViewController"],
               @[@"FWTheme", @"TestThemeViewController"],
@@ -105,6 +117,7 @@
               @[@"FWViewController", @"Test.TestSwiftViewController"],
               @[@"FWScrollViewController", @"TestControllerViewController"],
               @[@"FWNavigationView", @"TestNavigationTitleViewController"],
+              @[@"FWNavigationView+Scroll", @"Test.TestNavigationScrollViewController"],
               @[@"FWTabBarController", @"TestTabBarViewController"],
               @[@"FWCache", @"TestCacheViewController"],
               ]],
@@ -122,7 +135,6 @@
               @[@"NSAttributedString+FWOption", @"TestAttributedStringViewController"],
               @[@"UITableView+Hover", @"TestScrollViewController"],
               @[@"UIViewController+FWTransition", @"TestTransitionViewController"],
-              @[@"UIViewController+FWWorkflow", @"TestWorkflowViewController"],
               @[@"UIViewController+FWFramework", @"Test.TestChildViewController"],
               @[@"UITextField+FWKeyboard", @"TestKeyboardViewController"],
               @[@"UILabel+FWFramework", @"TestLabelViewController"],
@@ -154,8 +166,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.searchBar fwAddToNavigationItem:self.navigationItem];
+    if (@available(iOS 11.0, *)) {
+        self.fwNavigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    self.fwNavigationView.scrollView = self.tableView;
+    self.fwBarTitle = [self titleView];
 }
 
 #pragma mark - UISearchBar
@@ -242,7 +257,7 @@
     
     Class controllerClass = NSClassFromString([rowData objectAtIndex:1]);
     UIViewController *viewController = [[controllerClass alloc] init];
-    viewController.navigationItem.title = [rowData objectAtIndex:0];
+    viewController.fwNavigationItem.title = [rowData objectAtIndex:0];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

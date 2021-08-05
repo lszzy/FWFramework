@@ -1,7 +1,7 @@
 /*!
- @header     FWViewControllerStyle.h
+ @header     FWNavigationStyle.h
  @indexgroup FWFramework
- @brief      FWViewControllerStyle
+ @brief      FWNavigationStyle
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/12/5
@@ -23,6 +23,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 @interface FWNavigationBarAppearance : NSObject
 
 @property (nullable, nonatomic, strong) UIColor *foregroundColor;
+@property (nullable, nonatomic, strong) UIColor *titleColor;
 @property (nullable, nonatomic, strong) UIColor *backgroundColor;
 @property (nullable, nonatomic, strong) UIImage *backgroundImage;
 @property (nonatomic, assign) BOOL isHidden;
@@ -55,7 +56,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 #pragma mark - UIViewController+FWStyle
 
 /*!
- @brief 视图控制器样式分类
+ @brief 视图控制器样式分类，兼容系统导航栏和自定义导航栏(default和custom样式)
  @discussion 需要设置UIViewControllerBasedStatusBarAppearance为YES，视图控制器修改状态栏样式才会生效
  */
 @interface UIViewController (FWStyle)
@@ -77,9 +78,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 当前导航栏设置，优先级高于style和hidden，设置后会在viewWillAppear:自动应用生效
 @property (nullable, nonatomic, strong) FWNavigationBarAppearance *fwNavigationBarAppearance;
 
-/// 当前导航栏，默认navigationController.navigationBar，用于兼容自定义导航栏
-@property (nullable, nonatomic, readonly) UINavigationBar *fwNavigationBar;
-
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fwTabBarHidden;
 
@@ -89,15 +87,26 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
+#pragma mark - Height
+
+/// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
+
+/// 当前导航栏布局高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
+
+/// 当前顶部栏布局高度，导航栏隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
+
+/// 当前标签栏布局高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;
+
+/// 当前工具栏布局高度，隐藏时为0，推荐使用
+@property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
+
 #pragma mark - Item
 
-/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES，方便设置关闭按钮
-@property (nonatomic, assign, readonly) BOOL fwIsPresented;
-
-/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES，方便设置关闭按钮
-@property (nonatomic, assign, readonly) BOOL fwIsRoot;
-
-/// 快捷设置导航栏标题文字或试图
+/// 快捷设置导航栏标题文字或视图
 @property (nonatomic, strong, nullable) id fwBarTitle;
 
 /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
@@ -118,6 +127,18 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 快捷设置导航栏右侧按钮，block事件
 - (void)fwSetRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
+/// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)fwAddLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)fwAddLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏右侧按钮
+- (void)fwAddRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏右侧按钮，block事件
+- (void)fwAddRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+
 #pragma mark - Back
 
 /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
@@ -130,6 +151,18 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 @property (nonatomic, copy, nullable) BOOL (^fwBackBarBlock)(void);
 
 #pragma mark - State
+
+/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsRoot;
+
+/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsChild;
+
+/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
+@property (nonatomic, assign, readonly) BOOL fwIsPresented;
+
+/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
 
 /// 当前生命周期状态，默认Default
 @property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;
@@ -146,26 +179,37 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UINavigationBar (FWStyle)
 
-/// 导航栏背景视图，显示背景色和背景图片等
-@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
+/// 设置返回按钮图片，包含图片和转场Mask图片
+@property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色(nil时透明)并隐藏底部线条，自动清空主题背景
+/// 单独设置标题颜色，nil时显示前景颜色
+@property (nonatomic, strong, nullable) UIColor *fwTitleColor UI_APPEARANCE_SELECTOR;
+
+/// 设置背景颜色(nil时透明)并隐藏底部线条，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景图片(nil时透明)并隐藏底部线条，自动清空主题背景
+/// 设置背景图片(nil时透明)并隐藏底部线条，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
-
-/// 设置主题背景色(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
-
-/// 设置主题背景图片(nil时透明)并隐藏底部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
+
+#pragma mark - View
+
+/// 导航栏内容视图，iOS11+才存在，显示item和titleView等
+@property (nonatomic, readonly, nullable) UIView *fwContentView;
+
+/// 导航栏背景视图，显示背景色和背景图片等
+@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
+
+/// 导航栏大标题视图，显示时才有值。如果要设置背景色，可使用fwBackgroundView.backgroundColor
+@property (nonatomic, readonly, nullable) UIView *fwLargeTitleView;
+
+/// 导航栏大标题高度，与是否隐藏无关
+@property (class, nonatomic, readonly, assign) CGFloat fwLargeTitleHeight;
 
 @end
 
@@ -179,17 +223,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色并隐藏顶部线条，自动清空主题背景
+/// 设置背景颜色并隐藏顶部线条，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置背景图片并隐藏顶部线条，自动清空主题背景
+/// 设置背景图片并隐藏顶部线条，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
-
-/// 设置主题背景色并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIColor *fwThemeBackgroundColor;
-
-/// 设置主题背景图片并隐藏顶部线条，自动跟随系统改变，自动覆盖主题背景
-@property (nonatomic, strong, nullable) UIImage *fwThemeBackgroundImage;
 
 @end
 

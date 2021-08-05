@@ -8,6 +8,7 @@
  */
 
 #import "FWRefreshPluginImpl.h"
+#import "FWMessage.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
@@ -154,7 +155,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
                 [scrollView removeObserver:self forKeyPath:@"frame"];
-                [scrollView.panGestureRecognizer removeObserver:self forKeyPath:@"state"];
+                [scrollView.panGestureRecognizer fwUnobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
                 self.isObserving = NO;
             }
         }
@@ -315,12 +316,14 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         self.frame = CGRectMake(0, -self.scrollView.fwPullRefreshHeight, self.bounds.size.width, self.scrollView.fwPullRefreshHeight);
     }else if([keyPath isEqualToString:@"frame"]) {
         [self layoutSubviews];
-    }else if([keyPath isEqualToString:@"state"]) {
-        UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
-        if (state == UIGestureRecognizerStateBegan) {
-            self.isActive = NO;
-            self.scrollView.fwInfiniteScrollView.isActive = NO;
-        }
+    }
+}
+
+- (void)gestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer stateChanged:(NSDictionary *)change {
+    UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
+    if (state == UIGestureRecognizerStateBegan) {
+        self.isActive = NO;
+        self.scrollView.fwInfiniteScrollView.isActive = NO;
     }
 }
 
@@ -619,7 +622,7 @@ static char UIScrollViewFWPullRefreshView;
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"contentOffset"];
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"contentSize"];
             [self removeObserver:self.fwPullRefreshView forKeyPath:@"frame"];
-            [self.panGestureRecognizer removeObserver:self.fwPullRefreshView forKeyPath:@"state"];
+            [self.panGestureRecognizer fwUnobserveProperty:@"state" target:self.fwPullRefreshView action:@selector(gestureRecognizer:stateChanged:)];
             [self.fwPullRefreshView resetScrollViewContentInset];
             self.fwPullRefreshView.isObserving = NO;
         }
@@ -629,7 +632,7 @@ static char UIScrollViewFWPullRefreshView;
             [self addObserver:self.fwPullRefreshView forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
             [self addObserver:self.fwPullRefreshView forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
             [self addObserver:self.fwPullRefreshView forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
-            [self.panGestureRecognizer addObserver:self.fwPullRefreshView forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+            [self.panGestureRecognizer fwObserveProperty:@"state" target:self.fwPullRefreshView action:@selector(gestureRecognizer:stateChanged:)];
             self.fwPullRefreshView.isObserving = YES;
             
             [self.fwPullRefreshView setNeedsLayout];
@@ -679,7 +682,7 @@ static char UIScrollViewFWPullRefreshView;
             if (self.isObserving) {
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
-                [scrollView.panGestureRecognizer removeObserver:self forKeyPath:@"state"];
+                [scrollView.panGestureRecognizer fwUnobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
                 self.isObserving = NO;
             }
         }
@@ -740,17 +743,19 @@ static char UIScrollViewFWPullRefreshView;
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
         self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.bounds.size.width, self.scrollView.fwInfiniteScrollHeight);
-    }else if([keyPath isEqualToString:@"state"]) {
-        UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
-        if (state == UIGestureRecognizerStateBegan) {
-            self.isActive = NO;
-            self.scrollView.fwPullRefreshView.isActive = NO;
-        } else if (state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
-            if (self.scrollView.contentOffset.y >= 0) {
-                self.state = FWInfiniteScrollStateLoading;
-            } else {
-                self.state = FWInfiniteScrollStateStopped;
-            }
+    }
+}
+
+- (void)gestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer stateChanged:(NSDictionary *)change {
+    UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
+    if (state == UIGestureRecognizerStateBegan) {
+        self.isActive = NO;
+        self.scrollView.fwPullRefreshView.isActive = NO;
+    } else if (state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
+        if (self.scrollView.contentOffset.y >= 0) {
+            self.state = FWInfiniteScrollStateLoading;
+        } else {
+            self.state = FWInfiniteScrollStateStopped;
         }
     }
 }
@@ -979,7 +984,7 @@ static char UIScrollViewFWInfiniteScrollView;
         if (self.fwInfiniteScrollView.isObserving) {
             [self removeObserver:self.fwInfiniteScrollView forKeyPath:@"contentOffset"];
             [self removeObserver:self.fwInfiniteScrollView forKeyPath:@"contentSize"];
-            [self.panGestureRecognizer removeObserver:self.fwInfiniteScrollView forKeyPath:@"state"];
+            [self.panGestureRecognizer fwUnobserveProperty:@"state" target:self.fwInfiniteScrollView action:@selector(gestureRecognizer:stateChanged:)];
             [self.fwInfiniteScrollView resetScrollViewContentInset];
             self.fwInfiniteScrollView.isObserving = NO;
         }
@@ -988,7 +993,7 @@ static char UIScrollViewFWInfiniteScrollView;
         if (!self.fwInfiniteScrollView.isObserving) {
             [self addObserver:self.fwInfiniteScrollView forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
             [self addObserver:self.fwInfiniteScrollView forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
-            [self.panGestureRecognizer addObserver:self.fwInfiniteScrollView forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+            [self.panGestureRecognizer fwObserveProperty:@"state" target:self.fwInfiniteScrollView action:@selector(gestureRecognizer:stateChanged:)];
             [self.fwInfiniteScrollView setScrollViewContentInsetForInfiniteScrolling];
             self.fwInfiniteScrollView.isObserving = YES;
             

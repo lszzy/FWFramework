@@ -6,7 +6,7 @@ itc_team_id("{itc_team_id}") # App Store Connect Team ID
 team_id("{team_id}") # Developer Portal Team ID
 
 # https://docs.fastlane.tools/advanced/Appfile/
-for_lane :testflight_test do
+for_lane :testflight_testing do
   app_identifier("{app_identifier}")
   apple_id("{apple_id}")
   itc_team_id("{itc_team_id}")

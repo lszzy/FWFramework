@@ -11,6 +11,12 @@ import FWFramework
     @FWUserDefaultAnnotation("isNavBarCustom", defaultValue: false)
     public static var isNavBarCustom: Bool
     
+    @FWUserDefaultAnnotation("isNavStyleCustom", defaultValue: false)
+    public static var isNavStyleCustom: Bool
+    
+    @FWUserDefaultAnnotation("isLargeTitles", defaultValue: false)
+    public static var isLargeTitles: Bool
+    
     public static var backgroundColor: UIColor {
         UIColor.fwThemeLight(.white, dark: .black)
     }
@@ -32,11 +38,14 @@ import FWFramework
     public static var borderColor: UIColor {
         UIColor.fwThemeLight(.fwColor(withHex: 0xDDDDDD), dark: .fwColor(withHex: 0x303030))
     }
+    public static var buttonColor: UIColor {
+        UIColor.fwThemeLight(.fwColor(withHex: 0x017AFF), dark: .fwColor(withHex: 0x0A84FF))
+    }
     
     public static func largeButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
-        button.setBackgroundImage(UIImage.fwImage(with: UIColor.fwThemeLight(.fwColor(withHex: 0x017AFF), dark: .fwColor(withHex: 0x0A84FF))), for: .normal)
+        button.setBackgroundImage(UIImage.fwImage(with: Theme.buttonColor), for: .normal)
         button.titleLabel?.font = .fwBoldFont(ofSize: 17)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
@@ -126,9 +135,13 @@ extension Theme {
     
     func viewControllerLoadView(_ viewController: UIViewController) {
         viewController.view.backgroundColor = Theme.tableColor
+        viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
     }
     
     func viewControllerViewDidLoad(_ viewController: UIViewController) {
         viewController.fwBackBarItem = CoreBundle.imageNamed("back")
+        if #available(iOS 11.0, *) {
+            viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
+        }
     }
 }

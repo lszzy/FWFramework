@@ -115,7 +115,7 @@
     self.imageView.image = image;
     [self layoutImageView];
     
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.fwNavigationItem.rightBarButtonItem.enabled = YES;
     
     if (cropViewController.croppingStyle != FWCropViewCroppingStyleCircular) {
         self.imageView.hidden = YES;
@@ -187,7 +187,7 @@
                                              profilePicker.allowsEditing = NO;
                                              profilePicker.delegate = self;
                                              profilePicker.preferredContentSize = CGSizeMake(512,512);
-                                             profilePicker.popoverPresentationController.barButtonItem = self.navigationItem.leftBarButtonItem;
+                                             profilePicker.popoverPresentationController.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
                                              [self presentViewController:profilePicker animated:YES completion:nil];
                                          }];
     
@@ -196,7 +196,7 @@
     [alertController setModalPresentationStyle:UIModalPresentationPopover];
     
     UIPopoverPresentationController *popPresenter = [alertController popoverPresentationController];
-    popPresenter.barButtonItem = self.navigationItem.leftBarButtonItem;
+    popPresenter.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -218,17 +218,17 @@
 #pragma mark - View Creation/Lifecycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = NSLocalizedString(@"FWCropViewController", @"");
+    self.fwNavigationItem.title = NSLocalizedString(@"FWCropViewController", @"");
     
     self.navigationController.navigationBar.translucent = NO;
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showCropViewController)];
+    self.fwNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showCropViewController)];
     
 #if TARGET_APP_EXTENSION
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissViewController)];
+    self.fwNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissViewController)];
 #else
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(sharePhoto:)];
-    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.fwNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(sharePhoto:)];
+    self.fwNavigationItem.rightBarButtonItem.enabled = NO;
 #endif
     
     FWWeakifySelf();

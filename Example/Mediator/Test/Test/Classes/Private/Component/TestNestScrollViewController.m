@@ -308,7 +308,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar fwSetBackgroundTransparent];
+    [self.fwNavigationBar fwSetBackgroundTransparent];
 }
 
 - (void)onRefreshing
@@ -358,7 +358,7 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     UIView *cartView = [UIView fwAutoLayoutView];
     _cartView = cartView;
     cartView.backgroundColor = [UIColor greenColor];
-    [self.fwView addSubview:cartView];
+    [self.view addSubview:cartView];
     [cartView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
     [cartView fwSetDimension:NSLayoutAttributeHeight toSize:CartViewHeight];
     UILabel *cartLabel = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[UIColor blackColor] text:@"我是购物车"];
@@ -417,14 +417,14 @@ static NSString * const kTestNestCollectionCellID = @"kTestNestCollectionCellID"
     // 导航栏透明度
     CGFloat progress = scrollView.contentOffset.y / (HeaderViewHeight - NavigationViewHeight);
     if (progress >= 1) {
-        self.navigationController.navigationBar.fwBackgroundColor = [Theme barColor];
-        self.navigationController.navigationBar.fwForegroundColor = [Theme textColor];
+        self.fwNavigationBar.fwBackgroundColor = [Theme barColor];
+        self.fwNavigationBar.fwForegroundColor = [Theme textColor];
     } else if (progress >= 0 && progress < 1) {
-        self.navigationController.navigationBar.fwBackgroundColor = [[Theme barColor] colorWithAlphaComponent:progress];
+        self.fwNavigationBar.fwBackgroundColor = [[Theme barColor] colorWithAlphaComponent:progress];
         if (progress <= 0.5) {
-            self.navigationController.navigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:1 - progress];
+            self.fwNavigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:1 - progress];
         } else {
-            self.navigationController.navigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:progress];
+            self.fwNavigationBar.fwForegroundColor = [[Theme textColor] colorWithAlphaComponent:progress];
         }
     }
 }

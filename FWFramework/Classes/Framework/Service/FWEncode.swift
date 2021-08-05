@@ -342,10 +342,6 @@ extension String: FWSafeUnwrappable {
     public static var fwSafeValue: String = ""
     public var fwIsEmpty: Bool { return self.isEmpty }
 }
-extension NSNumber: FWSafeUnwrappable {
-    public static var fwSafeValue: Self { return Self.init(value: 0) }
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
-}
 extension Array: FWSafeUnwrappable {
     public static var fwSafeValue: Array<Element> { return [] }
     public var fwIsEmpty: Bool { return self.isEmpty }

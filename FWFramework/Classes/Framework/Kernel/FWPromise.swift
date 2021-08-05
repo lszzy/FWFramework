@@ -139,43 +139,43 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
     public func then(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
-            self.done { value in
+            self.done({ value in
                 let result = block(value)
                 if let promise = result as? FWPromise {
                     promise.execute(progress: true, completion: completion)
                 } else {
                     completion(result)
                 }
-            } catch: { error in
+            }, catch: { error in
                 completion(error)
-            } progress: { value in
+            }, progress: { value in
                 completion(Progress(value: value))
-            }
+            })
         }
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
     public func recover(_ block: @escaping (_ error: Error) -> Any?) -> FWPromise {
         return FWPromise { completion in
-            self.done { value in
+            self.done({ value in
                 completion(value)
-            } catch: { error in
+            }, catch: { error in
                 let result = block(error)
                 if let promise = result as? FWPromise {
                     promise.execute(progress: true, completion: completion)
                 } else {
                     completion(result)
                 }
-            } progress: { value in
+            }, progress: { value in
                 completion(Progress(value: value))
-            }
+            })
         }
     }
     
     /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
     public func validate(_ block: @escaping (_ value: Any?) -> Any?) -> FWPromise {
         return FWPromise { completion in
-            self.done { value in
+            self.done({ value in
                 let result = block(value)
                 if let error = result as? Error {
                     completion(error)
@@ -184,11 +184,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 } else {
                     completion(value)
                 }
-            } catch: { error in
+            }, catch: { error in
                 completion(error)
-            } progress: { value in
+            }, progress: { value in
                 completion(Progress(value: value))
-            }
+            })
         }
     }
     
@@ -206,11 +206,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 约定延时，当前约定成功时延时返回结果；默认失败时不延时，可设置force强制失败时也延时
     public func delay(_ time: TimeInterval, force: Bool = false) -> FWPromise {
         return FWPromise { completion in
-            self.done { value in
+            self.done({ value in
                 FWPromise.delay(time) {
                     completion(value)
                 }
-            } catch: { error in
+            }, catch: { error in
                 if force {
                     FWPromise.delay(time) {
                         completion(error)
@@ -218,9 +218,9 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
                 } else {
                     completion(error)
                 }
-            } progress: { value in
+            }, progress: { value in
                 completion(Progress(value: value))
-            }
+            })
         }
     }
     
@@ -262,13 +262,13 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         var error: Error?
         let group = DispatchGroup()
         group.enter()
-        promise.done { value in
+        promise.done({ value in
             result = value
             group.leave()
-        } catch: { e in
+        }, catch: { e in
             error = e
             group.leave()
-        }
+        })
         group.wait()
         if let e = error {
             throw e
@@ -282,18 +282,18 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
             var values: [Any?] = []
             var progress: [Int: Double] = [:]
             for promise in promises {
-                promise.done { value in
+                promise.done({ value in
                     values.append(value)
                     if values.count == promises.count {
                         completion(values)
                     }
-                } catch: { error in
+                }, catch: { error in
                     completion(error)
-                } progress: { value in
+                }, progress: { value in
                     progress[promise.hash] = value
                     let sum = progress.values.reduce(0) { x, y in x + y }
                     completion(Progress(value: sum / Double(promises.count)))
-                }
+                })
             }
         }
     }
@@ -304,17 +304,17 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
             var failedCount = 0
             var progress: [Int: Double] = [:]
             for promise in promises {
-                promise.done { value in
+                promise.done({ value in
                     completion(value)
-                } catch: { error in
+                }, catch: { error in
                     failedCount += 1
                     if failedCount == promises.count {
                         completion(error)
                     }
-                } progress: { value in
+                }, progress: { value in
                     progress[promise.hash] = value
                     completion(Progress(value: progress.values.max() ?? 0))
-                }
+                })
             }
         }
     }
@@ -324,14 +324,14 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
         return FWPromise { completion in
             var progress: [Int: Double] = [:]
             for promise in promises {
-                promise.done { value in
+                promise.done({ value in
                     completion(value)
-                } catch: { error in
+                }, catch: { error in
                     completion(error)
-                } progress: { value in
+                }, progress: { value in
                     progress[promise.hash] = value
                     completion(Progress(value: progress.values.max() ?? 0))
-                }
+                })
             }
         }
     }

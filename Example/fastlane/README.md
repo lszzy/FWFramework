@@ -16,31 +16,31 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
-### ios pgyer_test
+### ios pgyer_testing
 ```
-fastlane ios pgyer_test
+fastlane ios pgyer_testing
 ```
-Push a new test build to Pgyer
-### ios pgyer_prod
+Push a new testing build to Pgyer
+### ios pgyer_production
 ```
-fastlane ios pgyer_prod
+fastlane ios pgyer_production
 ```
-Push a new prod build to Pgyer
-### ios testflight_test
+Push a new production build to Pgyer
+### ios testflight_testing
 ```
-fastlane ios testflight_test
+fastlane ios testflight_testing
 ```
-Push a new test build to TestFlight
-### ios testflight_prod
+Push a new testing build to TestFlight
+### ios testflight_production
 ```
-fastlane ios testflight_prod
+fastlane ios testflight_production
 ```
-Push a new prod build to TestFlight
-### ios appstore_prod
+Push a new production build to TestFlight
+### ios appstore_production
 ```
-fastlane ios appstore_prod
+fastlane ios appstore_production
 ```
-Push a new prod build to the App Store
+Push a new production build to the App Store
 
 ----
 
