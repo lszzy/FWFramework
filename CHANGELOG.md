@@ -4,12 +4,14 @@
 
 ### Added
 * Added custom navigation bar FWNavigationView component
+* New controller popover controller shortcut method
 
 ### Changed
 * Modify the minimum compatible iOS version to iOS10
 * Refactored the implementation of FWNavigationStyle, compatible with custom navigation bars
 * Refactored FWPopupMenuDelegate method name
 * Refactored UIViewController navigation bar height acquisition method
+* Modify the web container JS bridge call to support callback when there is an error
 
 ## [1.7.4] - 2021-07-14
 
