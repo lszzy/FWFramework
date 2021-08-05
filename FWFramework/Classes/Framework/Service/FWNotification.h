@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 处理远程推送通知，支持NSDictionary|UNNotification|UNNotificationResponse
 - (void)handleRemoteNotification:(id)notification;
 
-/// 处理本地通知，支持NSDictionary|UILocalNotification|UNNotification|UNNotificationResponse
+/// 处理本地通知，支持NSDictionary|UNNotification|UNNotificationResponse
 - (void)handleLocalNotification:(id)notification;
 
 #pragma mark - Local

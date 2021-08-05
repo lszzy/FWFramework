@@ -132,8 +132,8 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 当前导航项，默认navigationItem，用于兼容自定义导航栏，仅default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *fwNavigationItem;
 
-/// 当前视图，默认view，用于兼容自定义导航栏
-@property (nonatomic, strong, readonly) UIView *fwView;
+/// 启用自定义导航栏后的内容容器视图，位于导航栏下方或底部，建议通过fwView方法调用
+@property (nonatomic, strong, readonly) UIView *fwContainerView;
 
 @end
 

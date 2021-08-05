@@ -74,8 +74,10 @@
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         char *type = method_copyReturnType(class_getInstanceMethod([object class], forwardSelector));
         if (type && *type == 'v') {
+            free(type);
             [object performSelector:forwardSelector];
         } else {
+            free(type);
             return [object performSelector:forwardSelector];
         }
 #pragma clang diagnostic pop
@@ -91,8 +93,10 @@
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         char *type = method_copyReturnType(class_getInstanceMethod([object class], forwardSelector));
         if (type && *type == 'v') {
+            free(type);
             [object performSelector:forwardSelector withObject:parameter];
         } else {
+            free(type);
             return [object performSelector:forwardSelector withObject:parameter];
         }
 #pragma clang diagnostic pop

@@ -87,14 +87,6 @@
      */
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
-{
-    [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(notification)]];
-    /*
-    [[FWNotificationManager sharedInstance] handleLocalNotification:notification];
-     */
-}
-
 #pragma mark - openURL
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options

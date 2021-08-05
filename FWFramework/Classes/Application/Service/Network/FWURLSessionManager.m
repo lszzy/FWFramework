@@ -69,7 +69,7 @@ typedef void (^FWURLSessionDidFinishEventsForBackgroundURLSessionBlock)(NSURLSes
 typedef NSInputStream * (^FWURLSessionTaskNeedNewBodyStreamBlock)(NSURLSession *session, NSURLSessionTask *task);
 typedef void (^FWURLSessionTaskDidSendBodyDataBlock)(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
 typedef void (^FWURLSessionTaskDidCompleteBlock)(NSURLSession *session, NSURLSessionTask *task, NSError *error);
-typedef void (^FWURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * metrics) NS_AVAILABLE_IOS(10_0);
+typedef void (^FWURLSessionTaskDidFinishCollectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * metrics);
 
 typedef NSURLSessionResponseDisposition (^FWURLSessionDataTaskDidReceiveResponseBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response);
 typedef void (^FWURLSessionDataTaskDidBecomeDownloadTaskBlock)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask);
@@ -92,7 +92,7 @@ typedef void (^FWURLSessionTaskCompletionHandler)(NSURLResponse *response, id re
 @property (nonatomic, strong) NSProgress *uploadProgress;
 @property (nonatomic, strong) NSProgress *downloadProgress;
 @property (nonatomic, copy) NSURL *downloadFileURL;
-@property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics NS_AVAILABLE_IOS(10_0);
+@property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics;
 @property (nonatomic, copy) FWURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
 @property (nonatomic, copy) FWURLSessionTaskProgressBlock uploadProgressBlock;
 @property (nonatomic, copy) FWURLSessionTaskProgressBlock downloadProgressBlock;
@@ -182,10 +182,8 @@ didCompleteWithError:(NSError *)error
         self.mutableData = nil;
     }
 
-    if (@available(iOS 10, macOS 10.12, watchOS 3, tvOS 10, *)) {
-        if (self.sessionTaskMetrics) {
-            userInfo[FWNetworkingTaskDidCompleteSessionTaskMetrics] = self.sessionTaskMetrics;
-        }
+    if (self.sessionTaskMetrics) {
+        userInfo[FWNetworkingTaskDidCompleteSessionTaskMetrics] = self.sessionTaskMetrics;
     }
 
     if (self.downloadFileURL) {
@@ -238,7 +236,7 @@ didCompleteWithError:(NSError *)error
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
-didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics NS_AVAILABLE_IOS(10_0) {
+didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics {
     self.sessionTaskMetrics = metrics;
 }
 
@@ -448,7 +446,7 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
 @property (readwrite, nonatomic, copy) FWURLSessionTaskNeedNewBodyStreamBlock taskNeedNewBodyStream;
 @property (readwrite, nonatomic, copy) FWURLSessionTaskDidSendBodyDataBlock taskDidSendBodyData;
 @property (readwrite, nonatomic, copy) FWURLSessionTaskDidCompleteBlock taskDidComplete;
-@property (readwrite, nonatomic, copy) FWURLSessionTaskDidFinishCollectingMetricsBlock taskDidFinishCollectingMetrics NS_AVAILABLE_IOS(10_0);
+@property (readwrite, nonatomic, copy) FWURLSessionTaskDidFinishCollectingMetricsBlock taskDidFinishCollectingMetrics;
 @property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidReceiveResponseBlock dataTaskDidReceiveResponse;
 @property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidBecomeDownloadTaskBlock dataTaskDidBecomeDownloadTask;
 @property (readwrite, nonatomic, copy) FWURLSessionDataTaskDidReceiveDataBlock dataTaskDidReceiveData;
@@ -833,7 +831,7 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
     self.taskDidComplete = block;
 }
 
-- (void)setTaskDidFinishCollectingMetricsBlock:(void (^)(NSURLSession * _Nonnull, NSURLSessionTask * _Nonnull, NSURLSessionTaskMetrics * _Nullable))block NS_AVAILABLE_IOS(10_0) {
+- (void)setTaskDidFinishCollectingMetricsBlock:(void (^)(NSURLSession * _Nonnull, NSURLSessionTask * _Nonnull, NSURLSessionTaskMetrics * _Nullable))block {
     self.taskDidFinishCollectingMetrics = block;
 }
 
@@ -1071,7 +1069,7 @@ didCompleteWithError:(NSError *)error
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
-didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics NS_AVAILABLE_IOS(10_0)
+didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
 {
     FWURLSessionManagerTaskDelegate *delegate = [self delegateForTask:task];
     // Metrics may fire after URLSession:task:didCompleteWithError: is called, delegate may be nil
