@@ -9,7 +9,7 @@
 
 #import "FWPhotoBrowser.h"
 #import "FWProgressView.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWToolkit.h"
 #import "FWImage.h"
 

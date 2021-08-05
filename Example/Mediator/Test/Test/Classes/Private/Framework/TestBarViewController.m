@@ -19,7 +19,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
+    self.fwNavigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
     if (self.index < 2) {
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
@@ -59,13 +59,17 @@ FWPropertyAssign(BOOL, hideToast);
 {
     [super viewDidLoad];
     
+    self.fwNavigationBar.fwBackgroundView.backgroundColor = Theme.backgroundColor;
     self.fwTabBarHidden = YES;
-    [self refreshBarFrame];
     [self fwObserveNotification:UIDeviceOrientationDidChangeNotification target:self action:@selector(refreshBarFrame)];
     
     if (!self.hideToast) {
         [self fwSetRightBarItem:@"启用" block:^(id sender) {
             [UINavigationController fwEnableBarTransition];
+        }];
+    } else {
+        [self fwSetLeftBarItem:[CoreBundle imageNamed:@"close"] block:^(id  _Nonnull sender) {
+            [FWRouter closeViewControllerAnimated:YES];
         }];
     }
 }
@@ -86,6 +90,12 @@ FWPropertyAssign(BOOL, hideToast);
     if (!self.hideToast) {
         [UIWindow.fwMainWindow fwShowMessageWithText:[NSString stringWithFormat:@"viewWillDisappear:%@", @(animated)]];
     }
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self refreshBarFrame];
 }
 
 - (UITableViewStyle)renderTableStyle
@@ -118,6 +128,8 @@ FWPropertyAssign(BOOL, hideToast);
                                          @[@"状态栏样式", @"onStatusStyle"],
                                          @[@"导航栏切换", @"onNavigationBar"],
                                          @[@"导航栏样式", @"onNavigationStyle"],
+                                         @[@"标题栏颜色", @"onTitleColor"],
+                                         @[@"大标题切换", @"onLargeTitle"],
                                          @[@"标签栏切换", @"onTabBar"],
                                          @[@"工具栏切换", @"onToolBar"],
                                          @[@"导航栏转场", @"onTransitionBar"],
@@ -127,6 +139,7 @@ FWPropertyAssign(BOOL, hideToast);
         [self.tableData addObject:@[@"Present(FullScreen)", @"onPresent2"]];
         [self.tableData addObject:@[@"Present(PageSheet)", @"onPresent3"]];
         [self.tableData addObject:@[@"Present(默认带导航栏)", @"onPresent4"]];
+        [self.tableData addObject:@[@"Present(Popover)", @"onPresent5:"]];
     } else {
         [self.tableData addObject:@[@"Dismiss", @"onDismiss"]];
     }
@@ -155,9 +168,14 @@ FWPropertyAssign(BOOL, hideToast);
     SEL selector = NSSelectorFromString([rowData objectAtIndex:1]);
     if ([self respondsToSelector:selector]) {
         FWIgnoredBegin();
-        [self performSelector:selector];
+        [self performSelector:selector withObject:indexPath];
         FWIgnoredEnd();
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self refreshBarFrame];
 }
 
 #pragma mark - Protected
@@ -176,12 +194,12 @@ FWPropertyAssign(BOOL, hideToast);
 
 - (void)refreshBarFrame
 {
-    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%@ 当前状态栏：%@\n全局导航栏：%@ 当前导航栏：%@\n全局顶部栏：%@ 当前顶部栏：%@\n全局标签栏：%@ 当前标签栏：%@\n全局工具栏：%@ 当前工具栏：%@\n安全区域：%@",
-                            @([UIScreen fwStatusBarHeight]), @([self fwStatusBarHeight]),
-                            @([UIScreen fwNavigationBarHeight]), @([self fwNavigationBarHeight]),
-                            @([UIScreen fwTopBarHeight]), @([self fwTopBarHeight]),
-                            @([UIScreen fwTabBarHeight]), @([self fwTabBarHeight]),
-                            @([UIScreen fwToolBarHeight]), @([self fwToolBarHeight]),
+    self.frameLabel.text = [NSString stringWithFormat:@"全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：%@",
+                            [UIScreen fwStatusBarHeight], [self fwStatusBarHeight],
+                            [UIScreen fwNavigationBarHeight], [self fwNavigationBarHeight],
+                            [UIScreen fwTopBarHeight], [self fwTopBarHeight],
+                            [UIScreen fwTabBarHeight], [self fwTabBarHeight],
+                            [UIScreen fwToolBarHeight], [self fwToolBarHeight],
                             NSStringFromUIEdgeInsets([UIScreen fwSafeAreaInsets])];
 }
 
@@ -215,6 +233,19 @@ FWPropertyAssign(BOOL, hideToast);
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
     }
     [self refreshBarFrame];
+}
+
+- (void)onTitleColor
+{
+    self.fwNavigationBar.fwTitleColor = self.fwNavigationBar.fwTitleColor ? nil : Theme.buttonColor;
+}
+
+- (void)onLargeTitle
+{
+    if (@available(iOS 11.0, *)) {
+        self.fwNavigationBar.prefersLargeTitles = !self.fwNavigationBar.prefersLargeTitles;
+        [self refreshBarFrame];
+    }
 }
 
 - (void)onTabBar
@@ -283,6 +314,31 @@ FWPropertyAssign(BOOL, hideToast);
         [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
     };
     [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)onPresent5:(NSIndexPath *)indexPath
+{
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    
+    TestBarViewController *viewController = [[TestBarViewController alloc] init];
+    viewController.hideToast = YES;
+    viewController.preferredContentSize = CGSizeMake(FWScreenWidth / 2, FWScreenHeight / 2);
+    [viewController fwSetPopoverPresentation:^(UIPopoverPresentationController *controller) {
+        controller.barButtonItem = self.fwNavigationItem.rightBarButtonItem;
+        controller.permittedArrowDirections = UIPopoverArrowDirectionUp;
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        controller.passthroughViews = [NSArray arrayWithObjects:cell, nil];
+    } shouldDismiss:[@[@0, @1].fwRandomObject fwAsBool]];
+    viewController.fwPresentationDidDismiss = ^{
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwPresentationDidDismiss"];
+    };
+    viewController.fwDismissBlock = ^{
+        [UIWindow.fwMainWindow fwShowMessageWithText:@"fwDismissBlock"];
+    };
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)onDismiss

@@ -10,7 +10,7 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWToolkit.h"
+#import "FWNavigationView.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWToastPluginView

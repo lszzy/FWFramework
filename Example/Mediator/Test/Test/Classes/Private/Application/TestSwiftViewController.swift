@@ -46,7 +46,7 @@ import FWFramework
         default:
             viewController = SwiftTestViewController()
         }
-        viewController?.navigationItem.title = tableData.object(at: indexPath.row) as? String
+        viewController?.fwNavigationItem.title = tableData.object(at: indexPath.row) as? String
         navigationController?.pushViewController(viewController!, animated: true)
     }
 }

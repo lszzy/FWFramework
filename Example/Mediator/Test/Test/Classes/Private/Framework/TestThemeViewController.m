@@ -38,7 +38,7 @@
 
 - (void)renderView
 {
-    self.view.backgroundColor = [UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]];
+    self.fwView.backgroundColor = [UIColor fwThemeLight:[UIColor whiteColor] dark:[UIColor blackColor]];
     
     UIView *colorView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
     colorView.backgroundColor = [UIColor fwThemeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
@@ -85,7 +85,7 @@
     [layer fwAddThemeListener:^(FWThemeStyle style) {
         layer.backgroundColor = [themeColor fwColorForStyle:style].CGColor;
     }];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(90, 160, 50, 50);
@@ -93,13 +93,13 @@
     layer.fwThemeBackgroundColor = [UIColor fwThemeColor:^UIColor * _Nonnull(FWThemeStyle style) {
         return style == FWThemeStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
     }];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     CAGradientLayer *gradientLayer = [CAGradientLayer new];
     gradientLayer.frame = CGRectMake(160, 160, 50, 50);
     gradientLayer.fwThemeContext = self;
     gradientLayer.fwThemeColors = @[[UIColor fwThemeNamed:@"theme_color" bundle:TestBundle.bundle], [UIColor fwThemeNamed:@"theme_color" bundle:TestBundle.bundle]];
-    [self.view.layer addSublayer:gradientLayer];
+    [self.fwView.layer addSublayer:gradientLayer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(20, 230, 50, 50);
@@ -109,7 +109,7 @@
     [layer fwAddThemeListener:^(FWThemeStyle style) {
         layer.contents = (id)layerImage.fwImage.CGImage;
     }];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(90, 230, 50, 50);
@@ -117,13 +117,13 @@
     layer.fwThemeContents = [UIImage fwThemeImage:^UIImage * _Nonnull(FWThemeStyle style) {
         return style == FWThemeStyleDark ? [TestBundle imageNamed:@"theme_image_dark"] : [TestBundle imageNamed:@"theme_image_light"];
     }];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     layer = [CALayer new];
     layer.frame = CGRectMake(160, 230, 50, 50);
     layer.fwThemeContext = self.view;
     layer.fwThemeContents = [UIImage fwThemeNamed:@"theme_image" bundle:TestBundle.bundle];
-    [self.view.layer addSublayer:layer];
+    [self.fwView.layer addSublayer:layer];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 300, 50, 50)];
     static dispatch_once_t onceToken;

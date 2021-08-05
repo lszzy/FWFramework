@@ -32,18 +32,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL fwIsDataLoaded;
 
+/*!
+ @brief Component模块内部使用，控制器代理视图，默认view，用于兼容自定义导航栏
+ */
+@property (nonatomic, strong, readonly) UIView *fwProxyView;
+
 #pragma mark - Present
 
 /*!
  @brief 全局适配iOS13默认present样式(系统Automatic)，仅当未自定义modalPresentationStyle时生效
  */
 + (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style;
-
-/*!
- @brief 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发
- @discussion 手工dismiss不会触发，iOS12及以下也不会触发(会触发生命周期方法)。会自动设置presentationController.delegate
- */
-@property (nullable, nonatomic, copy) void (^fwPresentationDidDismiss)(void);
 
 /*!
  @brief 设置手工dismiss完成回调block，优先级presented大于self，viewController大于navigationController，需调用fwDismissAnimated:手工触发

@@ -10,7 +10,7 @@
 
 @interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate, FWPopupMenuDelegate>
 
-@property(nullable, nonatomic, strong) FWNavigationTitleView *titleView;
+@property(nonatomic, strong) FWNavigationTitleView *titleView;
 @property(nonatomic, assign) UIControlContentHorizontalAlignment horizontalAlignment;
 
 @end
@@ -24,43 +24,54 @@
 
 - (void)renderView
 {
-    self.titleView = [[FWNavigationTitleView alloc] init];
-    self.titleView.showsLoadingView = YES;
-    self.titleView.title = self.title;
-    self.navigationItem.titleView = self.titleView;
+    FWNavigationTitleView *titleView = [[FWNavigationTitleView alloc] init];
+    self.titleView = titleView;
+    titleView.showsLoadingView = YES;
+    self.fwBarTitle = titleView;
+    self.fwNavigationItem.title = @"我是很长很长要多长有多长长得不得了的按钮";
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 300)];
     
-    FWNavigationButton *backButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
-    FWNavigationButton *rightButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
-    FWNavigationButton *shareButton = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]];
-    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:backButton block:^(id  _Nonnull sender) {
+    self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:rightButton block:^(id  _Nonnull sender) {
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    UIBarButtonItem *shareItem = [UIBarButtonItem fwBarItemWithObject:shareButton block:^(id  _Nonnull sender) {
-        [FWRouter closeViewControllerAnimated:YES];
-    }];
-    self.navigationItem.leftBarButtonItem = backItem;
-    self.navigationItem.rightBarButtonItems = @[rightItem, shareItem];
+    
+    FWNavigationView *navigationView = self.fwNavigationView;
+    navigationView.bottomView.backgroundColor = UIColor.brownColor;
+    navigationView.bottomHidden = YES;
+    UILabel *titleLabel = [UILabel fwLabelWithFont:FWFontBold(18) textColor:UIColor.whiteColor text:@"FWNavigationView"];
+    [navigationView.bottomView addSubview:titleLabel];
+    titleLabel.fwLayoutChain.leftWithInset(15).bottomWithInset(15);
 }
 
 - (void)renderData
 {
     self.tableView.backgroundColor = Theme.tableColor;
-    [self.tableData addObjectsFromArray:@[@"显示左边的loading",
-                                          @"显示右边的accessoryView",
-                                          @"显示副标题",
-                                          @"切换为上下两行显示",
-                                          @"水平方向的对齐方式",
-                                          @"模拟标题的loading状态切换",
-                                          @"标题点击效果"]];
-}
-
-- (void)dealloc
-{
-    self.titleView.delegate = nil;
+    [self.tableData addObjectsFromArray:@[
+        @"显示左边的loading",
+        @"显示右边的accessoryView",
+        @"显示副标题",
+        @"切换为上下两行显示",
+        @"水平方向的对齐方式",
+        @"模拟标题的loading状态切换",
+        @"标题点击效果",
+    ]];
+    if (self.fwNavigationViewEnabled) {
+        [self.tableData addObjectsFromArray:@[
+            @"导航栏顶部视图切换",
+            @"导航栏自定义视图切换",
+            @"导航栏中间视图切换",
+            @"导航栏底部视图切换",
+            @"导航栏绑定控制器切换",
+            @"导航栏固定高度切换",
+            @"导航栏内间距切换",
+            @"导航栏滚动效果切换",
+        ]];
+    }
 }
 
 - (UIImage *)accessoryImage
@@ -141,6 +152,64 @@
             self.titleView.delegate = self;
         }
             break;
+        case 7:
+        {
+            if (self.fwNavigationView.topView.backgroundColor != UIColor.greenColor) {
+                self.fwNavigationView.topView.backgroundColor = UIColor.greenColor;
+            } else {
+                self.fwNavigationView.topHidden = !self.fwNavigationView.topHidden;
+            }
+        }
+            break;
+        case 8:
+        {
+            if (self.fwNavigationView.contentView.backgroundColor != UIColor.yellowColor) {
+                self.fwNavigationView.contentView.backgroundColor = UIColor.yellowColor;
+                self.fwNavigationView.style = FWNavigationViewStyleCustom;
+            } else {
+                self.fwNavigationView.style = self.fwNavigationView.style == FWNavigationViewStyleDefault ? FWNavigationViewStyleCustom : FWNavigationViewStyleDefault;
+            }
+        }
+            break;
+        case 9:
+        {
+            self.fwNavigationView.middleHidden = !self.fwNavigationView.middleHidden;
+        }
+            break;
+        case 10:
+        {
+            self.fwNavigationView.bottomHidden = !self.fwNavigationView.bottomHidden;
+            self.fwNavigationView.bottomHeight = 100;
+        }
+            break;
+        case 11:
+        {
+            self.fwNavigationView.viewController = self.fwNavigationView.viewController ? nil : self;
+        }
+            break;
+        case 12:
+        {
+            if (self.fwNavigationView.middleHeight == 100) {
+                self.fwNavigationView.middleHeight = 0;
+                self.fwNavigationView.contentInsets = UIEdgeInsetsZero;
+                self.fwNavigationView.middleView.backgroundColor = nil;
+            } else {
+                self.fwNavigationView.middleHeight = 100;
+                self.fwNavigationView.contentInsets = UIEdgeInsetsMake(0, 0, 100 - self.fwNavigationView.contentHeight, 0);
+                self.fwNavigationView.middleView.backgroundColor = [UIColor orangeColor];
+            }
+        }
+            break;
+        case 13:
+        {
+            self.fwNavigationView.contentInsets = UIEdgeInsetsEqualToEdgeInsets(self.fwNavigationView.contentInsets, UIEdgeInsetsZero) ? UIEdgeInsetsMake(0, 0, 100 - self.fwNavigationView.contentHeight, 0) : UIEdgeInsetsZero;
+        }
+            break;
+        case 14:
+        {
+            self.fwNavigationView.scrollView = self.fwNavigationView.scrollView ? nil : tableView;
+        }
+            break;
     }
     
     [tableView reloadData];
@@ -174,6 +243,14 @@
             break;
     }
     return cell;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!self.fwNavigationViewEnabled) return;
+    
+    CGFloat progress = 1.0 - (self.fwNavigationView.bottomHeight / 100);
+    self.titleView.tintColor = [Theme.textColor colorWithAlphaComponent:progress];
 }
 
 #pragma mark - FWNavigationTitleViewDelegate

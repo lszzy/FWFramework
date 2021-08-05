@@ -114,7 +114,7 @@ static int logMaxLength = 500;
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
                 if (self.errorHandler) {
-                    self.errorHandler(message);
+                    self.errorHandler(message[@"handlerName"], message[@"data"], responseCallback);
                 }
                 continue;
             }
@@ -281,7 +281,7 @@ static int logMaxLength = 500;
     [_base.messageHandlers removeObjectForKey:handlerName];
 }
 
-- (void)setErrorHandler:(void (^)(FWJsBridgeMessage *))handler {
+- (void)setErrorHandler:(FWJsBridgeErrorHandler)handler {
     _base.errorHandler = handler;
 }
 
@@ -437,8 +437,8 @@ NSString * FWWebViewJsBridge_js() {
     }
     window.WebViewJavascriptBridge = {
         registerHandler: registerHandler,
+        setErrorHandler: setErrorHandler,
         callHandler: callHandler,
-        errorHandler: errorHandler,
         disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
         _fetchQueue: _fetchQueue,
         _handleMessageFromObjC: _handleMessageFromObjC
@@ -447,6 +447,7 @@ NSString * FWWebViewJsBridge_js() {
     var messagingIframe;
     var sendMessageQueue = [];
     var messageHandlers = {};
+    var errorHandler = null;
     
     var CUSTOM_PROTOCOL_SCHEME = 'https';
     var QUEUE_HAS_MESSAGE = '__wvjb_queue_message__';
@@ -459,8 +460,8 @@ NSString * FWWebViewJsBridge_js() {
         messageHandlers[handlerName] = handler;
     }
     
-    function errorHandler(message) {
-        console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+    function setErrorHandler(handler) {
+        errorHandler = handler;
     }
     
     function callHandler(handlerName, data, responseCallback) {
@@ -470,6 +471,7 @@ NSString * FWWebViewJsBridge_js() {
         }
         _doSend({ handlerName:handlerName, data:data }, responseCallback);
     }
+    
     function disableJavscriptAlertBoxSafetyTimeout() {
         dispatchMessagesWithTimeoutSafety = false;
     }
@@ -514,12 +516,15 @@ NSString * FWWebViewJsBridge_js() {
                     responseCallback = function(responseData) {
                         _doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
                     };
+                } else {
+                    responseCallback = function(ignoreResponseData) {};
                 }
                 
                 var handler = messageHandlers[message.handlerName];
                 if (!handler) {
-                    if (WebViewJavascriptBridge.errorHandler) {
-                        WebViewJavascriptBridge.errorHandler(message);
+                    console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+                    if (errorHandler) {
+                        errorHandler(message.handlerName, message.data, responseCallback);
                     }
                 } else {
                     handler(message.data, responseCallback);

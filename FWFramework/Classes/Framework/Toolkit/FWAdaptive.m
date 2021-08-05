@@ -8,7 +8,7 @@
  */
 
 #import "FWAdaptive.h"
-#import "FWRouter.h"
+#import "FWNavigation.h"
 #import "FWToolkit.h"
 
 @implementation UIApplication (FWAdaptive)
@@ -305,44 +305,6 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     } else {
         return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorWidth;
     }
-}
-
-@end
-
-@implementation UIViewController (FWAdaptive)
-
-- (CGFloat)fwStatusBarHeight
-{
-    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
-    return [UIApplication sharedApplication].statusBarFrame.size.height;
-}
-
-- (CGFloat)fwNavigationBarHeight
-{
-    if (self.navigationController.navigationBarHidden) return 0.0;
-    return self.navigationController.navigationBar.frame.size.height;
-}
-
-- (CGFloat)fwTopBarHeight
-{
-    if (![UIScreen fwIsNotchedScreen]) {
-        return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
-    }
-    
-    if (self.navigationController.navigationBarHidden) return [self fwStatusBarHeight];
-    return self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height;
-}
-
-- (CGFloat)fwTabBarHeight
-{
-    if (self.tabBarController.tabBar.hidden) return 0.0;
-    return self.tabBarController.tabBar.frame.size.height;
-}
-
-- (CGFloat)fwToolBarHeight
-{
-    if (self.navigationController.toolbarHidden) return 0.0;
-    return self.navigationController.toolbar.frame.size.height + [UIScreen fwSafeAreaInsets].bottom;
 }
 
 @end

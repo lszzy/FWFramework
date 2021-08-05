@@ -13,8 +13,9 @@
 #import <Foundation/Foundation.h>
 #import "FWLoader.h"
 #import "FWLog.h"
-#import "FWMessage.h"
 #import "FWMediator.h"
+#import "FWMessage.h"
+#import "FWNavigation.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWRouter.h"
