@@ -186,6 +186,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *middleConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 @property (nonatomic, strong) NSNumber *statusBarHidden;
+@property (nonatomic, assign) CGFloat maxMiddleHeight;
 @property (nonatomic, assign) CGFloat maxBottomHeight;
 
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
@@ -279,6 +280,14 @@
     [self invalidateIntrinsicContentSize];
 }
 
+- (void)orientationChanged
+{
+    _middleHeight = _maxMiddleHeight;
+    [self.navigationBar sizeToFit];
+    [self.contentView setNeedsUpdateConstraints];
+    [self updateLayout];
+}
+
 - (CGSize)sizeThatFits:(CGSize)size
 {
     CGFloat maxWidth = CGRectGetWidth(self.bounds) ?: UIScreen.mainScreen.bounds.size.width;
@@ -350,6 +359,7 @@
 - (void)setMiddleHeight:(CGFloat)middleHeight
 {
     _middleHeight = middleHeight;
+    _maxMiddleHeight = middleHeight;
     [self updateLayout];
 }
 
@@ -451,10 +461,29 @@
 
 - (void)scrollView:(UIScrollView *)scrollView offsetChanged:(NSDictionary *)change
 {
-    if (self.maxBottomHeight <= 0) return;
-    CGFloat bottomHeight = MIN(MAX(0, self.maxBottomHeight - scrollView.contentOffset.y), self.maxBottomHeight);
-    _bottomHeight = bottomHeight;
-    [self updateLayout];
+    if (!self.superview) return;
+    
+    // 底部可滚动时处理bottomView动画效果
+    if (self.maxBottomHeight > 0) {
+        CGFloat bottomHeight = MIN(MAX(0, self.maxBottomHeight - scrollView.contentOffset.y), self.maxBottomHeight);
+        _bottomHeight = bottomHeight;
+        [self updateLayout];
+        return;
+    }
+    
+    // default样式且为竖屏并开启了iOS11+largeTitles显示时处理大标题动画效果
+    if (@available(iOS 11.0, *)) {
+        if (self.style == FWNavigationViewStyleCustom || [UIDevice fwIsLandscape]) return;
+        if (!self.navigationBar.prefersLargeTitles || self.navigationItem.largeTitleDisplayMode == UINavigationItemLargeTitleDisplayModeNever) return;
+        UIView *largeTitleView = self.navigationBar.fwLargeTitleView;
+        if (!largeTitleView || largeTitleView.frame.origin.y <= 0) return;
+        
+        CGFloat minHeight = largeTitleView.frame.origin.y;
+        CGFloat maxHeight = minHeight + UINavigationBar.fwLargeTitleHeight;
+        CGFloat middleHeight = MIN(MAX(minHeight, maxHeight - scrollView.contentOffset.y), maxHeight);
+        _middleHeight = middleHeight;
+        [self updateLayout];
+    }
 }
 
 @end
@@ -535,8 +564,7 @@
             if (!selfObject.navigationController) return;
             
             [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                [selfObject.fwNavigationView updateLayout];
-                [selfObject.fwNavigationView.contentView setNeedsUpdateConstraints];
+                [selfObject.fwNavigationView orientationChanged];
             } completion:nil];
         }));
     });

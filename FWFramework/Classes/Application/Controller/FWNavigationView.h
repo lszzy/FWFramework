@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
  *
  * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
- * 不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
+ * custom样式不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
  */
 @interface FWNavigationView : UIView
 
@@ -95,7 +95,12 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
-/// 绑定scrollView，绑定后自动处理bottomView滚动并更新bottomHeight，要求scrollView内容足够高
+/**
+ * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度，要求scrollView内容足够高
+ *
+ * 1. 如果bottomHeight > 0，则滚动bottomView并更新bottomHeight，不执行2
+ * 2. 如果为default样式且为竖屏并开启了iOS11+largeTitles效果，则滚动大标题并更新middleHeight(自动变为固定高度)
+ */
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
 @end
