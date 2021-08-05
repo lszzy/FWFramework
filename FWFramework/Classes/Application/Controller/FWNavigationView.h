@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 底部：延迟加载bottomView，高度为bottomHeight，可设置bottomHidden显示或隐藏
  *
  * 自定义导航栏整体高度为height，隐藏时为0；绑定控制器后自动同步系统导航栏状态，可解除绑定。
- * iOS11+支持largeTitles显示样式，但需手工处理largeTitles滚动动画效果
+ * 不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
  */
 @interface FWNavigationView : UIView
 
@@ -68,8 +68,11 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义导航项，可设置标题、按钮等，default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 内容视图，初始加载，custom样式时显示，与middleView顶部对齐
+/// 内容视图，初始加载，custom样式时显示，与navigationBar布局相同
 @property (nonatomic, strong, readonly) FWNavigationContentView *contentView;
+
+/// 内容视图内间距，支持navigationBar和contentView，默认zero
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
 
 /// 内容视图高度，只读，与是否隐藏无关。绑定控制器后自动跟随系统导航栏变化
 @property (nonatomic, assign, readonly) CGFloat contentHeight;
@@ -92,12 +95,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
-/**
- * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度，要求scrollView内容足够高
- *
- * 1. 如果bottomHeight > 0，则滚动bottomView并更新bottomHeight
- * 2. 如果bottomHeight为0，且middleHeight > contentHeight，则滚动middleView并更新middleHeight(变为固定高度)
- */
+/// 绑定scrollView，绑定后自动处理bottomView滚动并更新bottomHeight，要求scrollView内容足够高
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
 @end
@@ -112,7 +110,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
- * 4. 支持切换largeTitles样式，但默认不支持动画效果，需手工处理
+ * 4. 不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)
