@@ -25,7 +25,7 @@ static dispatch_queue_t FWAsyncLayerGetDisplayQueue() {
             queues[i] = dispatch_queue_create("site.wuyong.FWFramework.FWAsyncLayer", attr);
         }
     });
-    atomic_int cur = atomic_fetch_add(&counter, 1);
+    int cur = atomic_fetch_add(&counter, 1);
     if (cur < 0) cur = -cur;
     return queues[(cur) % queueCount];
 #undef MAX_QUEUE_COUNT
@@ -96,7 +96,7 @@ static dispatch_queue_t FWAsyncLayerGetReleaseQueue() {
     if (async) {
         if (task.willDisplay) task.willDisplay(self);
         FWSentinel *sentinel = _sentinel;
-        atomic_int value = sentinel.value;
+        int value = sentinel.value;
         BOOL (^isCancelled)(void) = ^BOOL() {
             return value != sentinel.value;
         };
@@ -204,11 +204,11 @@ static dispatch_queue_t FWAsyncLayerGetReleaseQueue() {
     atomic_int _value;
 }
 
-- (atomic_int)value {
+- (int)value {
     return _value;
 }
 
-- (atomic_int)increase {
+- (int)increase {
     return atomic_fetch_add(&_value, 1);
 }
 
