@@ -8,7 +8,7 @@
  */
 
 #import "FWAsyncLayer.h"
-#import <libkern/OSAtomic.h>
+#import <stdatomic.h>
 
 /// Global display queue, used for content rendering.
 static dispatch_queue_t FWAsyncLayerGetDisplayQueue() {
@@ -16,7 +16,7 @@ static dispatch_queue_t FWAsyncLayerGetDisplayQueue() {
     static int queueCount;
     static dispatch_queue_t queues[MAX_QUEUE_COUNT];
     static dispatch_once_t onceToken;
-    static int32_t counter = 0;
+    static atomic_int counter = 0;
     dispatch_once(&onceToken, ^{
         queueCount = (int)[NSProcessInfo processInfo].activeProcessorCount;
         queueCount = queueCount < 1 ? 1 : queueCount > MAX_QUEUE_COUNT ? MAX_QUEUE_COUNT : queueCount;
@@ -25,7 +25,7 @@ static dispatch_queue_t FWAsyncLayerGetDisplayQueue() {
             queues[i] = dispatch_queue_create("site.wuyong.FWFramework.FWAsyncLayer", attr);
         }
     });
-    int32_t cur = OSAtomicIncrement32(&counter);
+    atomic_int cur = atomic_fetch_add(&counter, 1);
     if (cur < 0) cur = -cur;
     return queues[(cur) % queueCount];
 #undef MAX_QUEUE_COUNT
@@ -96,7 +96,7 @@ static dispatch_queue_t FWAsyncLayerGetReleaseQueue() {
     if (async) {
         if (task.willDisplay) task.willDisplay(self);
         FWSentinel *sentinel = _sentinel;
-        int32_t value = sentinel.value;
+        atomic_int value = sentinel.value;
         BOOL (^isCancelled)(void) = ^BOOL() {
             return value != sentinel.value;
         };
@@ -201,15 +201,15 @@ static dispatch_queue_t FWAsyncLayerGetReleaseQueue() {
 @end
 
 @implementation FWSentinel {
-    int32_t _value;
+    atomic_int _value;
 }
 
-- (int32_t)value {
+- (atomic_int)value {
     return _value;
 }
 
-- (int32_t)increase {
-    return OSAtomicIncrement32(&_value);
+- (atomic_int)increase {
+    return atomic_fetch_add(&_value, 1);
 }
 
 @end
