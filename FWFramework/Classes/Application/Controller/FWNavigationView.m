@@ -45,6 +45,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *contentConstraint;
 @property (nonatomic, strong) NSNumber *statusBarHidden;
+@property (nonatomic, assign) CGFloat middleMaxHeight;
 @property (nonatomic, assign) CGFloat bottomMaxHeight;
 @property (nonatomic, assign) BOOL issetContentLayout;
 
@@ -234,9 +235,9 @@
 - (void)setMiddleHeight:(CGFloat)middleHeight
 {
     _middleHeight = middleHeight;
+    _middleMaxHeight = middleHeight;
     // iOS11+系统UINavigationBar自带contentView，内容固定显示在上方，可直接设置
-    UIView *relativeView = [self.navigationBar fwContentView];
-    if (!relativeView) {
+    if (@available(iOS 11.0, *)) {} else {
         // iOS11以下UINavigationBar不带contentView，默认内容固定显示在下方，需要手工布局到上方
         CGFloat bottomInset = middleHeight > 0 ? middleHeight - self.contentHeight : 0;
         [self.navigationBar fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:bottomInset];
@@ -339,12 +340,23 @@
 
 - (void)scrollView:(UIScrollView *)scrollView offsetChanged:(NSDictionary *)change
 {
-    CGFloat maxHeight = self.bottomMaxHeight;
-    if (maxHeight <= 0) return;
+    // 底部可滚动时处理底部滚动效果
+    if (self.bottomMaxHeight > 0) {
+        CGFloat bottomHeight = MIN(MAX(0, self.bottomMaxHeight - scrollView.contentOffset.y), self.bottomMaxHeight);
+        _bottomHeight = bottomHeight;
+        [self updateLayout];
+        return;
+    }
     
-    CGFloat bottomHeight = MIN(MAX(0, maxHeight - scrollView.contentOffset.y), maxHeight);
-    _bottomHeight = bottomHeight;
-    [self updateLayout];
+    // 底部不可滚动且中间可滚动时处理中间滚动效果(内容布局之后才能拿到正确高度)
+    if (!self.issetContentLayout) return;
+    if (self.middleMaxHeight <= 0) self.middleMaxHeight = self.middleHeight;
+    CGFloat contentHeight = self.contentHeight;
+    if (self.middleMaxHeight > contentHeight) {
+        CGFloat middleHeight = MIN(MAX(contentHeight, self.middleMaxHeight - scrollView.contentOffset.y), self.middleMaxHeight);
+        _middleHeight = middleHeight;
+        [self updateLayout];
+    }
 }
 
 @end
