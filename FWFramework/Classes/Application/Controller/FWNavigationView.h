@@ -68,7 +68,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 自定义导航项，可设置标题、按钮等，default样式时生效
 @property (nonatomic, strong, readonly) UINavigationItem *navigationItem;
 
-/// 内容视图，延迟加载，custom样式时显示，与middleView顶部对齐
+/// 内容视图，初始加载，custom样式时显示，与middleView顶部对齐
 @property (nonatomic, strong, readonly) FWNavigationContentView *contentView;
 
 /// 内容视图高度，只读，与是否隐藏无关。绑定控制器后自动跟随系统导航栏变化
@@ -92,7 +92,12 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 /// 绑定视图控制器，绑定后导航栏状态自动跟随变化，设为nil时解除绑定
 @property (nonatomic, weak, nullable) UIViewController *viewController;
 
-/// 绑定scrollView，绑定后自动处理bottomView动画效果，自动更新bottomHeight
+/**
+ * 绑定scrollView，绑定后自动处理滚动动画效果并更新相应高度
+ *
+ * 1. 如果bottomHeight > 0，则滚动bottomView并更新bottomHeight
+ * 2. 如果bottomHeight为0，且middleHeight > contentHeight，则滚动middleView并更新middleHeight(变为固定高度)
+ */
 @property (nonatomic, weak, nullable) UIScrollView *scrollView;
 
 @end

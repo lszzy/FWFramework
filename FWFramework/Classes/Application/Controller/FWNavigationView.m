@@ -44,13 +44,13 @@
 @property (nonatomic, strong) NSLayoutConstraint *middleConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *contentConstraint;
+@property (nonatomic, strong) NSNumber *statusBarHidden;
+@property (nonatomic, assign) CGFloat bottomMaxHeight;
+@property (nonatomic, assign) BOOL issetContentLayout;
 
 @property (nonatomic, strong) NSLayoutConstraint *noneEdgeConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *topEdgeConstraint;
-@property (nonatomic, strong) NSNumber *statusBarHidden;
-@property (nonatomic, assign) CGFloat bottomMaxHeight;
 @property (nonatomic, assign) BOOL issetBackItem;
-@property (nonatomic, assign) BOOL issetContentLayout;
 
 @end
 
@@ -89,11 +89,17 @@
         [_navigationBar fwPinEdgesToSuperview];
         [self addSubview:_middleView];
         
+        _contentView = [[FWNavigationContentView alloc] init];
+        _contentView.clipsToBounds = YES;
+        _contentView.hidden = YES;
+        [_middleView addSubview:_contentView];
+        
         _topConstraint = [_middleView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:_topHeight];
         [_middleView fwPinEdgesToSuperviewHorizontal];
         _middleConstraint = [_middleView fwSetDimension:NSLayoutAttributeHeight toSize:_middleHeight];
         _middleConstraint.active = _middleHeight > 0;
         _bottomConstraint = [_middleView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:_bottomHeight];
+        [_contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     }
     return self;
 }
@@ -132,7 +138,6 @@
 
 - (void)updateContent:(BOOL)forceLayout
 {
-    if (!_contentView) return;
     if (forceLayout) [self.contentView setNeedsUpdateConstraints];
     if (self.issetContentLayout) return;
     
@@ -149,6 +154,7 @@
     
     // iOS11以下或者contentView还未初始化时和navigationBar对齐
     if (@available(iOS 11.0, *)) {
+        // 只有开启largeTitles或者自定义middleHeight时，contentView才和navigationBar高度不同
         if (self.contentConstraint) return;
     } else {
         self.issetContentLayout = YES;
@@ -198,24 +204,11 @@
     return _bottomView;
 }
 
-- (FWNavigationContentView *)contentView
-{
-    if (!_contentView) {
-        _contentView = [[FWNavigationContentView alloc] init];
-        _contentView.clipsToBounds = YES;
-        _contentView.hidden = (self.style == FWNavigationViewStyleDefault);
-        [self.middleView addSubview:_contentView];
-        [_contentView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-        [self updateContent:NO];
-    }
-    return _contentView;
-}
-
 - (void)setStyle:(FWNavigationViewStyle)style
 {
     _style = style;
     if (style == FWNavigationViewStyleDefault) {
-        _contentView.hidden = YES;
+        self.contentView.hidden = YES;
         self.backgroundView.hidden = YES;
         self.navigationBar.hidden = NO;
     } else {
@@ -479,7 +472,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [self.navigationView updateContent:NO];
+    
+    if (self.subviews.count > 0) {
+        [self.navigationView updateContent:NO];
+    }
     
     UIView *backgroundView = self.fwBackgroundView;
     backgroundView.frame = CGRectMake(backgroundView.frame.origin.x, -self.navigationView.topHeight, backgroundView.frame.size.width, self.navigationView.bounds.size.height);
