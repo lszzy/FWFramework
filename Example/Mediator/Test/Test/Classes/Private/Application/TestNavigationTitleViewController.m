@@ -68,6 +68,7 @@
             @"导航栏底部视图切换",
             @"导航栏绑定控制器切换",
             @"导航栏固定高度切换",
+            @"导航栏内间距切换",
             @"导航栏滚动效果切换",
         ]];
     }
@@ -190,13 +191,21 @@
         {
             if (self.fwNavigationView.middleHeight == 100) {
                 self.fwNavigationView.middleHeight = 0;
+                self.fwNavigationView.contentInsets = UIEdgeInsetsZero;
                 self.fwNavigationView.middleView.backgroundColor = nil;
             } else {
                 self.fwNavigationView.middleHeight = 100;
+                self.fwNavigationView.contentInsets = UIEdgeInsetsMake(0, 0, 100 - self.fwNavigationView.contentHeight, 0);
                 self.fwNavigationView.middleView.backgroundColor = [UIColor orangeColor];
             }
         }
+            break;
         case 13:
+        {
+            self.fwNavigationView.contentInsets = UIEdgeInsetsEqualToEdgeInsets(self.fwNavigationView.contentInsets, UIEdgeInsetsZero) ? UIEdgeInsetsMake(0, 0, 100 - self.fwNavigationView.contentHeight, 0) : UIEdgeInsetsZero;
+        }
+            break;
+        case 14:
         {
             self.fwNavigationView.scrollView = self.fwNavigationView.scrollView ? nil : tableView;
         }
@@ -240,7 +249,7 @@
 {
     if (!self.fwNavigationViewEnabled) return;
     
-    CGFloat progress = 1.0 - (self.fwNavigationView.bottomHeight / UINavigationBar.fwLargeTitleHeight);
+    CGFloat progress = 1.0 - (self.fwNavigationView.bottomHeight / 100);
     self.titleView.tintColor = [Theme.textColor colorWithAlphaComponent:progress];
 }
 
