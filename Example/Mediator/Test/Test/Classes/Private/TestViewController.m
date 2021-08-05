@@ -11,6 +11,25 @@
 
 @implementation TestViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    if ([self conformsToProtocol:@protocol(FWScrollViewController)]) {
+        UIViewController<FWScrollViewController> *scrollController = (UIViewController<FWScrollViewController> *)self;
+        self.fwNavigationView.scrollView = scrollController.scrollView;
+    } else if ([self conformsToProtocol:@protocol(FWTableViewController)]) {
+        UIViewController<FWTableViewController> *tableController = (UIViewController<FWTableViewController> *)self;
+        self.fwNavigationView.scrollView = tableController.tableView;
+    } else if ([self conformsToProtocol:@protocol(FWCollectionViewController)]) {
+        UIViewController<FWCollectionViewController> *collectionController = (UIViewController<FWCollectionViewController> *)self;
+        self.fwNavigationView.scrollView = collectionController.collectionView;
+    } else if ([self conformsToProtocol:@protocol(FWWebViewController)]) {
+        UIViewController<FWWebViewController> *webController = (UIViewController<FWWebViewController> *)self;
+        self.fwNavigationView.scrollView = webController.webView.scrollView;
+    }
+}
+
 FWDealloc();
 
 @end

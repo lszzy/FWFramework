@@ -169,6 +169,7 @@
     if (@available(iOS 11.0, *)) {
         self.fwNavigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
+    self.fwNavigationView.scrollView = self.tableView;
     self.fwBarTitle = [self titleView];
 }
 
