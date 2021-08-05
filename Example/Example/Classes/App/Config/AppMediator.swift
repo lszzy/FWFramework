@@ -55,9 +55,6 @@ class AppModule: NSObject, AppService {
         if let remoteNotification = launchOptions?[.remoteNotification] {
             FWNotificationManager.sharedInstance.handleRemoteNotification(remoteNotification)
         }
-        if let localNotification = launchOptions?[.localNotification] {
-            FWNotificationManager.sharedInstance.handleLocalNotification(localNotification)
-        }
         
         FWNotificationManager.sharedInstance.registerNotificationHandler()
         FWNotificationManager.sharedInstance.requestAuthorize(nil)
@@ -101,9 +98,5 @@ class AppModule: NSObject, AppService {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         FWNotificationManager.sharedInstance.handleRemoteNotification(userInfo)
         completionHandler(.newData)
-    }
-    
-    func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
-        FWNotificationManager.sharedInstance.handleLocalNotification(notification)
     }
 }
