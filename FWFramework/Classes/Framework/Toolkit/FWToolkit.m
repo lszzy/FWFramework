@@ -645,12 +645,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 #pragma mark - UIViewController+FWToolkit
 
-@interface UIViewController ()
-
-@property (nonatomic, strong, readonly) UIView *fwContainerView;
-
-@end
-
 @implementation UIViewController (FWToolkit)
 
 - (BOOL)fwIsRoot
@@ -691,7 +685,7 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 - (UIView *)fwView
 {
-    return [self respondsToSelector:@selector(fwContainerView)] ? self.fwContainerView : self.view;
+    return self.view;
 }
 
 @end
