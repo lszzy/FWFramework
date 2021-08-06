@@ -176,17 +176,13 @@
 {
     if (!self.navigationController || self.fwIsChild) return;
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
-    NSNumber *style = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
-    NSNumber *hidden = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
-    if (!appearance && !style && !hidden) return;
+    NSNumber *styleNum = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
+    NSNumber *hiddenNum = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
+    if (!appearance && !styleNum && !hiddenNum) return;
 
-    BOOL isHidden = appearance.isHidden;
-    BOOL isTransparent = appearance.isTransparent;
-    if (!appearance) {
-        appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
-        isHidden = (style.integerValue == FWNavigationBarStyleHidden) || hidden.boolValue || appearance.isHidden;
-        isTransparent = (style.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
-    }
+    if (!appearance) appearance = [FWNavigationBarAppearance appearanceForStyle:styleNum.integerValue];
+    BOOL isHidden = (styleNum.integerValue == FWNavigationBarStyleHidden) || hiddenNum.boolValue || appearance.isHidden;
+    BOOL isTransparent = (styleNum.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     
     // 自定义导航栏，隐藏系统默认导航栏，切换自定义导航栏显示状态
     if ([self fwNavigationViewEnabled]) {
