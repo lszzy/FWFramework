@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.8.0] - 2021-08-01
+## [1.8.0] - 2021-08-06
 
 ### Added
 * Added custom navigation bar FWNavigationView component
