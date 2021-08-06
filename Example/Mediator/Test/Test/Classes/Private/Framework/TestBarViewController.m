@@ -16,10 +16,17 @@
 
 @implementation TestBarSubViewController
 
+- (FWNavigationBarAppearance *)fwNavigationBarAppearance
+{
+    FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance new];
+    appearance.isHidden = NO;
+    appearance.isTransparent = NO;
+    return appearance;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.fwNavigationItem.title = [NSString stringWithFormat:@"标题:%@", @(self.index + 1)];
     self.fwForcePopGesture = YES;
     if (self.index < 2) {
         self.fwNavigationBarStyle = FWNavigationBarStyleDefault;
@@ -28,6 +35,7 @@
     } else {
         self.fwNavigationBarStyle = [[@[@(FWNavigationBarStyleDefault), @(FWNavigationBarStyleWhite), @(FWNavigationBarStyleHidden)] fwRandomObject] integerValue];
     }
+    self.fwNavigationItem.title = [NSString stringWithFormat:@"标题:%@ 样式:%@", @(self.index + 1), @(self.fwNavigationBarStyle)];
     
     FWWeakifySelf();
     [self fwSetRightBarItem:@"打开界面" block:^(id sender) {
