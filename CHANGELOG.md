@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.1] - 2021-08-07
+
+### Fixed
+* Fixed the bug that the navigation bar cannot be hidden when Appearance is set and then hidden
+
 ## [1.8.0] - 2021-08-06
 
 ### Added
