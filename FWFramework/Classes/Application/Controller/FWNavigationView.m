@@ -512,6 +512,12 @@
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
         }));
         
+        FWSwizzleClass(UIViewController, @selector(fwView), FWSwizzleReturn(UIView *), FWSwizzleArgs(), FWSwizzleCode({
+            if (!selfObject.fwNavigationViewEnabled) return FWSwizzleOriginal();
+
+            return selfObject.fwContainerView;
+        }));
+        
         FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
