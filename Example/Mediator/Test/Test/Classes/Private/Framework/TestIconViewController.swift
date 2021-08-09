@@ -80,7 +80,7 @@ class TestIconCell: UICollectionViewCell {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestIconCell.fwCell(with: collectionView, indexPath: indexPath)
         let name = collectionData.fwObject(at: indexPath.item) as? String
-        cell.imageView.image = FWIconImage(name.fwSafeValue, 20)
+        cell.imageView.fwThemeImage = FWIconImage(name.fwSafeValue, 60)?.fwTheme
         cell.nameLabel.text = name
         return cell
     }
