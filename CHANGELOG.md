@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.2] - 2021-08-11
+
+### Added
+* Added a method to determine whether the view skeleton screen is displaying
+* Toast plug-in supports setting the vertical offset, the default is -30
+
 ## [1.8.1] - 2021-08-07
 
 ### Fixed
