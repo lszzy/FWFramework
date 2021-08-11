@@ -90,6 +90,8 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
 @property (nonatomic, assign) CGFloat contentCornerRadius UI_APPEARANCE_SELECTOR;
 /// 是否水平对齐，默认NO垂直对齐
 @property (nonatomic, assign) BOOL horizontalAlignment UI_APPEARANCE_SELECTOR;
+/// 如果不想要内容整体垂直居中，则可通过调整此属性来进行垂直偏移。默认为-30，即内容比中间略微偏上
+@property(nonatomic, assign) CGFloat verticalOffset UI_APPEARANCE_SELECTOR;
 /// 指示器图片，支持动画图片，自适应大小，仅Image生效
 @property (nonatomic, strong, nullable) UIImage *indicatorImage;
 /// 指示器样式，默认medium，仅Loading生效
