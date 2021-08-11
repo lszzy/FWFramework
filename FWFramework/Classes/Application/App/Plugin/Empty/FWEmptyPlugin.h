@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置空界面外间距，默认zero
 @property (nonatomic, assign) UIEdgeInsets fwEmptyInsets;
 
+/// 是否显示空界面
+@property (nonatomic, assign, readonly) BOOL fwHasEmptyView;
+
 /// 显示空界面
 - (void)fwShowEmptyView;
 
@@ -55,9 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 隐藏空界面
 - (void)fwHideEmptyView;
-
-/// 是否显示空界面
-- (BOOL)fwHasEmptyView;
 
 @end
 

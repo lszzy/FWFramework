@@ -91,6 +91,7 @@
         _contentInsets = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
         _contentSpacing = 5.f;
         _contentCornerRadius = 5.f;
+        _verticalOffset = -30;
         if (@available(iOS 13.0, *)) {
             _indicatorStyle = UIActivityIndicatorViewStyleMedium;
         } else {
@@ -158,7 +159,8 @@
 {
     self.contentView.backgroundColor = self.contentBackgroundColor;
     self.contentView.layer.cornerRadius = self.contentCornerRadius;
-    [self.contentView fwAlignCenterToSuperview];
+    [self.contentView fwAlignAxisToSuperview:NSLayoutAttributeCenterX];
+    [self.contentView fwAlignAxisToSuperview:NSLayoutAttributeCenterY withOffset:self.verticalOffset];
     [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeTop withInset:self.contentMarginInsets.top relation:NSLayoutRelationGreaterThanOrEqual];
     [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeLeft withInset:self.contentMarginInsets.left relation:NSLayoutRelationGreaterThanOrEqual];
     [self.contentView fwPinEdgeToSuperview:NSLayoutAttributeBottom withInset:self.contentMarginInsets.bottom relation:NSLayoutRelationGreaterThanOrEqual];
