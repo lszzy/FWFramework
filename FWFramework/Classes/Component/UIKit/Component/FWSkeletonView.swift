@@ -952,6 +952,16 @@ import UIKit
             layout.removeFromSuperview()
         }
     }
+    
+    /// 是否正在显示骨架屏
+    open var fwHasSkeleton: Bool {
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if self is UITableView || self is UICollectionView {
+            return superview?.fwHasSkeleton ?? false
+        }
+        
+        return subviews.firstIndex(where: { $0.tag == 2051 }) != nil
+    }
 }
 
 /// 控制器显示骨架屏扩展
@@ -974,6 +984,11 @@ import UIKit
     /// 隐藏view骨架屏
     open func fwHideSkeleton() {
         fwView.fwHideSkeleton()
+    }
+    
+    /// 是否正在显示view骨架屏
+    open var fwHasSkeleton: Bool {
+        return fwView.fwHasSkeleton
     }
 }
 
