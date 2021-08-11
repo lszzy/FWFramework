@@ -91,6 +91,7 @@
               @[@"FWLayoutChain", @"TestChainViewController"],
               @[@"FWTheme", @"TestThemeViewController"],
               @[@"FWTheme+Extension", @"TestThemeExtensionViewController"],
+              @[@"FWIcon", @"Test.TestIconViewController"],
               @[@"FWDynamicLayout+UITableView", @"TestTableDynamicLayoutViewController"],
               @[@"FWDynamicLayout+UICollectionView", @"TestCollectionDynamicLayoutViewController"],
               @[@"FWAdaptive", @"TestBarViewController"],
