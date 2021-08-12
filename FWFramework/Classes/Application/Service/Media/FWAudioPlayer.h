@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)audioPlayerCurrentItemEvicted:(AVPlayerItem *)item;
 - (void)audioPlayerRateChanged:(BOOL)isPlaying;
 - (void)audioPlayerDidReachEnd;
+- (void)audioPlayerPeriodicTime:(CMTime)time;
 - (void)audioPlayerCurrentItemPreloaded:(CMTime)time;
 - (void)audioPlayerDidFailed:(nullable AVPlayerItem *)item error:(nullable NSError *)error;
 - (void)audioPlayerReadyToPlay:(nullable AVPlayerItem *)item;
@@ -89,6 +90,7 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 
 @property (nonatomic, assign, readonly) float playingItemCurrentTime;
 @property (nonatomic, assign, readonly) float playingItemDurationTime;
+@property (nonatomic, assign) BOOL observePeriodicTime;
 
 /// necessary if you implement audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: delegate method, should not use this method outside of audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: scope
 - (void)setupPlayerItemWithUrl:(NSURL *)url index:(NSInteger)index;
@@ -107,8 +109,8 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 - (void)seekToTime:(double)CMTime;
 - (void)seekToTime:(double)CMTime withCompletionBlock:(nullable void (^)(BOOL finished))completionBlock;
 
-- (id)addBoundaryTimeObserverForTimes:(NSArray *)times queue:(dispatch_queue_t)queue usingBlock:(void (^)(void))block;
-- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(dispatch_queue_t)queue usingBlock:(void (^)(CMTime time))block;
+- (id)addBoundaryTimeObserverForTimes:(NSArray *)times queue:(nullable dispatch_queue_t)queue usingBlock:(void (^)(void))block;
+- (id)addPeriodicTimeObserverForInterval:(CMTime)interval queue:(nullable dispatch_queue_t)queue usingBlock:(void (^)(CMTime time))block;
 - (void)removeTimeObserver:(id)observer;
 
 - (void)destroyPlayer;

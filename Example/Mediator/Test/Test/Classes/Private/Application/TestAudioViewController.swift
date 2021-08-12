@@ -14,6 +14,7 @@ import FWFramework
     private lazy var audioLabel: UILabel = {
         let result = UILabel()
         result.textColor = Theme.textColor
+        result.textAlignment = .center
         result.numberOfLines = 0
         return result
     }()
@@ -25,6 +26,7 @@ import FWFramework
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
+        audioPlayer.observePeriodicTime = true
         audioPlayer.fetchAndPlayPlayerItem(0)
     }
     
@@ -49,12 +51,19 @@ import FWFramework
                 self?.renderData()
             }
         }
-        
-        if let index = audioPlayer.getAudioIndex(audioPlayer.currentItem) {
-            audioLabel.text = "\(String(describing: index.intValue + 1))\n\(audioPlayer.playingItemCurrentTime):\(audioPlayer.playingItemDurationTime)"
-        } else {
+    }
+    
+    func renderLabel() {
+        guard let currentItem = audioPlayer.currentItem else {
             audioLabel.text = ""
+            return
         }
+        
+        let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem)?.intValue ?? 0) + 1)
+        let totalStr = String(describing: audioPlayerNumberOfItems())
+        let timeStr = NSDate.fwFormatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
+        let durationStr = NSDate.fwFormatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
+        audioLabel.text = String(format: "%@/%@\n%@\n%@", indexStr, totalStr, timeStr, durationStr)
     }
     
     func audioPlayerNumberOfItems() -> Int {
@@ -92,5 +101,9 @@ import FWFramework
     
     func audioPlayerCurrentItemChanged(_ item: AVPlayerItem) {
         renderData()
+    }
+    
+    func audioPlayerPeriodicTime(_ time: CMTime) {
+        renderLabel()
     }
 }
