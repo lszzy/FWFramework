@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FWAnimatedImage.h"
+#import "FWAudioPlayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
