@@ -15,20 +15,20 @@ import CoreGraphics
 
 /// Player delegate protocol
 @objc public protocol FWVideoPlayerDelegate {
-    func playerReady(_ player: FWVideoPlayer)
-    func playerPlaybackStateDidChange(_ player: FWVideoPlayer)
-    func playerBufferingStateDidChange(_ player: FWVideoPlayer)
-    func playerBufferTimeDidChange(_ bufferTime: Double)
-    func player(_ player: FWVideoPlayer, didFailWithError error: Error?)
+    @objc optional func playerReady(_ player: FWVideoPlayer)
+    @objc optional func playerPlaybackStateDidChange(_ player: FWVideoPlayer)
+    @objc optional func playerBufferingStateDidChange(_ player: FWVideoPlayer)
+    @objc optional func playerBufferTimeDidChange(_ bufferTime: Double)
+    @objc optional func player(_ player: FWVideoPlayer, didFailWithError error: Error?)
 }
 
 /// Player playback protocol
 @objc public protocol FWVideoPlayerPlaybackDelegate {
-    func playerCurrentTimeDidChange(_ player: FWVideoPlayer)
-    func playerPlaybackWillStartFromBeginning(_ player: FWVideoPlayer)
-    func playerPlaybackDidEnd(_ player: FWVideoPlayer)
-    func playerPlaybackWillLoop(_ player: FWVideoPlayer)
-    func playerPlaybackDidLoop(_ player: FWVideoPlayer)
+    @objc optional func playerCurrentTimeDidChange(_ player: FWVideoPlayer)
+    @objc optional func playerPlaybackWillStartFromBeginning(_ player: FWVideoPlayer)
+    @objc optional func playerPlaybackDidEnd(_ player: FWVideoPlayer)
+    @objc optional func playerPlaybackWillLoop(_ player: FWVideoPlayer)
+    @objc optional func playerPlaybackDidLoop(_ player: FWVideoPlayer)
 }
 
 /// Asset playback states
@@ -166,7 +166,7 @@ import CoreGraphics
         didSet {
             if playbackState != oldValue || !playbackEdgeTriggered {
                 self.executeClosureOnMainQueueIfNecessary {
-                    self.playerDelegate?.playerPlaybackStateDidChange(self)
+                    self.playerDelegate?.playerPlaybackStateDidChange?(self)
                 }
             }
         }
@@ -177,7 +177,7 @@ import CoreGraphics
         didSet {
             if bufferingState != oldValue || !playbackEdgeTriggered {
                 self.executeClosureOnMainQueueIfNecessary {
-                    self.playerDelegate?.playerBufferingStateDidChange(self)
+                    self.playerDelegate?.playerBufferingStateDidChange?(self)
                 }
             }
         }
@@ -401,7 +401,7 @@ import CoreGraphics
 
     /// Begins playback of the media from the beginning.
     open func playFromBeginning() {
-        self.playbackDelegate?.playerPlaybackWillStartFromBeginning(self)
+        self.playbackDelegate?.playerPlaybackWillStartFromBeginning?(self)
         self._avplayer.seek(to: CMTime.zero)
         self.playFromCurrentTime()
     }
@@ -440,7 +440,7 @@ import CoreGraphics
 
         self._avplayer.pause()
         self.playbackState = .stopped
-        self.playbackDelegate?.playerPlaybackDidEnd(self)
+        self.playbackDelegate?.playerPlaybackDidEnd?(self)
     }
 
     /// Updates playback to the specified time.
@@ -557,7 +557,7 @@ import CoreGraphics
                 if status == .failed {
                     self.playbackState = .failed
                     self.executeClosureOnMainQueueIfNecessary {
-                        self.playerDelegate?.player(self, didFailWithError: error)
+                        self.playerDelegate?.player?(self, didFailWithError: error)
                     }
                     return
                 }
@@ -566,7 +566,7 @@ import CoreGraphics
             if !asset.isPlayable {
                 self.playbackState = .failed
                 self.executeClosureOnMainQueueIfNecessary {
-                    self.playerDelegate?.player(self, didFailWithError: NSError(domain: "FWVideoPlayer", code: 0, userInfo: nil))
+                    self.playerDelegate?.player?(self, didFailWithError: NSError(domain: "FWVideoPlayer", code: 0, userInfo: nil))
                 }
                 return
             }
@@ -633,11 +633,11 @@ import CoreGraphics
     @objc internal func playerItemDidPlayToEndTime(_ aNotification: Notification) {
         self.executeClosureOnMainQueueIfNecessary {
             if self.playbackLoops {
-                self.playbackDelegate?.playerPlaybackWillLoop(self)
+                self.playbackDelegate?.playerPlaybackWillLoop?(self)
                 self._avplayer.seek(to: CMTime.zero)
                 self._avplayer.play()
                 self._avplayer.rate = self.rate
-                self.playbackDelegate?.playerPlaybackDidLoop(self)
+                self.playbackDelegate?.playerPlaybackDidLoop?(self)
             } else if self.playbackFreezesAtEnd {
                 self.stop()
             } else {
@@ -730,7 +730,7 @@ import CoreGraphics
                 if strongSelf._lastBufferTime != bufferedTime {
                     strongSelf._lastBufferTime = bufferedTime
                     strongSelf.executeClosureOnMainQueueIfNecessary {
-                        strongSelf.playerDelegate?.playerBufferTimeDidChange(bufferedTime)
+                        strongSelf.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
                     }
                 }
             }
@@ -760,7 +760,7 @@ import CoreGraphics
         self._playerLayerObserver = self._playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] (object, change) in
             self?.executeClosureOnMainQueueIfNecessary {
                 if let strongSelf = self {
-                    strongSelf.playerDelegate?.playerReady(strongSelf)
+                    strongSelf.playerDelegate?.playerReady?(strongSelf)
                 }
             }
         }
@@ -778,24 +778,21 @@ import CoreGraphics
             guard let strongSelf = self else {
                 return
             }
-            strongSelf.playbackDelegate?.playerCurrentTimeDidChange(strongSelf)
+            strongSelf.playbackDelegate?.playerCurrentTimeDidChange?(strongSelf)
         })
 
-        if #available(iOS 10.0, tvOS 10.0, *) {
-            self._playerObservers.append(self._avplayer.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] (object, change) in
-                switch object.timeControlStatus {
-                case .paused:
-                    self?.playbackState = .paused
-                case .playing:
-                    self?.playbackState = .playing
-                case .waitingToPlayAtSpecifiedRate:
-                    fallthrough
-                @unknown default:
-                    break
-                }
-            })
-        }
-
+        self._playerObservers.append(self._avplayer.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] (object, change) in
+            switch object.timeControlStatus {
+            case .paused:
+                self?.playbackState = .paused
+            case .playing:
+                self?.playbackState = .playing
+            case .waitingToPlayAtSpecifiedRate:
+                fallthrough
+            @unknown default:
+                break
+            }
+        })
     }
 
     internal func removePlayerObservers() {

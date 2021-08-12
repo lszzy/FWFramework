@@ -103,7 +103,7 @@ import FWFramework
         renderData()
     }
     
-    func audioPlayerPeriodicTime(_ time: CMTime) {
+    func audioPlayerCurrentTimeChanged(_ time: CMTime) {
         renderLabel()
     }
 }

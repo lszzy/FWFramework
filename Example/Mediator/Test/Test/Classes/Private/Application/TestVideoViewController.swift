@@ -8,7 +8,7 @@
 
 import FWFramework
 
-@objcMembers class TestVideoViewController: TestViewController {
+@objcMembers class TestVideoViewController: TestViewController, FWVideoPlayerDelegate, FWVideoPlayerPlaybackDelegate {
     fileprivate var player = FWVideoPlayer()
     
     // MARK: object lifecycle
@@ -52,11 +52,8 @@ import FWFramework
         
         self.player.playFromBeginning()
     }
-}
-
-// MARK: - UIGestureRecognizer
-
-extension TestVideoViewController {
+    
+    // MARK: -
     
     @objc func handleTapGestureRecognizer(_ gestureRecognizer: UITapGestureRecognizer) {
         switch self.player.playbackState {
@@ -75,12 +72,6 @@ extension TestVideoViewController {
         }
     }
     
-}
-
-// MARK: - FWVideoPlayerDelegate
-
-extension TestVideoViewController: FWVideoPlayerDelegate {
-    
     func playerReady(_ player: FWVideoPlayer) {
         print("\(#function) ready")
         
@@ -91,36 +82,9 @@ extension TestVideoViewController: FWVideoPlayerDelegate {
         print("\(#function) \(player.playbackState.rawValue)")
     }
     
-    func playerBufferingStateDidChange(_ player: FWVideoPlayer) {
-    }
-    
-    func playerBufferTimeDidChange(_ bufferTime: Double) {
-    }
-    
     func player(_ player: FWVideoPlayer, didFailWithError error: Error?) {
         print("\(#function) error.description")
         
         fwHideLoading()
-    }
-    
-}
-
-// MARK: - PlayerPlaybackDelegate
-
-extension TestVideoViewController: FWVideoPlayerPlaybackDelegate {
-    
-    func playerCurrentTimeDidChange(_ player: FWVideoPlayer) {
-    }
-    
-    func playerPlaybackWillStartFromBeginning(_ player: FWVideoPlayer) {
-    }
-    
-    func playerPlaybackDidEnd(_ player: FWVideoPlayer) {
-    }
-    
-    func playerPlaybackWillLoop(_ player: FWVideoPlayer) {
-    }
-
-    func playerPlaybackDidLoop(_ player: FWVideoPlayer) {
     }
 }
