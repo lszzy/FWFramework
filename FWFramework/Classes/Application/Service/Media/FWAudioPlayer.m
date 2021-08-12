@@ -26,10 +26,6 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     BOOL tookAudioFocus;
     
     NSInteger prepareingItemHash;
-    
-    UIBackgroundTaskIdentifier bgTaskId;
-    UIBackgroundTaskIdentifier removedId;
-    
     dispatch_queue_t audioQueue;
 }
 
@@ -37,9 +33,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 @property (nonatomic) NSInteger lastItemIndex;
 @property (nonatomic) FWAudioPauseReason pauseReason;
 @property (nonatomic, strong) NSMutableSet *playedItems;
-
-- (void)longTimeBufferBackground;
-- (void)longTimeBufferBackgroundCompleted;
+@property (nonatomic, strong) id periodicTimeToken;
 
 @end
 
@@ -112,31 +106,6 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         if (!self.disableLogs) {
             NSLog(@"FWAudioPlayer: unable to register background playback");
         }
-    }
-    
-    [self longTimeBufferBackground];
-}
-
-- (void)longTimeBufferBackground
-{
-    __weak __typeof__(self) self_weak_ = self;
-    bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        __typeof__(self) self = self_weak_;
-        [[UIApplication sharedApplication] endBackgroundTask:self->removedId];
-        self->bgTaskId = UIBackgroundTaskInvalid;
-    }];
-    
-    if (bgTaskId != UIBackgroundTaskInvalid && removedId == 0 ? YES : (removedId != UIBackgroundTaskInvalid)) {
-        [[UIApplication sharedApplication] endBackgroundTask: removedId];
-    }
-    removedId = bgTaskId;
-}
-
-- (void)longTimeBufferBackgroundCompleted
-{
-    if (bgTaskId != UIBackgroundTaskInvalid && removedId != bgTaskId) {
-        [[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
-        removedId = bgTaskId;
     }
 }
 
@@ -536,6 +505,16 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         return duration;
 }
 
+- (void)setObservePeriodicTime:(BOOL)observePeriodicTime
+{
+    if (_observePeriodicTime == observePeriodicTime) return;
+    _observePeriodicTime = observePeriodicTime;
+    if (!observePeriodicTime && self.periodicTimeToken) {
+        [self removeTimeObserver:self.periodicTimeToken];
+        self.periodicTimeToken = nil;
+    }
+}
+
 - (id)addBoundaryTimeObserverForTimes:(NSArray *)times queue:(dispatch_queue_t)queue usingBlock:(void (^)(void))block
 {
     id boundaryObserver = [self.audioPlayer addBoundaryTimeObserverForTimes:times queue:queue usingBlock:block];
@@ -641,6 +620,15 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                         change:(NSDictionary *)change context:(void *)context {
     if (object == self.audioPlayer && [keyPath isEqualToString:@"status"]) {
         if (self.audioPlayer.status == AVPlayerStatusReadyToPlay) {
+            if (self.observePeriodicTime && !self.periodicTimeToken) {
+                __weak __typeof__(self) self_weak_ = self;
+                self.periodicTimeToken = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                    __typeof__(self) self = self_weak_;
+                    if ([self.delegate respondsToSelector:@selector(audioPlayerPeriodicTime:)]) {
+                        [self.delegate audioPlayerPeriodicTime:time];
+                    }
+                }];
+            }
             if ([self.delegate respondsToSelector:@selector(audioPlayerReadyToPlay:)]) {
                 [self.delegate audioPlayerReadyToPlay:nil];
             }
@@ -725,7 +713,6 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
             
             if (self.audioPlayer.rate == 0 && _pauseReason != FWAudioPauseReasonForced) {
                 _pauseReason = FWAudioPauseReasonBuffering;
-                [self longTimeBufferBackground];
                 
                 CMTime bufferdTime = CMTimeAdd(timerange.start, timerange.duration);
                 CMTime milestone = CMTimeAdd(self.audioPlayer.currentTime, CMTimeMakeWithSeconds(5.0f, timerange.duration.timescale));
@@ -736,7 +723,6 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                             NSLog(@"FWAudioPlayer: resume from buffering..");
                         }
                         [self play];
-                        [self longTimeBufferBackgroundCompleted];
                     }
                 }
             }
@@ -840,6 +826,11 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         }
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    if (self.periodicTimeToken) {
+        [self removeTimeObserver:self.periodicTimeToken];
+        self.periodicTimeToken = nil;
+    }
     
     [self.audioPlayer removeObserver:self forKeyPath:@"status" context:nil];
     [self.audioPlayer removeObserver:self forKeyPath:@"rate" context:nil];
