@@ -72,8 +72,8 @@ Pod::Spec.new do |s|
       sss.source_files = 'FWFramework/Classes/Application/Service/Database/*.{h,m,swift}'
     end
 
-    ss.subspec 'Image' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Service/Image/*.{h,m,swift}'
+    ss.subspec 'Media' do |sss|
+      sss.source_files = 'FWFramework/Classes/Application/Service/Media/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
     end
 
