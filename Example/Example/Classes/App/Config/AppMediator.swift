@@ -62,10 +62,8 @@ class AppModule: NSObject, AppService {
             FWNotificationManager.sharedInstance.clearNotificationBadges()
             
             var title: String?
-            if #available(iOS 10.0, *) {
-                if let response = notification as? UNNotificationResponse {
-                    title = response.notification.request.content.title
-                }
+            if let response = notification as? UNNotificationResponse {
+                title = response.notification.request.content.title
             }
             UIWindow.fwMain?.fwShowMessage(withText: "收到远程通知：\(title ?? "")\n\(userInfo ?? [:])")
         }
@@ -73,14 +71,8 @@ class AppModule: NSObject, AppService {
             FWNotificationManager.sharedInstance.clearNotificationBadges()
             
             var title: String?
-            if #available(iOS 10.0, *) {
-                if let response = notification as? UNNotificationResponse {
-                    title = response.notification.request.content.title
-                }
-            } else {
-                if let local = notification as? UILocalNotification {
-                    title = local.alertTitle ?? local.alertBody
-                }
+            if let response = notification as? UNNotificationResponse {
+                title = response.notification.request.content.title
             }
             UIWindow.fwMain?.fwShowMessage(withText: "收到本地通知：\(title ?? "")\n\(userInfo ?? [:])")
         }
