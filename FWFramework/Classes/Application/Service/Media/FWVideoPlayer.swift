@@ -64,8 +64,7 @@ import CoreGraphics
     // configuration
 
     /// Local or remote URL for the file asset to be played.
-    ///
-    /// - Parameter url: URL of the asset.
+    /// URL of the asset.
     open var url: URL? {
         didSet {
             if let url = self.url {
