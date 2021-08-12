@@ -624,8 +624,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                 __weak __typeof__(self) self_weak_ = self;
                 self.periodicTimeToken = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                     __typeof__(self) self = self_weak_;
-                    if ([self.delegate respondsToSelector:@selector(audioPlayerPeriodicTime:)]) {
-                        [self.delegate audioPlayerPeriodicTime:time];
+                    if ([self.delegate respondsToSelector:@selector(audioPlayerCurrentTimeChanged:)]) {
+                        [self.delegate audioPlayerCurrentTimeChanged:time];
                     }
                 }];
             }

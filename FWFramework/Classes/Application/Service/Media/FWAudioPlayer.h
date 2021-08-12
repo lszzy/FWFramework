@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)audioPlayerCurrentItemEvicted:(AVPlayerItem *)item;
 - (void)audioPlayerRateChanged:(BOOL)isPlaying;
 - (void)audioPlayerDidReachEnd;
-- (void)audioPlayerPeriodicTime:(CMTime)time;
+- (void)audioPlayerCurrentTimeChanged:(CMTime)time;
 - (void)audioPlayerCurrentItemPreloaded:(CMTime)time;
 - (void)audioPlayerDidFailed:(nullable AVPlayerItem *)item error:(nullable NSError *)error;
 - (void)audioPlayerReadyToPlay:(nullable AVPlayerItem *)item;
