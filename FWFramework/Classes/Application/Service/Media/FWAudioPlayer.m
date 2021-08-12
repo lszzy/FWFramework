@@ -12,10 +12,10 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioSession.h>
 
-typedef NS_ENUM(NSInteger, PauseReason) {
-    PauseReasonNone,
-    PauseReasonForced,
-    PauseReasonBuffering,
+typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
+    FWAudioPauseReasonNone,
+    FWAudioPauseReasonForced,
+    FWAudioPauseReasonBuffering,
 };
 
 @interface FWAudioPlayer ()
@@ -30,18 +30,12 @@ typedef NS_ENUM(NSInteger, PauseReason) {
     UIBackgroundTaskIdentifier bgTaskId;
     UIBackgroundTaskIdentifier removedId;
     
-    dispatch_queue_t HBGQueue;
+    dispatch_queue_t audioQueue;
 }
 
-
 @property (nonatomic, strong, readwrite) NSArray *playerItems;
-@property (nonatomic, readwrite) BOOL emptySoundPlaying;
 @property (nonatomic) NSInteger lastItemIndex;
-
-@property (nonatomic) FWAudioPlayerRepeatMode repeatMode;
-@property (nonatomic) FWAudioPlayerShuffleMode shuffleMode;
-@property (nonatomic) FWAudioPlayerStatus audioPlayerStatus;
-@property (nonatomic) PauseReason pauseReason;
+@property (nonatomic) FWAudioPauseReason pauseReason;
 @property (nonatomic, strong) NSMutableSet *playedItems;
 
 - (void)longTimeBufferBackground;
@@ -51,34 +45,27 @@ typedef NS_ENUM(NSInteger, PauseReason) {
 
 @implementation FWAudioPlayer
 
+#pragma mark - Lifecycle
 
-static FWAudioPlayer *sharedInstance = nil;
-static dispatch_once_t onceToken;
-
-#pragma mark -
-#pragma mark ===========  Initialization, Setup  =========
-#pragma mark -
-
-+ (FWAudioPlayer *)sharedInstance {
-    
++ (FWAudioPlayer *)sharedInstance
+{
+    static FWAudioPlayer *instance = nil;
+    static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
+        instance = [[self alloc] init];
     });
-    
-    return sharedInstance;
+    return instance;
 }
 
-- (id)init {
+- (instancetype)init
+{
     self = [super init];
     if (self) {
-        HBGQueue = dispatch_queue_create("com.audio.queue", NULL);
+        audioQueue = dispatch_queue_create("com.audio.queue", NULL);
         _playerItems = [NSArray array];
-        
         _repeatMode = FWAudioPlayerRepeatModeOff;
         _shuffleMode = FWAudioPlayerShuffleModeOff;
-        _audioPlayerStatus = FWAudioPlayerStatusUnknown;
     }
-    
     return self;
 }
 
@@ -130,11 +117,7 @@ static dispatch_once_t onceToken;
     [self longTimeBufferBackground];
 }
 
-
-/*
- * Tells OS this application starts one or more long-running tasks, should end background task when completed.
- */
--(void)longTimeBufferBackground
+- (void)longTimeBufferBackground
 {
     __weak __typeof__(self) self_weak_ = self;
     bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
@@ -149,7 +132,7 @@ static dispatch_once_t onceToken;
     removedId = bgTaskId;
 }
 
--(void)longTimeBufferBackgroundCompleted
+- (void)longTimeBufferBackgroundCompleted
 {
     if (bgTaskId != UIBackgroundTaskInvalid && removedId != bgTaskId) {
         [[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
@@ -157,56 +140,19 @@ static dispatch_once_t onceToken;
     }
 }
 
-
-#pragma mark -
-#pragma mark ===========  Runtime AssociatedObject  =========
-#pragma mark -
-
-- (void)setAudioIndex:(AVPlayerItem *)item key:(NSNumber *)order {
+- (void)setAudioIndex:(AVPlayerItem *)item key:(NSNumber *)order
+{
+    if (!item) return;
     objc_setAssociatedObject(item, @selector(getAudioIndex:), order, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSNumber *)getAudioIndex:(AVPlayerItem *)item {
+- (NSNumber *)getAudioIndex:(AVPlayerItem *)item
+{
+    if (!item) return nil;
     return objc_getAssociatedObject(item, @selector(getAudioIndex:));
 }
 
-#pragma mark -
-#pragma mark ===========  AVAudioSession Notifications  =========
-#pragma mark -
-
-- (void)AVAudioSessionNotification
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidReachEnd:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemFailedToPlayEndTime:)
-                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemPlaybackStall:)
-                                                 name:AVPlayerItemPlaybackStalledNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(interruption:)
-                                                 name:AVAudioSessionInterruptionNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(routeChange:)
-                                                 name:AVAudioSessionRouteChangeNotification
-                                               object:nil];
-    
-    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil];
-    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:0 context:nil];
-    [self.audioPlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-}
-
-#pragma mark -
-#pragma mark ===========  Player Methods  =========
-#pragma mark -
+#pragma mark - Player
 
 - (void)willPlayPlayerItemAtIndex:(NSInteger)index
 {
@@ -248,7 +194,7 @@ static dispatch_once_t onceToken;
     NSAssert([self.dataSource respondsToSelector:@selector(audioPlayerURLForItemAtIndex:preBuffer:)] || [self.dataSource respondsToSelector:@selector(audioPlayerAsyncSetUrlForItemAtIndex:preBuffer:)], @"You didn't implement URL getter delegate from FWAudioPlayerDelegate, audioPlayerURLForItemAtIndex:preBuffer: and audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: provides for the use of alternatives.");
     NSAssert([self audioPlayerItemsCount] > index, ([NSString stringWithFormat:@"You are about to access index: %li URL when your FWAudioPlayer items count value is %li, please check audioPlayerNumberOfItems or set itemsCount directly.", (unsigned long)index, (unsigned long)[self audioPlayerItemsCount]]));
     if ([self.dataSource respondsToSelector:@selector(audioPlayerURLForItemAtIndex:preBuffer:)] && [self.dataSource audioPlayerURLForItemAtIndex:index preBuffer:preBuffer]) {
-        dispatch_async(HBGQueue, ^{
+        dispatch_async(audioQueue, ^{
             [self setupPlayerItemWithUrl:[self.dataSource audioPlayerURLForItemAtIndex:index preBuffer:preBuffer] index:index];
         });
     } else if ([self.dataSource respondsToSelector:@selector(audioPlayerAsyncSetUrlForItemAtIndex:preBuffer:)]) {
@@ -260,17 +206,17 @@ static dispatch_once_t onceToken;
 
 - (void)setupPlayerItemWithUrl:(NSURL *)url index:(NSInteger)index
 {
+    if (!url) return;
     AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
-    if (!item)
-        return;
+    if (!item) return;
     [self setupPlayerItemWithAVPlayerItem:item index:index];
 }
 
 - (void)setupPlayerItemWithAVURLAsset:(AVURLAsset *)asset index:(NSInteger)index
 {
+    if (!asset) return;
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-    if (!item)
-        return;
+    if (!item) return;
     [self setupPlayerItemWithAVPlayerItem:item index:index];
 }
 
@@ -286,7 +232,6 @@ static dispatch_once_t onceToken;
         [self insertPlayerItem:playerItem];
     });
 }
-
 
 - (BOOL)findSourceInPlayerItems:(NSInteger)index
 {
@@ -306,9 +251,7 @@ static dispatch_once_t onceToken;
 
 - (void)prepareNextPlayerItem
 {
-    if (_shuffleMode == FWAudioPlayerShuffleModeOn || _repeatMode == FWAudioPlayerRepeatModeOnce) {
-        return;
-    }
+    if (_shuffleMode == FWAudioPlayerShuffleModeOn || _repeatMode == FWAudioPlayerRepeatModeOnce) return;
     
     NSInteger nowIndex = self.lastItemIndex;
     BOOL findInPlayerItems = NO;
@@ -442,25 +385,15 @@ static dispatch_once_t onceToken;
     }];
 }
 
-- (NSInteger)getLastItemIndex
-{
-    return self.lastItemIndex;
-}
-
-- (AVPlayerItem *)getCurrentItem
-{
-    return [self.audioPlayer currentItem];
-}
-
 - (void)play
 {
-    _pauseReason = PauseReasonNone;
+    _pauseReason = FWAudioPauseReasonNone;
     [self.audioPlayer play];
 }
 
 - (void)pause
 {
-    _pauseReason = PauseReasonForced;
+    _pauseReason = FWAudioPauseReasonForced;
     [self.audioPlayer pause];
 }
 
@@ -471,7 +404,7 @@ static dispatch_once_t onceToken;
         if (nextIndex != NSNotFound) {
             [self fetchAndPlayPlayerItem:nextIndex];
         } else {
-            _pauseReason = PauseReasonForced;
+            _pauseReason = FWAudioPauseReasonForced;
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
                 [self.delegate audioPlayerDidReachEnd];
             }
@@ -488,7 +421,7 @@ static dispatch_once_t onceToken;
             }
         } else {
             if (_repeatMode == FWAudioPlayerRepeatModeOff) {
-                _pauseReason = PauseReasonForced;
+                _pauseReason = FWAudioPauseReasonForced;
                 if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
                     [self.delegate audioPlayerDidReachEnd];
                 }
@@ -535,17 +468,7 @@ static dispatch_once_t onceToken;
     }
 }
 
-- (void)setPlayerRepeatMode:(FWAudioPlayerRepeatMode)mode
-{
-    _repeatMode = mode;
-}
-
-- (FWAudioPlayerRepeatMode)getPlayerRepeatMode
-{
-    return _repeatMode;
-}
-
-- (void)setPlayerShuffleMode:(FWAudioPlayerShuffleMode)mode
+- (void)setShuffleMode:(FWAudioPlayerShuffleMode)mode
 {
     switch (mode) {
         case FWAudioPlayerShuffleModeOff:
@@ -565,31 +488,27 @@ static dispatch_once_t onceToken;
     }
 }
 
-- (FWAudioPlayerShuffleMode)getPlayerShuffleMode
-{
-    return _shuffleMode;
-}
-
-- (void)pausePlayerForcibly:(BOOL)forcibly {}
-
-#pragma mark -
-#pragma mark ===========  Player info  =========
-#pragma mark -
+#pragma mark - Info
 
 - (BOOL)isPlaying
 {
-    return self.emptySoundPlaying ? NO : self.audioPlayer.rate != 0.f;
+    return self.audioPlayer.rate != 0.f;
 }
 
-- (FWAudioPlayerStatus)getAudioPlayerStatus
+- (AVPlayerItem *)currentItem
+{
+    return self.audioPlayer.currentItem;
+}
+
+- (FWAudioPlayerStatus)playerStatus
 {
     if ([self isPlaying]) {
         return FWAudioPlayerStatusPlaying;
     } else {
         switch (_pauseReason) {
-            case PauseReasonForced:
+            case FWAudioPauseReasonForced:
                 return FWAudioPlayerStatusForcePause;
-            case PauseReasonBuffering:
+            case FWAudioPauseReasonBuffering:
                 return FWAudioPlayerStatusBuffering;
             default:
                 return FWAudioPlayerStatusUnknown;
@@ -597,7 +516,7 @@ static dispatch_once_t onceToken;
     }
 }
 
-- (float)getPlayingItemCurrentTime
+- (float)playingItemCurrentTime
 {
     CMTime itemCurrentTime = [[self.audioPlayer currentItem] currentTime];
     float current = CMTimeGetSeconds(itemCurrentTime);
@@ -607,7 +526,7 @@ static dispatch_once_t onceToken;
         return current;
 }
 
-- (float)getPlayingItemDurationTime
+- (float)playingItemDurationTime
 {
     CMTime itemDurationTime = [self playerItemDuration];
     float duration = CMTimeGetSeconds(itemDurationTime);
@@ -636,16 +555,58 @@ static dispatch_once_t onceToken;
     [self.audioPlayer removeTimeObserver:observer];
 }
 
-#pragma mark -
-#pragma mark ===========  Interruption, Route changed  =========
-#pragma mark -
+- (BOOL)isMemoryCached
+{
+    return self.playerItems != nil;
+}
+
+- (void)setIsMemoryCached:(BOOL)memoryCache
+{
+    if (self.playerItems == nil && memoryCache) {
+        self.playerItems = [NSArray array];
+    } else if (self.playerItems != nil && !memoryCache) {
+        self.playerItems = nil;
+    }
+}
+
+#pragma mark - Interruption
+
+- (void)AVAudioSessionNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemFailedToPlayEndTime:)
+                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemPlaybackStall:)
+                                                 name:AVPlayerItemPlaybackStalledNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(interruption:)
+                                                 name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(routeChange:)
+                                                 name:AVAudioSessionRouteChangeNotification
+                                               object:nil];
+    
+    [self.audioPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil];
+    [self.audioPlayer addObserver:self forKeyPath:@"rate" options:0 context:nil];
+    [self.audioPlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+}
 
 - (void)interruption:(NSNotification*)notification
 {
     NSDictionary *interuptionDict = notification.userInfo;
     NSInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
     
-    if (interuptionType == AVAudioSessionInterruptionTypeBegan && _pauseReason != PauseReasonForced) {
+    if (interuptionType == AVAudioSessionInterruptionTypeBegan && _pauseReason != FWAudioPauseReasonForced) {
         interruptedWhilePlaying = YES;
         [self pause];
     } else if (interuptionType == AVAudioSessionInterruptionTypeEnded && interruptedWhilePlaying) {
@@ -662,7 +623,7 @@ static dispatch_once_t onceToken;
     NSDictionary *routeChangeDict = notification.userInfo;
     NSInteger routeChangeType = [[routeChangeDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
     
-    if (routeChangeType == AVAudioSessionRouteChangeReasonOldDeviceUnavailable && _pauseReason != PauseReasonForced) {
+    if (routeChangeType == AVAudioSessionRouteChangeReasonOldDeviceUnavailable && _pauseReason != FWAudioPauseReasonForced) {
         routeChangedWhilePlaying = YES;
         [self pause];
     } else if (routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable && routeChangedWhilePlaying) {
@@ -674,16 +635,14 @@ static dispatch_once_t onceToken;
     }
 }
 
-#pragma mark -
-#pragma mark ===========  KVO  =========
-#pragma mark -
+#pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     if (object == self.audioPlayer && [keyPath isEqualToString:@"status"]) {
         if (self.audioPlayer.status == AVPlayerStatusReadyToPlay) {
             if ([self.delegate respondsToSelector:@selector(audioPlayerReadyToPlay:)]) {
-                [self.delegate audioPlayerReadyToPlay:FWAudioPlayerReadyToPlayPlayer];
+                [self.delegate audioPlayerReadyToPlay:nil];
             }
             if (![self isPlaying]) {
                 [self.audioPlayer play];
@@ -694,16 +653,14 @@ static dispatch_once_t onceToken;
             }
             
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidFailed:error:)]) {
-                [self.delegate audioPlayerDidFailed:FWAudioPlayerFailedPlayer error:self.audioPlayer.error];
+                [self.delegate audioPlayerDidFailed:nil error:self.audioPlayer.error];
             }
         }
     }
     
     if (object == self.audioPlayer && [keyPath isEqualToString:@"rate"]) {
-        if (!self.emptySoundPlaying) {
-            if ([self.delegate respondsToSelector:@selector(audioPlayerRateChanged:)]) {
-                [self.delegate audioPlayerRateChanged:[self isPlaying]];
-            }
+        if ([self.delegate respondsToSelector:@selector(audioPlayerRateChanged:)]) {
+            [self.delegate audioPlayerRateChanged:[self isPlaying]];
         }
     }
     
@@ -729,7 +686,6 @@ static dispatch_once_t onceToken;
             if ([self.delegate respondsToSelector:@selector(audioPlayerCurrentItemChanged:)]) {
                 [self.delegate audioPlayerCurrentItemChanged:newPlayerItem];
             }
-            self.emptySoundPlaying = NO;
         }
     }
     
@@ -737,13 +693,13 @@ static dispatch_once_t onceToken;
         isPreBuffered = NO;
         if (self.audioPlayer.currentItem.status == AVPlayerItemStatusFailed) {
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidFailed:error:)]) {
-                [self.delegate audioPlayerDidFailed:FWAudioPlayerFailedCurrentItem error:self.audioPlayer.currentItem.error];
+                [self.delegate audioPlayerDidFailed:self.audioPlayer.currentItem error:self.audioPlayer.currentItem.error];
             }
         } else if (self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
             if ([self.delegate respondsToSelector:@selector(audioPlayerReadyToPlay:)]) {
-                [self.delegate audioPlayerReadyToPlay:FWAudioPlayerReadyToPlayCurrentItem];
+                [self.delegate audioPlayerReadyToPlay:self.audioPlayer.currentItem];
             }
-            if (![self isPlaying] && _pauseReason != PauseReasonForced) {
+            if (![self isPlaying] && _pauseReason != FWAudioPauseReasonForced) {
                 [self.audioPlayer play];
             }
         }
@@ -767,8 +723,8 @@ static dispatch_once_t onceToken;
                 [self.delegate audioPlayerCurrentItemPreloaded:CMTimeAdd(timerange.start, timerange.duration)];
             }
             
-            if (self.audioPlayer.rate == 0 && _pauseReason != PauseReasonForced) {
-                _pauseReason = PauseReasonBuffering;
+            if (self.audioPlayer.rate == 0 && _pauseReason != FWAudioPauseReasonForced) {
+                _pauseReason = FWAudioPauseReasonBuffering;
                 [self longTimeBufferBackground];
                 
                 CMTime bufferdTime = CMTimeAdd(timerange.start, timerange.duration);
@@ -870,9 +826,7 @@ static dispatch_once_t onceToken;
     return index;
 }
 
-#pragma mark -
-#pragma mark ===========   Deprecation  =========
-#pragma mark -
+#pragma mark - Deprecation
 
 - (void)destroyPlayer
 {
@@ -897,26 +851,6 @@ static dispatch_once_t onceToken;
     self.delegate = nil;
     self.dataSource = nil;
     self.audioPlayer = nil;
-    
-    onceToken = 0;
-}
-
-#pragma mark -
-#pragma mark ===========   Memory cached  =========
-#pragma mark -
-
-- (BOOL)isMemoryCached
-{
-    return self.playerItems != nil;
-}
-
-- (void)enableMemoryCached:(BOOL)memoryCache
-{
-    if (self.playerItems == nil && memoryCache) {
-        self.playerItems = [NSArray array];
-    } else if (self.playerItems != nil && !memoryCache) {
-        self.playerItems = nil;
-    }
 }
 
 @end

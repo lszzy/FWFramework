@@ -9,10 +9,19 @@
 import FWFramework
 
 @objcMembers class TestAudioViewController: TestViewController, FWAudioPlayerDelegate, FWAudioPlayerDataSource {
-    lazy var audioPlayer = FWAudioPlayer.sharedInstance()
+    lazy var audioPlayer = FWAudioPlayer.sharedInstance
+    
+    private lazy var audioLabel: UILabel = {
+        let result = UILabel()
+        result.textColor = Theme.textColor
+        result.numberOfLines = 0
+        return result
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        fwView.addSubview(audioLabel)
+        audioLabel.fwLayoutChain.center()
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
@@ -25,14 +34,26 @@ import FWFramework
     }
     
     override func renderData() {
-        if audioPlayer.isPlaying() {
-            fwSetRightBarItem("暂停") { [weak self] sender in
+        if audioPlayer.isPlaying {
+            fwSetRightBarItem(FWIconImage("octicon-playback-pause", 24)) { [weak self] sender in
                 self?.audioPlayer.pause()
+                self?.renderData()
             }
         } else {
-            fwSetRightBarItem("播放") { [weak self] sender in
-                self?.audioPlayer.play()
+            fwSetRightBarItem(FWIconImage("octicon-playback-play", 24)) { [weak self] sender in
+                if self?.audioPlayer.currentItem != nil {
+                    self?.audioPlayer.play()
+                } else {
+                    self?.audioPlayer.fetchAndPlayPlayerItem(0)
+                }
+                self?.renderData()
             }
+        }
+        
+        if let index = audioPlayer.getAudioIndex(audioPlayer.currentItem) {
+            audioLabel.text = "\(String(describing: index.intValue + 1))\n\(audioPlayer.playingItemCurrentTime):\(audioPlayer.playingItemDurationTime)"
+        } else {
+            audioLabel.text = ""
         }
     }
     
@@ -40,38 +61,36 @@ import FWFramework
         return 3
     }
     
-    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> URL {
-        var url: URL
+    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> URL? {
+        var url: URL?
         switch index {
             case 0:
-                url = URL(string: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3")!
+                url = URL(string: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3")
                 break
             case 1:
-                url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")!
+                url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")
                 break
             case 2:
-                url = URL(string: "http://a345.phobos.apple.com/us/r1000/046/Music5/v4/52/53/4b/52534b36-620e-d7f3-c9a8-2f9661652ff5/mzaf_2360247732780989514.plus.aac.p.m4a")!
+                url = URL(string: "http://a345.phobos.apple.com/us/r1000/046/Music5/v4/52/53/4b/52534b36-620e-d7f3-c9a8-2f9661652ff5/mzaf_2360247732780989514.plus.aac.p.m4a")
                 break
             default:
-                    url = URL(string: "")!
                 break
         }
-        
         return url
     }
     
-    func audioPlayerReady(_ identifier: FWAudioPlayerReadyToPlay) {
-        switch(identifier) {
-            case .currentItem:
-                audioPlayer.play()
-                renderData()
-                break
-            default:
-                break
+    func audioPlayerReady(toPlay item: AVPlayerItem?) {
+        if item != nil {
+            audioPlayer.play()
+            renderData()
         }
     }
     
     func audioPlayerDidReachEnd() {
+        renderData()
+    }
+    
+    func audioPlayerCurrentItemChanged(_ item: AVPlayerItem) {
         renderData()
     }
 }
