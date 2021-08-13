@@ -25,7 +25,7 @@
         dispatch_once(&onceToken, ^{
             UITextField *textField = [[UITextField alloc] init];
             textField.placeholder = @" ";
-            UILabel *placeholderLabel = [textField fwPerformPropertySelector:@"_placeholderLabel"];
+            UILabel *placeholderLabel = [textField fwPerformGetter:@"_placeholderLabel"];
             defaultPlaceholderColor = placeholderLabel.textColor;
         });
         

@@ -98,12 +98,12 @@
 
 - (UITextField *)fwTextField
 {
-    return [self fwPerformPropertySelector:@"searchField"];
+    return [self fwPerformGetter:@"searchField"];
 }
 
 - (UIButton *)fwCancelButton
 {
-    return [self fwPerformPropertySelector:@"cancelButton"];
+    return [self fwPerformGetter:@"cancelButton"];
 }
 
 - (UIColor *)fwBackgroundColor

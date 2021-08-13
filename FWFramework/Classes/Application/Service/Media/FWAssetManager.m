@@ -35,7 +35,7 @@ static NSString * const kAssetInfoSize = @"size";
         switch (phAsset.mediaType) {
             case PHAssetMediaTypeImage:
                 _assetType = FWAssetTypeImage;
-                if ([[phAsset fwPerformPropertySelector:@"uniformTypeIdentifier"] isEqualToString:(__bridge NSString *)kUTTypeGIF]) {
+                if ([[phAsset fwPerformGetter:@"uniformTypeIdentifier"] isEqualToString:(__bridge NSString *)kUTTypeGIF]) {
                     _assetSubType = FWAssetSubTypeGIF;
                 } else {
                     if (phAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive) {

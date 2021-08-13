@@ -199,7 +199,7 @@
     return nil;
 }
 
-- (id)fwPerformPropertySelector:(NSString *)name
+- (id)fwPerformGetter:(NSString *)name
 {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
@@ -218,7 +218,7 @@
     return nil;
 }
 
-- (id)fwPerformPropertySelector:(NSString *)name withObject:(id)object
+- (id)fwPerformSetter:(NSString *)name withObject:(id)object
 {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
