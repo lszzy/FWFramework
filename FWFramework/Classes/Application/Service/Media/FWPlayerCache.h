@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cancelLoaders;
 
 + (NSURL *)assetURLWithURL:(NSURL *)url;
+
+- (AVURLAsset *)URLAssetWithURL:(NSURL *)url;
 - (AVPlayerItem *)playerItemWithURL:(NSURL *)url;
 
 @end

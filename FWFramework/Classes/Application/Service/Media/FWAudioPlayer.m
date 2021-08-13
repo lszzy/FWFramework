@@ -68,12 +68,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     tookAudioFocus = YES;
     
     [self backgroundPlayable];
-    
     self.audioPlayer = [[AVQueuePlayer alloc] init];
-    if ([self.audioPlayer respondsToSelector:@selector(automaticallyWaitsToMinimizeStalling)]) {
-        self.audioPlayer.automaticallyWaitsToMinimizeStalling = NO;
-    }
-    
+    self.audioPlayer.automaticallyWaitsToMinimizeStalling = NO;
     [self AVAudioSessionNotification];
 }
 

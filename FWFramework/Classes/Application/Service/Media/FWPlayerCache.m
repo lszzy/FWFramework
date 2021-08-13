@@ -51,14 +51,19 @@ static NSString *FWPlayerCacheScheme = @"__FWPlayerCache___:";
     return assetURL;
 }
 
+- (AVURLAsset *)URLAssetWithURL:(NSURL *)url {
+    NSURL *assetURL = [FWPlayerCacheLoaderManager assetURLWithURL:url];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
+    [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
+    return urlAsset;
+}
+
 - (AVPlayerItem *)playerItemWithURL:(NSURL *)url {
     NSURL *assetURL = [FWPlayerCacheLoaderManager assetURLWithURL:url];
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
     [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:urlAsset];
-    if ([playerItem respondsToSelector:@selector(setCanUseNetworkResourcesForLiveStreamingWhilePaused:)]) {
-        playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = YES;
-    }
+    playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = YES;
     return playerItem;
 }
 

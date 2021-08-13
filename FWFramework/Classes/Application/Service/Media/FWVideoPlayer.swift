@@ -278,6 +278,7 @@ import CoreGraphics
     }
     internal lazy var _avplayer: AVPlayer = {
         let avplayer = AVPlayer()
+        avplayer.automaticallyWaitsToMinimizeStalling = false
         avplayer.actionAtItemEnd = .pause
         return avplayer
     }()
