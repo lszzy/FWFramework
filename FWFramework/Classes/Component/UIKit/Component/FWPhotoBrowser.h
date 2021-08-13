@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- 获取对应索引的高质量图片地址字符串
+ 获取对应索引的高质量图片地址字符串或UIImage
  
  @param photoBrowser 图片浏览器
  @param index          索引
@@ -27,6 +27,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return 图片的 url 字符串或UIImage
  */
 - (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
+
+/**
+ 异步获取对应索引的高质量图片地址字符串或UIImage
+ 
+ @param photoBrowser 图片浏览器
+ @param index          索引
+ @param completionHandler 异步完成回调，参数为图片的url字符串或UIImage
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser asyncUrlForIndex:(NSInteger)index completionHandler:(void (^)(id _Nullable))completionHandler;
 
 /**
  获取对应索引的视图或相对于window的位置NSValue
