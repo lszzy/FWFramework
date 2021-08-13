@@ -498,24 +498,19 @@
     self.imageLoaded = NO;
     if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
         self.progress = 0.01;
-        // 取消上一次的下载
-        self.userInteractionEnabled = false;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             if (image) {
                 self.imageView.image = image;
-                self.progress = 1;
-                self.userInteractionEnabled = true;
-                // 计算图片的大小
                 [self setPictureSize:image.size];
+                self.progress = 1;
                 self.imageLoaded = YES;
                 
                 [self.pictureDelegate photoViewLoaded:self];
             } else {
                 self.progress = 1;
-                self.userInteractionEnabled = true;
                 self.imageLoaded = NO;
                 
                 [self.pictureDelegate photoViewLoaded:self];
@@ -533,13 +528,11 @@
         }
         if (image) {
             self.imageView.image = image;
-            // 计算图片的大小
             [self setPictureSize:image.size];
         } else {
             self.imageView.image = self.placeholderImage;
         }
         self.progress = 1;
-        self.userInteractionEnabled = true;
         self.imageLoaded = image ? YES : NO;
         
         [_pictureDelegate photoViewLoaded:self];
@@ -555,11 +548,11 @@
 {
     self.progressView.progress = progress;
     if (progress >= 1) {
-        self.progressView.hidden = true;
+        if (!self.userInteractionEnabled) self.userInteractionEnabled = true;
+        if (!self.progressView.hidden) self.progressView.hidden = true;
     } else {
-        if (self.showAnimation == false) {
-            self.progressView.hidden = false;
-        }
+        if (self.userInteractionEnabled) self.userInteractionEnabled = false;
+        if (self.showAnimation == false) self.progressView.hidden = false;
     }
 }
 
