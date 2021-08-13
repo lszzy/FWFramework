@@ -306,14 +306,13 @@ import CoreGraphics
         self.setupPlayerItem(nil)
 
         self.removePlayerObservers()
-
         self.playerDelegate = nil
         self.removeApplicationObservers()
-
         self.playbackDelegate = nil
         self.removePlayerLayerObservers()
 
         self.playerView.player = nil
+        NSLog("FWVideoPlayer did dealloc")
     }
 
     open override func loadView() {
