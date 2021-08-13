@@ -130,7 +130,7 @@ import FWFramework
                             FWRouter.closeViewController(animated: true)
                         }
                         video.view.addSubview(button)
-                        button.fwLayoutChain.left(8).top(8)
+                        button.fwLayoutChain.leftToSafeArea(8).topToSafeArea(8)
                         self?.present(video, animated: true, completion: nil)
                     }
                 }, withProgressHandler: nil)
