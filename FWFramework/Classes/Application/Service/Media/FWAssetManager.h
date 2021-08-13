@@ -248,7 +248,7 @@ extern void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *vi
 @interface FWAssetManager : NSObject
 
 /// 获取 FWAssetManager 的单例
-+ (instancetype)sharedInstance;
+@property (class, nonatomic, readonly) FWAssetManager *sharedInstance;
 
 /// 获取当前应用的“照片”访问授权状态
 + (FWAssetAuthorizationStatus)authorizationStatus;
