@@ -52,7 +52,7 @@ import FWFramework
     private func loadPhotos() {
         fwShowLoading()
         DispatchQueue.global().async { [weak self] in
-            self?.album.enumerateAssets { asset in
+            self?.album.enumerateAssets(withOptions: .reverse, using: { asset in
                 if let photo = asset {
                     self?.photos.append(photo)
                 } else {
@@ -62,7 +62,7 @@ import FWFramework
                         self?.tableView.reloadData()
                     }
                 }
-            }
+            })
         }
     }
     
@@ -157,11 +157,23 @@ import FWFramework
         }
     }
     
-    func photoBrowser(_ photoBrowser: FWPhotoBrowser, asyncUrlFor index: Int, completionHandler: @escaping (Any?) -> Void) {
+    func photoBrowser(_ photoBrowser: FWPhotoBrowser, asyncUrlFor index: Int, photoView: FWPhotoView) {
         let photo = photos[index]
-        photo.requestPreviewImage(completion: { image, info in
-            completionHandler(image)
-        }, withProgressHandler: nil)
+        if photo.assetSubType == .GIF {
+            photo.requestImageData { data, info, _, _ in
+                photoView.urlString = UIImage.fwImage(with:data)
+            }
+        } else {
+            photoView.progress = 0.01
+            photo.requestPreviewImage { image, info in
+                photoView.progress = 1
+                photoView.urlString = image
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    photoView.progress = CGFloat(progress)
+                }
+            }
+        }
     }
     
     func photoBrowser(_ photoBrowser: FWPhotoBrowser, viewFor index: Int) -> Any? {

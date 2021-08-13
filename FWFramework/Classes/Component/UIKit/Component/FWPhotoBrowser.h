@@ -33,9 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param photoBrowser 图片浏览器
  @param index          索引
- @param completionHandler 异步完成回调，参数为图片的url字符串或UIImage
+ @param photoView 图片视图，异步完成后设置urlString即可
  */
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser asyncUrlForIndex:(NSInteger)index completionHandler:(void (^)(id _Nullable))completionHandler;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser asyncUrlForIndex:(NSInteger)index photoView:(FWPhotoView *)photoView;
 
 /**
  获取对应索引的视图或相对于window的位置NSValue
@@ -216,6 +216,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
+// 当前图片加载进度
+@property (nonatomic, assign) CGFloat progress;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
 
