@@ -10,6 +10,7 @@ import FWFramework
 
 @objcMembers class TestAudioViewController: TestViewController, FWAudioPlayerDelegate, FWAudioPlayerDataSource {
     lazy var audioPlayer = FWAudioPlayer.sharedInstance
+    lazy var resourceLoader = FWPlayerCacheLoaderManager()
     
     private lazy var audioLabel: UILabel = {
         let result = UILabel()
@@ -80,10 +81,14 @@ import FWFramework
                 url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")
                 break
             case 2:
-                url = URL(string: "http://a345.phobos.apple.com/us/r1000/046/Music5/v4/52/53/4b/52534b36-620e-d7f3-c9a8-2f9661652ff5/mzaf_2360247732780989514.plus.aac.p.m4a")
+                url = URL(string: "http://downsc.chinaz.net/files/download/sound1/201206/1638.mp3")
                 break
             default:
                 break
+        }
+        
+        if let audioUrl = url {
+            return resourceLoader.playerItem(with: audioUrl)
         }
         return url
     }
