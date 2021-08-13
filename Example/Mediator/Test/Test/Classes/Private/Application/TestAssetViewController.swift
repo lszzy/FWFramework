@@ -51,7 +51,7 @@ import FWFramework
     }
     
     private func loadPhotos() {
-        fwSetRightBarItem("模拟进度") { [weak self] sender in
+        fwSetRightBarItem("进度") { [weak self] sender in
             guard let this = self else { return }
             this.mockProgress = !this.mockProgress
         }
