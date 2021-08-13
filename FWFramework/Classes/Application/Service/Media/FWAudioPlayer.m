@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     dispatch_queue_t audioQueue;
 }
 
-@property (nonatomic, strong, readwrite) NSArray *playerItems;
+@property (nonatomic, strong, readwrite) NSArray<AVPlayerItem *> *playerItems;
 @property (nonatomic) NSInteger lastItemIndex;
 @property (nonatomic) FWAudioPauseReason pauseReason;
 @property (nonatomic, strong) NSMutableSet *playedItems;
@@ -85,7 +85,6 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         UIDevice *device = [UIDevice currentDevice];
         if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
             if (device.multitaskingSupported) {
-                
                 NSError *aError = nil;
                 [audioSession setCategory:AVAudioSessionCategoryPlayback error:&aError];
                 if (aError) {
@@ -136,15 +135,14 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     }
 }
 
-- (void)fetchAndPlayPlayerItem:(NSInteger)startAt
+- (void)playItemFromIndex:(NSInteger)startIndex
 {
-    [self willPlayPlayerItemAtIndex:startAt];
+    [self willPlayPlayerItemAtIndex:startIndex];
     [self.audioPlayer pause];
     [self.audioPlayer removeAllItems];
-    BOOL findInPlayerItems = NO;
-    findInPlayerItems = [self findSourceInPlayerItems:startAt];
-    if (!findInPlayerItems) {
-        [self getSourceURLAtIndex:startAt preBuffer:NO];
+    BOOL foundSource = [self findSourceInPlayerItems:startIndex];
+    if (!foundSource) {
+        [self getSourceURLAtIndex:startIndex preBuffer:NO];
     } else if (self.audioPlayer.currentItem.status == AVPlayerStatusReadyToPlay) {
         [self.audioPlayer play];
     }
@@ -160,32 +158,36 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 
 - (void)getSourceURLAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer
 {
-    NSAssert([self.dataSource respondsToSelector:@selector(audioPlayerURLForItemAtIndex:preBuffer:)] || [self.dataSource respondsToSelector:@selector(audioPlayerAsyncSetUrlForItemAtIndex:preBuffer:)], @"You didn't implement URL getter delegate from FWAudioPlayerDelegate, audioPlayerURLForItemAtIndex:preBuffer: and audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: provides for the use of alternatives.");
-    NSAssert([self audioPlayerItemsCount] > index, ([NSString stringWithFormat:@"You are about to access index: %li URL when your FWAudioPlayer items count value is %li, please check audioPlayerNumberOfItems or set itemsCount directly.", (unsigned long)index, (unsigned long)[self audioPlayerItemsCount]]));
-    if ([self.dataSource respondsToSelector:@selector(audioPlayerURLForItemAtIndex:preBuffer:)] && [self.dataSource audioPlayerURLForItemAtIndex:index preBuffer:preBuffer]) {
+    if ([self.dataSource respondsToSelector:@selector(audioPlayerURLForItemAtIndex:preBuffer:)]) {
+        id url = [self.dataSource audioPlayerURLForItemAtIndex:index preBuffer:preBuffer];
         dispatch_async(audioQueue, ^{
-            [self setupPlayerItemWithUrl:[self.dataSource audioPlayerURLForItemAtIndex:index preBuffer:preBuffer] index:index];
+            [self setupPlayerItemWithURL:url index:index];
         });
-    } else if ([self.dataSource respondsToSelector:@selector(audioPlayerAsyncSetUrlForItemAtIndex:preBuffer:)]) {
-        [self.dataSource audioPlayerAsyncSetUrlForItemAtIndex:index preBuffer:preBuffer];
+    } else if ([self.dataSource respondsToSelector:@selector(audioPlayerAsyncURLForItemAtIndex:preBuffer:)]) {
+        [self.dataSource audioPlayerAsyncURLForItemAtIndex:index preBuffer:preBuffer];
     } else {
-        NSLog(@"No FWAudioPlayer dataSource detected at %li index", (unsigned long) index);
+        if (index < self.itemURLs.count) {
+            id url = self.itemURLs[index];
+            dispatch_async(audioQueue, ^{
+                [self setupPlayerItemWithURL:url index:index];
+            });
+        }
     }
 }
 
-- (void)setupPlayerItemWithUrl:(NSURL *)url index:(NSInteger)index
+- (void)setupPlayerItemWithURL:(id)url index:(NSInteger)index
 {
     if (!url) return;
-    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
+    AVPlayerItem *item;
+    if ([url isKindOfClass:[AVPlayerItem class]]) {
+        item = (AVPlayerItem *)url;
+    } else if ([url isKindOfClass:[NSURL class]]) {
+        item = [AVPlayerItem playerItemWithURL:(NSURL *)url];
+    } else if ([url isKindOfClass:[AVURLAsset class]]) {
+        item = [AVPlayerItem playerItemWithAsset:(AVURLAsset *)url];
+    }
     if (!item) return;
-    [self setupPlayerItemWithAVPlayerItem:item index:index];
-}
-
-- (void)setupPlayerItemWithAVURLAsset:(AVURLAsset *)asset index:(NSInteger)index
-{
-    if (!asset) return;
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-    if (!item) return;
+    
     [self setupPlayerItemWithAVPlayerItem:item index:index];
 }
 
@@ -263,7 +265,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     [self.audioPlayer removeAllItems];
 }
 
-- (void)removeQueuesAtPlayer
+- (void)removeQueueItems
 {
     while (self.audioPlayer.items.count > 1) {
         [self.audioPlayer removeItem:[self.audioPlayer.items objectAtIndex:1]];
@@ -307,7 +309,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     
     for (AVPlayerItem *item in self.audioPlayer.items) {
         if ([self resetItemIndexIfNeeds:item fromIndex:from toIndex:to]) {
-            [self removeQueuesAtPlayer];
+            [self removeQueueItems];
         }
     }
 }
@@ -371,7 +373,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     if (_shuffleMode == FWAudioPlayerShuffleModeOn) {
         NSInteger nextIndex = [self randomIndex];
         if (nextIndex != NSNotFound) {
-            [self fetchAndPlayPlayerItem:nextIndex];
+            [self playItemFromIndex:nextIndex];
         } else {
             _pauseReason = FWAudioPauseReasonForced;
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
@@ -386,7 +388,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                 [self willPlayPlayerItemAtIndex:nowIndex + 1];
                 [self.audioPlayer advanceToNextItem];
             } else {
-                [self fetchAndPlayPlayerItem:(nowIndex + 1)];
+                [self playItemFromIndex:(nowIndex + 1)];
             }
         } else {
             if (_repeatMode == FWAudioPlayerRepeatModeOff) {
@@ -395,7 +397,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                     [self.delegate audioPlayerDidReachEnd];
                 }
             } else {
-                [self fetchAndPlayPlayerItem:0];
+                [self playItemFromIndex:0];
             }
         }
     }
@@ -406,7 +408,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     NSInteger nowIndex = [[self getAudioIndex:self.audioPlayer.currentItem] integerValue];
     if (nowIndex == 0) {
         if (_repeatMode == FWAudioPlayerRepeatModeOn) {
-            [self fetchAndPlayPlayerItem:[self audioPlayerItemsCount] - 1];
+            [self playItemFromIndex:[self audioPlayerItemsCount] - 1];
         } else {
             [self pause];
             [self.audioPlayer.currentItem seekToTime:kCMTimeZero completionHandler:^(BOOL finished) {
@@ -414,7 +416,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
             }];
         }
     } else {
-        [self fetchAndPlayPlayerItem:(nowIndex - 1)];
+        [self playItemFromIndex:(nowIndex - 1)];
     }
 }
 
@@ -741,11 +743,11 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     if (currentItemIndex) {
         if (_repeatMode == FWAudioPlayerRepeatModeOnce) {
             NSInteger currentIndex = [currentItemIndex integerValue];
-            [self fetchAndPlayPlayerItem:currentIndex];
+            [self playItemFromIndex:currentIndex];
         } else if (_shuffleMode == FWAudioPlayerShuffleModeOn) {
             NSInteger nextIndex = [self randomIndex];
             if (nextIndex != NSNotFound) {
-                [self fetchAndPlayPlayerItem:[self randomIndex]];
+                [self playItemFromIndex:[self randomIndex]];
             } else {
                 [self pause];
                 if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
@@ -764,7 +766,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                             [self.delegate audioPlayerDidReachEnd];
                         }
                     }else {
-                        [self fetchAndPlayPlayerItem:0];
+                        [self playItemFromIndex:0];
                     }
                 }
             }
