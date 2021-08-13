@@ -62,11 +62,11 @@
         self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes;
     }
     
-    if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.standardAppearance = navigationBar.standardAppearance;
         self.compactAppearance = navigationBar.standardAppearance;
         self.scrollEdgeAppearance = navigationBar.scrollEdgeAppearance;
-    }
+    }}
 }
 
 @end
