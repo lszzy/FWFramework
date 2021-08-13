@@ -157,9 +157,11 @@ import FWFramework
         }
     }
     
-    func photoBrowser(_ photoBrowser: FWPhotoBrowser, photoUrlFor index: Int) -> Any? {
+    func photoBrowser(_ photoBrowser: FWPhotoBrowser, asyncUrlFor index: Int, completionHandler: @escaping (Any?) -> Void) {
         let photo = photos[index]
-        return photo.previewImage
+        photo.requestPreviewImage(completion: { image, info in
+            completionHandler(image)
+        }, withProgressHandler: nil)
     }
     
     func photoBrowser(_ photoBrowser: FWPhotoBrowser, viewFor index: Int) -> Any? {
