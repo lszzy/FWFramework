@@ -17,13 +17,11 @@
     self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
     self.sectionHeaderHeight = 0;
     self.sectionFooterHeight = 0;
-    /*
 #if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.sectionHeaderTopPadding = 0;
     }
 #endif
-     */
 }
 
 - (void)fwFollowWithHeader:(CGFloat)headerHeight footer:(CGFloat)footerHeight
