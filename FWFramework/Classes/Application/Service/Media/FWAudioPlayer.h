@@ -37,11 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// Asks the data source to return the number of items that FWAudioPlayer would play
 - (NSInteger)audioPlayerNumberOfItems;
 
-/// Source URL provider, audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: is for async task usage
-- (nullable NSURL *)audioPlayerURLForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
+/// Source URL provider, support NSURL|AVURLAsset|AVPlayerItem
+- (nullable id)audioPlayerURLForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
 
-/// Source URL provider, would excute until you call setupPlayerItemWithUrl:index:
-- (void)audioPlayerAsyncSetUrlForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
+/// Source URL provider, would excute until you call setupPlayerItemWithURL:index:
+- (void)audioPlayerAsyncURLForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
 
 @end
 
@@ -76,8 +76,9 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 @property (nonatomic, weak, nullable) id<FWAudioPlayerDelegate> delegate;
 @property (nonatomic, weak, nullable) id<FWAudioPlayerDataSource> dataSource;
 @property (nonatomic, assign) NSInteger itemsCount;
+@property (nonatomic, copy, nullable) NSArray *itemURLs;
 @property (nonatomic, assign) BOOL disableLogs;
-@property (nonatomic, strong, readonly, nullable) NSArray *playerItems;
+@property (nonatomic, strong, readonly, nullable) NSArray<AVPlayerItem *> *playerItems;
 
 @property (nonatomic, assign) FWAudioPlayerRepeatMode repeatMode;
 @property (nonatomic, assign) FWAudioPlayerShuffleMode shuffleMode;
@@ -92,12 +93,11 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 @property (nonatomic, assign, readonly) float playingItemDurationTime;
 @property (nonatomic, assign) BOOL observePeriodicTime;
 
-/// necessary if you implement audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: delegate method, should not use this method outside of audioPlayerAsyncSetUrlForItemAtIndex:preBuffer: scope
-- (void)setupPlayerItemWithUrl:(NSURL *)url index:(NSInteger)index;
-- (void)setupPlayerItemWithAVURLAsset:(AVURLAsset *)asset index:(NSInteger)index;
-- (void)fetchAndPlayPlayerItem:(NSInteger)startAt;
+/// should not use this method outside of audioPlayerAsyncURLForItemAtIndex:preBuffer: scope
+- (void)setupPlayerItemWithURL:(id)url index:(NSInteger)index;
+- (void)playItemFromIndex:(NSInteger)startIndex;
 - (void)removeAllItems;
-- (void)removeQueuesAtPlayer;
+- (void)removeQueueItems;
 
 - (nullable NSNumber *)getAudioIndex:(nullable AVPlayerItem *)item;
 - (void)removeItemAtIndex:(NSInteger)index;

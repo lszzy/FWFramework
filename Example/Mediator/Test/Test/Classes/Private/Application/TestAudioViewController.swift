@@ -27,7 +27,7 @@ import FWFramework
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
         audioPlayer.observePeriodicTime = true
-        audioPlayer.fetchAndPlayPlayerItem(0)
+        audioPlayer.playItem(from: 0)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -46,7 +46,7 @@ import FWFramework
                 if self?.audioPlayer.currentItem != nil {
                     self?.audioPlayer.play()
                 } else {
-                    self?.audioPlayer.fetchAndPlayPlayerItem(0)
+                    self?.audioPlayer.playItem(from: 0)
                 }
                 self?.renderData()
             }
@@ -70,7 +70,7 @@ import FWFramework
         return 3
     }
     
-    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> URL? {
+    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> Any? {
         var url: URL?
         switch index {
             case 0:
