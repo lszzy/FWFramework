@@ -121,6 +121,7 @@
               @[@"FWNavigationView+Scroll", @"Test.TestNavigationScrollViewController"],
               @[@"FWTabBarController", @"TestTabBarViewController"],
               @[@"FWCache", @"TestCacheViewController"],
+              @[@"FWAssetManager", @"Test.TestAssetViewController"],
               @[@"FWAudioPlayer", @"Test.TestAudioViewController"],
               @[@"FWVideoPlayer", @"Test.TestVideoViewController"],
               ]],

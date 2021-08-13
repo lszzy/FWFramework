@@ -76,8 +76,11 @@ import CoreGraphics
     /// For setting up with AVAsset instead of URL
     /// Note: This will reset the `url` property. (cannot set both)
     open var asset: AVAsset? {
-        get { return _asset }
-        set { _ = newValue.map { setupAsset($0) } }
+        didSet {
+            if let asset = self.asset {
+                setupAsset(asset)
+            }
+        }
     }
 
     /// Specifies how the video is displayed within a player layer’s bounds.
@@ -137,7 +140,7 @@ import CoreGraphics
     
     open var isPlayingVideo: Bool {
         get {
-            guard let asset = self._asset else {
+            guard let asset = self.asset else {
                 return false
             }
             return asset.tracks(withMediaType: .video).count != 0
@@ -269,13 +272,6 @@ import CoreGraphics
 
     // private
 
-    internal var _asset: AVAsset? {
-        didSet {
-            if let _ = self._asset {
-                self.setupPlayerItem(nil)
-            }
-        }
-    }
     internal lazy var _avplayer: AVPlayer = {
         let avplayer = AVPlayer()
         avplayer.automaticallyWaitsToMinimizeStalling = false
@@ -531,9 +527,8 @@ import CoreGraphics
         }
 
         self.setupPlayerItem(nil)
-
-        let asset = AVURLAsset(url: url, options: .none)
-        self.setupAsset(asset)
+        
+        self.asset = AVURLAsset(url: url, options: .none)
     }
 
     fileprivate func setupAsset(_ asset: AVAsset, loadableKeys: [String] = ["tracks", "playable", "duration"]) {
@@ -545,10 +540,10 @@ import CoreGraphics
 
         self.bufferingState = .unknown
 
-        self._asset = asset
+        self.setupPlayerItem(nil)
 
-        self._asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () -> Void in
-            guard let asset = self._asset else {
+        self.asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () -> Void in
+            guard let asset = self.asset else {
                 return
             }
             
