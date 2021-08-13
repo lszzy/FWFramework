@@ -773,7 +773,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 
 - (UIView *)fwBackgroundView
 {
-    return [self fwPerformPropertySelector:@"_backgroundView"];
+    return [self fwPerformGetter:@"_backgroundView"];
 }
 
 - (UIView *)fwLargeTitleView

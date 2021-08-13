@@ -119,7 +119,7 @@
     }
     
     if ([self respondsToSelector:@selector(view)]) {
-        return [self fwPerformPropertySelector:@"view"];
+        return [self fwPerformGetter:@"view"];
     }
     return nil;
 }

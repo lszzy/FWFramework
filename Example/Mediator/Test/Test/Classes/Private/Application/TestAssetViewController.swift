@@ -8,7 +8,7 @@
 
 import FWFramework
 
-@objcMembers class TestAssetViewController: TestViewController, FWTableViewController {
+@objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate {
     var albums: [FWAssetGroup] = []
     var photos: [FWAsset] = []
     var isAlbum: Bool = false
@@ -16,6 +16,7 @@ import FWFramework
     
     private lazy var photoBrowser: FWPhotoBrowser = {
         let result = FWPhotoBrowser()
+        result.delegate = self
         return result
     }()
     
@@ -57,6 +58,7 @@ import FWFramework
                 } else {
                     DispatchQueue.main.async {
                         self?.fwHideLoading()
+                        self?.photoBrowser.picturesCount = self?.photos.count ?? 0
                         self?.tableView.reloadData()
                     }
                 }
@@ -83,7 +85,7 @@ import FWFramework
             cell.fwTempObject = photo.identifier
             photo.requestThumbnailImage(with: CGSize(width: 88, height: 88)) { image, info in
                 if cell.fwTempObject.fwAsString == photo.identifier {
-                    cell.imageView?.image = image
+                    cell.imageView?.image = image?.fwImage(withScale: CGSize(width: 88, height: 88), contentMode: .scaleAspectFill)
                 } else {
                     cell.imageView?.image = nil
                 }
@@ -98,6 +100,12 @@ import FWFramework
             
             if photo.assetType == .video {
                 cell.detailTextLabel?.text = NSDate.fwFormatDuration(photo.duration(), hasHour: false)
+            } else if photo.assetType == .audio {
+                cell.detailTextLabel?.text = "audio"
+            } else if photo.assetSubType == .livePhoto {
+                cell.detailTextLabel?.text = "livePhoto"
+            } else if photo.assetSubType == .GIF {
+                cell.detailTextLabel?.text = "gif"
             } else {
                 cell.detailTextLabel?.text = nil
             }
@@ -135,15 +143,9 @@ import FWFramework
                     }
                 }, withProgressHandler: nil)
             } else {
-                fwShowLoading()
-                photo.requestPreviewImage(completion: { [weak self] aImage, info in
-                    self?.fwHideLoading()
-                    if let image = aImage {
-                        self?.photoBrowser.pictureUrls = [image]
-                        self?.photoBrowser.currentIndex = 0
-                        self?.photoBrowser.show()
-                    }
-                }, withProgressHandler: nil)
+                let cell = tableView.cellForRow(at: indexPath)
+                self.photoBrowser.currentIndex = indexPath.row
+                self.photoBrowser.show(from: cell?.imageView)
             }
         } else {
             let album = albums[indexPath.row]
@@ -153,5 +155,15 @@ import FWFramework
             viewController.isAlbum = true
             fwOpen(viewController, animated: true)
         }
+    }
+    
+    func photoBrowser(_ photoBrowser: FWPhotoBrowser, photoUrlFor index: Int) -> Any? {
+        let photo = photos[index]
+        return photo.previewImage
+    }
+    
+    func photoBrowser(_ photoBrowser: FWPhotoBrowser, viewFor index: Int) -> Any? {
+        let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+        return cell?.imageView
     }
 }
