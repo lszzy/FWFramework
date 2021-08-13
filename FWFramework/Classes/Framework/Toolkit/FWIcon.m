@@ -243,14 +243,14 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 + (NSDictionary<NSString *,NSString *> *)iconMapper
 {
-    @throw [NSException exceptionWithName:@"FWFramework"
+    @throw [NSException exceptionWithName:@"FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }
 
 + (UIFont *)iconFontWithSize:(CGFloat)size
 {
-    @throw [NSException exceptionWithName:@"FWFramework"
+    @throw [NSException exceptionWithName:@"FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }
