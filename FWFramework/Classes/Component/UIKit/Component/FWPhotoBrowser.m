@@ -302,10 +302,8 @@
     
     if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
         view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
-    } else if ([_delegate respondsToSelector:@selector(photoBrowser:asyncUrlForIndex:completionHandler:)]) {
-        [_delegate photoBrowser:self asyncUrlForIndex:index completionHandler:^(id urlString) {
-            view.urlString = urlString;
-        }];
+    } else if ([_delegate respondsToSelector:@selector(photoBrowser:asyncUrlForIndex:photoView:)]) {
+        [_delegate photoBrowser:self asyncUrlForIndex:index photoView:view];
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }
@@ -499,12 +497,7 @@
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
     if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
-        self.progressView.progress = 0.01;
-        // 如果没有在执行动画，那么就显示出来
-        if (self.showAnimation == false) {
-            // 显示出来
-            self.progressView.hidden = false;
-        }
+        self.progress = 0.01;
         // 取消上一次的下载
         self.userInteractionEnabled = false;
         // 优先使用插件，否则使用默认
@@ -513,24 +506,16 @@
             __typeof__(self) self = self_weak_;
             if (image) {
                 self.imageView.image = image;
-                self.progressView.hidden = true;
+                self.progress = 1;
                 self.userInteractionEnabled = true;
                 // 计算图片的大小
                 [self setPictureSize:image.size];
-                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-                // 解决在执行动画完毕之后根据值去判断是否要隐藏
-                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-                self.progressView.progress = 1;
                 self.imageLoaded = YES;
                 
                 [self.pictureDelegate photoViewLoaded:self];
             } else {
-                self.progressView.hidden = true;
+                self.progress = 1;
                 self.userInteractionEnabled = true;
-                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-                // 解决在执行动画完毕之后根据值去判断是否要隐藏
-                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-                self.progressView.progress = 1;
                 self.imageLoaded = NO;
                 
                 [self.pictureDelegate photoViewLoaded:self];
@@ -553,12 +538,28 @@
         } else {
             self.imageView.image = self.placeholderImage;
         }
-        self.progressView.hidden = true;
+        self.progress = 1;
         self.userInteractionEnabled = true;
-        self.progressView.progress = 1;
         self.imageLoaded = image ? YES : NO;
         
         [_pictureDelegate photoViewLoaded:self];
+    }
+}
+
+- (CGFloat)progress
+{
+    return self.progressView.progress;
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    self.progressView.progress = progress;
+    if (progress >= 1) {
+        self.progressView.hidden = true;
+    } else {
+        if (self.showAnimation == false) {
+            self.progressView.hidden = false;
+        }
     }
 }
 
