@@ -13,6 +13,7 @@ import FWFramework
     var photos: [FWAsset] = []
     var isAlbum: Bool = false
     var album: FWAssetGroup = FWAssetGroup()
+    var mockProgress: Bool = false
     
     private lazy var photoBrowser: FWPhotoBrowser = {
         let result = FWPhotoBrowser()
@@ -50,6 +51,11 @@ import FWFramework
     }
     
     private func loadPhotos() {
+        fwSetRightBarItem("模拟进度") { [weak self] sender in
+            guard let this = self else { return }
+            this.mockProgress = !this.mockProgress
+        }
+        
         fwShowLoading()
         DispatchQueue.global().async { [weak self] in
             self?.album.enumerateAssets(withOptions: .reverse, using: { asset in
@@ -163,7 +169,7 @@ import FWFramework
             photo.requestImageData { data, info, _, _ in
                 photoView.urlString = UIImage.fwImage(with:data)
             }
-        } else {
+        } else if !mockProgress {
             photoView.progress = 0.01
             photo.requestPreviewImage { image, info in
                 photoView.progress = 1
@@ -172,6 +178,15 @@ import FWFramework
                 DispatchQueue.main.async {
                     photoView.progress = CGFloat(progress)
                 }
+            }
+        } else {
+            let url = "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif?t=\(NSDate.fwCurrentTime)"
+            photoView.progress = 0.01
+            UIImage.fwDownloadImage(url) { image, error in
+                photoView.progress = 1
+                photoView.urlString = image
+            } progress: { progress in
+                photoView.progress = CGFloat(progress)
             }
         }
     }
