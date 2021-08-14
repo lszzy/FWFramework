@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)audioPlayerURLForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
 
 /// Source URL provider, would excute until you call setupPlayerItemWithURL:index:
-- (void)audioPlayerAsyncURLForItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
+- (void)audioPlayerLoadItemAtIndex:(NSInteger)index preBuffer:(BOOL)preBuffer;
 
 @end
 
@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 @property (nonatomic, assign, readonly) float playingItemDurationTime;
 @property (nonatomic, assign) BOOL observePeriodicTime;
 
-/// should not use this method outside of audioPlayerAsyncURLForItemAtIndex:preBuffer: scope
+/// should not use this method outside of audioPlayerLoadItemAtIndex:preBuffer: scope
 - (void)setupPlayerItemWithURL:(id)url index:(NSInteger)index;
 - (void)playItemFromIndex:(NSInteger)startIndex;
 - (void)removeAllItems;

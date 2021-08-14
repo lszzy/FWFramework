@@ -29,13 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
 
 /**
- 异步获取对应索引的高质量图片地址字符串或UIImage
+ 手工加载对应索引的高质量图片地址字符串或UIImage
  
  @param photoBrowser 图片浏览器
  @param index          索引
  @param photoView 图片视图，异步完成后设置urlString即可
  */
-- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser asyncUrlForIndex:(NSInteger)index photoView:(FWPhotoView *)photoView;
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadPhotoForIndex:(NSInteger)index photoView:(FWPhotoView *)photoView;
 
 /**
  获取对应索引的视图或相对于window的位置NSValue
