@@ -8,6 +8,28 @@
 
 import FWFramework
 
+class TestPlayerView: FWVideoPlayerView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = Theme.backgroundColor
+        fwAddTapGesture { sender in
+            FWRouter.closeViewController(animated: true)
+        }
+        
+        let closeButton = FWNavigationButton(image: CoreBundle.imageNamed("close"))
+        closeButton.tintColor = Theme.textColor
+        closeButton.fwAddTouch { sender in
+            FWRouter.closeViewController(animated: true)
+        }
+        addSubview(closeButton)
+        closeButton.fwLayoutChain.leftToSafeArea(8).topToSafeArea(8)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 @objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate {
     var albums: [FWAssetGroup] = []
     var photos: [FWAsset] = []
@@ -24,10 +46,7 @@ import FWFramework
     private lazy var videoPlayer: FWVideoPlayer = {
         let result = FWVideoPlayer()
         result.modalPresentationStyle = .fullScreen
-        result.view.backgroundColor = Theme.backgroundColor
-        result.view.fwAddTapGesture { sender in
-            FWRouter.closeViewController(animated: true)
-        }
+        result.playerView = TestPlayerView(frame: .zero)
         return result
     }()
     
