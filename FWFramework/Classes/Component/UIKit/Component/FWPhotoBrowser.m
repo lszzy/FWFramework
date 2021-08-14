@@ -234,6 +234,7 @@
     if (_currentPage == currentPage) {
         return;
     }
+    
     NSUInteger oldValue = _currentPage;
     _currentPage = currentPage;
     [self setPageText:currentPage];
@@ -249,6 +250,9 @@
             [self setPictureViewForIndex:currentPage - 1 defaultSize:CGSizeZero];
         }
     }
+    
+    // 清理未显示的photoView内存
+    [self clearPhotoView:currentPage];
 }
 
 /**
@@ -310,7 +314,6 @@
     return view;
 }
 
-
 /**
  获取图片控件：如果缓存里面有，那就从缓存里面取，没有就创建
  
@@ -318,9 +321,7 @@
  */
 - (FWPhotoView *)getPhotoView:(NSInteger)index {
     for (FWPhotoView *photoView in self.photoViews) {
-        if (photoView.index == index) {
-            return photoView;
-        }
+        if (photoView.index == index) return photoView;
     }
     
     FWPhotoView *view = [FWPhotoView new];
@@ -331,6 +332,21 @@
     [_scrollView addSubview:view];
     [_photoViews addObject:view];
     return view;
+}
+
+/**
+ 清理未显示的photoView，最多7个
+ */
+- (void)clearPhotoView:(NSInteger)index {
+    if (self.photoViews.count < 8) return;
+    
+    [self.photoViews enumerateObjectsUsingBlock:^(FWPhotoView *photoView, NSUInteger idx, BOOL *stop) {
+        if (photoView.index >= index - 3 && photoView.index <= index + 3) return;
+        
+        [photoView.imageView fwCancelImageRequest];
+        [photoView removeFromSuperview];
+        [self.photoViews removeObject:photoView];
+    }];
 }
 
 /**
