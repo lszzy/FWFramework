@@ -808,21 +808,21 @@ import CoreGraphics
 
 // MARK: - FWVideoPlayerView
 
-@objcMembers public class FWVideoPlayerView: UIView {
+@objcMembers open class FWVideoPlayerView: UIView {
 
-    public override class var layerClass: AnyClass {
+    open override class var layerClass: AnyClass {
         get {
             return AVPlayerLayer.self
         }
     }
 
-    internal var playerLayer: AVPlayerLayer {
+    open var playerLayer: AVPlayerLayer {
         get {
             return self.layer as! AVPlayerLayer
         }
     }
 
-    internal var player: AVPlayer? {
+    open var player: AVPlayer? {
         get {
             return self.playerLayer.player
         }
@@ -832,7 +832,7 @@ import CoreGraphics
         }
     }
 
-    public var playerBackgroundColor: UIColor? {
+    open var playerBackgroundColor: UIColor? {
         get {
             if let cgColor = self.playerLayer.backgroundColor {
                 return UIColor(cgColor: cgColor)
@@ -844,7 +844,7 @@ import CoreGraphics
         }
     }
 
-    public var playerFillMode: AVLayerVideoGravity {
+    open var playerFillMode: AVLayerVideoGravity {
         get {
             return self.playerLayer.videoGravity
         }
@@ -853,7 +853,7 @@ import CoreGraphics
         }
     }
 
-    public var isReadyForDisplay: Bool {
+    open var isReadyForDisplay: Bool {
         get {
             return self.playerLayer.isReadyForDisplay
         }
