@@ -159,8 +159,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         dispatch_async(audioQueue, ^{
             [self setupPlayerItemWithURL:url index:index];
         });
-    } else if ([self.dataSource respondsToSelector:@selector(audioPlayerAsyncURLForItemAtIndex:preBuffer:)]) {
-        [self.dataSource audioPlayerAsyncURLForItemAtIndex:index preBuffer:preBuffer];
+    } else if ([self.dataSource respondsToSelector:@selector(audioPlayerLoadItemAtIndex:preBuffer:)]) {
+        [self.dataSource audioPlayerLoadItemAtIndex:index preBuffer:preBuffer];
     } else {
         if (index < self.itemURLs.count) {
             id url = self.itemURLs[index];

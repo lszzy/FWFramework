@@ -50,7 +50,10 @@ import FWFramework
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.player.playFromBeginning()
+        if !fwIsDataLoaded {
+            fwIsDataLoaded = true
+            self.player.playFromBeginning()
+        }
     }
     
     override func renderModel() {

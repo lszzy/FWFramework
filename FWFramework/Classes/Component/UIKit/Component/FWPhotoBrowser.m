@@ -302,8 +302,8 @@
     
     if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
         view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
-    } else if ([_delegate respondsToSelector:@selector(photoBrowser:asyncUrlForIndex:photoView:)]) {
-        [_delegate photoBrowser:self asyncUrlForIndex:index photoView:view];
+    } else if ([_delegate respondsToSelector:@selector(photoBrowser:loadPhotoForIndex:photoView:)]) {
+        [_delegate photoBrowser:self loadPhotoForIndex:index photoView:view];
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }

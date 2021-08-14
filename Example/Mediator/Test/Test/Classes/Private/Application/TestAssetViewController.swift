@@ -23,6 +23,11 @@ import FWFramework
     
     private lazy var videoPlayer: FWVideoPlayer = {
         let result = FWVideoPlayer()
+        result.modalPresentationStyle = .fullScreen
+        result.view.backgroundColor = Theme.backgroundColor
+        result.view.fwAddTapGesture { sender in
+            FWRouter.closeViewController(animated: true)
+        }
         return result
     }()
     
@@ -135,17 +140,8 @@ import FWFramework
                 photo.requestPlayerItem(completion: { [weak self] playerItem, info in
                     self?.fwHideLoading()
                     if let item = playerItem, let video = self?.videoPlayer {
-                        video.modalPresentationStyle = .fullScreen
                         video.asset = item.asset
-                        video.view.backgroundColor = Theme.backgroundColor
-                        let button = FWNavigationButton(image: CoreBundle.imageNamed("close"))
-                        button.tintColor = Theme.textColor
-                        button.fwAddTouch { sender in
-                            FWRouter.closeViewController(animated: true)
-                        }
-                        video.view.addSubview(button)
-                        button.fwLayoutChain.leftToSafeArea(8).topToSafeArea(8)
-                        self?.present(video, animated: true, completion: nil)
+                        self?.present(video, animated: true)
                     }
                 }, withProgressHandler: nil)
             } else {
@@ -163,7 +159,7 @@ import FWFramework
         }
     }
     
-    func photoBrowser(_ photoBrowser: FWPhotoBrowser, asyncUrlFor index: Int, photoView: FWPhotoView) {
+    func photoBrowser(_ photoBrowser: FWPhotoBrowser, loadPhotoFor index: Int, photoView: FWPhotoView) {
         let photo = photos[index]
         if photo.assetSubType == .GIF {
             photo.requestImageData { data, info, _, _ in
