@@ -119,7 +119,7 @@ NSString *const FWStateChangedNotification = @"FWStateChangedNotification";
 - (void)checkActive
 {
     if (self.isActive) {
-        @throw [NSException exceptionWithName:@"FWFramework" reason:@"FWStateMachine is activated" userInfo:nil];
+        @throw [NSException exceptionWithName:@"FWState" reason:@"FWStateMachine is activated" userInfo:nil];
     }
 }
 

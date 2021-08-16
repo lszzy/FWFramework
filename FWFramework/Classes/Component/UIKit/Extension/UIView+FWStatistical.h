@@ -30,7 +30,7 @@ typedef void (^FWStatisticalCallback)(__kindof UIView * _Nullable cell, NSIndexP
 @interface FWStatisticalManager : NSObject
 
 /// 单例模式
-+ (instancetype)sharedInstance;
+@property (class, nonatomic, readonly) FWStatisticalManager *sharedInstance;
 
 /// 是否启用通知，默认NO
 @property (nonatomic, assign) BOOL notificationEnabled;

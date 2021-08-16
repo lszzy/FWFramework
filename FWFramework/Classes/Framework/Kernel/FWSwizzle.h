@@ -187,13 +187,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
 
 /*!
- @brief 安全调用内部属性方法，如果属性不存在，则忽略之
+ @brief 安全调用内部属性获取方法，如果属性不存在，则忽略之
  @discussion 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
  
  @param name 内部属性名称
  @return 属性值
  */
-- (nullable id)fwPerformPropertySelector:(NSString *)name;
+- (nullable id)fwPerformGetter:(NSString *)name;
 
 /*!
  @brief 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -203,7 +203,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 传递的方法参数
  @return 方法执行后返回的值
  */
-- (nullable id)fwPerformPropertySelector:(NSString *)name withObject:(nullable id)object;
+- (nullable id)fwPerformSetter:(NSString *)name withObject:(nullable id)object;
 
 #pragma mark - Property
 

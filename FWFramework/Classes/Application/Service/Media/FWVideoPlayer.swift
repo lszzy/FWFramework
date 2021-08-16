@@ -76,18 +76,21 @@ import CoreGraphics
     /// For setting up with AVAsset instead of URL
     /// Note: This will reset the `url` property. (cannot set both)
     open var asset: AVAsset? {
-        get { return _asset }
-        set { _ = newValue.map { setupAsset($0) } }
+        didSet {
+            if let asset = self.asset {
+                setupAsset(asset)
+            }
+        }
     }
 
     /// Specifies how the video is displayed within a player layer’s bounds.
     /// The default value is `AVLayerVideoGravityResizeAspect`. See `PlayerFillMode`.
     open var fillMode: AVLayerVideoGravity {
         get {
-            return self._playerView.playerFillMode
+            return self.playerView.playerFillMode
         }
         set {
-            self._playerView.playerFillMode = newValue
+            self.playerView.playerFillMode = newValue
         }
     }
 
@@ -97,27 +100,27 @@ import CoreGraphics
     /// Mutes audio playback when true.
     open var muted: Bool {
         get {
-            return self._avplayer.isMuted
+            return self.player.isMuted
         }
         set {
-            self._avplayer.isMuted = newValue
+            self.player.isMuted = newValue
         }
     }
 
     /// Volume for the player, ranging from 0.0 to 1.0 on a linear scale.
     open var volume: Float {
         get {
-            return self._avplayer.volume
+            return self.player.volume
         }
         set {
-            self._avplayer.volume = newValue
+            self.player.volume = newValue
         }
     }
     
     /// Rate at which the video should play once it loads
     open var rate: Float = 1 {
         didSet {
-            self._avplayer.rate = rate
+            self.player.rate = rate
         }
     }
 
@@ -137,7 +140,7 @@ import CoreGraphics
     
     open var isPlayingVideo: Bool {
         get {
-            guard let asset = self._asset else {
+            guard let asset = self.asset else {
                 return false
             }
             return asset.tracks(withMediaType: .video).count != 0
@@ -147,13 +150,13 @@ import CoreGraphics
     /// Playback automatically loops continuously when true.
     open var playbackLoops: Bool {
         get {
-            return self._avplayer.actionAtItemEnd == .none
+            return self.player.actionAtItemEnd == .none
         }
         set {
             if newValue {
-                self._avplayer.actionAtItemEnd = .none
+                self.player.actionAtItemEnd = .none
             } else {
-                self._avplayer.actionAtItemEnd = .pause
+                self.player.actionAtItemEnd = .pause
             }
         }
     }
@@ -192,7 +195,7 @@ import CoreGraphics
     /// Maximum duration of playback.
     open var maximumDuration: TimeInterval {
         get {
-            if let playerItem = self._playerItem {
+            if let playerItem = self.playerItem {
                 return CMTimeGetSeconds(playerItem.duration)
             } else {
                 return CMTimeGetSeconds(CMTime.indefinite)
@@ -203,7 +206,7 @@ import CoreGraphics
     /// Media playback's current time interval in seconds.
     open var currentTimeInterval: TimeInterval {
         get {
-            if let playerItem = self._playerItem {
+            if let playerItem = self.playerItem {
                 return CMTimeGetSeconds(playerItem.currentTime())
             } else {
                 return CMTimeGetSeconds(CMTime.indefinite)
@@ -214,7 +217,7 @@ import CoreGraphics
     /// Media playback's current time.
     open var currentTime: CMTime {
         get {
-            if let playerItem = self._playerItem {
+            if let playerItem = self.playerItem {
                 return playerItem.currentTime()
             } else {
                 return CMTime.indefinite
@@ -225,7 +228,7 @@ import CoreGraphics
     /// The natural dimensions of the media.
     open var naturalSize: CGSize {
         get {
-            if let playerItem = self._playerItem,
+            if let playerItem = self.playerItem,
                 let track = playerItem.asset.tracks(withMediaType: .video).first {
 
                 let size = track.naturalSize.applying(track.preferredTransform)
@@ -235,23 +238,25 @@ import CoreGraphics
             }
         }
     }
+    
+    open lazy var player: AVPlayer = {
+        let player = AVPlayer()
+        player.automaticallyWaitsToMinimizeStalling = false
+        player.actionAtItemEnd = .pause
+        return player
+    }()
 
-    /// self.view as PlayerView type
-    public var playerView: FWVideoPlayerView {
-        get {
-            return self._playerView
-        }
-    }
+    open lazy var playerView: FWVideoPlayerView = FWVideoPlayerView(frame: .zero)
 
     /// Return the av player layer for consumption by things such as Picture in Picture
     open func playerLayer() -> AVPlayerLayer? {
-        return self._playerView.playerLayer
+        return self.playerView.playerLayer
     }
 
     /// Indicates the desired limit of network bandwidth consumption for this item.
     open var preferredPeakBitRate: Double = 0 {
         didSet {
-            self._playerItem?.preferredPeakBitRate = self.preferredPeakBitRate
+            self.playerItem?.preferredPeakBitRate = self.preferredPeakBitRate
         }
     }
 
@@ -259,42 +264,28 @@ import CoreGraphics
     @available(iOS 11.0, tvOS 11.0, *)
     open var preferredMaximumResolution: CGSize {
         get {
-            return self._playerItem?.preferredMaximumResolution ?? CGSize.zero
+            return self.playerItem?.preferredMaximumResolution ?? CGSize.zero
         }
         set {
-            self._playerItem?.preferredMaximumResolution = newValue
-            self._preferredMaximumResolution = newValue
+            self.playerItem?.preferredMaximumResolution = newValue
+            self.itemMaximumResolution = newValue
         }
     }
 
     // private
+    
+    internal var playerItem: AVPlayerItem?
+    internal var playerObservers = [NSKeyValueObservation]()
+    internal var playerItemObservers = [NSKeyValueObservation]()
+    internal var playerLayerObserver: NSKeyValueObservation?
+    internal var playerTimeObserver: Any?
 
-    internal var _asset: AVAsset? {
-        didSet {
-            if let _ = self._asset {
-                self.setupPlayerItem(nil)
-            }
-        }
-    }
-    internal lazy var _avplayer: AVPlayer = {
-        let avplayer = AVPlayer()
-        avplayer.actionAtItemEnd = .pause
-        return avplayer
-    }()
-    internal var _playerItem: AVPlayerItem?
-
-    internal var _playerObservers = [NSKeyValueObservation]()
-    internal var _playerItemObservers = [NSKeyValueObservation]()
-    internal var _playerLayerObserver: NSKeyValueObservation?
-    internal var _playerTimeObserver: Any?
-
-    internal var _playerView: FWVideoPlayerView = FWVideoPlayerView(frame: .zero)
-    internal var _seekTimeRequested: CMTime?
-    internal var _lastBufferTime: Double = 0
-    internal var _preferredMaximumResolution: CGSize = .zero
+    internal var seekTimeRequested: CMTime?
+    internal var lastBufferTime: Double = 0
+    internal var itemMaximumResolution: CGSize = .zero
 
     // Boolean that determines if the user or calling coded has trigged autoplay manually.
-    internal var _hasAutoplayActivated: Bool = true
+    internal var hasAutoplayActivated: Bool = true
 
     // MARK: - lifecycle
 
@@ -311,29 +302,28 @@ import CoreGraphics
     }
 
     deinit {
-        self._avplayer.pause()
+        self.player.pause()
         self.setupPlayerItem(nil)
 
         self.removePlayerObservers()
-
         self.playerDelegate = nil
         self.removeApplicationObservers()
-
         self.playbackDelegate = nil
         self.removePlayerLayerObservers()
 
-        self._playerView.player = nil
+        self.playerView.player = nil
+        NSLog("FWVideoPlayer did dealloc")
     }
 
     open override func loadView() {
         super.loadView()
-        self._playerView.frame = self.view.bounds
-        self.view = self._playerView
+        self.playerView.frame = self.view.bounds
+        self.view = self.playerView
     }
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self._playerView.player = self._avplayer
+        self.playerView.player = self.player
 
         if let url = self.url {
             setup(url: url)
@@ -359,7 +349,7 @@ import CoreGraphics
     public var totalDurationWatched: TimeInterval {
         get {
             var totalDurationWatched = 0.0
-            if let accessLog = self._playerItem?.accessLog(), accessLog.events.isEmpty == false {
+            if let accessLog = self.playerItem?.accessLog(), accessLog.events.isEmpty == false {
                 for event in accessLog.events where event.durationWatched > 0 {
                     totalDurationWatched += event.durationWatched
                 }
@@ -373,7 +363,7 @@ import CoreGraphics
         var timeWeightedIBR = 0.0
         let totalDurationWatched = self.totalDurationWatched
            
-        if let accessLog = self._playerItem?.accessLog(), totalDurationWatched > 0 {
+        if let accessLog = self.playerItem?.accessLog(), totalDurationWatched > 0 {
             for event in accessLog.events {
                 if event.durationWatched > 0 && event.indicatedBitrate > 0 {
                     let eventTimeWeight = event.durationWatched / totalDurationWatched
@@ -389,7 +379,7 @@ import CoreGraphics
         var totalNumberOfStalls = 0
         let totalHoursWatched = self.totalDurationWatched / 3600
         
-        if let accessLog = self._playerItem?.accessLog(), totalDurationWatched > 0 {
+        if let accessLog = self.playerItem?.accessLog(), totalDurationWatched > 0 {
             for event in accessLog.events {
                 totalNumberOfStalls += event.numberOfStalls
             }
@@ -402,7 +392,7 @@ import CoreGraphics
     /// Begins playback of the media from the beginning.
     open func playFromBeginning() {
         self.playbackDelegate?.playerPlaybackWillStartFromBeginning?(self)
-        self._avplayer.seek(to: CMTime.zero)
+        self.player.seek(to: CMTime.zero)
         self.playFromCurrentTime()
     }
 
@@ -410,15 +400,15 @@ import CoreGraphics
     open func playFromCurrentTime() {
         if !self.autoplay {
             // External call to this method with autoplay disabled. Re-activate it before calling play.
-            self._hasAutoplayActivated = true
+            self.hasAutoplayActivated = true
         }
         self.play()
     }
 
     fileprivate func play() {
-        if self.autoplay || self._hasAutoplayActivated {
+        if self.autoplay || self.hasAutoplayActivated {
             self.playbackState = .playing
-            self._avplayer.playImmediately(atRate: rate)
+            self.player.playImmediately(atRate: rate)
         }
     }
 
@@ -428,7 +418,7 @@ import CoreGraphics
             return
         }
 
-        self._avplayer.pause()
+        self.player.pause()
         self.playbackState = .paused
     }
 
@@ -438,7 +428,7 @@ import CoreGraphics
             return
         }
 
-        self._avplayer.pause()
+        self.player.pause()
         self.playbackState = .stopped
         self.playbackDelegate?.playerPlaybackDidEnd?(self)
     }
@@ -449,10 +439,10 @@ import CoreGraphics
     ///   - time: The time to switch to move the playback.
     ///   - completionHandler: Call block handler after seeking/
     open func seek(to time: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
-        if let playerItem = self._playerItem {
+        if let playerItem = self.playerItem {
             return playerItem.seek(to: time, completionHandler: completionHandler)
         } else {
-            self._seekTimeRequested = time
+            self.seekTimeRequested = time
         }
     }
 
@@ -464,7 +454,7 @@ import CoreGraphics
     ///   - toleranceAfter: The tolerance allowed after time.
     ///   - completionHandler: call block handler after seeking
     open func seekToTime(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
-        if let playerItem = self._playerItem {
+        if let playerItem = self.playerItem {
             return playerItem.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
     }
@@ -473,7 +463,7 @@ import CoreGraphics
     ///
     /// - Parameter completionHandler: Returns a UIImage of the requested video frame. (Great for thumbnails!)
     open func takeSnapshot(completionHandler: ((_ image: UIImage?, _ error: Error?) -> Void)? ) {
-        guard let asset = self._playerItem?.asset else {
+        guard let asset = self.playerItem?.asset else {
             DispatchQueue.main.async {
                 completionHandler?(nil, nil)
             }
@@ -483,7 +473,7 @@ import CoreGraphics
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
 
-        let currentTime = self._playerItem?.currentTime() ?? CMTime.zero
+        let currentTime = self.playerItem?.currentTime() ?? CMTime.zero
 
         imageGenerator.generateCGImagesAsynchronously(forTimes: [NSValue(time: currentTime)]) { (requestedTime, image, actualTime, result, error) in
             guard let image = image else {
@@ -522,7 +512,7 @@ import CoreGraphics
         }
 
         // Reset autoplay flag since a new url is set.
-        self._hasAutoplayActivated = false
+        self.hasAutoplayActivated = false
         if self.autoplay {
             self.playbackState = .playing
         } else {
@@ -530,9 +520,8 @@ import CoreGraphics
         }
 
         self.setupPlayerItem(nil)
-
-        let asset = AVURLAsset(url: url, options: .none)
-        self.setupAsset(asset)
+        
+        self.asset = AVURLAsset(url: url, options: .none)
     }
 
     fileprivate func setupAsset(_ asset: AVAsset, loadableKeys: [String] = ["tracks", "playable", "duration"]) {
@@ -544,10 +533,10 @@ import CoreGraphics
 
         self.bufferingState = .unknown
 
-        self._asset = asset
+        self.setupPlayerItem(nil)
 
-        self._asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () -> Void in
-            guard let asset = self._asset else {
+        self.asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () -> Void in
+            guard let asset = self.asset else {
                 return
             }
             
@@ -580,38 +569,38 @@ import CoreGraphics
 
         self.removePlayerItemObservers()
 
-        if let currentPlayerItem = self._playerItem {
+        if let currentPlayerItem = self.playerItem {
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: currentPlayerItem)
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemFailedToPlayToEndTime, object: currentPlayerItem)
         }
 
-        self._playerItem = playerItem
+        self.playerItem = playerItem
         
-        self._playerItem?.audioTimePitchAlgorithm = .spectral
-        self._playerItem?.preferredPeakBitRate = self.preferredPeakBitRate
+        self.playerItem?.audioTimePitchAlgorithm = .spectral
+        self.playerItem?.preferredPeakBitRate = self.preferredPeakBitRate
         if #available(iOS 11.0, tvOS 11.0, *) {
-            self._playerItem?.preferredMaximumResolution = self._preferredMaximumResolution
+            self.playerItem?.preferredMaximumResolution = self.itemMaximumResolution
         }
 
-        if let seek = self._seekTimeRequested, self._playerItem != nil {
-            self._seekTimeRequested = nil
+        if let seek = self.seekTimeRequested, self.playerItem != nil {
+            self.seekTimeRequested = nil
             self.seek(to: seek)
         }
 
-        if let updatedPlayerItem = self._playerItem {
+        if let updatedPlayerItem = self.playerItem {
             self.addPlayerItemObservers()
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidPlayToEndTime(_:)), name: .AVPlayerItemDidPlayToEndTime, object: updatedPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: updatedPlayerItem)
         }
 
-        self._avplayer.replaceCurrentItem(with: self._playerItem)
-        self._avplayer.rate = rate
+        self.player.replaceCurrentItem(with: self.playerItem)
+        self.player.rate = rate
 
         // update new playerItem settings
         if self.playbackLoops {
-            self._avplayer.actionAtItemEnd = .none
+            self.player.actionAtItemEnd = .none
         } else {
-            self._avplayer.actionAtItemEnd = .pause
+            self.player.actionAtItemEnd = .pause
         }
     }
 
@@ -634,14 +623,14 @@ import CoreGraphics
         self.executeClosureOnMainQueueIfNecessary {
             if self.playbackLoops {
                 self.playbackDelegate?.playerPlaybackWillLoop?(self)
-                self._avplayer.seek(to: CMTime.zero)
-                self._avplayer.play()
-                self._avplayer.rate = self.rate
+                self.player.seek(to: CMTime.zero)
+                self.player.play()
+                self.player.rate = self.rate
                 self.playbackDelegate?.playerPlaybackDidLoop?(self)
             } else if self.playbackFreezesAtEnd {
                 self.stop()
             } else {
-                self._avplayer.seek(to: CMTime.zero, completionHandler: { _ in
+                self.player.seek(to: CMTime.zero, completionHandler: { _ in
                     self.stop()
                 })
             }
@@ -681,11 +670,11 @@ import CoreGraphics
     // MARK: - AVPlayerItemObservers
 
     internal func addPlayerItemObservers() {
-        guard let playerItem = self._playerItem else {
+        guard let playerItem = self.playerItem else {
             return
         }
 
-        self._playerItemObservers.append(playerItem.observe(\.isPlaybackBufferEmpty, options: [.new, .old]) { [weak self] (object, change) in
+        self.playerItemObservers.append(playerItem.observe(\.isPlaybackBufferEmpty, options: [.new, .old]) { [weak self] (object, change) in
             if object.isPlaybackBufferEmpty {
                 self?.bufferingState = .delayed
             }
@@ -698,7 +687,7 @@ import CoreGraphics
             }
         })
 
-        self._playerItemObservers.append(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new, .old]) { [weak self] (object, change) in
+        self.playerItemObservers.append(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new, .old]) { [weak self] (object, change) in
             guard let strongSelf = self else {
                 return
             }
@@ -719,7 +708,7 @@ import CoreGraphics
             }
         })
 
-        self._playerItemObservers.append(playerItem.observe(\.loadedTimeRanges, options: [.new, .old]) { [weak self] (object, change) in
+        self.playerItemObservers.append(playerItem.observe(\.loadedTimeRanges, options: [.new, .old]) { [weak self] (object, change) in
             guard let strongSelf = self else {
                 return
             }
@@ -727,8 +716,8 @@ import CoreGraphics
             let timeRanges = object.loadedTimeRanges
             if let timeRange = timeRanges.first?.timeRangeValue {
                 let bufferedTime = CMTimeGetSeconds(CMTimeAdd(timeRange.start, timeRange.duration))
-                if strongSelf._lastBufferTime != bufferedTime {
-                    strongSelf._lastBufferTime = bufferedTime
+                if strongSelf.lastBufferTime != bufferedTime {
+                    strongSelf.lastBufferTime = bufferedTime
                     strongSelf.executeClosureOnMainQueueIfNecessary {
                         strongSelf.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
                     }
@@ -736,10 +725,10 @@ import CoreGraphics
             }
 
             let currentTime = CMTimeGetSeconds(object.currentTime())
-            let passedTime = strongSelf._lastBufferTime <= 0 ? currentTime : (strongSelf._lastBufferTime - currentTime)
+            let passedTime = strongSelf.lastBufferTime <= 0 ? currentTime : (strongSelf.lastBufferTime - currentTime)
 
             if (passedTime >= strongSelf.bufferSizeInSeconds ||
-                strongSelf._lastBufferTime == strongSelf.maximumDuration ||
+                strongSelf.lastBufferTime == strongSelf.maximumDuration ||
                 timeRanges.first == nil) &&
                 strongSelf.playbackState == .playing {
                 strongSelf.play()
@@ -748,16 +737,16 @@ import CoreGraphics
     }
 
     internal func removePlayerItemObservers() {
-        for observer in self._playerItemObservers {
+        for observer in self.playerItemObservers {
             observer.invalidate()
         }
-        self._playerItemObservers.removeAll()
+        self.playerItemObservers.removeAll()
     }
 
     // MARK: - AVPlayerLayerObservers
 
     internal func addPlayerLayerObservers() {
-        self._playerLayerObserver = self._playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] (object, change) in
+        self.playerLayerObserver = self.playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] (object, change) in
             self?.executeClosureOnMainQueueIfNecessary {
                 if let strongSelf = self {
                     strongSelf.playerDelegate?.playerReady?(strongSelf)
@@ -767,21 +756,21 @@ import CoreGraphics
     }
 
     internal func removePlayerLayerObservers() {
-        self._playerLayerObserver?.invalidate()
-        self._playerLayerObserver = nil
+        self.playerLayerObserver?.invalidate()
+        self.playerLayerObserver = nil
     }
 
     // MARK: - AVPlayerObservers
 
     internal func addPlayerObservers() {
-        self._playerTimeObserver = self._avplayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] timeInterval in
+        self.playerTimeObserver = self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] timeInterval in
             guard let strongSelf = self else {
                 return
             }
             strongSelf.playbackDelegate?.playerCurrentTimeDidChange?(strongSelf)
         })
 
-        self._playerObservers.append(self._avplayer.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] (object, change) in
+        self.playerObservers.append(self.player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] (object, change) in
             switch object.timeControlStatus {
             case .paused:
                 self?.playbackState = .paused
@@ -796,13 +785,13 @@ import CoreGraphics
     }
 
     internal func removePlayerObservers() {
-        if let observer = self._playerTimeObserver {
-            self._avplayer.removeTimeObserver(observer)
+        if let observer = self.playerTimeObserver {
+            self.player.removeTimeObserver(observer)
         }
-        for observer in self._playerObservers {
+        for observer in self.playerObservers {
             observer.invalidate()
         }
-        self._playerObservers.removeAll()
+        self.playerObservers.removeAll()
     }
 
     // MARK: - queues
@@ -819,21 +808,21 @@ import CoreGraphics
 
 // MARK: - FWVideoPlayerView
 
-@objcMembers public class FWVideoPlayerView: UIView {
+@objcMembers open class FWVideoPlayerView: UIView {
 
-    public override class var layerClass: AnyClass {
+    open override class var layerClass: AnyClass {
         get {
             return AVPlayerLayer.self
         }
     }
 
-    internal var playerLayer: AVPlayerLayer {
+    open var playerLayer: AVPlayerLayer {
         get {
             return self.layer as! AVPlayerLayer
         }
     }
 
-    internal var player: AVPlayer? {
+    open var player: AVPlayer? {
         get {
             return self.playerLayer.player
         }
@@ -843,7 +832,7 @@ import CoreGraphics
         }
     }
 
-    public var playerBackgroundColor: UIColor? {
+    open var playerBackgroundColor: UIColor? {
         get {
             if let cgColor = self.playerLayer.backgroundColor {
                 return UIColor(cgColor: cgColor)
@@ -855,7 +844,7 @@ import CoreGraphics
         }
     }
 
-    public var playerFillMode: AVLayerVideoGravity {
+    open var playerFillMode: AVLayerVideoGravity {
         get {
             return self.playerLayer.videoGravity
         }
@@ -864,7 +853,7 @@ import CoreGraphics
         }
     }
 
-    public var isReadyForDisplay: Bool {
+    open var isReadyForDisplay: Bool {
         get {
             return self.playerLayer.isReadyForDisplay
         }

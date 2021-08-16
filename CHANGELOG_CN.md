@@ -1,5 +1,17 @@
 # 更新日志
 
+## [1.9.0] - 2021-08-16
+
+### Added
+* 新增FWAssetManager图片管理组件
+* 新增FWAudioPlayer音频播放组件
+* 新增FWVideoPlayer视频播放组件
+* 输入框支持自定义光标颜色和光标大小
+* 导航栏样式兼容iOS15，Xcode13生效
+
+### Changed
+* 重构FWPhotoBrowser，支持异步加载图片
+
 ## [1.8.2] - 2021-08-11
 
 ### Added

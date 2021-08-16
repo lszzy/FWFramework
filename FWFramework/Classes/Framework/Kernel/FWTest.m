@@ -44,7 +44,7 @@
                                @"file": (file ? file.lastPathComponent : @""),
                                @"line": @(line),
                                };
-    self.assertError = [NSError errorWithDomain:@"FWFramework" code:0 userInfo:userInfo];
+    self.assertError = [NSError errorWithDomain:@"FWTest" code:0 userInfo:userInfo];
 }
 
 @end

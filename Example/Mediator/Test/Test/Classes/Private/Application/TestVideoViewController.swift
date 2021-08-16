@@ -10,6 +10,10 @@ import FWFramework
 
 @objcMembers class TestVideoViewController: TestViewController, FWVideoPlayerDelegate, FWVideoPlayerPlaybackDelegate {
     fileprivate var player = FWVideoPlayer()
+    lazy var resourceLoader = FWPlayerCacheLoaderManager()
+    
+    @FWUserDefaultAnnotation("TestVideoCacheEnabled", defaultValue: false)
+    private var cacheEnabled: Bool
     
     // MARK: object lifecycle
     deinit {
@@ -33,11 +37,7 @@ import FWFramework
         self.player.view.fwPinEdgesToSuperview()
         self.player.didMove(toParent: self)
         
-//        let localUrl = Bundle.main.url(forResource: "IMG_3267", withExtension: "MOV")
-//        self.player.url = localUrl
-        let videoUrl = URL(string: "https://v.cdn.vine.co/r/videos/AA3C120C521177175800441692160_38f2cbd1ffb.1.5.13763579289575020226.mp4")!
-        self.player.url = videoUrl
-        
+        self.playVideo()
         self.player.playbackLoops = true
         
         let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
@@ -50,7 +50,28 @@ import FWFramework
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.player.playFromBeginning()
+        if !fwIsDataLoaded {
+            fwIsDataLoaded = true
+            self.player.playFromBeginning()
+        }
+    }
+    
+    override func renderModel() {
+        fwSetRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
+            guard let strongSelf = self else { return }
+            strongSelf.cacheEnabled = !strongSelf.cacheEnabled
+            strongSelf.playVideo()
+            strongSelf.renderModel()
+        }
+    }
+    
+    private func playVideo() {
+        let videoUrl = URL(string: "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4")!
+        if cacheEnabled {
+            self.player.asset = resourceLoader.urlAsset(with: videoUrl)
+        } else {
+            self.player.url = videoUrl
+        }
     }
     
     // MARK: -
