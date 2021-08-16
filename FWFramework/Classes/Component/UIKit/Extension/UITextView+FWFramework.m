@@ -26,6 +26,19 @@
             }
             return FWSwizzleOriginal(action, sender);
         }));
+        
+        FWSwizzleClass(UITextView, @selector(caretRectForPosition:), FWSwizzleReturn(CGRect), FWSwizzleArgs(UITextPosition *position), FWSwizzleCode({
+            CGRect caretRect = FWSwizzleOriginal(position);
+            NSValue *rectValue = objc_getAssociatedObject(selfObject, @selector(fwCursorRect));
+            if (!rectValue) return caretRect;
+            
+            CGRect rect = rectValue.CGRectValue;
+            if (rect.origin.x != 0) caretRect.origin.x = rect.origin.x;
+            if (rect.origin.y != 0) caretRect.origin.y = rect.origin.y;
+            if (rect.size.width != 0) caretRect.size.width = rect.size.width;
+            if (rect.size.height != 0) caretRect.size.height = rect.size.height;
+            return caretRect;
+        }));
     });
 }
 
@@ -166,6 +179,27 @@
 }
 
 #pragma mark - Select
+
+- (UIColor *)fwCursorColor
+{
+    return self.tintColor;
+}
+
+- (void)setFwCursorColor:(UIColor *)fwCursorColor
+{
+    self.tintColor = fwCursorColor;
+}
+
+- (CGRect)fwCursorRect
+{
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwCursorRect));
+    return value ? [value CGRectValue] : CGRectZero;
+}
+
+- (void)setFwCursorRect:(CGRect)fwCursorRect
+{
+    objc_setAssociatedObject(self, @selector(fwCursorRect), [NSValue valueWithCGRect:fwCursorRect], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (NSRange)fwSelectedRange
 {

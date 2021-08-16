@@ -39,6 +39,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Select
 
+// 自定义光标颜色
+@property (nonatomic, strong, null_resettable) UIColor *fwCursorColor;
+
+// 自定义光标大小，不为0才会生效，默认zero不生效
+@property (nonatomic, assign) CGRect fwCursorRect;
+
 // 获取及设置当前选中文字范围
 @property (nonatomic, assign) NSRange fwSelectedRange;
 
