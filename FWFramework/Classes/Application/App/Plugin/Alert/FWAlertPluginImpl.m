@@ -183,7 +183,7 @@
         titleColor = FWAlertAppearance.appearance.actionColor;
     }
     if (titleColor) {
-        [self fwPerformPropertySelector:@"titleTextColor" withObject:titleColor];
+        [self fwPerformSetter:@"titleTextColor" withObject:titleColor];
     }
 }
 
@@ -195,7 +195,7 @@
 - (void)setFwTitleColor:(UIColor *)fwTitleColor
 {
     objc_setAssociatedObject(self, @selector(fwTitleColor), fwTitleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwPerformPropertySelector:@"titleTextColor" withObject:fwTitleColor];
+    [self fwPerformSetter:@"titleTextColor" withObject:fwTitleColor];
 }
 
 @end
@@ -305,7 +305,7 @@
 - (void)setFwAttributedTitle:(NSAttributedString *)fwAttributedTitle
 {
     objc_setAssociatedObject(self, @selector(fwAttributedTitle), fwAttributedTitle, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwPerformPropertySelector:@"attributedTitle" withObject:fwAttributedTitle];
+    [self fwPerformSetter:@"attributedTitle" withObject:fwAttributedTitle];
 }
 
 - (NSAttributedString *)fwAttributedMessage
@@ -316,7 +316,7 @@
 - (void)setFwAttributedMessage:(NSAttributedString *)fwAttributedMessage
 {
     objc_setAssociatedObject(self, @selector(fwAttributedMessage), fwAttributedMessage, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwPerformPropertySelector:@"attributedMessage" withObject:fwAttributedMessage];
+    [self fwPerformSetter:@"attributedMessage" withObject:fwAttributedMessage];
 }
 
 @end

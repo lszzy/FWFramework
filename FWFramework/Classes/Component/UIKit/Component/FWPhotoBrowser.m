@@ -234,6 +234,7 @@
     if (_currentPage == currentPage) {
         return;
     }
+    
     NSUInteger oldValue = _currentPage;
     _currentPage = currentPage;
     [self setPageText:currentPage];
@@ -249,6 +250,9 @@
             [self setPictureViewForIndex:currentPage - 1 defaultSize:CGSizeZero];
         }
     }
+    
+    // 清理未显示的photoView内存
+    [self clearPhotoView:currentPage];
 }
 
 /**
@@ -302,12 +306,13 @@
     
     if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
         view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
+    } else if ([_delegate respondsToSelector:@selector(photoBrowser:loadPhotoForIndex:photoView:)]) {
+        [_delegate photoBrowser:self loadPhotoForIndex:index photoView:view];
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }
     return view;
 }
-
 
 /**
  获取图片控件：如果缓存里面有，那就从缓存里面取，没有就创建
@@ -316,9 +321,7 @@
  */
 - (FWPhotoView *)getPhotoView:(NSInteger)index {
     for (FWPhotoView *photoView in self.photoViews) {
-        if (photoView.index == index) {
-            return photoView;
-        }
+        if (photoView.index == index) return photoView;
     }
     
     FWPhotoView *view = [FWPhotoView new];
@@ -329,6 +332,21 @@
     [_scrollView addSubview:view];
     [_photoViews addObject:view];
     return view;
+}
+
+/**
+ 清理未显示的photoView，最多7个
+ */
+- (void)clearPhotoView:(NSInteger)index {
+    if (self.photoViews.count < 8) return;
+    
+    [self.photoViews enumerateObjectsUsingBlock:^(FWPhotoView *photoView, NSUInteger idx, BOOL *stop) {
+        if (photoView.index >= index - 3 && photoView.index <= index + 3) return;
+        
+        [photoView.imageView fwCancelImageRequest];
+        [photoView removeFromSuperview];
+        [self.photoViews removeObject:photoView];
+    }];
 }
 
 /**
@@ -495,38 +513,20 @@
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
     if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
-        self.progressView.progress = 0.01;
-        // 如果没有在执行动画，那么就显示出来
-        if (self.showAnimation == false) {
-            // 显示出来
-            self.progressView.hidden = false;
-        }
-        // 取消上一次的下载
-        self.userInteractionEnabled = false;
+        self.progress = 0.01;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             if (image) {
                 self.imageView.image = image;
-                self.progressView.hidden = true;
-                self.userInteractionEnabled = true;
-                // 计算图片的大小
                 [self setPictureSize:image.size];
-                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-                // 解决在执行动画完毕之后根据值去判断是否要隐藏
-                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-                self.progressView.progress = 1;
+                self.progress = 1;
                 self.imageLoaded = YES;
                 
                 [self.pictureDelegate photoViewLoaded:self];
             } else {
-                self.progressView.hidden = true;
-                self.userInteractionEnabled = true;
-                // 当下载完毕设置为1，因为如果直接走缓存的话，是不会走进度的 block 的
-                // 解决在执行动画完毕之后根据值去判断是否要隐藏
-                // 在执行显示的动画过程中：进度视图要隐藏，而如果在这个时候没有下载完成，需要在动画执行完毕之后显示出来
-                self.progressView.progress = 1;
+                self.progress = 1;
                 self.imageLoaded = NO;
                 
                 [self.pictureDelegate photoViewLoaded:self];
@@ -544,17 +544,31 @@
         }
         if (image) {
             self.imageView.image = image;
-            // 计算图片的大小
             [self setPictureSize:image.size];
         } else {
             self.imageView.image = self.placeholderImage;
         }
-        self.progressView.hidden = true;
-        self.userInteractionEnabled = true;
-        self.progressView.progress = 1;
+        self.progress = 1;
         self.imageLoaded = image ? YES : NO;
         
         [_pictureDelegate photoViewLoaded:self];
+    }
+}
+
+- (CGFloat)progress
+{
+    return self.progressView.progress;
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    self.progressView.progress = progress;
+    if (progress >= 1) {
+        if (!self.userInteractionEnabled) self.userInteractionEnabled = true;
+        if (!self.progressView.hidden) self.progressView.hidden = true;
+    } else {
+        if (self.userInteractionEnabled) self.userInteractionEnabled = false;
+        if (self.showAnimation == false) self.progressView.hidden = false;
     }
 }
 

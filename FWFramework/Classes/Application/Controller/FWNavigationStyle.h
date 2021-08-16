@@ -167,6 +167,15 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  */
 @interface UINavigationBar (FWStyle)
 
+/// 是否启用iOS13+样式，iOS15+必须启用。默认Xcode13+为YES，Xcode12及以下为NO
+@property (class, nonatomic, assign) BOOL fwAppearanceEnabled;
+
+/// 导航栏iOS13+样式对象，用于自定义样式
+@property (nonatomic, strong, readonly) UINavigationBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+
+/// 手工更新导航栏样式
+- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+
 /// 设置返回按钮图片，包含图片和转场Mask图片
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
 
@@ -207,6 +216,15 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  @brief 标签栏视图分类，全局设置用[UITabBar appearance]
  */
 @interface UITabBar (FWStyle)
+
+/// 是否启用iOS13+样式，iOS15+必须启用。默认Xcode13+为YES，Xcode12及以下为NO
+@property (class, nonatomic, assign) BOOL fwAppearanceEnabled;
+
+/// 标签栏iOS13+样式对象，用于自定义样式
+@property (nonatomic, strong, readonly) UITabBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+
+/// 手工更新标签栏样式
+- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;

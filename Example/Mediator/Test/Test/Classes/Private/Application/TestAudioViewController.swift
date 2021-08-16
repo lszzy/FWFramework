@@ -10,6 +10,19 @@ import FWFramework
 
 @objcMembers class TestAudioViewController: TestViewController, FWAudioPlayerDelegate, FWAudioPlayerDataSource {
     lazy var audioPlayer = FWAudioPlayer.sharedInstance
+    lazy var resourceLoader = FWPlayerCacheLoaderManager()
+    
+    @FWUserDefaultAnnotation("TestAudioCacheEnabled", defaultValue: false)
+    private var cacheEnabled: Bool
+    
+    private lazy var audioImage: UIImageView = {
+        let result = UIImageView()
+        result.isUserInteractionEnabled = true
+        result.fwAddTapGesture { [weak self] sender in
+            self?.toggleAudio()
+        }
+        return result
+    }()
     
     private lazy var audioLabel: UILabel = {
         let result = UILabel()
@@ -21,13 +34,16 @@ import FWFramework
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        fwView.addSubview(audioImage)
         fwView.addSubview(audioLabel)
-        audioLabel.fwLayoutChain.center()
+        audioImage.fwLayoutChain.centerX().size(CGSize(width: 100, height: 100))
+            .centerYToView(fwView, withOffset: -58)
+        audioLabel.fwLayoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: fwView, withOffset: 8)
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
         audioPlayer.observePeriodicTime = true
-        audioPlayer.fetchAndPlayPlayerItem(0)
+        audioPlayer.playItem(from: 0)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -35,22 +51,35 @@ import FWFramework
         audioPlayer.destroy()
     }
     
+    override func renderModel() {
+        fwSetRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
+            guard let strongSelf = self else { return }
+            strongSelf.cacheEnabled = !strongSelf.cacheEnabled
+            strongSelf.audioPlayer.playItem(from: 0)
+            strongSelf.renderData()
+            strongSelf.renderModel()
+        }
+    }
+    
     override func renderData() {
         if audioPlayer.isPlaying {
-            fwSetRightBarItem(FWIconImage("octicon-playback-pause", 24)) { [weak self] sender in
-                self?.audioPlayer.pause()
-                self?.renderData()
-            }
+            audioImage.image = FWIconImage("octicon-playback-pause", 100)
         } else {
-            fwSetRightBarItem(FWIconImage("octicon-playback-play", 24)) { [weak self] sender in
-                if self?.audioPlayer.currentItem != nil {
-                    self?.audioPlayer.play()
-                } else {
-                    self?.audioPlayer.fetchAndPlayPlayerItem(0)
-                }
-                self?.renderData()
+            audioImage.image = FWIconImage("octicon-playback-play", 100)
+        }
+    }
+    
+    private func toggleAudio() {
+        if audioPlayer.isPlaying {
+            self.audioPlayer.pause()
+        } else {
+            if self.audioPlayer.currentItem != nil {
+                self.audioPlayer.play()
+            } else {
+                self.audioPlayer.playItem(from: 0)
             }
         }
+        self.renderData()
     }
     
     func renderLabel() {
@@ -70,7 +99,7 @@ import FWFramework
         return 3
     }
     
-    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> URL? {
+    func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> Any? {
         var url: URL?
         switch index {
             case 0:
@@ -80,10 +109,14 @@ import FWFramework
                 url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")
                 break
             case 2:
-                url = URL(string: "http://a345.phobos.apple.com/us/r1000/046/Music5/v4/52/53/4b/52534b36-620e-d7f3-c9a8-2f9661652ff5/mzaf_2360247732780989514.plus.aac.p.m4a")
+                url = URL(string: "http://downsc.chinaz.net/files/download/sound1/201206/1638.mp3")
                 break
             default:
                 break
+        }
+        
+        if let audioUrl = url, cacheEnabled {
+            return resourceLoader.urlAsset(with: audioUrl)
         }
         return url
     }

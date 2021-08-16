@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- 获取对应索引的高质量图片地址字符串
+ 获取对应索引的高质量图片地址字符串或UIImage
  
  @param photoBrowser 图片浏览器
  @param index          索引
@@ -27,6 +27,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return 图片的 url 字符串或UIImage
  */
 - (nullable id)photoBrowser:(FWPhotoBrowser *)photoBrowser photoUrlForIndex:(NSInteger)index;
+
+/**
+ 手工加载对应索引的高质量图片地址字符串或UIImage
+ 
+ @param photoBrowser 图片浏览器
+ @param index          索引
+ @param photoView 图片视图，异步完成后设置urlString即可
+ */
+- (void)photoBrowser:(FWPhotoBrowser *)photoBrowser loadPhotoForIndex:(NSInteger)index photoView:(FWPhotoView *)photoView;
 
 /**
  获取对应索引的视图或相对于window的位置NSValue
@@ -207,6 +216,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
+// 当前图片加载进度
+@property (nonatomic, assign) CGFloat progress;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
 
