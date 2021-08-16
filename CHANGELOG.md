@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0] - 2021-08-16
+
+### Added
+* Added FWAssetManager image management component
+* Added FWAudioPlayer audio player component
+* Added FWVideoPlayer video playback component
+* The input box supports custom cursor color and cursor size
+* The navigation bar style is compatible with iOS15, Xcode13 takes effect
+
+### Changed
+* Refactored FWPhotoBrowser to support asynchronous loading of pictures
+
 ## [1.8.2] - 2021-08-11
 
 ### Added
