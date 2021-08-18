@@ -115,8 +115,6 @@
     self.imageView.image = image;
     [self layoutImageView];
     
-    self.fwNavigationItem.rightBarButtonItem.enabled = YES;
-    
     if (cropViewController.croppingStyle != FWCropViewCroppingStyleCircular) {
         self.imageView.hidden = YES;
         [cropViewController dismissViewControllerAnimated:YES completion:^{
@@ -222,20 +220,8 @@
     
     self.navigationController.navigationBar.translucent = NO;
     
-    self.fwNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showCropViewController)];
-    
-#if TARGET_APP_EXTENSION
-    self.fwNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissViewController)];
-#else
-    self.fwNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(sharePhoto:)];
-    self.fwNavigationItem.rightBarButtonItem.enabled = NO;
-#endif
-    
-    FWWeakifySelf();
-    [self.view fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        [self fwCloseViewControllerAnimated:YES];
-    }];
+    [self fwAddRightBarItem:FWIcon.addImage target:self action:@selector(showCropViewController)];
+    [self fwAddRightBarItem:FWIcon.actionImage target:self action:@selector(sharePhoto:)];
     
     self.imageView = [[UIImageView alloc] init];
     self.imageView.userInteractionEnabled = YES;
