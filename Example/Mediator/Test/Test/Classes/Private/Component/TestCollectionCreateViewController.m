@@ -195,7 +195,7 @@
 - (void)renderModel
 {
     FWWeakifySelf();
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemAdd) block:^(id sender) {
+    [self fwSetRightBarItem:FWIcon.addImage block:^(id sender) {
         FWStrongifySelf();
         NSMutableArray *sectionData = self.collectionView.fwDelegate.collectionData[0].mutableCopy;
         [sectionData addObjectsFromArray:@[[self randomObject], [self randomObject]]];

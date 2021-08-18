@@ -32,7 +32,7 @@ class TestNavigationTitleLabel: UILabel, FWNavigationTitleViewProtocol {
         navigationView.contentView.titleView = TestNavigationTitleLabel()
         navigationView.contentView.title = "我是很长很长要多长有多长长得不得了的按钮"
         navigationView.contentView.tintColor = Theme.textColor
-        let leftButton = FWNavigationButton(image: CoreBundle.imageNamed("back"))
+        let leftButton = FWNavigationButton(image: FWIcon.backImage)
         leftButton.fwAddTouch { sender in
             FWRouter.closeViewController(animated: true)
         }

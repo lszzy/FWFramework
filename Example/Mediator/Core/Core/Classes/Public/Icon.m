@@ -2866,3 +2866,15 @@
 }
 
 @end
+
+@implementation FWIcon (Core)
+
++ (UIImage *)refreshImage { return FWIconImage(@"ion-android-refresh", 24); }
++ (UIImage *)playImage { return FWIconImage(@"octicon-playback-play", 24); }
++ (UIImage *)stopImage { return FWIconImage(@"octicon-playback-pause", 24); }
++ (UIImage *)actionImage { return FWIconImage(@"ion-android-more-horizontal", 24); }
++ (UIImage *)addImage { return FWIconImage(@"ion-plus", 24); }
++ (UIImage *)backImage { return [CoreBundle imageNamed:@"back"]; }
++ (UIImage *)closeImage { return [CoreBundle imageNamed:@"close"]; }
+
+@end

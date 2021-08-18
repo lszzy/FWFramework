@@ -131,7 +131,7 @@ extension Theme {
     }
     
     func viewControllerViewDidLoad(_ viewController: UIViewController) {
-        viewController.fwBackBarItem = CoreBundle.imageNamed("back")
+        viewController.fwBackBarItem = FWIcon.backImage
         if #available(iOS 11.0, *) {
             viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
         }

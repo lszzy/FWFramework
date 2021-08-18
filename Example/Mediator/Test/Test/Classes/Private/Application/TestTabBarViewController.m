@@ -43,19 +43,19 @@
     UIViewController *firstController = [TestRouterViewController new];
     firstController.hidesBottomBarWhenPushed = NO;
     FWWeakifySelf();
-    firstController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+    firstController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:FWIcon.backImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self.navigationController popViewControllerAnimated:YES];
     }];
     UIViewController *secondController = [TestModuleController new];
     secondController.hidesBottomBarWhenPushed = NO;
-    secondController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+    secondController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:FWIcon.backImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self.navigationController popViewControllerAnimated:YES];
     }];
     UIViewController *thirdController = [[TestWebViewController alloc] initWithRequestUrl:@"http://kvm.wuyong.site/test.php"];
     thirdController.hidesBottomBarWhenPushed = NO;
-    thirdController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] block:^(id  _Nonnull sender) {
+    thirdController.fwNavigationItem.leftBarButtonItem = [UIBarButtonItem fwBarItemWithObject:FWIcon.backImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self.navigationController popViewControllerAnimated:YES];
     }];

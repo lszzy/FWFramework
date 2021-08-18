@@ -80,7 +80,7 @@
     
     // 自定义关闭按钮
     FWWeakifySelf();
-    [self fwSetLeftBarItem:[CoreBundle imageNamed:@"close"] block:^(id sender) {
+    [self fwSetLeftBarItem:FWIcon.closeImage block:^(id sender) {
         FWStrongifySelf();
         [self fwCloseViewControllerAnimated:!self.noAnimate];
     }];
