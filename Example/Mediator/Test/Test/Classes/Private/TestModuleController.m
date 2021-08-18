@@ -141,6 +141,7 @@
               @[@"UIViewController+FWTransition", @"TestTransitionViewController"],
               @[@"UIViewController+FWFramework", @"Test.TestChildViewController"],
               @[@"UITextField+FWKeyboard", @"TestKeyboardViewController"],
+              @[@"UITextView+FWPlaceholder", @"Test.TestTextViewViewController"],
               @[@"UILabel+FWFramework", @"TestLabelViewController"],
               @[@"UIView+FWGradient", @"TestGradientViewController"],
               @[@"NSURL+FWVendor", @"TestUrlViewController"],
