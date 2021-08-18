@@ -40,6 +40,7 @@
         label.font = self.font;
         objc_setAssociatedObject(self, @selector(fwPlaceholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self fwUpdatePlaceholder];
+        [self insertSubview:label atIndex:0];
         
         // 监听当前输入框的文本改变通知
         [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwTextDidChange)];
@@ -64,11 +65,11 @@
 - (void)fwUpdatePlaceholder
 {
     if (self.text.length) {
-        [self.fwPlaceholderLabel removeFromSuperview];
+        self.fwPlaceholderLabel.hidden = YES;
         return;
     }
     
-    [self insertSubview:self.fwPlaceholderLabel atIndex:0];
+    self.fwPlaceholderLabel.hidden = NO;
     self.fwPlaceholderLabel.textAlignment = self.textAlignment;
     CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
     UIEdgeInsets textContainerInset = self.textContainerInset;
@@ -86,7 +87,7 @@
     
     NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
     // 如果显示placeholder，同时计算placeholder高度，取其中较大值
-    if (self.fwPlaceholderLabel.superview) {
+    if (!self.fwPlaceholderLabel.isHidden) {
         NSInteger placeholderHeight = ceil(CGRectGetMaxY(self.fwPlaceholderLabel.frame) + self.textContainerInset.bottom);
         currentHeight = MAX(currentHeight, placeholderHeight);
     }
