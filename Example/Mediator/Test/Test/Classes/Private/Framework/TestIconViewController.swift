@@ -45,11 +45,12 @@ class TestIconCell: UICollectionViewCell {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
         searchBar.delegate = self
-        searchBar.showsCancelButton = true
         searchBar.tintColor = Theme.textColor
-        searchBar.fwContentInset = UIEdgeInsets(top: 6, left: 15, bottom: 6, right: 65)
+        searchBar.fwContentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
         searchBar.fwBackgroundColor = Theme.barColor
         searchBar.fwTextFieldBackgroundColor = Theme.tableColor
+        searchBar.fwSearchIconPosition = 16 - 6
+        searchBar.fwSearchIconCenter = false
         
         let textField = searchBar.fwTextField
         textField?.font = UIFont.systemFont(ofSize: 12)
@@ -60,6 +61,7 @@ class TestIconCell: UICollectionViewCell {
     
     override func renderView() {
         collectionView.backgroundColor = Theme.backgroundColor
+        collectionView.fwKeyboardDismissOnDrag = true
     }
     
     func renderCollectionViewLayout() -> UICollectionViewLayout {
@@ -124,10 +126,6 @@ class TestIconCell: UICollectionViewCell {
         let name = collectionData.fwObject(at: indexPath.item) as? String
         UIPasteboard.general.string = FWSafeString(name)
         fwShowMessage(withText: name)
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
