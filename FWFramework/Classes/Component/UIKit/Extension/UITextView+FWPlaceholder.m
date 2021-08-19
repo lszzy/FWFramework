@@ -82,14 +82,13 @@
     }
     
     CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-    CGFloat y = self.textContainerInset.top;
     CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
+    CGFloat height = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
     CGFloat maxHeight = (self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height) - self.textContainerInset.top - self.textContainerInset.bottom;
-    CGFloat placeholderHeight = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-    CGFloat height = MIN(placeholderHeight, maxHeight);
+    CGRect targetFrame = CGRectMake(x, self.textContainerInset.top, width, MIN(height, maxHeight));
     self.fwPlaceholderLabel.hidden = NO;
     self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-    self.fwPlaceholderLabel.frame = CGRectMake(x, y, width, height);
+    self.fwPlaceholderLabel.frame = targetFrame;
 }
 
 - (void)fwUpdateText
@@ -99,18 +98,14 @@
     
     NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
     // 如果显示placeholder，同时计算placeholder高度，取其中较大值
-    if (!self.fwPlaceholderLabel.isHidden) {
-        currentHeight = MAX(currentHeight, ceil(self.fwPlaceholderHeight));
-    }
+    if (!self.fwPlaceholderLabel.isHidden) currentHeight = MAX(currentHeight, ceil(self.fwPlaceholderHeight));
     currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
     if (currentHeight == self.fwLastHeight) return;
     
-    CGRect frame = self.frame;
-    frame.size.height = currentHeight;
-    self.frame = frame;
-    if (self.fwHeightDidChange) {
-        self.fwHeightDidChange(currentHeight);
-    }
+    CGRect targetFrame = self.frame;
+    targetFrame.size.height = currentHeight;
+    self.frame = targetFrame;
+    if (self.fwHeightDidChange) self.fwHeightDidChange(currentHeight);
     self.fwLastHeight = currentHeight;
 }
 
