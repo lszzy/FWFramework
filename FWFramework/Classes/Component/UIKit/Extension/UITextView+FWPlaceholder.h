@@ -24,9 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 占位文本总高度，含上下间距，只读
 @property (nonatomic, assign, readonly) CGFloat fwPlaceholderHeight;
 
-/// 占位文本默认与输入光标首行对齐，可设置此属性居中对齐，会自动修改textContainerInset，默认NO
-@property (nonatomic, assign) BOOL fwPlaceholderCursorCenter;
-
 #pragma mark - AutoHeight
 
 /// 是否启用自动高度功能，随文字改变高度
