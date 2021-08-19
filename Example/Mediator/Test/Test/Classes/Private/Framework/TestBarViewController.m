@@ -76,7 +76,7 @@ FWPropertyAssign(BOOL, hideToast);
             [UINavigationController fwEnableBarTransition];
         }];
     } else {
-        [self fwSetLeftBarItem:[CoreBundle imageNamed:@"close"] block:^(id  _Nonnull sender) {
+        [self fwSetLeftBarItem:FWIcon.closeImage block:^(id  _Nonnull sender) {
             [FWRouter closeViewControllerAnimated:YES];
         }];
     }

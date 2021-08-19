@@ -370,6 +370,7 @@ extension Dictionary {
     public var fwNSDictionary: NSDictionary { return self as NSDictionary }
 }
 extension String {
+    public var fwTrimString: String { return trimmingCharacters(in: .whitespacesAndNewlines) }
     public var fwNSString: NSString { return self as NSString }
     public var fwUTF8Data: Data? { return self.data(using: .utf8) }
     public var fwURL: URL? { return fwNSString.fwURL }

@@ -22,7 +22,7 @@
 - (void)renderModel
 {
     FWWeakifySelf();
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+    [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self.tableData removeAllObjects];
         [self.tableView reloadData];

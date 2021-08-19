@@ -32,11 +32,11 @@
     self.horizontalAlignment = self.titleView.contentHorizontalAlignment;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, 300)];
     
-    self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]];
-    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"close"]] block:^(id  _Nonnull sender) {
+    self.fwLeftBarItem = [[FWNavigationButton alloc] initWithImage:FWIcon.backImage];
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:FWIcon.closeImage] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
-    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:[CoreBundle imageNamed:@"back"]] block:^(id  _Nonnull sender) {
+    [self fwAddRightBarItem:[[FWNavigationButton alloc] initWithImage:FWIcon.backImage] block:^(id  _Nonnull sender) {
         [FWRouter closeViewControllerAnimated:YES];
     }];
     

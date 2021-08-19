@@ -31,8 +31,8 @@
         return nil;
     } else {
         return @[
-            [UIBarButtonItem fwBarItemWithObject:[CoreBundle imageNamed:@"back"] target:self action:@selector(onWebBack)],
-            [CoreBundle imageNamed:@"close"],
+            [UIBarButtonItem fwBarItemWithObject:FWIcon.backImage target:self action:@selector(onWebBack)],
+            FWIcon.closeImage,
         ];
     }
 }
@@ -97,14 +97,14 @@
     if (self.fwIsDataLoaded) return;
     self.fwIsDataLoaded = YES;
     
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
+    [self fwSetRightBarItem:FWIcon.actionImage target:self action:@selector(shareRequestUrl)];
 }
 
 - (void)webViewFailLoad:(NSError *)error
 {
     if (self.fwIsDataLoaded) return;
     
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(loadRequestUrl)];
+    [self fwSetRightBarItem:FWIcon.refreshImage target:self action:@selector(loadRequestUrl)];
     
     FWWeakifySelf();
     [self fwShowEmptyViewWithText:error.localizedDescription detail:nil image:nil action:@"点击重试" block:^(id  _Nonnull sender) {

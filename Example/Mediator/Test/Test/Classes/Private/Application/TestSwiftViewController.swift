@@ -224,8 +224,8 @@ import FWFramework
 @objcMembers class SwiftTestWebViewController: UIViewController, FWWebViewController {
     var webItems: NSArray? = {
         return [
-            CoreBundle.imageNamed("back") as Any,
-            CoreBundle.imageNamed("close") as Any
+            FWIcon.backImage as Any,
+            FWIcon.closeImage as Any
         ]
     }()
     

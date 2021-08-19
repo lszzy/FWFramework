@@ -16,13 +16,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UISearchBar (FWFramework)
 
-// 自定义内容边距，可调整左右距离和TextField高度。未设置时为系统默认
+// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
 @property (nonatomic, assign) UIEdgeInsets fwContentInset;
+
+// 自定义取消按钮边距，未设置时为系统默认
+@property (nonatomic, assign) UIEdgeInsets fwCancelButtonInset;
 
 // 输入框内部视图
 @property (nullable, nonatomic, weak, readonly) UITextField *fwTextField;
 
-// 取消按钮内部视图
+// 取消按钮内部视图，showsCancelButton开启后才存在
 @property (nullable, nonatomic, weak, readonly) UIButton *fwCancelButton;
 
 // 设置整体背景色
@@ -31,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置输入框背景色
 @property (nonatomic, strong, nullable) UIColor *fwTextFieldBackgroundColor;
 
-// 设置TextField搜索图标(placeholder)离左侧的位置
+// 设置TextField搜索图标(placeholder)离左侧的位置，非居中时生效
 @property (nonatomic, assign) CGFloat fwSearchIconPosition;
 
 // 设置TextField搜索图标(placeholder)是否居中，否则居左

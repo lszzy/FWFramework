@@ -1,5 +1,12 @@
 # 更新日志
 
+## [1.9.1] - 2021-08-19
+
+### Added
+* UITextView支持自动高度和设置最大高度
+* 新增swift扩展String.fwTrimString方法
+* 重构UISearchBar扩展，支持取消按钮间距定制和textField间距定制
+
 ## [1.9.0] - 2021-08-16
 
 ### Added

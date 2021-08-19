@@ -16,7 +16,7 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
     }
     
     private lazy var closeButton: FWNavigationButton = {
-        let result = FWNavigationButton(image: CoreBundle.imageNamed("close"))
+        let result = FWNavigationButton(image: FWIcon.closeImage)
         result.tintColor = Theme.textColor
         result.fwAddTouch { sender in
             FWRouter.closeViewController(animated: true)
