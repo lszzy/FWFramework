@@ -15,7 +15,7 @@ import FWFramework
         result.fwSetBorderColor(Theme.borderColor, width: 0.5, cornerRadius: 8)
         result.fwAutoHeightEnabled = true
         result.fwMaxLength = 100
-        result.fwKeyboardResign = true
+        result.fwTouchResign = true
         return result
     }()
     
@@ -28,7 +28,7 @@ import FWFramework
         }
         result.fwMinHeight = result.fwPlaceholderHeight
         result.fwPlaceholderCursorCenter = true
-        result.fwKeyboardResign = true
+        result.fwTouchResign = true
         return result
     }()
     
