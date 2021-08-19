@@ -71,11 +71,12 @@
     
     self.fwPlaceholderLabel.hidden = NO;
     self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-    CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
-    UIEdgeInsets textContainerInset = self.textContainerInset;
-    CGFloat x = lineFragmentPadding + textContainerInset.left;
-    CGFloat y = textContainerInset.top;
-    CGFloat width = CGRectGetWidth(self.bounds) - x - lineFragmentPadding - textContainerInset.right;
+    CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
+    CGFloat y = self.textContainerInset.top;
+    if (self.fwPlaceholderCursorCenter) {
+        y = self.fwPlaceholderInsetTop;
+    }
+    CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
     CGFloat height = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
     self.fwPlaceholderLabel.frame = CGRectMake(x, y, width, height);
 }
@@ -83,24 +84,37 @@
 - (void)fwTextDidChange
 {
     [self fwUpdatePlaceholder];
-    if (!self.fwAutoHeightEnabled) return;
     
-    NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-    // 如果显示placeholder，同时计算placeholder高度，取其中较大值
-    if (!self.fwPlaceholderLabel.isHidden) {
-        NSInteger placeholderHeight = ceil(CGRectGetMaxY(self.fwPlaceholderLabel.frame) + self.textContainerInset.bottom);
-        currentHeight = MAX(currentHeight, placeholderHeight);
+    if (self.fwPlaceholderCursorCenter) {
+        NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+        NSInteger placeholderHeight = ceil(self.fwPlaceholderHeight);
+        CGFloat insetTop = self.fwPlaceholderInsetTop;
+        if (placeholderHeight >= currentHeight) {
+            CGFloat textHeight = currentHeight - self.textContainerInset.top - self.textContainerInset.bottom;
+            insetTop = (placeholderHeight - textHeight) / 2.0;
+        }
+        UIEdgeInsets textContainerInset = self.textContainerInset;
+        textContainerInset.top = insetTop;
+        self.textContainerInset = textContainerInset;
     }
-    currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
-    if (currentHeight == self.fwLastHeight) return;
     
-    CGRect frame = self.frame;
-    frame.size.height = currentHeight;
-    self.frame = frame;
-    if (self.fwHeightDidChange) {
-        self.fwHeightDidChange(currentHeight);
+    if (self.fwAutoHeightEnabled) {
+        NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+        // 如果显示placeholder，同时计算placeholder高度，取其中较大值
+        if (!self.fwPlaceholderLabel.isHidden) {
+            currentHeight = MAX(currentHeight, ceil(self.fwPlaceholderHeight));
+        }
+        currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
+        if (currentHeight == self.fwLastHeight) return;
+        
+        CGRect frame = self.frame;
+        frame.size.height = currentHeight;
+        self.frame = frame;
+        if (self.fwHeightDidChange) {
+            self.fwHeightDidChange(currentHeight);
+        }
+        self.fwLastHeight = currentHeight;
     }
-    self.fwLastHeight = currentHeight;
 }
 
 #pragma mark - Public
@@ -135,6 +149,29 @@
 - (void)setFwPlaceholderColor:(UIColor *)fwPlaceholderColor
 {
     self.fwPlaceholderLabel.textColor = fwPlaceholderColor;
+}
+
+- (CGFloat)fwPlaceholderHeight
+{
+    return CGRectGetMaxY(self.fwPlaceholderLabel.frame) + self.textContainerInset.bottom;
+}
+
+- (BOOL)fwPlaceholderCursorCenter
+{
+    return [objc_getAssociatedObject(self, @selector(fwPlaceholderCursorCenter)) boolValue];
+}
+
+- (void)setFwPlaceholderCursorCenter:(BOOL)center
+{
+    objc_setAssociatedObject(self, @selector(fwPlaceholderCursorCenter), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwPlaceholderInsetTop), center ? @(self.textContainerInset.top) : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwTextDidChange];
+}
+
+- (CGFloat)fwPlaceholderInsetTop
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwPlaceholderInsetTop));
+    return value ? value.doubleValue : self.textContainerInset.top;
 }
 
 #pragma mark - AutoHeight

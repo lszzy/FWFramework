@@ -15,6 +15,7 @@ import FWFramework
         result.fwSetBorderColor(Theme.borderColor, width: 0.5, cornerRadius: 8)
         result.fwAutoHeightEnabled = true
         result.fwMaxLength = 100
+        result.fwKeyboardResign = true
         return result
     }()
     
@@ -25,6 +26,9 @@ import FWFramework
         result.fwAutoHeight(withMaxHeight: 100) { height in
             result.fwLayoutChain.height(height)
         }
+        result.fwMinHeight = result.fwPlaceholderHeight
+        result.fwPlaceholderCursorCenter = true
+        result.fwKeyboardResign = true
         return result
     }()
     
@@ -33,6 +37,6 @@ import FWFramework
         fwView.addSubview(textView2)
         textView2.fwLayoutChain.left(16).right(16)
             .topToBottomOfView(textView, withOffset: 16)
-            .height(textView2.fwHeight)
+            .height(textView2.fwPlaceholderHeight)
     }
 }
