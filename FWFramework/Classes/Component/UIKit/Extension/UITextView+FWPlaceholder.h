@@ -12,14 +12,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextView (FWPlaceholder)
 
-/// 占位文本
+/// 占位文本，默认nil
 @property (nullable, nonatomic, strong) NSString *fwPlaceholder;
 
-/// 占位颜色
+/// 占位颜色，默认系统颜色
 @property (nullable, nonatomic, strong) UIColor *fwPlaceholderColor;
 
-/// 带属性占位文本
+/// 带属性占位文本，默认nil
 @property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
+
+/// 占位文本总高度，含上下间距，只读
+@property (nonatomic, assign, readonly) CGFloat fwPlaceholderHeight;
+
+/// 占位文本默认与输入光标首行对齐，可设置此属性居中对齐，会自动修改textContainerInset，默认NO
+@property (nonatomic, assign) BOOL fwPlaceholderCursorCenter;
 
 #pragma mark - AutoHeight
 
