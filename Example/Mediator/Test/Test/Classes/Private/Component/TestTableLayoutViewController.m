@@ -182,7 +182,7 @@
 
 - (void)renderModel
 {
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(renderData)];
+    [self fwSetRightBarItem:FWIcon.refreshImage target:self action:@selector(renderData)];
 }
 
 - (void)renderData

@@ -12,14 +12,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextView (FWPlaceholder)
 
-// 占位文本
+/// 占位文本，默认nil
 @property (nullable, nonatomic, strong) NSString *fwPlaceholder;
 
-// 占位颜色
+/// 占位颜色，默认系统颜色
 @property (nullable, nonatomic, strong) UIColor *fwPlaceholderColor;
 
-// 带属性占位文本
+/// 带属性占位文本，默认nil
 @property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
+
+/// 占位文本总高度，含上下间距，只读
+@property (nonatomic, assign, readonly) CGFloat fwPlaceholderHeight;
+
+/// 占位文本默认与输入光标首行对齐，可设置此属性居中对齐，会自动修改textContainerInset，默认NO
+@property (nonatomic, assign) BOOL fwPlaceholderCursorCenter;
+
+#pragma mark - AutoHeight
+
+/// 是否启用自动高度功能，随文字改变高度
+@property (nonatomic, assign) BOOL fwAutoHeightEnabled;
+
+/// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
+@property (nonatomic, assign) CGFloat fwMaxHeight;
+
+/// 最小高度，默认0，启用自动高度后生效
+@property (nonatomic, assign) CGFloat fwMinHeight;
+
+/// 高度改变回调句柄，默认nil，启用自动高度后生效
+@property (nullable, nonatomic, copy) void (^fwHeightDidChange)(CGFloat height);
+
+/// 快捷启用自动高度，并设置最大高度和回调句柄
+- (void)fwAutoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(nullable void (^)(CGFloat height))didChange;
 
 @end
 

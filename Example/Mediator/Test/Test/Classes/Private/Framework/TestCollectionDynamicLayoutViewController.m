@@ -183,7 +183,7 @@ static BOOL isExpanded = NO;
 {
     FWWeakifySelf();
     isExpanded = NO;
-    [self fwSetRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
+    [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"不固定宽高", @"固定宽度", @"固定高度", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
             FWStrongifySelf();

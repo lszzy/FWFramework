@@ -31,4 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FWIcon (Core)
+
+@property (class, nonatomic, strong, readonly, nullable) UIImage *refreshImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *playImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *stopImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *actionImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *addImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *backImage;
+@property (class, nonatomic, strong, readonly, nullable) UIImage *closeImage;
+
+@end
+
 NS_ASSUME_NONNULL_END

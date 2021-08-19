@@ -38,17 +38,46 @@ class TestIconCell: UICollectionViewCell {
     }
 }
 
-@objcMembers class TestIconViewController: TestViewController, FWCollectionViewController {
+@objcMembers class TestIconViewController: TestViewController, FWCollectionViewController, UISearchBarDelegate {
     private var iconClass: FWIcon.Type = Octicons.self
+        
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search"
+        searchBar.delegate = self
+        searchBar.tintColor = Theme.textColor
+        searchBar.fwContentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
+        searchBar.fwBackgroundColor = Theme.barColor
+        searchBar.fwTextFieldBackgroundColor = Theme.tableColor
+        searchBar.fwSearchIconPosition = 16 - 6
+        searchBar.fwSearchIconCenter = false
+        
+        let textField = searchBar.fwTextField
+        textField?.font = UIFont.systemFont(ofSize: 12)
+        textField?.fwSetCornerRadius(16)
+        textField?.fwTouchResign = true
+        return searchBar
+    }()
     
     override func renderView() {
         collectionView.backgroundColor = Theme.backgroundColor
+        collectionView.fwKeyboardDismissOnDrag = true
     }
     
     func renderCollectionViewLayout() -> UICollectionViewLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 60, height: 100)
         return flowLayout
+    }
+    
+    func renderCollectionLayout() {
+        fwView.addSubview(searchBar)
+        searchBar.fwLayoutChain
+            .edges(excludingEdge: .bottom)
+            .height(FWNavigationBarHeight)
+        collectionView.fwLayoutChain
+            .edges(excludingEdge: .top)
+            .topToBottomOfView(searchBar)
     }
     
     override func renderData() {
@@ -69,7 +98,14 @@ class TestIconCell: UICollectionViewCell {
             })
         }
         
-        collectionData.setArray(Array(iconClass.iconMapper().keys))
+        var array = Array(iconClass.iconMapper().keys)
+        let text = FWSafeString(searchBar.text?.fwTrimString)
+        if text.count > 0 {
+            array.removeAll { icon in
+                return !icon.lowercased().contains(text.lowercased())
+            }
+        }
+        collectionData.setArray(array)
         collectionView.reloadData()
     }
     
@@ -90,5 +126,9 @@ class TestIconCell: UICollectionViewCell {
         let name = collectionData.fwObject(at: indexPath.item) as? String
         UIPasteboard.general.string = FWSafeString(name)
         fwShowMessage(withText: name)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        renderData()
     }
 }
