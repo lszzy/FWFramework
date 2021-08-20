@@ -42,6 +42,8 @@
         _searchBar.fwContentInset = UIEdgeInsetsMake(6, 16, 6, 0);
         _searchBar.fwCancelButtonInset = UIEdgeInsetsMake(0, 16, 0, 16);
         _searchBar.fwSearchIconCenter = YES;
+        _searchBar.fwSearchIconOffset = 10;
+        _searchBar.fwSearchTextOffset = 4;
         
         UITextField *textField = [_searchBar fwTextField];
         textField.font = [UIFont systemFontOfSize:12];

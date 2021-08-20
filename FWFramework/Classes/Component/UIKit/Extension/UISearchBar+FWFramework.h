@@ -34,8 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置输入框背景色
 @property (nonatomic, strong, nullable) UIColor *fwTextFieldBackgroundColor;
 
-// 设置TextField搜索图标(placeholder)离左侧的位置，非居中时生效
-@property (nonatomic, assign) CGFloat fwSearchIconPosition;
+// 设置搜索图标离左侧的偏移位置，非居中时生效
+@property (nonatomic, assign) CGFloat fwSearchIconOffset;
+
+// 设置搜索文本离左侧图标的偏移位置
+@property (nonatomic, assign) CGFloat fwSearchTextOffset;
 
 // 设置TextField搜索图标(placeholder)是否居中，否则居左
 @property (nonatomic, assign) BOOL fwSearchIconCenter;
