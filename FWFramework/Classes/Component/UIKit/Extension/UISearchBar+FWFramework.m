@@ -51,14 +51,15 @@
             if (isCenterValue) {
                 if (@available(iOS 11.0, *)) {
                     if (![isCenterValue boolValue]) {
-                        NSNumber *offset = objc_getAssociatedObject(selfObject, @selector(fwSearchIconPosition));
+                        NSNumber *offset = objc_getAssociatedObject(selfObject, @selector(fwSearchIconOffset));
                         [selfObject setPositionAdjustment:UIOffsetMake(offset ? offset.doubleValue : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
                     } else {
                         UITextField *textField = [selfObject fwTextField];
-                        CGSize placeholdSize = [selfObject.placeholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:textField.font, NSFontAttributeName, nil] context:nil].size;
-                        CGFloat placeholdWidth = ceilf(placeholdSize.width);
-                        CGFloat leftWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
-                        CGFloat position = (textField.frame.size.width - placeholdWidth) / 2 - leftWidth;
+                        CGFloat placeholdWidth = [selfObject.placeholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:textField.font, NSFontAttributeName, nil] context:nil].size.width;
+                        CGFloat textOffset = 4 + [selfObject searchTextPositionAdjustment].horizontal;
+                        CGFloat iconWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
+                        CGFloat targetWidth = textField.frame.size.width - ceilf(placeholdWidth) - textOffset - iconWidth;
+                        CGFloat position = targetWidth / 2 - 6;
                         [selfObject setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
                     }
                 } else {
@@ -188,17 +189,27 @@
     textField.backgroundColor = color;
 }
 
-- (CGFloat)fwSearchIconPosition
+- (CGFloat)fwSearchIconOffset
 {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fwSearchIconPosition));
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwSearchIconOffset));
     if (value) return value.doubleValue;
     return [self positionAdjustmentForSearchBarIcon:UISearchBarIconSearch].horizontal;
 }
 
-- (void)setFwSearchIconPosition:(CGFloat)horizontal
+- (void)setFwSearchIconOffset:(CGFloat)offset
 {
-    objc_setAssociatedObject(self, @selector(fwSearchIconPosition), @(horizontal), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self setPositionAdjustment:UIOffsetMake(horizontal, 0) forSearchBarIcon:UISearchBarIconSearch];
+    objc_setAssociatedObject(self, @selector(fwSearchIconOffset), @(offset), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setPositionAdjustment:UIOffsetMake(offset, 0) forSearchBarIcon:UISearchBarIconSearch];
+}
+
+- (CGFloat)fwSearchTextOffset
+{
+    return [self searchTextPositionAdjustment].horizontal;
+}
+
+- (void)setFwSearchTextOffset:(CGFloat)offset
+{
+    [self setSearchTextPositionAdjustment:UIOffsetMake(offset, 0)];
 }
 
 - (BOOL)fwSearchIconCenter
