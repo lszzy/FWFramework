@@ -62,17 +62,6 @@
     return label;
 }
 
-- (CGRect)fwPlaceholderFrame
-{
-    CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-    CGFloat y = self.textContainerInset.top;
-    CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
-    CGFloat textHeight = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-    CGFloat maxHeight = self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height;
-    CGFloat height = MIN(textHeight, maxHeight - self.textContainerInset.top - self.textContainerInset.bottom);
-    return CGRectMake(x, y, width, height);
-}
-
 - (void)fwSetNeedsUpdatePlaceholder
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdatePlaceholder) object:nil];
@@ -89,12 +78,48 @@
 {
     if (self.text.length) {
         self.fwPlaceholderLabel.hidden = YES;
-        return;
+    } else {
+        CGRect targetFrame;
+        UIEdgeInsets inset = [self fwPlaceholderInset];
+        if (!UIEdgeInsetsEqualToEdgeInsets(inset, UIEdgeInsetsZero)) {
+            targetFrame = CGRectMake(inset.left, inset.top, CGRectGetWidth(self.bounds) - inset.left - inset.right, CGRectGetHeight(self.bounds) - inset.top - inset.bottom);
+        } else {
+            CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
+            CGFloat y = self.textContainerInset.top;
+            CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
+            CGFloat textHeight = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
+            CGFloat maxHeight = self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height;
+            CGFloat height = MIN(textHeight, maxHeight - self.textContainerInset.top - self.textContainerInset.bottom);
+            targetFrame = CGRectMake(x, y, width, height);
+        }
+        
+        self.fwPlaceholderLabel.hidden = NO;
+        self.fwPlaceholderLabel.textAlignment = self.textAlignment;
+        self.fwPlaceholderLabel.frame = targetFrame;
     }
     
-    self.fwPlaceholderLabel.hidden = NO;
-    self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-    self.fwPlaceholderLabel.frame = [self fwPlaceholderFrame];
+    UIEdgeInsets contentInset = self.contentInset;
+    if (self.contentSize.height >= self.bounds.size.height) {
+        contentInset.top = 0;
+    } else {
+        switch (self.fwVerticalAlignment) {
+            case UIControlContentVerticalAlignmentCenter: {
+                NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+                contentInset.top = (self.bounds.size.height - height) / 2.0;
+                break;
+            }
+            case UIControlContentVerticalAlignmentBottom: {
+                NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+                contentInset.top = self.bounds.size.height - height;
+                break;
+            }
+            default: {
+                contentInset.top = 0;
+                break;
+            }
+        }
+    }
+    self.contentInset = contentInset;
 }
 
 - (void)fwUpdateText
@@ -102,15 +127,15 @@
     [self fwUpdatePlaceholder];
     if (!self.fwAutoHeightEnabled) return;
     
-    NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-    currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
-    if (currentHeight == self.fwLastHeight) return;
+    NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+    height = MAX(self.fwMinHeight, MIN(height, self.fwMaxHeight));
+    if (height == self.fwLastHeight) return;
     
     CGRect targetFrame = self.frame;
-    targetFrame.size.height = currentHeight;
+    targetFrame.size.height = height;
     self.frame = targetFrame;
-    if (self.fwHeightDidChange) self.fwHeightDidChange(currentHeight);
-    self.fwLastHeight = currentHeight;
+    if (self.fwHeightDidChange) self.fwHeightDidChange(height);
+    self.fwLastHeight = height;
 }
 
 #pragma mark - Public
@@ -123,7 +148,7 @@
 - (void)setFwPlaceholder:(NSString *)fwPlaceholder
 {
     self.fwPlaceholderLabel.text = fwPlaceholder;
-    [self fwSetNeedsUpdateText];
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 - (NSAttributedString *)fwAttributedPlaceholder
@@ -134,7 +159,7 @@
 - (void)setFwAttributedPlaceholder:(NSAttributedString *)fwAttributedPlaceholder
 {
     self.fwPlaceholderLabel.attributedText = fwAttributedPlaceholder;
-    [self fwSetNeedsUpdateText];
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 - (UIColor *)fwPlaceholderColor
@@ -147,9 +172,28 @@
     self.fwPlaceholderLabel.textColor = fwPlaceholderColor;
 }
 
-- (CGFloat)fwPlaceholderHeight
+- (UIEdgeInsets)fwPlaceholderInset
 {
-    return CGRectGetMaxY([self fwPlaceholderFrame]) + self.textContainerInset.bottom;
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwPlaceholderInset));
+    return value ? value.UIEdgeInsetsValue : UIEdgeInsetsZero;
+}
+
+- (void)setFwPlaceholderInset:(UIEdgeInsets)inset
+{
+    objc_setAssociatedObject(self, @selector(fwPlaceholderInset), [NSValue valueWithUIEdgeInsets:inset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdatePlaceholder];
+}
+
+- (UIControlContentVerticalAlignment)fwVerticalAlignment
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwVerticalAlignment));
+    return value ? value.integerValue : UIControlContentVerticalAlignmentTop;
+}
+
+- (void)setFwVerticalAlignment:(UIControlContentVerticalAlignment)fwVerticalAlignment
+{
+    objc_setAssociatedObject(self, @selector(fwVerticalAlignment), @(fwVerticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 #pragma mark - AutoHeight

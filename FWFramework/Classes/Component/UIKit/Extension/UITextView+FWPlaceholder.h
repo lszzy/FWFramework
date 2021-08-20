@@ -21,8 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 带属性占位文本，默认nil
 @property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
 
-/// 占位文本总高度，含上下间距，只读
-@property (nonatomic, assign, readonly) CGFloat fwPlaceholderHeight;
+/// 自定义占位文本内间距，默认zero与内容一致
+@property (nonatomic, assign) UIEdgeInsets fwPlaceholderInset;
+
+/// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
+@property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
 
 #pragma mark - AutoHeight
 
