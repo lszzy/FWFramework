@@ -62,6 +62,17 @@
     return label;
 }
 
+- (CGRect)fwPlaceholderFrame
+{
+    CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
+    CGFloat y = self.textContainerInset.top;
+    CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
+    CGFloat textHeight = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
+    CGFloat maxHeight = self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height;
+    CGFloat height = MIN(textHeight, maxHeight - self.textContainerInset.top - self.textContainerInset.bottom);
+    return CGRectMake(x, y, width, height);
+}
+
 - (void)fwSetNeedsUpdatePlaceholder
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdatePlaceholder) object:nil];
@@ -81,14 +92,9 @@
         return;
     }
     
-    CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-    CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
-    CGFloat height = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-    CGFloat maxHeight = (self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height) - self.textContainerInset.top - self.textContainerInset.bottom;
-    CGRect targetFrame = CGRectMake(x, self.textContainerInset.top, width, MIN(height, maxHeight));
     self.fwPlaceholderLabel.hidden = NO;
     self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-    self.fwPlaceholderLabel.frame = targetFrame;
+    self.fwPlaceholderLabel.frame = [self fwPlaceholderFrame];
 }
 
 - (void)fwUpdateText
@@ -97,8 +103,6 @@
     if (!self.fwAutoHeightEnabled) return;
     
     NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-    // 如果显示placeholder，同时计算placeholder高度，取其中较大值
-    if (!self.fwPlaceholderLabel.isHidden) currentHeight = MAX(currentHeight, ceil(self.fwPlaceholderHeight));
     currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
     if (currentHeight == self.fwLastHeight) return;
     
@@ -145,7 +149,7 @@
 
 - (CGFloat)fwPlaceholderHeight
 {
-    return CGRectGetMaxY(self.fwPlaceholderLabel.frame) + self.textContainerInset.bottom;
+    return CGRectGetMaxY([self fwPlaceholderFrame]) + self.textContainerInset.bottom;
 }
 
 #pragma mark - AutoHeight
