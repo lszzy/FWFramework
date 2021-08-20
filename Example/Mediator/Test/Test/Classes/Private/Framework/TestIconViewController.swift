@@ -49,7 +49,8 @@ class TestIconCell: UICollectionViewCell {
         searchBar.fwContentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
         searchBar.fwBackgroundColor = Theme.barColor
         searchBar.fwTextFieldBackgroundColor = Theme.tableColor
-        searchBar.fwSearchIconPosition = 16 - 6
+        searchBar.fwSearchIconOffset = 16 - 6
+        searchBar.fwSearchTextOffset = 4
         searchBar.fwSearchIconCenter = false
         
         let textField = searchBar.fwTextField
