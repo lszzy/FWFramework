@@ -1,11 +1,10 @@
 # Changelog
 
-## [1.9.1] - 2021-08-19
+## [1.9.2] - 2021-08-20
 
-### Added
-* UITextView supports automatic height and set maximum height
-* Added swift extension String.fwTrimString method
-* Refactored UISearchBar extension to support cancel button spacing customization and textField spacing customization
+### Changed
+* UITextView supports vertical center layout and placeholder custom margins
+* Optimize UISearchBar center position algorithm
 
 ## [1.9.0] - 2021-08-16
 

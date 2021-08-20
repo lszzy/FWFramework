@@ -1,5 +1,11 @@
 # 更新日志
 
+## [1.9.2] - 2021-08-20
+
+### Changed
+* UITextView支持垂直居中布局和placeholder自定义边距
+* 优化UISearchBar居中位置算法
+
 ## [1.9.1] - 2021-08-19
 
 ### Added

@@ -39,82 +39,111 @@
         label.userInteractionEnabled = NO;
         label.font = self.font;
         objc_setAssociatedObject(self, @selector(fwPlaceholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self fwUpdatePlaceholder];
+        [self fwSetNeedsUpdatePlaceholder];
         [self insertSubview:label atIndex:0];
         
         // 监听当前输入框的文本改变通知
-        [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwTextDidChange)];
+        [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwSetNeedsUpdateText)];
         
         // 监听当前输入框属性改变
-        [self fwObserveProperty:@"attributedText" target:self action:@selector(fwTextDidChange)];
-        [self fwObserveProperty:@"text" target:self action:@selector(fwTextDidChange)];
-        [self fwObserveProperty:@"bounds" target:self action:@selector(fwUpdatePlaceholder)];
-        [self fwObserveProperty:@"frame" target:self action:@selector(fwUpdatePlaceholder)];
-        [self fwObserveProperty:@"textAlignment" target:self action:@selector(fwUpdatePlaceholder)];
-        [self fwObserveProperty:@"textContainerInset" target:self action:@selector(fwUpdatePlaceholder)];
+        [self fwObserveProperty:@"attributedText" target:self action:@selector(fwSetNeedsUpdateText)];
+        [self fwObserveProperty:@"text" target:self action:@selector(fwSetNeedsUpdateText)];
+        [self fwObserveProperty:@"bounds" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self fwObserveProperty:@"frame" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self fwObserveProperty:@"textAlignment" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self fwObserveProperty:@"textContainerInset" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
         
         // 监听字体改变
         [self fwObserveProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
             if (change[NSKeyValueChangeNewKey] != nil) textView.fwPlaceholderLabel.font = textView.font;
-            [textView fwUpdatePlaceholder];
+            [textView fwSetNeedsUpdatePlaceholder];
         }];
     }
     return label;
 }
 
-- (void)fwUpdatePlaceholder
+- (void)fwSetNeedsUpdatePlaceholder
 {
-    if (self.text.length) {
-        self.fwPlaceholderLabel.hidden = YES;
-        return;
-    }
-    
-    self.fwPlaceholderLabel.hidden = NO;
-    self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-    CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-    CGFloat y = self.textContainerInset.top;
-    if (self.fwPlaceholderCursorCenter) {
-        y = self.fwPlaceholderInsetTop;
-    }
-    CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
-    CGFloat height = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-    self.fwPlaceholderLabel.frame = CGRectMake(x, y, width, height);
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdatePlaceholder) object:nil];
+    [self performSelector:@selector(fwUpdatePlaceholder) withObject:nil afterDelay:0];
 }
 
-- (void)fwTextDidChange
+- (void)fwSetNeedsUpdateText
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdateText) object:nil];
+    [self performSelector:@selector(fwUpdateText) withObject:nil afterDelay:0];
+}
+
+- (void)fwUpdatePlaceholder
+{
+    // 调整contentInset实现垂直分布，不使用contentOffset是因为光标移动会不正常
+    UIEdgeInsets contentInset = self.contentInset;
+    contentInset.top = 0;
+    if (self.contentSize.height < self.bounds.size.height) {
+        CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+        switch (self.fwVerticalAlignment) {
+            case UIControlContentVerticalAlignmentCenter:
+                contentInset.top = (self.bounds.size.height - height) / 2.0;
+                break;
+            case UIControlContentVerticalAlignmentBottom:
+                contentInset.top = self.bounds.size.height - height;
+                break;
+            default:
+                break;
+        }
+    }
+    self.contentInset = contentInset;
+    
+    // 处理占位文本位置，顶部也存在contentInset
+    if (self.text.length) {
+        self.fwPlaceholderLabel.hidden = YES;
+    } else {
+        CGRect targetFrame;
+        // 自定义占位文本内间距时不处理
+        UIEdgeInsets inset = [self fwPlaceholderInset];
+        if (!UIEdgeInsetsEqualToEdgeInsets(inset, UIEdgeInsetsZero)) {
+            targetFrame = CGRectMake(inset.left, inset.top, CGRectGetWidth(self.bounds) - inset.left - inset.right, CGRectGetHeight(self.bounds) - inset.top - inset.bottom);
+        } else {
+            CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
+            CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
+            CGFloat height = ceil([self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height);
+            height = MIN(height, self.bounds.size.height - self.textContainerInset.top - self.textContainerInset.bottom);
+            
+            // 根据垂直分布方式调整y坐标
+            CGFloat y = self.textContainerInset.top;
+            switch (self.fwVerticalAlignment) {
+                case UIControlContentVerticalAlignmentCenter:
+                    y = (self.bounds.size.height - height) / 2.0 - self.contentInset.top;
+                    break;
+                case UIControlContentVerticalAlignmentBottom:
+                    y = self.bounds.size.height - height - self.textContainerInset.bottom - self.contentInset.top;
+                    break;
+                default:
+                    break;
+            }
+            targetFrame = CGRectMake(x, y, width, height);
+        }
+        
+        self.fwPlaceholderLabel.hidden = NO;
+        self.fwPlaceholderLabel.textAlignment = self.textAlignment;
+        self.fwPlaceholderLabel.frame = targetFrame;
+    }
+}
+
+- (void)fwUpdateText
 {
     [self fwUpdatePlaceholder];
+    if (!self.fwAutoHeightEnabled) return;
     
-    if (self.fwPlaceholderCursorCenter) {
-        NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-        NSInteger placeholderHeight = ceil(self.fwPlaceholderHeight);
-        CGFloat insetTop = self.fwPlaceholderInsetTop;
-        if (placeholderHeight >= currentHeight) {
-            CGFloat textHeight = currentHeight - self.textContainerInset.top - self.textContainerInset.bottom;
-            insetTop = (placeholderHeight - textHeight) / 2.0;
-        }
-        UIEdgeInsets textContainerInset = self.textContainerInset;
-        textContainerInset.top = insetTop;
-        self.textContainerInset = textContainerInset;
-    }
+    CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+    height = MAX(self.fwMinHeight, MIN(height, self.fwMaxHeight));
+    if (height == self.fwLastHeight) return;
     
-    if (self.fwAutoHeightEnabled) {
-        NSInteger currentHeight = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-        // 如果显示placeholder，同时计算placeholder高度，取其中较大值
-        if (!self.fwPlaceholderLabel.isHidden) {
-            currentHeight = MAX(currentHeight, ceil(self.fwPlaceholderHeight));
-        }
-        currentHeight = MAX(self.fwMinHeight, MIN(currentHeight, self.fwMaxHeight));
-        if (currentHeight == self.fwLastHeight) return;
-        
-        CGRect frame = self.frame;
-        frame.size.height = currentHeight;
-        self.frame = frame;
-        if (self.fwHeightDidChange) {
-            self.fwHeightDidChange(currentHeight);
-        }
-        self.fwLastHeight = currentHeight;
-    }
+    CGRect targetFrame = self.frame;
+    targetFrame.size.height = height;
+    self.frame = targetFrame;
+    if (self.fwHeightDidChange) self.fwHeightDidChange(height);
+    self.fwLastHeight = height;
 }
 
 #pragma mark - Public
@@ -127,7 +156,7 @@
 - (void)setFwPlaceholder:(NSString *)fwPlaceholder
 {
     self.fwPlaceholderLabel.text = fwPlaceholder;
-    [self fwTextDidChange];
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 - (NSAttributedString *)fwAttributedPlaceholder
@@ -138,7 +167,7 @@
 - (void)setFwAttributedPlaceholder:(NSAttributedString *)fwAttributedPlaceholder
 {
     self.fwPlaceholderLabel.attributedText = fwAttributedPlaceholder;
-    [self fwTextDidChange];
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 - (UIColor *)fwPlaceholderColor
@@ -151,27 +180,28 @@
     self.fwPlaceholderLabel.textColor = fwPlaceholderColor;
 }
 
-- (CGFloat)fwPlaceholderHeight
+- (UIEdgeInsets)fwPlaceholderInset
 {
-    return CGRectGetMaxY(self.fwPlaceholderLabel.frame) + self.textContainerInset.bottom;
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwPlaceholderInset));
+    return value ? value.UIEdgeInsetsValue : UIEdgeInsetsZero;
 }
 
-- (BOOL)fwPlaceholderCursorCenter
+- (void)setFwPlaceholderInset:(UIEdgeInsets)inset
 {
-    return [objc_getAssociatedObject(self, @selector(fwPlaceholderCursorCenter)) boolValue];
+    objc_setAssociatedObject(self, @selector(fwPlaceholderInset), [NSValue valueWithUIEdgeInsets:inset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
-- (void)setFwPlaceholderCursorCenter:(BOOL)center
+- (UIControlContentVerticalAlignment)fwVerticalAlignment
 {
-    objc_setAssociatedObject(self, @selector(fwPlaceholderCursorCenter), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, @selector(fwPlaceholderInsetTop), center ? @(self.textContainerInset.top) : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwTextDidChange];
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwVerticalAlignment));
+    return value ? value.integerValue : UIControlContentVerticalAlignmentTop;
 }
 
-- (CGFloat)fwPlaceholderInsetTop
+- (void)setFwVerticalAlignment:(UIControlContentVerticalAlignment)fwVerticalAlignment
 {
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fwPlaceholderInsetTop));
-    return value ? value.doubleValue : self.textContainerInset.top;
+    objc_setAssociatedObject(self, @selector(fwVerticalAlignment), @(fwVerticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdatePlaceholder];
 }
 
 #pragma mark - AutoHeight
@@ -184,7 +214,7 @@
 - (void)setFwAutoHeightEnabled:(BOOL)enabled
 {
     objc_setAssociatedObject(self, @selector(fwAutoHeightEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwTextDidChange];
+    [self fwSetNeedsUpdateText];
 }
 
 - (CGFloat)fwMaxHeight
@@ -196,6 +226,7 @@
 - (void)setFwMaxHeight:(CGFloat)height
 {
     objc_setAssociatedObject(self, @selector(fwMaxHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdateText];
 }
 
 - (CGFloat)fwMinHeight
@@ -206,6 +237,7 @@
 - (void)setFwMinHeight:(CGFloat)height
 {
     objc_setAssociatedObject(self, @selector(fwMinHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwSetNeedsUpdateText];
 }
 
 - (void (^)(CGFloat))fwHeightDidChange
