@@ -76,20 +76,51 @@
 
 - (void)fwUpdatePlaceholder
 {
+    // 调整contentInset实现垂直分布，不使用contentOffset是因为光标移动会不正常
+    UIEdgeInsets contentInset = self.contentInset;
+    contentInset.top = 0;
+    if (self.contentSize.height < self.bounds.size.height) {
+        CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+        switch (self.fwVerticalAlignment) {
+            case UIControlContentVerticalAlignmentCenter:
+                contentInset.top = (self.bounds.size.height - height) / 2.0;
+                break;
+            case UIControlContentVerticalAlignmentBottom:
+                contentInset.top = self.bounds.size.height - height;
+                break;
+            default:
+                break;
+        }
+    }
+    self.contentInset = contentInset;
+    
+    // 处理占位文本位置，顶部也存在contentInset
     if (self.text.length) {
         self.fwPlaceholderLabel.hidden = YES;
     } else {
         CGRect targetFrame;
+        // 自定义占位文本内间距时不处理
         UIEdgeInsets inset = [self fwPlaceholderInset];
         if (!UIEdgeInsetsEqualToEdgeInsets(inset, UIEdgeInsetsZero)) {
             targetFrame = CGRectMake(inset.left, inset.top, CGRectGetWidth(self.bounds) - inset.left - inset.right, CGRectGetHeight(self.bounds) - inset.top - inset.bottom);
         } else {
             CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-            CGFloat y = self.textContainerInset.top;
             CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
-            CGFloat textHeight = [self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-            CGFloat maxHeight = self.fwAutoHeightEnabled ? self.fwMaxHeight : self.bounds.size.height;
-            CGFloat height = MIN(textHeight, maxHeight - self.textContainerInset.top - self.textContainerInset.bottom);
+            CGFloat height = ceil([self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height);
+            height = MIN(height, self.bounds.size.height - self.textContainerInset.top - self.textContainerInset.bottom);
+            
+            // 根据垂直分布方式调整y坐标
+            CGFloat y = self.textContainerInset.top;
+            switch (self.fwVerticalAlignment) {
+                case UIControlContentVerticalAlignmentCenter:
+                    y = (self.bounds.size.height - height) / 2.0 - self.contentInset.top;
+                    break;
+                case UIControlContentVerticalAlignmentBottom:
+                    y = self.bounds.size.height - height - self.textContainerInset.bottom - self.contentInset.top;
+                    break;
+                default:
+                    break;
+            }
             targetFrame = CGRectMake(x, y, width, height);
         }
         
@@ -97,29 +128,6 @@
         self.fwPlaceholderLabel.textAlignment = self.textAlignment;
         self.fwPlaceholderLabel.frame = targetFrame;
     }
-    
-    UIEdgeInsets contentInset = self.contentInset;
-    if (self.contentSize.height >= self.bounds.size.height) {
-        contentInset.top = 0;
-    } else {
-        switch (self.fwVerticalAlignment) {
-            case UIControlContentVerticalAlignmentCenter: {
-                NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-                contentInset.top = (self.bounds.size.height - height) / 2.0;
-                break;
-            }
-            case UIControlContentVerticalAlignmentBottom: {
-                NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-                contentInset.top = self.bounds.size.height - height;
-                break;
-            }
-            default: {
-                contentInset.top = 0;
-                break;
-            }
-        }
-    }
-    self.contentInset = contentInset;
 }
 
 - (void)fwUpdateText
@@ -127,7 +135,7 @@
     [self fwUpdatePlaceholder];
     if (!self.fwAutoHeightEnabled) return;
     
-    NSInteger height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
+    CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
     height = MAX(self.fwMinHeight, MIN(height, self.fwMaxHeight));
     if (height == self.fwLastHeight) return;
     
