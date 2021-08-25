@@ -14,75 +14,75 @@
 - (void)renderView
 {
     UIButton *button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button重复点击"];
-    button.frame = CGRectMake(20, 20, 200, 50);
+    button.frame = CGRectMake(25, 20, 150, 50);
     [button fwAddTouchTarget:self action:@selector(onClick1:)];
     [self.fwView addSubview:button];
     
     UILabel *label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"View重复点击"];
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
-    label.frame = CGRectMake(20, 90, 200, 50);
+    label.frame = CGRectMake(200, 20, 150, 50);
     [label fwAddTapGestureWithTarget:self action:@selector(onClick2:)];
     [self.fwView addSubview:label];
     
     button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button不可重复点击"];
-    button.frame = CGRectMake(20, 160, 200, 50);
+    button.frame = CGRectMake(25, 90, 150, 50);
     [button fwAddTouchTarget:self action:@selector(onClick3:)];
     [self.fwView addSubview:button];
     
     label = [UILabel fwLabelWithFont:[UIFont fwFontOfSize:15] textColor:[Theme textColor] text:@"View不可重复点击"];
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
-    label.frame = CGRectMake(20, 230, 200, 50);
+    label.frame = CGRectMake(200, 90, 150, 50);
     [label fwAddTapGestureWithTarget:self action:@selector(onClick4:)];
     [self.fwView addSubview:label];
     
     button = [UIButton fwButtonWithFont:[UIFont fwFontOfSize:15] titleColor:[Theme textColor] title:@"Button1秒内不可重复点击"];
     button.fwTouchEventInterval = 1;
-    button.frame = CGRectMake(20, 300, 200, 50);
+    button.frame = CGRectMake(25, 160, 200, 50);
     [button fwAddTouchTarget:self action:@selector(onClick5:)];
     [self.fwView addSubview:button];
     
     UIView *view = [UIView new];
     view.backgroundColor = [Theme textColor];
-    view.frame = CGRectMake(30, 370, 70, 70);
+    view.frame = CGRectMake(30, 230, 70, 70);
     [self.fwView addSubview:view];
     
     button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = [Theme textColor];
-    button.frame = CGRectMake(50, 390, 30, 30);
+    button.frame = CGRectMake(50, 250, 30, 30);
     button.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     [button fwAddTouchTarget:self action:@selector(onClick6:)];
     [self.fwView addSubview:button];
     
     view = [UIView new];
     view.backgroundColor = [Theme textColor];
-    view.frame = CGRectMake(130, 370, 70, 70);
+    view.frame = CGRectMake(130, 230, 70, 70);
     [self.fwView addSubview:view];
     
     view = [UIView new];
     view.backgroundColor = [Theme textColor];
-    view.frame = CGRectMake(150, 390, 30, 30);
+    view.frame = CGRectMake(150, 250, 30, 30);
     view.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     [view fwAddTapGestureWithTarget:self action:@selector(onClick6:)];
     [self.fwView addSubview:view];
     
     UIButton *timerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    timerButton.frame = CGRectMake(30, 460, 80, 30);
+    timerButton.frame = CGRectMake(30, 300, 80, 30);
     timerButton.titleLabel.font = [UIFont fwFontOfSize:15];
     [timerButton setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [timerButton setTitle:@"=>" forState:UIControlStateNormal];
     [self.fwView addSubview:timerButton];
     
     UIButton *timerButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    timerButton1.frame = CGRectMake(120, 460, 80, 30);
+    timerButton1.frame = CGRectMake(120, 300, 80, 30);
     timerButton1.titleLabel.font = [UIFont fwFontOfSize:15];
     [timerButton1 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [timerButton1 setTitle:@"=>" forState:UIControlStateNormal];
     [self.fwView addSubview:timerButton1];
     
     UIButton *timerButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    timerButton2.frame = CGRectMake(220, 460, 80, 30);
+    timerButton2.frame = CGRectMake(220, 300, 80, 30);
     timerButton2.titleLabel.font = [UIFont fwFontOfSize:15];
     [timerButton2 setTitleColor:[Theme textColor] forState:UIControlStateNormal];
     [timerButton2 setTitle:@"发送" forState:UIControlStateNormal];
@@ -105,6 +105,80 @@
         [timer2 fire];
     }];
     [self.fwView addSubview:timerButton2];
+    
+    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    button1.frame = CGRectMake(25, 370, 150, 50);
+    button1.enabled = NO;
+    [button1 setTitle:@"System不可点" forState:UIControlStateNormal];
+    [button1 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button1.backgroundColor = FWColorHex(0xFFDA00);
+    [button1 fwSetCornerRadius:5];
+    [self.fwView addSubview:button1];
+    
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    button2.frame = CGRectMake(200, 370, 150, 50);
+    [button2 setTitle:@"System可点击" forState:UIControlStateNormal];
+    [button2 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button2.backgroundColor = FWColorHex(0xFFDA00);
+    [button2 fwSetCornerRadius:5];
+    [self.fwView addSubview:button2];
+    
+    UIButton *button3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    button3.frame = CGRectMake(25, 430, 150, 50);
+    button3.enabled = NO;
+    [button3 setTitle:@"Custom不可点" forState:UIControlStateNormal];
+    [button3 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button3.backgroundColor = FWColorHex(0xFFDA00);
+    [button3 fwSetCornerRadius:5];
+    [self.fwView addSubview:button3];
+    
+    UIButton *button4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    button4.frame = CGRectMake(200, 430, 150, 50);
+    [button4 setTitle:@"Custom可点击" forState:UIControlStateNormal];
+    [button4 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button4.backgroundColor = FWColorHex(0xFFDA00);
+    [button4 fwSetCornerRadius:5];
+    [self.fwView addSubview:button4];
+    
+    button1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    button1.frame = CGRectMake(25, 500, 150, 50);
+    button1.enabled = NO;
+    button1.fwDisabledAlpha = 0.5;
+    [button1 setTitle:@"System不可点2" forState:UIControlStateNormal];
+    [button1 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button1.backgroundColor = FWColorHex(0xFFDA00);
+    [button1 fwSetCornerRadius:5];
+    [self.fwView addSubview:button1];
+    
+    button2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    button2.frame = CGRectMake(200, 500, 150, 50);
+    button2.fwHighlightedAlpha = 0.5;
+    [button2 setTitle:@"System可点击2" forState:UIControlStateNormal];
+    [button2 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button2.backgroundColor = FWColorHex(0xFFDA00);
+    [button2 fwSetCornerRadius:5];
+    [self.fwView addSubview:button2];
+    
+    button3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    button3.frame = CGRectMake(25, 570, 150, 50);
+    button3.enabled = NO;
+    button3.fwDisabledAlpha = 0.3;
+    button3.fwHighlightedAlpha = 0.5;
+    [button3 setTitle:@"Custom不可点2" forState:UIControlStateNormal];
+    [button3 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button3.backgroundColor = FWColorHex(0xFFDA00);
+    [button3 fwSetCornerRadius:5];
+    [self.fwView addSubview:button3];
+    
+    button4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    button4.frame = CGRectMake(200, 570, 150, 50);
+    button4.fwDisabledAlpha = 0.3;
+    button4.fwHighlightedAlpha = 0.5;
+    [button4 setTitle:@"Custom可点击2" forState:UIControlStateNormal];
+    [button4 setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    button4.backgroundColor = FWColorHex(0xFFDA00);
+    [button4 fwSetCornerRadius:5];
+    [self.fwView addSubview:button4];
 }
 
 #pragma mark - Action
