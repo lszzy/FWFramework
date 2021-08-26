@@ -16,11 +16,7 @@ import FWFramework
             "FWScrollViewController",
             "FWTableViewController",
             "FWWebViewController",
-            "AVPlayerViewController",
         ])
-        if #available(iOS 14, *) {
-            tableData.add("PHPickerViewController")
-        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,17 +43,6 @@ import FWFramework
             viewController = SwiftTestTableViewController()
         case 4:
             viewController = SwiftTestWebViewController()
-        case 5:
-            viewController = UIApplication.fwPlayVideo("http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4")
-            viewController?.fwVisibleStateChanged = { (vc, state) in
-                if state == .didAppear {
-                    (vc as? AVPlayerViewController)?.player?.play()
-                }
-            }
-        case 6:
-            if #available(iOS 14, *) {
-                viewController = SwiftTestPickerViewController()
-            }
         default:
             viewController = SwiftTestViewController()
         }
@@ -246,91 +231,5 @@ import FWFramework
     
     func renderWebView() {
         webRequest = "http://kvm.wuyong.site/test.php"
-    }
-}
-
-@available(iOS 14, *)
-class SwiftTestPickerViewController: UIViewController {
-    lazy var scrollView:UIScrollView = {
-        let s = UIScrollView()
-        s.backgroundColor = UIColor(white: 0.98, alpha: 1)
-        return s
-    }()
-    
-    lazy var button:UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle("Select Photos", for: .normal)
-        b.addTarget(self, action: #selector(pickPhotos), for: .touchUpInside)
-        b.sizeToFit()
-        return b
-    }()
-    
-    var imageViews = [UIImageView]()
-    
-    func newImageView(image:UIImage?) -> UIImageView {
-        let imv = UIImageView()
-        imv.backgroundColor = .black
-        imv.image = image
-        return imv
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.view.backgroundColor = UIColor.white
-        
-        self.view.addSubview(self.scrollView)
-        self.view.addSubview(self.button)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let size = self.view.bounds.size
-        let safeArea = self.view.safeAreaInsets
-        let padding:CGFloat = 10
-        
-        button.frame = {
-            var f = CGRect.zero
-            f.size.width = min(size.width - (padding * 2), 250)
-            f.size.height = 40
-            f.origin.x = (size.width - f.width) * 0.5
-            f.origin.y = size.height - (safeArea.bottom + padding + f.size.height)
-            return f
-        }()
-        
-        scrollView.frame = {
-            var f = CGRect.zero
-            f.origin.y = safeArea.top + padding
-            f.size.width = size.width - (padding * 2)
-            f.size.height = (button.frame.minY - 20) - f.origin.y
-            f.origin.x = (size.width - f.width) * 0.5
-            return f
-        }()
-        
-        var y:CGFloat = 10
-        for imageView in imageViews {
-            imageView.frame = {
-                var f = CGRect.zero
-                f.origin.y = y
-                f.size.width = min(scrollView.bounds.width - (padding * 2), 300)
-                f.size.height = min(f.width * 0.75, 250)
-                f.origin.x = (scrollView.bounds.width - f.size.width) * 0.5
-                y += f.size.height + padding
-                return f
-            }()
-        }
-        scrollView.contentSize = CGSize(width: 0, height: y)
-    }
-    
-    @objc func pickPhotos() {
-        let pickerController = PHPickerViewController.fwPickerController(withSelectionLimit: 9) { images, cancel in
-            for image in images {
-                let imv = self.newImageView(image: image)
-                self.imageViews.append(imv)
-                self.scrollView.addSubview(imv)
-                self.view.setNeedsLayout()
-            }
-        }
-        self.present(pickerController, animated: true, completion: nil)
     }
 }

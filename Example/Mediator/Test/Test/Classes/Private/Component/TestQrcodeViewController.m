@@ -181,12 +181,12 @@
     [self stopScanManager];
     
     FWWeakifySelf();
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary shouldDismiss:YES completion:^(UIImagePickerController *picker, NSDictionary *info, BOOL cancel) {
+    UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 completion:^(NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
         FWStrongifySelf();
         if (cancel) {
             [self startScanManager];
         } else {
-            UIImage *image = info[UIImagePickerControllerOriginalImage];
+            UIImage *image = images.firstObject;
             image = [image fwCompressImageWithMaxWidth:1200];
             image = [image fwCompressImageWithMaxLength:300 * 1024];
             NSString *result = [FWQrcodeScanManager scanQrcodeWithImage:image];
