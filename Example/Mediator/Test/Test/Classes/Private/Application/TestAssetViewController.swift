@@ -237,6 +237,14 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
             photo.requestImageData { data, info, _, _ in
                 photoView.urlString = UIImage.fwImage(with:data)
             }
+        } else if photo.assetSubType == .livePhoto {
+            photo.requestLivePhoto { livePhoto, info in
+                photoView.urlString = livePhoto
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    photoView.progress = CGFloat(progress)
+                }
+            }
         } else if !mockProgress {
             photoView.progress = 0.01
             photo.requestPreviewImage { image, info in
