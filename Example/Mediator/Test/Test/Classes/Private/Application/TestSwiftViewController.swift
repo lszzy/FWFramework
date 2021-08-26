@@ -7,7 +7,6 @@
 //
 
 import FWFramework
-import PhotosUI
 
 @objcMembers class TestSwiftViewController: TestViewController, FWTableViewController {
     override func renderData() {
@@ -251,45 +250,7 @@ import PhotosUI
 }
 
 @available(iOS 14, *)
-class SwiftTestPickerViewController: UIViewController, PHPickerViewControllerDelegate {
-
-    // MARK: - PHPickerViewController
-    
-    @objc func pickPhotos()
-    {
-        var config = PHPickerConfiguration()
-        config.selectionLimit = 3
-        config.filter = PHPickerFilter.any(of: [.images, .videos, .livePhotos])
-        
-        let pickerViewController = PHPickerViewController(configuration: config)
-        pickerViewController.delegate = self
-        self.present(pickerViewController, animated: true, completion: nil)
-    }
-    
-    // MARK: PHPickerViewControllerDelegate
-    
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true, completion: nil)
-        
-        for result in results {
-            // UIImage, PHLivePhoto, loadFileRepresentation
-            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
-                result.itemProvider.loadObject(ofClass: UIImage.self, completionHandler: { (object, error) in
-                    if let image = object as? UIImage {
-                        DispatchQueue.main.async {
-                            let imv = self.newImageView(image: image)
-                            self.imageViews.append(imv)
-                            self.scrollView.addSubview(imv)
-                            self.view.setNeedsLayout()
-                        }
-                    }
-                })
-            }
-        }
-    }
-    
-    // MARK: - View Setup
-    
+class SwiftTestPickerViewController: UIViewController {
     lazy var scrollView:UIScrollView = {
         let s = UIScrollView()
         s.backgroundColor = UIColor(white: 0.98, alpha: 1)
@@ -359,5 +320,17 @@ class SwiftTestPickerViewController: UIViewController, PHPickerViewControllerDel
             }()
         }
         scrollView.contentSize = CGSize(width: 0, height: y)
+    }
+    
+    @objc func pickPhotos() {
+        let pickerController = PHPickerViewController.fwPickerController(withSelectionLimit: 9) { images, cancel in
+            for image in images {
+                let imv = self.newImageView(image: image)
+                self.imageViews.append(imv)
+                self.scrollView.addSubview(imv)
+                self.view.setNeedsLayout()
+            }
+        }
+        self.present(pickerController, animated: true, completion: nil)
     }
 }

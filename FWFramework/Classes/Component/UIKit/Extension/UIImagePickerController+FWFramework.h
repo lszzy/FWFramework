@@ -49,26 +49,26 @@ API_AVAILABLE(ios(14.0))
 @interface PHPickerViewController (FWFramework)
 
 /*!
- @brief 快速创建照片选择器，自动设置delegate
+ @brief 快速创建照片选择器(仅支持图片)，自动设置delegate
  
- @param configuration 选择器配置
- @param completion 完成回调。参数1为回调数据，参数2为是否取消
- @return 照片选择器，不支持的返回nil
+ @param selectionLimit 最大选择数量
+ @param completion 完成回调，主线程。参数1为图片数组，参数2为是否取消
+ @return 照片选择器
  */
-+ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
-                                         completion:(void (^)(NSArray<PHPickerResult *> *results, BOOL cancel))completion;
++ (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                          completion:(void (^)(NSArray<UIImage *> *images, BOOL cancel))completion;
 
 /*!
- @brief 快速创建照片选择器，可自定义dismiss流程，自动设置delegate
+ @brief 快速创建照片选择器(仅支持图片)，可自定义dismiss流程，自动设置delegate
  
- @param configuration 选择器配置
+ @param selectionLimit 最大选择数量
  @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
- @param completion 完成回调。参数1为照片选择器，2为回调数据，参数3为是否取消
- @return 照片选择器，不支持的返回nil
+ @param completion 完成回调，主线程。参数1为照片选择器，2为图片数组，参数3为是否取消
+ @return 照片选择器
  */
-+ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
-                                      shouldDismiss:(BOOL)shouldDismiss
-                                         completion:(void (^)(PHPickerViewController * _Nullable picker, NSArray<PHPickerResult *> *results, BOOL cancel))completion;
++ (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                       shouldDismiss:(BOOL)shouldDismiss
+                                          completion:(void (^)(PHPickerViewController * _Nullable picker, NSArray<UIImage *> *images, BOOL cancel))completion;
 
 @end
 

@@ -17,7 +17,7 @@
 @property (nonatomic, assign) BOOL shouldDismiss;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, NSDictionary * _Nullable info, BOOL cancel);
 
-@property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
+@property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray<UIImage *> *images, BOOL cancel) API_AVAILABLE(ios(14));
 
 @end
 
@@ -53,13 +53,61 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
-    void (^completion)(PHPickerViewController *picker, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
+    void (^completion)(PHPickerViewController *picker, NSArray<UIImage *> *images, BOOL cancel) = self.photosCompletionBlock;
     if (self.shouldDismiss) {
         [picker dismissViewControllerAnimated:YES completion:^{
-            if (completion) completion(nil, results, results.count < 1);
+            if (!completion) {
+                return;
+            }
+            if (results.count < 1) {
+                completion(nil, @[], YES);
+                return;
+            }
+            
+            NSMutableArray *images = [NSMutableArray array];
+            NSInteger totalCount = results.count;
+            __block NSInteger finishCount = 0;
+            [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
+                [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(id<NSItemProviderReading> object, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([object isKindOfClass:[UIImage class]]) {
+                            [images addObject:(UIImage *)object];
+                        }
+                        
+                        finishCount += 1;
+                        if (finishCount == totalCount) {
+                            completion(nil, [images copy], NO);
+                        }
+                    });
+                }];
+            }];
         }];
     } else {
-        if (completion) completion(picker, results, results.count < 1);
+        if (!completion) {
+            return;
+        }
+        if (results.count < 1) {
+            completion(picker, @[], YES);
+            return;
+        }
+        
+        NSMutableArray *images = [NSMutableArray array];
+        NSInteger totalCount = results.count;
+        __block NSInteger finishCount = 0;
+        [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
+            [result.itemProvider loadObjectOfClass:[UIImage class] completionHandler:^(id<NSItemProviderReading> object, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([object isKindOfClass:[UIImage class]]) {
+                        [images addObject:(UIImage *)object];
+                    }
+                    
+                    finishCount += 1;
+                    if (finishCount == totalCount) {
+                        completion(picker, [images copy], NO);
+                    }
+                });
+            }];
+        }];
     }
 }
 
@@ -100,25 +148,28 @@
 
 @implementation PHPickerViewController (FWFramework)
 
-+ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
-                                         completion:(void (^)(NSArray<PHPickerResult *> *, BOOL))completion
++ (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                          completion:(void (^)(NSArray<UIImage *> * _Nonnull, BOOL))completion
 {
-    return [self fwPickerControllerWithConfiguration:configuration shouldDismiss:YES completion:^(PHPickerViewController * _Nullable picker, NSArray<PHPickerResult *> * _Nonnull results, BOOL cancel) {
-        if (completion) completion(results, cancel);
+    return [self fwPickerControllerWithSelectionLimit:selectionLimit shouldDismiss:YES completion:^(PHPickerViewController * _Nullable picker, NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
+        if (completion) completion(images, cancel);
     }];
 }
 
-+ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
-                                      shouldDismiss:(BOOL)shouldDismiss
-                                         completion:(void (^)(PHPickerViewController * _Nullable, NSArray<PHPickerResult *> * _Nonnull, BOOL))completion
++ (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                       shouldDismiss:(BOOL)shouldDismiss
+                                          completion:(void (^)(PHPickerViewController * _Nullable, NSArray<UIImage *> * _Nonnull, BOOL))completion
 {
+    PHPickerConfiguration *configuration = [[PHPickerConfiguration alloc] init];
+    configuration.selectionLimit = selectionLimit;
+    configuration.filter = [PHPickerFilter anyFilterMatchingSubfilters:@[PHPickerFilter.imagesFilter, PHPickerFilter.livePhotosFilter]];
     PHPickerViewController *pickerController = [[PHPickerViewController alloc] initWithConfiguration:configuration];
     
     FWImagePickerControllerDelegate *pickerDelegate = [[FWImagePickerControllerDelegate alloc] init];
     pickerDelegate.shouldDismiss = shouldDismiss;
     pickerDelegate.photosCompletionBlock = completion;
     
-    objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithConfiguration:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithSelectionLimit:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     pickerController.delegate = pickerDelegate;
     return pickerController;
 }
