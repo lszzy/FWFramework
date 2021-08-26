@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWPhotoBrowser
+
 @class FWPhotoBrowser;
 @class FWPhotoView;
 
@@ -192,6 +194,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWPhotoView
+
 @class FWPhotoView;
 
 @protocol FWPhotoViewDelegate <NSObject>
@@ -204,7 +208,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWPhotoView : UIScrollView
+@interface FWPhotoView : UIView
 
 // 当前视图所在的索引
 @property (nonatomic, assign) NSInteger index;
@@ -218,6 +222,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL imageLoaded;
 // 当前图片加载进度
 @property (nonatomic, assign) CGFloat progress;
+// 当前滚动视图容器
+@property (nonatomic, strong, readonly) UIScrollView *scrollView;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 显示livePhoto的控件
@@ -230,9 +236,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIButton *videoPlayButton;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
-
-// 清理资源，释放内存
-- (void)clearAll;
 
 /**
  动画显示
