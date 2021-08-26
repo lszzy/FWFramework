@@ -15,6 +15,524 @@
 #import "FWToolkit.h"
 #import "FWImage.h"
 
+#pragma mark - FWPhotoView
+
+@interface FWPhotoPlayerView : UIView
+
+@end
+
+@implementation FWPhotoPlayerView
+
++ (Class)layerClass {
+    return [AVPlayerLayer class];
+}
+
+@end
+
+@interface FWPhotoView() <UIScrollViewDelegate>
+
+@property (nonatomic, assign) CGSize showPictureSize;
+
+@property (nonatomic, assign) BOOL doubleClicks;
+
+@property (nonatomic, assign) CGPoint lastContentOffset;
+
+@property (nonatomic, assign) CGFloat scale;
+
+@property (nonatomic, assign) CGFloat offsetY;
+
+@property (nonatomic, weak) FWProgressView *progressView;
+
+@property (nonatomic, assign) BOOL showAnimation;
+
+@property (nonatomic, strong) PHLivePhotoView *livePhotoView;
+
+@property (nonatomic, strong) UIView *videoPlayerView;
+
+@property (nonatomic, strong) AVPlayer *videoPlayer;
+
+@property (nonatomic, strong) UIButton *videoPlayButton;
+
+@end
+
+@implementation FWPhotoView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    scrollView.delegate = self;
+    scrollView.alwaysBounceVertical = true;
+    scrollView.backgroundColor = [UIColor clearColor];
+    if (@available(iOS 11.0, *)) {
+        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    scrollView.showsHorizontalScrollIndicator = false;
+    scrollView.showsVerticalScrollIndicator = false;
+    scrollView.maximumZoomScale = 2;
+    _scrollView = scrollView;
+    [self addSubview:scrollView];
+    [scrollView fwPinEdgesToSuperview];
+    
+    // 添加 imageView
+    Class imageClass = [UIImageView fwImageViewAnimatedClass];
+    UIImageView *imageView = [[imageClass alloc] init];
+    imageView.clipsToBounds = true;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.frame = self.bounds;
+    imageView.userInteractionEnabled = true;
+    _imageView = imageView;
+    [scrollView addSubview:imageView];
+    
+    // 添加进度view
+    FWProgressView *progressView = [[FWProgressView alloc] init];
+    [scrollView addSubview:progressView];
+    self.progressView = progressView;
+    
+    // 添加监听事件
+    UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleClick:)];
+    doubleTapGes.numberOfTapsRequired = 2;
+    [imageView addGestureRecognizer:doubleTapGes];
+}
+
+#pragma mark - 外部方法
+
+- (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
+    _imageView.frame = rect;
+    self.showAnimation = true;
+    [self.progressView setHidden:true];
+    [UIView animateWithDuration:0.25 animations:^{
+        if (animationBlock != nil) {
+            animationBlock();
+        }
+        self.imageView.frame = [self getImageActualFrame:self.showPictureSize];
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (completionBlock) {
+                completionBlock();
+            }
+        }
+        self.showAnimation = false;
+    }];
+}
+
+- (void)animationDismissWithToRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
+    
+    // 隐藏进度视图
+    self.progressView.hidden = true;
+    [UIView animateWithDuration:0.25 animations:^{
+        if (animationBlock) {
+            animationBlock();
+        }
+        CGRect toRect = rect;
+        toRect.origin.y += self.offsetY;
+        // 这一句话用于在放大的时候去关闭
+        toRect.origin.x += self.scrollView.contentOffset.x;
+        self.imageView.frame = toRect;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (completionBlock) {
+                completionBlock();
+            }
+        }
+    }];
+}
+
+#pragma mark - 私有方法
+
+- (void)pauseAll {
+    if (_videoPlayer) {
+        [_videoPlayer pause];
+        [_videoPlayer seekToTime:CMTimeMake(0, 1)];
+        _videoPlayButton.hidden = NO;
+    }
+}
+
+- (void)clearAll {
+    [self.imageView fwCancelImageRequest];
+    self.imageView.image = nil;
+    _livePhotoView.livePhoto = nil;
+    [self playClear];
+    _urlString = nil;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
+}
+
+- (PHLivePhotoView *)livePhotoView {
+    if (!_livePhotoView) {
+        _livePhotoView = [[PHLivePhotoView alloc] init];
+        _livePhotoView.hidden = YES;
+        [self.imageView addSubview:_livePhotoView];
+        [_livePhotoView fwPinEdgesToSuperview];
+    }
+    return _livePhotoView;
+}
+
+- (UIView *)videoPlayerView {
+    if (!_videoPlayerView) {
+        _videoPlayerView = [[FWPhotoPlayerView alloc] init];
+        _videoPlayerView.hidden = YES;
+        [self.imageView addSubview:_videoPlayerView];
+        [_videoPlayerView fwPinEdgesToSuperview];
+    }
+    return _videoPlayerView;
+}
+
+- (AVPlayerLayer *)videoPlayerLayer {
+    return (AVPlayerLayer *)self.videoPlayerView.layer;
+}
+
+- (UIButton *)videoPlayButton {
+    if (!_videoPlayButton) {
+        _videoPlayButton = [[UIButton alloc] init];
+        [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
+        [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
+        _videoPlayButton.hidden = YES;
+        [self addSubview:_videoPlayButton];
+        [_videoPlayButton fwAlignCenterToSuperview];
+    }
+    return _videoPlayButton;
+}
+
+- (UIImage *)videoPlayImage {
+    CGFloat width = 60;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0);
+    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    if (!contextRef) return nil;
+    
+    UIColor *color = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.75];
+    CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
+    CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor);
+    CGFloat circleLineWidth = 1;
+    UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
+    [circle setLineWidth:circleLineWidth];
+    [circle stroke];
+    [circle fill];
+    
+    CGContextSetFillColorWithColor(contextRef, color.CGColor);
+    CGFloat triangleLength = width / 2.5;
+    UIBezierPath *triangle = [UIBezierPath bezierPath];
+    [triangle moveToPoint:CGPointZero];
+    [triangle addLineToPoint:CGPointMake(triangleLength * cos(M_PI / 6), triangleLength / 2)];
+    [triangle addLineToPoint:CGPointMake(0, triangleLength)];
+    [triangle closePath];
+    
+    UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
+    [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
+    [triangle fill];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (void)showImage:(UIImage *)image {
+    if (image) {
+        self.imageView.image = image;
+        [self setPictureSize:image.size];
+    } else {
+        self.imageView.image = self.placeholderImage;
+    }
+    _livePhotoView.hidden = YES;
+    _livePhotoView.livePhoto = nil;
+    [self playClear];
+}
+
+- (void)showLivePhoto:(PHLivePhoto *)livePhoto {
+    self.imageView.image = nil;
+    self.livePhotoView.hidden = NO;
+    self.livePhotoView.livePhoto = livePhoto;
+    [self setPictureSize:livePhoto.size];
+    [self playClear];
+}
+
+- (void)showPlayerItem:(AVPlayerItem *)playerItem {
+    self.imageView.image = nil;
+    _livePhotoView.hidden = YES;
+    _livePhotoView.livePhoto = nil;
+    [self playClear];
+    
+    NSArray<AVAssetTrack *> *tracksArray = playerItem.asset.tracks;
+    CGSize videoSize = CGSizeZero;
+    for (AVAssetTrack *track in tracksArray) {
+        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+            CGSize size = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+            videoSize = CGSizeMake(fabs(size.width), fabs(size.height));
+            break;
+        }
+    }
+    
+    self.videoPlayer = [AVPlayer playerWithPlayerItem:playerItem];
+    self.videoPlayerLayer.player = self.videoPlayer;
+    [self setPictureSize:videoSize];
+    
+    // 添加监听
+    [self fwObserveNotification:AVPlayerItemDidPlayToEndTimeNotification object:playerItem target:self action:@selector(playEnd)];
+    [self fwObserveNotification:UIApplicationDidEnterBackgroundNotification target:self action:@selector(playPause)];
+    
+    self.videoPlayerView.hidden = NO;
+    self.videoPlayButton.hidden = NO;
+}
+
+- (void)setShowAnimation:(BOOL)showAnimation {
+    _showAnimation = showAnimation;
+    if (showAnimation == true) {
+        self.progressView.hidden = true;
+    }else {
+        self.progressView.hidden = self.progressView.progress == 1;
+    }
+}
+
+- (void)setUrlString:(id)urlString {
+    _urlString = urlString;
+    [self.imageView fwCancelImageRequest];
+    self.imageLoaded = NO;
+    if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
+        self.progress = 0.01;
+        // 优先使用插件，否则使用默认
+        __weak __typeof__(self) self_weak_ = self;
+        [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+            __typeof__(self) self = self_weak_;
+            [self showImage:image];
+            self.progress = 1;
+            self.imageLoaded = image ? YES : NO;
+            
+            [self.pictureDelegate photoViewLoaded:self];
+        } progress:^(double progress) {
+            __typeof__(self) self = self_weak_;
+            self.progressView.progress = progress;
+        }];
+    } else if ([urlString isKindOfClass:[PHLivePhoto class]]) {
+        [self showLivePhoto:(PHLivePhoto *)urlString];
+        self.progress = 1;
+        self.imageLoaded = YES;
+        
+        [_pictureDelegate photoViewLoaded:self];
+    } else if ([urlString isKindOfClass:[AVPlayerItem class]]) {
+        [self showPlayerItem:(AVPlayerItem *)urlString];
+        self.progress = 1;
+        self.imageLoaded = YES;
+        
+        [_pictureDelegate photoViewLoaded:self];
+    } else {
+        UIImage *image = nil;
+        if ([urlString isKindOfClass:[NSString class]]) {
+            image = [UIImage fwImageNamed:urlString];
+        } else if ([urlString isKindOfClass:[UIImage class]]) {
+            image = (UIImage *)urlString;
+        }
+        [self showImage:image];
+        self.progress = 1;
+        self.imageLoaded = image ? YES : NO;
+        
+        [_pictureDelegate photoViewLoaded:self];
+    }
+}
+
+- (CGFloat)progress
+{
+    return self.progressView.progress;
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    self.progressView.progress = progress;
+    if (progress >= 1) {
+        if (!self.userInteractionEnabled) self.userInteractionEnabled = true;
+        if (!self.progressView.hidden) self.progressView.hidden = true;
+    } else {
+        if (self.userInteractionEnabled) self.userInteractionEnabled = false;
+        if (self.showAnimation == false) self.progressView.hidden = false;
+    }
+}
+
+- (void)setContentSize:(CGSize)contentSize {
+    self.scrollView.contentSize = contentSize;
+    if (self.scrollView.zoomScale == 1) {
+        [UIView animateWithDuration:0.25 animations:^{
+            CGPoint center = self.imageView.center;
+            center.x = self.scrollView.contentSize.width * 0.5;
+            self.imageView.center = center;
+        }];
+    }
+}
+
+- (void)setLastContentOffset:(CGPoint)lastContentOffset {
+    // 如果用户没有在拖动，并且绽放比 > 0.15
+    if (!(self.scrollView.dragging == false && _scale > 0.15)) {
+        _lastContentOffset = lastContentOffset;
+    }
+}
+
+- (void)setPictureSize:(CGSize)pictureSize {
+    _pictureSize = pictureSize;
+    if (CGSizeEqualToSize(pictureSize, CGSizeZero)) {
+        return;
+    }
+    // 计算实际的大小
+    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+    CGFloat scale = screenW / pictureSize.width;
+    CGFloat height = scale * pictureSize.height;
+    self.showPictureSize = CGSizeMake(screenW, height);
+}
+
+- (void)setShowPictureSize:(CGSize)showPictureSize {
+    _showPictureSize = showPictureSize;
+    self.imageView.frame = [self getImageActualFrame:_showPictureSize];
+    [self setContentSize:self.imageView.frame.size];
+}
+
+- (CGRect)getImageActualFrame:(CGSize)imageSize {
+    CGFloat x = 0;
+    CGFloat y = 0;
+    
+    if (imageSize.height < [UIScreen mainScreen].bounds.size.height) {
+        y = ([UIScreen mainScreen].bounds.size.height - imageSize.height) / 2;
+    }
+    return CGRectMake(x, y, imageSize.width, imageSize.height);
+}
+
+- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center{
+    CGRect zoomRect;
+    zoomRect.size.height =self.frame.size.height / scale;
+    zoomRect.size.width  =self.frame.size.width  / scale;
+    zoomRect.origin.x = center.x - (zoomRect.size.width  / 2.0);
+    zoomRect.origin.y = center.y - (zoomRect.size.height / 2.0);
+    return zoomRect;
+}
+
+#pragma mark - 监听方法
+
+- (void)playStart {
+    [self.videoPlayer play];
+    self.videoPlayButton.hidden = YES;
+}
+
+- (void)playPause {
+    [self.videoPlayer pause];
+    self.videoPlayButton.hidden = NO;
+}
+
+- (void)playEnd {
+    [self.videoPlayer seekToTime:CMTimeMake(0, 1)];
+    self.videoPlayButton.hidden = NO;
+}
+
+- (void)playClear {
+    _videoPlayerView.hidden = YES;
+    _videoPlayButton.hidden = YES;
+    [self fwUnobserveNotification:AVPlayerItemDidPlayToEndTimeNotification];
+    [self fwUnobserveNotification:UIApplicationDidEnterBackgroundNotification];
+    _videoPlayer = nil;
+    ((AVPlayerLayer *)_videoPlayerView.layer).player = nil;
+}
+
+- (void)doubleClick:(UITapGestureRecognizer *)ges {
+    CGFloat newScale = 2;
+    if (_doubleClicks) {
+        newScale = 1;
+    }
+    CGRect zoomRect = [self zoomRectForScale:newScale withCenter:[ges locationInView:ges.view]];
+    [self.scrollView zoomToRect:zoomRect animated:YES];
+    _doubleClicks = !_doubleClicks;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.lastContentOffset = scrollView.contentOffset;
+    // 保存 offsetY
+    _offsetY = scrollView.contentOffset.y;
+    
+    // 正在动画
+    if ([self.imageView.layer animationForKey:@"transform"] != nil) {
+        return;
+    }
+    // 用户正在缩放
+    if (self.scrollView.zoomBouncing || self.scrollView.zooming) {
+        return;
+    }
+    CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
+    // 滑动到中间
+    if (scrollView.contentSize.height > screenH) {
+        // 代表没有滑动到底部
+        if (_lastContentOffset.y > 0 && _lastContentOffset.y <= scrollView.contentSize.height - screenH) {
+            return;
+        }
+    }
+    _scale = fabs(_lastContentOffset.y) / screenH;
+    
+    // 如果内容高度 > 屏幕高度
+    // 并且偏移量 > 内容高度 - 屏幕高度
+    // 那么就代表滑动到最底部了
+    if (scrollView.contentSize.height > screenH &&
+        _lastContentOffset.y > scrollView.contentSize.height - screenH) {
+        _scale = (_lastContentOffset.y - (scrollView.contentSize.height - screenH)) / screenH;
+    }
+    
+    // 条件1：拖动到顶部再继续往下拖
+    // 条件2：拖动到顶部再继续往上拖
+    // 两个条件都满足才去设置 scale -> 针对于长图
+    if (scrollView.contentSize.height > screenH) {
+        // 长图
+        if (scrollView.contentOffset.y < 0 || _lastContentOffset.y > scrollView.contentSize.height - screenH) {
+            [_pictureDelegate photoView:self scale:_scale];
+        }
+    }else {
+        [_pictureDelegate photoView:self scale:_scale];
+    }
+    
+    // 如果用户松手
+    if (scrollView.dragging == false) {
+        if (_scale > 0.15 && _scale <= 1) {
+            // 关闭
+            [_pictureDelegate photoViewClicked:self];
+            // 设置 contentOffset
+            [scrollView setContentOffset:_lastContentOffset animated:false];
+        }
+    }
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return _imageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    CGPoint center = _imageView.center;
+    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+    center.y = scrollView.contentSize.height * 0.5 + offsetY;
+    _imageView.center = center;
+    
+    // 如果是缩小，保证在屏幕中间
+    if (scrollView.zoomScale < scrollView.minimumZoomScale) {
+        CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+        center.x = scrollView.contentSize.width * 0.5 + offsetX;
+        _imageView.center = center;
+    }
+}
+
+@end
+
+#pragma mark - FWPhotoBrowser
+
 @interface FWPhotoBrowser() <UIScrollViewDelegate, FWPhotoViewDelegate>
 
 /// 图片数组
@@ -384,501 +902,6 @@
 - (void)photoViewLoaded:(FWPhotoView *)photoView {
     if ([_delegate respondsToSelector:@selector(photoBrowser:finishLoadPhotoView:)]) {
         [_delegate photoBrowser:self finishLoadPhotoView:photoView];
-    }
-}
-
-@end
-
-@interface FWPhotoPlayerView : UIView
-
-@end
-
-@implementation FWPhotoPlayerView
-
-+ (Class)layerClass {
-    return [AVPlayerLayer class];
-}
-
-@end
-
-@interface FWPhotoView() <UIScrollViewDelegate>
-
-@property (nonatomic, assign) CGSize showPictureSize;
-
-@property (nonatomic, assign) BOOL doubleClicks;
-
-@property (nonatomic, assign) CGPoint lastContentOffset;
-
-@property (nonatomic, assign) CGFloat scale;
-
-@property (nonatomic, assign) CGFloat offsetY;
-
-@property (nonatomic, weak) FWProgressView *progressView;
-
-@property (nonatomic, assign) BOOL showAnimation;
-
-@property (nonatomic, strong) PHLivePhotoView *livePhotoView;
-
-@property (nonatomic, strong) UIView *videoPlayerView;
-
-@property (nonatomic, strong) AVPlayer *videoPlayer;
-
-@property (nonatomic, strong) UIButton *videoPlayButton;
-
-@end
-
-@implementation FWPhotoView
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
-
-- (void)setupUI {
-    self.delegate = self;
-    self.alwaysBounceVertical = true;
-    self.backgroundColor = [UIColor clearColor];
-    if (@available(iOS 11.0, *)) {
-        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    self.showsHorizontalScrollIndicator = false;
-    self.showsVerticalScrollIndicator = false;
-    self.maximumZoomScale = 2;
-    
-    // 添加 imageView
-    Class imageClass = [UIImageView fwImageViewAnimatedClass];
-    UIImageView *imageView = [[imageClass alloc] init];
-    imageView.clipsToBounds = true;
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.frame = self.bounds;
-    imageView.userInteractionEnabled = true;
-    _imageView = imageView;
-    [self addSubview:imageView];
-    
-    // 添加进度view
-    FWProgressView *progressView = [[FWProgressView alloc] init];
-    [self addSubview:progressView];
-    self.progressView = progressView;
-    
-    // 添加监听事件
-    UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleClick:)];
-    doubleTapGes.numberOfTapsRequired = 2;
-    [imageView addGestureRecognizer:doubleTapGes];
-}
-
-#pragma mark - 外部方法
-
-- (void)clearAll {
-    [self.imageView fwCancelImageRequest];
-    self.imageView.image = nil;
-    _livePhotoView.livePhoto = nil;
-    [self playClear];
-    _urlString = nil;
-}
-
-- (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
-    _imageView.frame = rect;
-    self.showAnimation = true;
-    [self.progressView setHidden:true];
-    [UIView animateWithDuration:0.25 animations:^{
-        if (animationBlock != nil) {
-            animationBlock();
-        }
-        self.imageView.frame = [self getImageActualFrame:self.showPictureSize];
-    } completion:^(BOOL finished) {
-        if (finished) {
-            if (completionBlock) {
-                completionBlock();
-            }
-        }
-        self.showAnimation = false;
-    }];
-}
-
-- (void)animationDismissWithToRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
-    
-    // 隐藏进度视图
-    self.progressView.hidden = true;
-    [UIView animateWithDuration:0.25 animations:^{
-        if (animationBlock) {
-            animationBlock();
-        }
-        CGRect toRect = rect;
-        toRect.origin.y += self.offsetY;
-        // 这一句话用于在放大的时候去关闭
-        toRect.origin.x += self.contentOffset.x;
-        self.imageView.frame = toRect;
-    } completion:^(BOOL finished) {
-        if (finished) {
-            if (completionBlock) {
-                completionBlock();
-            }
-        }
-    }];
-}
-
-#pragma mark - 私有方法
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-}
-
-- (PHLivePhotoView *)livePhotoView {
-    if (!_livePhotoView) {
-        _livePhotoView = [[PHLivePhotoView alloc] init];
-        _livePhotoView.hidden = YES;
-        [self.imageView addSubview:_livePhotoView];
-        [_livePhotoView fwPinEdgesToSuperview];
-    }
-    return _livePhotoView;
-}
-
-- (UIView *)videoPlayerView {
-    if (!_videoPlayerView) {
-        _videoPlayerView = [[FWPhotoPlayerView alloc] init];
-        _videoPlayerView.hidden = YES;
-        [self.imageView addSubview:_videoPlayerView];
-        [_videoPlayerView fwPinEdgesToSuperview];
-    }
-    return _videoPlayerView;
-}
-
-- (AVPlayerLayer *)videoPlayerLayer {
-    return (AVPlayerLayer *)self.videoPlayerView.layer;
-}
-
-- (UIButton *)videoPlayButton {
-    if (!_videoPlayButton) {
-        _videoPlayButton = [[UIButton alloc] init];
-        [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
-        [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
-        _videoPlayButton.hidden = YES;
-        [self addSubview:_videoPlayButton];
-        [_videoPlayButton fwAlignCenterToSuperview];
-    }
-    return _videoPlayButton;
-}
-
-- (UIImage *)videoPlayImage {
-    CGFloat width = 60;
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0);
-    CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    if (!contextRef) return nil;
-    
-    UIColor *color = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.75];
-    CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
-    CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor);
-    CGFloat circleLineWidth = 1;
-    UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
-    [circle setLineWidth:circleLineWidth];
-    [circle stroke];
-    [circle fill];
-    
-    CGContextSetFillColorWithColor(contextRef, color.CGColor);
-    CGFloat triangleLength = width / 2.5;
-    UIBezierPath *triangle = [UIBezierPath bezierPath];
-    [triangle moveToPoint:CGPointZero];
-    [triangle addLineToPoint:CGPointMake(triangleLength * cos(M_PI / 6), triangleLength / 2)];
-    [triangle addLineToPoint:CGPointMake(0, triangleLength)];
-    [triangle closePath];
-    
-    UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
-    [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
-    [triangle fill];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
-- (void)showImage:(UIImage *)image {
-    if (image) {
-        self.imageView.image = image;
-        [self setPictureSize:image.size];
-    } else {
-        self.imageView.image = self.placeholderImage;
-    }
-    _livePhotoView.hidden = YES;
-    _livePhotoView.livePhoto = nil;
-    [self playClear];
-}
-
-- (void)showLivePhoto:(PHLivePhoto *)livePhoto {
-    self.imageView.image = nil;
-    self.livePhotoView.hidden = NO;
-    self.livePhotoView.livePhoto = livePhoto;
-    [self setPictureSize:livePhoto.size];
-    [self playClear];
-}
-
-- (void)showPlayerItem:(AVPlayerItem *)playerItem {
-    self.imageView.image = nil;
-    _livePhotoView.hidden = YES;
-    _livePhotoView.livePhoto = nil;
-    [self playClear];
-    
-    NSArray<AVAssetTrack *> *tracksArray = playerItem.asset.tracks;
-    CGSize videoSize = CGSizeZero;
-    for (AVAssetTrack *track in tracksArray) {
-        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-            CGSize size = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
-            videoSize = CGSizeMake(fabs(size.width), fabs(size.height));
-            break;
-        }
-    }
-    
-    self.videoPlayer = [AVPlayer playerWithPlayerItem:playerItem];
-    self.videoPlayerLayer.player = self.videoPlayer;
-    [self setPictureSize:videoSize];
-    
-    // 添加监听
-    [self fwObserveNotification:AVPlayerItemDidPlayToEndTimeNotification object:playerItem target:self action:@selector(playEnd)];
-    [self fwObserveNotification:UIApplicationDidEnterBackgroundNotification target:self action:@selector(playPause)];
-    
-    self.videoPlayerView.hidden = NO;
-    self.videoPlayButton.hidden = NO;
-}
-
-- (void)setShowAnimation:(BOOL)showAnimation {
-    _showAnimation = showAnimation;
-    if (showAnimation == true) {
-        self.progressView.hidden = true;
-    }else {
-        self.progressView.hidden = self.progressView.progress == 1;
-    }
-}
-
-- (void)setUrlString:(id)urlString {
-    _urlString = urlString;
-    [self.imageView fwCancelImageRequest];
-    self.imageLoaded = NO;
-    if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
-        self.progress = 0.01;
-        // 优先使用插件，否则使用默认
-        __weak __typeof__(self) self_weak_ = self;
-        [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
-            __typeof__(self) self = self_weak_;
-            [self showImage:image];
-            self.progress = 1;
-            self.imageLoaded = image ? YES : NO;
-            
-            [self.pictureDelegate photoViewLoaded:self];
-        } progress:^(double progress) {
-            __typeof__(self) self = self_weak_;
-            self.progressView.progress = progress;
-        }];
-    } else if ([urlString isKindOfClass:[PHLivePhoto class]]) {
-        [self showLivePhoto:(PHLivePhoto *)urlString];
-        self.progress = 1;
-        self.imageLoaded = YES;
-        
-        [_pictureDelegate photoViewLoaded:self];
-    } else if ([urlString isKindOfClass:[AVPlayerItem class]]) {
-        [self showPlayerItem:(AVPlayerItem *)urlString];
-        self.progress = 1;
-        self.imageLoaded = YES;
-        
-        [_pictureDelegate photoViewLoaded:self];
-    } else {
-        UIImage *image = nil;
-        if ([urlString isKindOfClass:[NSString class]]) {
-            image = [UIImage fwImageNamed:urlString];
-        } else if ([urlString isKindOfClass:[UIImage class]]) {
-            image = (UIImage *)urlString;
-        }
-        [self showImage:image];
-        self.progress = 1;
-        self.imageLoaded = image ? YES : NO;
-        
-        [_pictureDelegate photoViewLoaded:self];
-    }
-}
-
-- (CGFloat)progress
-{
-    return self.progressView.progress;
-}
-
-- (void)setProgress:(CGFloat)progress
-{
-    self.progressView.progress = progress;
-    if (progress >= 1) {
-        if (!self.userInteractionEnabled) self.userInteractionEnabled = true;
-        if (!self.progressView.hidden) self.progressView.hidden = true;
-    } else {
-        if (self.userInteractionEnabled) self.userInteractionEnabled = false;
-        if (self.showAnimation == false) self.progressView.hidden = false;
-    }
-}
-
-- (void)setContentSize:(CGSize)contentSize {
-    [super setContentSize:contentSize];
-    if (self.zoomScale == 1) {
-        [UIView animateWithDuration:0.25 animations:^{
-            CGPoint center = self.imageView.center;
-            center.x = self.contentSize.width * 0.5;
-            self.imageView.center = center;
-        }];
-    }
-}
-
-- (void)setLastContentOffset:(CGPoint)lastContentOffset {
-    // 如果用户没有在拖动，并且绽放比 > 0.15
-    if (!(self.dragging == false && _scale > 0.15)) {
-        _lastContentOffset = lastContentOffset;
-    }
-}
-
-- (void)setPictureSize:(CGSize)pictureSize {
-    _pictureSize = pictureSize;
-    if (CGSizeEqualToSize(pictureSize, CGSizeZero)) {
-        return;
-    }
-    // 计算实际的大小
-    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
-    CGFloat scale = screenW / pictureSize.width;
-    CGFloat height = scale * pictureSize.height;
-    self.showPictureSize = CGSizeMake(screenW, height);
-}
-
-- (void)setShowPictureSize:(CGSize)showPictureSize {
-    _showPictureSize = showPictureSize;
-    self.imageView.frame = [self getImageActualFrame:_showPictureSize];
-    self.contentSize = self.imageView.frame.size;
-}
-
-- (CGRect)getImageActualFrame:(CGSize)imageSize {
-    CGFloat x = 0;
-    CGFloat y = 0;
-    
-    if (imageSize.height < [UIScreen mainScreen].bounds.size.height) {
-        y = ([UIScreen mainScreen].bounds.size.height - imageSize.height) / 2;
-    }
-    return CGRectMake(x, y, imageSize.width, imageSize.height);
-}
-
-- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center{
-    CGRect zoomRect;
-    zoomRect.size.height =self.frame.size.height / scale;
-    zoomRect.size.width  =self.frame.size.width  / scale;
-    zoomRect.origin.x = center.x - (zoomRect.size.width  / 2.0);
-    zoomRect.origin.y = center.y - (zoomRect.size.height / 2.0);
-    return zoomRect;
-}
-
-#pragma mark - 监听方法
-
-- (void)playStart {
-    [self.videoPlayer play];
-    self.videoPlayButton.hidden = YES;
-}
-
-- (void)playPause {
-    [self.videoPlayer pause];
-    self.videoPlayButton.hidden = NO;
-}
-
-- (void)playEnd {
-    [self.videoPlayer seekToTime:CMTimeMake(0, 1)];
-    self.videoPlayButton.hidden = NO;
-}
-
-- (void)playClear {
-    _videoPlayerView.hidden = YES;
-    _videoPlayButton.hidden = YES;
-    [self fwUnobserveNotification:AVPlayerItemDidPlayToEndTimeNotification];
-    [self fwUnobserveNotification:UIApplicationDidEnterBackgroundNotification];
-    _videoPlayer = nil;
-    ((AVPlayerLayer *)_videoPlayerView.layer).player = nil;
-}
-
-- (void)doubleClick:(UITapGestureRecognizer *)ges {
-    CGFloat newScale = 2;
-    if (_doubleClicks) {
-        newScale = 1;
-    }
-    CGRect zoomRect = [self zoomRectForScale:newScale withCenter:[ges locationInView:ges.view]];
-    [self zoomToRect:zoomRect animated:YES];
-    _doubleClicks = !_doubleClicks;
-}
-
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.lastContentOffset = scrollView.contentOffset;
-    // 保存 offsetY
-    _offsetY = scrollView.contentOffset.y;
-    
-    // 正在动画
-    if ([self.imageView.layer animationForKey:@"transform"] != nil) {
-        return;
-    }
-    // 用户正在缩放
-    if (self.zoomBouncing || self.zooming) {
-        return;
-    }
-    CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
-    // 滑动到中间
-    if (scrollView.contentSize.height > screenH) {
-        // 代表没有滑动到底部
-        if (_lastContentOffset.y > 0 && _lastContentOffset.y <= scrollView.contentSize.height - screenH) {
-            return;
-        }
-    }
-    _scale = fabs(_lastContentOffset.y) / screenH;
-    
-    // 如果内容高度 > 屏幕高度
-    // 并且偏移量 > 内容高度 - 屏幕高度
-    // 那么就代表滑动到最底部了
-    if (scrollView.contentSize.height > screenH &&
-        _lastContentOffset.y > scrollView.contentSize.height - screenH) {
-        _scale = (_lastContentOffset.y - (scrollView.contentSize.height - screenH)) / screenH;
-    }
-    
-    // 条件1：拖动到顶部再继续往下拖
-    // 条件2：拖动到顶部再继续往上拖
-    // 两个条件都满足才去设置 scale -> 针对于长图
-    if (scrollView.contentSize.height > screenH) {
-        // 长图
-        if (scrollView.contentOffset.y < 0 || _lastContentOffset.y > scrollView.contentSize.height - screenH) {
-            [_pictureDelegate photoView:self scale:_scale];
-        }
-    }else {
-        [_pictureDelegate photoView:self scale:_scale];
-    }
-    
-    // 如果用户松手
-    if (scrollView.dragging == false) {
-        if (_scale > 0.15 && _scale <= 1) {
-            // 关闭
-            [_pictureDelegate photoViewClicked:self];
-            // 设置 contentOffset
-            [scrollView setContentOffset:_lastContentOffset animated:false];
-        }
-    }
-}
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return _imageView;
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView
-{
-    CGPoint center = _imageView.center;
-    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
-    center.y = scrollView.contentSize.height * 0.5 + offsetY;
-    _imageView.center = center;
-    
-    // 如果是缩小，保证在屏幕中间
-    if (scrollView.zoomScale < scrollView.minimumZoomScale) {
-        CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
-        center.x = scrollView.contentSize.width * 0.5 + offsetX;
-        _imageView.center = center;
     }
 }
 
