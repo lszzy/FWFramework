@@ -1165,6 +1165,19 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 @end
 
+@implementation PHPhotoLibrary (FWCropRotate)
+
++ (__kindof UIViewController *)fwPickerControllerWithCropController:(FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable, BOOL))completion
+{
+    if (@available(iOS 14, *)) {
+        return [PHPickerViewController fwPickerControllerWithCropController:cropController completion:completion];
+    } else {
+        return [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:cropController completion:completion];
+    }
+}
+
+@end
+
 static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
 
 @interface FWCropOverlayView ()

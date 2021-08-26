@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 #import <PhotosUI/PhotosUI.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -69,6 +70,34 @@ API_AVAILABLE(ios(14.0))
 + (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
                                        shouldDismiss:(BOOL)shouldDismiss
                                           completion:(void (^)(PHPickerViewController * _Nullable picker, NSArray<UIImage *> *images, BOOL cancel))completion;
+
+@end
+
+#pragma mark - PHPhotoLibrary+FWFramework
+
+@interface PHPhotoLibrary (FWFramework)
+
+/*!
+ @brief 快速创建照片选择器(仅支持图片)
+ 
+ @param selectionLimit 最大选择数量，iOS14以下只支持单选
+ @param completion 完成回调，主线程。参数1为图片数组，参数2为是否取消
+ @return 照片选择器
+ */
++ (nullable __kindof UIViewController *)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                                                  completion:(void (^)(NSArray<UIImage *> *images, BOOL cancel))completion;
+
+/*!
+ @brief 快速创建照片选择器(仅支持图片)，可自定义dismiss流程
+ 
+ @param selectionLimit 最大选择数量，iOS14以下只支持单选
+ @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
+ @param completion 完成回调，主线程。参数1为照片选择器，2为图片数组，参数3为是否取消
+ @return 照片选择器
+ */
++ (nullable __kindof UIViewController *)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                                               shouldDismiss:(BOOL)shouldDismiss
+                                                                  completion:(void (^)(__kindof UIViewController * _Nullable picker, NSArray<UIImage *> *images, BOOL cancel))completion;
 
 @end
 
