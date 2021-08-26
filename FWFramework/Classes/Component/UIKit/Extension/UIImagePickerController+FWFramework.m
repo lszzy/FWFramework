@@ -175,3 +175,33 @@
 }
 
 @end
+
+#pragma mark - PHPhotoLibrary+FWFramework
+
+@implementation PHPhotoLibrary (FWFramework)
+
++ (__kindof UIViewController *)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                                         completion:(void (^)(NSArray<UIImage *> * _Nonnull, BOOL))completion
+{
+    return [self fwPickerControllerWithSelectionLimit:selectionLimit shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
+        if (completion) completion(images, cancel);
+    }];
+}
+
++ (__kindof UIViewController *)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                                      shouldDismiss:(BOOL)shouldDismiss
+                                                         completion:(void (^)(__kindof UIViewController * _Nullable, NSArray<UIImage *> * _Nonnull, BOOL))completion
+{
+    if (@available(iOS 14, *)) {
+        return [PHPickerViewController fwPickerControllerWithSelectionLimit:selectionLimit shouldDismiss:shouldDismiss completion:^(PHPickerViewController * _Nullable picker, NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
+            if (completion) completion(picker, images, cancel);
+        }];
+    } else {
+        return [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary shouldDismiss:shouldDismiss completion:^(UIImagePickerController * _Nullable picker, NSDictionary * _Nullable info, BOOL cancel) {
+            UIImage *image = info[UIImagePickerControllerEditedImage] ?: info[UIImagePickerControllerOriginalImage];
+            if (completion) completion(picker, image ? @[image] : @[], cancel);
+        }];
+    }
+}
+
+@end

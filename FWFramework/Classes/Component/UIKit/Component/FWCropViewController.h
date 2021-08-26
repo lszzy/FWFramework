@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 #import <PhotosUI/PhotosUI.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -378,6 +379,13 @@ API_AVAILABLE(ios(14.0))
 
 /** Custom cropController for PHPickerViewController, if nil, consistent with the system effect  */
 + (instancetype)fwPickerControllerWithCropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
+
+@end
+
+@interface PHPhotoLibrary (FWCropRotate)
+
+/** Custom cropController for UIImagePickerController and PHPickerViewController iOS14+ */
++ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 
