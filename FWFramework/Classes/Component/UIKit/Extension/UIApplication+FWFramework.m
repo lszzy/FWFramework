@@ -143,6 +143,24 @@
     [self fwOpenURL:[NSString stringWithFormat:@"telprompt:%@", phone]];
 }
 
++ (AVPlayerViewController *)fwPlayVideo:(id)video
+{
+    AVPlayer *player = nil;
+    if ([video isKindOfClass:[AVPlayerItem class]]) {
+        player = [AVPlayer playerWithPlayerItem:(AVPlayerItem *)video];
+    } else if ([video isKindOfClass:[NSURL class]]) {
+        player = [AVPlayer playerWithURL:(NSURL *)video];
+    } else if ([video isKindOfClass:[NSString class]]) {
+        NSURL *videoURL = [NSURL fwURLWithString:(NSString *)video];
+        if (videoURL) player = [AVPlayer playerWithURL:videoURL];
+    }
+    if (!player) return nil;
+    
+    AVPlayerViewController *viewController = [[AVPlayerViewController alloc] init];
+    viewController.player = player;
+    return viewController;
+}
+
 + (AVAudioPlayer *)fwPlaySound:(NSString *)file
 {
     // 设置播放模式

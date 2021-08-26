@@ -70,6 +70,7 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
     var isAlbum: Bool = false
     var album: FWAssetGroup = FWAssetGroup()
     var mockProgress: Bool = false
+    var systemPlayer: Bool = false
     
     private lazy var photoBrowser: FWPhotoBrowser = {
         let result = FWPhotoBrowser()
@@ -111,9 +112,18 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
     }
     
     private func loadPhotos() {
-        fwSetRightBarItem("进度") { [weak self] sender in
-            guard let this = self else { return }
-            this.mockProgress = !this.mockProgress
+        fwSetRightBarItem("切换") { [weak self] sender in
+            self?.fwShowSheet(withTitle: nil, message: nil, cancel: "取消", actions: ["模拟进度", "取消模拟进度", "FWVideoPlayer", "系统播放器"], actionBlock: { index in
+                if index == 0 {
+                    self?.mockProgress = true
+                } else if index == 1 {
+                    self?.mockProgress = false
+                } else if index == 2 {
+                    self?.systemPlayer = false
+                } else {
+                    self?.systemPlayer = true
+                }
+            })
         }
         
         fwShowLoading()
@@ -194,7 +204,14 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
                 fwShowLoading()
                 photo.requestPlayerItem(completion: { [weak self] playerItem, info in
                     self?.fwHideLoading()
-                    if let item = playerItem, let video = self?.videoPlayer {
+                    guard let item = playerItem else { return }
+                    if self?.systemPlayer ?? false {
+                        if let viewController = UIApplication.fwPlayVideo(item) {
+                            self?.present(viewController, animated: true, completion: {
+                                viewController.player?.play()
+                            })
+                        }
+                    } else if let video = self?.videoPlayer {
                         video.asset = item.asset
                         self?.present(video, animated: true)
                     }
