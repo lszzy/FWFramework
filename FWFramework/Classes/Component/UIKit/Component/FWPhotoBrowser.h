@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import <PhotosUI/PhotosUI.h>
+#import <AVFoundation/AVFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -211,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize pictureSize;
 // 显示的默认图片
 @property (nonatomic, strong, nullable) UIImage *placeholderImage;
-// 图片的地址，支持NSString、UIImage、PHLivePhoto
+// 图片的地址，支持NSString、UIImage、PHLivePhoto、AVPlayerItem
 @property (nonatomic, strong, nullable) id urlString;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
@@ -223,6 +224,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat progress;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
+
+// 清理资源，释放内存
+- (void)clearAll;
 
 /**
  动画显示
