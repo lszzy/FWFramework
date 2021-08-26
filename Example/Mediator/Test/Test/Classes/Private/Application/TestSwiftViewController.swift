@@ -7,7 +7,6 @@
 //
 
 import FWFramework
-import AVKit
 import PhotosUI
 
 @objcMembers class TestSwiftViewController: TestViewController, FWTableViewController {
@@ -50,9 +49,12 @@ import PhotosUI
         case 4:
             viewController = SwiftTestWebViewController()
         case 5:
-            let playerController = AVPlayerViewController()
-            playerController.player = AVPlayer(url: URL(string: "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4")!)
-            viewController = playerController
+            viewController = UIApplication.fwPlayVideo("http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4")
+            viewController?.fwVisibleStateChanged = { (vc, state) in
+                if state == .didAppear {
+                    (vc as? AVPlayerViewController)?.player?.play()
+                }
+            }
         case 6:
             if #available(iOS 14, *) {
                 viewController = SwiftTestPickerViewController()

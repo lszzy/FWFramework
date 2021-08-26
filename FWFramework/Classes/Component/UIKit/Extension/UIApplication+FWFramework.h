@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -71,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 打电话
 + (void)fwMakeCall:(NSString *)phone;
+
+// 播放视频文件，支持AVPlayerItem|NSURL|NSString
++ (nullable AVPlayerViewController *)fwPlayVideo:(id)video;
 
 // 播放音频文件
 + (nullable AVAudioPlayer *)fwPlaySound:(NSString *)file;
