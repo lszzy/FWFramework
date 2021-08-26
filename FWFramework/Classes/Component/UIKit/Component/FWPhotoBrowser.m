@@ -169,10 +169,6 @@
     
     // 取到当前显示的 photoView
     FWPhotoView *photoView = [[_photoViews filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"index == %d", _currentPage]] firstObject];
-    // 取消所有的下载
-    [_photoViews enumerateObjectsUsingBlock:^(FWPhotoView *obj, NSUInteger idx, BOOL *stop) {
-        [obj.imageView fwCancelImageRequest];
-    }];
     
     // 显示状态栏
     if (self.statusBarHidden) {
@@ -188,7 +184,10 @@
             [self.delegate photoBrowser:self willDismissPhotoView:photoView];
         }
     } completionBlock:^{
-        [self.photoViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.photoViews enumerateObjectsUsingBlock:^(FWPhotoView *obj, NSUInteger idx, BOOL *stop) {
+            [obj clearAll];
+            [obj removeFromSuperview];
+        }];
         [self.photoViews removeAllObjects];
         [self removeFromSuperview];
     }];
@@ -344,7 +343,7 @@
     [self.photoViews enumerateObjectsUsingBlock:^(FWPhotoView *photoView, NSUInteger idx, BOOL *stop) {
         if (photoView.index >= index - 3 && photoView.index <= index + 3) return;
         
-        [photoView.imageView fwCancelImageRequest];
+        [photoView clearAll];
         [photoView removeFromSuperview];
         [self.photoViews removeObject:photoView];
     }];
@@ -453,6 +452,12 @@
 }
 
 #pragma mark - 外部方法
+
+- (void)clearAll {
+    [self.imageView fwCancelImageRequest];
+    self.imageView.image = nil;
+    _livePhotoView.livePhoto = nil;
+}
 
 - (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
     _imageView.frame = rect;
