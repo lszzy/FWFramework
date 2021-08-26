@@ -8,82 +8,16 @@
 
 import FWFramework
 
-class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
-    weak var videoPlayer: FWVideoPlayer? {
-        didSet {
-            videoPlayer?.playerDelegate = self
-        }
-    }
-    
-    private lazy var closeButton: FWNavigationButton = {
-        let result = FWNavigationButton(image: FWIcon.closeImage)
-        result.tintColor = Theme.textColor
-        result.fwAddTouch { sender in
-            FWRouter.closeViewController(animated: true)
-        }
-        return result
-    }()
-    
-    private lazy var playButton: FWNavigationButton = {
-        let result = FWNavigationButton(image: FWIconImage("octicon-playback-play", 24))
-        result.tintColor = Theme.textColor
-        result.fwAddTouch { [weak self] sender in
-            guard let player = self?.videoPlayer else { return }
-            
-            if player.playbackState == .playing {
-                player.pause()
-            } else if player.playbackState == .paused {
-                player.playFromCurrentTime()
-            } else {
-                player.playFromBeginning()
-            }
-        }
-        return result
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = Theme.backgroundColor
-        
-        addSubview(closeButton)
-        addSubview(playButton)
-        closeButton.fwLayoutChain.leftToSafeArea(8).topToSafeArea(8)
-        playButton.fwLayoutChain.rightToSafeArea(8).topToSafeArea(8)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func playerPlaybackStateDidChange(_ player: FWVideoPlayer) {
-        if player.playbackState == .playing {
-            playButton.setImage(FWIconImage("octicon-playback-pause", 24), for: .normal)
-        } else {
-            playButton.setImage(FWIconImage("octicon-playback-play", 24), for: .normal)
-        }
-    }
-}
-
 @objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate {
     var albums: [FWAssetGroup] = []
     var photos: [FWAsset] = []
     var isAlbum: Bool = false
     var album: FWAssetGroup = FWAssetGroup()
     var mockProgress: Bool = false
-    var systemPlayer: Bool = false
     
     private lazy var photoBrowser: FWPhotoBrowser = {
         let result = FWPhotoBrowser()
         result.delegate = self
-        return result
-    }()
-    
-    private lazy var videoPlayer: FWVideoPlayer = {
-        let result = FWVideoPlayer()
-        result.modalPresentationStyle = .fullScreen
-        let playerView = TestPlayerView(frame: .zero)
-        playerView.videoPlayer = result
-        result.playerView = playerView
         return result
     }()
     
@@ -112,18 +46,9 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
     }
     
     private func loadPhotos() {
-        fwSetRightBarItem("切换") { [weak self] sender in
-            self?.fwShowSheet(withTitle: nil, message: nil, cancel: "取消", actions: ["模拟进度", "取消模拟进度", "FWVideoPlayer", "系统播放器"], actionBlock: { index in
-                if index == 0 {
-                    self?.mockProgress = true
-                } else if index == 1 {
-                    self?.mockProgress = false
-                } else if index == 2 {
-                    self?.systemPlayer = false
-                } else {
-                    self?.systemPlayer = true
-                }
-            })
+        fwSetRightBarItem("模拟进度") { [weak self] sender in
+            guard let self = self else { return }
+            self.mockProgress = !self.mockProgress
         }
         
         fwShowLoading()
@@ -199,28 +124,9 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isAlbum {
-            let photo = photos[indexPath.row]
-            if photo.assetType == .video {
-                fwShowLoading()
-                photo.requestPlayerItem(completion: { [weak self] playerItem, info in
-                    self?.fwHideLoading()
-                    guard let item = playerItem else { return }
-                    if self?.systemPlayer ?? false {
-                        if let viewController = UIApplication.fwPlayVideo(item) {
-                            self?.present(viewController, animated: true, completion: {
-                                viewController.player?.play()
-                            })
-                        }
-                    } else if let video = self?.videoPlayer {
-                        video.asset = item.asset
-                        self?.present(video, animated: true)
-                    }
-                }, withProgressHandler: nil)
-            } else {
-                let cell = tableView.cellForRow(at: indexPath)
-                self.photoBrowser.currentIndex = indexPath.row
-                self.photoBrowser.show(from: cell?.imageView)
-            }
+            let cell = tableView.cellForRow(at: indexPath)
+            self.photoBrowser.currentIndex = indexPath.row
+            self.photoBrowser.show(from: cell?.imageView)
         } else {
             let album = albums[indexPath.row]
             let viewController = TestAssetViewController()
@@ -240,6 +146,14 @@ class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
         } else if photo.assetSubType == .livePhoto {
             photo.requestLivePhoto { livePhoto, info in
                 photoView.urlString = livePhoto
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    photoView.progress = CGFloat(progress)
+                }
+            }
+        } else if photo.assetType == .video {
+            photo.requestPlayerItem { playerItem, info in
+                photoView.urlString = playerItem
             } withProgressHandler: { progress, error, stop, info in
                 DispatchQueue.main.async {
                     photoView.progress = CGFloat(progress)

@@ -8,6 +8,71 @@
 
 import FWFramework
 
+class TestPlayerView: FWVideoPlayerView, FWVideoPlayerDelegate {
+    static func videoPlayer() -> FWVideoPlayer {
+        let result = FWVideoPlayer()
+        result.modalPresentationStyle = .fullScreen
+        let playerView = TestPlayerView(frame: .zero)
+        playerView.videoPlayer = result
+        result.playerView = playerView
+        return result
+    }
+    
+    weak var videoPlayer: FWVideoPlayer? {
+        didSet {
+            videoPlayer?.playerDelegate = self
+        }
+    }
+    
+    private lazy var closeButton: FWNavigationButton = {
+        let result = FWNavigationButton(image: FWIcon.closeImage)
+        result.tintColor = Theme.textColor
+        result.fwAddTouch { sender in
+            FWRouter.closeViewController(animated: true)
+        }
+        return result
+    }()
+    
+    private lazy var playButton: FWNavigationButton = {
+        let result = FWNavigationButton(image: FWIconImage("octicon-playback-play", 24))
+        result.tintColor = Theme.textColor
+        result.fwAddTouch { [weak self] sender in
+            guard let player = self?.videoPlayer else { return }
+            
+            if player.playbackState == .playing {
+                player.pause()
+            } else if player.playbackState == .paused {
+                player.playFromCurrentTime()
+            } else {
+                player.playFromBeginning()
+            }
+        }
+        return result
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = Theme.backgroundColor
+        
+        addSubview(closeButton)
+        addSubview(playButton)
+        closeButton.fwLayoutChain.leftToSafeArea(8).topToSafeArea(8)
+        playButton.fwLayoutChain.rightToSafeArea(8).topToSafeArea(8)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func playerPlaybackStateDidChange(_ player: FWVideoPlayer) {
+        if player.playbackState == .playing {
+            playButton.setImage(FWIconImage("octicon-playback-pause", 24), for: .normal)
+        } else {
+            playButton.setImage(FWIconImage("octicon-playback-play", 24), for: .normal)
+        }
+    }
+}
+
 @objcMembers class TestVideoViewController: TestViewController, FWVideoPlayerDelegate, FWVideoPlayerPlaybackDelegate {
     fileprivate var player = FWVideoPlayer()
     lazy var resourceLoader = FWPlayerCacheLoaderManager()
