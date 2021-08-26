@@ -10,14 +10,20 @@
 #import "UIImagePickerController+FWFramework.h"
 #import <objc/runtime.h>
 
-@interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+#pragma mark - UIImagePickerController+FWFramework
+
+@interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 
 @property (nonatomic, assign) BOOL shouldDismiss;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, NSDictionary * _Nullable info, BOOL cancel);
 
+@property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
+
 @end
 
 @implementation FWImagePickerControllerDelegate
+
+#pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info
 {
@@ -43,9 +49,21 @@
     }
 }
 
-@end
+#pragma mark - PHPickerViewControllerDelegate
 
-#pragma mark - UIImagePickerController+FWFramework
+- (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
+{
+    void (^completion)(PHPickerViewController *picker, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
+    if (self.shouldDismiss) {
+        [picker dismissViewControllerAnimated:YES completion:^{
+            if (completion) completion(nil, results, results.count < 1);
+        }];
+    } else {
+        if (completion) completion(picker, results, results.count < 1);
+    }
+}
+
+@end
 
 @implementation UIImagePickerController (FWFramework)
 
@@ -72,6 +90,35 @@
     pickerDelegate.completionBlock = completion;
     
     objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithSourceType:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    pickerController.delegate = pickerDelegate;
+    return pickerController;
+}
+
+@end
+
+#pragma mark - PHPickerViewController+FWFramework
+
+@implementation PHPickerViewController (FWFramework)
+
++ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
+                                         completion:(void (^)(NSArray<PHPickerResult *> *, BOOL))completion
+{
+    return [self fwPickerControllerWithConfiguration:configuration shouldDismiss:YES completion:^(PHPickerViewController * _Nullable picker, NSArray<PHPickerResult *> * _Nonnull results, BOOL cancel) {
+        if (completion) completion(results, cancel);
+    }];
+}
+
++ (instancetype)fwPickerControllerWithConfiguration:(PHPickerConfiguration *)configuration
+                                      shouldDismiss:(BOOL)shouldDismiss
+                                         completion:(void (^)(PHPickerViewController * _Nullable, NSArray<PHPickerResult *> * _Nonnull, BOOL))completion
+{
+    PHPickerViewController *pickerController = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+    
+    FWImagePickerControllerDelegate *pickerDelegate = [[FWImagePickerControllerDelegate alloc] init];
+    pickerDelegate.shouldDismiss = shouldDismiss;
+    pickerDelegate.photosCompletionBlock = completion;
+    
+    objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithConfiguration:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     pickerController.delegate = pickerDelegate;
     return pickerController;
 }
