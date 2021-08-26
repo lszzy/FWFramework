@@ -214,14 +214,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) UIImage *placeholderImage;
 // 图片的地址，支持NSString、UIImage、PHLivePhoto、AVPlayerItem
 @property (nonatomic, strong, nullable) id urlString;
-// 当前显示图片的控件
-@property (nonatomic, strong, readonly) UIImageView *imageView;
-// 显示livePhoto的控件
-@property (nonatomic, strong, readonly) PHLivePhotoView *livePhotoView;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
 // 当前图片加载进度
 @property (nonatomic, assign) CGFloat progress;
+// 当前显示图片的控件
+@property (nonatomic, strong, readonly) UIImageView *imageView;
+// 显示livePhoto的控件
+@property (nonatomic, strong, readonly) PHLivePhotoView *livePhotoView;
+// 显示video的控件
+@property (nonatomic, strong, readonly) UIView *videoPlayerView;
+// 显示video的layer
+@property (nonatomic, strong, readonly) AVPlayerLayer *videoPlayerLayer;
+// 自定义video播放按钮
+@property (nonatomic, strong, readonly) UIButton *videoPlayButton;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
 

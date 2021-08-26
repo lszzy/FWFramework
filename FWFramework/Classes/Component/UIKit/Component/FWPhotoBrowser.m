@@ -11,6 +11,7 @@
 #import "FWAutoLayout.h"
 #import "FWProgressView.h"
 #import "FWNavigation.h"
+#import "FWMessage.h"
 #import "FWToolkit.h"
 #import "FWImage.h"
 
@@ -388,6 +389,18 @@
 
 @end
 
+@interface FWPhotoPlayerView : UIView
+
+@end
+
+@implementation FWPhotoPlayerView
+
++ (Class)layerClass {
+    return [AVPlayerLayer class];
+}
+
+@end
+
 @interface FWPhotoView() <UIScrollViewDelegate>
 
 @property (nonatomic, assign) CGSize showPictureSize;
@@ -405,6 +418,12 @@
 @property (nonatomic, assign) BOOL showAnimation;
 
 @property (nonatomic, strong) PHLivePhotoView *livePhotoView;
+
+@property (nonatomic, strong) UIView *videoPlayerView;
+
+@property (nonatomic, strong) AVPlayer *videoPlayer;
+
+@property (nonatomic, strong) UIButton *videoPlayButton;
 
 @end
 
@@ -457,6 +476,8 @@
     [self.imageView fwCancelImageRequest];
     self.imageView.image = nil;
     _livePhotoView.livePhoto = nil;
+    [self playClear];
+    _urlString = nil;
 }
 
 - (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
@@ -517,6 +538,64 @@
     return _livePhotoView;
 }
 
+- (UIView *)videoPlayerView {
+    if (!_videoPlayerView) {
+        _videoPlayerView = [[FWPhotoPlayerView alloc] init];
+        _videoPlayerView.hidden = YES;
+        [self.imageView addSubview:_videoPlayerView];
+        [_videoPlayerView fwPinEdgesToSuperview];
+    }
+    return _videoPlayerView;
+}
+
+- (AVPlayerLayer *)videoPlayerLayer {
+    return (AVPlayerLayer *)self.videoPlayerView.layer;
+}
+
+- (UIButton *)videoPlayButton {
+    if (!_videoPlayButton) {
+        _videoPlayButton = [[UIButton alloc] init];
+        [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
+        [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
+        _videoPlayButton.hidden = YES;
+        [self addSubview:_videoPlayButton];
+        [_videoPlayButton fwAlignCenterToSuperview];
+    }
+    return _videoPlayButton;
+}
+
+- (UIImage *)videoPlayImage {
+    CGFloat width = 60;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0);
+    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    if (!contextRef) return nil;
+    
+    UIColor *color = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.75];
+    CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
+    CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor);
+    CGFloat circleLineWidth = 1;
+    UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
+    [circle setLineWidth:circleLineWidth];
+    [circle stroke];
+    [circle fill];
+    
+    CGContextSetFillColorWithColor(contextRef, color.CGColor);
+    CGFloat triangleLength = width / 2.5;
+    UIBezierPath *triangle = [UIBezierPath bezierPath];
+    [triangle moveToPoint:CGPointZero];
+    [triangle addLineToPoint:CGPointMake(triangleLength * cos(M_PI / 6), triangleLength / 2)];
+    [triangle addLineToPoint:CGPointMake(0, triangleLength)];
+    [triangle closePath];
+    
+    UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
+    [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
+    [triangle fill];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 - (void)showImage:(UIImage *)image {
     if (image) {
         self.imageView.image = image;
@@ -526,6 +605,7 @@
     }
     _livePhotoView.hidden = YES;
     _livePhotoView.livePhoto = nil;
+    [self playClear];
 }
 
 - (void)showLivePhoto:(PHLivePhoto *)livePhoto {
@@ -533,6 +613,35 @@
     self.livePhotoView.hidden = NO;
     self.livePhotoView.livePhoto = livePhoto;
     [self setPictureSize:livePhoto.size];
+    [self playClear];
+}
+
+- (void)showPlayerItem:(AVPlayerItem *)playerItem {
+    self.imageView.image = nil;
+    _livePhotoView.hidden = YES;
+    _livePhotoView.livePhoto = nil;
+    [self playClear];
+    
+    NSArray<AVAssetTrack *> *tracksArray = playerItem.asset.tracks;
+    CGSize videoSize = CGSizeZero;
+    for (AVAssetTrack *track in tracksArray) {
+        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+            CGSize size = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+            videoSize = CGSizeMake(fabs(size.width), fabs(size.height));
+            break;
+        }
+    }
+    
+    self.videoPlayer = [AVPlayer playerWithPlayerItem:playerItem];
+    self.videoPlayerLayer.player = self.videoPlayer;
+    [self setPictureSize:videoSize];
+    
+    // 添加监听
+    [self fwObserveNotification:AVPlayerItemDidPlayToEndTimeNotification object:playerItem target:self action:@selector(playEnd)];
+    [self fwObserveNotification:UIApplicationDidEnterBackgroundNotification target:self action:@selector(playPause)];
+    
+    self.videoPlayerView.hidden = NO;
+    self.videoPlayButton.hidden = NO;
 }
 
 - (void)setShowAnimation:(BOOL)showAnimation {
@@ -565,6 +674,12 @@
         }];
     } else if ([urlString isKindOfClass:[PHLivePhoto class]]) {
         [self showLivePhoto:(PHLivePhoto *)urlString];
+        self.progress = 1;
+        self.imageLoaded = YES;
+        
+        [_pictureDelegate photoViewLoaded:self];
+    } else if ([urlString isKindOfClass:[AVPlayerItem class]]) {
+        [self showPlayerItem:(AVPlayerItem *)urlString];
         self.progress = 1;
         self.imageLoaded = YES;
         
@@ -657,6 +772,30 @@
 }
 
 #pragma mark - 监听方法
+
+- (void)playStart {
+    [self.videoPlayer play];
+    self.videoPlayButton.hidden = YES;
+}
+
+- (void)playPause {
+    [self.videoPlayer pause];
+    self.videoPlayButton.hidden = NO;
+}
+
+- (void)playEnd {
+    [self.videoPlayer seekToTime:CMTimeMake(0, 1)];
+    self.videoPlayButton.hidden = NO;
+}
+
+- (void)playClear {
+    _videoPlayerView.hidden = YES;
+    _videoPlayButton.hidden = YES;
+    [self fwUnobserveNotification:AVPlayerItemDidPlayToEndTimeNotification];
+    [self fwUnobserveNotification:UIApplicationDidEnterBackgroundNotification];
+    _videoPlayer = nil;
+    ((AVPlayerLayer *)_videoPlayerView.layer).player = nil;
+}
 
 - (void)doubleClick:(UITapGestureRecognizer *)ges {
     CGFloat newScale = 2;
