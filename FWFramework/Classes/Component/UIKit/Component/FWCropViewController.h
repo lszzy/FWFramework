@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <PhotosUI/PhotosUI.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -369,6 +370,14 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 
 /** Custom cropController for UIImagePickerController, if nil, consistent with the system effect  */
 + (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
+
+@end
+
+API_AVAILABLE(ios(14.0))
+@interface PHPickerViewController (FWCropRotate)
+
+/** Custom cropController for PHPickerViewController, if nil, consistent with the system effect  */
++ (instancetype)fwPickerControllerWithCropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 

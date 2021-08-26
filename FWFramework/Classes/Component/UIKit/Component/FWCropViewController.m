@@ -1130,6 +1130,41 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 @end
 
+@implementation PHPickerViewController (FWCropRotate)
+
++ (instancetype)fwPickerControllerWithCropController:(FWCropViewController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
+{
+    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithSelectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
+        UIImage *originalImage = images.firstObject;
+        if (originalImage) {
+            FWCropViewController *cropController = cropViewController;
+            if (!cropController) {
+                cropController = [[FWCropViewController alloc] initWithImage:originalImage];
+                cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare;
+                cropController.aspectRatioLockEnabled = YES;
+                cropController.resetAspectRatioEnabled = NO;
+                cropController.aspectRatioPickerButtonHidden = YES;
+            }
+            cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
+                [picker.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                    if (completion) completion(image, NO);
+                }];
+            };
+            cropController.onDidFinishCancelled = ^(BOOL isFinished) {
+                [picker dismissViewControllerAnimated:YES completion:nil];
+            };
+            [picker presentViewController:cropController animated:YES completion:nil];
+        } else {
+            [picker dismissViewControllerAnimated:YES completion:^{
+                if (completion) completion(nil, YES);
+            }];
+        }
+    }];
+    return pickerController;
+}
+
+@end
+
 static const CGFloat kFWCropOverLayerCornerWidth = 20.0f;
 
 @interface FWCropOverlayView ()
