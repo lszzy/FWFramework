@@ -8,6 +8,7 @@
  */
 
 #import "FWPhotoBrowser.h"
+#import "FWAutoLayout.h"
 #import "FWProgressView.h"
 #import "FWNavigation.h"
 #import "FWToolkit.h"
@@ -404,6 +405,8 @@
 
 @property (nonatomic, assign) BOOL showAnimation;
 
+@property (nonatomic, strong) PHLivePhotoView *livePhotoView;
+
 @end
 
 @implementation FWPhotoView
@@ -499,6 +502,34 @@
     self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
 }
 
+- (PHLivePhotoView *)livePhotoView {
+    if (!_livePhotoView) {
+        _livePhotoView = [[PHLivePhotoView alloc] init];
+        _livePhotoView.hidden = YES;
+        [self.imageView addSubview:_livePhotoView];
+        [_livePhotoView fwPinEdgesToSuperview];
+    }
+    return _livePhotoView;
+}
+
+- (void)showImage:(UIImage *)image {
+    if (image) {
+        self.imageView.image = image;
+        [self setPictureSize:image.size];
+    } else {
+        self.imageView.image = self.placeholderImage;
+    }
+    _livePhotoView.hidden = YES;
+    _livePhotoView.livePhoto = nil;
+}
+
+- (void)showLivePhoto:(PHLivePhoto *)livePhoto {
+    self.imageView.image = nil;
+    self.livePhotoView.hidden = NO;
+    self.livePhotoView.livePhoto = livePhoto;
+    [self setPictureSize:livePhoto.size];
+}
+
 - (void)setShowAnimation:(BOOL)showAnimation {
     _showAnimation = showAnimation;
     if (showAnimation == true) {
@@ -518,23 +549,21 @@
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURL:urlString placeholderImage:self.placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
-            if (image) {
-                self.imageView.image = image;
-                [self setPictureSize:image.size];
-                self.progress = 1;
-                self.imageLoaded = YES;
-                
-                [self.pictureDelegate photoViewLoaded:self];
-            } else {
-                self.progress = 1;
-                self.imageLoaded = NO;
-                
-                [self.pictureDelegate photoViewLoaded:self];
-            }
+            [self showImage:image];
+            self.progress = 1;
+            self.imageLoaded = image ? YES : NO;
+            
+            [self.pictureDelegate photoViewLoaded:self];
         } progress:^(double progress) {
             __typeof__(self) self = self_weak_;
             self.progressView.progress = progress;
         }];
+    } else if ([urlString isKindOfClass:[PHLivePhoto class]]) {
+        [self showLivePhoto:(PHLivePhoto *)urlString];
+        self.progress = 1;
+        self.imageLoaded = YES;
+        
+        [_pictureDelegate photoViewLoaded:self];
     } else {
         UIImage *image = nil;
         if ([urlString isKindOfClass:[NSString class]]) {
@@ -542,12 +571,7 @@
         } else if ([urlString isKindOfClass:[UIImage class]]) {
             image = (UIImage *)urlString;
         }
-        if (image) {
-            self.imageView.image = image;
-            [self setPictureSize:image.size];
-        } else {
-            self.imageView.image = self.placeholderImage;
-        }
+        [self showImage:image];
         self.progress = 1;
         self.imageLoaded = image ? YES : NO;
         

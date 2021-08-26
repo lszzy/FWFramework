@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <PhotosUI/PhotosUI.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -210,10 +211,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize pictureSize;
 // 显示的默认图片
 @property (nonatomic, strong, nullable) UIImage *placeholderImage;
-// 图片的地址，支持NSString和UIImage
+// 图片的地址，支持NSString、UIImage、PHLivePhoto
 @property (nonatomic, strong, nullable) id urlString;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
+// 显示livePhoto的控件
+@property (nonatomic, strong, readonly) PHLivePhotoView *livePhotoView;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
 // 当前图片加载进度
