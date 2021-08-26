@@ -272,16 +272,19 @@ class SwiftTestPickerViewController: UIViewController, PHPickerViewControllerDel
         picker.dismiss(animated: true, completion: nil)
         
         for result in results {
-            result.itemProvider.loadObject(ofClass: UIImage.self, completionHandler: { (object, error) in
-                if let image = object as? UIImage {
-                    DispatchQueue.main.async {
-                        let imv = self.newImageView(image: image)
-                        self.imageViews.append(imv)
-                        self.scrollView.addSubview(imv)
-                        self.view.setNeedsLayout()
+            // UIImage, PHLivePhoto, loadFileRepresentation
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                result.itemProvider.loadObject(ofClass: UIImage.self, completionHandler: { (object, error) in
+                    if let image = object as? UIImage {
+                        DispatchQueue.main.async {
+                            let imv = self.newImageView(image: image)
+                            self.imageViews.append(imv)
+                            self.scrollView.addSubview(imv)
+                            self.view.setNeedsLayout()
+                        }
                     }
-                }
-            })
+                })
+            }
         }
     }
     
