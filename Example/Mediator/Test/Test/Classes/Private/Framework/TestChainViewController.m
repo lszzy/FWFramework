@@ -9,6 +9,13 @@
 
 #import "TestChainViewController.h"
 
+@interface TestChainViewController ()
+
+@property (nonatomic, strong) FWAttributedLabel *attributedLabel;
+@property (nonatomic, assign) CGFloat buttonWidth;
+
+@end
+
 @implementation TestChainViewController
 
 - (void)renderView
@@ -42,21 +49,35 @@
     image.fwLayoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).heightToWidth(1.0).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
     
     CGFloat lineHeight = ceil(FWFontRegular(16).lineHeight);
+    NSString *moreText = @"点击展开";
+    self.buttonWidth = [moreText fwSizeWithFont:FWFontRegular(16)].width + 20;
     FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
+    _attributedLabel = attr;
     attr.numberOfLines = 2;
     attr.lineBreakMode = kCTLineBreakByTruncatingTail;
-    attr.lineTruncatingSpacing = lineHeight + 10;
+    attr.lineTruncatingSpacing = self.buttonWidth;
+    FWWeakifySelf();
     attr.lineTruncatingAttachment = ^FWAttributedLabelAttachment * _Nullable{
-        UIImage *image = [[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)] fwImageWithScaleSize:CGSizeMake(lineHeight, lineHeight)];
-        return [FWAttributedLabelAttachment attachmentWith:image margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter maxSize:CGSizeMake(lineHeight, lineHeight)];
+        FWStrongifySelf();
+        UILabel *label = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:moreText];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.frame = CGRectMake(0, 0, self.buttonWidth, lineHeight);
+        label.userInteractionEnabled = YES;
+        [label fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            self.attributedLabel.lineTruncatingSpacing = 0;
+            self.attributedLabel.numberOfLines = 0;
+            self.attributedLabel.lineBreakMode = kCTLineBreakByWordWrapping;
+            [self resetLabel];
+        }];
+        return [FWAttributedLabelAttachment attachmentWith:label margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter maxSize:CGSizeZero];
     };
     attr.backgroundColor = Theme.backgroundColor;
     attr.font = FWFontRegular(16);
     attr.textAlignment = kCTTextAlignmentLeft;
     [self.fwView addSubview:attr];
-    attr.fwLayoutChain.leftWithInset(20).rightWithInset(20).topToBottomOfViewWithOffset(view, 20).height(lineHeight * 2);
-    [attr appendText:@"我是比较长的文本，真的长，要多长有多长，我会自动截断，再附加图片，不信你看，显示不下了的文本"];
-    [attr appendImage:[[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)] fwImageWithScaleSize:CGSizeMake(lineHeight, lineHeight)]];
+    attr.fwLayoutChain.leftWithInset(20).rightWithInset(20).topToBottomOfViewWithOffset(view, 20);
+    [self resetLabel];
     
     UILabel *emptyLabel = [[UILabel alloc] init];
     emptyLabel.textAlignment = NSTextAlignmentCenter;
@@ -65,7 +86,7 @@
     [self.fwView addSubview:emptyLabel];
     [emptyLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
         make.topToBottomOfViewWithOffset(attr, 20);
-        make.centerX();
+        make.leftWithInset(20);
     }];
     
     UILabel *emptyLabel2 = [[UILabel alloc] init];
@@ -87,7 +108,7 @@
     resultLabel.textColor = Theme.textColor;
     [self.fwView addSubview:resultLabel];
     [resultLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
-        make.leftToRightOfViewWithOffset(emptyLabel2, 20);
+        make.centerX();
         make.centerYToView(emptyLabel2);
     }];
     
@@ -101,6 +122,25 @@
         make.leftWithInset(20).rightWithInset(20)
             .topToBottomOfViewWithOffset(attr, 50);
     }];
+}
+
+- (void)resetLabel
+{
+    [self.attributedLabel setText:@"我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我又要换行了"];
+    
+    UILabel *label = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:@"点击收起"];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.frame = CGRectMake(0, 0, self.buttonWidth, ceil(FWFontRegular(16).lineHeight));
+    label.userInteractionEnabled = YES;
+    FWWeakifySelf();
+    [label fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.attributedLabel.lineTruncatingSpacing = self.buttonWidth;
+        self.attributedLabel.numberOfLines = 2;
+        self.attributedLabel.lineBreakMode = kCTLineBreakByTruncatingTail;
+        [self resetLabel];
+    }];
+    [self.attributedLabel appendView:label];
 }
 
 - (NSString *)numberString
