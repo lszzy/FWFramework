@@ -831,9 +831,71 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                         }
                         [truncationString appendAttributedString:tokenString];
 
+                        double truncationWidth = rect.size.width;
+                        if (self.lineTruncatingSpacing > 0) {
+                            truncationWidth -= self.lineTruncatingSpacing;
+                            
+                            FWAttributedLabelAttachment *attributedImage = self.lineTruncatingAttachment ? self.lineTruncatingAttachment() : nil;
+                            if (attributedImage) {
+                                CGFloat lineAscent;
+                                CGFloat lineDescent;
+                                CTLineGetTypographicBounds(line, &lineAscent, &lineDescent, NULL);
+                                CGFloat lineHeight = lineAscent + lineDescent;
+                                CGFloat lineBottomY = lineOrigin.y - lineDescent;
+                                
+                                CGSize boxSize = [attributedImage boxSize];
+                                CGFloat imageBoxHeight = boxSize.height;
+                                CGFloat xOffset = rect.size.width - self.lineTruncatingSpacing;
+                                
+                                CGFloat imageBoxOriginY = 0.0f;
+                                switch (attributedImage.alignment)
+                                {
+                                    case FWAttributedAlignmentTop:
+                                        imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight);
+                                        break;
+                                    case FWAttributedAlignmentCenter:
+                                        imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0;
+                                        break;
+                                    case FWAttributedAlignmentBottom:
+                                        imageBoxOriginY = lineBottomY;
+                                        break;
+                                }
+                                
+                                CGRect rect = CGRectMake(lineOrigin.x + xOffset, imageBoxOriginY, boxSize.width, imageBoxHeight);
+                                UIEdgeInsets flippedMargins = attributedImage.margin;
+                                CGFloat top = flippedMargins.top;
+                                flippedMargins.top = flippedMargins.bottom;
+                                flippedMargins.bottom = top;
+                                
+                                CGRect attatchmentRect = UIEdgeInsetsInsetRect(rect, flippedMargins);
+                                
+                                id content = attributedImage.content;
+                                if ([content isKindOfClass:[UIImage class]])
+                                {
+                                    CGContextDrawImage(context, attatchmentRect, ((UIImage *)content).CGImage);
+                                }
+                                else if ([content isKindOfClass:[UIView class]])
+                                {
+                                    UIView *view = (UIView *)content;
+                                    if (view.superview == nil)
+                                    {
+                                        [self addSubview:view];
+                                    }
+                                    CGRect viewFrame = CGRectMake(attatchmentRect.origin.x,
+                                                                  self.bounds.size.height - attatchmentRect.origin.y - attatchmentRect.size.height,
+                                                                  attatchmentRect.size.width,
+                                                                  attatchmentRect.size.height);
+                                    [view setFrame:viewFrame];
+                                }
+                                else
+                                {
+                                    NSLog(@"Attachment Content Not Supported %@",content);
+                                }
+                            }
+                        }
                         
                         CTLineRef truncationLine = CTLineCreateWithAttributedString((CFAttributedStringRef)truncationString);
-                        CTLineRef truncatedLine = CTLineCreateTruncatedLine(truncationLine, rect.size.width, truncationType, truncationToken);
+                        CTLineRef truncatedLine = CTLineCreateTruncatedLine(truncationLine, truncationWidth, truncationType, truncationToken);
                         if (!truncatedLine)
                         {
                             truncatedLine = CFRetain(truncationToken);
@@ -948,8 +1010,6 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                     continue;
                 }
             }
-            
-            
             
             id content = attributedImage.content;
             if ([content isKindOfClass:[UIImage class]])
