@@ -8,7 +8,6 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWAutoLayout.h"
 #import "FWProgressView.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
@@ -53,6 +52,8 @@
 
 @property (nonatomic, strong) UIButton *videoPlayButton;
 
+@property (nonatomic, assign) NSInteger showType;
+
 @end
 
 @implementation FWPhotoView
@@ -86,7 +87,6 @@
     scrollView.maximumZoomScale = 2;
     _scrollView = scrollView;
     [self addSubview:scrollView];
-    [scrollView fwPinEdgesToSuperview];
     
     // 添加 imageView
     Class imageClass = [UIImageView fwImageViewAnimatedClass];
@@ -114,7 +114,6 @@
 - (void)animationShowWithFromRect:(CGRect)rect animationBlock:(void (^)(void))animationBlock completionBlock:(void (^)(void))completionBlock {
     _imageView.frame = rect;
     self.showAnimation = true;
-    [self.progressView setHidden:true];
     [UIView animateWithDuration:0.25 animations:^{
         if (animationBlock != nil) {
             animationBlock();
@@ -134,6 +133,7 @@
     
     // 隐藏进度视图
     self.progressView.hidden = true;
+    _videoPlayButton.hidden = true;
     [UIView animateWithDuration:0.25 animations:^{
         if (animationBlock) {
             animationBlock();
@@ -172,25 +172,31 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    self.scrollView.frame = self.bounds;
     self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
+    _livePhotoView.frame = self.imageView.bounds;
+    _videoPlayerView.frame = self.imageView.bounds;
+    [_videoPlayButton sizeToFit];
+    _videoPlayButton.center = self.progressView.center;
 }
 
 - (PHLivePhotoView *)livePhotoView {
     if (!_livePhotoView) {
-        _livePhotoView = [[PHLivePhotoView alloc] init];
+        _livePhotoView = [[PHLivePhotoView alloc] initWithFrame:self.imageView.bounds];
         _livePhotoView.hidden = YES;
         [self.imageView addSubview:_livePhotoView];
-        [_livePhotoView fwPinEdgesToSuperview];
     }
     return _livePhotoView;
 }
 
 - (UIView *)videoPlayerView {
     if (!_videoPlayerView) {
-        _videoPlayerView = [[FWPhotoPlayerView alloc] init];
+        _videoPlayerView = [[FWPhotoPlayerView alloc] initWithFrame:self.imageView.bounds];
         _videoPlayerView.hidden = YES;
         [self.imageView addSubview:_videoPlayerView];
-        [_videoPlayerView fwPinEdgesToSuperview];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playToggle)];
+        [_videoPlayerView addGestureRecognizer:tapGesture];
     }
     return _videoPlayerView;
 }
@@ -206,7 +212,6 @@
         [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
         _videoPlayButton.hidden = YES;
         [self addSubview:_videoPlayButton];
-        [_videoPlayButton fwAlignCenterToSuperview];
     }
     return _videoPlayButton;
 }
@@ -244,6 +249,7 @@
 }
 
 - (void)showImage:(UIImage *)image {
+    self.showType = 0;
     if (image) {
         self.imageView.image = image;
         [self setPictureSize:image.size];
@@ -256,6 +262,7 @@
 }
 
 - (void)showLivePhoto:(PHLivePhoto *)livePhoto {
+    self.showType = 1;
     self.imageView.image = nil;
     self.livePhotoView.hidden = NO;
     self.livePhotoView.livePhoto = livePhoto;
@@ -264,6 +271,7 @@
 }
 
 - (void)showPlayerItem:(AVPlayerItem *)playerItem {
+    self.showType = 2;
     self.imageView.image = nil;
     _livePhotoView.hidden = YES;
     _livePhotoView.livePhoto = nil;
@@ -419,6 +427,14 @@
 }
 
 #pragma mark - 监听方法
+
+- (void)playToggle {
+    if (self.videoPlayButton.hidden) {
+        [self playPause];
+    } else {
+        [self playStart];
+    }
+}
 
 - (void)playStart {
     [self.videoPlayer play];
@@ -771,7 +787,7 @@
     }
     
     // 清理未显示的photoView内存
-    [self clearPhotoView:currentPage];
+    [self clearPhotoView:currentPage previousIndex:oldValue];
 }
 
 /**
@@ -856,10 +872,9 @@
 /**
  清理未显示的photoView，最多7个
  */
-- (void)clearPhotoView:(NSInteger)index {
-    if (self.photoViews.count < 8) return;
-    
+- (void)clearPhotoView:(NSInteger)index previousIndex:(NSInteger)previousIndex {
     [self.photoViews enumerateObjectsUsingBlock:^(FWPhotoView *photoView, NSUInteger idx, BOOL *stop) {
+        if (photoView.index == previousIndex) [photoView pauseAll];
         if (photoView.index >= index - 3 && photoView.index <= index + 3) return;
         
         [photoView clearAll];
