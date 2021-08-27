@@ -8,6 +8,7 @@
  */
 
 #import "FWPhotoBrowser.h"
+#import "FWAutoLayout.h"
 #import "FWProgressView.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
@@ -101,8 +102,8 @@
     
     // 添加进度view
     FWProgressView *progressView = [[FWProgressView alloc] init];
+    _progressView = progressView;
     [scrollView addSubview:progressView];
-    self.progressView = progressView;
     
     // 添加监听事件
     UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleClick:)];
@@ -173,9 +174,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-    [_videoPlayButton sizeToFit];
-    _videoPlayButton.center = self.progressView.center;
+    self.progressView.center = CGPointMake(self.scrollView.frame.size.width * 0.5, self.scrollView.frame.size.height * 0.5);
 }
 
 - (PHLivePhotoView *)livePhotoView {
@@ -211,7 +210,8 @@
         [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
         [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
         _videoPlayButton.hidden = YES;
-        [self addSubview:_videoPlayButton];
+        [self.imageView addSubview:_videoPlayButton];
+        [_videoPlayButton fwAlignCenterToSuperview];
     }
     return _videoPlayButton;
 }
@@ -419,8 +419,8 @@
 
 - (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center{
     CGRect zoomRect;
-    zoomRect.size.height =self.frame.size.height / scale;
-    zoomRect.size.width  =self.frame.size.width  / scale;
+    zoomRect.size.height =self.scrollView.frame.size.height / scale;
+    zoomRect.size.width  =self.scrollView.frame.size.width  / scale;
     zoomRect.origin.x = center.x - (zoomRect.size.width  / 2.0);
     zoomRect.origin.y = center.y - (zoomRect.size.height / 2.0);
     return zoomRect;
