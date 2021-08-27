@@ -41,15 +41,22 @@
     [self.fwView addSubview:image];
     image.fwLayoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).heightToWidth(1.0).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
     
+    CGFloat lineHeight = ceil(FWFontRegular(16).lineHeight);
     FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
-    attr.text = @"attr";
+    attr.numberOfLines = 2;
+    attr.lineBreakMode = kCTLineBreakByTruncatingTail;
+    attr.lineTruncatingSpacing = lineHeight + 10;
+    attr.lineTruncatingAttachment = ^FWAttributedLabelAttachment * _Nullable{
+        UIImage *image = [[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)] fwImageWithScaleSize:CGSizeMake(lineHeight, lineHeight)];
+        return [FWAttributedLabelAttachment attachmentWith:image margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter maxSize:CGSizeMake(lineHeight, lineHeight)];
+    };
     attr.backgroundColor = Theme.backgroundColor;
-    attr.textAlignment = kCTTextAlignmentCenter;
+    attr.font = FWFontRegular(16);
+    attr.textAlignment = kCTTextAlignmentLeft;
     [self.fwView addSubview:attr];
-    [attr fwLayoutMaker:^(FWLayoutChain *  _Nonnull make) {
-        make.leftToView(view).topToBottomOfViewWithOffset(view, 20);
-    }];
-    [attr appendImage:[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)]];
+    attr.fwLayoutChain.leftWithInset(20).rightWithInset(20).topToBottomOfViewWithOffset(view, 20).height(lineHeight * 2);
+    [attr appendText:@"我是比较长的文本，真的长，要多长有多长，我会自动截断，再附加图片，不信你看，显示不下了的文本"];
+    [attr appendImage:[[UIImage fwImageWithAppIcon:CGSizeMake(40, 40)] fwImageWithScaleSize:CGSizeMake(lineHeight, lineHeight)]];
     
     UILabel *emptyLabel = [[UILabel alloc] init];
     emptyLabel.textAlignment = NSTextAlignmentCenter;
@@ -57,8 +64,8 @@
     emptyLabel.backgroundColor = Theme.backgroundColor;
     [self.fwView addSubview:emptyLabel];
     [emptyLabel fwLayoutMaker:^(FWLayoutChain * _Nonnull make) {
-        make.leftToRightOfViewWithOffset(attr, 20);
-        make.centerYToView(attr);
+        make.topToBottomOfViewWithOffset(attr, 20);
+        make.centerX();
     }];
     
     UILabel *emptyLabel2 = [[UILabel alloc] init];

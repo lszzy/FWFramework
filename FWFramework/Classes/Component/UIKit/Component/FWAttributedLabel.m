@@ -845,7 +845,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                 
                                 CGSize boxSize = [attributedImage boxSize];
                                 CGFloat imageBoxHeight = boxSize.height;
-                                CGFloat xOffset = rect.size.width - self.lineTruncatingSpacing;
+                                CGFloat xOffset = truncationWidth;
                                 
                                 CGFloat imageBoxOriginY = 0.0f;
                                 switch (attributedImage.alignment)
@@ -861,13 +861,13 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                         break;
                                 }
                                 
-                                CGRect rect = CGRectMake(lineOrigin.x + xOffset, imageBoxOriginY, boxSize.width, imageBoxHeight);
+                                CGRect imageRect = CGRectMake(lineOrigin.x + xOffset, imageBoxOriginY, boxSize.width, imageBoxHeight);
                                 UIEdgeInsets flippedMargins = attributedImage.margin;
                                 CGFloat top = flippedMargins.top;
                                 flippedMargins.top = flippedMargins.bottom;
                                 flippedMargins.bottom = top;
                                 
-                                CGRect attatchmentRect = UIEdgeInsetsInsetRect(rect, flippedMargins);
+                                CGRect attatchmentRect = UIEdgeInsetsInsetRect(imageRect, flippedMargins);
                                 
                                 id content = attributedImage.content;
                                 if ([content isKindOfClass:[UIImage class]])
@@ -990,13 +990,13 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                     break;
             }
             
-            CGRect rect = CGRectMake(lineOrigin.x + xOffset, imageBoxOriginY, width, imageBoxHeight);
+            CGRect imageRect = CGRectMake(lineOrigin.x + xOffset, imageBoxOriginY, width, imageBoxHeight);
             UIEdgeInsets flippedMargins = attributedImage.margin;
             CGFloat top = flippedMargins.top;
             flippedMargins.top = flippedMargins.bottom;
             flippedMargins.bottom = top;
             
-            CGRect attatchmentRect = UIEdgeInsetsInsetRect(rect, flippedMargins);
+            CGRect attatchmentRect = UIEdgeInsetsInsetRect(imageRect, flippedMargins);
             
             if (i == numberOfLines - 1 &&
                 k >= runCount - 2 &&
