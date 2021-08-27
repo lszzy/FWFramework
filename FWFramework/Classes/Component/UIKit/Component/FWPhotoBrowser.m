@@ -85,6 +85,7 @@
     scrollView.showsHorizontalScrollIndicator = false;
     scrollView.showsVerticalScrollIndicator = false;
     scrollView.maximumZoomScale = 2;
+    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _scrollView = scrollView;
     [self addSubview:scrollView];
     
@@ -172,10 +173,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.scrollView.frame = self.bounds;
     self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-    _livePhotoView.frame = self.imageView.bounds;
-    _videoPlayerView.frame = self.imageView.bounds;
     [_videoPlayButton sizeToFit];
     _videoPlayButton.center = self.progressView.center;
 }
@@ -183,6 +181,7 @@
 - (PHLivePhotoView *)livePhotoView {
     if (!_livePhotoView) {
         _livePhotoView = [[PHLivePhotoView alloc] initWithFrame:self.imageView.bounds];
+        _livePhotoView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _livePhotoView.hidden = YES;
         [self.imageView addSubview:_livePhotoView];
     }
@@ -192,6 +191,7 @@
 - (UIView *)videoPlayerView {
     if (!_videoPlayerView) {
         _videoPlayerView = [[FWPhotoPlayerView alloc] initWithFrame:self.imageView.bounds];
+        _videoPlayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _videoPlayerView.hidden = YES;
         [self.imageView addSubview:_videoPlayerView];
         
