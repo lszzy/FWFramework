@@ -41,7 +41,7 @@ typedef NS_OPTIONS(NSUInteger, FWImagePickerControllerFilterType) {
  @brief 快速创建照片选择器，可自定义dismiss流程，自动设置delegate
  
  @param sourceType 选择器类型
- @param filterType 过滤类型，默认Image
+ @param filterType 过滤类型，默认0同系统
  @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
  @param completion 完成回调。参数1为照片选择器，2为回调对象，参数3为是否取消
  @return 照片选择器，不支持的返回nil
@@ -71,7 +71,7 @@ API_AVAILABLE(ios(14.0))
 /*!
  @brief 快速创建照片选择器，可自定义dismiss流程，自动设置delegate
  
- @param filterType 过滤类型
+ @param filterType 过滤类型，默认0同系统
  @param selectionLimit 最大选择数量
  @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
  @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组，参数3为是否取消
@@ -101,7 +101,7 @@ API_AVAILABLE(ios(14.0))
 /*!
  @brief 快速创建照片选择器，可自定义dismiss流程
  
- @param filterType 过滤类型
+ @param filterType 过滤类型，默认0同系统
  @param selectionLimit 最大选择数量，iOS14以下只支持单选
  @param shouldDismiss 是否先关闭照片选择器再回调，如果先关闭则回调参数1为nil
  @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组，参数3为是否取消

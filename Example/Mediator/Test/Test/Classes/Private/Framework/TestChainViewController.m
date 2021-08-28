@@ -59,6 +59,7 @@
     attr.lineTruncatingSpacing = self.buttonWidth;
     attr.backgroundColor = Theme.backgroundColor;
     attr.font = FWFontRegular(16);
+    attr.textColor = Theme.textColor;
     attr.textAlignment = kCTTextAlignmentLeft;
     [self.fwView addSubview:attr];
     attr.fwLayoutChain.leftWithInset(20).rightWithInset(20).topToBottomOfViewWithOffset(view, 20);
