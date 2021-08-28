@@ -15,6 +15,7 @@
 static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @interface FWAttributedLabel ()
+
 @property (nonatomic,strong)    NSMutableAttributedString   *attributedString;
 @property (nonatomic,strong)    NSMutableArray              *attachments;
 @property (nonatomic,strong)    NSMutableArray              *linkLocations;
@@ -25,6 +26,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 @property (nonatomic,assign)    CGFloat fontHeight;
 @property (nonatomic,assign)    BOOL linkDetected;
 @property (nonatomic,assign)    BOOL ignoreRedraw;
+@property (nonatomic,strong)    UIView *lineTruncatingView;
+
 @end
 
 @implementation FWAttributedLabel
@@ -107,10 +110,17 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         CFRelease(_textFrame);
         _textFrame = nil;
     }
-    if ([NSThread isMainThread] && !_ignoreRedraw)
+    if ([NSThread isMainThread])
     {
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsDisplay];
+        if (self.lineTruncatingView) {
+            [self.lineTruncatingView removeFromSuperview];
+            self.lineTruncatingView = nil;
+        }
+        
+        if (!_ignoreRedraw) {
+            [self invalidateIntrinsicContentSize];
+            [self setNeedsDisplay];
+        }
     }
 }
 
@@ -258,6 +268,24 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if (_paragraphSpacing != paragraphSpacing)
     {
         _paragraphSpacing = paragraphSpacing;
+        [self resetTextFrame];
+    }
+}
+
+- (void)setLineTruncatingSpacing:(CGFloat)lineTruncatingSpacing
+{
+    if (_lineTruncatingSpacing != lineTruncatingSpacing)
+    {
+        _lineTruncatingSpacing = lineTruncatingSpacing;
+        [self resetTextFrame];
+    }
+}
+
+- (void)setLineTruncatingAttachment:(FWAttributedLabelAttachment *)lineTruncatingAttachment
+{
+    if (_lineTruncatingAttachment != lineTruncatingAttachment)
+    {
+        _lineTruncatingAttachment = lineTruncatingAttachment;
         [self resetTextFrame];
     }
 }
@@ -835,7 +863,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                         if (self.lineTruncatingSpacing > 0) {
                             truncationWidth -= self.lineTruncatingSpacing;
                             
-                            FWAttributedLabelAttachment *attributedImage = self.lineTruncatingAttachment ? self.lineTruncatingAttachment() : nil;
+                            FWAttributedLabelAttachment *attributedImage = self.lineTruncatingAttachment;
                             if (attributedImage) {
                                 CGFloat lineAscent;
                                 CGFloat lineDescent;
@@ -877,6 +905,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                 else if ([content isKindOfClass:[UIView class]])
                                 {
                                     UIView *view = (UIView *)content;
+                                    self.lineTruncatingView = view;
                                     if (view.superview == nil)
                                     {
                                         [self addSubview:view];

@@ -53,31 +53,41 @@
     self.buttonWidth = [moreText fwSizeWithFont:FWFontRegular(16)].width + 20;
     FWAttributedLabel *attr = [[FWAttributedLabel alloc] init];
     _attributedLabel = attr;
+    attr.clipsToBounds = YES;
     attr.numberOfLines = 2;
     attr.lineBreakMode = kCTLineBreakByTruncatingTail;
     attr.lineTruncatingSpacing = self.buttonWidth;
-    FWWeakifySelf();
-    attr.lineTruncatingAttachment = ^FWAttributedLabelAttachment * _Nullable{
-        FWStrongifySelf();
-        UILabel *label = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:moreText];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.frame = CGRectMake(0, 0, self.buttonWidth, lineHeight);
-        label.userInteractionEnabled = YES;
-        [label fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-            FWStrongifySelf();
-            self.attributedLabel.lineTruncatingSpacing = 0;
-            self.attributedLabel.numberOfLines = 0;
-            self.attributedLabel.lineBreakMode = kCTLineBreakByWordWrapping;
-            [self resetLabel];
-        }];
-        return [FWAttributedLabelAttachment attachmentWith:label margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter maxSize:CGSizeZero];
-    };
     attr.backgroundColor = Theme.backgroundColor;
     attr.font = FWFontRegular(16);
     attr.textAlignment = kCTTextAlignmentLeft;
     [self.fwView addSubview:attr];
     attr.fwLayoutChain.leftWithInset(20).rightWithInset(20).topToBottomOfViewWithOffset(view, 20);
-    [self resetLabel];
+    
+    [self.attributedLabel setText:@"我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我又要换行了"];
+    UILabel *collapseLabel = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:@"点击收起"];
+    collapseLabel.textAlignment = NSTextAlignmentCenter;
+    collapseLabel.frame = CGRectMake(0, 0, self.buttonWidth, ceil(FWFontRegular(16).lineHeight));
+    collapseLabel.userInteractionEnabled = YES;
+    FWWeakifySelf();
+    [collapseLabel fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.attributedLabel.lineTruncatingSpacing = self.buttonWidth;
+        self.attributedLabel.numberOfLines = 2;
+        self.attributedLabel.lineBreakMode = kCTLineBreakByTruncatingTail;
+    }];
+    [self.attributedLabel appendView:collapseLabel];
+    
+    UILabel *expandLabel = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:moreText];
+    expandLabel.textAlignment = NSTextAlignmentCenter;
+    expandLabel.frame = CGRectMake(0, 0, self.buttonWidth, lineHeight);
+    expandLabel.userInteractionEnabled = YES;
+    [expandLabel fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        self.attributedLabel.lineTruncatingSpacing = 0;
+        self.attributedLabel.numberOfLines = 0;
+        self.attributedLabel.lineBreakMode = kCTLineBreakByWordWrapping;
+    }];
+    self.attributedLabel.lineTruncatingAttachment = [FWAttributedLabelAttachment attachmentWith:expandLabel margin:UIEdgeInsetsZero alignment:FWAttributedAlignmentCenter maxSize:CGSizeZero];
     
     UILabel *emptyLabel = [[UILabel alloc] init];
     emptyLabel.textAlignment = NSTextAlignmentCenter;
@@ -122,25 +132,6 @@
         make.leftWithInset(20).rightWithInset(20)
             .topToBottomOfViewWithOffset(attr, 50);
     }];
-}
-
-- (void)resetLabel
-{
-    [self.attributedLabel setText:@"我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我又要换行了"];
-    
-    UILabel *label = [UILabel fwLabelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:@"点击收起"];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.frame = CGRectMake(0, 0, self.buttonWidth, ceil(FWFontRegular(16).lineHeight));
-    label.userInteractionEnabled = YES;
-    FWWeakifySelf();
-    [label fwAddTapGestureWithBlock:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        self.attributedLabel.lineTruncatingSpacing = self.buttonWidth;
-        self.attributedLabel.numberOfLines = 2;
-        self.attributedLabel.lineBreakMode = kCTLineBreakByTruncatingTail;
-        [self resetLabel];
-    }];
-    [self.attributedLabel appendView:label];
 }
 
 - (NSString *)numberString
