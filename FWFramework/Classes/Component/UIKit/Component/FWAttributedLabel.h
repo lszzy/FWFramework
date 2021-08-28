@@ -37,6 +37,7 @@ typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
 };
 
 @class FWAttributedLabel;
+@class FWAttributedLabelAttachment;
 
 @protocol FWAttributedLabelDelegate <NSObject>
 - (void)attributedLabel:(FWAttributedLabel *)label clickedOnLink:(id)linkData;
@@ -68,6 +69,9 @@ typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
 @property (nonatomic,assign)                CGFloat paragraphSpacing;               //段间距
 @property (nonatomic,copy,nullable)         NSString *text;                         //普通文本，设置nil可重置
 @property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本，设置nil可重置
+//最后一行截断之后留白的宽度，默认0不生效，仅lineBreakMode为TruncatingTail且发生截断时生效
+@property (nonatomic,assign)                CGFloat lineTruncatingSpacing;
+@property (nonatomic,strong,nullable)       FWAttributedLabelAttachment *lineTruncatingAttachment;
 
 //添加文本
 - (void)appendText:(NSString *)text;
