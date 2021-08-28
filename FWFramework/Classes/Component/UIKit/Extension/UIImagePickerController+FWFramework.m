@@ -114,7 +114,9 @@
         [result.itemProvider loadFileRepresentationForTypeIdentifier:(NSString *)kUTTypeMovie completionHandler:^(NSURL * _Nullable url, NSError * _Nullable error) {
             NSURL *fileURL = nil;
             if (url) {
-                NSString *filePath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[url.absoluteString fwMd5Encode]] stringByAppendingPathExtension:url.pathExtension];
+                NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"FWImagePicker"];
+                [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
+                filePath = [[filePath stringByAppendingPathComponent:[url.absoluteString fwMd5Encode]] stringByAppendingPathExtension:url.pathExtension];
                 fileURL = [NSURL fileURLWithPath:filePath];
                 if (![[NSFileManager defaultManager] moveItemAtURL:url toURL:fileURL error:NULL]) {
                     fileURL = nil;
