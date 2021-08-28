@@ -62,19 +62,26 @@ import FWFramework
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let pickerController = PHPhotoLibrary.fwPickerController(withSelectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .image, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
                 self?.showData(results)
             }
             present(pickerController!, animated: true)
             break
         case 1:
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .livePhoto, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
+                self?.showData(results)
+            }
+            present(pickerController!, animated: true)
             break
         case 2:
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .video, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
+                self?.showData(results)
+            }
+            present(pickerController!, animated: true)
             break
         case 3:
-            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, shouldDismiss: true) { [weak self] picker, info, cancel in
-                let image = info?[UIImagePickerController.InfoKey.editedImage] ?? info?[UIImagePickerController.InfoKey.originalImage]
-                self?.showData(image != nil ? [image!] : [])
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, shouldDismiss: true) { [weak self] picker, object, cancel in
+                self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break

@@ -1092,8 +1092,8 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 + (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(FWCropViewController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
 {
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, NSDictionary * _Nullable info, BOOL cancel) {
-        UIImage *originalImage = cancel ? nil : info[UIImagePickerControllerOriginalImage];
+    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerControllerFilterTypeImage shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, BOOL cancel) {
+        UIImage *originalImage = cancel ? nil : object;
         if (originalImage) {
             FWCropViewController *cropController = cropViewController;
             if (!cropController) {
@@ -1134,8 +1134,8 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 + (instancetype)fwPickerControllerWithCropController:(FWCropViewController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
 {
-    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithSelectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray<UIImage *> * _Nonnull images, BOOL cancel) {
-        UIImage *originalImage = images.firstObject;
+    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithFilterType:FWImagePickerControllerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray * _Nonnull objects, BOOL cancel) {
+        UIImage *originalImage = objects.firstObject;
         if (originalImage) {
             FWCropViewController *cropController = cropViewController;
             if (!cropController) {
