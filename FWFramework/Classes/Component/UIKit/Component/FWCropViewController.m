@@ -1092,7 +1092,7 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 + (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(FWCropViewController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
 {
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerControllerFilterTypeImage shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, BOOL cancel) {
+    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerControllerFilterTypeImage shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
         UIImage *originalImage = cancel ? nil : object;
         if (originalImage) {
             FWCropViewController *cropController = cropViewController;
@@ -1134,7 +1134,7 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
 
 + (instancetype)fwPickerControllerWithCropController:(FWCropViewController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
 {
-    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithFilterType:FWImagePickerControllerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray * _Nonnull objects, BOOL cancel) {
+    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithFilterType:FWImagePickerControllerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
         UIImage *originalImage = objects.firstObject;
         if (originalImage) {
             FWCropViewController *cropController = cropViewController;

@@ -41,7 +41,12 @@ import FWFramework
             return
         }
         
-        photoBrowser.pictureUrls = results
+        photoBrowser.pictureUrls = results.map({ result in
+            if let url = result as? URL {
+                return AVPlayerItem(url: url)
+            }
+            return result
+        })
         photoBrowser.currentIndex = 0
         photoBrowser.show()
     }
@@ -62,37 +67,37 @@ import FWFramework
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .image, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
-                self?.showData(results)
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .image, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+                self?.showData(objects)
             }
             present(pickerController!, animated: true)
             break
         case 1:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .livePhoto, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
-                self?.showData(results)
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .livePhoto, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+                self?.showData(objects)
             }
             present(pickerController!, animated: true)
             break
         case 2:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .video, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, results, cancel in
-                self?.showData(results)
+            let pickerController = PHPhotoLibrary.fwPickerController(with: .video, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+                self?.showData(objects)
             }
             present(pickerController!, animated: true)
             break
         case 3:
-            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, shouldDismiss: true) { [weak self] picker, object, cancel in
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break
         case 4:
-            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, cancel in
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break
         case 5:
-            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, shouldDismiss: true) { [weak self] picker, object, cancel in
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
