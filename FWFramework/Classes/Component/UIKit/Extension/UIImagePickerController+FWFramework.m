@@ -8,6 +8,7 @@
  */
 
 #import "UIImagePickerController+FWFramework.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <objc/runtime.h>
 
 #pragma mark - UIImagePickerController+FWFramework
@@ -133,8 +134,25 @@
         return nil;
     }
     
+    NSMutableArray<NSString *> *mediaTypes = [NSMutableArray array];
+    if (filterType & FWImagePickerControllerFilterTypeImage) {
+        [mediaTypes addObject:(NSString *)kUTTypeImage];
+    }
+    if (filterType & FWImagePickerControllerFilterTypeLivePhoto) {
+        if (![mediaTypes containsObject:(NSString *)kUTTypeImage]) {
+            [mediaTypes addObject:(NSString *)kUTTypeImage];
+        }
+        [mediaTypes addObject:(NSString *)kUTTypeLivePhoto];
+    }
+    if (filterType & FWImagePickerControllerFilterTypeVideo) {
+        [mediaTypes addObject:(NSString *)kUTTypeMovie];
+    }
+    
     UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
     pickerController.sourceType = sourceType;
+    if (mediaTypes.count > 0) {
+        pickerController.mediaTypes = [mediaTypes copy];
+    }
     
     FWImagePickerControllerDelegate *pickerDelegate = [[FWImagePickerControllerDelegate alloc] init];
     pickerDelegate.filterType = filterType;
