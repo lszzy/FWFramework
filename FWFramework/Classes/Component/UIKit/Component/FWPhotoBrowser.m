@@ -8,7 +8,6 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWAutoLayout.h"
 #import "FWProgressView.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
@@ -210,8 +209,9 @@
         [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
         [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
         _videoPlayButton.hidden = YES;
+        [_videoPlayButton sizeToFit];
+        _videoPlayButton.center = self.videoPlayerView.center;
         [self.videoPlayerView addSubview:_videoPlayButton];
-        [_videoPlayButton fwAlignCenterToSuperview];
     }
     return _videoPlayButton;
 }
