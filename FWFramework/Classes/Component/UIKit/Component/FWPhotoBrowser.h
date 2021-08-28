@@ -208,7 +208,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWPhotoView : UIView
+@interface FWPhotoView : UIScrollView
 
 // 当前视图所在的索引
 @property (nonatomic, assign) NSInteger index;
@@ -222,8 +222,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL imageLoaded;
 // 当前图片加载进度
 @property (nonatomic, assign) CGFloat progress;
-// 当前滚动视图容器
-@property (nonatomic, strong, readonly) UIScrollView *scrollView;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 显示livePhoto的控件

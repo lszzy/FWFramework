@@ -75,19 +75,15 @@
 }
 
 - (void)setupUI {
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-    scrollView.delegate = self;
-    scrollView.alwaysBounceVertical = true;
-    scrollView.backgroundColor = [UIColor clearColor];
+    self.delegate = self;
+    self.alwaysBounceVertical = true;
+    self.backgroundColor = [UIColor clearColor];
     if (@available(iOS 11.0, *)) {
-        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    scrollView.showsHorizontalScrollIndicator = false;
-    scrollView.showsVerticalScrollIndicator = false;
-    scrollView.maximumZoomScale = 2;
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _scrollView = scrollView;
-    [self addSubview:scrollView];
+    self.showsHorizontalScrollIndicator = false;
+    self.showsVerticalScrollIndicator = false;
+    self.maximumZoomScale = 2;
     
     // 添加 imageView
     Class imageClass = [UIImageView fwImageViewAnimatedClass];
@@ -97,12 +93,12 @@
     imageView.frame = self.bounds;
     imageView.userInteractionEnabled = true;
     _imageView = imageView;
-    [scrollView addSubview:imageView];
+    [self addSubview:imageView];
     
     // 添加进度view
     FWProgressView *progressView = [[FWProgressView alloc] init];
     _progressView = progressView;
-    [scrollView addSubview:progressView];
+    [self addSubview:progressView];
     
     // 添加监听事件
     UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleClick:)];
@@ -142,7 +138,7 @@
         CGRect toRect = rect;
         toRect.origin.y += self.offsetY;
         // 这一句话用于在放大的时候去关闭
-        toRect.origin.x += self.scrollView.contentOffset.x;
+        toRect.origin.x += self.contentOffset.x;
         self.imageView.frame = toRect;
     } completion:^(BOOL finished) {
         if (finished) {
@@ -173,7 +169,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.progressView.center = CGPointMake(self.scrollView.frame.size.width * 0.5, self.scrollView.frame.size.height * 0.5);
+    self.progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
 }
 
 - (PHLivePhotoView *)livePhotoView {
@@ -372,11 +368,11 @@
 }
 
 - (void)setContentSize:(CGSize)contentSize {
-    self.scrollView.contentSize = contentSize;
-    if (self.scrollView.zoomScale == 1) {
+    [super setContentSize:contentSize];
+    if (self.zoomScale == 1) {
         [UIView animateWithDuration:0.25 animations:^{
             CGPoint center = self.imageView.center;
-            center.x = self.scrollView.contentSize.width * 0.5;
+            center.x = self.contentSize.width * 0.5;
             self.imageView.center = center;
         }];
     }
@@ -384,7 +380,7 @@
 
 - (void)setLastContentOffset:(CGPoint)lastContentOffset {
     // 如果用户没有在拖动，并且绽放比 > 0.15
-    if (!(self.scrollView.dragging == false && _scale > 0.15)) {
+    if (!(self.dragging == false && _scale > 0.15)) {
         _lastContentOffset = lastContentOffset;
     }
 }
@@ -404,7 +400,7 @@
 - (void)setShowPictureSize:(CGSize)showPictureSize {
     _showPictureSize = showPictureSize;
     self.imageView.frame = [self getImageActualFrame:_showPictureSize];
-    [self setContentSize:self.imageView.frame.size];
+    self.contentSize = self.imageView.frame.size;
 }
 
 - (CGRect)getImageActualFrame:(CGSize)imageSize {
@@ -419,8 +415,8 @@
 
 - (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center{
     CGRect zoomRect;
-    zoomRect.size.height =self.scrollView.frame.size.height / scale;
-    zoomRect.size.width  =self.scrollView.frame.size.width  / scale;
+    zoomRect.size.height = self.frame.size.height / scale;
+    zoomRect.size.width  = self.frame.size.width  / scale;
     zoomRect.origin.x = center.x - (zoomRect.size.width  / 2.0);
     zoomRect.origin.y = center.y - (zoomRect.size.height / 2.0);
     return zoomRect;
@@ -466,7 +462,7 @@
         newScale = 1;
     }
     CGRect zoomRect = [self zoomRectForScale:newScale withCenter:[ges locationInView:ges.view]];
-    [self.scrollView zoomToRect:zoomRect animated:YES];
+    [self zoomToRect:zoomRect animated:YES];
     _doubleClicks = !_doubleClicks;
 }
 
@@ -482,7 +478,7 @@
         return;
     }
     // 用户正在缩放
-    if (self.scrollView.zoomBouncing || self.scrollView.zooming) {
+    if (self.zoomBouncing || self.zooming) {
         return;
     }
     CGFloat screenH = [UIScreen mainScreen].bounds.size.height;
