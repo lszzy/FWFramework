@@ -86,6 +86,16 @@ import FWFramework
             present(pickerController!, animated: true)
             break
         case 4:
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            present(pickerController!, animated: true)
+            break
+        case 5:
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, shouldDismiss: true) { [weak self] picker, object, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            present(pickerController!, animated: true)
             break
         default:
             break
