@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.3] - 2021-08-28
+
+### Added
+* FWAttributedLabel supports custom view when the tail is truncated
+* UIButton supports quick setting of alpha when clicked and highlighted
+
 ## [1.9.2] - 2021-08-20
 
 ### Changed
