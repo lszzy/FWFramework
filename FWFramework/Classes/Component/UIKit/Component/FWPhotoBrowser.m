@@ -210,7 +210,7 @@
         [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
         [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
         _videoPlayButton.hidden = YES;
-        [self.imageView addSubview:_videoPlayButton];
+        [self.videoPlayerView addSubview:_videoPlayButton];
         [_videoPlayButton fwAlignCenterToSuperview];
     }
     return _videoPlayButton;
@@ -527,7 +527,7 @@
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return _imageView;
+    return self.showType != 2 ? _imageView : nil;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
