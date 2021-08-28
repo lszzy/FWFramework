@@ -90,8 +90,8 @@
         FWStrongifySelf();
         if (index == 0) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera completion:^(NSDictionary * _Nonnull info, BOOL cancel) {
-                    [self onPickerResult:cancel ? nil : info[UIImagePickerControllerEditedImage] cancelled:cancel];
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera completion:^(UIImage * _Nullable image, BOOL cancel) {
+                    [self onPickerResult:cancel ? nil : image cancelled:cancel];
                 }];
                 pickerController.allowsEditing = YES;
                 [self presentViewController:pickerController animated:YES completion:nil];
