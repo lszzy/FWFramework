@@ -112,11 +112,11 @@
     
     _percentShow = NO;
     _percentTextColor =[UIColor whiteColor];
-    _percentFont = [UIFont boldSystemFontOfSize:12.f];
+    _percentFont = [UIFont systemFontOfSize:12.f];
     
     _annular = YES;
     _annularLineCapStyle = kCGLineCapRound;
-    _annularLineWidth = 4.f;
+    _annularLineWidth = 3.f;
     
     _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
     _percentLabel.adjustsFontSizeToFitWidth = NO;

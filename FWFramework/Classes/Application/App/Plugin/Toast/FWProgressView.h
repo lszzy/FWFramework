@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 文本颜色，默认白色
 @property (nonatomic, strong, nullable) UIColor *percentTextColor;
 
-// 文本字体，默认12号粗体
+// 文本字体，默认12号字体
 @property (nonatomic, strong, nullable) UIFont *percentFont;
 
 // 是否显示环形线条样式，默认YES，NO为圆形
@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 环形进度样式，默认kCGLineCapRound
 @property (nonatomic, assign) CGLineCap annularLineCapStyle;
 
-// 环形线条宽度，默认4.0f
+// 环形线条宽度，默认3.0f
 @property (nonatomic, assign) CGFloat annularLineWidth;
 
 @end
