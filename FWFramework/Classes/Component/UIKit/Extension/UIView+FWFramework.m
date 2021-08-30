@@ -56,6 +56,14 @@
     objc_setAssociatedObject(self, @selector(fwTouchInsets), [NSValue valueWithUIEdgeInsets:fwTouchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (UIEdgeInsets)fwSafeAreaInsets
+{
+    if (@available(iOS 11.0, *)) {
+        return self.safeAreaInsets;
+    }
+    return UIEdgeInsetsZero;
+}
+
 #pragma mark - Transform
 
 - (CGFloat)fwScaleX
