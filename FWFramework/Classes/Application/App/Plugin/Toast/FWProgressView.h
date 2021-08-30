@@ -1,19 +1,27 @@
-//
-//  FWProgressView.h
-//  FWFramework
-//
-//  Created by wuyong on 17/3/24.
-//  Copyright © 2018年 wuyong.site. All rights reserved.
-//
+/*!
+ @header     FWProgressView.h
+ @indexgroup FWFramework
+ @brief      FWProgressView
+ @author     wuyong
+ @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
+ @updated    2018/9/22
+ */
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- *  框架进度视图，UIProgressView为横条样式
- */
-@interface FWProgressView : UIView
+/// 自定义进度条视图协议
+@protocol FWProgressViewProtocol <NSObject>
+@required
+
+/// 获取或设置进度条当前进度
+@property (nonatomic, assign) CGFloat progress;
+
+@end
+
+/// 框架默认吐司进度条视图
+@interface FWProgressView : UIView <FWProgressViewProtocol>
 
 // 进度值，0.0到1.0
 @property (nonatomic, assign) CGFloat progress;
