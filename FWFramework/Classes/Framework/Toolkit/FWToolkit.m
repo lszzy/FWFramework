@@ -9,6 +9,7 @@
 
 #import "FWToolkit.h"
 #import "FWNavigation.h"
+#import "FWSwizzle.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
@@ -493,6 +494,43 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @implementation UIView (FWToolkit)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIView, @selector(pointInside:withEvent:), FWSwizzleReturn(BOOL), FWSwizzleArgs(CGPoint point, UIEvent *event), FWSwizzleCode({
+            NSValue *insetsValue = objc_getAssociatedObject(selfObject, @selector(fwTouchInsets));
+            if (insetsValue) {
+                UIEdgeInsets touchInsets = [insetsValue UIEdgeInsetsValue];
+                CGRect bounds = selfObject.bounds;
+                bounds = CGRectMake(bounds.origin.x - touchInsets.left,
+                                    bounds.origin.y - touchInsets.top,
+                                    bounds.size.width + touchInsets.left + touchInsets.right,
+                                    bounds.size.height + touchInsets.top + touchInsets.bottom);
+                return CGRectContainsPoint(bounds, point);
+            }
+            
+            return FWSwizzleOriginal(point, event);
+        }));
+        
+        FWSwizzleClass(UIButton, @selector(setEnabled:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL enabled), FWSwizzleCode({
+            FWSwizzleOriginal(enabled);
+            
+            if (selfObject.fwDisabledAlpha > 0) {
+                selfObject.alpha = enabled ? 1 : selfObject.fwDisabledAlpha;
+            }
+        }));
+        
+        FWSwizzleClass(UIButton, @selector(setHighlighted:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL highlighted), FWSwizzleCode({
+            FWSwizzleOriginal(highlighted);
+            
+            if (selfObject.enabled && selfObject.fwHighlightedAlpha > 0) {
+                selfObject.alpha = highlighted ? selfObject.fwHighlightedAlpha : 1;
+            }
+        }));
+    });
+}
+
 - (CGFloat)fwTop
 {
     return self.frame.origin.y;
@@ -641,11 +679,94 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     return nil;
 }
 
+- (UIEdgeInsets)fwTouchInsets
+{
+    return [objc_getAssociatedObject(self, @selector(fwTouchInsets)) UIEdgeInsetsValue];
+}
+
+- (void)setFwTouchInsets:(UIEdgeInsets)fwTouchInsets
+{
+    objc_setAssociatedObject(self, @selector(fwTouchInsets), [NSValue valueWithUIEdgeInsets:fwTouchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIEdgeInsets)fwSafeAreaInsets
+{
+    if (@available(iOS 11.0, *)) {
+        return self.safeAreaInsets;
+    }
+    return UIEdgeInsetsZero;
+}
+
+@end
+
+#pragma mark - UIButton+FWToolkit
+
+@implementation UIButton (FWToolkit)
+
+- (CGFloat)fwDisabledAlpha
+{
+    return [objc_getAssociatedObject(self, @selector(fwDisabledAlpha)) doubleValue];
+}
+
+- (void)setFwDisabledAlpha:(CGFloat)alpha
+{
+    objc_setAssociatedObject(self, @selector(fwDisabledAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (alpha > 0) {
+        self.alpha = self.isEnabled ? 1 : alpha;
+    }
+}
+
+- (CGFloat)fwHighlightedAlpha
+{
+    return [objc_getAssociatedObject(self, @selector(fwHighlightedAlpha)) doubleValue];
+}
+
+- (void)setFwHighlightedAlpha:(CGFloat)alpha
+{
+    objc_setAssociatedObject(self, @selector(fwHighlightedAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (self.enabled && alpha > 0) {
+        self.alpha = self.isHighlighted ? alpha : 1;
+    }
+}
+
 @end
 
 #pragma mark - UIViewController+FWToolkit
 
 @implementation UIViewController (FWToolkit)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidLoad;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillAppear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidAppear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewWillDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            selfObject.fwVisibleState = FWViewControllerVisibleStateWillDisappear;
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            FWSwizzleOriginal(animated);
+            selfObject.fwVisibleState = FWViewControllerVisibleStateDidDisappear;
+        }));
+    });
+}
 
 - (BOOL)fwIsRoot
 {
@@ -683,9 +804,48 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     return NO;
 }
 
+- (BOOL)fwIsViewVisible
+{
+    return self.isViewLoaded && self.view.window;
+}
+
+- (BOOL)fwIsDataLoaded
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsDataLoaded)) boolValue];
+}
+
+- (void)setFwIsDataLoaded:(BOOL)fwIsDataLoaded
+{
+    objc_setAssociatedObject(self, @selector(fwIsDataLoaded), @(fwIsDataLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (UIView *)fwView
 {
     return self.view;
+}
+
+- (FWViewControllerVisibleState)fwVisibleState
+{
+    return [objc_getAssociatedObject(self, @selector(fwVisibleState)) unsignedIntegerValue];
+}
+
+- (void)setFwVisibleState:(FWViewControllerVisibleState)fwVisibleState
+{
+    BOOL valueChanged = self.fwVisibleState != fwVisibleState;
+    objc_setAssociatedObject(self, @selector(fwVisibleState), @(fwVisibleState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (valueChanged && self.fwVisibleStateChanged) {
+        self.fwVisibleStateChanged(self, fwVisibleState);
+    }
+}
+
+- (void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    return objc_getAssociatedObject(self, @selector(fwVisibleStateChanged));
+}
+
+- (void)setFwVisibleStateChanged:(void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fwVisibleStateChanged
+{
+    objc_setAssociatedObject(self, @selector(fwVisibleStateChanged), fwVisibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end

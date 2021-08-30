@@ -238,9 +238,46 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 获取响应的视图控制器
 @property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
 
+/// 设置额外热区(点击区域)
+@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
+
+/// 获取视图安全区域距离，iOS11以下为zero
+@property (nonatomic, assign, readonly) UIEdgeInsets fwSafeAreaInsets;
+
+@end
+
+#pragma mark - UIButton+FWToolkit
+
+/*!
+ @brief UIButton+FWToolkit
+ */
+@interface UIButton (FWToolkit)
+
+/// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+@property (nonatomic, assign) CGFloat fwDisabledAlpha;
+
+/// 自定义按钮高亮时的alpha，如0.5，默认0不生效
+@property (nonatomic, assign) CGFloat fwHighlightedAlpha;
+
 @end
 
 #pragma mark - UIViewController+FWToolkit
+
+/// 视图控制器生命周期状态枚举
+typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
+    /// 未触发ViewDidLoad
+    FWViewControllerVisibleStateReady = 0,
+    /// 已触发ViewDidLoad
+    FWViewControllerVisibleStateDidLoad,
+    /// 已触发ViewWillAppear
+    FWViewControllerVisibleStateWillAppear,
+    /// 已触发ViewDidAppear
+    FWViewControllerVisibleStateDidAppear,
+    /// 已触发ViewWillDisappear
+    FWViewControllerVisibleStateWillDisappear,
+    /// 已触发ViewDidDisappear
+    FWViewControllerVisibleStateDidDisappear,
+};
 
 /*!
  @brief UIViewController+FWToolkit
@@ -259,8 +296,20 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
 @property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
 
+/// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
+@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
+
+/// 是否已经加载完数据，默认NO，加载完成后可标记为YES，可用于第一次加载数据时显示loading等判断
+@property (nonatomic, assign) BOOL fwIsDataLoaded;
+
 /// 当前内容视图，默认view，用于兼容自定义导航栏等方案
 @property (nonatomic, strong, readonly) UIView *fwView;
+
+/// 当前生命周期状态，默认Ready
+@property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;
+
+/// 生命周期变化时通知句柄，默认nil
+@property (nonatomic, copy, nullable) void (^fwVisibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
 
 @end
 

@@ -19,21 +19,6 @@ static UIModalPresentationStyle fwStaticModalPresentationStyle = UIModalPresenta
 
 @implementation UIViewController (FWFramework)
 
-- (BOOL)fwIsViewVisible
-{
-    return self.isViewLoaded && self.view.window;
-}
-
-- (BOOL)fwIsDataLoaded
-{
-    return [objc_getAssociatedObject(self, @selector(fwIsDataLoaded)) boolValue];
-}
-
-- (void)setFwIsDataLoaded:(BOOL)fwIsDataLoaded
-{
-    objc_setAssociatedObject(self, @selector(fwIsDataLoaded), @(fwIsDataLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 #pragma mark - Present
 
 + (void)fwDefaultModalPresentationStyle:(UIModalPresentationStyle)style

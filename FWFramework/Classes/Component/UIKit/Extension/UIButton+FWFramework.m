@@ -8,60 +8,8 @@
  */
 
 #import "UIButton+FWFramework.h"
-#import "FWSwizzle.h"
-#import <objc/runtime.h>
 
 @implementation UIButton (FWFramework)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIButton, @selector(setEnabled:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL enabled), FWSwizzleCode({
-            FWSwizzleOriginal(enabled);
-            
-            if (selfObject.fwDisabledAlpha > 0) {
-                selfObject.alpha = enabled ? 1 : selfObject.fwDisabledAlpha;
-            }
-        }));
-        
-        FWSwizzleClass(UIButton, @selector(setHighlighted:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL highlighted), FWSwizzleCode({
-            FWSwizzleOriginal(highlighted);
-            
-            if (selfObject.enabled && selfObject.fwHighlightedAlpha > 0) {
-                selfObject.alpha = highlighted ? selfObject.fwHighlightedAlpha : 1;
-            }
-        }));
-    });
-}
-
-- (CGFloat)fwDisabledAlpha
-{
-    return [objc_getAssociatedObject(self, @selector(fwDisabledAlpha)) doubleValue];
-}
-
-- (void)setFwDisabledAlpha:(CGFloat)alpha
-{
-    objc_setAssociatedObject(self, @selector(fwDisabledAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (alpha > 0) {
-        self.alpha = self.isEnabled ? 1 : alpha;
-    }
-}
-
-- (CGFloat)fwHighlightedAlpha
-{
-    return [objc_getAssociatedObject(self, @selector(fwHighlightedAlpha)) doubleValue];
-}
-
-- (void)setFwHighlightedAlpha:(CGFloat)alpha
-{
-    objc_setAssociatedObject(self, @selector(fwHighlightedAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    if (self.enabled && alpha > 0) {
-        self.alpha = self.isHighlighted ? alpha : 1;
-    }
-}
 
 - (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
 {
