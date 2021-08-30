@@ -40,7 +40,7 @@
 
 @property (nonatomic, assign) CGFloat offsetY;
 
-@property (nonatomic, weak) FWProgressView *progressView;
+@property (nonatomic, strong) FWProgressView *progressView;
 
 @property (nonatomic, assign) BOOL showAnimation;
 

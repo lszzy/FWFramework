@@ -40,6 +40,66 @@
     return self;
 }
 
+- (void)setProgressTintColor:(UIColor *)progressTintColor
+{
+    _progressTintColor = progressTintColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setBackgroundTintColor:(UIColor *)backgroundTintColor
+{
+    _backgroundTintColor = backgroundTintColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setProgressBackgroundColor:(UIColor *)progressBackgroundColor
+{
+    _progressBackgroundColor = progressBackgroundColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    [self setNeedsDisplay];
+}
+
+- (void)setPercentShow:(BOOL)percentShow
+{
+    _percentShow = percentShow;
+    self.percentLabel.hidden = !percentShow;
+}
+
+- (void)setPercentTextColor:(UIColor *)percentTextColor
+{
+    _percentTextColor = percentTextColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setPercentFont:(UIFont *)percentFont
+{
+    _percentFont = percentFont;
+    [self setNeedsDisplay];
+}
+
+- (void)setAnnular:(BOOL)annular
+{
+    _annular = annular;
+    [self setNeedsDisplay];
+}
+
+- (void)setAnnularLineCapStyle:(CGLineCap)annularLineCapStyle
+{
+    _annularLineCapStyle = annularLineCapStyle;
+    [self setNeedsDisplay];
+}
+
+- (void)setAnnularLineWidth:(CGFloat)annularLineWidth
+{
+    _annularLineWidth = annularLineWidth;
+    [self setNeedsDisplay];
+}
+
 - (void)renderView
 {
     self.backgroundColor = [UIColor clearColor];
@@ -68,11 +128,6 @@
     _percentLabel.text = @"0%";
     _percentLabel.hidden = !_percentShow;
     [self addSubview:_percentLabel];
-    
-    // 添加监听
-    for (NSString *keyPath in [self observableKeypaths]) {
-        [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
-    }
 }
 
 - (void)drawRect:(CGRect)rect
@@ -128,41 +183,6 @@
         CGContextClosePath(context);
         CGContextFillPath(context);
     }
-}
-
-- (void)setPercentShow:(BOOL)percentShow
-{
-    _percentShow = percentShow;
-    self.percentLabel.hidden = !percentShow;
-}
-
-- (void)dealloc
-{
-    // 移除监听
-    for (NSString *keyPath in [self observableKeypaths]) {
-        [self removeObserver:self forKeyPath:keyPath];
-    }
-}
-
-- (NSArray *)observableKeypaths
-{
-    return [NSArray arrayWithObjects:
-            @"progressTintColor",
-            @"backgroundTintColor",
-            @"progressBackgroundColor",
-            @"progress",
-            @"percentShow",
-            @"percentTextColor",
-            @"percentFont",
-            @"annular",
-            @"annularLineCapStyle",
-            @"annularLineWidth",
-            nil];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    [self setNeedsDisplay];
 }
 
 @end
