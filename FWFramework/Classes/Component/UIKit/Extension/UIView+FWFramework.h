@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置额外热区(点击区域)
 @property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
 
+// 获取视图安全区域距离，iOS11以下为zero
+@property (nonatomic, assign, readonly) UIEdgeInsets fwSafeAreaInsets;
+
 #pragma mark - Transform
 
 // 获取当前view的transform scale x
