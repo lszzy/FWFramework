@@ -153,13 +153,21 @@
 
 - (void)fwUpdateNavigationBarStyle:(BOOL)animated
 {
-    if (!self.navigationController || self.fwIsChild) return;
+    // 含有导航栏且不是child控制器且不是导航栏控制器时才处理
+    if (!self.navigationController || self.fwIsChild ||
+        [self isKindOfClass:[UINavigationController class]]) return;
+    
+    // 检查VC是否自定义appearance或style或hidden，都未自定义时检查nav是否自定义appearance
     FWNavigationBarAppearance *appearance = self.fwNavigationBarAppearance;
     NSNumber *styleNum = objc_getAssociatedObject(self, @selector(fwNavigationBarStyle));
     NSNumber *hiddenNum = objc_getAssociatedObject(self, @selector(fwNavigationBarHidden));
-    if (!appearance && !styleNum && !hiddenNum) return;
+    if (!appearance && !styleNum && !hiddenNum) {
+        appearance = self.navigationController.fwNavigationBarAppearance;
+        if (!appearance) return;
+    }
 
-    if (!appearance) appearance = [FWNavigationBarAppearance appearanceForStyle:styleNum.integerValue];
+    // 检查hidden和transparent是否自定义，任意一个包含即生效
+    if (!appearance && styleNum) appearance = [FWNavigationBarAppearance appearanceForStyle:styleNum.integerValue];
     BOOL isHidden = (styleNum.integerValue == FWNavigationBarStyleHidden) || hiddenNum.boolValue || appearance.isHidden;
     BOOL isTransparent = (styleNum.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
     
