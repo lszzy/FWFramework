@@ -10,33 +10,10 @@
 #import "FWEmptyPluginImpl.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWEmptyView
-
-@interface FWEmptyViewButton : UIButton
-
-@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
-
-@end
-
-@implementation FWEmptyViewButton
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    if (!UIEdgeInsetsEqualToEdgeInsets(self.fwTouchInsets, UIEdgeInsetsZero)) {
-        UIEdgeInsets touchInsets = self.fwTouchInsets;
-        CGRect bounds = self.bounds;
-        bounds = CGRectMake(bounds.origin.x - touchInsets.left,
-                            bounds.origin.y - touchInsets.top,
-                            bounds.size.width + touchInsets.left + touchInsets.right,
-                            bounds.size.height + touchInsets.top + touchInsets.bottom);
-        return CGRectContainsPoint(bounds, point);
-    }
-    
-    return [super pointInside:point withEvent:event];
-}
-
-@end
 
 @interface FWEmptyView ()
 
@@ -93,7 +70,7 @@
     self.detailTextLabel.numberOfLines = 0;
     [self.contentView addSubview:self.detailTextLabel];
     
-    FWEmptyViewButton *actionButton = [[FWEmptyViewButton alloc] init];
+    UIButton *actionButton = [[UIButton alloc] init];
     actionButton.fwTouchInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     _actionButton = actionButton;
     [self.contentView addSubview:self.actionButton];
