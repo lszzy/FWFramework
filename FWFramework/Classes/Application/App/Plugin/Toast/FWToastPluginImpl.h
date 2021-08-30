@@ -1,17 +1,18 @@
 /*!
  @header     FWToastPluginImpl.h
  @indexgroup FWFramework
- @brief      FWToastPlugin
+ @brief      FWToastPluginImpl
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/22
  */
 
 #import "FWToastPlugin.h"
+#import "FWProgressView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWToastProgressView
+#pragma mark - FWToastView
 
 /// 自定义吐司加载视图协议
 @protocol FWToastLoadingViewProtocol <NSObject>
@@ -21,29 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startAnimating;
 
 @end
-
-/// 自定义吐司进度条视图协议
-@protocol FWToastProgressViewProtocol <NSObject>
-@optional
-
-/// 当进度发生变化时，将自动调用此处的setProgress:
-- (void)setProgress:(CGFloat)progress;
-
-@end
-
-/// 默认吐司进度条视图
-@interface FWToastProgressView : UIView
-
-/// 进度条颜色，默认白色
-@property (nonatomic, strong) UIColor *progressColor;
-/// 进度条宽度，默认2
-@property (nonatomic, assign) CGFloat lineWidth;
-/// 当前进度
-@property (nonatomic, assign) CGFloat progress;
-
-@end
-
-#pragma mark - FWToastView
 
 /// 吐司视图类型
 typedef NS_ENUM(NSInteger, FWToastViewType) {
@@ -74,7 +52,7 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
 /// 指示器视图，仅Loading存在
 @property (nonatomic, readonly, nullable) UIActivityIndicatorView *indicatorView;
 /// 进度条视图，仅Progress存在
-@property (nonatomic, readonly, nullable) FWToastProgressView *progressView;
+@property (nonatomic, readonly, nullable) FWProgressView *progressView;
 /// 标题标签，都存在，有内容时才显示
 @property (nonatomic, readonly) UILabel *titleLabel;
 

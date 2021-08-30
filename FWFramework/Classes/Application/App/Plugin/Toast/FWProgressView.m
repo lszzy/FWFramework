@@ -1,10 +1,11 @@
-//
-//  FWProgressView.m
-//  FWFramework
-//
-//  Created by wuyong on 17/3/24.
-//  Copyright © 2018年 wuyong.site. All rights reserved.
-//
+/*!
+ @header     FWProgressView.m
+ @indexgroup FWFramework
+ @brief      FWProgressView
+ @author     wuyong
+ @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
+ @updated    2018/9/22
+ */
 
 #import "FWProgressView.h"
 

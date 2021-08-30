@@ -1,7 +1,7 @@
 /*!
  @header     FWToastPluginImpl.m
  @indexgroup FWFramework
- @brief      FWToastPlugin
+ @brief      FWToastPluginImpl
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018/9/22
@@ -14,50 +14,6 @@
 #import "FWProxy.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWToastProgressView
-
-@implementation FWToastProgressView
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _progressColor = [UIColor whiteColor];
-        _lineWidth = 2.f;
-    }
-    return self;
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
-    processBackgroundPath.lineWidth = self.lineWidth;
-    processBackgroundPath.lineCapStyle = kCGLineCapButt;
-    CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-    CGFloat radius = (self.bounds.size.width - self.lineWidth) / 2;
-    CGFloat startAngle = - ((float)M_PI / 2);
-    CGFloat endAngle = (2 * (float)M_PI) + startAngle;
-    [processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-    [[self.progressColor colorWithAlphaComponent:0.1] set];
-    [processBackgroundPath stroke];
-    
-    UIBezierPath *processPath = [UIBezierPath bezierPath];
-    processPath.lineCapStyle = kCGLineCapSquare;
-    processPath.lineWidth = self.lineWidth;
-    endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-    [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-    [self.progressColor set];
-    [processPath stroke];
-}
-
-- (void)setProgress:(CGFloat)progress
-{
-    _progress = progress;
-    [self setNeedsDisplay];
-}
-
-@end
-
 #pragma mark - FWToastView
 
 @interface FWToastView ()
@@ -68,7 +24,7 @@
 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
-@property (nonatomic, strong) FWToastProgressView *progressView;
+@property (nonatomic, strong) FWProgressView *progressView;
 
 @property (nonatomic, strong) NSTimer *hideTimer;
 
@@ -141,7 +97,7 @@
             break;
         }
         case FWToastViewTypeProgress: {
-            _progressView = [FWToastProgressView fwAutoLayoutView];
+            _progressView = [FWProgressView fwAutoLayoutView];
             _progressView.backgroundColor = [UIColor clearColor];
             _progressView.userInteractionEnabled = NO;
             [_contentView addSubview:_progressView];
@@ -191,7 +147,7 @@
         }
         case FWToastViewTypeProgress: {
             self.firstView = self.progressView;
-            self.progressView.progressColor = self.indicatorColor;
+            self.progressView.progressTintColor = self.indicatorColor;
             break;
         }
         case FWToastViewTypeText:
@@ -251,7 +207,7 @@
     _progress = progress;
     UIView *progressView = self.progressView ?: self.customView;
     if (progressView && [progressView respondsToSelector:@selector(setProgress:)]) {
-        [(UIView<FWToastProgressViewProtocol> *)progressView setProgress:progress];
+        [(UIView<FWProgressViewProtocol> *)progressView setProgress:progress];
     }
 }
 

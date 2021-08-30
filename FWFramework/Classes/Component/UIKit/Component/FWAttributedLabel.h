@@ -23,7 +23,6 @@
 #import "FWPasscodeView.h"
 #import "FWPhotoBrowser.h"
 #import "FWPopupMenu.h"
-#import "FWProgressView.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"
 #import "FWTagCollectionView.h"

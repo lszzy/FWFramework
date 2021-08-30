@@ -100,6 +100,7 @@ Pod::Spec.new do |s|
 
     ss.subspec 'UIKit' do |sss|
       sss.source_files = 'FWFramework/Classes/Component/UIKit/**/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Application/App'
     end
 
     ss.subspec 'SwiftUI' do |sss|
