@@ -26,6 +26,20 @@
 
 @implementation UIActivityIndicatorView (FWFramework)
 
++ (instancetype)fwIndicatorViewWithColor:(UIColor *)color
+{
+    UIActivityIndicatorViewStyle indicatorStyle;
+    if (@available(iOS 13.0, *)) {
+        indicatorStyle = UIActivityIndicatorViewStyleMedium;
+    } else {
+        indicatorStyle = UIActivityIndicatorViewStyleWhite;
+    }
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
+    indicatorView.color = color ?: UIColor.whiteColor;
+    indicatorView.hidesWhenStopped = YES;
+    return indicatorView;
+}
+
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize
 {
     CGSize initialSize = self.bounds.size;

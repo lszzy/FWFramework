@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIPageControl (FWFramework)
 
-// 自定义圆点大小，默认{10, 10}
+/// 自定义圆点大小，默认{10, 10}
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize;
 
 @end
@@ -26,7 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIActivityIndicatorView (FWFramework)
 
-// 自定义指示器大小
+/// 指定颜色快速创建指示器视图，默认白色
++ (instancetype)fwIndicatorViewWithColor:(nullable UIColor *)color;
+
+/// 自定义指示器大小
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize;
 
 @end

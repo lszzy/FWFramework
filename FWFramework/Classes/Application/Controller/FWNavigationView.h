@@ -182,6 +182,7 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 @end
 
 @class FWNavigationTitleView;
+@protocol FWIndicatorViewPlugin;
 
 /// 自定义titleView事件代理
 @protocol FWNavigationTitleViewDelegate <NSObject>
@@ -267,7 +268,7 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 @property(nonatomic, assign) UIEdgeInsets subtitleEdgeInsets UI_APPEARANCE_SELECTOR;
 
 /// 标题栏左侧loading视图，开启loading后才存在
-@property(nonatomic, strong, readonly, nullable) UIActivityIndicatorView *loadingView;
+@property(nonatomic, strong, readonly, nullable) UIView<FWIndicatorViewPlugin> *loadingView;
 
 /// 是否显示loading视图，开启后才会显示，默认NO
 @property(nonatomic, assign) BOOL showsLoadingView;

@@ -8,6 +8,7 @@
  */
 
 #import "FWRefreshPluginImpl.h"
+#import "FWViewPlugin.h"
 #import "FWMessage.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
@@ -59,7 +60,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 @property (nonatomic) SEL action;
 
 @property (nonatomic, strong) FWPullRefreshArrow *arrow;
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nonatomic, strong, readwrite) UILabel *titleLabel;
 @property (nonatomic, strong, readwrite) UILabel *subtitleLabel;
 @property (nonatomic, readwrite) FWPullRefreshState state;
@@ -93,7 +94,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nonatomic, readwrite) FWInfiniteScrollState state;
 @property (nonatomic, assign) BOOL userTriggered;
 @property (nonatomic, strong) NSMutableArray *viewForState;
@@ -113,12 +114,12 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @implementation FWPullRefreshView
 
 // public properties
-@synthesize pullRefreshBlock, arrowColor, textColor, activityIndicatorViewColor, activityIndicatorViewStyle;
+@synthesize pullRefreshBlock, arrowColor, textColor, indicatorColor;
 @synthesize state = _state;
 @synthesize scrollView = _scrollView;
 @synthesize showsPullToRefresh = _showsPullToRefresh;
 @synthesize arrow = _arrow;
-@synthesize activityIndicatorView = _activityIndicatorView;
+@synthesize indicatorView = _indicatorView;
 @synthesize titleLabel = _titleLabel;
 
 #pragma mark - Lifecycle
@@ -127,7 +128,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if(self = [super initWithFrame:frame]) {
         
         // default styling values
-        self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         self.textColor = [UIColor darkGrayColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = FWPullRefreshStateStopped;
@@ -191,7 +191,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             case FWPullRefreshStateAll:
             case FWPullRefreshStateStopped:
                 self.arrow.alpha = 1;
-                [self.activityIndicatorView stopAnimating];
+                [self.indicatorView stopAnimating];
                 [self rotateArrow:0 hide:NO];
                 break;
                 
@@ -200,12 +200,12 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                 break;
                 
             case FWPullRefreshStateLoading:
-                [self.activityIndicatorView startAnimating];
+                [self.indicatorView startAnimating];
                 [self rotateArrow:0 hide:YES];
                 break;
         }
         
-        CGFloat leftViewWidth = MAX(self.arrow.bounds.size.width,self.activityIndicatorView.bounds.size.width);
+        CGFloat leftViewWidth = MAX(self.arrow.bounds.size.width,self.indicatorView.bounds.size.width);
         
         CGFloat margin = 10;
         CGFloat marginY = 2;
@@ -258,7 +258,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                                       (self.bounds.size.height / 2) - (self.arrow.bounds.size.height / 2),
                                       self.arrow.bounds.size.width,
                                       self.arrow.bounds.size.height);
-        self.activityIndicatorView.center = self.arrow.center;
+        self.indicatorView.center = self.arrow.center;
     }
 }
 
@@ -363,13 +363,13 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     return _arrow;
 }
 
-- (UIActivityIndicatorView *)activityIndicatorView {
-    if(!_activityIndicatorView) {
-        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        _activityIndicatorView.hidesWhenStopped = YES;
-        [self addSubview:_activityIndicatorView];
+- (UIView<FWIndicatorViewPlugin> *)indicatorView {
+    if(!_indicatorView) {
+        _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
+        _indicatorView.color = UIColor.grayColor;
+        [self addSubview:_indicatorView];
     }
-    return _activityIndicatorView;
+    return _indicatorView;
 }
 
 - (UILabel *)titleLabel {
@@ -402,12 +402,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     return self.titleLabel.textColor;
 }
 
-- (UIColor *)activityIndicatorViewColor {
-    return self.activityIndicatorView.color;
-}
-
-- (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {
-    return self.activityIndicatorView.activityIndicatorViewStyle;
+- (UIColor *)indicatorColor {
+    return self.indicatorView.color;
 }
 
 #pragma mark - Setters
@@ -464,12 +460,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     self.subtitleLabel.textColor = newTextColor;
 }
 
-- (void)setActivityIndicatorViewColor:(UIColor *)color {
-    self.activityIndicatorView.color = color;
-}
-
-- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)viewStyle {
-    self.activityIndicatorView.activityIndicatorViewStyle = viewStyle;
+- (void)setIndicatorColor:(UIColor *)indicatorColor {
+    self.indicatorView.color = indicatorColor;
 }
 
 - (void)setPullingPercent:(CGFloat)pullingPercent
@@ -653,10 +645,10 @@ static char UIScrollViewFWPullRefreshView;
 @implementation FWInfiniteScrollView
 
 // public properties
-@synthesize infiniteScrollBlock, activityIndicatorViewStyle;
+@synthesize infiniteScrollBlock, indicatorColor;
 @synthesize state = _state;
 @synthesize scrollView = _scrollView;
-@synthesize activityIndicatorView = _activityIndicatorView;
+@synthesize indicatorView = _indicatorView;
 
 #pragma mark - Lifecycle
 
@@ -664,7 +656,6 @@ static char UIScrollViewFWPullRefreshView;
     if(self = [super initWithFrame:frame]) {
         
         // default styling values
-        self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = FWInfiniteScrollStateStopped;
         self.enabled = YES;
@@ -691,7 +682,7 @@ static char UIScrollViewFWPullRefreshView;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.activityIndicatorView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    self.indicatorView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
 }
 
 #pragma mark - Static
@@ -781,17 +772,17 @@ static char UIScrollViewFWPullRefreshView;
 
 #pragma mark - Getters
 
-- (UIActivityIndicatorView *)activityIndicatorView {
-    if(!_activityIndicatorView) {
-        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        _activityIndicatorView.hidesWhenStopped = YES;
-        [self addSubview:_activityIndicatorView];
+- (UIView<FWIndicatorViewPlugin> *)indicatorView {
+    if(!_indicatorView) {
+        _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
+        _indicatorView.color = UIColor.grayColor;
+        [self addSubview:_indicatorView];
     }
-    return _activityIndicatorView;
+    return _indicatorView;
 }
 
-- (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {
-    return self.activityIndicatorView.activityIndicatorViewStyle;
+- (UIColor *)indicatorColor {
+    return self.indicatorView.color;
 }
 
 #pragma mark - Setters
@@ -810,8 +801,8 @@ static char UIScrollViewFWPullRefreshView;
     self.state = self.state;
 }
 
-- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)viewStyle {
-    self.activityIndicatorView.activityIndicatorViewStyle = viewStyle;
+- (void)setIndicatorColor:(UIColor *)indicatorColor {
+    self.indicatorView.color = indicatorColor;
 }
 
 #pragma mark -
@@ -870,22 +861,22 @@ static char UIScrollViewFWPullRefreshView;
         }
     }
     else {
-        CGRect viewBounds = [self.activityIndicatorView bounds];
+        CGRect viewBounds = [self.indicatorView bounds];
         CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
-        [self.activityIndicatorView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
+        [self.indicatorView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         
         switch (newState) {
             case FWInfiniteScrollStateStopped:
-                [self.activityIndicatorView stopAnimating];
+                [self.indicatorView stopAnimating];
                 break;
                 
             case FWInfiniteScrollStateTriggered:
                 self.isActive = YES;
-                [self.activityIndicatorView startAnimating];
+                [self.indicatorView startAnimating];
                 break;
                 
             case FWInfiniteScrollStateLoading:
-                [self.activityIndicatorView startAnimating];
+                [self.indicatorView startAnimating];
                 break;
                 
             default:

@@ -30,8 +30,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
-@property (nullable, nonatomic, strong) UIColor *activityIndicatorViewColor;
-@property (nonatomic, assign) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+@property (nullable, nonatomic, strong) UIColor *indicatorColor;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
@@ -81,9 +80,9 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @interface FWInfiniteScrollView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
-@property (nonatomic, readwrite) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 @property (nonatomic, readwrite) BOOL enabled;
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
+@property (nullable, nonatomic, strong) UIColor *indicatorColor;
 
 @property (nonatomic, readonly) FWInfiniteScrollState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
