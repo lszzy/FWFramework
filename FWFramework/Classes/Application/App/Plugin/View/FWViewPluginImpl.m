@@ -208,3 +208,47 @@
 @implementation UIActivityIndicatorView (FWIndicatorView)
 
 @end
+
+#pragma mark - FWViewPluginImpl
+
+@implementation FWViewPluginImpl
+
++ (FWViewPluginImpl *)sharedInstance
+{
+    static FWViewPluginImpl *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWViewPluginImpl alloc] init];
+    });
+    return instance;
+}
+
+- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style
+{
+    if (self.progressViewCreator) {
+        return self.progressViewCreator(style);
+    }
+    
+    FWProgressView *progressView = [[FWProgressView alloc] init];
+    return progressView;
+}
+
+- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style
+{
+    if (self.indicatorViewCreator) {
+        return self.indicatorViewCreator(style);
+    }
+    
+    UIActivityIndicatorViewStyle indicatorStyle;
+    if (@available(iOS 13.0, *)) {
+        indicatorStyle = UIActivityIndicatorViewStyleMedium;
+    } else {
+        indicatorStyle = UIActivityIndicatorViewStyleWhite;
+    }
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
+    indicatorView.color = UIColor.whiteColor;
+    indicatorView.hidesWhenStopped = YES;
+    return indicatorView;
+}
+
+@end

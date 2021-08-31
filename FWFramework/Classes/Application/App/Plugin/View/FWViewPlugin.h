@@ -49,25 +49,28 @@ static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
 
 @end
 
-#pragma mark - FWViewPluginManager
+#pragma mark - FWViewPlugin
+
+/// 视图插件协议
+@protocol FWViewPlugin <NSObject>
+@optional
+
+/// 进度视图工厂方法
+- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style;
+
+/// 指示器视图工厂方法
+- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style;
+
+@end
 
 /// 视图插件管理器
 @interface FWViewPluginManager : NSObject
 
-/// 单例模式
-@property (class, nonatomic, readonly) FWViewPluginManager *sharedInstance;
+/// 统一进度视图工厂方法
++ (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style;
 
-/// 自定义进度视图生产句柄
-@property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^progressViewCreator)(FWProgressViewStyle style);
-
-/// 自定义指示器视图生产句柄
-@property (nullable, nonatomic, copy) UIView<FWIndicatorViewPlugin> * (^indicatorViewCreator)(FWIndicatorViewStyle style);
-
-/// 进度视图工厂方法，默认FWProgressView
-- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style;
-
-/// 指示器视图工厂方法，默认UIActivityIndicatorView
-- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style;
+/// 统一指示器视图工厂方法
++ (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style;
 
 @end
 

@@ -8,7 +8,7 @@
  */
 
 #import "FWToastPluginImpl.h"
-#import "FWViewPluginImpl.h"
+#import "FWViewPlugin.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWPlugin.h"
@@ -87,13 +87,13 @@
             break;
         }
         case FWToastViewTypeIndicator: {
-            _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
+            _indicatorView = [FWViewPluginManager createIndicatorView:FWIndicatorViewStyleDefault];
             _indicatorView.userInteractionEnabled = NO;
             [_contentView addSubview:_indicatorView];
             break;
         }
         case FWToastViewTypeProgress: {
-            _progressView = [FWViewPluginManager.sharedInstance createProgressView:FWProgressViewStyleDefault];
+            _progressView = [FWViewPluginManager createProgressView:FWProgressViewStyleDefault];
             _progressView.userInteractionEnabled = NO;
             [_contentView addSubview:_progressView];
             break;

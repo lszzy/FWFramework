@@ -9,47 +9,28 @@
 
 #import "FWViewPlugin.h"
 #import "FWViewPluginImpl.h"
+#import "FWPlugin.h"
 
-#pragma mark - FWViewPluginManager
+#pragma mark - FWViewPlugin
 
 @implementation FWViewPluginManager
 
-+ (FWViewPluginManager *)sharedInstance
++ (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style
 {
-    static FWViewPluginManager *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[FWViewPluginManager alloc] init];
-    });
-    return instance;
+    id<FWViewPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWViewPlugin)];
+    if (!plugin || ![plugin respondsToSelector:@selector(createProgressView:)]) {
+        plugin = FWViewPluginImpl.sharedInstance;
+    }
+    return [plugin createProgressView:style];
 }
 
-- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style
++ (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style
 {
-    if (self.progressViewCreator) {
-        return self.progressViewCreator(style);
+    id<FWViewPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWViewPlugin)];
+    if (!plugin || ![plugin respondsToSelector:@selector(createIndicatorView:)]) {
+        plugin = FWViewPluginImpl.sharedInstance;
     }
-    
-    FWProgressView *progressView = [[FWProgressView alloc] init];
-    return progressView;
-}
-
-- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style
-{
-    if (self.indicatorViewCreator) {
-        return self.indicatorViewCreator(style);
-    }
-    
-    UIActivityIndicatorViewStyle indicatorStyle;
-    if (@available(iOS 13.0, *)) {
-        indicatorStyle = UIActivityIndicatorViewStyleMedium;
-    } else {
-        indicatorStyle = UIActivityIndicatorViewStyleWhite;
-    }
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
-    indicatorView.color = UIColor.whiteColor;
-    indicatorView.hidesWhenStopped = YES;
-    return indicatorView;
+    return [plugin createIndicatorView:style];
 }
 
 @end

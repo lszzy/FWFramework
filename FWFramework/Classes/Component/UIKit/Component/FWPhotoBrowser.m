@@ -96,7 +96,7 @@
     [self addSubview:imageView];
     
     // 添加进度view
-    _progressView = [FWViewPluginManager.sharedInstance createProgressView:FWProgressViewStyleDefault];
+    _progressView = [FWViewPluginManager createProgressView:FWProgressViewStyleDefault];
     [self addSubview:self.progressView];
     
     // 添加监听事件
