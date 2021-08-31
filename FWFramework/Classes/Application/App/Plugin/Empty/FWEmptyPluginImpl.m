@@ -52,7 +52,7 @@
     _contentView = [[UIView alloc] init];
     [self.scrollView addSubview:self.contentView];
     
-    _loadingView = (UIView<FWEmptyLoadingViewProtocol> *)[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     ((UIActivityIndicatorView *)self.loadingView).hidesWhenStopped = NO;
     [self.contentView addSubview:self.loadingView];
     
@@ -187,7 +187,7 @@
     [self setNeedsLayout];
 }
 
-- (void)setLoadingView:(UIView<FWEmptyLoadingViewProtocol> *)loadingView {
+- (void)setLoadingView:(UIView<FWLoadingViewProtocol> *)loadingView {
     if (self.loadingView != loadingView) {
         [self.loadingView removeFromSuperview];
         _loadingView = loadingView;
