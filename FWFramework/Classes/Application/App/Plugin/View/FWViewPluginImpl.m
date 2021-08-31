@@ -42,22 +42,34 @@
     return self;
 }
 
-- (void)setColor:(UIColor *)color
+- (void)renderView
 {
-    _color = color;
-    [self setNeedsDisplay];
-}
-
-- (void)setBackgroundTintColor:(UIColor *)backgroundTintColor
-{
-    _backgroundTintColor = backgroundTintColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setProgressBackgroundColor:(UIColor *)progressBackgroundColor
-{
-    _progressBackgroundColor = progressBackgroundColor;
-    [self setNeedsDisplay];
+    self.backgroundColor = [UIColor clearColor];
+    self.opaque = NO;
+    
+    _progress = 0.f;
+    _color = [UIColor colorWithWhite:1.f alpha:1.f];
+    _annular = YES;
+    _lineWidth = 3;
+    _lineColor = [UIColor colorWithWhite:1.f alpha:0.1f];
+    _lineCapStyle = kCGLineCapRound;
+    _borderWidth = 1;
+    _borderColor = [UIColor colorWithWhite:1.f alpha:1.f];
+    _borderInset = 0;
+    _showsPercentText = NO;
+    _percentTextColor =[UIColor whiteColor];
+    _percentFont = [UIFont systemFontOfSize:12.f];
+    
+    _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
+    _percentLabel.adjustsFontSizeToFitWidth = NO;
+    _percentLabel.textAlignment = NSTextAlignmentCenter;
+    _percentLabel.opaque = NO;
+    _percentLabel.backgroundColor = [UIColor clearColor];
+    _percentLabel.textColor = _percentTextColor;
+    _percentLabel.font = _percentFont;
+    _percentLabel.text = @"0%";
+    _percentLabel.hidden = !_showsPercentText;
+    [self addSubview:_percentLabel];
 }
 
 - (void)setProgress:(CGFloat)progress
@@ -66,10 +78,64 @@
     [self setNeedsDisplay];
 }
 
-- (void)setPercentShow:(BOOL)percentShow
+- (void)setColor:(UIColor *)color
 {
-    _percentShow = percentShow;
-    self.percentLabel.hidden = !percentShow;
+    _color = color;
+    [self setNeedsDisplay];
+}
+
+- (void)setAnnular:(BOOL)annular
+{
+    _annular = annular;
+    [self setNeedsDisplay];
+}
+
+- (void)setLineWidth:(CGFloat)lineWidth
+{
+    _lineWidth = lineWidth;
+    [self setNeedsDisplay];
+}
+
+- (void)setLineColor:(UIColor *)lineColor
+{
+    _lineColor = lineColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setLineCapStyle:(CGLineCap)lineCapStyle
+{
+    _lineCapStyle = lineCapStyle;
+    [self setNeedsDisplay];
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth
+{
+    _borderWidth = borderWidth;
+    [self setNeedsDisplay];
+}
+
+- (void)setBorderColor:(UIColor *)borderColor
+{
+    _borderColor = borderColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setBorderInset:(CGFloat)borderInset
+{
+    _borderInset = borderInset;
+    [self setNeedsDisplay];
+}
+
+- (void)setFillColor:(UIColor *)fillColor
+{
+    _fillColor = fillColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setShowsPercentText:(BOOL)showsPercentText
+{
+    _showsPercentText = showsPercentText;
+    self.percentLabel.hidden = !showsPercentText;
 }
 
 - (void)setPercentTextColor:(UIColor *)percentTextColor
@@ -84,102 +150,60 @@
     [self setNeedsDisplay];
 }
 
-- (void)setAnnular:(BOOL)annular
-{
-    _annular = annular;
-    [self setNeedsDisplay];
-}
-
-- (void)setAnnularLineCapStyle:(CGLineCap)annularLineCapStyle
-{
-    _annularLineCapStyle = annularLineCapStyle;
-    [self setNeedsDisplay];
-}
-
-- (void)setAnnularLineWidth:(CGFloat)annularLineWidth
-{
-    _annularLineWidth = annularLineWidth;
-    [self setNeedsDisplay];
-}
-
-- (void)renderView
-{
-    self.backgroundColor = [UIColor clearColor];
-    self.opaque = NO;
-    
-    _progress = 0.f;
-    _color = [UIColor colorWithWhite:1.f alpha:1.f];
-    _progressBackgroundColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
-    _backgroundTintColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
-    
-    _percentShow = NO;
-    _percentTextColor =[UIColor whiteColor];
-    _percentFont = [UIFont systemFontOfSize:12.f];
-    
-    _annular = YES;
-    _annularLineCapStyle = kCGLineCapRound;
-    _annularLineWidth = 3.f;
-    
-    _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
-    _percentLabel.adjustsFontSizeToFitWidth = NO;
-    _percentLabel.textAlignment = NSTextAlignmentCenter;
-    _percentLabel.opaque = NO;
-    _percentLabel.backgroundColor = [UIColor clearColor];
-    _percentLabel.textColor = _percentTextColor;
-    _percentLabel.font = _percentFont;
-    _percentLabel.text = @"0%";
-    _percentLabel.hidden = !_percentShow;
-    [self addSubview:_percentLabel];
-}
-
 - (void)drawRect:(CGRect)rect
 {
-    if (self.percentShow) {
+    if (self.showsPercentText) {
         self.percentLabel.text = [NSString stringWithFormat:@"%.0f%%", self.progress > 1.0f ? 100.f : self.progress * 100.f];
         self.percentLabel.textColor = self.percentTextColor;
         self.percentLabel.font = self.percentFont;
     }
     
     if (self.annular) {
-        // 绘制背景
-        CGFloat lineWidth = self.annularLineWidth;
-        UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
-        processBackgroundPath.lineWidth = lineWidth;
-        processBackgroundPath.lineCapStyle = kCGLineCapRound;
+        CGFloat lineWidth = self.lineWidth;
+        UIBezierPath *progessBackgroundPath = [UIBezierPath bezierPath];
+        progessBackgroundPath.lineWidth = lineWidth;
+        progessBackgroundPath.lineCapStyle = kCGLineCapRound;
         CGPoint center = CGPointMake(self.bounds.size.width / 2.f, self.bounds.size.height / 2.f);
         CGFloat radius = (MIN(self.bounds.size.width, self.bounds.size.height) - lineWidth) / 2.f;
         CGFloat startAngle = - ((float)M_PI / 2);
         CGFloat endAngle = (2 * (float)M_PI) + startAngle;
-        [processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [self.backgroundTintColor set];
-        [processBackgroundPath stroke];
+        [progessBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+        [self.lineColor set];
+        [progessBackgroundPath stroke];
         
-        // 绘制进度
-        UIBezierPath *processPath = [UIBezierPath bezierPath];
-        processPath.lineCapStyle = self.annularLineCapStyle;
-        processPath.lineWidth = lineWidth;
+        if (self.fillColor) {
+            UIBezierPath *progessFillPath = [UIBezierPath bezierPath];
+            CGFloat fillRadius = (MIN(self.bounds.size.width, self.bounds.size.height) - lineWidth * 2) / 2.f;
+            [progessFillPath addArcWithCenter:center radius:fillRadius startAngle:startAngle endAngle:endAngle clockwise:YES];
+            [self.fillColor setFill];
+            [progessFillPath fill];
+        }
+        
+        UIBezierPath *progessPath = [UIBezierPath bezierPath];
+        progessPath.lineCapStyle = self.lineCapStyle;
+        progessPath.lineWidth = lineWidth;
         endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-        [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+        [progessPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [self.color set];
-        [processPath stroke];
+        [progessPath stroke];
     } else {
         CGRect allRect = self.bounds;
-        CGRect circleRect = CGRectInset(allRect, 2.0f, 2.0f);
+        CGFloat circleInset = self.borderWidth + self.borderInset;
         CGContextRef context = UIGraphicsGetCurrentContext();
+        [self.borderColor setStroke];
+        CGContextSetLineWidth(context, self.borderWidth);
+        CGContextStrokeEllipseInRect(context, CGRectInset(allRect, self.borderWidth, self.borderWidth));
         
-        // 绘制背景
-        [self.color setStroke];
-        [self.backgroundTintColor setFill];
-        CGContextSetLineWidth(context, 2.0f);
-        CGContextFillEllipseInRect(context, circleRect);
-        CGContextStrokeEllipseInRect(context, circleRect);
+        if (self.fillColor) {
+            [self.fillColor setFill];
+            CGContextFillEllipseInRect(context, CGRectInset(allRect, circleInset, circleInset));
+        }
         
-        // 绘制进度
         CGPoint center = CGPointMake(allRect.size.width / 2.f, allRect.size.height / 2.f);
-        CGFloat radius = (MIN(allRect.size.width, allRect.size.height) - 4) / 2.f;
+        CGFloat radius = (MIN(allRect.size.width, allRect.size.height) - circleInset * 2) / 2.f;
         CGFloat startAngle = - ((float)M_PI / 2);
         CGFloat endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-        CGContextSetFillColorWithColor(context, self.progressBackgroundColor.CGColor);
+        CGContextSetFillColorWithColor(context, self.color.CGColor);
         CGContextMoveToPoint(context, center.x, center.y);
         CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, 0);
         CGContextClosePath(context);
