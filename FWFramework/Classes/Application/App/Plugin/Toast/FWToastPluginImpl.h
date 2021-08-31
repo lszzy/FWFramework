@@ -11,52 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWProgressView
-
-/// 自定义进度条视图协议
-@protocol FWProgressViewProtocol <NSObject>
-@required
-
-/// 获取或设置进度条当前进度
-@property (nonatomic, assign) CGFloat progress;
-
-@end
-
-/// 框架默认吐司进度条视图
-@interface FWProgressView : UIView <FWProgressViewProtocol>
-
-// 进度值，0.0到1.0
-@property (nonatomic, assign) CGFloat progress;
-
-// 进度值颜色，默认白色
-@property (nonatomic, strong, nullable) UIColor *progressTintColor;
-
-// 进度背景色，默认白色，annular为NO时生效
-@property (nonatomic, strong, nullable) UIColor *progressBackgroundColor;
-
-// 进度条背景色，无进度时颜色，默认白色，透明度0.1
-@property (nonatomic, strong, nullable) UIColor *backgroundTintColor;
-
-// 是否显示百分比文本，默认NO
-@property (nonatomic, assign) BOOL percentShow;
-
-// 文本颜色，默认白色
-@property (nonatomic, strong, nullable) UIColor *percentTextColor;
-
-// 文本字体，默认12号字体
-@property (nonatomic, strong, nullable) UIFont *percentFont;
-
-// 是否显示环形线条样式，默认YES，NO为圆形
-@property (nonatomic, assign) BOOL annular;
-
-// 环形进度样式，默认kCGLineCapRound
-@property (nonatomic, assign) CGLineCap annularLineCapStyle;
-
-// 环形线条宽度，默认3.0f
-@property (nonatomic, assign) CGFloat annularLineWidth;
-
-@end
-
 #pragma mark - FWToastView
 
 /// 吐司视图类型
@@ -73,6 +27,9 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
     FWToastViewTypeProgress,
 };
 
+@protocol FWProgressViewPlugin;
+@protocol FWIndicatorViewPlugin;
+
 /// 吐司视图，默认背景色透明
 @interface FWToastView : UIControl
 
@@ -85,10 +42,10 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
 @property (nonatomic, strong, nullable) UIView *customView;
 /// 图片视图，仅Image存在
 @property (nonatomic, readonly, nullable) UIImageView *imageView;
-/// 指示器视图，仅Loading存在
-@property (nonatomic, readonly, nullable) UIActivityIndicatorView *indicatorView;
+/// 指示器视图，仅Indicator存在
+@property (nonatomic, readonly, nullable) UIView<FWIndicatorViewPlugin> *indicatorView;
 /// 进度条视图，仅Progress存在
-@property (nonatomic, readonly, nullable) FWProgressView *progressView;
+@property (nonatomic, readonly, nullable) UIView<FWProgressViewPlugin> *progressView;
 /// 标题标签，都存在，有内容时才显示
 @property (nonatomic, readonly) UILabel *titleLabel;
 
@@ -108,9 +65,7 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
 @property(nonatomic, assign) CGFloat verticalOffset UI_APPEARANCE_SELECTOR;
 /// 指示器图片，支持动画图片，自适应大小，仅Image生效
 @property (nonatomic, strong, nullable) UIImage *indicatorImage;
-/// 指示器样式，默认medium，仅Loading生效
-@property (nonatomic, assign) UIActivityIndicatorViewStyle indicatorStyle UI_APPEARANCE_SELECTOR;
-/// 指示器颜色，默认白色，仅Loading生效
+/// 指示器颜色，默认白色，仅Indicator生效
 @property (nonatomic, strong) UIColor *indicatorColor UI_APPEARANCE_SELECTOR;
 /// 指示器大小，默认根据类型处理
 @property (nonatomic, assign) CGSize indicatorSize UI_APPEARANCE_SELECTOR;

@@ -8,7 +8,7 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWToastPluginImpl.h"
+#import "FWViewPlugin.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
 #import "FWToolkit.h"
@@ -40,7 +40,7 @@
 
 @property (nonatomic, assign) CGFloat offsetY;
 
-@property (nonatomic, strong) FWProgressView *progressView;
+@property (nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
 
 @property (nonatomic, assign) BOOL showAnimation;
 
@@ -96,9 +96,8 @@
     [self addSubview:imageView];
     
     // 添加进度view
-    FWProgressView *progressView = [[FWProgressView alloc] init];
-    _progressView = progressView;
-    [self addSubview:progressView];
+    _progressView = [FWViewPluginManager.sharedInstance createProgressView:FWProgressViewStyleDefault];
+    [self addSubview:self.progressView];
     
     // 添加监听事件
     UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleClick:)];
