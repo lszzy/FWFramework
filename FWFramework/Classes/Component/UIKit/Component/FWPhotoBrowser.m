@@ -8,7 +8,7 @@
  */
 
 #import "FWPhotoBrowser.h"
-#import "FWProgressView.h"
+#import "FWToastPluginImpl.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
 #import "FWToolkit.h"

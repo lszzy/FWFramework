@@ -11,16 +11,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWEmptyView
+#pragma mark - FWLoadingView
 
-/// 自定义空界面加载视图协议
-@protocol FWEmptyLoadingViewProtocol <NSObject>
-@optional
+/// 自定义加载视图协议
+@protocol FWLoadingViewProtocol <NSObject>
+@required
 
-/// 当调用setLoadingViewHidden:NO时，将自动调用此处的startAnimating
+/// 开始加载动画
 - (void)startAnimating;
+/// 停止加载动画
+- (void)stopAnimating;
 
 @end
+
+/// UIActivityIndicatorView默认实现加载视图协议
+@interface UIActivityIndicatorView (FWLoadingView) <FWLoadingViewProtocol>
+
+@end
+
+#pragma mark - FWEmptyView
 
 /**
  * 通用的空界面控件，布局顺序从上到下依次为：imageView, loadingView, textLabel, detailTextLabel, actionButton
@@ -30,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWEmptyView : UIView
 
 /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
-@property(nonatomic, strong) UIView<FWEmptyLoadingViewProtocol> *loadingView;
+@property(nonatomic, strong) UIView<FWLoadingViewProtocol> *loadingView;
 /// 图片控件
 @property(nonatomic, strong, readonly) UIImageView *imageView;
 /// 文本控件
