@@ -58,4 +58,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWViewPluginImpl
+
+/// 默认视图插件
+@interface FWViewPluginImpl : NSObject <FWViewPlugin>
+
+/// 单例模式
+@property (class, nonatomic, readonly) FWViewPluginImpl *sharedInstance;
+
+/// 自定义进度视图生产句柄，默认FWProgressView
+@property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^progressViewCreator)(FWProgressViewStyle style);
+
+/// 自定义指示器视图生产句柄，默认UIActivityIndicatorView
+@property (nullable, nonatomic, copy) UIView<FWIndicatorViewPlugin> * (^indicatorViewCreator)(FWIndicatorViewStyle style);
+
+@end
+
 NS_ASSUME_NONNULL_END
