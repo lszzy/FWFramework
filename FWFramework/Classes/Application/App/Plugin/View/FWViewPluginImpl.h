@@ -13,38 +13,47 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWProgressView
 
-/// 框架默认吐司进度条视图
+/// 框架默认进度条视图，默认大小{37, 37}
 @interface FWProgressView : UIView <FWProgressViewPlugin>
 
-// 进度值，0.0到1.0
-@property (nonatomic, assign) CGFloat progress;
-
-// 进度颜色，默认白色
-@property (nonatomic, strong) UIColor *color;
-
-// 进度背景色，默认白色，annular为NO时生效
-@property (nonatomic, strong, nullable) UIColor *progressBackgroundColor;
-
-// 进度条背景色，无进度时颜色，默认白色，透明度0.1
-@property (nonatomic, strong, nullable) UIColor *backgroundTintColor;
-
-// 是否显示百分比文本，默认NO
-@property (nonatomic, assign) BOOL percentShow;
-
-// 文本颜色，默认白色
-@property (nonatomic, strong, nullable) UIColor *percentTextColor;
-
-// 文本字体，默认12号字体
-@property (nonatomic, strong, nullable) UIFont *percentFont;
-
-// 是否显示环形线条样式，默认YES，NO为圆形
+/// 是否显示环形样式，默认YES，NO为扇形样式
 @property (nonatomic, assign) BOOL annular;
 
-// 环形进度样式，默认kCGLineCapRound
-@property (nonatomic, assign) CGLineCap annularLineCapStyle;
+/// 进度值，0.0到1.0
+@property (nonatomic, assign) CGFloat progress;
 
-// 环形线条宽度，默认3.0f
-@property (nonatomic, assign) CGFloat annularLineWidth;
+/// 进度颜色，默认白色
+@property (nonatomic, strong) UIColor *color;
+
+/// 填充颜色，默认nil不填充
+@property (nonatomic, strong, nullable) UIColor *fillColor;
+
+/// 线条宽度，仅环形生效，默认3.0f
+@property (nonatomic, assign) CGFloat lineWidth;
+
+/// 线条颜色，仅环形生效，默认白色透明度0.1
+@property (nonatomic, strong) UIColor *lineColor;
+
+/// 线条样式，仅环形生效，默认kCGLineCapRound
+@property (nonatomic, assign) CGLineCap lineCapStyle;
+
+/// 外边框大小，仅扇形生效，默认1
+@property (nonatomic, assign) CGFloat borderWidth;
+
+/// 外边框颜色，仅扇形生效，默认白色
+@property (nonatomic, strong) UIColor *borderColor;
+
+/// 外边框内边距大小，仅扇形生效，默认0
+@property (nonatomic, assign) CGFloat borderInset;
+
+/// 是否显示百分比文本，默认NO
+@property (nonatomic, assign) BOOL showsPercentText;
+
+/// 百分比文本颜色，默认白色
+@property (nonatomic, strong) UIColor *percentTextColor;
+
+/// 百分比文本字体，默认12号字体
+@property (nonatomic, strong) UIFont *percentFont;
 
 @end
 
