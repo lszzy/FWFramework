@@ -44,10 +44,10 @@
     if (@available(iOS 13.0, *)) {
         indicatorStyle = UIActivityIndicatorViewStyleMedium;
     } else {
-        indicatorStyle = (style == FWIndicatorViewStyleGray) ? UIActivityIndicatorViewStyleGray : UIActivityIndicatorViewStyleWhite;
+        indicatorStyle = UIActivityIndicatorViewStyleWhite;
     }
     UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
-    indicatorView.color = (style == FWIndicatorViewStyleGray) ? UIColor.grayColor : UIColor.whiteColor;
+    indicatorView.color = UIColor.whiteColor;
     indicatorView.hidesWhenStopped = YES;
     return indicatorView;
 }

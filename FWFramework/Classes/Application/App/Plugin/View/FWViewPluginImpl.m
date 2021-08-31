@@ -42,9 +42,9 @@
     return self;
 }
 
-- (void)setProgressTintColor:(UIColor *)progressTintColor
+- (void)setColor:(UIColor *)color
 {
-    _progressTintColor = progressTintColor;
+    _color = color;
     [self setNeedsDisplay];
 }
 
@@ -108,7 +108,7 @@
     self.opaque = NO;
     
     _progress = 0.f;
-    _progressTintColor = [UIColor colorWithWhite:1.f alpha:1.f];
+    _color = [UIColor colorWithWhite:1.f alpha:1.f];
     _progressBackgroundColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     _backgroundTintColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
     
@@ -160,7 +160,7 @@
         processPath.lineWidth = lineWidth;
         endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
         [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [self.progressTintColor set];
+        [self.color set];
         [processPath stroke];
     } else {
         CGRect allRect = self.bounds;
@@ -168,7 +168,7 @@
         CGContextRef context = UIGraphicsGetCurrentContext();
         
         // 绘制背景
-        [self.progressTintColor setStroke];
+        [self.color setStroke];
         [self.backgroundTintColor setFill];
         CGContextSetLineWidth(context, 2.0f);
         CGContextFillEllipseInRect(context, circleRect);

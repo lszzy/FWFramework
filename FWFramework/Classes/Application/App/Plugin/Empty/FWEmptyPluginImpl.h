@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// actionButton标题字体，默认为15pt系统字体
 @property(nonatomic, strong) UIFont *actionButtonFont UI_APPEARANCE_SELECTOR;
 
+/// loadingView颜色，默认灰色
+@property(nonatomic, strong) UIColor *loadingViewColor UI_APPEARANCE_SELECTOR;
 /// textLabel文本颜色，默认为(93, 100, 110)
 @property(nonatomic, strong) UIColor *textLabelTextColor UI_APPEARANCE_SELECTOR;
 /// detailTextLabel文本颜色，默认为(133, 140, 150)

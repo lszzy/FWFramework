@@ -22,6 +22,8 @@ static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
 @protocol FWProgressViewPlugin <NSObject>
 @required
 
+/// 设置或获取进度条当前颜色
+@property (nonatomic, strong) UIColor *color;
 /// 设置或获取进度条当前进度
 @property (nonatomic, assign) CGFloat progress;
 
@@ -31,15 +33,15 @@ static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
 
 /// 指示器视图样式枚举，可扩展
 typedef NSInteger FWIndicatorViewStyle NS_TYPED_EXTENSIBLE_ENUM;
-/// 白色指示器样式，默认
-static const FWIndicatorViewStyle FWIndicatorViewStyleWhite = 0;
-/// 灰色指示器样式
-static const FWIndicatorViewStyle FWIndicatorViewStyleGray = 1;
+/// 默认指示器样式
+static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
 
 /// 自定义指示器视图协议
 @protocol FWIndicatorViewPlugin <NSObject>
 @required
 
+/// 设置或获取指示器当前颜色
+@property (nonatomic, strong) UIColor *color;
 /// 开始加载动画
 - (void)startAnimating;
 /// 停止加载动画

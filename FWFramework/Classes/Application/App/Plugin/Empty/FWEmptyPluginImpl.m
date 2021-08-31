@@ -53,7 +53,7 @@
     _contentView = [[UIView alloc] init];
     [self.scrollView addSubview:self.contentView];
     
-    _loadingView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleGray];
+    _loadingView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
     [self.contentView addSubview:self.loadingView];
     
     _imageView = [[UIImageView alloc] init];
@@ -282,6 +282,11 @@
     [self setNeedsLayout];
 }
 
+- (void)setLoadingViewColor:(UIColor *)loadingViewColor {
+    _loadingViewColor = loadingViewColor;
+    self.loadingView.color = loadingViewColor;
+}
+
 - (void)setTextLabelTextColor:(UIColor *)textLabelTextColor {
     _textLabelTextColor = textLabelTextColor;
     self.textLabel.textColor = textLabelTextColor;
@@ -327,6 +332,7 @@
     appearance.detailTextLabelFont = [UIFont systemFontOfSize:14];
     appearance.actionButtonFont = [UIFont systemFontOfSize:15];
     
+    appearance.loadingViewColor = [UIColor grayColor];
     appearance.textLabelTextColor = [UIColor colorWithRed:93/255.0 green:100/255.0 blue:110/255.0 alpha:1];
     appearance.detailTextLabelTextColor = [UIColor colorWithRed:133/255.0 green:140/255.0 blue:150/255.0 alpha:1];
     appearance.actionButtonTitleColor = [UIColor colorWithRed:49/255.0 green:189/255.0 blue:243/255.0 alpha:1];
