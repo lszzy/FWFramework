@@ -8,192 +8,12 @@
  */
 
 #import "FWToastPluginImpl.h"
-#import "FWEmptyPluginImpl.h"
+#import "FWViewPluginImpl.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import <objc/runtime.h>
-
-#pragma mark - FWProgressView
-
-@interface FWProgressView ()
-
-@property (nonatomic, readonly) UILabel *percentLabel;
-
-@end
-
-@implementation FWProgressView
-
-- (instancetype)init
-{
-    return [self initWithFrame:CGRectMake(0.f, 0.f, 37.f, 37.f)];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self renderView];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self renderView];
-    }
-    return self;
-}
-
-- (void)setProgressTintColor:(UIColor *)progressTintColor
-{
-    _progressTintColor = progressTintColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setBackgroundTintColor:(UIColor *)backgroundTintColor
-{
-    _backgroundTintColor = backgroundTintColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setProgressBackgroundColor:(UIColor *)progressBackgroundColor
-{
-    _progressBackgroundColor = progressBackgroundColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setProgress:(CGFloat)progress
-{
-    _progress = progress;
-    [self setNeedsDisplay];
-}
-
-- (void)setPercentShow:(BOOL)percentShow
-{
-    _percentShow = percentShow;
-    self.percentLabel.hidden = !percentShow;
-}
-
-- (void)setPercentTextColor:(UIColor *)percentTextColor
-{
-    _percentTextColor = percentTextColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setPercentFont:(UIFont *)percentFont
-{
-    _percentFont = percentFont;
-    [self setNeedsDisplay];
-}
-
-- (void)setAnnular:(BOOL)annular
-{
-    _annular = annular;
-    [self setNeedsDisplay];
-}
-
-- (void)setAnnularLineCapStyle:(CGLineCap)annularLineCapStyle
-{
-    _annularLineCapStyle = annularLineCapStyle;
-    [self setNeedsDisplay];
-}
-
-- (void)setAnnularLineWidth:(CGFloat)annularLineWidth
-{
-    _annularLineWidth = annularLineWidth;
-    [self setNeedsDisplay];
-}
-
-- (void)renderView
-{
-    self.backgroundColor = [UIColor clearColor];
-    self.opaque = NO;
-    
-    _progress = 0.f;
-    _progressTintColor = [UIColor colorWithWhite:1.f alpha:1.f];
-    _progressBackgroundColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
-    _backgroundTintColor = [UIColor colorWithWhite:1.f alpha:0.1f];;
-    
-    _percentShow = NO;
-    _percentTextColor =[UIColor whiteColor];
-    _percentFont = [UIFont systemFontOfSize:12.f];
-    
-    _annular = YES;
-    _annularLineCapStyle = kCGLineCapRound;
-    _annularLineWidth = 3.f;
-    
-    _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
-    _percentLabel.adjustsFontSizeToFitWidth = NO;
-    _percentLabel.textAlignment = NSTextAlignmentCenter;
-    _percentLabel.opaque = NO;
-    _percentLabel.backgroundColor = [UIColor clearColor];
-    _percentLabel.textColor = _percentTextColor;
-    _percentLabel.font = _percentFont;
-    _percentLabel.text = @"0%";
-    _percentLabel.hidden = !_percentShow;
-    [self addSubview:_percentLabel];
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    if (self.percentShow) {
-        self.percentLabel.text = [NSString stringWithFormat:@"%.0f%%", self.progress > 1.0f ? 100.f : self.progress * 100.f];
-        self.percentLabel.textColor = self.percentTextColor;
-        self.percentLabel.font = self.percentFont;
-    }
-    
-    if (self.annular) {
-        // 绘制背景
-        CGFloat lineWidth = self.annularLineWidth;
-        UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
-        processBackgroundPath.lineWidth = lineWidth;
-        processBackgroundPath.lineCapStyle = kCGLineCapRound;
-        CGPoint center = CGPointMake(self.bounds.size.width / 2.f, self.bounds.size.height / 2.f);
-        CGFloat radius = (MIN(self.bounds.size.width, self.bounds.size.height) - lineWidth) / 2.f;
-        CGFloat startAngle = - ((float)M_PI / 2);
-        CGFloat endAngle = (2 * (float)M_PI) + startAngle;
-        [processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [self.backgroundTintColor set];
-        [processBackgroundPath stroke];
-        
-        // 绘制进度
-        UIBezierPath *processPath = [UIBezierPath bezierPath];
-        processPath.lineCapStyle = self.annularLineCapStyle;
-        processPath.lineWidth = lineWidth;
-        endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-        [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [self.progressTintColor set];
-        [processPath stroke];
-    } else {
-        CGRect allRect = self.bounds;
-        CGRect circleRect = CGRectInset(allRect, 2.0f, 2.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        // 绘制背景
-        [self.progressTintColor setStroke];
-        [self.backgroundTintColor setFill];
-        CGContextSetLineWidth(context, 2.0f);
-        CGContextFillEllipseInRect(context, circleRect);
-        CGContextStrokeEllipseInRect(context, circleRect);
-        
-        // 绘制进度
-        CGPoint center = CGPointMake(allRect.size.width / 2.f, allRect.size.height / 2.f);
-        CGFloat radius = (MIN(allRect.size.width, allRect.size.height) - 4) / 2.f;
-        CGFloat startAngle = - ((float)M_PI / 2);
-        CGFloat endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-        CGContextSetFillColorWithColor(context, self.progressBackgroundColor.CGColor);
-        CGContextMoveToPoint(context, center.x, center.y);
-        CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, 0);
-        CGContextClosePath(context);
-        CGContextFillPath(context);
-    }
-}
-
-@end
 
 #pragma mark - FWToastView
 
@@ -204,8 +24,8 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
-@property (nonatomic, strong) FWProgressView *progressView;
+@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
+@property (nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
 
 @property (nonatomic, strong) NSTimer *hideTimer;
 
@@ -229,11 +49,6 @@
         _contentSpacing = 5.f;
         _contentCornerRadius = 5.f;
         _verticalOffset = -30;
-        if (@available(iOS 13.0, *)) {
-            _indicatorStyle = UIActivityIndicatorViewStyleMedium;
-        } else {
-            _indicatorStyle = UIActivityIndicatorViewStyleWhite;
-        }
         _indicatorColor = [UIColor whiteColor];
         if (type == FWToastViewTypeProgress) {
             _indicatorSize = CGSizeMake(37.f, 37.f);
@@ -272,14 +87,13 @@
             break;
         }
         case FWToastViewTypeIndicator: {
-            _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:_indicatorStyle];
+            _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleWhite];
             _indicatorView.userInteractionEnabled = NO;
             [_contentView addSubview:_indicatorView];
             break;
         }
         case FWToastViewTypeProgress: {
-            _progressView = [FWProgressView fwAutoLayoutView];
-            _progressView.backgroundColor = [UIColor clearColor];
+            _progressView = [FWViewPluginManager.sharedInstance createProgressView:FWProgressViewStyleDefault];
             _progressView.userInteractionEnabled = NO;
             [_contentView addSubview:_progressView];
             break;
@@ -322,13 +136,16 @@
         }
         case FWToastViewTypeIndicator: {
             self.firstView = self.indicatorView;
-            self.indicatorView.activityIndicatorViewStyle = self.indicatorStyle;
-            self.indicatorView.color = self.indicatorColor;
+            if ([self.indicatorView isKindOfClass:[UIActivityIndicatorView class]]) {
+                ((UIActivityIndicatorView *)self.indicatorView).color = self.indicatorColor;
+            }
             break;
         }
         case FWToastViewTypeProgress: {
             self.firstView = self.progressView;
-            self.progressView.progressTintColor = self.indicatorColor;
+            if ([self.progressView isKindOfClass:[FWProgressView class]]) {
+                ((FWProgressView *)self.progressView).progressTintColor = self.indicatorColor;
+            }
             break;
         }
         case FWToastViewTypeText:
@@ -346,7 +163,7 @@
         [self.firstView fwSetDimensionsToSize:self.indicatorSize];
     }
     if (self.firstView && [self.firstView respondsToSelector:@selector(startAnimating)]) {
-        [(UIView<FWLoadingViewProtocol> *)self.firstView startAnimating];
+        [(UIView<FWIndicatorViewPlugin> *)self.firstView startAnimating];
     }
     
     if (self.horizontalAlignment) {
@@ -388,7 +205,7 @@
     _progress = progress;
     UIView *progressView = self.progressView ?: self.customView;
     if (progressView && [progressView respondsToSelector:@selector(setProgress:)]) {
-        [(UIView<FWProgressViewProtocol> *)progressView setProgress:progress];
+        [(UIView<FWProgressViewPlugin> *)progressView setProgress:progress];
     }
 }
 

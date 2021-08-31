@@ -13,6 +13,7 @@
 #import "FWEmptyPluginImpl.h"
 #import "FWRefreshPluginImpl.h"
 #import "FWToastPluginImpl.h"
+#import "FWViewPluginImpl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

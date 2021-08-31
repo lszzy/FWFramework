@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWPhotoBrowser;
 @class FWPhotoView;
-@class FWProgressView;
 
 @protocol FWPhotoBrowserDelegate <NSObject>
 
@@ -225,8 +224,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat progress;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
-// 当前显示进图视图
-@property (nonatomic, strong, readonly) FWProgressView *progressView;
 // 显示livePhoto的控件
 @property (nonatomic, strong, readonly) PHLivePhotoView *livePhotoView;
 // 显示video的控件

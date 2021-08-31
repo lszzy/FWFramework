@@ -8,6 +8,7 @@
  */
 
 #import "FWEmptyPluginImpl.h"
+#import "FWViewPlugin.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWToolkit.h"
@@ -52,8 +53,7 @@
     _contentView = [[UIView alloc] init];
     [self.scrollView addSubview:self.contentView];
     
-    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    ((UIActivityIndicatorView *)self.loadingView).hidesWhenStopped = NO;
+    _loadingView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleGray];
     [self.contentView addSubview:self.loadingView];
     
     _imageView = [[UIImageView alloc] init];
@@ -187,7 +187,7 @@
     [self setNeedsLayout];
 }
 
-- (void)setLoadingView:(UIView<FWLoadingViewProtocol> *)loadingView {
+- (void)setLoadingView:(UIView<FWIndicatorViewPlugin> *)loadingView {
     if (self.loadingView != loadingView) {
         [self.loadingView removeFromSuperview];
         _loadingView = loadingView;
