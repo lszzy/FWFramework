@@ -9,6 +9,7 @@
 
 #import "FWNavigationView.h"
 #import "FWNavigationStyle.h"
+#import "FWViewPlugin.h"
 #import "FWAutoLayout.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
@@ -1094,7 +1095,7 @@
     _showsLoadingView = showsLoadingView;
     if (showsLoadingView) {
         if (!self.loadingView) {
-            _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            _loadingView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
             CGSize initialSize = _loadingView.bounds.size;
             CGFloat scale = self.loadingViewSize.width / initialSize.width;
             self.loadingView.transform = CGAffineTransformMakeScale(scale, scale);
