@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 进度值，0.0到1.0
 @property (nonatomic, assign) CGFloat progress;
 
-// 进度值颜色，默认白色
-@property (nonatomic, strong, nullable) UIColor *progressTintColor;
+// 进度颜色，默认白色
+@property (nonatomic, strong) UIColor *color;
 
 // 进度背景色，默认白色，annular为NO时生效
 @property (nonatomic, strong, nullable) UIColor *progressBackgroundColor;

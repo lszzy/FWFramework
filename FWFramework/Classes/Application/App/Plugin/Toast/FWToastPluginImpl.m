@@ -87,7 +87,7 @@
             break;
         }
         case FWToastViewTypeIndicator: {
-            _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleWhite];
+            _indicatorView = [FWViewPluginManager.sharedInstance createIndicatorView:FWIndicatorViewStyleDefault];
             _indicatorView.userInteractionEnabled = NO;
             [_contentView addSubview:_indicatorView];
             break;
@@ -136,16 +136,12 @@
         }
         case FWToastViewTypeIndicator: {
             self.firstView = self.indicatorView;
-            if ([self.indicatorView isKindOfClass:[UIActivityIndicatorView class]]) {
-                ((UIActivityIndicatorView *)self.indicatorView).color = self.indicatorColor;
-            }
+            self.indicatorView.color = self.indicatorColor;
             break;
         }
         case FWToastViewTypeProgress: {
             self.firstView = self.progressView;
-            if ([self.progressView isKindOfClass:[FWProgressView class]]) {
-                ((FWProgressView *)self.progressView).progressTintColor = self.indicatorColor;
-            }
+            self.progressView.color = self.indicatorColor;
             break;
         }
         case FWToastViewTypeText:
