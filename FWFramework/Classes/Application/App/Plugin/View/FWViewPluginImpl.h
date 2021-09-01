@@ -53,8 +53,46 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWIndicatorView
 
-/// UIActivityIndicatorView默认实现加载视图协议
+/// 系统UIActivityIndicatorView默认实现加载视图协议
 @interface UIActivityIndicatorView (FWIndicatorView) <FWIndicatorViewPlugin>
+
+@end
+
+/// 自定义指示器视图动画类型枚举，可扩展
+typedef NSInteger FWIndicatorViewAnimationType NS_TYPED_EXTENSIBLE_ENUM;
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeDefault = 0;
+
+/// 自定义指示器视图动画协议
+@protocol FWIndicatorViewAnimationProtocol <NSObject>
+
+/// 初始化layer动画效果
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color;
+
+@end
+
+/// 自定义指示器视图
+@interface FWIndicatorView : UIView <FWIndicatorViewPlugin>
+
+/// 指定动画类型初始化
+- (instancetype)initWithType:(FWIndicatorViewAnimationType)type;
+
+/// 当前动画类型
+@property (nonatomic, assign) FWIndicatorViewAnimationType type;
+
+/// 指示器颜色，默认白色
+@property (nonatomic, strong) UIColor *color;
+
+/// 指示器大小，默认37
+@property (nonatomic, assign) CGFloat size;
+
+/// 是否正在动画
+@property (nonatomic, assign, readonly) BOOL isAnimating;
+
+/// 开始动画
+- (void)startAnimating;
+
+/// 停止动画
+- (void)stopAnimating;
 
 @end
 
