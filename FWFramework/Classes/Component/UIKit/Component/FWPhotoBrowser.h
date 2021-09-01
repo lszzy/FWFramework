@@ -197,6 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWPhotoView
 
 @class FWPhotoView;
+@protocol FWProgressViewPlugin;
 
 @protocol FWPhotoViewDelegate <NSObject>
 
@@ -222,6 +223,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL imageLoaded;
 // 当前图片加载进度
 @property (nonatomic, assign) CGFloat progress;
+// 当前显示进度的控件，可自定义
+@property (nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
 // 当前显示图片的控件
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 // 显示livePhoto的控件

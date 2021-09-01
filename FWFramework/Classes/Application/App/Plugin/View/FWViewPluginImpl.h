@@ -53,8 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIActivityIndicatorView+FWIndicatorView
 
-/// 系统UIActivityIndicatorView默认实现指示器视图协议
-@interface UIActivityIndicatorView (FWIndicatorView) <FWIndicatorViewPlugin>
+/// 系统指示器默认实现指示器视图协议
+@interface UIActivityIndicatorView (FWIndicatorView) <FWIndicatorViewPlugin, FWProgressViewPlugin>
+
+/// 指示器进度，大于0小于1时开始动画，其它值停止动画
+@property (nonatomic, assign) CGFloat progress;
 
 @end
 
@@ -91,7 +94,7 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
  *
  * @see https://github.com/gontovnik/DGActivityIndicatorView
  */
-@interface FWIndicatorView : UIView <FWIndicatorViewPlugin>
+@interface FWIndicatorView : UIView <FWIndicatorViewPlugin, FWProgressViewPlugin>
 
 /// 指定动画类型初始化
 - (instancetype)initWithType:(FWIndicatorViewAnimationType)type;
@@ -101,6 +104,12 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
 
 /// 指示器颜色，默认白色
 @property (nonatomic, strong) UIColor *color;
+
+/// 指示器进度，大于0小于1时开始动画，其它值停止动画
+@property (nonatomic, assign) CGFloat progress;
+
+/// 停止动画时是否自动隐藏，默认YES
+@property (nonatomic, assign) BOOL hidesWhenStopped;
 
 /// 是否正在动画
 @property (nonatomic, assign, readonly) BOOL isAnimating;

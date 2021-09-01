@@ -1091,26 +1091,39 @@
     }
 }
 
+- (void)setLoadingView:(UIView<FWIndicatorViewPlugin> *)loadingView {
+    if (_loadingView != loadingView) {
+        [_loadingView stopAnimating];
+        [_loadingView removeFromSuperview];
+        _loadingView = nil;
+    }
+    if (loadingView) {
+        _loadingView = loadingView;
+        CGFloat width = _loadingView.bounds.size.width ?: [_loadingView sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+        CGFloat scale = width > 0 ? (self.loadingViewSize.width / width) : 0;
+        _loadingView.transform = CGAffineTransformMakeScale(scale, scale);
+        _loadingView.color = self.tintColor;
+        [_loadingView stopAnimating];
+        [self.contentView addSubview:_loadingView];
+    }
+    [self refreshLayout];
+}
+
 - (void)setShowsLoadingView:(BOOL)showsLoadingView {
     _showsLoadingView = showsLoadingView;
     if (showsLoadingView) {
         if (!self.loadingView) {
-            _loadingView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleDefault];
-            CGFloat width = _loadingView.bounds.size.width ?: [_loadingView sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
-            CGFloat scale = width > 0 ? (self.loadingViewSize.width / width) : 0;
-            self.loadingView.transform = CGAffineTransformMakeScale(scale, scale);
-            self.loadingView.color = self.tintColor;
-            [self.loadingView stopAnimating];
-            [self.contentView addSubview:self.loadingView];
+            self.loadingView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleDefault];
+        } else {
+            [self refreshLayout];
         }
     } else {
         if (self.loadingView) {
-            [self.loadingView stopAnimating];
-            [self.loadingView removeFromSuperview];
-            _loadingView = nil;
+            self.loadingView = nil;
+        } else {
+            [self refreshLayout];
         }
     }
-    [self refreshLayout];
 }
 
 - (void)setLoadingViewHidden:(BOOL)loadingViewHidden {
