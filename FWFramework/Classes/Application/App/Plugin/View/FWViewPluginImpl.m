@@ -8,6 +8,7 @@
  */
 
 #import "FWViewPluginImpl.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWProgressView
 
@@ -229,6 +230,21 @@
 #pragma mark - UIActivityIndicatorView+FWIndicatorView
 
 @implementation UIActivityIndicatorView (FWIndicatorView)
+
+- (CGFloat)progress
+{
+    return [objc_getAssociatedObject(self, @selector(progress)) doubleValue];
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    objc_setAssociatedObject(self, @selector(progress), @(progress), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (0 < progress && progress < 1) {
+        if (!self.isAnimating) [self startAnimating];
+    } else {
+        if (self.isAnimating) [self stopAnimating];
+    }
+}
 
 @end
 
@@ -646,6 +662,7 @@
 - (void)setupLayer
 {
     _color = [UIColor whiteColor];
+    _hidesWhenStopped = YES;
     self.userInteractionEnabled = NO;
     self.hidden = YES;
     
@@ -682,6 +699,16 @@
     }
 }
 
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    if (0 < progress && progress < 1) {
+        if (!self.isAnimating) [self startAnimating];
+    } else {
+        if (self.isAnimating) [self stopAnimating];
+    }
+}
+
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
@@ -696,9 +723,7 @@
 
 - (void)startAnimating
 {
-    if (!_animationLayer.sublayers) {
-        [self setupAnimation];
-    }
+    if (!_animationLayer.sublayers) [self setupAnimation];
     self.hidden = NO;
     _animationLayer.speed = 1.0f;
     _isAnimating = YES;
@@ -708,7 +733,7 @@
 {
     _animationLayer.speed = 0.0f;
     _isAnimating = NO;
-    self.hidden = YES;
+    if (self.hidesWhenStopped) self.hidden = YES;
 }
 
 - (id<FWIndicatorViewAnimationProtocol>)animation

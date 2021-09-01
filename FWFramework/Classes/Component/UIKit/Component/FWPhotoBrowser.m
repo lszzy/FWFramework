@@ -40,8 +40,6 @@
 
 @property (nonatomic, assign) CGFloat offsetY;
 
-@property (nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
-
 @property (nonatomic, assign) BOOL showAnimation;
 
 @property (nonatomic, strong) PHLivePhotoView *livePhotoView;
@@ -364,6 +362,14 @@
         if (self.userInteractionEnabled) self.userInteractionEnabled = false;
         if (self.showAnimation == false) self.progressView.hidden = false;
     }
+}
+
+- (void)setProgressView:(UIView<FWProgressViewPlugin> *)progressView
+{
+    [_progressView removeFromSuperview];
+    _progressView = progressView;
+    _progressView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
+    [self addSubview:_progressView];
 }
 
 - (void)setContentSize:(CGSize)contentSize {

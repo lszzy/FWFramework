@@ -137,6 +137,12 @@
     FWViewPluginImpl.sharedInstance.customIndicatorView = ^UIView<FWIndicatorViewPlugin> * _Nonnull(FWIndicatorViewStyle style) {
         return [[FWIndicatorView alloc] initWithType:type];
     };
+    // FWIndicatorView也支持进度显示
+    FWViewPluginImpl.sharedInstance.customProgressView = ^UIView<FWProgressViewPlugin> * _Nonnull(FWProgressViewStyle style) {
+        FWIndicatorView *indicatorView = [[FWIndicatorView alloc] initWithType:type];
+        indicatorView.hidesWhenStopped = NO;
+        return indicatorView;
+    };
 }
 
 - (void)mockProgress:(FWProgressView *)progressView

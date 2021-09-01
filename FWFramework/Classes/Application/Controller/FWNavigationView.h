@@ -267,8 +267,8 @@ typedef NS_ENUM(NSInteger, FWNavigationTitleViewStyle) {
 /// 副标题的上下左右间距，副标题不显示时不参与计算大小，默认为 UIEdgeInsetsZero
 @property(nonatomic, assign) UIEdgeInsets subtitleEdgeInsets UI_APPEARANCE_SELECTOR;
 
-/// 标题栏左侧loading视图，开启loading后才存在
-@property(nonatomic, strong, readonly, nullable) UIView<FWIndicatorViewPlugin> *loadingView;
+/// 标题栏左侧loading视图，可自定义，开启loading后才存在
+@property(nonatomic, strong, nullable) UIView<FWIndicatorViewPlugin> *loadingView;
 
 /// 是否显示loading视图，开启后才会显示，默认NO
 @property(nonatomic, assign) BOOL showsLoadingView;

@@ -432,7 +432,11 @@ static BOOL isExpanded = NO;
     for (TestTableDynamicLayoutObject *object in self.tableData) {
         NSString *imageUrl = object.imageUrl;
         imageUrl.fwTempObject = @(count++);
-        [pictureUrls addObject:imageUrl];
+        if ([imageUrl fwIsFormatUrl] || imageUrl.length < 1) {
+            [pictureUrls addObject:imageUrl];
+        } else {
+            [pictureUrls addObject:[TestBundle imageNamed:object.imageUrl]];
+        }
     }
     self.photoBrowser.pictureUrls = pictureUrls;
     self.photoBrowser.currentIndex = indexPath.row;
