@@ -56,21 +56,23 @@ static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
 @optional
 
 /// 进度视图工厂方法
-- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style;
+- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style;
 
 /// 指示器视图工厂方法
-- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style;
+- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style;
 
 @end
 
-/// 视图插件管理器
-@interface FWViewPluginManager : NSObject
+#pragma mark - UIView+FWViewPlugin
+
+/// UIView视图插件分类
+@interface UIView (FWViewPlugin)
 
 /// 统一进度视图工厂方法
-+ (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style;
++ (UIView<FWProgressViewPlugin> *)fwProgressViewWithStyle:(FWProgressViewStyle)style;
 
 /// 统一指示器视图工厂方法
-+ (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style;
++ (UIView<FWIndicatorViewPlugin> *)fwIndicatorViewWithStyle:(FWIndicatorViewStyle)style;
 
 @end
 

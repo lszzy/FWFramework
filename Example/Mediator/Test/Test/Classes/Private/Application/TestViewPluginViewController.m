@@ -124,7 +124,7 @@
 {
     if (indexPath.section == 0) {
         BOOL annular = indexPath.row == 0;
-        FWViewPluginImpl.sharedInstance.progressViewCreator = ^UIView<FWProgressViewPlugin> * _Nonnull(FWProgressViewStyle style) {
+        FWViewPluginImpl.sharedInstance.customProgressView = ^UIView<FWProgressViewPlugin> * _Nonnull(FWProgressViewStyle style) {
             FWProgressView *progressView = [[FWProgressView alloc] init];
             progressView.annular = annular;
             return progressView;
@@ -134,7 +134,7 @@
     
     NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
     FWIndicatorViewAnimationType type = [sectionData[indexPath.row] fwAsInteger];
-    FWViewPluginImpl.sharedInstance.indicatorViewCreator = ^UIView<FWIndicatorViewPlugin> * _Nonnull(FWIndicatorViewStyle style) {
+    FWViewPluginImpl.sharedInstance.customIndicatorView = ^UIView<FWIndicatorViewPlugin> * _Nonnull(FWIndicatorViewStyle style) {
         return [[FWIndicatorView alloc] initWithType:type];
     };
 }
