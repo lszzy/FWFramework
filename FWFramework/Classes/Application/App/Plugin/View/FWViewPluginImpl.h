@@ -87,7 +87,7 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriang
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
 
 /**
- * 自定义指示器视图
+ * 自定义指示器视图，默认大小{37, 37}
  *
  * @see https://github.com/gontovnik/DGActivityIndicatorView
  */
@@ -101,9 +101,6 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
 
 /// 指示器颜色，默认白色
 @property (nonatomic, strong) UIColor *color;
-
-/// 指示器大小，默认37
-@property (nonatomic, assign) CGFloat size;
 
 /// 是否正在动画
 @property (nonatomic, assign, readonly) BOOL isAnimating;

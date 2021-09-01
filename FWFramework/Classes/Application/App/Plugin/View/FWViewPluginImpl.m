@@ -608,6 +608,11 @@
 
 @implementation FWIndicatorView
 
+- (instancetype)init
+{
+    return [self initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -630,7 +635,7 @@
 
 - (instancetype)initWithType:(FWIndicatorViewAnimationType)type
 {
-    self = [super initWithFrame:CGRectZero];
+    self = [super initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
     if (self) {
         _type = type;
         [self setupLayer];
@@ -641,7 +646,6 @@
 - (void)setupLayer
 {
     _color = [UIColor whiteColor];
-    _size = 37.f;
     self.userInteractionEnabled = NO;
     self.hidden = YES;
     
@@ -657,7 +661,7 @@
     
     id<FWIndicatorViewAnimationProtocol> animation = [self animation];
     if ([animation respondsToSelector:@selector(setupAnimation:size:color:)]) {
-        [animation setupAnimation:_animationLayer size:CGSizeMake(_size, _size) color:_color];
+        [animation setupAnimation:_animationLayer size:self.bounds.size color:_color];
         _animationLayer.speed = 0.0f;
     }
 }
@@ -670,22 +674,24 @@
     }
 }
 
-- (void)setSize:(CGFloat)size
-{
-    if (_size != size) {
-        _size = size;
-        
-        [self setupAnimation];
-        [self invalidateIntrinsicContentSize];
-    }
-}
-
 - (void)setColor:(UIColor *)color
 {
     if (![_color isEqual:color]) {
         _color = color;
         [self setupAnimation];
     }
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    [self invalidateIntrinsicContentSize];
+}
+
+- (void)setBounds:(CGRect)bounds
+{
+    [super setBounds:bounds];
+    [self invalidateIntrinsicContentSize];
 }
 
 - (void)startAnimating
@@ -738,12 +744,12 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return CGSizeMake(_size, _size);
+    return self.bounds.size;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-    return CGSizeMake(_size, _size);
+    return self.bounds.size;
 }
 
 @end
