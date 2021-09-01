@@ -579,36 +579,39 @@
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
 {
-    NSTimeInterval beginTime = CACurrentMediaTime();
-    CGFloat oX = (layer.bounds.size.width - size.width) / 2.0f;
-    CGFloat oY = (layer.bounds.size.height - size.height) / 2.0f;
-    for (int i = 0; i < 4; i++) {
-        CALayer *circle = [CALayer layer];
-        circle.frame = CGRectMake(oX, oY, size.width, size.height);
-        circle.backgroundColor = color.CGColor;
-        circle.anchorPoint = CGPointMake(0.5f, 0.5f);
-        circle.opacity = 0.8f;
-        circle.cornerRadius = circle.bounds.size.height / 2.0f;
-        circle.transform = CATransform3DMakeScale(0.0f, 0.0f, 0.0f);
-        
-        CABasicAnimation *transformAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-        transformAnimation.removedOnCompletion = NO;
-        transformAnimation.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.0f, 0.0f, 0.0f)];
-        transformAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0f, 1.0f, 0.0f)];
-        
-        CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        opacityAnimation.removedOnCompletion = NO;
-        opacityAnimation.fromValue = @(0.8f);
-        opacityAnimation.toValue = @(0.0f);
-        
-        CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
-        animationGroup.removedOnCompletion = NO;
-        animationGroup.beginTime = beginTime + i * 0.2f;
-        animationGroup.repeatCount = HUGE_VALF;
-        animationGroup.duration = 1.2f;
-        animationGroup.animations = @[transformAnimation, opacityAnimation];
-        [layer addSublayer:circle];
+    CFTimeInterval duration = 1;
+    CFTimeInterval beginTime = CACurrentMediaTime();
+    NSArray *beginTimes = @[@0, @0.2, @0.4];
+    
+    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    scaleAnimation.duration = duration;
+    scaleAnimation.fromValue = @0;
+    scaleAnimation.toValue = @1;
+    
+    CAKeyframeAnimation *opacityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.duration = duration;
+    opacityAnimation.keyTimes = @[@0, @0.05, @1];
+    opacityAnimation.values = @[@0, @1, @0];
+    
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.removedOnCompletion = NO;
+    animationGroup.animations = @[scaleAnimation, opacityAnimation];
+    animationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animationGroup.duration = duration;
+    animationGroup.repeatCount = HUGE_VALF;
+    
+    for (int i = 0; i < 3; i++) {
+        CAShapeLayer *circle = [[CAShapeLayer alloc] init];
+        UIBezierPath *circlePath = [UIBezierPath bezierPath];
+        [circlePath addArcWithCenter:CGPointMake(size.width / 2, size.height / 2) radius:size.width / 2 startAngle:0 endAngle:2 * M_PI clockwise:NO];
+        circle.fillColor = color.CGColor;
+        circle.backgroundColor = nil;
+        circle.path = circlePath.CGPath;
+        circle.frame = CGRectMake((layer.bounds.size.width - size.width) / 2.0f, (layer.bounds.size.height - size.height) / 2.0f, size.width, size.height);
+        circle.opacity = 0;
+        animationGroup.beginTime = beginTime + [beginTimes[i] doubleValue];
         [circle addAnimation:animationGroup forKey:@"animation"];
+        [layer addSublayer:circle];
     }
 }
 
