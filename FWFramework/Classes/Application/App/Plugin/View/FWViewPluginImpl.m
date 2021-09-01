@@ -209,6 +209,143 @@
 
 @end
 
+@interface FWIndicatorView ()
+
+@property (nonatomic, strong) CALayer *animationLayer;
+
+@end
+
+@implementation FWIndicatorView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _type = FWIndicatorViewAnimationTypeDefault;
+        [self setupLayer];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        _type = FWIndicatorViewAnimationTypeDefault;
+        [self setupLayer];
+    }
+    return self;
+}
+
+- (instancetype)initWithType:(FWIndicatorViewAnimationType)type
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        _type = type;
+        [self setupLayer];
+    }
+    return self;
+}
+
+- (void)setupLayer
+{
+    _color = [UIColor whiteColor];
+    _size = 37.f;
+    self.userInteractionEnabled = NO;
+    self.hidden = YES;
+    
+    _animationLayer = [[CALayer alloc] init];
+    [self.layer addSublayer:_animationLayer];
+    [self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+}
+
+- (void)setupAnimation
+{
+    _animationLayer.sublayers = nil;
+    
+    id<FWIndicatorViewAnimationProtocol> animation = [self animation];
+    if ([animation respondsToSelector:@selector(setupAnimation:size:color:)]) {
+        [animation setupAnimation:_animationLayer size:CGSizeMake(_size, _size) color:_color];
+        _animationLayer.speed = 0.0f;
+    }
+}
+
+- (void)setType:(FWIndicatorViewAnimationType)type
+{
+    if (_type != type) {
+        _type = type;
+        [self setupAnimation];
+    }
+}
+
+- (void)setSize:(CGFloat)size
+{
+    if (_size != size) {
+        _size = size;
+        
+        [self setupAnimation];
+        [self invalidateIntrinsicContentSize];
+    }
+}
+
+- (void)setColor:(UIColor *)color
+{
+    if (![_color isEqual:color]) {
+        _color = color;
+        [self setupAnimation];
+    }
+}
+
+- (void)startAnimating
+{
+    if (!_animationLayer.sublayers) {
+        [self setupAnimation];
+    }
+    self.hidden = NO;
+    _animationLayer.speed = 1.0f;
+    _isAnimating = YES;
+}
+
+- (void)stopAnimating
+{
+    _animationLayer.speed = 0.0f;
+    _isAnimating = NO;
+    self.hidden = YES;
+}
+
+- (id<FWIndicatorViewAnimationProtocol>)animation
+{
+    switch (_type) {
+        case FWIndicatorViewAnimationTypeDefault:
+            return nil;
+        default:
+            return nil;
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    _animationLayer.frame = self.bounds;
+    BOOL isAnimating = _isAnimating;
+    if (isAnimating) [self stopAnimating];
+    [self setupAnimation];
+    if (isAnimating) [self startAnimating];
+}
+
+- (CGSize)intrinsicContentSize
+{
+    return CGSizeMake(_size, _size);
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    return CGSizeMake(_size, _size);
+}
+
+@end
+
 #pragma mark - FWViewPluginImpl
 
 @implementation FWViewPluginImpl
