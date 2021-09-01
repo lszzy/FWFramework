@@ -42,10 +42,10 @@ typedef NS_ENUM(NSInteger, FWToastViewType) {
 @property (nonatomic, strong, nullable) UIView *customView;
 /// 图片视图，仅Image存在
 @property (nonatomic, readonly, nullable) UIImageView *imageView;
-/// 指示器视图，仅Indicator存在
-@property (nonatomic, readonly, nullable) UIView<FWIndicatorViewPlugin> *indicatorView;
-/// 进度条视图，仅Progress存在
-@property (nonatomic, readonly, nullable) UIView<FWProgressViewPlugin> *progressView;
+/// 指示器视图，可自定义，仅Indicator存在
+@property (nonatomic, strong, nullable) UIView<FWIndicatorViewPlugin> *indicatorView;
+/// 进度条视图，可自定义，仅Progress存在
+@property (nonatomic, strong, nullable) UIView<FWProgressViewPlugin> *progressView;
 /// 标题标签，都存在，有内容时才显示
 @property (nonatomic, readonly) UILabel *titleLabel;
 
