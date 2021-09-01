@@ -22,10 +22,7 @@
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIView *firstView;
 @property (nonatomic, strong) UILabel *titleLabel;
-
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
-@property (nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
 
 @property (nonatomic, strong) NSTimer *hideTimer;
 
@@ -203,6 +200,24 @@
     if (progressView && [progressView respondsToSelector:@selector(setProgress:)]) {
         [(UIView<FWProgressViewPlugin> *)progressView setProgress:progress];
     }
+}
+
+- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView
+{
+    if (self.type != FWToastViewTypeIndicator || !indicatorView) return;
+    [_indicatorView removeFromSuperview];
+    _indicatorView = indicatorView;
+    _indicatorView.userInteractionEnabled = NO;
+    [self.contentView addSubview:_indicatorView];
+}
+
+- (void)setProgressView:(UIView<FWProgressViewPlugin> *)progressView
+{
+    if (self.type != FWToastViewTypeProgress || !progressView) return;
+    [_progressView removeFromSuperview];
+    _progressView = progressView;
+    _progressView.userInteractionEnabled = NO;
+    [self.contentView addSubview:_progressView];
 }
 
 #pragma mark - Public

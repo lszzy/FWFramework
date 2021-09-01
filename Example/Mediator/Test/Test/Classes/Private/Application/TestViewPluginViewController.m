@@ -19,6 +19,24 @@
     return UITableViewStyleGrouped;
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        
+        [self fwShowSheetWithTitle:@"修改全局指示器样式" message:nil cancel:@"取消" actions:@[@"系统", @"LineSpin", @"LinePulse", @"BallSpin", @"BallRotate", @"BallPulse", @"BallTriangle", @"TriplePulse"] actionBlock:^(NSInteger index) {
+            if (index == 0) {
+                FWToastPluginImpl.sharedInstance.customBlock = nil;
+            } else {
+                FWToastPluginImpl.sharedInstance.customBlock = ^(FWToastView * _Nonnull toastView) {
+                    toastView.indicatorView = [[FWIndicatorView alloc] initWithType:(index - 1)];
+                };
+            }
+        }];
+    }];
+}
+
 - (void)renderData
 {
     [self.tableData addObject:@[@0, @1]];
@@ -84,14 +102,24 @@
     if (indexPath.section == 0) {
         FWProgressView *view = [cell viewWithTag:100];
         [self mockProgress:view];
-    } else {
-        FWIndicatorView *view = [cell viewWithTag:100];
-        if ([view isAnimating]) {
-            [view stopAnimating];
-        } else {
-            [view startAnimating];
-        }
+        return;
     }
+    
+    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
+    FWIndicatorViewAnimationType type = [sectionData[indexPath.row] fwAsInteger];
+    FWToastPluginImpl *toastPlugin = [[FWToastPluginImpl alloc] init];
+    toastPlugin.customBlock = ^(FWToastView * _Nonnull toastView) {
+        toastView.indicatorView = [[FWIndicatorView alloc] initWithType:type];
+    };
+    self.tableView.hidden = YES;
+    [toastPlugin fwShowLoadingWithAttributedText:[[NSAttributedString alloc] initWithString:@"Loading..."] inView:self.fwView];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [toastPlugin fwShowLoadingWithAttributedText:[[NSAttributedString alloc] initWithString:@"Authenticating..."] inView:self.fwView];
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [toastPlugin fwHideLoading:self.fwView];
+        self.tableView.hidden = NO;
+    });
 }
 
 #pragma mark - Action
