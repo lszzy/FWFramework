@@ -13,12 +13,8 @@
 
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize
 {
-    CGSize initialSize = self.bounds.size;
-    if (CGSizeEqualToSize(initialSize, CGSizeZero)) {
-        initialSize = CGSizeMake(10, 10);
-    }
-    
-    CGFloat scale = indicatorSize.height / initialSize.height;
+    CGFloat height = self.bounds.size.height > 0 ? self.bounds.size.height : 10;
+    CGFloat scale = indicatorSize.height / height;
     self.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
@@ -42,8 +38,8 @@
 
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize
 {
-    CGSize initialSize = self.bounds.size;
-    CGFloat scale = indicatorSize.width / initialSize.width;
+    CGFloat width = self.bounds.size.width > 0 ? self.bounds.size.width : 20;
+    CGFloat scale = indicatorSize.width / width;
     self.transform = CGAffineTransformMakeScale(scale, scale);
 }
 

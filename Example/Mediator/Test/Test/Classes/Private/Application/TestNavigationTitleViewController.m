@@ -48,6 +48,19 @@
     titleLabel.fwLayoutChain.leftWithInset(15).bottomWithInset(15);
 }
 
+- (void)renderModel
+{
+    FWWeakifySelf();
+    self.fwBackBarBlock = ^BOOL{
+        FWStrongifySelf();
+        [self fwShowConfirmWithTitle:nil message:@"是否关闭" cancel:@"否" confirm:@"是" confirmBlock:^{
+            FWStrongifySelf();
+            [self fwCloseViewControllerAnimated:YES];
+        }];
+        return NO;
+    };
+}
+
 - (void)renderData
 {
     self.tableView.backgroundColor = Theme.tableColor;

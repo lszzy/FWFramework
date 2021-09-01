@@ -24,7 +24,7 @@
     
     CGAffineTransform oldTransform = view.transform;
     CGAffineTransform scaleTransform = CGAffineTransformIdentity;
-    if (!isnan(limitWidth) && limitWidth > 0) {
+    if (!isnan(limitWidth) && limitWidth > 0 && CGRectGetWidth(view.frame) > 0) {
         CGFloat maxScale = limitWidth / CGRectGetWidth(view.frame);
         CGAffineTransform transformScale = CGAffineTransformMakeScale(maxScale, maxScale);
         scaleTransform = CGAffineTransformConcat(oldTransform, transformScale);

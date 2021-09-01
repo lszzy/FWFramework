@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 指定颜色快速创建指示器视图，默认白色
 + (instancetype)fwIndicatorViewWithColor:(nullable UIColor *)color;
 
-/// 自定义指示器大小
+/// 自定义指示器大小，默认{20, 20}
 - (void)fwSetIndicatorSize:(CGSize)indicatorSize;
 
 @end

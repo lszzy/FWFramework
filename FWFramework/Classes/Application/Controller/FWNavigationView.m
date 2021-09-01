@@ -1096,8 +1096,8 @@
     if (showsLoadingView) {
         if (!self.loadingView) {
             _loadingView = [FWViewPluginManager createIndicatorView:FWIndicatorViewStyleDefault];
-            CGSize initialSize = _loadingView.bounds.size;
-            CGFloat scale = self.loadingViewSize.width / initialSize.width;
+            CGFloat width = _loadingView.bounds.size.width ?: [_loadingView sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+            CGFloat scale = width > 0 ? (self.loadingViewSize.width / width) : 0;
             self.loadingView.transform = CGAffineTransformMakeScale(scale, scale);
             self.loadingView.color = self.tintColor;
             [self.loadingView stopAnimating];
