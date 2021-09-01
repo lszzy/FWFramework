@@ -220,7 +220,8 @@
     [color_filter setValue:[CIColor colorWithCGColor:backgroundColor.CGColor] forKey:@"inputColor1"];
     // 3、生成处理
     CIImage *outImage = color_filter.outputImage;
-    CGFloat scale = size / outImage.extent.size.width;
+    CGFloat outWidth = outImage.extent.size.width;
+    CGFloat scale = outWidth > 0 ? (size / outWidth) : 0;
     outImage = [outImage imageByApplyingTransform:CGAffineTransformMakeScale(scale, scale)];
     return [UIImage imageWithCIImage:outImage];
 }

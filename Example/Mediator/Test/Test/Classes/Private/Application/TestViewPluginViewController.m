@@ -19,24 +19,6 @@
     return UITableViewStyleGrouped;
 }
 
-- (void)renderModel
-{
-    FWWeakifySelf();
-    [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        
-        [self fwShowSheetWithTitle:@"修改全局指示器样式" message:nil cancel:@"取消" actions:@[@"系统", @"LineSpin", @"LinePulse", @"BallSpin", @"BallRotate", @"BallPulse", @"BallTriangle", @"TriplePulse"] actionBlock:^(NSInteger index) {
-            if (index == 0) {
-                FWToastPluginImpl.sharedInstance.customBlock = nil;
-            } else {
-                FWToastPluginImpl.sharedInstance.customBlock = ^(FWToastView * _Nonnull toastView) {
-                    toastView.indicatorView = [[FWIndicatorView alloc] initWithType:(index - 1)];
-                };
-            }
-        }];
-    }];
-}
-
 - (void)renderData
 {
     [self.tableData addObject:@[@0, @1]];
@@ -63,6 +45,7 @@
     NSInteger rowData = [sectionData[indexPath.row] fwAsInteger];
     if (indexPath.section == 0) {
         UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView style:UITableViewCellStyleDefault reuseIdentifier:@"cell1"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         FWProgressView *view = [cell viewWithTag:100];
         if (!view) {
             view = [[FWProgressView alloc] init];
@@ -77,6 +60,7 @@
     }
     
     UITableViewCell *cell = [UITableViewCell fwCellWithTableView:tableView style:UITableViewCellStyleDefault reuseIdentifier:@"cell2"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     FWIndicatorView *view = [cell viewWithTag:100];
     if (!view) {
         view = [[FWIndicatorView alloc] init];
@@ -97,8 +81,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    FWWeakifySelf();
+    [self fwShowAlertWithTitle:@"请选择" message:nil cancel:@"取消" actions:@[@"预览", @"设置全局样式"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index == 0) {
+            [self onPreview:indexPath];
+        } else {
+            [self onSettings:indexPath];
+        }
+    } cancelBlock:nil priority:FWAlertPriorityNormal];
+}
+
+#pragma mark - Action
+
+- (void)onPreview:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.section == 0) {
         FWProgressView *view = [cell viewWithTag:100];
         [self mockProgress:view];
@@ -122,7 +120,24 @@
     });
 }
 
-#pragma mark - Action
+- (void)onSettings:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        BOOL annular = indexPath.row == 0;
+        FWViewPluginImpl.sharedInstance.progressViewCreator = ^UIView<FWProgressViewPlugin> * _Nonnull(FWProgressViewStyle style) {
+            FWProgressView *progressView = [[FWProgressView alloc] init];
+            progressView.annular = annular;
+            return progressView;
+        };
+        return;
+    }
+    
+    NSArray *sectionData = [self.tableData objectAtIndex:indexPath.section];
+    FWIndicatorViewAnimationType type = [sectionData[indexPath.row] fwAsInteger];
+    FWViewPluginImpl.sharedInstance.indicatorViewCreator = ^UIView<FWIndicatorViewPlugin> * _Nonnull(FWIndicatorViewStyle style) {
+        return [[FWIndicatorView alloc] initWithType:type];
+    };
+}
 
 - (void)mockProgress:(FWProgressView *)progressView
 {
