@@ -51,26 +51,46 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWIndicatorView
+#pragma mark - UIActivityIndicatorView+FWIndicatorView
 
-/// 系统UIActivityIndicatorView默认实现加载视图协议
+/// 系统UIActivityIndicatorView默认实现指示器视图协议
 @interface UIActivityIndicatorView (FWIndicatorView) <FWIndicatorViewPlugin>
 
 @end
 
-/// 自定义指示器视图动画类型枚举，可扩展
-typedef NSInteger FWIndicatorViewAnimationType NS_TYPED_EXTENSIBLE_ENUM;
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeDefault = 0;
+#pragma mark - FWIndicatorView
 
 /// 自定义指示器视图动画协议
 @protocol FWIndicatorViewAnimationProtocol <NSObject>
+@required
 
 /// 初始化layer动画效果
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color;
 
 @end
 
-/// 自定义指示器视图
+/// 自定义指示器视图动画类型枚举，可扩展
+typedef NSInteger FWIndicatorViewAnimationType NS_TYPED_EXTENSIBLE_ENUM;
+/// 八线条渐变旋转，类似系统，默认
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLineSpin = 0;
+/// 五线条跳动，类似音符
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLinePulse = 1;
+/// 八圆球渐变旋转
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallSpin = 2;
+/// 单线条圆形旋转
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallRotate = 3;
+/// 三圆球水平跳动
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallPulse = 4;
+/// 三圆圈三角形旋转
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriangle = 5;
+/// 圆形向外扩散，类似水波纹
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
+
+/**
+ * 自定义指示器视图
+ *
+ * @see https://github.com/gontovnik/DGActivityIndicatorView
+ */
 @interface FWIndicatorView : UIView <FWIndicatorViewPlugin>
 
 /// 指定动画类型初始化
@@ -93,6 +113,9 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeDefault = 
 
 /// 停止动画
 - (void)stopAnimating;
+
+/// 创建动画对象，子类可重写
+- (id<FWIndicatorViewAnimationProtocol>)animation;
 
 @end
 
