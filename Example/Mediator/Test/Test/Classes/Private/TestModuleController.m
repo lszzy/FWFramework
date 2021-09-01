@@ -115,6 +115,7 @@
               @[@"FWRefreshPlugin+Reload", @"TestTableReloadViewController"],
               @[@"FWEmptyPlugin", @"TestEmptyViewController"],
               @[@"FWEmptyPlugin+Scroll", @"TestEmptyScrollViewController"],
+              @[@"FWViewPlugin", @"TestViewPluginViewController"],
               @[@"FWModel", @"TestModelViewController"],
               @[@"FWAsyncSocket", @"TestSocketViewController"],
               @[@"FWViewController", @"Test.TestSwiftViewController"],
