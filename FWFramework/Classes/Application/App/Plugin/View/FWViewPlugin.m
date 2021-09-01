@@ -11,26 +11,26 @@
 #import "FWViewPluginImpl.h"
 #import "FWPlugin.h"
 
-#pragma mark - FWViewPlugin
+#pragma mark - UIView+FWViewPlugin
 
-@implementation FWViewPluginManager
+@implementation UIView (FWViewPlugin)
 
-+ (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style
++ (UIView<FWProgressViewPlugin> *)fwProgressViewWithStyle:(FWProgressViewStyle)style
 {
     id<FWViewPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWViewPlugin)];
-    if (!plugin || ![plugin respondsToSelector:@selector(createProgressView:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(fwProgressViewWithStyle:)]) {
         plugin = FWViewPluginImpl.sharedInstance;
     }
-    return [plugin createProgressView:style];
+    return [plugin progressViewWithStyle:style];
 }
 
-+ (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style
++ (UIView<FWIndicatorViewPlugin> *)fwIndicatorViewWithStyle:(FWIndicatorViewStyle)style
 {
     id<FWViewPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWViewPlugin)];
-    if (!plugin || ![plugin respondsToSelector:@selector(createIndicatorView:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(fwIndicatorViewWithStyle:)]) {
         plugin = FWViewPluginImpl.sharedInstance;
     }
-    return [plugin createIndicatorView:style];
+    return [plugin indicatorViewWithStyle:style];
 }
 
 @end

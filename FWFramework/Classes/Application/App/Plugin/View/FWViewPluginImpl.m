@@ -768,20 +768,20 @@
     return instance;
 }
 
-- (UIView<FWProgressViewPlugin> *)createProgressView:(FWProgressViewStyle)style
+- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style
 {
-    if (self.progressViewCreator) {
-        return self.progressViewCreator(style);
+    if (self.customProgressView) {
+        return self.customProgressView(style);
     }
     
     FWProgressView *progressView = [[FWProgressView alloc] init];
     return progressView;
 }
 
-- (UIView<FWIndicatorViewPlugin> *)createIndicatorView:(FWIndicatorViewStyle)style
+- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style
 {
-    if (self.indicatorViewCreator) {
-        return self.indicatorViewCreator(style);
+    if (self.customIndicatorView) {
+        return self.customIndicatorView(style);
     }
     
     UIActivityIndicatorViewStyle indicatorStyle;

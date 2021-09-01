@@ -125,10 +125,10 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
 @property (class, nonatomic, readonly) FWViewPluginImpl *sharedInstance;
 
 /// 自定义进度视图生产句柄，默认FWProgressView
-@property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^progressViewCreator)(FWProgressViewStyle style);
+@property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^customProgressView)(FWProgressViewStyle style);
 
 /// 自定义指示器视图生产句柄，默认UIActivityIndicatorView
-@property (nullable, nonatomic, copy) UIView<FWIndicatorViewPlugin> * (^indicatorViewCreator)(FWIndicatorViewStyle style);
+@property (nullable, nonatomic, copy) UIView<FWIndicatorViewPlugin> * (^customIndicatorView)(FWIndicatorViewStyle style);
 
 @end
 
