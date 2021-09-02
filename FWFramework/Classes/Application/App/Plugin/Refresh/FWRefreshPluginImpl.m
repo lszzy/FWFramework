@@ -175,7 +175,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     
     self.titleLabel.hidden = hasCustomView || !self.showsTitleLabel;
     self.subtitleLabel.hidden = hasCustomView || !self.showsTitleLabel;
-    self.arrowView.hidden = hasCustomView;
+    self.arrowView.hidden = hasCustomView || !self.showsArrowView;
     
     if(hasCustomView) {
         if (customViewChanged) {
@@ -189,23 +189,34 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     else {
         switch (self.state) {
             case FWPullRefreshStateAll:
-            case FWPullRefreshStateStopped:
-                self.arrowView.alpha = 1;
+            case FWPullRefreshStateStopped: {
                 [self.indicatorView stopAnimating];
-                [self rotateArrow:0 hide:NO];
+                if (self.showsArrowView) {
+                    self.arrowView.alpha = 1;
+                    [self rotateArrow:0 hide:NO];
+                }
                 break;
-                
-            case FWPullRefreshStateTriggered:
-                [self rotateArrow:(float)M_PI hide:NO];
+            }
+            case FWPullRefreshStateTriggered: {
+                if (self.showsArrowView) {
+                    [self rotateArrow:(float)M_PI hide:NO];
+                } else {
+                    if (!self.indicatorView.isAnimating) {
+                        [self.indicatorView startAnimating];
+                    }
+                }
                 break;
-                
-            case FWPullRefreshStateLoading:
+            }
+            case FWPullRefreshStateLoading: {
                 [self.indicatorView startAnimating];
-                [self rotateArrow:0 hide:YES];
+                if (self.showsArrowView) {
+                    [self rotateArrow:0 hide:YES];
+                }
                 break;
+            }
         }
         
-        CGFloat leftViewWidth = MAX(self.arrowView.bounds.size.width,self.indicatorView.bounds.size.width);
+        CGFloat leftViewWidth = MAX(self.arrowView.bounds.size.width, self.indicatorView.bounds.size.width);
         
         CGFloat margin = 10;
         CGFloat marginY = 2;
@@ -423,6 +434,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.titles replaceObjectAtIndex:state withObject:title];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setSubtitle:(NSString *)subtitle forState:(FWPullRefreshState)state {
@@ -435,6 +447,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.subtitles replaceObjectAtIndex:state withObject:subtitle];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setCustomView:(UIView *)view forState:(FWPullRefreshState)state {
@@ -449,16 +462,21 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.viewForState replaceObjectAtIndex:state withObject:viewPlaceholder];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setShowsTitleLabel:(BOOL)showsTitleLabel {
     _showsTitleLabel = showsTitleLabel;
+    
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setShowsArrowView:(BOOL)showsArrowView {
     _showsArrowView = showsArrowView;
+    
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setTextColor:(UIColor *)newTextColor {
@@ -475,6 +493,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     [self addSubview:_indicatorView];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
@@ -485,6 +504,14 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 {
     _pullingPercent = pullingPercent;
     self.alpha = pullingPercent;
+    
+    if (pullingPercent > 0 && !self.showsArrowView) {
+        id customView = [self.viewForState objectAtIndex:self.state];
+        BOOL hasCustomView = [customView isKindOfClass:[UIView class]];
+        if (!hasCustomView && !self.indicatorView.isAnimating) {
+            [self.indicatorView startAnimating];
+        }
+    }
 }
 
 #pragma mark -
@@ -826,6 +853,7 @@ static char UIScrollViewFWPullRefreshView;
     [self addSubview:_indicatorView];
     
     [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
