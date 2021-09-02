@@ -8,7 +8,6 @@
  */
 
 #import "FWBannerView.h"
-#import "UIPageControl+FWFramework.h"
 #import "FWPageControl.h"
 #import "FWImage.h"
 #import "UIView+FWStatistical.h"
