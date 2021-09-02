@@ -1085,10 +1085,12 @@ static char UIScrollViewFWInfiniteScrollView;
 
 - (void)fwSetRefreshingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
     [scrollView fwAddPullRefreshWithBlock:block];
+    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fwPullRefreshView);
 }
 
 - (void)fwSetRefreshingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
     [scrollView fwAddPullRefreshWithTarget:target action:action];
+    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fwPullRefreshView);
 }
 
 - (void)fwBeginRefreshing:(UIScrollView *)scrollView {
@@ -1115,10 +1117,12 @@ static char UIScrollViewFWInfiniteScrollView;
 
 - (void)fwSetLoadingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
     [scrollView fwAddInfiniteScrollWithBlock:block];
+    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fwInfiniteScrollView);
 }
 
 - (void)fwSetLoadingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
     [scrollView fwAddInfiniteScrollWithTarget:target action:action];
+    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fwInfiniteScrollView);
 }
 
 - (void)fwBeginLoading:(UIScrollView *)scrollView {

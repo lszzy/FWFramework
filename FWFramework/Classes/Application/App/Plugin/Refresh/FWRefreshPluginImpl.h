@@ -128,6 +128,12 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 /// 单例模式
 @property (class, nonatomic, readonly) FWRefreshPluginImpl *sharedInstance;
 
+/// 下拉刷新自定义句柄，开启时自动调用
+@property (nonatomic, copy, nullable) void (^pullRefreshBlock)(FWPullRefreshView *pullRefreshView);
+
+/// 上拉追加自定义句柄，开启时自动调用
+@property (nonatomic, copy, nullable) void (^infiniteScrollBlock)(FWInfiniteScrollView *infiniteScrollView);
+
 @end
 
 NS_ASSUME_NONNULL_END
