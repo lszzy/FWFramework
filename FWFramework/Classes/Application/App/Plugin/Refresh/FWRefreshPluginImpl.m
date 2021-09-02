@@ -126,10 +126,10 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if(self = [super initWithFrame:frame]) {
         
         // default styling values
-        self.showsTitleLabel = YES;
-        self.showsArrowView = YES;
         self.textColor = [UIColor darkGrayColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.showsTitleLabel = [self.indicatorView isKindOfClass:[UIActivityIndicatorView class]];
+        self.showsArrowView = self.showsTitleLabel;
         self.state = FWPullRefreshStateStopped;
         self.pullingPercent = 0;
         
@@ -137,7 +137,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                        NSLocalizedString(@"松开立即刷新   ",),
                        NSLocalizedString(@"正在刷新数据...",),
                        nil];
-        
         self.subtitles = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
         self.viewForState = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
     }
@@ -192,7 +191,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             case FWPullRefreshStateStopped: {
                 [self.indicatorView stopAnimating];
                 if (self.showsArrowView) {
-                    self.arrowView.alpha = 1;
                     [self rotateArrow:0 hide:NO];
                 }
                 break;
@@ -376,7 +374,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (UIView<FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleDefault];
+        _indicatorView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
@@ -491,8 +489,11 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     _indicatorView = indicatorView;
     _indicatorView.color = indicatorColor;
     [self addSubview:_indicatorView];
-    _showsTitleLabel = NO;
-    _showsArrowView = NO;
+    
+    if (![_indicatorView isKindOfClass:[UIActivityIndicatorView class]]) {
+        _showsTitleLabel = NO;
+        _showsArrowView = NO;
+    }
     
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -820,7 +821,7 @@ static char UIScrollViewFWPullRefreshView;
 
 - (UIView<FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleDefault];
+        _indicatorView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
