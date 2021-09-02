@@ -34,6 +34,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 @property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
+@property (nonatomic, assign) BOOL showsTitleLabel;
+@property (nonatomic, assign) BOOL showsArrowView;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
