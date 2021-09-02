@@ -9,7 +9,7 @@
 
 #import "FWNavigationView.h"
 #import "FWNavigationStyle.h"
-#import "FWViewPlugin.h"
+#import "FWViewPluginImpl.h"
 #import "FWAutoLayout.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
@@ -1099,9 +1099,7 @@
     }
     if (loadingView) {
         _loadingView = loadingView;
-        CGFloat width = _loadingView.bounds.size.width ?: [_loadingView sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
-        CGFloat scale = width > 0 ? (self.loadingViewSize.width / width) : 0;
-        _loadingView.transform = CGAffineTransformMakeScale(scale, scale);
+        _loadingView.size = self.loadingViewSize;
         _loadingView.color = self.tintColor;
         [_loadingView stopAnimating];
         [self.contentView addSubview:_loadingView];
@@ -1113,7 +1111,7 @@
     _showsLoadingView = showsLoadingView;
     if (showsLoadingView) {
         if (!self.loadingView) {
-            self.loadingView = [UIView fwIndicatorViewWithStyle:FWIndicatorViewStyleDefault];
+            self.loadingView = [UIActivityIndicatorView fwIndicatorViewWithColor:nil];
         } else {
             [self refreshLayout];
         }

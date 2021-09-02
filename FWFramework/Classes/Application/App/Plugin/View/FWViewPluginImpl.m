@@ -845,15 +845,7 @@
         return self.customIndicatorView(style);
     }
     
-    UIActivityIndicatorViewStyle indicatorStyle;
-    if (@available(iOS 13.0, *)) {
-        indicatorStyle = UIActivityIndicatorViewStyleMedium;
-    } else {
-        indicatorStyle = UIActivityIndicatorViewStyleWhite;
-    }
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
-    indicatorView.color = UIColor.whiteColor;
-    indicatorView.hidesWhenStopped = YES;
+    UIActivityIndicatorView *indicatorView = [UIActivityIndicatorView fwIndicatorViewWithColor:nil];
     return indicatorView;
 }
 

@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 进度条视图样式枚举，可扩展
 typedef NSInteger FWProgressViewStyle NS_TYPED_EXTENSIBLE_ENUM;
-/// 默认进度条样式
+/// 默认进度条样式，用于框架Toast等
 static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
 
 /// 自定义进度条视图插件
@@ -37,8 +37,10 @@ static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
 
 /// 指示器视图样式枚举，可扩展
 typedef NSInteger FWIndicatorViewStyle NS_TYPED_EXTENSIBLE_ENUM;
-/// 默认指示器样式
+/// 默认指示器样式，用于框架Empty|Toast等
 static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
+/// 刷新指示器样式，用于框架Refresh等
+static const FWIndicatorViewStyle FWIndicatorViewStyleRefresh = 1;
 
 /// 自定义指示器视图协议
 @protocol FWIndicatorViewPlugin <NSObject>

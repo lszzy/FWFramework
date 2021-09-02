@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 /*!
  @brief 下拉刷新视图，默认高度60
- @discussion 自定义indicatorView后会自动隐藏标题和箭头，仅显示指示器视图
+ @discussion 如果indicatorView为自定义指示器时会自动隐藏标题和箭头，仅显示指示器视图
 */
 @interface FWPullRefreshView : UIView
 
