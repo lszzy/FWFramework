@@ -26,6 +26,8 @@ static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
 @property (nonatomic, strong) UIColor *color;
 /// 设置或获取进度条当前进度
 @property (nonatomic, assign) CGFloat progress;
+/// 设置进度条当前进度，支持动画
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated;
 
 @end
 
@@ -42,6 +44,8 @@ static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
 
 /// 设置或获取指示器当前颜色
 @property (nonatomic, strong) UIColor *color;
+/// 当前是否正在执行动画
+@property (nonatomic, assign, readonly) BOOL isAnimating;
 /// 开始加载动画
 - (void)startAnimating;
 /// 停止加载动画
