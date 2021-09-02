@@ -126,6 +126,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if(self = [super initWithFrame:frame]) {
         
         // default styling values
+        self.showsTitleLabel = YES;
+        self.showsArrowView = YES;
         self.textColor = [UIColor darkGrayColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = FWPullRefreshStateStopped;
@@ -171,8 +173,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         self.currentCustomView = nil;
     }
     
-    self.titleLabel.hidden = hasCustomView;
-    self.subtitleLabel.hidden = hasCustomView;
+    self.titleLabel.hidden = hasCustomView || !self.showsTitleLabel;
+    self.subtitleLabel.hidden = hasCustomView || !self.showsTitleLabel;
     self.arrowView.hidden = hasCustomView;
     
     if(hasCustomView) {
@@ -209,9 +211,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         CGFloat marginY = 2;
         CGFloat labelMaxWidth = self.bounds.size.width - margin - leftViewWidth;
         
-        self.titleLabel.text = [self.titles objectAtIndex:self.state];
+        self.titleLabel.text = self.showsTitleLabel ? [self.titles objectAtIndex:self.state] : nil;
         
-        NSString *subtitle = [self.subtitles objectAtIndex:self.state];
+        NSString *subtitle = self.showsTitleLabel ? [self.subtitles objectAtIndex:self.state] : nil;
         self.subtitleLabel.text = subtitle.length > 0 ? subtitle : nil;
         
         CGSize titleSize = [self.titleLabel.text boundingRectWithSize:CGSizeMake(labelMaxWidth,self.titleLabel.font.lineHeight)
@@ -421,7 +423,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.titles replaceObjectAtIndex:state withObject:title];
     
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 - (void)setSubtitle:(NSString *)subtitle forState:(FWPullRefreshState)state {
@@ -434,7 +435,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.subtitles replaceObjectAtIndex:state withObject:subtitle];
     
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 - (void)setCustomView:(UIView *)view forState:(FWPullRefreshState)state {
@@ -449,7 +449,16 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         [self.viewForState replaceObjectAtIndex:state withObject:viewPlaceholder];
     
     [self setNeedsLayout];
-    [self layoutIfNeeded];
+}
+
+- (void)setShowsTitleLabel:(BOOL)showsTitleLabel {
+    _showsTitleLabel = showsTitleLabel;
+    [self setNeedsLayout];
+}
+
+- (void)setShowsArrowView:(BOOL)showsArrowView {
+    _showsArrowView = showsArrowView;
+    [self setNeedsLayout];
 }
 
 - (void)setTextColor:(UIColor *)newTextColor {
@@ -466,7 +475,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     [self addSubview:_indicatorView];
     
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
@@ -818,7 +826,6 @@ static char UIScrollViewFWPullRefreshView;
     [self addSubview:_indicatorView];
     
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
