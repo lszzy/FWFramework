@@ -271,11 +271,11 @@
     CFTimeInterval duration = 1.2;
     CFTimeInterval beginTime = CACurrentMediaTime();
     NSArray<NSNumber *> *beginTimes = @[@0.12, @0.24, @0.36, @0.48, @0.6, @0.72, @0.84, @0.96];
-    CAMediaTimingFunction *timingFuncation = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    CAMediaTimingFunction *timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
     animation.keyTimes = @[@0, @0.5, @1];
-    animation.timingFunctions = @[timingFuncation, timingFuncation];
+    animation.timingFunctions = @[timingFunction, timingFunction];
     animation.values = @[@1, @0.3, @1];
     animation.duration = duration;
     animation.repeatCount = HUGE_VALF;
@@ -414,34 +414,45 @@
 @implementation FWIndicatorViewAnimationBallRotate
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
-    CGFloat duration = 0.75f;
-    CAKeyframeAnimation *scaleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-    scaleAnimation.removedOnCompletion = NO;
-    scaleAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0f, 1.0f, 1.0f)],
-                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.6f, 0.6f, 1.0f)],
-                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0f, 1.0f, 1.0f)]];
-    scaleAnimation.keyTimes = @[@0.0f, @0.5f, @1.0f];
+    CFTimeInterval beginTime = 0.5;
+    CFTimeInterval strokeStartDuration = 1.2;
+    CFTimeInterval strokeEndDuration = 0.7;
     
-    CAKeyframeAnimation *rotateAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotateAnimation.removedOnCompletion = NO;
-    rotateAnimation.values = @[@0, @M_PI, @(2 * M_PI)];
-    rotateAnimation.keyTimes = scaleAnimation.keyTimes;
+    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    rotationAnimation.byValue = @(M_PI * 2);
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
-    CAAnimationGroup *animation = [CAAnimationGroup animation];
-    animation.removedOnCompletion = NO;
-    animation.animations = @[scaleAnimation, rotateAnimation];
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    animation.duration = duration;
-    animation.repeatCount = HUGE_VALF;
+    CABasicAnimation *strokeEndAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    strokeEndAnimation.duration = strokeEndDuration;
+    strokeEndAnimation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.4 :0.0 :0.2 :1.0];
+    strokeEndAnimation.fromValue = @0;
+    strokeEndAnimation.toValue = @1;
     
-    CAShapeLayer *circle = [CAShapeLayer layer];
-    UIBezierPath *circlePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(size.width / 2, size.height / 2) radius:size.width / 2 startAngle:1.5 * M_PI endAngle:M_PI clockwise:true];
-    circle.path = circlePath.CGPath;
-    circle.lineWidth = 2;
+    CABasicAnimation *strokeStartAnimation = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
+    strokeStartAnimation.duration = strokeStartDuration;
+    strokeStartAnimation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.4 :0.0 :0.2 :1.0];
+    strokeStartAnimation.fromValue = @0;
+    strokeStartAnimation.toValue = @1;
+    strokeStartAnimation.beginTime = beginTime;
+    
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.animations = @[rotationAnimation, strokeEndAnimation, strokeStartAnimation];
+    animationGroup.duration = strokeStartDuration + beginTime;
+    animationGroup.repeatCount = HUGE_VALF;
+    animationGroup.removedOnCompletion = NO;
+    animationGroup.fillMode = kCAFillModeForwards;
+    
+    CAShapeLayer *circle = [[CAShapeLayer alloc] init];
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    CGFloat lineWidth = 3;
+    [path addArcWithCenter:CGPointMake(size.width / 2, size.height / 2) radius:size.width / 2 startAngle:-(M_PI / 2) endAngle:M_PI + M_PI / 2 clockwise:YES];
     circle.fillColor = nil;
     circle.strokeColor = color.CGColor;
+    circle.lineWidth = lineWidth;
+    circle.backgroundColor = nil;
+    circle.path = path.CGPath;
     circle.frame = CGRectMake((layer.bounds.size.width - size.width) / 2, (layer.bounds.size.height - size.height) / 2, size.width, size.height);
-    [circle addAnimation:animation forKey:@"animation"];
+    [circle addAnimation:animationGroup forKey:@"animation"];
     [layer addSublayer:circle];
 }
 
@@ -730,7 +741,7 @@
             return [[FWIndicatorViewAnimationLinePulse alloc] init];
         case FWIndicatorViewAnimationTypeBallSpin:
             return [[FWIndicatorViewAnimationBallSpin alloc] init];
-        case FWIndicatorViewAnimationTypeBallRotate:
+        case FWIndicatorViewAnimationTypeCircleSpin:
             return [[FWIndicatorViewAnimationBallRotate alloc] init];
         case FWIndicatorViewAnimationTypeBallPulse:
             return [[FWIndicatorViewAnimationBallPulse alloc] init];
