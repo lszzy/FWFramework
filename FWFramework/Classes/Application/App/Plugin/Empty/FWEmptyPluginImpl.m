@@ -442,7 +442,7 @@
     return self;
 }
 
-- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id))block inView:(UIView *)view
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id))block inView:(UIView *)view
 {
     NSString *emptyText = text;
     if (!emptyText && self.defaultText) {
@@ -469,7 +469,7 @@
     emptyView.tag = 2021;
     [view addSubview:emptyView];
     [emptyView fwPinEdgesToSuperviewWithInsets:view.fwEmptyInsets];
-    [emptyView setLoadingViewHidden:YES];
+    [emptyView setLoadingViewHidden:!loading];
     [emptyView setImage:emptyImage];
     [emptyView setTextLabelText:emptyText];
     [emptyView setDetailTextLabelText:emptyDetail];

@@ -32,7 +32,7 @@
 #pragma mark - TableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.fwView.fwHasEmptyView ? 0 : 4;
+    return self.fwView.fwHasEmptyView ? 0 : 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -47,6 +47,10 @@
         cell.textLabel.text = @"显示图片和提示语";
     } else if (row == 3) {
         cell.textLabel.text = @"显示提示语及操作按钮";
+    } else if (row == 4) {
+        cell.textLabel.text = @"显示加载视图";
+    } else if (row == 5) {
+        cell.textLabel.text = @"显示所有视图";
     }
     return cell;
 }
@@ -64,6 +68,15 @@
     } else if (row == 3) {
         FWWeakifySelf();
         [self fwShowEmptyViewWithText:@"请求失败" detail:@"请检查网络连接" image:nil action:@"重试" block:^(id  _Nonnull sender) {
+            FWStrongifySelf();
+            [self fwHideEmptyView];
+            [self.tableView reloadData];
+        }];
+    } else if (row == 4) {
+        [self fwShowEmptyViewLoading];
+    } else if (row == 5) {
+        FWWeakifySelf();
+        [self fwShowEmptyViewWithText:@"请求失败" detail:@"请检查网络连接" image:[UIImage fwImageWithAppIcon] loading:YES action:@"重试" block:^(id  _Nonnull sender) {
             FWStrongifySelf();
             [self fwHideEmptyView];
             [self.tableView reloadData];
