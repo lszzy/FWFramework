@@ -80,12 +80,12 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLineSpin =
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLinePulse = 1;
 /// 八圆球渐变旋转
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallSpin = 2;
-/// 单线条圆形旋转
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallRotate = 3;
 /// 三圆球水平跳动
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallPulse = 4;
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallPulse = 3;
 /// 三圆圈三角形旋转
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriangle = 5;
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriangle = 4;
+/// 单圆圈旋转
+static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeCircleSpin = 5;
 /// 圆形向外扩散，类似水波纹
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
 
