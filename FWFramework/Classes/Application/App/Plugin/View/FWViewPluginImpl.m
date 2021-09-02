@@ -12,194 +12,88 @@
 
 #pragma mark - FWProgressView
 
-@interface FWProgressView ()
+@interface FWProgressLayer : CALayer
 
-@property (nonatomic, readonly) UILabel *percentLabel;
+@property (nonatomic, assign) BOOL annular;
+@property (nonatomic, strong) UIColor *color;
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, assign) CGFloat lineWidth;
+@property (nonatomic, assign) CGLineCap lineCap;
+@property (nonatomic, strong) UIColor *fillColor;
+@property (nonatomic, assign) CGFloat fillInset;
+@property (nonatomic, assign) CFTimeInterval animationDuration;
+@property (nonatomic, assign) CGFloat progress;
+@property (nonatomic, assign) BOOL animated;
 
 @end
 
-@implementation FWProgressView
+@implementation FWProgressLayer
 
-- (instancetype)init
-{
-    return [self initWithFrame:CGRectMake(0.f, 0.f, 37.f, 37.f)];
+@dynamic annular;
+@dynamic color;
+@dynamic lineColor;
+@dynamic lineWidth;
+@dynamic lineCap;
+@dynamic fillColor;
+@dynamic fillInset;
+@dynamic progress;
+
++ (BOOL)needsDisplayForKey:(NSString *)key {
+    return [key isEqualToString:@"progress"] || [super needsDisplayForKey:key];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self renderView];
+- (id<CAAction>)actionForKey:(NSString *)event {
+    if ([event isEqualToString:@"progress"] && self.animated) {
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:event];
+        animation.fromValue = [self.presentationLayer valueForKey:event];
+        animation.duration = self.animationDuration;
+        return animation;
     }
-    return self;
+    return [super actionForKey:event];
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self renderView];
-    }
-    return self;
-}
-
-- (void)renderView
-{
-    self.backgroundColor = [UIColor clearColor];
-    self.opaque = NO;
-    
-    _annular = YES;
-    _progress = 0.f;
-    _color = [UIColor colorWithWhite:1.f alpha:1.f];
-    _lineColor = nil;
-    _lineWidth = 0;
-    _lineCap = kCGLineCapRound;
-    _fillColor = nil;
-    _fillInset = 0;
-    _showsPercentText = NO;
-    _percentTextColor =[UIColor whiteColor];
-    _percentFont = [UIFont systemFontOfSize:12.f];
-    
-    _percentLabel = [[UILabel alloc] initWithFrame:self.bounds];
-    _percentLabel.adjustsFontSizeToFitWidth = NO;
-    _percentLabel.textAlignment = NSTextAlignmentCenter;
-    _percentLabel.opaque = NO;
-    _percentLabel.backgroundColor = [UIColor clearColor];
-    _percentLabel.textColor = _percentTextColor;
-    _percentLabel.font = _percentFont;
-    _percentLabel.text = @"0%";
-    _percentLabel.hidden = !_showsPercentText;
-    [self addSubview:_percentLabel];
-}
-
-- (void)setAnnular:(BOOL)annular
-{
-    _annular = annular;
-    [self setNeedsDisplay];
-}
-
-- (void)setProgress:(CGFloat)progress
-{
-    _progress = MAX(0.0, MIN(progress, 1.0));
-    [self setNeedsDisplay];
-}
-
-- (void)setColor:(UIColor *)color
-{
-    _color = color;
-    [self setNeedsDisplay];
-}
-
-- (void)setLineColor:(UIColor *)lineColor
-{
-    _lineColor = lineColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setLineWidth:(CGFloat)lineWidth
-{
-    _lineWidth = lineWidth;
-    [self setNeedsDisplay];
-}
-
-- (void)setLineCap:(CGLineCap)lineCap
-{
-    _lineCap = lineCap;
-    [self setNeedsDisplay];
-}
-
-- (void)setFillColor:(UIColor *)fillColor
-{
-    _fillColor = fillColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setFillInset:(CGFloat)fillInset
-{
-    _fillInset = fillInset;
-    [self setNeedsDisplay];
-}
-
-- (void)setShowsPercentText:(BOOL)showsPercentText
-{
-    _showsPercentText = showsPercentText;
-    self.percentLabel.hidden = !showsPercentText;
-}
-
-- (void)setPercentTextColor:(UIColor *)percentTextColor
-{
-    _percentTextColor = percentTextColor;
-    [self setNeedsDisplay];
-}
-
-- (void)setPercentFont:(UIFont *)percentFont
-{
-    _percentFont = percentFont;
-    [self setNeedsDisplay];
-}
-
-- (void)setFrame:(CGRect)frame
-{
-    [super setFrame:frame];
-    [self invalidateIntrinsicContentSize];
-}
-
-- (void)setBounds:(CGRect)bounds
-{
-    [super setBounds:bounds];
-    [self invalidateIntrinsicContentSize];
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    if (rect.size.width < 1 || rect.size.height < 1) return;
-    if (self.showsPercentText) {
-        self.percentLabel.text = [NSString stringWithFormat:@"%.0f%%", self.progress * 100.f];
-        self.percentLabel.textColor = self.percentTextColor;
-        self.percentLabel.font = self.percentFont;
-    }
+- (void)drawInContext:(CGContextRef)context {
+    if (CGRectIsEmpty(self.bounds)) return;
     
     if (self.annular) {
-        UIColor *lineColor = self.lineColor ? self.lineColor : [self.color colorWithAlphaComponent:0.1];
+        UIColor *lineColor = self.lineColor ?: [self.color colorWithAlphaComponent:0.1];
         CGFloat lineWidth = self.lineWidth > 0 ? self.lineWidth : 3;
-        UIBezierPath *backgroundPath = [UIBezierPath bezierPath];
-        backgroundPath.lineWidth = lineWidth;
-        backgroundPath.lineCapStyle = kCGLineCapRound;
+        CGContextSetLineWidth(context, lineWidth);
+        CGContextSetLineCap(context, kCGLineCapRound);
         CGPoint center = CGPointMake(self.bounds.size.width / 2.f, self.bounds.size.height / 2.f);
         CGFloat radius = (MIN(self.bounds.size.width, self.bounds.size.height) - lineWidth) / 2.f;
         CGFloat startAngle = - ((float)M_PI / 2);
         CGFloat endAngle = (2 * (float)M_PI) + startAngle;
-        [backgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [lineColor set];
-        [backgroundPath stroke];
+        CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, 1);
+        CGContextSetStrokeColorWithColor(context, lineColor.CGColor);
+        CGContextStrokePath(context);
         
         if (self.fillColor) {
-            UIBezierPath *fillPath = [UIBezierPath bezierPath];
             CGFloat fillRadius = (MIN(self.bounds.size.width, self.bounds.size.height) - (lineWidth + self.fillInset) * 2) / 2.f;
-            [fillPath addArcWithCenter:center radius:fillRadius startAngle:startAngle endAngle:endAngle clockwise:YES];
-            [self.fillColor setFill];
-            [fillPath fill];
+            CGContextAddArc(context, center.x, center.y, fillRadius, startAngle, endAngle, 1);
+            CGContextSetFillColorWithColor(context, self.fillColor.CGColor);
+            CGContextFillPath(context);
         }
         
-        UIBezierPath *progessPath = [UIBezierPath bezierPath];
-        progessPath.lineCapStyle = self.lineCap;
-        progessPath.lineWidth = lineWidth;
+        UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+        bezierPath.lineWidth = lineWidth;
+        bezierPath.lineCapStyle = self.lineCap;
         endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
-        [progessPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [self.color set];
-        [progessPath stroke];
+        [bezierPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+        CGContextSetStrokeColorWithColor(context, self.color.CGColor);
+        CGContextAddPath(context, bezierPath.CGPath);
+        CGContextStrokePath(context);
     } else {
         UIColor *lineColor = self.lineColor ?: self.color;
         CGFloat lineWidth = self.lineWidth > 0 ? self.lineWidth : 1;
         CGRect allRect = self.bounds;
         CGFloat circleInset = lineWidth + self.fillInset;
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        [lineColor setStroke];
+        CGContextSetStrokeColorWithColor(context, lineColor.CGColor);
         CGContextSetLineWidth(context, lineWidth);
         CGContextStrokeEllipseInRect(context, CGRectInset(allRect, lineWidth / 2.0, lineWidth / 2.0));
         
         if (self.fillColor) {
-            [self.fillColor setFill];
+            CGContextSetFillColorWithColor(context, self.fillColor.CGColor);
             CGContextFillEllipseInRect(context, CGRectInset(allRect, circleInset, circleInset));
         }
         
@@ -213,15 +107,126 @@
         CGContextClosePath(context);
         CGContextFillPath(context);
     }
+    
+    [super drawInContext:context];
 }
 
-- (CGSize)intrinsicContentSize
-{
+- (void)layoutSublayers {
+    [super layoutSublayers];
+    self.cornerRadius = CGRectGetHeight(self.bounds) / 2;
+}
+
+@end
+
+@implementation FWProgressView
+
++ (Class)layerClass {
+    return [FWProgressLayer class];
+}
+
+- (instancetype)init {
+    return [self initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    if (self = [super initWithCoder:coder]) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (void)didInitialize {
+    self.annular = YES;
+    self.color = [UIColor colorWithWhite:1.f alpha:1.f];
+    self.lineColor = nil;
+    self.lineWidth = 0;
+    self.lineCap = kCGLineCapRound;
+    self.fillColor = nil;
+    self.fillInset = 0;
+    self.progress = 0.f;
+    self.animationDuration = 0.5;
+    
+    self.backgroundColor = [UIColor clearColor];
+    self.layer.contentsScale = UIScreen.mainScreen.scale;
+    [self.layer setNeedsDisplay];
+}
+
+- (FWProgressLayer *)progressLayer {
+    return (FWProgressLayer *)self.layer;
+}
+
+- (void)setAnnular:(BOOL)annular {
+    _annular = annular;
+    self.progressLayer.annular = annular;
+}
+
+- (void)setColor:(UIColor *)color {
+    _color = color;
+    self.progressLayer.color = color;
+}
+
+- (void)setLineColor:(UIColor *)lineColor {
+    _lineColor = lineColor;
+    self.progressLayer.lineColor = lineColor;
+}
+
+- (void)setLineWidth:(CGFloat)lineWidth {
+    _lineWidth = lineWidth;
+    self.progressLayer.lineWidth = lineWidth;
+}
+
+- (void)setLineCap:(CGLineCap)lineCap {
+    _lineCap = lineCap;
+    self.progressLayer.lineCap = lineCap;
+}
+
+- (void)setFillColor:(UIColor *)fillColor {
+    _fillColor = fillColor;
+    self.progressLayer.fillColor = fillColor;
+}
+
+- (void)setFillInset:(CGFloat)fillInset {
+    _fillInset = fillInset;
+    self.progressLayer.fillInset = fillInset;
+}
+
+- (void)setAnimationDuration:(CFTimeInterval)animationDuration {
+    _animationDuration = animationDuration;
+    self.progressLayer.animationDuration = animationDuration;
+}
+
+- (void)setProgress:(CGFloat)progress {
+    [self setProgress:progress animated:NO];
+}
+
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated {
+    _progress = MAX(0.0, MIN(progress, 1.0));
+    self.progressLayer.animated = animated;
+    self.progressLayer.progress = _progress;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self invalidateIntrinsicContentSize];
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    [self invalidateIntrinsicContentSize];
+}
+
+- (CGSize)intrinsicContentSize {
     return self.bounds.size;
 }
 
-- (CGSize)sizeThatFits:(CGSize)size
-{
+- (CGSize)sizeThatFits:(CGSize)size {
     return self.bounds.size;
 }
 
@@ -231,13 +236,15 @@
 
 @implementation UIActivityIndicatorView (FWIndicatorView)
 
-- (CGFloat)progress
-{
+- (CGFloat)progress {
     return [objc_getAssociatedObject(self, @selector(progress)) doubleValue];
 }
 
-- (void)setProgress:(CGFloat)progress
-{
+- (void)setProgress:(CGFloat)progress {
+    [self setProgress:progress animated:NO];
+}
+
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated {
     objc_setAssociatedObject(self, @selector(progress), @(progress), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (0 < progress && progress < 1) {
         if (!self.isAnimating) [self startAnimating];
@@ -256,8 +263,7 @@
 
 @implementation FWIndicatorViewAnimationLineSpin
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat lineSpacing = 2;
     CGSize lineSize = CGSizeMake((size.width - lineSpacing * 4) / 5, (size.height - lineSpacing * 2) / 3);
     CGFloat x = (layer.bounds.size.width - size.width) / 2;
@@ -283,8 +289,7 @@
     }
 }
 
-- (CALayer *)createLayer:(CGFloat)angle size:(CGSize)size origin:(CGPoint)origin containerSize:(CGSize)containerSize color:(UIColor *)color
-{
+- (CALayer *)createLayer:(CGFloat)angle size:(CGSize)size origin:(CGPoint)origin containerSize:(CGSize)containerSize color:(UIColor *)color {
     CGFloat radius = containerSize.width / 2 - MAX(size.width, size.height) / 2;
     CGSize layerSize = CGSizeMake(MAX(size.width, size.height), MAX(size.width, size.height));
     CALayer *layer = [[CALayer alloc] init];
@@ -310,8 +315,7 @@
 
 @implementation FWIndicatorViewAnimationLinePulse
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat duration = 1.0f;
     NSArray *beginTimes = @[@0.4f, @0.2f, @0.0f, @0.2f, @0.4f];
     CAMediaTimingFunction *timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.85f :0.25f :0.37f :0.85f];
@@ -347,8 +351,7 @@
 
 @implementation FWIndicatorViewAnimationBallSpin
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat circleSpacing = -2;
     CGFloat circleSize = (size.width - 4 * circleSpacing) / 5;
     CGFloat x = (layer.bounds.size.width - size.width) / 2;
@@ -384,8 +387,7 @@
     }
 }
 
-- (CALayer *)circleLayer:(CGFloat)angle size:(CGFloat)size origin:(CGPoint)origin containerSize:(CGSize)containerSize color:(UIColor *)color
-{
+- (CALayer *)circleLayer:(CGFloat)angle size:(CGFloat)size origin:(CGPoint)origin containerSize:(CGSize)containerSize color:(UIColor *)color {
     CGFloat radius = containerSize.width / 2;
     CALayer *circle = [self createLayerWith:CGSizeMake(size, size) color:color];
     CGRect frame = CGRectMake((origin.x + radius * (cos(angle) + 1) - size / 2), origin.y + radius * (sin(angle) + 1) - size / 2, size, size);
@@ -393,8 +395,7 @@
     return circle;
 }
 
-- (CALayer *)createLayerWith:(CGSize)size color:(UIColor *)color
-{
+- (CALayer *)createLayerWith:(CGSize)size color:(UIColor *)color {
     CAShapeLayer *layer = [CAShapeLayer layer];
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path addArcWithCenter:CGPointMake(size.width / 2,size.height / 2) radius:(size.width / 2) startAngle:0 endAngle:2 * M_PI clockwise:NO];
@@ -412,8 +413,7 @@
 
 @implementation FWIndicatorViewAnimationBallRotate
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat duration = 0.75f;
     CAKeyframeAnimation *scaleAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     scaleAnimation.removedOnCompletion = NO;
@@ -453,8 +453,7 @@
 
 @implementation FWIndicatorViewAnimationBallPulse
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat circlePadding = 5.0f;
     CGFloat circleSize = (size.width - 2 * circlePadding) / 3;
     CGFloat x = (layer.bounds.size.width - size.width) / 2;
@@ -492,8 +491,7 @@
 
 @implementation FWIndicatorViewAnimationBallTriangle
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat duration = 2.0f;
     CGFloat circleSize = size.width / 5;
     CGFloat deltaX = size.width / 2 - circleSize / 2;
@@ -528,8 +526,7 @@
     [layer addSublayer:bottomRigthCircle];
 }
 
-- (CALayer *)createCircleWithSize:(CGFloat)size color:(UIColor *)color
-{
+- (CALayer *)createCircleWithSize:(CGFloat)size color:(UIColor *)color {
     CAShapeLayer *circle = [CAShapeLayer layer];
     UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size, size) cornerRadius:size / 2];
     circle.fillColor = nil;
@@ -539,8 +536,7 @@
     return circle;
 }
 
-- (CAAnimation *)changeAnimation:(CAKeyframeAnimation *)animation values:(NSArray *)rawValues deltaX:(CGFloat)deltaX deltaY:(CGFloat)deltaY
-{
+- (CAAnimation *)changeAnimation:(CAKeyframeAnimation *)animation values:(NSArray *)rawValues deltaX:(CGFloat)deltaX deltaY:(CGFloat)deltaY {
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:5];
     for (NSString *rawValue in rawValues) {
         CGPoint point = CGPointFromString([self translate:rawValue withDeltaX:deltaX deltaY:deltaY]);
@@ -550,8 +546,7 @@
     return animation;
 }
 
-- (NSString *)translate:(NSString *)valueString withDeltaX:(CGFloat)deltaX deltaY:(CGFloat)deltaY
-{
+- (NSString *)translate:(NSString *)valueString withDeltaX:(CGFloat)deltaX deltaY:(CGFloat)deltaY {
     NSMutableString *valueMutableString = [NSMutableString stringWithString:valueString];
     CGFloat fullDeltaX = 2 * deltaX;
     CGFloat fullDeltaY = 2 * deltaY;
@@ -577,8 +572,7 @@
 
 @implementation FWIndicatorViewAnimationTriplePulse
 
-- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color
-{
+- (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CFTimeInterval duration = 1;
     CFTimeInterval beginTime = CACurrentMediaTime();
     NSArray *beginTimes = @[@0, @0.2, @0.4];
@@ -627,13 +621,11 @@
 
 @implementation FWIndicatorView
 
-- (instancetype)init
-{
+- (instancetype)init {
     return [self initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         _type = FWIndicatorViewAnimationTypeLineSpin;
@@ -642,8 +634,7 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
+- (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
         _type = FWIndicatorViewAnimationTypeLineSpin;
@@ -652,8 +643,7 @@
     return self;
 }
 
-- (instancetype)initWithType:(FWIndicatorViewAnimationType)type
-{
+- (instancetype)initWithType:(FWIndicatorViewAnimationType)type {
     self = [super initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
     if (self) {
         _type = type;
@@ -662,8 +652,7 @@
     return self;
 }
 
-- (void)setupLayer
-{
+- (void)setupLayer {
     _color = [UIColor whiteColor];
     _hidesWhenStopped = YES;
     self.userInteractionEnabled = NO;
@@ -675,8 +664,7 @@
     [self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 }
 
-- (void)setupAnimation
-{
+- (void)setupAnimation {
     _animationLayer.sublayers = nil;
     
     id<FWIndicatorViewAnimationProtocol> animation = [self animation];
@@ -686,24 +674,25 @@
     }
 }
 
-- (void)setType:(FWIndicatorViewAnimationType)type
-{
+- (void)setType:(FWIndicatorViewAnimationType)type {
     if (_type != type) {
         _type = type;
         [self setupAnimation];
     }
 }
 
-- (void)setColor:(UIColor *)color
-{
+- (void)setColor:(UIColor *)color {
     if (![_color isEqual:color]) {
         _color = color;
         [self setupAnimation];
     }
 }
 
-- (void)setProgress:(CGFloat)progress
-{
+- (void)setProgress:(CGFloat)progress {
+    [self setProgress:progress animated:NO];
+}
+
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated {
     _progress = progress;
     if (0 < progress && progress < 1) {
         if (!self.isAnimating) [self startAnimating];
@@ -712,35 +701,30 @@
     }
 }
 
-- (void)setFrame:(CGRect)frame
-{
+- (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self invalidateIntrinsicContentSize];
 }
 
-- (void)setBounds:(CGRect)bounds
-{
+- (void)setBounds:(CGRect)bounds {
     [super setBounds:bounds];
     [self invalidateIntrinsicContentSize];
 }
 
-- (void)startAnimating
-{
+- (void)startAnimating {
     if (!_animationLayer.sublayers) [self setupAnimation];
     self.hidden = NO;
     _animationLayer.speed = 1.0f;
     _isAnimating = YES;
 }
 
-- (void)stopAnimating
-{
+- (void)stopAnimating {
     _animationLayer.speed = 0.0f;
     _isAnimating = NO;
     if (self.hidesWhenStopped) self.hidden = YES;
 }
 
-- (id<FWIndicatorViewAnimationProtocol>)animation
-{
+- (id<FWIndicatorViewAnimationProtocol>)animation {
     switch (_type) {
         case FWIndicatorViewAnimationTypeLinePulse:
             return [[FWIndicatorViewAnimationLinePulse alloc] init];
@@ -760,8 +744,7 @@
     }
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     _animationLayer.frame = self.bounds;
     BOOL isAnimating = _isAnimating;
@@ -770,13 +753,11 @@
     if (isAnimating) [self startAnimating];
 }
 
-- (CGSize)intrinsicContentSize
-{
+- (CGSize)intrinsicContentSize {
     return self.bounds.size;
 }
 
-- (CGSize)sizeThatFits:(CGSize)size
-{
+- (CGSize)sizeThatFits:(CGSize)size {
     return self.bounds.size;
 }
 
@@ -786,8 +767,7 @@
 
 @implementation FWViewPluginImpl
 
-+ (FWViewPluginImpl *)sharedInstance
-{
++ (FWViewPluginImpl *)sharedInstance {
     static FWViewPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -796,8 +776,7 @@
     return instance;
 }
 
-- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style
-{
+- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style {
     if (self.customProgressView) {
         return self.customProgressView(style);
     }
@@ -806,8 +785,7 @@
     return progressView;
 }
 
-- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style
-{
+- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style {
     if (self.customIndicatorView) {
         return self.customIndicatorView(style);
     }
