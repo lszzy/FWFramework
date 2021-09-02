@@ -102,6 +102,9 @@ extension Theme {
                 return nil
             }
         }
+        FWEmptyPluginImpl.sharedInstance.customBlock = { (emptyView) in
+            emptyView.loadingViewColor = Theme.textColor
+        }
         FWEmptyPluginImpl.sharedInstance.defaultText = {
             return "暂无数据"
         }

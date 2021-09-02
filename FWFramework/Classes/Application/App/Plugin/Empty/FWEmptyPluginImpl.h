@@ -139,13 +139,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 空界面自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(FWEmptyView *emptyView);
 
-/// 默认空界面文本句柄
+/// 默认空界面文本句柄，非loading时才触发
 @property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);
-/// 默认空界面详细文本句柄
+/// 默认空界面详细文本句柄，非loading时才触发
 @property (nonatomic, copy, nullable) NSString * _Nullable (^defaultDetail)(void);
-/// 默认空界面图片句柄
+/// 默认空界面图片句柄，非loading时才触发
 @property (nonatomic, copy, nullable) UIImage * _Nullable (^defaultImage)(void);
-/// 默认空界面动作按钮句柄
+/// 默认空界面动作按钮句柄，非loading时才触发
 @property (nonatomic, copy, nullable) NSString * _Nullable (^defaultAction)(void);
 
 @end

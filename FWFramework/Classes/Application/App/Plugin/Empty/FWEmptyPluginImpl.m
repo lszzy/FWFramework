@@ -445,19 +445,19 @@
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id))block inView:(UIView *)view
 {
     NSString *emptyText = text;
-    if (!emptyText && self.defaultText) {
+    if (!loading && !emptyText && self.defaultText) {
         emptyText = self.defaultText();
     }
     NSString *emptyDetail = detail;
-    if (!emptyDetail && self.defaultDetail) {
+    if (!loading && !emptyDetail && self.defaultDetail) {
         emptyDetail = self.defaultDetail();
     }
     UIImage *emptyImage = image;
-    if (!emptyImage && self.defaultImage) {
+    if (!loading && !emptyImage && self.defaultImage) {
         emptyImage = self.defaultImage();
     }
     NSString *emptyAction = action;
-    if (!emptyAction && block && self.defaultAction) {
+    if (!loading && !emptyAction && block && self.defaultAction) {
         emptyAction = self.defaultAction();
     }
     
