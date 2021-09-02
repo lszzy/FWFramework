@@ -309,6 +309,23 @@
 
 @end
 
+#pragma mark - UIPageControl+FWPageControl
+
+@implementation UIPageControl (FWPageControl)
+
+- (void)fwSetIndicatorSize:(CGSize)indicatorSize
+{
+    CGFloat height = self.bounds.size.height;
+    if (height <= 0) {
+        height = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
+        if (height <= 0) height = 10;
+    }
+    CGFloat scale = indicatorSize.height / height;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+@end
+
 #pragma mark - FWDotView
 
 @implementation FWDotView

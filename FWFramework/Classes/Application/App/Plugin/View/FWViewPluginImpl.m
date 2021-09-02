@@ -212,6 +212,14 @@
     self.progressLayer.progress = _progress;
 }
 
+- (CGSize)size {
+    return self.bounds.size;
+}
+
+- (void)setSize:(CGSize)size {
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, size.width, size.height);
+}
+
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self invalidateIntrinsicContentSize];
@@ -235,6 +243,33 @@
 #pragma mark - UIActivityIndicatorView+FWIndicatorView
 
 @implementation UIActivityIndicatorView (FWIndicatorView)
+
++ (instancetype)fwIndicatorViewWithColor:(UIColor *)color {
+    UIActivityIndicatorViewStyle indicatorStyle;
+    if (@available(iOS 13.0, *)) {
+        indicatorStyle = UIActivityIndicatorViewStyleMedium;
+    } else {
+        indicatorStyle = UIActivityIndicatorViewStyleWhite;
+    }
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
+    indicatorView.color = color ?: UIColor.whiteColor;
+    indicatorView.hidesWhenStopped = YES;
+    return indicatorView;
+}
+
+- (CGSize)size {
+    return self.bounds.size;
+}
+
+- (void)setSize:(CGSize)size {
+    CGFloat height = self.bounds.size.height;
+    if (height <= 0) {
+        height = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
+        if (height <= 0) height = 20;
+    }
+    CGFloat scale = size.height / height;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+}
 
 - (CGFloat)progress {
     return [objc_getAssociatedObject(self, @selector(progress)) doubleValue];
@@ -710,6 +745,14 @@
     } else {
         if (self.isAnimating) [self stopAnimating];
     }
+}
+
+- (CGSize)size {
+    return self.bounds.size;
+}
+
+- (void)setSize:(CGSize)size {
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, size.width, size.height);
 }
 
 - (void)setFrame:(CGRect)frame {

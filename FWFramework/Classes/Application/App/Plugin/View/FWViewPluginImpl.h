@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWProgressView
 
-/// 框架默认进度条视图，默认大小{37, 37}
+/// 框架默认进度条视图
 @interface FWProgressView : UIView <FWProgressViewPlugin>
 
 /// 是否是环形，默认YES，NO为扇形
@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 进度颜色，默认白色
 @property (nonatomic, strong) UIColor *color;
+
+/// 设置或获取进度条大小，默认{37, 37}
+@property (nonatomic, assign) CGSize size;
 
 /// 自定义线条颜色，默认nil自动处理。环形时为color透明度0.1，扇形时为color
 @property (nonatomic, strong, nullable) UIColor *lineColor;
@@ -52,6 +55,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 系统指示器默认实现指示器视图协议
 @interface UIActivityIndicatorView (FWIndicatorView) <FWIndicatorViewPlugin, FWProgressViewPlugin>
+
+/// 快速创建指示器，可指定颜色，默认白色
++ (instancetype)fwIndicatorViewWithColor:(nullable UIColor *)color;
+
+/// 设置或获取指示器大小，默认中{20,20}，大{37,37}
+@property (nonatomic, assign) CGSize size;
 
 /// 指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:animated:
 @property (nonatomic, assign) CGFloat progress;
@@ -90,7 +99,7 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeCircleSpin
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
 
 /**
- * 自定义指示器视图，默认大小{37, 37}
+ * 自定义指示器视图
  *
  * @see https://github.com/gontovnik/DGActivityIndicatorView
  */
@@ -104,6 +113,9 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
 
 /// 指示器颜色，默认白色
 @property (nonatomic, strong) UIColor *color;
+
+/// 设置或获取指示器大小，默认{37,37}
+@property (nonatomic, assign) CGSize size;
 
 /// 停止动画时是否自动隐藏，默认YES
 @property (nonatomic, assign) BOOL hidesWhenStopped;

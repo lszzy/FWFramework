@@ -65,7 +65,7 @@
     CGSize activitySize = CGSizeMake(30, 30);
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityView.color = Theme.textColor;
-    [activityView fwSetIndicatorSize:activitySize];
+    activityView.size = activitySize;
     [activityView startAnimating];
     [self.fwView addSubview:activityView];
     [activityView fwAlignAxis:NSLayoutAttributeCenterX toView:self.view];

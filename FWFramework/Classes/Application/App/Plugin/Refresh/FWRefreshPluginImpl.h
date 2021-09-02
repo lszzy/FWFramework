@@ -23,7 +23,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @protocol FWIndicatorViewPlugin;
 
 /*!
-@brief 下拉刷新视图，默认高度60
+ @brief 下拉刷新视图，默认高度60
+ @discussion 自定义indicatorView后会自动隐藏标题和箭头，仅显示指示器视图
 */
 @interface FWPullRefreshView : UIView
 
@@ -54,7 +55,6 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 
 /*!
  @brief UIScrollView+FWPullRefresh
- @discussion FWRefreshPlugin
  
  @see https://github.com/samvermette/SVPullToRefresh
  */

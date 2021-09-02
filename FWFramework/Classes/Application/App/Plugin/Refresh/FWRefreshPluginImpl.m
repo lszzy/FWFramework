@@ -491,6 +491,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     _indicatorView = indicatorView;
     _indicatorView.color = indicatorColor;
     [self addSubview:_indicatorView];
+    _showsTitleLabel = NO;
+    _showsArrowView = NO;
     
     [self setNeedsLayout];
     [self layoutIfNeeded];
