@@ -35,6 +35,11 @@
     [self fwShowEmptyViewWithText:nil];
 }
 
+- (void)fwShowEmptyViewLoading
+{
+    [self fwShowEmptyViewWithText:nil detail:nil image:nil loading:YES action:nil block:nil];
+}
+
 - (void)fwShowEmptyViewWithText:(NSString *)text
 {
     [self fwShowEmptyViewWithText:text detail:nil];
@@ -52,17 +57,22 @@
 
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
+    [self fwShowEmptyViewWithText:text detail:detail image:image loading:NO action:action block:block];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id _Nonnull))block
+{
     id<FWEmptyPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
-    if (!plugin || ![plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:action:block:inView:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(fwShowEmptyViewWithText:detail:image:loading:action:block:inView:)]) {
         plugin = FWEmptyPluginImpl.sharedInstance;
     }
     
     if ([self isKindOfClass:[UIScrollView class]]) {
         UIScrollView *scrollView = (UIScrollView *)self;
         [scrollView fwShowOverlayView];
-        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:scrollView.fwOverlayView];
+        [plugin fwShowEmptyViewWithText:text detail:detail image:image loading:loading action:action block:block inView:scrollView.fwOverlayView];
     } else {
-        [plugin fwShowEmptyViewWithText:text detail:detail image:image action:action block:block inView:self];
+        [plugin fwShowEmptyViewWithText:text detail:detail image:image loading:loading action:action block:block inView:self];
     }
 }
 
@@ -116,6 +126,11 @@
     [self.fwView fwShowEmptyView];
 }
 
+- (void)fwShowEmptyViewLoading
+{
+    [self.fwView fwShowEmptyViewLoading];
+}
+
 - (void)fwShowEmptyViewWithText:(NSString *)text
 {
     [self.fwView fwShowEmptyViewWithText:text];
@@ -134,6 +149,11 @@
 - (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
 {
     [self.fwView fwShowEmptyViewWithText:text detail:detail image:image action:action block:block];
+}
+
+- (void)fwShowEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id _Nonnull))block
+{
+    [self.fwView fwShowEmptyViewWithText:text detail:detail image:image loading:loading action:action block:block];
 }
 
 - (void)fwHideEmptyView

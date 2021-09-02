@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /// 显示空界面，指定文本、图片和动作按钮
-- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block inView:(UIView *)view;
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading action:(nullable NSString *)action block:(nullable void (^)(id sender))block inView:(UIView *)view;
 
 /// 隐藏空界面
 - (void)fwHideEmptyView:(UIView *)view;
@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示空界面
 - (void)fwShowEmptyView;
 
+/// 显示空界面加载视图
+- (void)fwShowEmptyViewLoading;
+
 /// 显示空界面，指定文本
 - (void)fwShowEmptyViewWithText:(nullable NSString *)text;
 
@@ -55,6 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 显示空界面，指定文本、详细文本、图片和动作按钮
 - (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block;
+
+/// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
+- (void)fwShowEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading action:(nullable NSString *)action block:(nullable void (^)(id sender))block;
 
 /// 隐藏空界面
 - (void)fwHideEmptyView;
