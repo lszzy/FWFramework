@@ -723,6 +723,7 @@
 }
 
 - (void)startAnimating {
+    if (_isAnimating) return;
     if (!_animationLayer.sublayers) [self setupAnimation];
     self.hidden = NO;
     _animationLayer.speed = 1.0f;
