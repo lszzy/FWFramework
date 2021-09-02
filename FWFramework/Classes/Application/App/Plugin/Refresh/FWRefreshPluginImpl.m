@@ -13,15 +13,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
-#pragma mark - FWPullRefreshArrow
+#pragma mark - FWPullRefreshArrowView
 
-@interface FWPullRefreshArrow : UIView
+@interface FWPullRefreshArrowView : UIView
 
 @property (nonatomic, strong) UIColor *arrowColor;
 
 @end
 
-@implementation FWPullRefreshArrow
+@implementation FWPullRefreshArrowView
 
 @synthesize arrowColor;
 
@@ -59,8 +59,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 
-@property (nonatomic, strong) FWPullRefreshArrow *arrow;
-@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
+@property (nonatomic, strong) FWPullRefreshArrowView *arrowView;
 @property (nonatomic, strong, readwrite) UILabel *titleLabel;
 @property (nonatomic, strong, readwrite) UILabel *subtitleLabel;
 @property (nonatomic, readwrite) FWPullRefreshState state;
@@ -94,7 +93,6 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 
-@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nonatomic, readwrite) FWInfiniteScrollState state;
 @property (nonatomic, assign) BOOL userTriggered;
 @property (nonatomic, strong) NSMutableArray *viewForState;
@@ -118,7 +116,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @synthesize state = _state;
 @synthesize scrollView = _scrollView;
 @synthesize showsPullToRefresh = _showsPullToRefresh;
-@synthesize arrow = _arrow;
+@synthesize arrowView = _arrowView;
 @synthesize indicatorView = _indicatorView;
 @synthesize titleLabel = _titleLabel;
 
@@ -175,7 +173,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     
     self.titleLabel.hidden = hasCustomView;
     self.subtitleLabel.hidden = hasCustomView;
-    self.arrow.hidden = hasCustomView;
+    self.arrowView.hidden = hasCustomView;
     
     if(hasCustomView) {
         if (customViewChanged) {
@@ -190,7 +188,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         switch (self.state) {
             case FWPullRefreshStateAll:
             case FWPullRefreshStateStopped:
-                self.arrow.alpha = 1;
+                self.arrowView.alpha = 1;
                 [self.indicatorView stopAnimating];
                 [self rotateArrow:0 hide:NO];
                 break;
@@ -205,7 +203,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                 break;
         }
         
-        CGFloat leftViewWidth = MAX(self.arrow.bounds.size.width,self.indicatorView.bounds.size.width);
+        CGFloat leftViewWidth = MAX(self.arrowView.bounds.size.width,self.indicatorView.bounds.size.width);
         
         CGFloat margin = 10;
         CGFloat marginY = 2;
@@ -253,12 +251,12 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             self.subtitleLabel.frame = CGRectIntegral(CGRectMake(labelX, titleY + titleSize.height + marginY, subtitleSize.width, subtitleSize.height));
         }
         
-        CGFloat arrowX = (self.bounds.size.width / 2) - (totalMaxWidth / 2) + (leftViewWidth - self.arrow.bounds.size.width) / 2;
-        self.arrow.frame = CGRectMake(arrowX,
-                                      (self.bounds.size.height / 2) - (self.arrow.bounds.size.height / 2),
-                                      self.arrow.bounds.size.width,
-                                      self.arrow.bounds.size.height);
-        self.indicatorView.center = self.arrow.center;
+        CGFloat arrowX = (self.bounds.size.width / 2) - (totalMaxWidth / 2) + (leftViewWidth - self.arrowView.bounds.size.width) / 2;
+        self.arrowView.frame = CGRectMake(arrowX,
+                                      (self.bounds.size.height / 2) - (self.arrowView.bounds.size.height / 2),
+                                      self.arrowView.bounds.size.width,
+                                      self.arrowView.bounds.size.height);
+        self.indicatorView.center = self.arrowView.center;
     }
 }
 
@@ -354,13 +352,13 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 #pragma mark - Getters
 
-- (FWPullRefreshArrow *)arrow {
-    if(!_arrow) {
-        _arrow = [[FWPullRefreshArrow alloc]initWithFrame:CGRectMake(0, self.bounds.size.height-47, 15, 40)];
-        _arrow.backgroundColor = [UIColor clearColor];
-        [self addSubview:_arrow];
+- (FWPullRefreshArrowView *)arrowView {
+    if(!_arrowView) {
+        _arrowView = [[FWPullRefreshArrowView alloc]initWithFrame:CGRectMake(0, self.bounds.size.height-47, 15, 40)];
+        _arrowView.backgroundColor = [UIColor clearColor];
+        [self addSubview:_arrowView];
     }
-    return _arrow;
+    return _arrowView;
 }
 
 - (UIView<FWIndicatorViewPlugin> *)indicatorView {
@@ -395,7 +393,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 }
 
 - (UIColor *)arrowColor {
-    return self.arrow.arrowColor; // pass through
+    return self.arrowView.arrowColor; // pass through
 }
 
 - (UIColor *)textColor {
@@ -409,8 +407,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 #pragma mark - Setters
 
 - (void)setArrowColor:(UIColor *)newArrowColor {
-    self.arrow.arrowColor = newArrowColor; // pass through
-    [self.arrow setNeedsDisplay];
+    self.arrowView.arrowColor = newArrowColor; // pass through
+    [self.arrowView setNeedsDisplay];
 }
 
 - (void)setTitle:(NSString *)title forState:(FWPullRefreshState)state {
@@ -458,6 +456,17 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     textColor = newTextColor;
     self.titleLabel.textColor = newTextColor;
     self.subtitleLabel.textColor = newTextColor;
+}
+
+- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView {
+    UIColor *indicatorColor = self.indicatorView.color;
+    [_indicatorView removeFromSuperview];
+    _indicatorView = indicatorView;
+    _indicatorView.color = indicatorColor;
+    [self addSubview:_indicatorView];
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
@@ -534,8 +543,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 
 - (void)rotateArrow:(float)degrees hide:(BOOL)hide {
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-        self.arrow.layer.transform = CATransform3DMakeRotation(degrees, 0, 0, 1);
-        self.arrow.layer.opacity = !hide;
+        self.arrowView.layer.transform = CATransform3DMakeRotation(degrees, 0, 0, 1);
+        self.arrowView.layer.opacity = !hide;
     } completion:NULL];
 }
 
@@ -799,6 +808,17 @@ static char UIScrollViewFWPullRefreshView;
         [self.viewForState replaceObjectAtIndex:state withObject:viewPlaceholder];
     
     self.state = self.state;
+}
+
+- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView {
+    UIColor *indicatorColor = self.indicatorView.color;
+    [_indicatorView removeFromSuperview];
+    _indicatorView = indicatorView;
+    _indicatorView.color = indicatorColor;
+    [self addSubview:_indicatorView];
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {

@@ -20,6 +20,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
     FWPullRefreshStateAll = 10
 };
 
+@protocol FWIndicatorViewPlugin;
+
 /*!
 @brief 下拉刷新视图，默认高度60
 */
@@ -30,6 +32,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
+@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
@@ -82,6 +85,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) BOOL enabled;
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
+@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 
 @property (nonatomic, readonly) FWInfiniteScrollState state;
