@@ -244,6 +244,9 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 获取视图安全区域距离，iOS11以下为zero
 @property (nonatomic, assign, readonly) UIEdgeInsets fwSafeAreaInsets;
 
+/// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
+@property(nonatomic, assign) CGRect fwFrameApplyTransform;
+
 @end
 
 #pragma mark - UIButton+FWToolkit

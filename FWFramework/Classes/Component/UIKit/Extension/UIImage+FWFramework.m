@@ -298,20 +298,6 @@
     return image;
 }
 
-#pragma mark - Block
-
-+ (UIImage *)fwImageWithBlock:(void (^)(CGContextRef context))block size:(CGSize)size
-{
-    if (!block) return nil;
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    if (!context) return nil;
-    block(context);
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
 #pragma mark - Gradient
 
 + (UIImage *)fwGradientImageWithSize:(CGSize)size

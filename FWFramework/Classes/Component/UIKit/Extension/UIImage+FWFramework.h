@@ -60,11 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 从Emoji字符串创建指定大小UIImage
 + (nullable UIImage *)fwImageWithEmoji:(NSString *)emoji size:(CGFloat)size;
 
-#pragma mark - Block
-
-// 执行block创建指定大小UIImage
-+ (nullable UIImage *)fwImageWithBlock:(void (^)(CGContextRef context))block size:(CGSize)size;
-
 #pragma mark - Gradient
 
 /*!

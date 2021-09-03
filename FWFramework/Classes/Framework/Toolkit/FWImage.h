@@ -78,6 +78,9 @@ typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
 /// 从颜色创建UIImage，指定尺寸
 + (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
 
+/// 从block创建UIImage，指定尺寸
++ (nullable UIImage *)fwImageWithBlock:(void (^)(CGContextRef context))block size:(CGSize)size;
+
 /// 从当前图片创建指定透明度的图片
 - (nullable UIImage *)fwImageWithAlpha:(CGFloat)alpha;
 
