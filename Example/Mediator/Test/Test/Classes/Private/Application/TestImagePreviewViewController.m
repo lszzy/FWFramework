@@ -72,6 +72,7 @@
 - (void)handleImageButtonEvent:(UIButton *)button {
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
+        self.imagePreviewViewController.imagePreviewView.loadingColor = UIColor.whiteColor;
         self.imagePreviewViewController.presentingStyle = FWImagePreviewTransitioningStyleZoom;// 将 present 动画改为 zoom，也即从某个位置放大到屏幕中央。默认样式为 fade。
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
         
@@ -133,9 +134,13 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 zoomImageView.cloudProgressView.progress = 1;
+                zoomImageView.cloudProgressView.hidden = YES;
                 zoomImageView.image = self.images[index];
             });
         });
+    } else if (index == 5) {
+        NSURL *url = [NSURL fwURLWithString:@"http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"];
+        zoomImageView.videoPlayerItem = [AVPlayerItem playerItemWithURL:url];
     } else {
         zoomImageView.image = self.images[index];
     }
@@ -156,6 +161,13 @@
 #pragma mark - <FWZoomImageViewDelegate>
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
+    if (zoomImageView.videoPlayerItem != nil) return;
+    // 退出图片预览
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)doubleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
+    if (zoomImageView.videoPlayerItem == nil) return;
     // 退出图片预览
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -125,8 +125,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         CGPoint origin = CGPointMake(12, 12);
         _cloudDownloadRetryButton.fwX = origin.x;
         _cloudDownloadRetryButton.fwY = FWTopBarHeight + origin.y;
-        _cloudProgressView.fwSize = _cloudDownloadRetryButton.currentImage.size;
-        _cloudProgressView.center = _cloudDownloadRetryButton.center;
+        //_cloudProgressView.fwSize = _cloudDownloadRetryButton.currentImage.size;
+        _cloudProgressView.center = self.center;
     }
 }
 

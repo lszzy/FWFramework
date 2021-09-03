@@ -65,3 +65,7 @@
 #if __has_include("FWAttributedLabel.h")
 #import "FWAttributedLabel.h"
 #endif
+
+#if __has_include("FWPhotoBrowser.h")
+#import "FWPhotoBrowser.h"
+#endif
