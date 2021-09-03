@@ -27,15 +27,6 @@
 
 #pragma mark - Frame
 
-- (UIEdgeInsets)fwContentInset
-{
-    if (@available(iOS 11, *)) {
-        return self.adjustedContentInset;
-    } else {
-        return self.contentInset;
-    }
-}
-
 - (CGFloat)fwContentWidth
 {
     return self.contentSize.width;

@@ -261,6 +261,18 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
+#pragma mark - UIScrollView+FWToolkit
+
+/*!
+ @brief UIScrollView+FWToolkit
+ */
+@interface UIScrollView (FWToolkit)
+
+/// UIScrollView真正的inset，iOS11+使用adjustedContentInset，iOS11以下使用contentInset
+@property (nonatomic, assign, readonly) UIEdgeInsets fwContentInset;
+
+@end
+
 #pragma mark - UIViewController+FWToolkit
 
 /// 视图控制器生命周期状态枚举

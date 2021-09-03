@@ -9,7 +9,8 @@
 
 #import <UIKit/UIKit.h>
 #import "FWAnimatedImage.h"
-#import "FWAssetManager.h"
+#import "FWImagePreview.h"
+#import "FWImagePicker.h"
 #import "FWAudioPlayer.h"
 #import "FWPlayerCache.h"
 
