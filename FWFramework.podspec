@@ -48,46 +48,50 @@ Pod::Spec.new do |s|
     ss.subspec 'App' do |sss|
       sss.source_files = 'FWFramework/Classes/Application/App/**/*.{h,m,swift}'
     end
+    
+    ss.subspec 'Plugin' do |sss|
+      sss.source_files = 'FWFramework/Classes/Application/Plugin/**/*.{h,m,swift}'
+    end
 
     ss.subspec 'Controller' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Controller/*.{h,m,swift}'
-      sss.dependency 'FWFramework/Application/App'
+      sss.source_files = 'FWFramework/Classes/Application/Controller/**/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Application/Plugin'
     end
 
     ss.subspec 'Model' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Model/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Model/**/*.{h,m,swift}'
     end
 
     ss.subspec 'View' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/View/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/View/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Cache' do |sss|
       sss.library = 'sqlite3'
-      sss.source_files = 'FWFramework/Classes/Application/Service/Cache/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Cache/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Database' do |sss|
       sss.library = 'sqlite3'
-      sss.source_files = 'FWFramework/Classes/Application/Service/Database/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Database/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Media' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Service/Media/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Media/**/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
     end
 
     ss.subspec 'Network' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Service/Network/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Network/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Request' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Service/Request/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Request/**/*.{h,m,swift}'
       sss.dependency 'FWFramework/Application/Network'
     end
 
     ss.subspec 'Socket' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Service/Socket/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/Service/Socket/**/*.{h,m,swift}'
     end
   end
 
@@ -100,7 +104,7 @@ Pod::Spec.new do |s|
 
     ss.subspec 'UIKit' do |sss|
       sss.source_files = 'FWFramework/Classes/Component/UIKit/**/*.{h,m,swift}'
-      sss.dependency 'FWFramework/Application/App'
+      sss.dependency 'FWFramework/Application/Plugin'
     end
 
     ss.subspec 'SwiftUI' do |sss|

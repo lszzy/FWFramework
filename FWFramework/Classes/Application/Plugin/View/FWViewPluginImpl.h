@@ -8,6 +8,10 @@
  */
 
 #import "FWViewPlugin.h"
+#import "FWAlertControllerImpl.h"
+#import "FWEmptyPluginImpl.h"
+#import "FWRefreshPluginImpl.h"
+#import "FWToastPluginImpl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
