@@ -46,11 +46,11 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/Framework'
 
     ss.subspec 'App' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/App/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/App/App/**/*.{h,m,swift}'
     end
     
     ss.subspec 'Plugin' do |sss|
-      sss.source_files = 'FWFramework/Classes/Application/Plugin/**/*.{h,m,swift}'
+      sss.source_files = 'FWFramework/Classes/Application/App/Plugin/**/*.{h,m,swift}'
     end
 
     ss.subspec 'Controller' do |sss|
