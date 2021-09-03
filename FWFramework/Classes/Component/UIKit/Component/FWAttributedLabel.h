@@ -21,7 +21,6 @@
 #import "FWMarqueeLabel.h"
 #import "FWPageControl.h"
 #import "FWPasscodeView.h"
-#import "FWPhotoBrowser.h"
 #import "FWPopupMenu.h"
 #import "FWQrcodeScanView.h"
 #import "FWSegmentedControl.h"

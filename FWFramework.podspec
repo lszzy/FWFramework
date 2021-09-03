@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '1.9.3'
+  s.version               = '1.10.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/Application'
     ss.dependency 'FWFramework/Component/Foundation'
     ss.dependency 'FWFramework/Component/UIKit'
+    ss.dependency 'FWFramework/Component/Deprecated'
   end
 
   s.subspec 'Framework' do |ss|
@@ -109,6 +110,11 @@ Pod::Spec.new do |s|
 
     ss.subspec 'SwiftUI' do |sss|
       sss.source_files = 'FWFramework/Classes/Component/SwiftUI/**/*.{h,m,swift}'
+    end
+    
+    ss.subspec 'Deprecated' do |sss|
+      sss.source_files = 'FWFramework/Classes/Component/Deprecated/**/*.{h,m,swift}'
+      sss.dependency 'FWFramework/Application/Plugin'
     end
 
     ss.subspec 'Contacts' do |sss|
