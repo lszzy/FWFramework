@@ -211,6 +211,18 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     return image;
 }
 
++ (UIImage *)fwImageWithBlock:(void (^)(CGContextRef context))block size:(CGSize)size
+{
+    if (!block) return nil;
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    if (!context) return nil;
+    block(context);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 - (UIImage *)fwImageWithTintColor:(UIColor *)tintColor
 {
     return [self fwImageWithTintColor:tintColor blendMode:kCGBlendModeDestinationIn];
