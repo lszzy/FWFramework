@@ -475,3 +475,461 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 }
 
 @end
+
+#pragma mark - FWImagePreviewViewController
+
+const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
+
+@interface FWImagePreviewViewController ()
+
+@property(nonatomic, strong) UIPanGestureRecognizer *dismissingGesture;
+@property(nonatomic, assign) CGPoint gestureBeganLocation;
+@property(nonatomic, weak) FWZoomImageView *gestureZoomImageView;
+@property(nonatomic, assign) BOOL canShowPresentingViewControllerWhenGesturing;
+@property(nonatomic, assign) BOOL originalStatusBarHidden;
+@property(nonatomic, assign) BOOL statusBarHidden;
+@end
+
+@implementation FWImagePreviewViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self didInitialize];
+    }
+    return self;
+}
+
+- (void)didInitialize {
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
+    
+    _dismissingGestureEnabled = YES;
+    self.backgroundColor = UIColor.blackColor;
+    
+    // present style
+    self.transitioningAnimator = [[FWImagePreviewTransitionAnimator alloc] init];
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.modalPresentationCapturesStatusBarAppearance = YES;
+    self.transitioningDelegate = self;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    _backgroundColor = backgroundColor;
+    if ([self isViewLoaded]) {
+        self.view.backgroundColor = backgroundColor;
+    }
+}
+
+@synthesize imagePreviewView = _imagePreviewView;
+- (FWImagePreviewView *)imagePreviewView {
+    if (!_imagePreviewView) {
+        _imagePreviewView = [[FWImagePreviewView alloc] initWithFrame:self.isViewLoaded ? self.view.bounds : CGRectZero];
+    }
+    return _imagePreviewView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = self.backgroundColor;
+    [self.view addSubview:self.imagePreviewView];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.imagePreviewView.fwFrameApplyTransform = self.view.bounds;
+    
+    // TODO
+    self.canShowPresentingViewControllerWhenGesturing = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.fwIsPresented) {
+        [self initObjectsForZoomStyleIfNeeded];
+    }
+    [self.imagePreviewView.collectionView reloadData];
+    [self.imagePreviewView.collectionView layoutIfNeeded];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.fwIsPresented) {
+        self.statusBarHidden = YES;
+    }
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.statusBarHidden = self.originalStatusBarHidden;
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self removeObjectsForZoomStyle];
+    [self resetDismissingGesture];
+}
+
+- (void)setPresentingStyle:(FWImagePreviewTransitioningStyle)presentingStyle {
+    _presentingStyle = presentingStyle;
+    self.dismissingStyle = presentingStyle;
+}
+
+- (void)setTransitioningAnimator:(__kindof FWImagePreviewTransitionAnimator *)transitioningAnimator {
+    _transitioningAnimator = transitioningAnimator;
+    transitioningAnimator.imagePreviewViewController = self;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    if (self.fwVisibleState < FWViewControllerVisibleStateDidAppear || self.fwVisibleState >= FWViewControllerVisibleStateDidDisappear) {
+        // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
+        if (self.presentingViewController) {
+            BOOL statusBarHidden = NO;
+            if (@available(iOS 13.0, *)) {
+                statusBarHidden = self.presentingViewController.view.window.windowScene.statusBarManager.statusBarHidden;
+            } else {
+                statusBarHidden = UIApplication.sharedApplication.statusBarHidden;
+            }
+            self.originalStatusBarHidden = statusBarHidden;
+            return self.originalStatusBarHidden;
+        }
+        return [super prefersStatusBarHidden];
+    }
+    return self.statusBarHidden;
+}
+
+#pragma mark - 动画
+
+- (void)initObjectsForZoomStyleIfNeeded {
+    if (!self.dismissingGesture && self.dismissingGestureEnabled) {
+        self.dismissingGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissingPreviewGesture:)];
+        [self.view addGestureRecognizer:self.dismissingGesture];
+    }
+}
+
+- (void)removeObjectsForZoomStyle {
+    [self.dismissingGesture removeTarget:self action:@selector(handleDismissingPreviewGesture:)];
+    [self.view removeGestureRecognizer:self.dismissingGesture];
+    self.dismissingGesture = nil;
+}
+
+- (void)handleDismissingPreviewGesture:(UIPanGestureRecognizer *)gesture {
+    
+    if (!self.dismissingGestureEnabled) return;
+    
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan:
+            self.gestureBeganLocation = [gesture locationInView:self.view];
+            self.gestureZoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
+            self.gestureZoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
+            break;
+            
+        case UIGestureRecognizerStateChanged: {
+            CGPoint location = [gesture locationInView:self.view];
+            CGFloat horizontalDistance = location.x - self.gestureBeganLocation.x;
+            CGFloat verticalDistance = location.y - self.gestureBeganLocation.y;
+            CGFloat ratio = 1.0;
+            CGFloat alpha = 1.0;
+            if (verticalDistance > 0) {
+                // 往下拉的话，图片缩小，但图片移动距离与手指移动距离保持一致
+                ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
+                
+                // 如果预览大图支持横竖屏而背后的界面只支持竖屏，则在横屏时手势拖拽不要露出背后的界面
+                if (self.canShowPresentingViewControllerWhenGesturing) {
+                    alpha = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) * 1.8;
+                }
+            } else {
+                // 往上拉的话，图片不缩小，但手指越往上移动，图片将会越难被拖走
+                CGFloat a = self.gestureBeganLocation.y + 100;// 后面这个加数越大，拖动时会越快达到不怎么拖得动的状态
+                CGFloat b = 1 - pow((a - fabs(verticalDistance)) / a, 2);
+                CGFloat contentViewHeight = CGRectGetHeight(self.gestureZoomImageView.contentViewRectInZoomImageView);
+                CGFloat c = (CGRectGetHeight(self.view.bounds) - contentViewHeight) / 2;
+                verticalDistance = -c * b;
+            }
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(horizontalDistance, verticalDistance);
+            transform = CGAffineTransformScale(transform, ratio, ratio);
+            self.gestureZoomImageView.transform = transform;
+            self.view.backgroundColor = [self.view.backgroundColor colorWithAlphaComponent:alpha];
+            BOOL statusBarHidden = alpha >= 1 ? YES : self.originalStatusBarHidden;
+            if (statusBarHidden != self.statusBarHidden) {
+                self.statusBarHidden = statusBarHidden;
+                [self setNeedsStatusBarAppearanceUpdate];
+            }
+        }
+            break;
+            
+        case UIGestureRecognizerStateEnded: {
+            CGPoint location = [gesture locationInView:self.view];
+            CGFloat verticalDistance = location.y - self.gestureBeganLocation.y;
+            if (verticalDistance > CGRectGetHeight(self.view.bounds) / 2 / 3) {
+                
+                // 如果背后的界面支持的方向与当前预览大图的界面不一样，则为了避免在 dismiss 后看到背后界面的旋转，这里提前触发背后界面的 viewWillAppear，从而借助 AutomaticallyRotateDeviceOrientation 的功能去提前旋转到正确方向。（备忘，如果不这么处理，标准的触发 viewWillAppear: 的时机是在 animator 的 animateTransition: 时，这里就算重复调用一次也不会导致 viewWillAppear: 多次触发）
+                // 这里只能解决手势拖拽的 dismiss，如果是业务代码手动调用 dismiss 则无法兼顾，再看怎么处理。
+                if (!self.canShowPresentingViewControllerWhenGesturing) {
+                    [self.presentingViewController beginAppearanceTransition:YES animated:YES];
+                }
+                
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } else {
+                [self cancelDismissingGesture];
+            }
+        }
+            break;
+        default:
+            [self cancelDismissingGesture];
+            break;
+    }
+}
+
+// 手势判定失败，恢复到手势前的状态
+- (void)cancelDismissingGesture {
+    self.statusBarHidden = YES;
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self setNeedsStatusBarAppearanceUpdate];
+        [self resetDismissingGesture];
+    } completion:NULL];
+}
+
+// 清理手势相关的变量
+- (void)resetDismissingGesture {
+    self.gestureZoomImageView.transform = CGAffineTransformIdentity;
+    self.gestureBeganLocation = CGPointZero;
+    self.gestureZoomImageView = nil;
+    self.view.backgroundColor = self.backgroundColor;
+}
+
+// 不使用 qmui_visibleViewControllerIfExist 是因为不想考虑 presentedViewController
+- (UIViewController *)visibleViewControllerWithViewController:(UIViewController *)viewController {
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        return [self visibleViewControllerWithViewController:((UINavigationController *)viewController).topViewController];
+    }
+    
+    if ([viewController isKindOfClass:[UITabBarController class]]) {
+        return [self visibleViewControllerWithViewController:((UITabBarController *)viewController).selectedViewController];
+    }
+    
+    return viewController;
+}
+
+#pragma mark - <UIViewControllerTransitioningDelegate>
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+    return self.transitioningAnimator;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    return self.transitioningAnimator;
+}
+
+@end
+
+#pragma mark - FWImagePreviewTransitionAnimator
+
+@implementation FWImagePreviewTransitionAnimator
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.duration = .25;
+        
+        _cornerRadiusMaskLayer = [CALayer layer];
+        self.cornerRadiusMaskLayer.backgroundColor = [UIColor whiteColor].CGColor;
+        
+        self.animationEnteringBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+            
+            UIView *previewView = animator.imagePreviewViewController.view;
+            
+            if (style == FWImagePreviewTransitioningStyleFade) {
+                
+                previewView.alpha = isPresenting ? 0 : 1;
+                
+            } else if (style == FWImagePreviewTransitioningStyleZoom) {
+                
+                CGRect contentViewFrame = [previewView convertRect:zoomImageView.contentViewRectInZoomImageView fromView:nil];
+                CGPoint contentViewCenterInZoomImageView = CGPointMake(CGRectGetMidX(zoomImageView.contentViewRectInZoomImageView), CGRectGetMidY(zoomImageView.contentViewRectInZoomImageView));
+                if (CGRectIsEmpty(contentViewFrame)) {
+                    // 有可能 start preview 时图片还在 loading，此时拿到的 content rect 是 zero，所以做个保护
+                    contentViewFrame = [previewView convertRect:zoomImageView.frame fromView:zoomImageView.superview];
+                    contentViewCenterInZoomImageView = CGPointMake(CGRectGetMidX(contentViewFrame), CGRectGetMidY(contentViewFrame));
+                }
+                CGPoint centerInZoomImageView = CGPointMake(CGRectGetMidX(zoomImageView.bounds), CGRectGetMidY(zoomImageView.bounds));// 注意不是 zoomImageView 的 center，而是 zoomImageView 这个容器里的中心点
+                CGFloat horizontalRatio = CGRectGetWidth(sourceImageRect) / CGRectGetWidth(contentViewFrame);
+                CGFloat verticalRatio = CGRectGetHeight(sourceImageRect) / CGRectGetHeight(contentViewFrame);
+                CGFloat finalRatio = MAX(horizontalRatio, verticalRatio);
+                
+                CGAffineTransform fromTransform = CGAffineTransformIdentity;
+                CGAffineTransform toTransform = CGAffineTransformIdentity;
+                CGAffineTransform transform = CGAffineTransformIdentity;
+                
+                // 先缩再移
+                transform = CGAffineTransformScale(transform, finalRatio, finalRatio);
+                CGPoint contentViewCenterAfterScale = CGPointMake(centerInZoomImageView.x + (contentViewCenterInZoomImageView.x - centerInZoomImageView.x) * finalRatio, centerInZoomImageView.y + (contentViewCenterInZoomImageView.y - centerInZoomImageView.y) * finalRatio);
+                CGSize translationAfterScale = CGSizeMake(CGRectGetMidX(sourceImageRect) - contentViewCenterAfterScale.x, CGRectGetMidY(sourceImageRect) - contentViewCenterAfterScale.y);
+                transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(translationAfterScale.width, translationAfterScale.height));
+                
+                if (isPresenting) {
+                    fromTransform = transform;
+                } else {
+                    toTransform = transform;
+                }
+                
+                CGRect maskFromBounds = zoomImageView.contentView.bounds;
+                CGRect maskToBounds = zoomImageView.contentView.bounds;
+                CGRect maskBounds = maskFromBounds;
+                CGFloat maskHorizontalRatio = CGRectGetWidth(sourceImageRect) / CGRectGetWidth(maskBounds);
+                CGFloat maskVerticalRatio = CGRectGetHeight(sourceImageRect) / CGRectGetHeight(maskBounds);
+                CGFloat maskFinalRatio = MAX(maskHorizontalRatio, maskVerticalRatio);
+                maskBounds = CGRectMake(0, 0, CGRectGetWidth(sourceImageRect) / maskFinalRatio, CGRectGetHeight(sourceImageRect) / maskFinalRatio);
+                if (isPresenting) {
+                    maskFromBounds = maskBounds;
+                } else {
+                    maskToBounds = maskBounds;
+                }
+                
+                CGFloat cornerRadius = animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView ? animator.imagePreviewViewController.sourceImageView().layer.cornerRadius : MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
+                cornerRadius = cornerRadius / maskFinalRatio;
+                CGFloat fromCornerRadius = isPresenting ? cornerRadius : 0;
+                CGFloat toCornerRadius = isPresenting ? 0 : cornerRadius;
+                CABasicAnimation *cornerRadiusAnimation = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+                cornerRadiusAnimation.fromValue = @(fromCornerRadius);
+                cornerRadiusAnimation.toValue = @(toCornerRadius);
+                
+                CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
+                boundsAnimation.fromValue = [NSValue valueWithCGRect:CGRectMake(0, 0, maskFromBounds.size.width, maskFromBounds.size.height)];
+                boundsAnimation.toValue = [NSValue valueWithCGRect:CGRectMake(0, 0, maskToBounds.size.width, maskToBounds.size.height)];
+                
+                CAAnimationGroup *maskAnimation = [[CAAnimationGroup alloc] init];
+                maskAnimation.duration = animator.duration;
+                maskAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                maskAnimation.fillMode = kCAFillModeForwards;
+                maskAnimation.removedOnCompletion = NO;// remove 都交给 UIView Block 的 completion 里做，这里是为了避免 Core Animation 和 UIView Animation Block 时间不一致导致的值变动
+                maskAnimation.animations = @[cornerRadiusAnimation, boundsAnimation];
+                animator.cornerRadiusMaskLayer.position = CGPointMake(CGRectGetMidX(zoomImageView.contentView.bounds), CGRectGetMidY(zoomImageView.contentView.bounds));// 不管怎样，mask 都是居中的
+                zoomImageView.contentView.layer.mask = animator.cornerRadiusMaskLayer;
+                [animator.cornerRadiusMaskLayer addAnimation:maskAnimation forKey:@"maskAnimation"];
+                
+                // 动画开始
+                zoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么退出预览时，contentView 溢出的那部分内容就看不到
+                
+                if (isPresenting) {
+                    zoomImageView.transform = fromTransform;
+                    previewView.backgroundColor = UIColor.clearColor;
+                }
+                
+                // 发现 zoomImageView.transform 用 UIView Animation Block 实现的话，手势拖拽 dismissing 的情况下，松手时会瞬间跳动到某个位置，然后才继续做动画，改为 Core Animation 就没这个问题
+                CABasicAnimation *transformAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+                transformAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(toTransform)];
+                transformAnimation.duration = animator.duration;
+                transformAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                transformAnimation.fillMode = kCAFillModeForwards;
+                transformAnimation.removedOnCompletion = NO;// remove 都交给 UIView Block 的 completion 里做，这里是为了避免 Core Animation 和 UIView Animation Block 时间不一致导致的值变动
+                [zoomImageView.layer addAnimation:transformAnimation forKey:@"transformAnimation"];
+            };
+        };
+        
+        self.animationBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+            if (style == FWImagePreviewTransitioningStyleFade) {
+                animator.imagePreviewViewController.view.alpha = isPresenting ? 1 : 0;
+            } else if (style == FWImagePreviewTransitioningStyleZoom) {
+                animator.imagePreviewViewController.view.backgroundColor = isPresenting ? animator.imagePreviewViewController.backgroundColor : UIColor.clearColor;
+            }
+        };
+        
+        self.animationCompletionBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+            
+            // 由于支持 zoom presenting 和 fade dismissing 搭配使用，所以这里不管是哪种 style 都要做相同的清理工作
+            
+            // for fade
+            animator.imagePreviewViewController.view.alpha = 1;
+            
+            // for zoom
+            [animator.cornerRadiusMaskLayer removeAnimationForKey:@"maskAnimation"];
+            zoomImageView.scrollView.clipsToBounds = YES;// UIScrollView.clipsToBounds default is YES
+            zoomImageView.contentView.layer.mask = nil;
+            zoomImageView.transform = CGAffineTransformIdentity;
+            [zoomImageView.layer removeAnimationForKey:@"transformAnimation"];
+        };
+    }
+    return self;
+}
+
+#pragma mark - <UIViewControllerAnimatedTransitioning>
+
+- (void)animateTransition:(nonnull id<UIViewControllerContextTransitioning>)transitionContext {
+    if (!self.imagePreviewViewController) {
+        return;
+    }
+    
+    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    BOOL isPresenting = fromViewController.presentedViewController == toViewController;
+    UIViewController *presentingViewController = isPresenting ? fromViewController : toViewController;
+    BOOL shouldAppearanceTransitionManually = self.imagePreviewViewController.modalPresentationStyle != UIModalPresentationFullScreen;// 触发背后界面的生命周期，从而配合屏幕旋转那边做一些强制旋转的操作
+    
+    FWImagePreviewTransitioningStyle style = isPresenting ? self.imagePreviewViewController.presentingStyle : self.imagePreviewViewController.dismissingStyle;
+    CGRect sourceImageRect = CGRectZero;
+    if (style == FWImagePreviewTransitioningStyleZoom) {
+        if (self.imagePreviewViewController.sourceImageRect) {
+            sourceImageRect = [self.imagePreviewViewController.view convertRect:self.imagePreviewViewController.sourceImageRect() fromView:nil];
+        } else if (self.imagePreviewViewController.sourceImageView) {
+            UIView *sourceImageView = self.imagePreviewViewController.sourceImageView();
+            if (sourceImageView) {
+                sourceImageRect = [self.imagePreviewViewController.view convertRect:sourceImageView.frame fromView:sourceImageView.superview];
+            }
+        }
+        if (!CGRectEqualToRect(sourceImageRect, CGRectZero) && !CGRectIntersectsRect(sourceImageRect, self.imagePreviewViewController.view.bounds)) {
+            sourceImageRect = CGRectZero;
+        }
+    }
+    style = style == FWImagePreviewTransitioningStyleZoom && CGRectEqualToRect(sourceImageRect, CGRectZero) ? FWImagePreviewTransitioningStyleFade : style;// zoom 类型一定需要有个非 zero 的 sourceImageRect，否则不知道动画的起点/终点，所以当不存在 sourceImageRect 时强制改为用 fade 动画
+    
+    UIView *containerView = transitionContext.containerView;
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    [fromView setNeedsLayout];
+    [fromView layoutIfNeeded];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    [toView setNeedsLayout];
+    [toView layoutIfNeeded];// present 时 toViewController 还没走到 viewDidLayoutSubviews，此时做动画可能得到不正确的布局，所以强制布局一次
+    FWZoomImageView *zoomImageView = [self.imagePreviewViewController.imagePreviewView zoomImageViewAtIndex:self.imagePreviewViewController.imagePreviewView.currentImageIndex];
+    
+    toView.frame = containerView.bounds;
+    if (isPresenting) {
+        [containerView addSubview:toView];
+        if (shouldAppearanceTransitionManually) {
+            [presentingViewController beginAppearanceTransition:NO animated:YES];
+        }
+    } else {
+        [containerView insertSubview:toView belowSubview:fromView];
+        [presentingViewController beginAppearanceTransition:YES animated:YES];
+    }
+    
+    if (self.animationEnteringBlock) {
+        self.animationEnteringBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
+    }
+    
+    [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        if (self.animationBlock) {
+            self.animationBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
+        }
+    } completion:^(BOOL finished) {
+        [presentingViewController endAppearanceTransition];
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+        if (self.animationCompletionBlock) {
+            self.animationCompletionBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
+        }
+    }];
+}
+
+- (NSTimeInterval)transitionDuration:(nullable id<UIViewControllerContextTransitioning>)transitionContext {
+    return self.duration;
+}
+
+@end

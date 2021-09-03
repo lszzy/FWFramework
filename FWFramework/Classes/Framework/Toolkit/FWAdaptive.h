@@ -133,6 +133,8 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
 /// 是否是全面屏屏幕
 #define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
+/// 屏幕一像素的大小
+#define FWPixelOne [UIScreen fwPixelOne]
 
 /// 状态栏高度，与是否隐藏无关
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]

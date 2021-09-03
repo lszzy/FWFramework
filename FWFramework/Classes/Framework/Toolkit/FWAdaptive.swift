@@ -65,6 +65,8 @@ public var FWScreenScale: CGFloat { return UIScreen.main.scale }
 public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsScreenInch(inch) }
 /// 是否是全面屏屏幕
 public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen }
+/// 屏幕一像素的大小
+public var FWPixelOne: CGFloat { return UIScreen.fwPixelOne }
 
 /// 状态栏高度，与是否隐藏无关
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight }
