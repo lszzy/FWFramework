@@ -153,7 +153,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     if (_imageView) {
         return;
     }
-    _imageView = [[UIImageView alloc] init];
+    Class imageClass = [UIImageView fwImageViewAnimatedClass];
+    _imageView = [[imageClass alloc] init];
     [self.scrollView addSubview:_imageView];
 }
 
