@@ -125,6 +125,7 @@
               @[@"FWTabBarController", @"TestTabBarViewController"],
               @[@"FWCache", @"TestCacheViewController"],
               @[@"FWAssetManager", @"Test.TestAssetViewController"],
+              @[@"FWImagePreview", @"TestImagePreviewViewController"],
               @[@"FWAudioPlayer", @"Test.TestAudioViewController"],
               @[@"FWVideoPlayer", @"Test.TestVideoViewController"],
               ]],

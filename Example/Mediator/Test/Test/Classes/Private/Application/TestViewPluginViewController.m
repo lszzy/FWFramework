@@ -149,24 +149,20 @@
 {
     progressView.progress = 0;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self runProgress:progressView];
+        double progress = 0.0f;
+        while (progress < 1.0f) {
+            progress += 0.02f;
+            BOOL finish = progress >= 1.0f;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progressView.progress = progress;
+            });
+            usleep(finish ? 2000000 : 50000);
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             progressView.progress = 1;
         });
     });
-}
-
-- (void)runProgress:(FWProgressView *)progressView
-{
-    double progress = 0.0f;
-    while (progress < 1.0f) {
-        progress += 0.02f;
-        BOOL finish = progress >= 1.0f;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            progressView.progress = progress;
-        });
-        usleep(finish ? 2000000 : 50000);
-    }
 }
 
 @end
