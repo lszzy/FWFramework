@@ -19,9 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Frame
 
-// UIScrollView的真正inset，在iOS11以后需要用到adjustedContentInset而在iOS11以前只需要用contentInset
-@property (nonatomic, assign, readonly) UIEdgeInsets fwContentInset;
-
 // contentSize.width
 @property (nonatomic, assign) CGFloat fwContentWidth;
 

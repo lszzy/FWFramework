@@ -733,6 +733,21 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @end
 
+#pragma mark - UIScrollView+FWToolkit
+
+@implementation UIScrollView (FWToolkit)
+
+- (UIEdgeInsets)fwContentInset
+{
+    if (@available(iOS 11, *)) {
+        return self.adjustedContentInset;
+    } else {
+        return self.contentInset;
+    }
+}
+
+@end
+
 #pragma mark - UIViewController+FWToolkit
 
 @implementation UIViewController (FWToolkit)
