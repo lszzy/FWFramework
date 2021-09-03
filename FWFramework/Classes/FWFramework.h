@@ -14,6 +14,10 @@
 #import "FWAppDelegate.h"
 #endif
 
+#if __has_include("FWViewPluginImpl.h")
+#import "FWViewPluginImpl.h"
+#endif
+
 #if __has_include("FWWebViewController.h")
 #import "FWWebViewController.h"
 #endif
