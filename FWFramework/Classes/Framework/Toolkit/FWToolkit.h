@@ -276,6 +276,21 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
+#pragma mark - UISlider+FWToolkit
+
+/*!
+ @brief UISlider+FWToolkit
+ */
+@interface UISlider (FWToolkit)
+
+/// 中间圆球的大小，默认zero
+@property (nonatomic, assign) CGSize fwThumbSize UI_APPEARANCE_SELECTOR;
+
+/// 中间圆球的颜色，默认nil
+@property (nonatomic, strong, nullable) UIColor *fwThumbColor UI_APPEARANCE_SELECTOR;
+
+@end
+
 #pragma mark - UIViewController+FWToolkit
 
 /// 视图控制器生命周期状态枚举

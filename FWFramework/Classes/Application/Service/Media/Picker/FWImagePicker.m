@@ -743,8 +743,6 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
 - (void)handleCancelPreviewImage:(UIButton *)button {
     if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:YES];
-    } else {
-//        [self exitPreviewAutomatically];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewViewControllerDidCancel:)]) {
         [self.delegate imagePickerPreviewViewControllerDidCancel:self];

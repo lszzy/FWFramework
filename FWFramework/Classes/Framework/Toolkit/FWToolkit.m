@@ -9,6 +9,7 @@
 
 #import "FWToolkit.h"
 #import "FWNavigation.h"
+#import "FWImage.h"
 #import "FWSwizzle.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
@@ -785,6 +786,50 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     } else {
         return self.contentInset;
     }
+}
+
+@end
+
+#pragma mark - UISlider+FWToolkit
+
+@implementation UISlider (FWToolkit)
+
+- (CGSize)fwThumbSize
+{
+    NSValue *value = objc_getAssociatedObject(self, @selector(fwThumbSize));
+    return value ? [value CGSizeValue] : CGSizeZero;
+}
+
+- (void)setFwThumbSize:(CGSize)fwThumbSize
+{
+    objc_setAssociatedObject(self, @selector(fwThumbSize), [NSValue valueWithCGSize:fwThumbSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwUpdateThumbImage];
+}
+
+- (UIColor *)fwThumbColor
+{
+    return objc_getAssociatedObject(self, @selector(fwThumbColor));
+}
+
+- (void)setFwThumbColor:(UIColor *)fwThumbColor
+{
+    objc_setAssociatedObject(self, @selector(fwThumbColor), fwThumbColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fwUpdateThumbImage];
+}
+
+- (void)fwUpdateThumbImage
+{
+    CGSize thumbSize = self.fwThumbSize;
+    if (thumbSize.width <= 0 || thumbSize.height <= 0) return;
+    UIColor *thumbColor = self.fwThumbColor ?: (self.tintColor ?: [UIColor whiteColor]);
+    UIImage *thumbImage = [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
+        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
+        CGContextSetFillColorWithColor(contextRef, thumbColor.CGColor);
+        [path fill];
+    } size:thumbSize];
+    
+    [self setThumbImage:thumbImage forState:UIControlStateNormal];
+    [self setThumbImage:thumbImage forState:UIControlStateHighlighted];
 }
 
 @end
