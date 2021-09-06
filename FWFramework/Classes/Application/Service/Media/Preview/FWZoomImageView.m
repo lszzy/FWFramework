@@ -8,13 +8,12 @@
  */
 
 #import "FWZoomImageView.h"
+#import "FWAutoLayout.h"
 #import "FWAdaptive.h"
 #import "FWToolkit.h"
 #import "FWImage.h"
 #import "FWViewPlugin.h"
 
-// generate icon images needed by FWZoomImageView
-// 用于生成 FWZoomImageView 所需的一些简单的图标图片
 @interface FWZoomImageViewImageGenerator : NSObject
 
 + (UIImage *)largePlayImage;
@@ -47,8 +46,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 @synthesize videoPlayerLayer = _videoPlayerLayer;
 @synthesize videoToolbar = _videoToolbar;
 @synthesize videoCenteredPlayButton = _videoCenteredPlayButton;
-@synthesize cloudProgressView = _cloudProgressView;
-@synthesize cloudDownloadRetryButton = _cloudDownloadRetryButton;
+@synthesize progressView = _progressView;
 
 - (void)didMoveToWindow {
     [super didMoveToWindow];
@@ -119,14 +117,6 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
             CGFloat height = [_videoToolbar sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)].height;
             CGRectMake(margins.left, CGRectGetHeight(self.bounds) - margins.bottom - height, width, height);
         });
-    }
-    
-    if (_cloudProgressView && _cloudDownloadRetryButton) {
-        CGPoint origin = CGPointMake(12, 12);
-        _cloudDownloadRetryButton.fwX = origin.x;
-        _cloudDownloadRetryButton.fwY = FWTopBarHeight + origin.y;
-        //_cloudProgressView.fwSize = _cloudDownloadRetryButton.currentImage.size;
-        _cloudProgressView.center = self.center;
     }
 }
 
@@ -532,7 +522,6 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     self.videoToolbar.sliderLeftLabel.text = [self timeStringFromSeconds:currentSeconds];
 }
 
-// convert "100" to "01:40"
 - (NSString *)timeStringFromSeconds:(NSUInteger)seconds {
     NSUInteger min = floor(seconds / 60);
     NSUInteger sec = floor(seconds - min * 60);
@@ -658,84 +647,36 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self pauseVideo];
 }
 
-#pragma mark - iCloud
+#pragma mark - Progress
 
-- (UIView<FWProgressViewPlugin> *)cloudProgressView {
-    [self initCloudRelatedViewsIfNeeded];
-    return _cloudProgressView;
-}
-
-- (UIButton *)cloudDownloadRetryButton {
-    [self initCloudRelatedViewsIfNeeded];
-    return _cloudDownloadRetryButton;
-}
-
-- (void)initCloudRelatedViewsIfNeeded {
-    [self initCloudProgressViewIfNeeded];
-    [self initCloudDownloadRetryButtonIfNeeded];
-}
-
-- (void)initCloudProgressViewIfNeeded {
-    if (_cloudProgressView) {
-        return;
+- (UIView<FWProgressViewPlugin> *)progressView {
+    if (!_progressView) {
+        _progressView = [UIView fwProgressViewWithStyle:FWProgressViewStyleDefault];
+        _progressView.hidden = YES;
+        [self addSubview:_progressView];
+        [_progressView fwAlignCenterToSuperview];
     }
-    _cloudProgressView = [UIView fwProgressViewWithStyle:FWProgressViewStyleDefault];
-    _cloudProgressView.color = UIColor.grayColor;
-    _cloudProgressView.hidden = YES;
-    [self addSubview:_cloudProgressView];
+    return _progressView;
 }
 
-- (void)initCloudDownloadRetryButtonIfNeeded {
-    if (_cloudDownloadRetryButton) {
-        return;
-    }
-    
-    // TODO
-    _cloudDownloadRetryButton = [[UIButton alloc] init];
-    [_cloudDownloadRetryButton sizeToFit];
-    _cloudDownloadRetryButton.fwTouchInsets = UIEdgeInsetsMake(6, 6, 6, 6);
-    _cloudDownloadRetryButton.hidden = YES;
-    [_cloudDownloadRetryButton addTarget:self action:@selector(handleICloudDownloadRetryEvent:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_cloudDownloadRetryButton];
+- (void)setProgressView:(UIView<FWProgressViewPlugin> *)progressView {
+    [_progressView removeFromSuperview];
+    _progressView = progressView;
+    _progressView.hidden = YES;
+    [self addSubview:_progressView];
+    [_progressView fwAlignCenterToSuperview];
 }
 
-- (void)setCloudDownloadStatus:(FWAssetDownloadStatus)cloudDownloadStatus {
-    BOOL statusChanged = _cloudDownloadStatus != cloudDownloadStatus;
-    _cloudDownloadStatus = cloudDownloadStatus;
-    switch (cloudDownloadStatus) {
-        case FWAssetDownloadStatusSucceed:
-            self.cloudProgressView.hidden = YES;
-            self.cloudDownloadRetryButton.hidden = YES;
-            break;
-            
-        case FWAssetDownloadStatusDownloading:
-            self.cloudProgressView.hidden = NO;
-            [self.cloudProgressView.superview bringSubviewToFront:self.cloudProgressView];
-            self.cloudDownloadRetryButton.hidden = YES;
-            break;
-            
-        case FWAssetDownloadStatusCanceled:
-            self.cloudProgressView.hidden = YES;
-            self.cloudDownloadRetryButton.hidden = YES;
-            break;
-            
-        case FWAssetDownloadStatusFailed:
-            self.cloudProgressView.hidden = YES;
-            self.cloudDownloadRetryButton.hidden = NO;
-            [self.cloudDownloadRetryButton.superview bringSubviewToFront:self.cloudDownloadRetryButton];
-            break;
-            
-        default:
-            break;
-    }
-    if (statusChanged) {
-        [self setNeedsLayout];
-    }
+- (CGFloat)progress {
+    return self.progressView.progress;
 }
 
-- (void)handleICloudDownloadRetryEvent:(UIView *)sender {
-    if ([self.delegate respondsToSelector:@selector(didTouchICloudRetryButtonInZoomImageView:)]) {
-        [self.delegate didTouchICloudRetryButtonInZoomImageView:self];
+- (void)setProgress:(CGFloat)progress {
+    self.progressView.progress = progress;
+    if (progress >= 1 || progress <= 0) {
+        if (!self.progressView.hidden) self.progressView.hidden = YES;
+    } else {
+        if (self.progressView.hidden) self.progressView.hidden = NO;
     }
 }
 

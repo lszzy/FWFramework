@@ -118,26 +118,14 @@
         });
     // 模拟进度的情况
     } else if (index == 3) {
-        zoomImageView.cloudProgressView.hidden = NO;
-        zoomImageView.cloudProgressView.color = UIColor.whiteColor;
-        zoomImageView.cloudProgressView.progress = 0;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            double progress = 0.0f;
-            while (progress < 1.0f) {
-                progress += 0.02f;
-                BOOL finish = progress >= 1.0f;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    zoomImageView.cloudProgressView.progress = progress;
-                });
-                usleep(finish ? 2000000 : 50000);
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                zoomImageView.cloudProgressView.progress = 1;
-                zoomImageView.cloudProgressView.hidden = YES;
+        FWWeakifySelf();
+        [self mockProgress:^(double progress, BOOL finished) {
+            FWStrongifySelf();
+            zoomImageView.progress = progress;
+            if (finished) {
                 zoomImageView.image = self.images[index];
-            });
-        });
+            }
+        }];
     } else if (index == 5) {
         NSURL *url = [NSURL fwURLWithString:@"http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"];
         zoomImageView.videoPlayerItem = [AVPlayerItem playerItemWithURL:url];

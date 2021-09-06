@@ -55,7 +55,9 @@
             view.fwLayoutChain.center();
         }
         view.annular = rowData == 0 ? YES : NO;
-        [self mockProgress:view];
+        [self mockProgress:^(double progress, BOOL finished) {
+            view.progress = progress;
+        }];
         return cell;
     }
     
@@ -99,7 +101,9 @@
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.section == 0) {
         FWProgressView *view = [cell viewWithTag:100];
-        [self mockProgress:view];
+        [self mockProgress:^(double progress, BOOL finished) {
+            view.progress = progress;
+        }];
         return;
     }
     
@@ -143,26 +147,6 @@
         indicatorView.hidesWhenStopped = NO;
         return indicatorView;
     };
-}
-
-- (void)mockProgress:(FWProgressView *)progressView
-{
-    progressView.progress = 0;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        double progress = 0.0f;
-        while (progress < 1.0f) {
-            progress += 0.02f;
-            BOOL finish = progress >= 1.0f;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                progressView.progress = progress;
-            });
-            usleep(finish ? 2000000 : 50000);
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            progressView.progress = 1;
-        });
-    });
 }
 
 @end

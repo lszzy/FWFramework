@@ -734,11 +734,6 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
     self.topToolBarView.hidden = !self.topToolBarView.hidden;
 }
 
-- (void)didTouchICloudRetryButtonInZoomImageView:(FWZoomImageView *)imageView {
-    NSInteger index = [self.imagePreviewView indexForZoomImageView:imageView];
-    [self.imagePreviewView.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
-}
-
 - (void)zoomImageView:(FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide {
     self.topToolBarView.hidden = didHide;
 }
@@ -816,21 +811,18 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.downloadStatus != FWAssetDownloadStatusDownloading) {
                 self.downloadStatus = FWAssetDownloadStatusDownloading;
-                imageView.cloudDownloadStatus = FWAssetDownloadStatusDownloading;
-
-                // 重置 progressView 的显示的进度为 0
-                [imageView.cloudProgressView setProgress:0 animated:NO];
+                imageView.progress = 0;
             }
             // 拉取资源的初期，会有一段时间没有进度，猜测是发出网络请求以及与 iCloud 建立连接的耗时，这时预先给个 0.02 的进度值，看上去好看些
             float targetProgress = fmax(0.02, progress);
-            if (targetProgress < imageView.cloudProgressView.progress) {
-                [imageView.cloudProgressView setProgress:targetProgress animated:NO];
+            if (targetProgress < imageView.progress) {
+                imageView.progress = targetProgress;
             } else {
-                imageView.cloudProgressView.progress = fmax(0.02, progress);
+                imageView.progress = fmax(0.02, progress);
             }
             if (error) {
                 self.downloadStatus = FWAssetDownloadStatusFailed;
-                imageView.cloudDownloadStatus = FWAssetDownloadStatusFailed;
+                imageView.progress = 0;
             }
         });
     };
@@ -876,12 +868,12 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
                         // 资源资源已经在本地或下载成功
                         [imageAsset updateDownloadStatusWithDownloadResult:YES];
                         self.downloadStatus = FWAssetDownloadStatusSucceed;
-                        imageView.cloudDownloadStatus = FWAssetDownloadStatusSucceed;
+                        imageView.progress = 1;
                     } else if ([info objectForKey:PHLivePhotoInfoErrorKey] ) {
                         // 下载错误
                         [imageAsset updateDownloadStatusWithDownloadResult:NO];
                         self.downloadStatus = FWAssetDownloadStatusFailed;
-                        imageView.cloudDownloadStatus = FWAssetDownloadStatusFailed;
+                        imageView.progress = 0;
                     }
                 });
             } withProgressHandler:phProgressHandler];
@@ -918,12 +910,12 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
                         // 资源资源已经在本地或下载成功
                         [imageAsset updateDownloadStatusWithDownloadResult:YES];
                         self.downloadStatus = FWAssetDownloadStatusSucceed;
-                        imageView.cloudDownloadStatus = FWAssetDownloadStatusSucceed;
+                        imageView.progress = 1;
                     } else if ([info objectForKey:PHImageErrorKey] ) {
                         // 下载错误
                         [imageAsset updateDownloadStatusWithDownloadResult:NO];
                         self.downloadStatus = FWAssetDownloadStatusFailed;
-                        imageView.cloudDownloadStatus = FWAssetDownloadStatusFailed;
+                        imageView.progress = 0;
                     }
                 });
             } withProgressHandler:phProgressHandler];

@@ -99,26 +99,15 @@
 
 - (void)onProgress
 {
-    [self fwShowProgressWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", 0.0f] progress:0];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self mockProgress];
-        dispatch_async(dispatch_get_main_queue(), ^{
+    FWWeakifySelf();
+    [self mockProgress:^(double progress, BOOL finished) {
+        FWStrongifySelf();
+        if (!finished) {
+            [self fwShowProgressWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100] progress:progress];
+        } else {
             [self fwHideProgress];
-        });
-    });
-}
-
-- (void)mockProgress
-{
-    double progress = 0.0f;
-    while (progress < 1.0f) {
-        progress += 0.02f;
-        BOOL finish = progress >= 1.0f;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self fwShowProgressWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100] progress:progress];
-        });
-        usleep(finish ? 2000000 : 50000);
-    }
+        }
+    }];
 }
 
 - (void)onLoadingWindow
@@ -133,26 +122,15 @@
 
 - (void)onProgressWindow
 {
-    [self.view.window fwShowLoadingWithText:@"上传中"];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self mockProgressWindow];
-        dispatch_async(dispatch_get_main_queue(), ^{
+    FWWeakifySelf();
+    [self mockProgress:^(double progress, BOOL finished) {
+        FWStrongifySelf();
+        if (!finished) {
+            [self.view.window fwShowLoadingWithText:[NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]];
+        } else {
             [self.view.window fwHideLoading];
-        });
-    });
-}
-
-- (void)mockProgressWindow
-{
-    double progress = 0.0f;
-    while (progress < 1.0f) {
-        progress += 0.02f;
-        BOOL finish = progress >= 1.0f;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view.window fwShowLoadingWithText:finish ? @"上传完成" : [NSString stringWithFormat:@"上传中(%.0f%%)", progress * 100]];
-        });
-        usleep(finish ? 2000000 : 50000);
-    }
+        }
+    }];
 }
 
 - (void)onToast
