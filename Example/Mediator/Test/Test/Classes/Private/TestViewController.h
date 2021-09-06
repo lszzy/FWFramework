@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TestViewController : UIViewController <FWViewController>
 
+- (void)mockProgress:(void (^)(double progress, BOOL finished))block;
+
 @end
 
 NS_ASSUME_NONNULL_END

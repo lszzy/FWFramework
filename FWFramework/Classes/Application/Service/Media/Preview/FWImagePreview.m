@@ -342,8 +342,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
     FWImagePreviewCell *cell = (FWImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     FWZoomImageView *zoomView = cell.zoomImageView;
-    zoomView.cloudProgressView.color = self.loadingColor;
-    zoomView.cloudDownloadRetryButton.tintColor = self.loadingColor;
+    zoomView.progressView.color = self.loadingColor;
     zoomView.delegate = self;
     
     // 因为 cell 复用的问题，很可能此时会显示一张错误的图片，因此这里要清空所有图片的显示
@@ -452,12 +451,6 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 - (void)longPressInZoomingImageView:(FWZoomImageView *)imageView {
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate longPressInZoomingImageView:imageView];
-    }
-}
-
-- (void)didTouchICloudRetryButtonInZoomImageView:(FWZoomImageView *)imageView {
-    if ([self.delegate respondsToSelector:_cmd]) {
-        [self.delegate didTouchICloudRetryButtonInZoomImageView:imageView];
     }
 }
 

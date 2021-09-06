@@ -24,11 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)longPressInZoomingImageView:(FWZoomImageView *)zoomImageView;
 
 /**
- *  告知 delegate 用户点击了 iCloud 图片的重试按钮
- */
-- (void)didTouchICloudRetryButtonInZoomImageView:(FWZoomImageView *)imageView;
-
-/**
  *  告知 delegate 在视频预览界面里，由于用户点击了空白区域或播放视频等导致了底部的视频工具栏被显示或隐藏
  *  @param didHide 如果为 YES 则表示工具栏被隐藏，NO 表示工具栏被显示了出来
  */
@@ -99,14 +94,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 可通过此属性修改 video 播放时屏幕中央的播放按钮图片
 @property(nonatomic, strong) UIImage *videoCenteredPlayButtonImage UI_APPEARANCE_SELECTOR;
 
-// 从 iCloud 加载资源的进度展示
-@property(nonatomic, strong) UIView<FWProgressViewPlugin> *cloudProgressView;
+// 进度视图，居中显示
+@property(nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
 
-// 从 iCloud 加载资源失败的重试按钮
-@property(nonatomic, strong) UIButton *cloudDownloadRetryButton;
-
-// 当前展示的资源的下载状态
-@property(nonatomic, assign) FWAssetDownloadStatus cloudDownloadStatus;
+// 设置当前进度，自动显示或隐藏进度视图
+@property(nonatomic, assign) CGFloat progress;
 
 /// 暂停视频播放
 - (void)pauseVideo;
