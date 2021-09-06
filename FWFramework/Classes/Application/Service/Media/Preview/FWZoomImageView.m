@@ -22,7 +22,7 @@
 
 @end
 
-@interface QMUIZoomImageVideoPlayerView : UIView
+@interface FWZoomImageVideoPlayerView : UIView
 
 @end
 
@@ -31,7 +31,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 @interface FWZoomImageView () <UIGestureRecognizerDelegate>
 
 // video play
-@property(nonatomic, strong) QMUIZoomImageVideoPlayerView *videoPlayerView;
+@property(nonatomic, strong) FWZoomImageVideoPlayerView *videoPlayerView;
 @property(nonatomic, strong) AVPlayer *videoPlayer;
 @property(nonatomic, strong) id videoTimeObserver;
 @property(nonatomic, assign) BOOL isSeekingVideo;
@@ -567,7 +567,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     if (self.videoPlayerView) {
         return;
     }
-    self.videoPlayerView = [[QMUIZoomImageVideoPlayerView alloc] init];
+    self.videoPlayerView = [[FWZoomImageVideoPlayerView alloc] init];
     _videoPlayerLayer = (AVPlayerLayer *)self.videoPlayerView.layer;
     self.videoPlayerView.hidden = YES;
     [self.scrollView addSubview:self.videoPlayerView];
@@ -814,7 +814,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 @end
 
-@implementation QMUIZoomImageVideoPlayerView
+@implementation FWZoomImageVideoPlayerView
 
 + (Class)layerClass {
     return [AVPlayerLayer class];
@@ -905,8 +905,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         _slider = [[UISlider alloc] init];
         self.slider.minimumTrackTintColor = [UIColor colorWithRed:195/255.f green:195/255.f blue:195/255.f alpha:1];
         self.slider.maximumTrackTintColor = [UIColor colorWithRed:95/255.f green:95/255.f blue:95/255.f alpha:1];
-        //self.slider.thumbSize = CGSizeMake(12, 12);
-        //self.slider.thumbColor = UIColor.whiteColor;
+        self.slider.fwThumbSize = CGSizeMake(12, 12);
+        self.slider.fwThumbColor = UIColor.whiteColor;
         [self addSubview:self.slider];
         
         _sliderLeftLabel = [[UILabel alloc] init];

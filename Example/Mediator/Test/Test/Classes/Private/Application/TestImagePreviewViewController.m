@@ -72,7 +72,6 @@
 - (void)handleImageButtonEvent:(UIButton *)button {
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
-        self.imagePreviewViewController.imagePreviewView.loadingColor = UIColor.whiteColor;
         self.imagePreviewViewController.presentingStyle = FWImagePreviewTransitioningStyleZoom;// 将 present 动画改为 zoom，也即从某个位置放大到屏幕中央。默认样式为 fade。
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
         

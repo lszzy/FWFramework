@@ -9,6 +9,7 @@
 
 #import "FWImagePreview.h"
 #import "FWToolkit.h"
+#import "FWImage.h"
 #import "FWViewPlugin.h"
 
 #pragma mark - FWCollectionViewPagingLayout
@@ -327,17 +328,31 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if ([self.delegate respondsToSelector:@selector(numberOfImagesInImagePreviewView:)]) {
         return [self.delegate numberOfImagesInImagePreviewView:self];
     }
-    return 0;
+    return self.imageURLs.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *identifier = kImageOrUnknownCellIdentifier;
+    id imageURL = nil;
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:assetTypeAtIndex:)]) {
         FWImagePreviewMediaType type = [self.delegate imagePreviewView:self assetTypeAtIndex:indexPath.item];
         if (type == FWImagePreviewMediaTypeLivePhoto) {
             identifier = kLivePhotoCellIdentifier;
         } else if (type == FWImagePreviewMediaTypeVideo) {
             identifier = kVideoCellIdentifier;
+        }
+    } else {
+        if (self.imageURLs.count > indexPath.item) {
+            imageURL = self.imageURLs[indexPath.item];
+            if ([imageURL isKindOfClass:[NSURL class]]) {
+                imageURL = ((NSURL *)imageURL).absoluteString;
+            }
+            
+            if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
+                identifier = kLivePhotoCellIdentifier;
+            } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
+                identifier = kVideoCellIdentifier;
+            }
         }
     }
     FWImagePreviewCell *cell = (FWImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
@@ -349,8 +364,30 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     zoomView.image = nil;
     zoomView.videoPlayerItem = nil;
     zoomView.livePhoto = nil;
+    
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:renderZoomImageView:atIndex:)]) {
         [self.delegate imagePreviewView:self renderZoomImageView:zoomView atIndex:indexPath.item];
+    } else {
+        [zoomView.imageView fwCancelImageRequest];
+        if ([imageURL isKindOfClass:[NSString class]]) {
+            zoomView.progress = 0.01;
+            UIImage *placeholderImage = self.placeholderImage ? self.placeholderImage(indexPath.item) : nil;
+            [zoomView.imageView fwSetImageWithURL:imageURL placeholderImage:placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+                zoomView.progress = 1;
+                if (image) zoomView.image = image;
+            } progress:^(double progress) {
+                zoomView.progress = progress;
+            }];
+        } else if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
+            zoomView.progress = 1;
+            zoomView.livePhoto = (PHLivePhoto *)imageURL;
+        } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
+            zoomView.progress = 1;
+            zoomView.videoPlayerItem = (AVPlayerItem *)imageURL;
+        } else if ([imageURL isKindOfClass:[UIImage class]]) {
+            zoomView.progress = 1;
+            zoomView.image = (UIImage *)imageURL;
+        }
     }
     return cell;
 }

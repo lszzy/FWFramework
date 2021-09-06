@@ -127,6 +127,11 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 @property(nonatomic, assign) NSUInteger currentImageIndex;
 - (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated;
 
+/// 图片数组，delegate不存在时调用，支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString等
+@property(nonatomic, copy, nullable) NSArray *imageURLs;
+/// 占位图片句柄，仅imageURLs生效，默认nil
+@property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSUInteger index);
+
 /// 每一页里的 loading 的颜色，默认为 UIColorWhite
 @property(nonatomic, strong) UIColor *loadingColor;
 
