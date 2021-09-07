@@ -271,13 +271,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-@interface FWImagePickerPreviewViewController (UIAppearance)
-
-+ (instancetype)appearance;
-
-@end
-
 #pragma mark - FWImagePickerViewController
 
 @class FWImagePickerViewController;
@@ -398,13 +391,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @see imagePickerViewControllerWillStartLoading: & imagePickerViewControllerDidFinishLoading:
  */
 @property(nonatomic, assign) BOOL shouldShowDefaultLoadingView;
-
-@end
-
-
-@interface FWImagePickerViewController (UIAppearance)
-
-+ (instancetype)appearance;
 
 @end
 

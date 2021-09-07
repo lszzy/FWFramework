@@ -96,10 +96,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
 
 // 播放 video 时屏幕中央的播放按钮
-@property(nonatomic, strong, readonly) UIButton *videoCenteredPlayButton;
+@property(nonatomic, strong, readonly) UIButton *videoPlayButton;
 
 // 可通过此属性修改 video 播放时屏幕中央的播放按钮图片
-@property(nonatomic, strong) UIImage *videoCenteredPlayButtonImage UI_APPEARANCE_SELECTOR;
+@property(nonatomic, strong) UIImage *videoPlayButtonImage UI_APPEARANCE_SELECTOR;
 
 // 进度视图，居中显示
 @property(nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
@@ -120,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endPlayingVideo;
 
 /// 获取当前正在显示的图片/视频在整个 FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）
-- (CGRect)contentViewRectInZoomImageView;
+- (CGRect)contentViewRect;
 
 /// 重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。注意子类重写需要调一下super
 - (void)revertZooming;
@@ -129,6 +129,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setImageURL:(nullable id)imageURL placeholderImage:(nullable UIImage *)placeholderImage;
 
 @end
+
+#pragma mark - FWZoomImageViewVideoToolbar
 
 @interface FWZoomImageViewVideoToolbar : UIView
 

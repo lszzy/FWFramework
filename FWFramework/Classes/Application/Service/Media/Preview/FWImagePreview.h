@@ -88,11 +88,6 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 /// 获取某个 index 对应的 zoomImageView，若该 index 对应的图片当前不可见（不处于可视区域），则返回 nil
 - (nullable FWZoomImageView *)zoomImageViewAtIndex:(NSUInteger)index;
 
-/// 页数标签，默认字号16、白色，默认不显示
-@property(nonatomic, strong, readonly) UILabel *pageLabel;
-/// 页数标签中心，默认zero，距离底部20+安全距离
-@property (nonatomic, assign) CGPoint pageLabelCenter;
-
 @end
 
 #pragma mark - FWImagePreviewViewController
@@ -148,6 +143,13 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 
 /// 手势单击时是否退出预览模式，默认NO。如果正在播放视频，单击会先暂停，再点击一次才会退出。
 @property(nonatomic, assign) BOOL dismissingWhenTapped;
+
+/// 是否显示页数标签，默认NO
+@property(nonatomic, assign) BOOL showsPageLabel;
+/// 页数标签中心垂直偏移，默认0，位于底部20+安全距离
+@property(nonatomic, assign) CGFloat pageLabelOffset;
+/// 页数标签，默认字号16、白色
+@property(nonatomic, strong, readonly) UILabel *pageLabel;
 
 @end
 
