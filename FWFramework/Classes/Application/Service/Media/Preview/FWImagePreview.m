@@ -9,7 +9,7 @@
 
 #import "FWImagePreview.h"
 #import "FWToolkit.h"
-#import "FWImage.h"
+#import "FWNavigation.h"
 #import "FWViewPlugin.h"
 
 #pragma mark - FWImagePreviewView
@@ -47,6 +47,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 @property(nonatomic, assign) BOOL isChangingCollectionViewBounds;
 @property(nonatomic, assign) CGFloat previousIndexWhenScrolling;
+@property(nonatomic, weak) id<FWImagePreviewViewDelegate> controllerDelegate;
+
 @end
 
 @implementation FWImagePreviewView
@@ -88,10 +90,23 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
     [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kLivePhotoCellIdentifier];
     [self addSubview:self.collectionView];
+    
+    _pageLabel = [[UILabel alloc] init];
+    _pageLabel.font = [UIFont systemFontOfSize:16];
+    _pageLabel.textColor = [UIColor whiteColor];
+    _pageLabel.textAlignment = NSTextAlignmentCenter;
+    _pageLabel.hidden = YES;
+    [self addSubview:_pageLabel];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
+    if (self.pageLabel.text.length < 1 && [self.collectionView numberOfItemsInSection:0] > 0) {
+        [self updatePageLabel];
+    }
+    self.pageLabel.center = !CGPointEqualToPoint(self.pageLabelCenter, CGPointZero) ? self.pageLabelCenter : CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - (20 + self.fwSafeAreaInsets.bottom));
+    
     BOOL isCollectionViewSizeChanged = !CGSizeEqualToSize(self.collectionView.bounds.size, self.bounds.size);
     if (isCollectionViewSizeChanged) {
         self.isChangingCollectionViewBounds = YES;
@@ -111,11 +126,27 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated {
     _currentImageIndex = currentImageIndex;
+    [self updatePageLabel];
+    
     [self.collectionView reloadData];
     if (currentImageIndex < [self.collectionView numberOfItemsInSection:0]) {
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:currentImageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:animated];
         [self.collectionView layoutIfNeeded];// scroll immediately
     }
+}
+
+- (NSUInteger)imageCount {
+    return [self.collectionView numberOfItemsInSection:0];
+}
+
+- (void)setPageLabelCenter:(CGPoint)pageLabelCenter {
+    _pageLabelCenter = pageLabelCenter;
+    [self setNeedsLayout];
+}
+
+- (void)updatePageLabel {
+    self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.currentImageIndex + 1), @([self.collectionView numberOfItemsInSection:0])];
+    [self.pageLabel sizeToFit];
 }
 
 #pragma mark - <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -137,18 +168,16 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         } else if (type == FWImagePreviewMediaTypeVideo) {
             identifier = kVideoCellIdentifier;
         }
-    } else {
-        if (self.imageURLs.count > indexPath.item) {
-            imageURL = self.imageURLs[indexPath.item];
-            if ([imageURL isKindOfClass:[NSURL class]]) {
-                imageURL = ((NSURL *)imageURL).absoluteString;
-            }
-            
-            if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
-                identifier = kLivePhotoCellIdentifier;
-            } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
-                identifier = kVideoCellIdentifier;
-            }
+    } else if (self.imageURLs.count > indexPath.item) {
+        imageURL = self.imageURLs[indexPath.item];
+        if ([imageURL isKindOfClass:[NSURL class]]) {
+            imageURL = ((NSURL *)imageURL).absoluteString;
+        }
+        
+        if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
+            identifier = kLivePhotoCellIdentifier;
+        } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
+            identifier = kVideoCellIdentifier;
         }
     }
     FWImagePreviewCell *cell = (FWImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
@@ -160,29 +189,16 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     zoomView.videoPlayerItem = nil;
     zoomView.livePhoto = nil;
     
+    if (self.zoomImageView) {
+        self.zoomImageView(zoomView, indexPath.item);
+    }
+    
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:renderZoomImageView:atIndex:)]) {
         [self.delegate imagePreviewView:self renderZoomImageView:zoomView atIndex:indexPath.item];
-    } else {
-        [zoomView.imageView fwCancelImageRequest];
-        if ([imageURL isKindOfClass:[NSString class]]) {
-            zoomView.progress = 0.01;
-            UIImage *placeholderImage = self.placeholderImage ? self.placeholderImage(indexPath.item) : nil;
-            [zoomView.imageView fwSetImageWithURL:imageURL placeholderImage:placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
-                zoomView.progress = 1;
-                if (image) zoomView.image = image;
-            } progress:^(double progress) {
-                zoomView.progress = progress;
-            }];
-        } else if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
-            zoomView.progress = 1;
-            zoomView.livePhoto = (PHLivePhoto *)imageURL;
-        } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
-            zoomView.progress = 1;
-            zoomView.videoPlayerItem = (AVPlayerItem *)imageURL;
-        } else if ([imageURL isKindOfClass:[UIImage class]]) {
-            zoomView.progress = 1;
-            zoomView.image = (UIImage *)imageURL;
-        }
+    } else if (self.imageURLs.count > indexPath.item) {
+        zoomView.reusedIdentifier = @(indexPath.item);
+        UIImage *placeholderImage = self.placeholderImage ? self.placeholderImage(indexPath.item) : nil;
+        [zoomView setImageURL:imageURL placeholderImage:placeholderImage];
     }
     return cell;
 }
@@ -245,6 +261,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             
             // 不调用 setter，避免又走一次 scrollToItem
             _currentImageIndex = index;
+            [self updatePageLabel];
             
             if ([self.delegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
                 [self.delegate imagePreviewView:self willScrollHalfToIndex:index];
@@ -269,6 +286,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 #pragma mark - <FWZoomImageViewDelegate>
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)imageView location:(CGPoint)location {
+    if ([self.controllerDelegate respondsToSelector:_cmd]) {
+        [self.controllerDelegate singleTouchInZoomingImageView:imageView location:location];
+    }
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate singleTouchInZoomingImageView:imageView location:location];
     }
@@ -305,12 +325,11 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
-@interface FWImagePreviewViewController ()
+@interface FWImagePreviewViewController () <FWImagePreviewViewDelegate>
 
 @property(nonatomic, strong) UIPanGestureRecognizer *dismissingGesture;
 @property(nonatomic, assign) CGPoint gestureBeganLocation;
 @property(nonatomic, weak) FWZoomImageView *gestureZoomImageView;
-@property(nonatomic, assign) BOOL canShowPresentingViewControllerWhenGesturing;
 @property(nonatomic, assign) BOOL originalStatusBarHidden;
 @property(nonatomic, assign) BOOL statusBarHidden;
 @end
@@ -357,6 +376,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 - (FWImagePreviewView *)imagePreviewView {
     if (!_imagePreviewView) {
         _imagePreviewView = [[FWImagePreviewView alloc] initWithFrame:self.isViewLoaded ? self.view.bounds : CGRectZero];
+        _imagePreviewView.controllerDelegate = self;
     }
     return _imagePreviewView;
 }
@@ -370,9 +390,6 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.imagePreviewView.fwFrameApplyTransform = self.view.bounds;
-    
-    // TODO
-    self.canShowPresentingViewControllerWhenGesturing = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -469,7 +486,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
                 
                 // 如果预览大图支持横竖屏而背后的界面只支持竖屏，则在横屏时手势拖拽不要露出背后的界面
-                if (self.canShowPresentingViewControllerWhenGesturing) {
+                if (self.dismissingGestureEnabled) {
                     alpha = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) * 1.8;
                 }
             } else {
@@ -499,7 +516,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 
                 // 如果背后的界面支持的方向与当前预览大图的界面不一样，则为了避免在 dismiss 后看到背后界面的旋转，这里提前触发背后界面的 viewWillAppear，从而借助 AutomaticallyRotateDeviceOrientation 的功能去提前旋转到正确方向。（备忘，如果不这么处理，标准的触发 viewWillAppear: 的时机是在 animator 的 animateTransition: 时，这里就算重复调用一次也不会导致 viewWillAppear: 多次触发）
                 // 这里只能解决手势拖拽的 dismiss，如果是业务代码手动调用 dismiss 则无法兼顾，再看怎么处理。
-                if (!self.canShowPresentingViewControllerWhenGesturing) {
+                if (!self.dismissingGestureEnabled) {
                     [self.presentingViewController beginAppearanceTransition:YES animated:YES];
                 }
                 
@@ -543,6 +560,17 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     }
     
     return viewController;
+}
+
+#pragma mark - FWImagePreviewViewDelegate
+
+- (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
+    if (!self.dismissingWhenTapped) return;
+    if (zoomImageView.isPlayingVideo) {
+        [zoomImageView pauseVideo];
+    } else {
+        [self fwCloseViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark - <UIViewControllerTransitioningDelegate>

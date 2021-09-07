@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取当前正在显示的图片/视频的容器
 @property(nonatomic, weak, nullable, readonly) __kindof UIView *contentView;
 
-/// 是否播放video时显示底部的工具栏，默认YES
+/// 是否播放video时显示底部的工具栏，默认NO
 @property(nonatomic, assign) BOOL showsVideoToolbar;
 
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式
@@ -119,16 +119,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 停止视频播放，将播放状态重置到初始状态
 - (void)endPlayingVideo;
 
-/**
- *  获取当前正在显示的图片/视频在整个 FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）
- */
+/// 获取当前正在显示的图片/视频在整个 FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）
 - (CGRect)contentViewRectInZoomImageView;
 
-/**
- *  重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。
- *  注意子类重写需要调一下super。
- */
+/// 重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。注意子类重写需要调一下super
 - (void)revertZooming;
+
+/// 快速设置图片URL，网络图片支持占位图，参数支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString等
+- (void)setImageURL:(nullable id)imageURL placeholderImage:(nullable UIImage *)placeholderImage;
 
 @end
 
