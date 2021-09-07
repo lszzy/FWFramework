@@ -14,19 +14,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWZoomImageView;
-@class FWZoomImageViewVideoToolbar;
-@protocol FWProgressViewPlugin;
 
+/// FWZoomImageView事件代理
 @protocol FWZoomImageViewDelegate <NSObject>
+
 @optional
+
+/// 单击事件代理方法
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location;
+/// 双击事件代理方法
 - (void)doubleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location;
+/// 长按事件代理方法
 - (void)longPressInZoomingImageView:(FWZoomImageView *)zoomImageView;
 
-/**
- *  告知 delegate 在视频预览界面里，由于用户点击了空白区域或播放视频等导致了底部的视频工具栏被显示或隐藏
- *  @param didHide 如果为 YES 则表示工具栏被隐藏，NO 表示工具栏被显示了出来
- */
+/// 在视频预览界面里，由于用户点击了空白区域或播放视频等导致了底部的视频工具栏被显示或隐藏
 - (void)zoomImageView:(FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide;
 
 /// 是否支持缩放，默认为 YES
@@ -34,14 +35,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@class FWZoomImageViewVideoToolbar;
+@protocol FWProgressViewPlugin;
+
 /**
  *  支持缩放查看静态图片、live photo、视频的控件
  *  默认显示完整图片或视频，可双击查看原始大小，再次双击查看放大后的大小，第三次双击恢复到初始大小。
  *
  *  支持通过修改 contentMode 来控制静态图片和 live photo 默认的显示模式，目前仅支持 UIViewContentModeCenter、UIViewContentModeScaleAspectFill、UIViewContentModeScaleAspectFit，默认为 UIViewContentModeCenter。注意这里的显示模式是基于 viewportRect 而言的而非整个 zoomImageView
- *  @see viewportRect
- *
  *  FWZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通过继承来实现。
+ *
  *  @see https://github.com/Tencent/QMUI_iOS
  */
 @interface FWZoomImageView : UIView <UIScrollViewDelegate>
@@ -80,12 +83,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// 用于显示 video 的 layer
 @property(nonatomic, strong, readonly) AVPlayerLayer *videoPlayerLayer;
 
+/// 获取当前正在显示的图片/视频的容器
+@property(nonatomic, weak, nullable, readonly) __kindof UIView *contentView;
+
+/// 是否播放video时显示底部的工具栏，默认YES
+@property(nonatomic, assign) BOOL showsVideoToolbar;
+
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式
-// @see FWZoomImageViewVideoToolbar
 @property(nonatomic, strong, readonly) FWZoomImageViewVideoToolbar *videoToolbar;
 
-// 视频底部控制条的 margins，会在此基础上自动叠加 FWZoomImageView.qmui_safeAreaInsets，因此无需考虑在 iPhone X 下的兼容
-// 默认值为 {0, 25, 25, 18}
+// 视频底部控制条的 margins，会在此基础上自动叠加 FWZoomImageView.qmui_safeAreaInsets，因此无需考虑在 iPhone X 下的兼容，默认值为 {0, 25, 25, 18}
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
 
 // 播放 video 时屏幕中央的播放按钮
@@ -100,13 +107,17 @@ NS_ASSUME_NONNULL_BEGIN
 // 设置当前进度，自动显示或隐藏进度视图
 @property(nonatomic, assign) CGFloat progress;
 
+/// 是否正在播放视频
+@property(nonatomic, assign, readonly) BOOL isPlayingVideo;
+
+/// 开始视频播放
+- (void)playVideo;
+
 /// 暂停视频播放
 - (void)pauseVideo;
+
 /// 停止视频播放，将播放状态重置到初始状态
 - (void)endPlayingVideo;
-
-/// 获取当前正在显示的图片/视频的容器
-@property(nonatomic, weak, nullable, readonly) __kindof UIView *contentView;
 
 /**
  *  获取当前正在显示的图片/视频在整个 FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）

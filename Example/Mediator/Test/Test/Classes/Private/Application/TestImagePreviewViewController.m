@@ -108,10 +108,10 @@
     
     // 模拟异步加载的情况
     if (index == 2) {
-        [zoomImageView fwShowEmptyViewLoading];
+        [zoomImageView fwShowLoading];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if ([zoomImageView.reusedIdentifier isEqual:@(index)]) {
-                [zoomImageView fwHideEmptyView];
+                [zoomImageView fwHideLoading];
                 zoomImageView.image = self.images[index];
             }
         });
