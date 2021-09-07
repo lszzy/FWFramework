@@ -24,6 +24,32 @@
 
 @implementation FWEmptyView
 
++ (void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self setDefaultAppearance];
+    });
+}
+
++ (void)setDefaultAppearance {
+    FWEmptyView *appearance = [FWEmptyView appearance];
+    appearance.imageViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
+    appearance.loadingViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
+    appearance.textLabelInsets = UIEdgeInsetsMake(0, 0, 10, 0);
+    appearance.detailTextLabelInsets = UIEdgeInsetsMake(0, 0, 14, 0);
+    appearance.actionButtonInsets = UIEdgeInsetsZero;
+    appearance.verticalOffset = -30;
+    
+    appearance.textLabelFont = [UIFont systemFontOfSize:15];
+    appearance.detailTextLabelFont = [UIFont systemFontOfSize:14];
+    appearance.actionButtonFont = [UIFont systemFontOfSize:15];
+    
+    appearance.loadingViewColor = [UIColor grayColor];
+    appearance.textLabelTextColor = [UIColor colorWithRed:93/255.0 green:100/255.0 blue:110/255.0 alpha:1];
+    appearance.detailTextLabelTextColor = [UIColor colorWithRed:133/255.0 green:140/255.0 blue:150/255.0 alpha:1];
+    appearance.actionButtonTitleColor = [UIColor colorWithRed:49/255.0 green:189/255.0 blue:243/255.0 alpha:1];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -302,40 +328,6 @@
     [self.actionButton setTitleColor:actionButtonTitleColor forState:UIControlStateNormal];
     [self.actionButton setTitleColor:[actionButtonTitleColor colorWithAlphaComponent:0.5f] forState:UIControlStateHighlighted];
     [self.actionButton setTitleColor:[actionButtonTitleColor colorWithAlphaComponent:0.5f] forState:UIControlStateDisabled];
-}
-
-@end
-
-@interface FWEmptyView (UIAppearance)
-
-@end
-
-@implementation FWEmptyView (UIAppearance)
-
-+ (void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self setDefaultAppearance];
-    });
-}
-
-+ (void)setDefaultAppearance {
-    FWEmptyView *appearance = [FWEmptyView appearance];
-    appearance.imageViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
-    appearance.loadingViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
-    appearance.textLabelInsets = UIEdgeInsetsMake(0, 0, 10, 0);
-    appearance.detailTextLabelInsets = UIEdgeInsetsMake(0, 0, 14, 0);
-    appearance.actionButtonInsets = UIEdgeInsetsZero;
-    appearance.verticalOffset = -30;
-    
-    appearance.textLabelFont = [UIFont systemFontOfSize:15];
-    appearance.detailTextLabelFont = [UIFont systemFontOfSize:14];
-    appearance.actionButtonFont = [UIFont systemFontOfSize:15];
-    
-    appearance.loadingViewColor = [UIColor grayColor];
-    appearance.textLabelTextColor = [UIColor colorWithRed:93/255.0 green:100/255.0 blue:110/255.0 alpha:1];
-    appearance.detailTextLabelTextColor = [UIColor colorWithRed:133/255.0 green:140/255.0 blue:150/255.0 alpha:1];
-    appearance.actionButtonTitleColor = [UIColor colorWithRed:49/255.0 green:189/255.0 blue:243/255.0 alpha:1];
 }
 
 @end

@@ -90,22 +90,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
     [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kLivePhotoCellIdentifier];
     [self addSubview:self.collectionView];
-    
-    _pageLabel = [[UILabel alloc] init];
-    _pageLabel.font = [UIFont systemFontOfSize:16];
-    _pageLabel.textColor = [UIColor whiteColor];
-    _pageLabel.textAlignment = NSTextAlignmentCenter;
-    _pageLabel.hidden = YES;
-    [self addSubview:_pageLabel];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    if (self.pageLabel.text.length < 1 && [self.collectionView numberOfItemsInSection:0] > 0) {
-        [self updatePageLabel];
-    }
-    self.pageLabel.center = !CGPointEqualToPoint(self.pageLabelCenter, CGPointZero) ? self.pageLabelCenter : CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - (20 + self.fwSafeAreaInsets.bottom));
     
     BOOL isCollectionViewSizeChanged = !CGSizeEqualToSize(self.collectionView.bounds.size, self.bounds.size);
     if (isCollectionViewSizeChanged) {
@@ -126,7 +114,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated {
     _currentImageIndex = currentImageIndex;
-    [self updatePageLabel];
+    if ([self.controllerDelegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
+        [self.controllerDelegate imagePreviewView:self willScrollHalfToIndex:currentImageIndex];
+    }
     
     [self.collectionView reloadData];
     if (currentImageIndex < [self.collectionView numberOfItemsInSection:0]) {
@@ -137,16 +127,6 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (NSUInteger)imageCount {
     return [self.collectionView numberOfItemsInSection:0];
-}
-
-- (void)setPageLabelCenter:(CGPoint)pageLabelCenter {
-    _pageLabelCenter = pageLabelCenter;
-    [self setNeedsLayout];
-}
-
-- (void)updatePageLabel {
-    self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.currentImageIndex + 1), @([self.collectionView numberOfItemsInSection:0])];
-    [self.pageLabel sizeToFit];
 }
 
 #pragma mark - <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -261,7 +241,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             
             // 不调用 setter，避免又走一次 scrollToItem
             _currentImageIndex = index;
-            [self updatePageLabel];
+            if ([self.controllerDelegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
+                [self.controllerDelegate imagePreviewView:self willScrollHalfToIndex:index];
+            }
             
             if ([self.delegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
                 [self.delegate imagePreviewView:self willScrollHalfToIndex:index];
@@ -332,6 +314,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 @property(nonatomic, weak) FWZoomImageView *gestureZoomImageView;
 @property(nonatomic, assign) BOOL originalStatusBarHidden;
 @property(nonatomic, assign) BOOL statusBarHidden;
+
 @end
 
 @implementation FWImagePreviewViewController
@@ -381,15 +364,33 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     return _imagePreviewView;
 }
 
+@synthesize pageLabel = _pageLabel;
+- (UILabel *)pageLabel {
+    if (!_pageLabel) {
+        _pageLabel = [[UILabel alloc] init];
+        _pageLabel.font = [UIFont systemFontOfSize:16];
+        _pageLabel.textColor = [UIColor whiteColor];
+        _pageLabel.textAlignment = NSTextAlignmentCenter;
+        _pageLabel.hidden = YES;
+    }
+    return _pageLabel;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = self.backgroundColor;
     [self.view addSubview:self.imagePreviewView];
+    [self.view addSubview:self.pageLabel];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.imagePreviewView.fwFrameApplyTransform = self.view.bounds;
+    
+    if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
+        [self updatePageLabel];
+    }
+    self.pageLabel.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height - (20 + self.view.fwSafeAreaInsets.bottom - self.pageLabelOffset));
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -449,6 +450,19 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     return self.statusBarHidden;
 }
 
+- (BOOL)showsPageLabel {
+    return !self.pageLabel.hidden;
+}
+
+- (void)setShowsPageLabel:(BOOL)showsPageLabel {
+    self.pageLabel.hidden = !showsPageLabel;
+}
+
+- (void)updatePageLabel {
+    self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.imagePreviewView.currentImageIndex + 1), @(self.imagePreviewView.imageCount)];
+    [self.pageLabel sizeToFit];
+}
+
 #pragma mark - 动画
 
 - (void)initObjectsForZoomStyleIfNeeded {
@@ -473,6 +487,11 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             self.gestureBeganLocation = [gesture locationInView:self.view];
             self.gestureZoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
             self.gestureZoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
+            if (self.dismissingGestureEnabled) {
+                [self.view.subviews enumerateObjectsUsingBlock:^(UIView * obj, NSUInteger idx, BOOL *stop) {
+                    if (obj != self.imagePreviewView) obj.alpha = 0;
+                }];
+            }
             break;
             
         case UIGestureRecognizerStateChanged: {
@@ -493,7 +512,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 // 往上拉的话，图片不缩小，但手指越往上移动，图片将会越难被拖走
                 CGFloat a = self.gestureBeganLocation.y + 100;// 后面这个加数越大，拖动时会越快达到不怎么拖得动的状态
                 CGFloat b = 1 - pow((a - fabs(verticalDistance)) / a, 2);
-                CGFloat contentViewHeight = CGRectGetHeight(self.gestureZoomImageView.contentViewRectInZoomImageView);
+                CGFloat contentViewHeight = CGRectGetHeight(self.gestureZoomImageView.contentViewRect);
                 CGFloat c = (CGRectGetHeight(self.view.bounds) - contentViewHeight) / 2;
                 verticalDistance = -c * b;
             }
@@ -547,6 +566,11 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     self.gestureBeganLocation = CGPointZero;
     self.gestureZoomImageView = nil;
     self.view.backgroundColor = self.backgroundColor;
+    if (self.dismissingGestureEnabled) {
+        [self.view.subviews enumerateObjectsUsingBlock:^(UIView * obj, NSUInteger idx, BOOL *stop) {
+            if (obj != self.imagePreviewView) obj.alpha = 1;
+        }];
+    }
 }
 
 // 不使用 qmui_visibleViewControllerIfExist 是因为不想考虑 presentedViewController
@@ -571,6 +595,10 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     } else {
         [self fwCloseViewControllerAnimated:YES];
     }
+}
+
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index {
+    [self updatePageLabel];
 }
 
 #pragma mark - <UIViewControllerTransitioningDelegate>
@@ -606,8 +634,8 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 
             } else if (style == FWImagePreviewTransitioningStyleZoom) {
                 
-                CGRect contentViewFrame = [previewView convertRect:zoomImageView.contentViewRectInZoomImageView fromView:nil];
-                CGPoint contentViewCenterInZoomImageView = CGPointMake(CGRectGetMidX(zoomImageView.contentViewRectInZoomImageView), CGRectGetMidY(zoomImageView.contentViewRectInZoomImageView));
+                CGRect contentViewFrame = [previewView convertRect:zoomImageView.contentViewRect fromView:nil];
+                CGPoint contentViewCenterInZoomImageView = CGPointMake(CGRectGetMidX(zoomImageView.contentViewRect), CGRectGetMidY(zoomImageView.contentViewRect));
                 if (CGRectIsEmpty(contentViewFrame)) {
                     // 有可能 start preview 时图片还在 loading，此时拿到的 content rect 是 zero，所以做个保护
                     contentViewFrame = [previewView convertRect:zoomImageView.frame fromView:zoomImageView.superview];

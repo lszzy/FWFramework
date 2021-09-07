@@ -14,17 +14,77 @@
 #import "FWImage.h"
 #import "FWViewPlugin.h"
 
-@interface FWZoomImageViewImageGenerator : NSObject
-
-+ (UIImage *)largePlayImage;
-+ (UIImage *)smallPlayImage;
-+ (UIImage *)pauseImage;
-
-@end
+#pragma mark - FWZoomImageVideoPlayerView
 
 @interface FWZoomImageVideoPlayerView : UIView
 
 @end
+
+@implementation FWZoomImageVideoPlayerView
+
++ (Class)layerClass {
+    return [AVPlayerLayer class];
+}
+
++ (UIImage *)largePlayImage {
+    CGFloat width = 60;
+    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
+        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
+        CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
+        CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:.25].CGColor);
+        CGFloat circleLineWidth = 1;
+        UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
+        [circle setLineWidth:circleLineWidth];
+        [circle stroke];
+        [circle fill];
+        
+        CGContextSetFillColorWithColor(contextRef, color.CGColor);
+        CGFloat triangleLength = width / 2.5;
+        UIBezierPath *triangle = [self trianglePathWithLength:triangleLength];
+        UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
+        [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
+        [triangle fill];
+    } size:CGSizeMake(width, width)];
+}
+
++ (UIImage *)smallPlayImage {
+    CGFloat width = 17;
+    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
+        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
+        CGContextSetFillColorWithColor(contextRef, color.CGColor);
+        UIBezierPath *path = [self trianglePathWithLength:width];
+        [path fill];
+    } size:CGSizeMake(width, width)];
+}
+
++ (UIImage *)pauseImage {
+    CGSize size = CGSizeMake(12, 18);
+    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
+        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
+        CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
+        CGFloat lineWidth = 2;
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        [path moveToPoint:CGPointMake(lineWidth / 2, 0)];
+        [path addLineToPoint:CGPointMake(lineWidth / 2, size.height)];
+        [path moveToPoint:CGPointMake(size.width - lineWidth / 2, 0)];
+        [path addLineToPoint:CGPointMake(size.width - lineWidth / 2, size.height)];
+        [path setLineWidth:lineWidth];
+        [path stroke];
+    } size:size];
+}
+
++ (UIBezierPath *)trianglePathWithLength:(CGFloat)length {
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointZero];
+    [path addLineToPoint:CGPointMake(length * cos(M_PI / 6), length / 2)];
+    [path addLineToPoint:CGPointMake(0, length)];
+    [path closePath];
+    return path;
+}
+
+@end
+
+#pragma mark - FWZoomImageView
 
 static NSUInteger const kTagForCenteredPlayButton = 1;
 
@@ -45,15 +105,20 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 @synthesize livePhotoView = _livePhotoView;
 @synthesize videoPlayerLayer = _videoPlayerLayer;
 @synthesize videoToolbar = _videoToolbar;
-@synthesize videoCenteredPlayButton = _videoCenteredPlayButton;
+@synthesize videoPlayButton = _videoPlayButton;
 @synthesize progressView = _progressView;
 
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    // 当 self.window 为 nil 时说明此 view 被移出了可视区域（比如所在的 controller 被 pop 了），此时应该停止视频播放
-    if (!self.window) {
-        [self endPlayingVideo];
-    }
++ (void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self setDefaultAppearance];
+    });
+}
+
++ (void)setDefaultAppearance {
+    FWZoomImageView *appearance = [FWZoomImageView appearance];
+    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 25, 25, 18);
+    appearance.videoPlayButtonImage = [FWZoomImageVideoPlayerView largePlayImage];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -94,6 +159,14 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     return self;
 }
 
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    // 当 self.window 为 nil 时说明此 view 被移出了可视区域（比如所在的 controller 被 pop 了），此时应该停止视频播放
+    if (!self.window) {
+        [self endPlayingVideo];
+    }
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     if (CGRectIsEmpty(self.bounds)) return;
@@ -102,9 +175,9 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     
     CGRect viewportRect = [self finalViewportRect];
     
-    if (_videoCenteredPlayButton) {
-        [_videoCenteredPlayButton sizeToFit];
-        _videoCenteredPlayButton.center = CGPointMake(CGRectGetMidX(viewportRect), CGRectGetMidY(viewportRect));
+    if (_videoPlayButton) {
+        [_videoPlayButton sizeToFit];
+        _videoPlayButton.center = CGPointMake(CGRectGetMidX(viewportRect), CGRectGetMidY(viewportRect));
     }
     
     if (_videoToolbar) {
@@ -314,7 +387,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     }
 }
 
-- (CGRect)contentViewRectInZoomImageView {
+- (CGRect)contentViewRect {
     UIView *contentView = [self contentView];
     if (!contentView) {
         return CGRectZero;
@@ -408,7 +481,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self configVideoProgressSlider];
     
     self.videoPlayerLayer.hidden = NO;
-    self.videoCenteredPlayButton.hidden = NO;
+    self.videoPlayButton.hidden = NO;
     self.videoToolbar.playButton.hidden = NO;
     
     [self revertZooming];
@@ -417,7 +490,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 - (void)handlePlayButton:(UIButton *)button {
     [self addPlayerTimeObserver];
     [self.videoPlayer play];
-    self.videoCenteredPlayButton.hidden = YES;
+    self.videoPlayButton.hidden = YES;
     self.videoToolbar.playButton.hidden = YES;
     self.videoToolbar.pauseButton.hidden = NO;
     if (button.tag == kTagForCenteredPlayButton) {
@@ -434,13 +507,13 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     self.videoToolbar.playButton.hidden = NO;
     self.videoToolbar.pauseButton.hidden = YES;
     if (!self.showsVideoToolbar) {
-        self.videoCenteredPlayButton.hidden = NO;
+        self.videoPlayButton.hidden = NO;
     }
 }
 
 - (void)handleVideoPlayToEndEvent {
     [self.videoPlayer seekToTime:CMTimeMake(0, 1)];
-    self.videoCenteredPlayButton.hidden = NO;
+    self.videoPlayButton.hidden = NO;
     self.videoToolbar.playButton.hidden = NO;
     self.videoToolbar.pauseButton.hidden = YES;
 }
@@ -466,7 +539,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 - (void)handleFinishDragVideoSlider:(UISlider *)slider {
     [self.videoPlayer play];
-    self.videoCenteredPlayButton.hidden = YES;
+    self.videoPlayButton.hidden = YES;
     self.videoToolbar.playButton.hidden = YES;
     self.videoToolbar.pauseButton.hidden = NO;
     
@@ -543,7 +616,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self pauseVideo];
     [self syncVideoProgressSlider];
     self.videoToolbar.hidden = YES;
-    self.videoCenteredPlayButton.hidden = NO;
+    self.videoPlayButton.hidden = NO;
     
 }
 
@@ -557,9 +630,9 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     return _videoToolbar;
 }
 
-- (UIButton *)videoCenteredPlayButton {
-    [self initVideoCenteredPlayButtonIfNeeded];
-    return _videoCenteredPlayButton;
+- (UIButton *)videoPlayButton {
+    [self initvideoPlayButtonIfNeeded];
+    return _videoPlayButton;
 }
 
 - (void)initVideoPlayerLayerIfNeeded {
@@ -582,14 +655,14 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     });
 }
 
-- (void)initVideoCenteredPlayButtonIfNeeded {
-    if (_videoCenteredPlayButton) return;
+- (void)initvideoPlayButtonIfNeeded {
+    if (_videoPlayButton) return;
     
-    _videoCenteredPlayButton = ({
+    _videoPlayButton = ({
         UIButton *b = [[UIButton alloc] init];
         b.fwTouchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
         b.tag = kTagForCenteredPlayButton;
-        [b setImage:self.videoCenteredPlayButtonImage forState:UIControlStateNormal];
+        [b setImage:self.videoPlayButtonImage forState:UIControlStateNormal];
         [b addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
         b.hidden = YES;
         [self addSubview:b];
@@ -600,7 +673,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 - (void)initVideoRelatedViewsIfNeeded {
     [self initVideoPlayerLayerIfNeeded];
     [self initVideoToolbarIfNeeded];
-    [self initVideoCenteredPlayButtonIfNeeded];
+    [self initvideoPlayButtonIfNeeded];
     [self setNeedsLayout];
 }
 
@@ -615,8 +688,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self.videoToolbar removeFromSuperview];
     _videoToolbar = nil;
     
-    [self.videoCenteredPlayButton removeFromSuperview];
-    _videoCenteredPlayButton = nil;
+    [self.videoPlayButton removeFromSuperview];
+    _videoPlayButton = nil;
     
     self.videoPlayer = nil;
     _videoPlayerLayer.player = nil;
@@ -627,11 +700,11 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self setNeedsLayout];
 }
 
-- (void)setVideoCenteredPlayButtonImage:(UIImage *)videoCenteredPlayButtonImage {
-    _videoCenteredPlayButtonImage = videoCenteredPlayButtonImage;
-    if (!self.videoCenteredPlayButton) return;
+- (void)setVideoPlayButtonImage:(UIImage *)videoPlayButtonImage {
+    _videoPlayButtonImage = videoPlayButtonImage;
+    if (!self.videoPlayButton) return;
     
-    [self.videoCenteredPlayButton setImage:videoCenteredPlayButtonImage forState:UIControlStateNormal];
+    [self.videoPlayButton setImage:videoPlayButtonImage forState:UIControlStateNormal];
     [self setNeedsLayout];
 }
 
@@ -716,7 +789,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
                 [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
             }
         } else {
-            if (self.videoCenteredPlayButton.hidden) {
+            if (self.videoPlayButton.hidden) {
                 [self pauseVideo];
             }
         }
@@ -797,7 +870,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 - (void)hideViews {
     _livePhotoView.hidden = YES;
     _imageView.hidden = YES;
-    _videoCenteredPlayButton.hidden = YES;
+    _videoPlayButton.hidden = YES;
     _videoPlayerLayer.hidden = YES;
     _videoToolbar.hidden = YES;
     _videoToolbar.pauseButton.hidden = YES;
@@ -819,11 +892,9 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 @end
 
-@interface FWZoomImageView (UIAppearance)
+#pragma mark - FWZoomImageViewVideoToolbar
 
-@end
-
-@implementation FWZoomImageView (UIAppearance)
+@implementation FWZoomImageViewVideoToolbar
 
 + (void)initialize {
     static dispatch_once_t onceToken;
@@ -833,87 +904,10 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 + (void)setDefaultAppearance {
-    FWZoomImageView *appearance = [FWZoomImageView appearance];
-    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 25, 25, 18);
-    appearance.videoCenteredPlayButtonImage = [FWZoomImageViewImageGenerator largePlayImage];
+    FWZoomImageViewVideoToolbar *appearance = [FWZoomImageViewVideoToolbar appearance];
+    appearance.playButtonImage = [FWZoomImageVideoPlayerView smallPlayImage];
+    appearance.pauseButtonImage = [FWZoomImageVideoPlayerView pauseImage];
 }
-
-@end
-
-@implementation FWZoomImageVideoPlayerView
-
-+ (Class)layerClass {
-    return [AVPlayerLayer class];
-}
-
-@end
-
-@implementation FWZoomImageViewImageGenerator
-
-+ (UIImage *)largePlayImage {
-    CGFloat width = 60;
-    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
-        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
-        CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
-        
-        // circle outside
-        CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:.25].CGColor);
-        CGFloat circleLineWidth = 1;
-        // consider line width to avoid edge clip
-        UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
-        [circle setLineWidth:circleLineWidth];
-        [circle stroke];
-        [circle fill];
-        
-        // triangle inside
-        CGContextSetFillColorWithColor(contextRef, color.CGColor);
-        CGFloat triangleLength = width / 2.5;
-        UIBezierPath *triangle = [self trianglePathWithLength:triangleLength];
-        UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
-        [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
-        [triangle fill];
-    } size:CGSizeMake(width, width)];
-}
-
-+ (UIImage *)smallPlayImage {
-    CGFloat width = 17;
-    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
-        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
-        CGContextSetFillColorWithColor(contextRef, color.CGColor);
-        UIBezierPath *path = [self trianglePathWithLength:width];
-        [path fill];
-    } size:CGSizeMake(width, width)];
-}
-
-+ (UIImage *)pauseImage {
-    CGSize size = CGSizeMake(12, 18);
-    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
-        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
-        CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
-        CGFloat lineWidth = 2;
-        UIBezierPath *path = [UIBezierPath bezierPath];
-        [path moveToPoint:CGPointMake(lineWidth / 2, 0)];
-        [path addLineToPoint:CGPointMake(lineWidth / 2, size.height)];
-        [path moveToPoint:CGPointMake(size.width - lineWidth / 2, 0)];
-        [path addLineToPoint:CGPointMake(size.width - lineWidth / 2, size.height)];
-        [path setLineWidth:lineWidth];
-        [path stroke];
-    } size:size];
-}
-
-// @param length of the triangle side
-+ (UIBezierPath *)trianglePathWithLength:(CGFloat)length {
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    [path moveToPoint:CGPointZero];
-    [path addLineToPoint:CGPointMake(length * cos(M_PI / 6), length / 2)];
-    [path addLineToPoint:CGPointMake(0, length)];
-    [path closePath];
-    return path;
-}
-
-@end
-
-@implementation FWZoomImageViewVideoToolbar
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -1009,7 +1003,6 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self setNeedsLayout];
 }
 
-// 返回一堆 view 中高度最大的那个的高度
 - (CGFloat)maxHeightAmongViews:(NSArray<UIView *> *)views {
     __block CGFloat maxValue = 0;
     [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1017,27 +1010,6 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         maxValue = MAX(height, maxValue);
     }];
     return maxValue;
-}
-
-@end
-
-@interface FWZoomImageViewVideoToolbar (UIAppearance)
-
-@end
-
-@implementation FWZoomImageViewVideoToolbar (UIAppearance)
-
-+ (void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self setDefaultAppearance];
-    });
-}
-
-+ (void)setDefaultAppearance {
-    FWZoomImageViewVideoToolbar *appearance = [FWZoomImageViewVideoToolbar appearance];
-    appearance.playButtonImage = [FWZoomImageViewImageGenerator smallPlayImage];
-    appearance.pauseButtonImage = [FWZoomImageViewImageGenerator pauseImage];
 }
 
 @end

@@ -89,8 +89,11 @@
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
         self.imagePreviewViewController.dismissingWhenTapped = YES;
-        self.imagePreviewViewController.imagePreviewView.pageLabel.hidden = NO;
+        self.imagePreviewViewController.showsPageLabel = YES;
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
+        self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSUInteger index) {
+            zoomImageView.showsVideoToolbar = YES;
+        };
         
         // 当需要在退出大图预览时做一些事情的时候，可配合 UIViewController (FW) 的 qmui_visibleStateDidChangeBlock 来实现。
         __weak __typeof(self)weakSelf = self;
