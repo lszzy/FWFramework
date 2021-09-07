@@ -59,6 +59,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         
+        _showsVideoToolbar = YES;
         self.maximumZoomScale = 2.0;
         
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
@@ -96,10 +97,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    if (CGRectIsEmpty(self.bounds)) {
-        return;
-    }
+    if (CGRectIsEmpty(self.bounds)) return;
     
     self.scrollView.frame = self.bounds;
     
@@ -140,9 +138,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)initImageViewIfNeeded {
-    if (_imageView) {
-        return;
-    }
+    if (_imageView) return;
     Class imageClass = [UIImageView fwImageViewAnimatedClass];
     _imageView = [[imageClass alloc] init];
     [self.scrollView addSubview:_imageView];
@@ -206,9 +202,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)initLivePhotoViewIfNeeded {
-    if (_livePhotoView) {
-        return;
-    }
+    if (_livePhotoView) return;
     _livePhotoView = [[PHLivePhotoView alloc] init];
     [self.scrollView addSubview:_livePhotoView];
 }
@@ -263,9 +257,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)revertZooming {
-    if (CGRectIsEmpty(self.bounds)) {
-        return;
-    }
+    if (CGRectIsEmpty(self.bounds)) return;
     
     BOOL enabledZoomImageView = [self enabledZoomImageView];
     CGFloat minimumZoomScale = [self minimumZoomScale];
@@ -430,9 +422,11 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     self.videoToolbar.playButton.hidden = YES;
     self.videoToolbar.pauseButton.hidden = NO;
     if (button.tag == kTagForCenteredPlayButton) {
-        self.videoToolbar.hidden = YES;
-        if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
-            [self.delegate zoomImageView:self didHideVideoToolbar:YES];
+        if (self.showsVideoToolbar) {
+            self.videoToolbar.hidden = YES;
+            if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
+                [self.delegate zoomImageView:self didHideVideoToolbar:YES];
+            }
         }
     }
 }
@@ -440,6 +434,9 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self.videoPlayer pause];
     self.videoToolbar.playButton.hidden = NO;
     self.videoToolbar.pauseButton.hidden = YES;
+    if (!self.showsVideoToolbar) {
+        self.videoCenteredPlayButton.hidden = NO;
+    }
 }
 
 - (void)handleVideoPlayToEndEvent {
@@ -499,9 +496,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)addPlayerTimeObserver {
-    if (self.videoTimeObserver) {
-        return;
-    }
+    if (self.videoTimeObserver) return;
+    
     double interval = .1f;
     __weak FWZoomImageView *weakSelf = self;
     self.videoTimeObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
@@ -510,9 +506,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)removePlayerTimeObserver {
-    if (!self.videoTimeObserver) {
-        return;
-    }
+    if (!self.videoTimeObserver) return;
     [self.videoPlayer removeTimeObserver:self.videoTimeObserver];
     self.videoTimeObserver = nil;
 }
@@ -528,18 +522,24 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     return [NSString stringWithFormat:@"%02ld:%02ld", (long)min, (long)sec];
 }
 
+- (BOOL)isPlayingVideo {
+    if (!self.videoPlayer) return NO;
+    return self.videoPlayer.rate != 0.f;
+}
+
+- (void)playVideo {
+    if (!self.videoPlayer) return;
+    [self handlePlayButton:nil];
+}
+
 - (void)pauseVideo {
-    if (!self.videoPlayer) {
-        return;
-    }
+    if (!self.videoPlayer) return;
     [self handlePauseButton];
     [self removePlayerTimeObserver];
 }
 
 - (void)endPlayingVideo {
-    if (!self.videoPlayer) {
-        return;
-    }
+    if (!self.videoPlayer) return;
     [self.videoPlayer seekToTime:CMTimeMake(0, 1)];
     [self pauseVideo];
     [self syncVideoProgressSlider];
@@ -564,9 +564,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)initVideoPlayerLayerIfNeeded {
-    if (self.videoPlayerView) {
-        return;
-    }
+    if (self.videoPlayerView) return;
     self.videoPlayerView = [[FWZoomImageVideoPlayerView alloc] init];
     _videoPlayerLayer = (AVPlayerLayer *)self.videoPlayerView.layer;
     self.videoPlayerView.hidden = YES;
@@ -574,9 +572,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)initVideoToolbarIfNeeded {
-    if (_videoToolbar) {
-        return;
-    }
+    if (_videoToolbar) return;
     _videoToolbar = ({
         FWZoomImageViewVideoToolbar * b = [[FWZoomImageViewVideoToolbar alloc] init];
         [b.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -588,9 +584,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (void)initVideoCenteredPlayButtonIfNeeded {
-    if (_videoCenteredPlayButton) {
-        return;
-    }
+    if (_videoCenteredPlayButton) return;
     
     _videoCenteredPlayButton = ({
         UIButton *b = [[UIButton alloc] init];
@@ -636,9 +630,8 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 - (void)setVideoCenteredPlayButtonImage:(UIImage *)videoCenteredPlayButtonImage {
     _videoCenteredPlayButtonImage = videoCenteredPlayButtonImage;
-    if (!self.videoCenteredPlayButton) {
-        return;
-    }
+    if (!self.videoCenteredPlayButton) return;
+    
     [self.videoCenteredPlayButton setImage:videoCenteredPlayButtonImage forState:UIControlStateNormal];
     [self setNeedsLayout];
 }
@@ -688,9 +681,15 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         [self.delegate singleTouchInZoomingImageView:self location:gesturePoint];
     }
     if (self.videoPlayerItem) {
-        self.videoToolbar.hidden = !self.videoToolbar.hidden;
-        if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
-            [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
+        if (self.showsVideoToolbar) {
+            self.videoToolbar.hidden = !self.videoToolbar.hidden;
+            if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
+                [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
+            }
+        } else {
+            if (self.videoCenteredPlayButton.hidden) {
+                [self pauseVideo];
+            }
         }
     }
 }
@@ -774,9 +773,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     _videoToolbar.hidden = YES;
     _videoToolbar.pauseButton.hidden = YES;
     _videoToolbar.playButton.hidden = YES;
-    _videoCenteredPlayButton.hidden = YES;
 }
-
 
 - (UIView *)contentView {
     if (_imageView) {
@@ -898,6 +895,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         [self addSubview:self.playButton];
         
         _pauseButton = [[UIButton alloc] init];
+        self.pauseButton.hidden = YES;
         self.pauseButton.fwTouchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [self.pauseButton setImage:self.pauseButtonImage forState:UIControlStateNormal];
         [self addSubview:self.pauseButton];
