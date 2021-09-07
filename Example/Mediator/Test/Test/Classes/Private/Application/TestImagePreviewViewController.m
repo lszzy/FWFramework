@@ -14,6 +14,8 @@
 @property(nonatomic, strong) NSArray<UIImage *> *images;
 @property(nonatomic, strong) FWFloatLayoutView *floatLayoutView;
 @property(nonatomic, strong) UILabel *tipsLabel;
+@property(nonatomic, assign) BOOL mockProgress;
+@property(nonatomic, assign) BOOL previewFade;
 
 @end
 
@@ -34,6 +36,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    FWWeakifySelf();
+    [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        NSString *progressText = self.mockProgress ? @"关闭进度" : @"开启进度";
+        NSString *fadeText = self.previewFade ? @"关闭渐变" : @"开启渐变";
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText] actionBlock:^(NSInteger index) {
+            FWStrongifySelf();
+            if (index == 0) {
+                self.mockProgress = !self.mockProgress;
+            } else {
+                self.previewFade = !self.previewFade;
+            }
+        }];
+    }];
     
     self.floatLayoutView = [[FWFloatLayoutView alloc] init];
     self.floatLayoutView.itemMargins = UIEdgeInsetsMake(UIScreen.fwPixelOne, UIScreen.fwPixelOne, 0, 0);
@@ -72,7 +88,8 @@
 - (void)handleImageButtonEvent:(UIButton *)button {
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
-        self.imagePreviewViewController.presentingStyle = FWImagePreviewTransitioningStyleZoom;// 将 present 动画改为 zoom，也即从某个位置放大到屏幕中央。默认样式为 fade。
+        self.imagePreviewViewController.dismissingWhenTapped = YES;
+        self.imagePreviewViewController.imagePreviewView.pageLabel.hidden = NO;
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
         
         // 当需要在退出大图预览时做一些事情的时候，可配合 UIViewController (FW) 的 qmui_visibleStateDidChangeBlock 来实现。
@@ -85,6 +102,7 @@
         };
     }
     
+    self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index
     
@@ -106,30 +124,29 @@
 - (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSUInteger)index {
     zoomImageView.reusedIdentifier = @(index);
     
-    // 模拟异步加载的情况
-    if (index == 2) {
-        [zoomImageView fwShowLoading];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([zoomImageView.reusedIdentifier isEqual:@(index)]) {
-                [zoomImageView fwHideLoading];
-                zoomImageView.image = self.images[index];
-            }
-        });
-    // 模拟进度的情况
-    } else if (index == 3) {
+    if (self.mockProgress) {
         FWWeakifySelf();
         [self mockProgress:^(double progress, BOOL finished) {
             FWStrongifySelf();
+            if (zoomImageView.reusedIdentifier.fwAsInteger != index) return;
+            
             zoomImageView.progress = progress;
             if (finished) {
-                zoomImageView.image = self.images[index];
+                if (index == 5) {
+                    NSURL *url = [NSURL fwURLWithString:@"http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"];
+                    zoomImageView.videoPlayerItem = [AVPlayerItem playerItemWithURL:url];
+                } else {
+                    zoomImageView.image = self.images[index];
+                }
             }
         }];
-    } else if (index == 5) {
-        NSURL *url = [NSURL fwURLWithString:@"http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"];
-        zoomImageView.videoPlayerItem = [AVPlayerItem playerItemWithURL:url];
     } else {
-        zoomImageView.image = self.images[index];
+        if (index == 5) {
+            NSURL *url = [NSURL fwURLWithString:@"http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"];
+            zoomImageView.videoPlayerItem = [AVPlayerItem playerItemWithURL:url];
+        } else {
+            zoomImageView.image = self.images[index];
+        }
     }
 }
 
@@ -143,20 +160,6 @@
     self.imagePreviewViewController.sourceImageView = ^UIView *{
         return weakSelf.floatLayoutView.subviews[index];
     };
-}
-
-#pragma mark - <FWZoomImageViewDelegate>
-
-- (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
-    if (zoomImageView.videoPlayerItem != nil) return;
-    // 退出图片预览
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)doubleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
-    if (zoomImageView.videoPlayerItem == nil) return;
-    // 退出图片预览
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

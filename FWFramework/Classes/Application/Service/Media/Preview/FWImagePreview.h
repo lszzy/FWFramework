@@ -71,6 +71,7 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 @property(nonatomic, strong, readonly) UICollectionView *collectionView;
 @property(nonatomic, strong, readonly) FWCollectionViewPagingLayout *collectionViewLayout;
 
+@property(nonatomic, assign, readonly) NSUInteger imageCount;
 /// 获取当前正在查看的图片 index，也可强制将图片滚动到指定的 index
 @property(nonatomic, assign) NSUInteger currentImageIndex;
 - (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated;
@@ -80,17 +81,17 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 /// 占位图片句柄，仅imageURLs生效，默认nil
 @property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSUInteger index);
 
-/**
- *  获取某个 FWZoomImageView 所对应的 index
- *  @return zoomImageView 对应的 index，若当前的 zoomImageView 不可见，会返回 0
- */
+/// 自定义zoomImageView句柄，cellForItem方法自动调用
+@property(nonatomic, copy, nullable) void (^zoomImageView)(FWZoomImageView *zoomImageView, NSUInteger index);
+/// 获取某个 FWZoomImageView 所对应的 index，若当前的 zoomImageView 不可见，会返回NSNotFound
 - (NSInteger)indexForZoomImageView:(FWZoomImageView *)zoomImageView;
-
-/**
- *  获取某个 index 对应的 zoomImageView
- *  @return 指定的 index 所在的 zoomImageView，若该 index 对应的图片当前不可见（不处于可视区域），则返回 nil
- */
+/// 获取某个 index 对应的 zoomImageView，若该 index 对应的图片当前不可见（不处于可视区域），则返回 nil
 - (nullable FWZoomImageView *)zoomImageViewAtIndex:(NSUInteger)index;
+
+/// 页数标签，默认字号16、白色，默认不显示
+@property(nonatomic, strong, readonly) UILabel *pageLabel;
+/// 页数标签中心，默认zero，距离底部20+安全距离
+@property (nonatomic, assign) CGPoint pageLabelCenter;
 
 @end
 
@@ -134,7 +135,7 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 @property(nonatomic, assign) FWImagePreviewTransitioningStyle dismissingStyle;
 
 /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 nil，则会强制使用 fade 动画。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
-@property(nullable, nonatomic, copy)  UIView * _Nullable (^sourceImageView)(void);
+@property(nullable, nonatomic, copy) UIView * _Nullable (^sourceImageView)(void);
 
 /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 CGRectZero，则会强制使用 fade 动画。注意返回值要进行坐标系转换。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
 @property(nullable, nonatomic, copy) CGRect (^sourceImageRect)(void);
@@ -144,6 +145,9 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 
 /// 是否支持手势拖拽退出预览模式，默认为 YES。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingGestureEnabled;
+
+/// 手势单击时是否退出预览模式，默认NO。如果正在播放视频，单击会先暂停，再点击一次才会退出。
+@property(nonatomic, assign) BOOL dismissingWhenTapped;
 
 @end
 

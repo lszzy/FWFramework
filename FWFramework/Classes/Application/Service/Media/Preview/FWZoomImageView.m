@@ -58,8 +58,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        
-        _showsVideoToolbar = YES;
+
         self.maximumZoomScale = 2.0;
         
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
@@ -670,6 +669,36 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
         if (!self.progressView.hidden) self.progressView.hidden = YES;
     } else {
         if (self.progressView.hidden) self.progressView.hidden = NO;
+    }
+}
+
+#pragma mark - ImageURL
+
+- (void)setImageURL:(id)imageURL placeholderImage:(UIImage *)placeholderImage {
+    [self.imageView fwCancelImageRequest];
+    if ([imageURL isKindOfClass:[NSString class]]) {
+        self.progress = 0.01;
+        __weak __typeof__(self) self_weak_ = self;
+        [self.imageView fwSetImageWithURL:imageURL placeholderImage:placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+            __typeof__(self) self = self_weak_;
+            self.progress = 1;
+            if (image) self.image = image;
+        } progress:^(double progress) {
+            __typeof__(self) self = self_weak_;
+            self.progress = progress;
+        }];
+    } else if ([imageURL isKindOfClass:[PHLivePhoto class]]) {
+        self.progress = 1;
+        self.livePhoto = (PHLivePhoto *)imageURL;
+    } else if ([imageURL isKindOfClass:[AVPlayerItem class]]) {
+        self.progress = 1;
+        self.videoPlayerItem = (AVPlayerItem *)imageURL;
+    } else if ([imageURL isKindOfClass:[UIImage class]]) {
+        self.progress = 1;
+        self.image = (UIImage *)imageURL;
+    } else {
+        self.progress = 1;
+        self.image = placeholderImage;
     }
 }
 
