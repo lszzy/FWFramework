@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式
 @property(nonatomic, strong, readonly) FWZoomImageViewVideoToolbar *videoToolbar;
 
-// 视频底部控制条的 margins，会在此基础上自动叠加 FWZoomImageView.qmui_safeAreaInsets，因此无需考虑在 iPhone X 下的兼容，默认值为 {0, 25, 25, 18}
+// 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 25, 25, 18}
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
 
 // 播放 video 时屏幕中央的播放按钮

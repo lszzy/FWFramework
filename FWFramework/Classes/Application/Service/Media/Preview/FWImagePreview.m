@@ -578,19 +578,6 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     }];
 }
 
-// 不使用 qmui_visibleViewControllerIfExist 是因为不想考虑 presentedViewController
-- (UIViewController *)visibleViewControllerWithViewController:(UIViewController *)viewController {
-    if ([viewController isKindOfClass:[UINavigationController class]]) {
-        return [self visibleViewControllerWithViewController:((UINavigationController *)viewController).topViewController];
-    }
-    
-    if ([viewController isKindOfClass:[UITabBarController class]]) {
-        return [self visibleViewControllerWithViewController:((UITabBarController *)viewController).selectedViewController];
-    }
-    
-    return viewController;
-}
-
 #pragma mark - FWImagePreviewViewDelegate
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
@@ -680,7 +667,8 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                     maskToBounds = maskBounds;
                 }
                 
-                CGFloat cornerRadius = animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView ? animator.imagePreviewViewController.sourceImageView().layer.cornerRadius : MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
+                NSInteger sourceImageIndex = animator.imagePreviewViewController.imagePreviewView.currentImageIndex;
+                CGFloat cornerRadius = animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView ? animator.imagePreviewViewController.sourceImageView(sourceImageIndex).layer.cornerRadius : MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
                 cornerRadius = cornerRadius / maskFinalRatio;
                 CGFloat fromCornerRadius = isPresenting ? cornerRadius : 0;
                 CGFloat toCornerRadius = isPresenting ? 0 : cornerRadius;
@@ -762,11 +750,12 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     
     FWImagePreviewTransitioningStyle style = isPresenting ? self.imagePreviewViewController.presentingStyle : self.imagePreviewViewController.dismissingStyle;
     CGRect sourceImageRect = CGRectZero;
+    NSInteger currentImageIndex = self.imagePreviewViewController.imagePreviewView.currentImageIndex;
     if (style == FWImagePreviewTransitioningStyleZoom) {
         if (self.imagePreviewViewController.sourceImageRect) {
-            sourceImageRect = [self.imagePreviewViewController.view convertRect:self.imagePreviewViewController.sourceImageRect() fromView:nil];
+            sourceImageRect = [self.imagePreviewViewController.view convertRect:self.imagePreviewViewController.sourceImageRect(currentImageIndex) fromView:nil];
         } else if (self.imagePreviewViewController.sourceImageView) {
-            UIView *sourceImageView = self.imagePreviewViewController.sourceImageView();
+            UIView *sourceImageView = self.imagePreviewViewController.sourceImageView(currentImageIndex);
             if (sourceImageView) {
                 sourceImageRect = [self.imagePreviewViewController.view convertRect:sourceImageView.frame fromView:sourceImageView.superview];
             }
@@ -784,7 +773,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
     [toView setNeedsLayout];
     [toView layoutIfNeeded];// present 时 toViewController 还没走到 viewDidLayoutSubviews，此时做动画可能得到不正确的布局，所以强制布局一次
-    FWZoomImageView *zoomImageView = [self.imagePreviewViewController.imagePreviewView zoomImageViewAtIndex:self.imagePreviewViewController.imagePreviewView.currentImageIndex];
+    FWZoomImageView *zoomImageView = [self.imagePreviewViewController.imagePreviewView zoomImageViewAtIndex:currentImageIndex];
     
     toView.frame = containerView.bounds;
     if (isPresenting) {
