@@ -24,6 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
 @property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
 
+// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
+- (void)fwTextLengthChanged;
+
 #pragma mark - AutoComplete
 
 // 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
