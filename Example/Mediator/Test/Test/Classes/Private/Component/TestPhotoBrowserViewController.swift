@@ -31,6 +31,9 @@ import FWFramework
             "照片选择器(图片旧版)",
             "照片选择器(LivePhoto旧版)",
             "照片选择器(视频旧版)",
+            "照相机(图片)",
+            "照相机(LivePhoto)",
+            "照相机(视频)",
         ])
     }
     
@@ -100,6 +103,25 @@ import FWFramework
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            present(pickerController!, animated: true)
+            break
+        case 6:
+            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .image, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            present(pickerController!, animated: true)
+            break
+        case 7:
+            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            present(pickerController!, animated: true)
+            break
+        case 8:
+            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .video, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            pickerController?.cameraCaptureMode = .video
             present(pickerController!, animated: true)
             break
         default:

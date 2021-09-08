@@ -162,10 +162,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 如果没有透明通道，增加透明通道
 @property (nonatomic, readonly) UIImage *fwAlphaImage;
 
-#pragma mark - Save
+#pragma mark - Album
 
 // 保存图片到相册，保存成功时error为nil
 - (void)fwSaveImageWithBlock:(nullable void (^)(NSError * _Nullable error))block;
+
+// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
++ (void)fwSaveVideo:(NSString *)videoPath withBlock:(nullable void (^)(NSError * _Nullable error))block;
 
 @end
 
