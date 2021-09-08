@@ -141,7 +141,7 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 /// 是否支持手势拖拽退出预览模式，默认为 YES。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingGestureEnabled;
 
-/// 手势单击时是否退出预览模式，默认NO。如果正在播放视频，单击会先暂停，再点击一次才会退出。
+/// 手势单击时是否退出预览模式，默认NO。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingWhenTapped;
 
 /// 是否显示页数标签，默认NO
@@ -150,6 +150,9 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 @property(nonatomic, assign) CGFloat pageLabelOffset;
 /// 页数标签，默认字号16、白色
 @property(nonatomic, strong, readonly) UILabel *pageLabel;
+
+/// 手势拖动开始时隐藏子视图，拖动完毕后还原，子类可重写
+- (void)dismissingGestureChanged:(BOOL)finished;
 
 @end
 
