@@ -137,7 +137,7 @@ import FWFramework
         if isAlbum {
             if isPreview {
                 let cell = tableView.cellForRow(at: indexPath)
-                self.imagePreview.imagePreviewView.currentImageIndex = UInt(indexPath.row)
+                self.imagePreview.imagePreviewView.currentImageIndex = indexPath.row
                 self.imagePreview.sourceImageView = {
                     return cell?.imageView
                 }
@@ -201,12 +201,12 @@ import FWFramework
     
     // MARK: - FWImagePreviewViewDelegate
     
-    func numberOfImages(in imagePreviewView: FWImagePreviewView) -> UInt {
-        return UInt(photos.count)
+    func numberOfImages(in imagePreviewView: FWImagePreviewView) -> Int {
+        return photos.count
     }
     
-    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, renderZoomImageView zoomImageView: FWZoomImageView, at index: UInt) {
-        let photo = photos[Int(index)]
+    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, renderZoomImageView zoomImageView: FWZoomImageView, at index: Int) {
+        let photo = photos[index]
         if photo.assetSubType == .GIF {
             zoomImageView.progress = 0.01
             photo.requestImageData { data, info, _, _ in
@@ -246,8 +246,8 @@ import FWFramework
         }
     }
     
-    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, didScrollTo index: UInt) {
-        let cell = tableView.cellForRow(at: IndexPath(row: Int(index), section: 0))
+    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, didScrollTo index: Int) {
+        let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
         self.imagePreview.sourceImageView = {
             return cell?.imageView
         }

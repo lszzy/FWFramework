@@ -106,11 +106,11 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
 }
 
-- (void)setCurrentImageIndex:(NSUInteger)currentImageIndex {
+- (void)setCurrentImageIndex:(NSInteger)currentImageIndex {
     [self setCurrentImageIndex:currentImageIndex animated:NO];
 }
 
-- (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated {
+- (void)setCurrentImageIndex:(NSInteger)currentImageIndex animated:(BOOL)animated {
     _currentImageIndex = currentImageIndex;
     if ([self.controllerDelegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
         [self.controllerDelegate imagePreviewView:self willScrollHalfToIndex:currentImageIndex];
@@ -123,7 +123,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
 }
 
-- (NSUInteger)imageCount {
+- (NSInteger)imageCount {
     return [self.collectionView numberOfItemsInSection:0];
 }
 
@@ -258,7 +258,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     return NSNotFound;
 }
 
-- (FWZoomImageView *)zoomImageViewAtIndex:(NSUInteger)index {
+- (FWZoomImageView *)zoomImageViewAtIndex:(NSInteger)index {
     FWImagePreviewCell *cell = (FWImagePreviewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
     return cell.zoomImageView;
 }
@@ -602,7 +602,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {
     [self updatePageLabel];
 }
 

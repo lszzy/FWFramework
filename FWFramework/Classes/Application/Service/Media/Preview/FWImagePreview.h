@@ -26,26 +26,26 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 @protocol FWImagePreviewViewDelegate <FWZoomImageViewDelegate>
 
 @optional
-- (NSUInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView;
+- (NSInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView;
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSUInteger)index;
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index;
 
 // 返回要展示的媒体资源的类型（图片、live photo、视频），如果不实现此方法，则 FWImagePreviewView 将无法选择最合适的 cell 来复用从而略微增大系统开销
-- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSUInteger)index;
+- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index;
 
 /**
  *  当左右的滚动停止时会触发这个方法
  *  @param  imagePreviewView 当前预览的 FWImagePreviewView
  *  @param  index 当前滚动到的图片所在的索引
  */
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView didScrollToIndex:(NSUInteger)index;
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView didScrollToIndex:(NSInteger)index;
 
 /**
  *  在滚动过程中，如果某一张图片的边缘（左/右）经过预览控件的中心点时，就会触发这个方法
  *  @param  imagePreviewView 当前预览的 FWImagePreviewView
  *  @param  index 当前滚动到的图片所在的索引
  */
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index;
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index;
 
 @end
 
@@ -71,22 +71,22 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 @property(nonatomic, strong, readonly) UICollectionView *collectionView;
 @property(nonatomic, strong, readonly) FWCollectionViewPagingLayout *collectionViewLayout;
 
-@property(nonatomic, assign, readonly) NSUInteger imageCount;
+@property(nonatomic, assign, readonly) NSInteger imageCount;
 /// 获取当前正在查看的图片 index，也可强制将图片滚动到指定的 index
-@property(nonatomic, assign) NSUInteger currentImageIndex;
-- (void)setCurrentImageIndex:(NSUInteger)currentImageIndex animated:(BOOL)animated;
+@property(nonatomic, assign) NSInteger currentImageIndex;
+- (void)setCurrentImageIndex:(NSInteger)currentImageIndex animated:(BOOL)animated;
 
 /// 图片数组，delegate不存在时调用，支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString等
 @property(nonatomic, copy, nullable) NSArray *imageURLs;
 /// 占位图片句柄，仅imageURLs生效，默认nil
-@property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSUInteger index);
+@property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
 
 /// 自定义zoomImageView句柄，cellForItem方法自动调用
-@property(nonatomic, copy, nullable) void (^zoomImageView)(FWZoomImageView *zoomImageView, NSUInteger index);
+@property(nonatomic, copy, nullable) void (^zoomImageView)(FWZoomImageView *zoomImageView, NSInteger index);
 /// 获取某个 FWZoomImageView 所对应的 index，若当前的 zoomImageView 不可见，会返回NSNotFound
 - (NSInteger)indexForZoomImageView:(FWZoomImageView *)zoomImageView;
 /// 获取某个 index 对应的 zoomImageView，若该 index 对应的图片当前不可见（不处于可视区域），则返回 nil
-- (nullable FWZoomImageView *)zoomImageViewAtIndex:(NSUInteger)index;
+- (nullable FWZoomImageView *)zoomImageViewAtIndex:(NSInteger)index;
 
 @end
 

@@ -168,14 +168,14 @@
 
 #pragma mark - <FWImagePreviewViewDelegate>
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     [super imagePreviewView:imagePreviewView renderZoomImageView:zoomImageView atIndex:index];
     UIEdgeInsets insets = zoomImageView.videoToolbarMargins;
     insets.bottom = [FWZoomImageView appearance].videoToolbarMargins.bottom + CGRectGetHeight(self.bottomToolBarView.frame) - imagePreviewView.fwSafeAreaInsets.bottom;
     zoomImageView.videoToolbarMargins = insets;// videToolbarMargins 是利用 UIAppearance 赋值的，也即意味着要在 addSubview 之后才会被赋值，而在 renderZoomImageView 里，zoomImageView 可能尚未被添加到 view 层级里，所以无法通过 zoomImageView.videoToolbarMargins 获取到原来的值，因此只能通过 [FWZoomImageView appearance] 的方式获取
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {
     [super imagePreviewView:imagePreviewView willScrollHalfToIndex:index];
     [self updateOriginImageCheckboxButtonWithIndex:index];
 }
