@@ -17,6 +17,8 @@
 @property(nonatomic, assign) BOOL mockProgress;
 @property(nonatomic, assign) BOOL previewFade;
 @property(nonatomic, assign) BOOL showsToolbar;
+@property(nonatomic, assign) BOOL autoplayVideo;
+@property(nonatomic, assign) BOOL dismissTapped;
 
 @end
 
@@ -37,20 +39,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.dismissTapped = YES;
+    
     FWWeakifySelf();
     [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         NSString *progressText = self.mockProgress ? @"关闭进度" : @"开启进度";
         NSString *fadeText = self.previewFade ? @"关闭渐变" : @"开启渐变";
         NSString *toolbarText = self.showsToolbar ? @"隐藏工具栏" : @"开启工具栏";
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText] actionBlock:^(NSInteger index) {
+        NSString *autoText = self.autoplayVideo ? @"关闭自动播放" : @"开启自动播放";
+        NSString *dismissText = self.dismissTapped ? @"单击时不关闭" : @"单击时自动关闭";
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText, autoText, dismissText] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             if (index == 0) {
                 self.mockProgress = !self.mockProgress;
             } else if (index == 1) {
                 self.previewFade = !self.previewFade;
-            } else {
+            } else if (index == 2) {
                 self.showsToolbar = !self.showsToolbar;
+            } else if (index == 3) {
+                self.autoplayVideo = !self.autoplayVideo;
+            } else {
+                self.dismissTapped = !self.dismissTapped;
             }
         }];
     }];
@@ -92,7 +102,6 @@
 - (void)handleImageButtonEvent:(UIButton *)button {
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
-        self.imagePreviewViewController.dismissingWhenTapped = YES;
         self.imagePreviewViewController.showsPageLabel = YES;
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
         
@@ -110,7 +119,9 @@
     self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSUInteger index) {
         FWStrongifySelf();
         zoomImageView.showsVideoToolbar = self.showsToolbar;
+        zoomImageView.autoplayVideo = self.autoplayVideo;
     };
+    self.imagePreviewViewController.dismissingWhenTapped = self.dismissTapped;
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index

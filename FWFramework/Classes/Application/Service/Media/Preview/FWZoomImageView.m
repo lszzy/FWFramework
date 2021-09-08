@@ -86,8 +86,6 @@
 
 #pragma mark - FWZoomImageView
 
-static NSUInteger const kTagForCenteredPlayButton = 1;
-
 @interface FWZoomImageView () <UIGestureRecognizerDelegate>
 
 // video play
@@ -485,6 +483,10 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     self.videoToolbar.playButton.hidden = NO;
     
     [self revertZooming];
+    
+    if (self.autoplayVideo) {
+        [self handlePlayButton:nil];
+    }
 }
 
 - (void)handlePlayButton:(UIButton *)button {
@@ -493,7 +495,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     self.videoPlayButton.hidden = YES;
     self.videoToolbar.playButton.hidden = YES;
     self.videoToolbar.pauseButton.hidden = NO;
-    if (button.tag == kTagForCenteredPlayButton) {
+    if (button.tag == 1) {
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = YES;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
@@ -660,7 +662,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     _videoPlayButton = ({
         UIButton *playButton = [[UIButton alloc] init];
         playButton.fwTouchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
-        playButton.tag = kTagForCenteredPlayButton;
+        playButton.tag = 1;
         [playButton setImage:self.videoPlayButtonImage forState:UIControlStateNormal];
         [playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
         playButton.hidden = YES;
@@ -777,21 +779,18 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 #pragma mark - GestureRecognizers
 
 - (void)handleSingleTapGestureWithPoint:(UITapGestureRecognizer *)gestureRecognizer {
-    CGPoint gesturePoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-    if ([self.delegate respondsToSelector:@selector(singleTouchInZoomingImageView:location:)]) {
-        [self.delegate singleTouchInZoomingImageView:self location:gesturePoint];
-    }
     if (self.videoPlayerItem) {
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = !self.videoToolbar.hidden;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
                 [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
             }
-        } else {
-            if (self.videoPlayButton.hidden) {
-                [self pauseVideo];
-            }
         }
+    }
+    
+    CGPoint gesturePoint = [gestureRecognizer locationInView:gestureRecognizer.view];
+    if ([self.delegate respondsToSelector:@selector(singleTouchInZoomingImageView:location:)]) {
+        [self.delegate singleTouchInZoomingImageView:self location:gesturePoint];
     }
 }
 
