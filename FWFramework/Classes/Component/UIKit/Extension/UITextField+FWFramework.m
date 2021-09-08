@@ -65,6 +65,47 @@
     [self fwInnerLengthEvent];
 }
 
+- (void)fwTextLengthChanged
+{
+    // 英文字数限制
+    if (self.fwMaxLength > 0) {
+        if (self.markedTextRange) {
+            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
+                if (self.text.length > self.fwMaxLength) {
+                    // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                    NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
+                    self.text = [self.text substringToIndex:maxRange.location];
+                    // 此方法会导致末尾出现半个Emoji
+                    // self.text = [self.text substringToIndex:self.fwMaxLength];
+                }
+            }
+        } else {
+            if (self.text.length > self.fwMaxLength) {
+                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
+                self.text = [self.text substringToIndex:maxRange.location];
+                // 此方法会导致末尾出现半个Emoji
+                // self.text = [self.text substringToIndex:self.fwMaxLength];
+            }
+        }
+    }
+    
+    // Unicode字数限制
+    if (self.fwMaxUnicodeLength > 0) {
+        if (self.markedTextRange) {
+            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
+                if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
+                    self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+                }
+            }
+        } else {
+            if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
+                self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+            }
+        }
+    }
+}
+
 #pragma mark - AutoComplete
 
 - (NSTimeInterval)fwAutoCompleteInterval
@@ -110,43 +151,8 @@
 
 - (void)fwInnerLengthAction
 {
-    // 英文字数限制
-    if (self.fwMaxLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if (self.text.length > self.fwMaxLength) {
-                    // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                    NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                    self.text = [self.text substringToIndex:maxRange.location];
-                    // 此方法会导致末尾出现半个Emoji
-                    // self.text = [self.text substringToIndex:self.fwMaxLength];
-                }
-            }
-        } else {
-            if (self.text.length > self.fwMaxLength) {
-                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                self.text = [self.text substringToIndex:maxRange.location];
-                // 此方法会导致末尾出现半个Emoji
-                // self.text = [self.text substringToIndex:self.fwMaxLength];
-            }
-        }
-    }
-    
-    // Unicode字数限制
-    if (self.fwMaxUnicodeLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                    self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
-                }
-            }
-        } else {
-            if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
-            }
-        }
-    }
+    // 检测字数限制
+    [self fwTextLengthChanged];
     
     // 自动完成回调
     if (self.fwAutoCompleteBlock) {
