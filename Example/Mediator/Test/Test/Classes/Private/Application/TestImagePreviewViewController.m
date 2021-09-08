@@ -116,7 +116,7 @@
     }
     
     FWWeakifySelf();
-    self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSUInteger index) {
+    self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSInteger index) {
         FWStrongifySelf();
         zoomImageView.showsVideoToolbar = self.showsToolbar;
         zoomImageView.autoplayVideo = self.autoplayVideo;
@@ -137,11 +137,11 @@
 
 #pragma mark - <FWImagePreviewViewDelegate>
 
-- (NSUInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView {
+- (NSInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView {
     return self.images.count;
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     zoomImageView.reusedIdentifier = @(index);
     
     if (self.mockProgress) {
@@ -170,11 +170,11 @@
     }
 }
 
-- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSUInteger)index {
+- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index {
     return FWImagePreviewMediaTypeImage;
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView didScrollToIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView didScrollToIndex:(NSInteger)index {
     // 由于进入大图查看模式后可以左右滚动切换图片，最终退出时要退出到当前大图所对应的小图那，所以需要在适当的时机（这里选择 imagePreviewView:didScrollToIndex:）更新 sourceImageView 的值
     __weak __typeof(self)weakSelf = self;
     self.imagePreviewViewController.sourceImageView = ^UIView *{

@@ -699,11 +699,11 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
 
 #pragma mark - <FWImagePreviewViewDelegate>
 
-- (NSUInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView {
+- (NSInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView {
     return [self.imagesAssetArray count];
 }
 
-- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSUInteger)index {
+- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index {
     FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:index];
     if (imageAsset.assetType == FWAssetTypeImage) {
         if (imageAsset.assetSubType == FWAssetSubTypeLivePhoto) {
@@ -717,11 +717,11 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
     }
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     [self requestImageForZoomImageView:zoomImageView withIndex:index];
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index {
+- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {
     if (!_singleCheckMode) {
         FWAsset *imageAsset = self.imagesAssetArray[index];
         self.checkboxButton.selected = [self.selectedImageAssetArray containsObject:imageAsset];
