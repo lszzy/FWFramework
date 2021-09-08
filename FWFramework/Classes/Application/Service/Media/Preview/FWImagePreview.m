@@ -9,8 +9,6 @@
 
 #import "FWImagePreview.h"
 #import "FWToolkit.h"
-#import "FWNavigation.h"
-#import "FWViewPlugin.h"
 
 #pragma mark - FWImagePreviewView
 
@@ -488,9 +486,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             self.gestureZoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
             self.gestureZoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
             if (self.dismissingGestureEnabled) {
-                [self.view.subviews enumerateObjectsUsingBlock:^(UIView * obj, NSUInteger idx, BOOL *stop) {
-                    if (obj != self.imagePreviewView) obj.alpha = 0;
-                }];
+                [self dismissingGestureChanged:NO];
             }
             break;
             
@@ -564,12 +560,17 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 - (void)resetDismissingGesture {
     self.gestureZoomImageView.transform = CGAffineTransformIdentity;
     self.gestureBeganLocation = CGPointZero;
+    if (self.dismissingGestureEnabled) {
+        [self dismissingGestureChanged:YES];
+    }
     self.gestureZoomImageView = nil;
     self.view.backgroundColor = self.backgroundColor;
-    if (self.dismissingGestureEnabled) {
-        [self.view.subviews enumerateObjectsUsingBlock:^(UIView * obj, NSUInteger idx, BOOL *stop) {
-            if (obj != self.imagePreviewView) obj.alpha = 1;
-        }];
+}
+
+- (void)dismissingGestureChanged:(BOOL)finished {
+    self.pageLabel.alpha = finished ? 1 : 0;
+    if (self.gestureZoomImageView.showsVideoToolbar && self.gestureZoomImageView.videoPlayerItem) {
+        self.gestureZoomImageView.videoToolbar.alpha = finished ? 1 : 0;
     }
 }
 
@@ -589,12 +590,8 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 #pragma mark - FWImagePreviewViewDelegate
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
-    if (!self.dismissingWhenTapped) return;
-    if (zoomImageView.isPlayingVideo) {
-        [zoomImageView pauseVideo];
-    } else {
-        [self fwCloseViewControllerAnimated:YES];
-    }
+    if (!self.dismissingWhenTapped || !self.fwIsPresented) return;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSUInteger)index {

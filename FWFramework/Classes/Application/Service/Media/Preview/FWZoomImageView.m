@@ -617,7 +617,6 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
     [self syncVideoProgressSlider];
     self.videoToolbar.hidden = YES;
     self.videoPlayButton.hidden = NO;
-    
 }
 
 - (AVPlayerLayer *)videoPlayerLayer {
@@ -631,7 +630,7 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 }
 
 - (UIButton *)videoPlayButton {
-    [self initvideoPlayButtonIfNeeded];
+    [self initVideoPlayButtonIfNeeded];
     return _videoPlayButton;
 }
 
@@ -646,34 +645,34 @@ static NSUInteger const kTagForCenteredPlayButton = 1;
 - (void)initVideoToolbarIfNeeded {
     if (_videoToolbar) return;
     _videoToolbar = ({
-        FWZoomImageViewVideoToolbar * b = [[FWZoomImageViewVideoToolbar alloc] init];
-        [b.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
-        [b.pauseButton addTarget:self action:@selector(handlePauseButton) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:b];
-        b.hidden = YES;
-        b;
+        FWZoomImageViewVideoToolbar *videoToolbar = [[FWZoomImageViewVideoToolbar alloc] init];
+        [videoToolbar.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
+        [videoToolbar.pauseButton addTarget:self action:@selector(handlePauseButton) forControlEvents:UIControlEventTouchUpInside];
+        videoToolbar.hidden = YES;
+        [self addSubview:videoToolbar];
+        videoToolbar;
     });
 }
 
-- (void)initvideoPlayButtonIfNeeded {
+- (void)initVideoPlayButtonIfNeeded {
     if (_videoPlayButton) return;
     
     _videoPlayButton = ({
-        UIButton *b = [[UIButton alloc] init];
-        b.fwTouchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
-        b.tag = kTagForCenteredPlayButton;
-        [b setImage:self.videoPlayButtonImage forState:UIControlStateNormal];
-        [b addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
-        b.hidden = YES;
-        [self addSubview:b];
-        b;
+        UIButton *playButton = [[UIButton alloc] init];
+        playButton.fwTouchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
+        playButton.tag = kTagForCenteredPlayButton;
+        [playButton setImage:self.videoPlayButtonImage forState:UIControlStateNormal];
+        [playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
+        playButton.hidden = YES;
+        [self addSubview:playButton];
+        playButton;
     });
 }
 
 - (void)initVideoRelatedViewsIfNeeded {
     [self initVideoPlayerLayerIfNeeded];
     [self initVideoToolbarIfNeeded];
-    [self initvideoPlayButtonIfNeeded];
+    [self initVideoPlayButtonIfNeeded];
     [self setNeedsLayout];
 }
 

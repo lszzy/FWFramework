@@ -16,6 +16,7 @@
 @property(nonatomic, strong) UILabel *tipsLabel;
 @property(nonatomic, assign) BOOL mockProgress;
 @property(nonatomic, assign) BOOL previewFade;
+@property(nonatomic, assign) BOOL showsToolbar;
 
 @end
 
@@ -41,12 +42,15 @@
         FWStrongifySelf();
         NSString *progressText = self.mockProgress ? @"关闭进度" : @"开启进度";
         NSString *fadeText = self.previewFade ? @"关闭渐变" : @"开启渐变";
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText] actionBlock:^(NSInteger index) {
+        NSString *toolbarText = self.showsToolbar ? @"隐藏工具栏" : @"开启工具栏";
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             if (index == 0) {
                 self.mockProgress = !self.mockProgress;
-            } else {
+            } else if (index == 1) {
                 self.previewFade = !self.previewFade;
+            } else {
+                self.showsToolbar = !self.showsToolbar;
             }
         }];
     }];
@@ -91,9 +95,6 @@
         self.imagePreviewViewController.dismissingWhenTapped = YES;
         self.imagePreviewViewController.showsPageLabel = YES;
         self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
-        self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSUInteger index) {
-            zoomImageView.showsVideoToolbar = YES;
-        };
         
         // 当需要在退出大图预览时做一些事情的时候，可配合 UIViewController (FW) 的 qmui_visibleStateDidChangeBlock 来实现。
         __weak __typeof(self)weakSelf = self;
@@ -105,6 +106,11 @@
         };
     }
     
+    FWWeakifySelf();
+    self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSUInteger index) {
+        FWStrongifySelf();
+        zoomImageView.showsVideoToolbar = self.showsToolbar;
+    };
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index
