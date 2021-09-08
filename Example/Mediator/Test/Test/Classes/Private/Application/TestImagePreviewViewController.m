@@ -45,8 +45,8 @@
     [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
         FWStrongifySelf();
         NSString *progressText = self.mockProgress ? @"关闭进度" : @"开启进度";
-        NSString *fadeText = self.previewFade ? @"关闭渐变" : @"开启渐变";
-        NSString *toolbarText = self.showsToolbar ? @"隐藏工具栏" : @"开启工具栏";
+        NSString *fadeText = self.previewFade ? @"关闭渐变效果" : @"开启渐变效果";
+        NSString *toolbarText = self.showsToolbar ? @"隐藏视频工具栏" : @"开启视频工具栏";
         NSString *autoText = self.autoplayVideo ? @"关闭自动播放" : @"开启自动播放";
         NSString *dismissText = self.dismissTapped ? @"单击时不关闭" : @"单击时自动关闭";
         [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText, autoText, dismissText] actionBlock:^(NSInteger index) {

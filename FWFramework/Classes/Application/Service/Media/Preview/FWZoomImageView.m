@@ -27,34 +27,34 @@
 }
 
 + (UIImage *)largePlayImage {
-    CGFloat width = 60;
+    CGSize size = CGSizeMake(60, 60);
     return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
         UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
         CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
         CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:.25].CGColor);
         CGFloat circleLineWidth = 1;
-        UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
+        UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, size.width - circleLineWidth, size.width - circleLineWidth)];
         [circle setLineWidth:circleLineWidth];
         [circle stroke];
         [circle fill];
         
         CGContextSetFillColorWithColor(contextRef, color.CGColor);
-        CGFloat triangleLength = width / 2.5;
+        CGFloat triangleLength = size.width / 2.5;
         UIBezierPath *triangle = [self trianglePathWithLength:triangleLength];
-        UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
+        UIOffset offset = UIOffsetMake(size.width / 2 - triangleLength * tan(M_PI / 6) / 2, size.width / 2 - triangleLength / 2);
         [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
         [triangle fill];
-    } size:CGSizeMake(width, width)];
+    } size:size];
 }
 
 + (UIImage *)smallPlayImage {
-    CGFloat width = 17;
+    CGSize size = CGSizeMake(17, 17);
     return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
         UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
         CGContextSetFillColorWithColor(contextRef, color.CGColor);
-        UIBezierPath *path = [self trianglePathWithLength:width];
+        UIBezierPath *path = [self trianglePathWithLength:size.width];
         [path fill];
-    } size:CGSizeMake(width, width)];
+    } size:size];
 }
 
 + (UIImage *)pauseImage {
