@@ -8,16 +8,25 @@
 
 import FWFramework
 
-@objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate {
+@objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate, FWImagePreviewViewDelegate {
     var albums: [FWAssetGroup] = []
     var photos: [FWAsset] = []
     var isAlbum: Bool = false
     var album: FWAssetGroup = FWAssetGroup()
-    var mockProgress: Bool = false
+    var isPreview: Bool = true
     
     private lazy var photoBrowser: FWPhotoBrowser = {
         let result = FWPhotoBrowser()
         result.delegate = self
+        return result
+    }()
+    
+    private lazy var imagePreview: FWImagePreviewViewController = {
+        let result = FWImagePreviewViewController()
+        result.imagePreviewView.delegate = self
+        result.showsPageLabel = true
+        result.dismissingWhenTapped = true
+        result.presentingStyle = .zoom
         return result
     }()
     
@@ -46,9 +55,11 @@ import FWFramework
     }
     
     private func loadPhotos() {
-        fwSetRightBarItem("模拟进度") { [weak self] sender in
-            guard let self = self else { return }
-            self.mockProgress = !self.mockProgress
+        fwSetRightBarItem(FWIcon.refreshImage) { [weak self] sender in
+            let isPreview = self?.isPreview ?? false
+            self?.fwShowSheet(withTitle: nil, message: nil, cancel: "取消", actions: ["\(isPreview ? "- " : "")FWImagePreview", "\(isPreview ? "" : "- ")FWPhotoBrowser"]) { index in
+                self?.isPreview = index == 0 ? true : false
+            }
         }
         
         fwShowLoading()
@@ -124,9 +135,18 @@ import FWFramework
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isAlbum {
-            let cell = tableView.cellForRow(at: indexPath)
-            self.photoBrowser.currentIndex = indexPath.row
-            self.photoBrowser.show(from: cell?.imageView)
+            if isPreview {
+                let cell = tableView.cellForRow(at: indexPath)
+                self.imagePreview.imagePreviewView.currentImageIndex = UInt(indexPath.row)
+                self.imagePreview.sourceImageView = {
+                    return cell?.imageView
+                }
+                present(self.imagePreview, animated: true, completion: nil)
+            } else {
+                let cell = tableView.cellForRow(at: indexPath)
+                self.photoBrowser.currentIndex = indexPath.row
+                self.photoBrowser.show(from: cell?.imageView)
+            }
         } else {
             let album = albums[indexPath.row]
             let viewController = TestAssetViewController()
@@ -136,6 +156,8 @@ import FWFramework
             fwOpen(viewController, animated: true)
         }
     }
+    
+    // MARK: - FWPhotoBrowserDelegate
     
     func photoBrowser(_ photoBrowser: FWPhotoBrowser, loadPhotoFor index: Int, photoView: FWPhotoView) {
         let photo = photos[index]
@@ -159,7 +181,7 @@ import FWFramework
                     photoView.progress = CGFloat(progress)
                 }
             }
-        } else if !mockProgress {
+        } else {
             photoView.progress = 0.01
             photo.requestPreviewImage { image, info in
                 photoView.progress = 1
@@ -169,20 +191,65 @@ import FWFramework
                     photoView.progress = CGFloat(progress)
                 }
             }
-        } else {
-            let url = "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif?t=\(NSDate.fwCurrentTime)"
-            photoView.progress = 0.01
-            UIImage.fwDownloadImage(url) { image, error in
-                photoView.progress = 1
-                photoView.urlString = image
-            } progress: { progress in
-                photoView.progress = CGFloat(progress)
-            }
         }
     }
     
     func photoBrowser(_ photoBrowser: FWPhotoBrowser, viewFor index: Int) -> Any? {
         let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
         return cell?.imageView
+    }
+    
+    // MARK: - FWImagePreviewViewDelegate
+    
+    func numberOfImages(in imagePreviewView: FWImagePreviewView) -> UInt {
+        return UInt(photos.count)
+    }
+    
+    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, renderZoomImageView zoomImageView: FWZoomImageView, at index: UInt) {
+        let photo = photos[Int(index)]
+        if photo.assetSubType == .GIF {
+            zoomImageView.progress = 0.01
+            photo.requestImageData { data, info, _, _ in
+                zoomImageView.progress = 1
+                zoomImageView.image = UIImage.fwImage(with:data)
+            }
+        } else if photo.assetSubType == .livePhoto {
+            zoomImageView.progress = 0.01
+            photo.requestLivePhoto { livePhoto, info in
+                zoomImageView.progress = 1
+                zoomImageView.livePhoto = livePhoto
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    zoomImageView.progress = CGFloat(progress)
+                }
+            }
+        } else if photo.assetType == .video {
+            zoomImageView.progress = 0.01
+            photo.requestPlayerItem { playerItem, info in
+                zoomImageView.progress = 1
+                zoomImageView.videoPlayerItem = playerItem
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    zoomImageView.progress = CGFloat(progress)
+                }
+            }
+        } else {
+            zoomImageView.progress = 0.01
+            photo.requestPreviewImage { image, info in
+                zoomImageView.progress = 1
+                zoomImageView.image = image
+            } withProgressHandler: { progress, error, stop, info in
+                DispatchQueue.main.async {
+                    zoomImageView.progress = CGFloat(progress)
+                }
+            }
+        }
+    }
+    
+    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, didScrollTo index: UInt) {
+        let cell = tableView.cellForRow(at: IndexPath(row: Int(index), section: 0))
+        self.imagePreview.sourceImageView = {
+            return cell?.imageView
+        }
     }
 }

@@ -185,9 +185,6 @@
         _videoPlayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _videoPlayerView.hidden = YES;
         [self.imageView addSubview:_videoPlayerView];
-        
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playToggle)];
-        [_videoPlayerView addGestureRecognizer:tapGesture];
     }
     return _videoPlayerView;
 }
@@ -199,6 +196,7 @@
 - (UIButton *)videoPlayButton {
     if (!_videoPlayButton) {
         _videoPlayButton = [[UIButton alloc] init];
+        _videoPlayButton.fwTouchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
         [_videoPlayButton setImage:[self videoPlayImage] forState:UIControlStateNormal];
         [_videoPlayButton addTarget:self action:@selector(playStart) forControlEvents:UIControlEventTouchUpInside];
         _videoPlayButton.hidden = YES;
@@ -210,8 +208,8 @@
 }
 
 - (UIImage *)videoPlayImage {
-    CGFloat width = 60;
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0);
+    CGSize size = CGSizeMake(60, 60);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     if (!contextRef) return nil;
     
@@ -219,20 +217,20 @@
     CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
     CGContextSetFillColorWithColor(contextRef, [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor);
     CGFloat circleLineWidth = 1;
-    UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, width - circleLineWidth, width - circleLineWidth)];
+    UIBezierPath *circle = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleLineWidth / 2, circleLineWidth / 2, size.width - circleLineWidth, size.width - circleLineWidth)];
     [circle setLineWidth:circleLineWidth];
     [circle stroke];
     [circle fill];
     
     CGContextSetFillColorWithColor(contextRef, color.CGColor);
-    CGFloat triangleLength = width / 2.5;
+    CGFloat triangleLength = size.width / 2.5;
     UIBezierPath *triangle = [UIBezierPath bezierPath];
     [triangle moveToPoint:CGPointZero];
     [triangle addLineToPoint:CGPointMake(triangleLength * cos(M_PI / 6), triangleLength / 2)];
     [triangle addLineToPoint:CGPointMake(0, triangleLength)];
     [triangle closePath];
     
-    UIOffset offset = UIOffsetMake(width / 2 - triangleLength * tan(M_PI / 6) / 2, width / 2 - triangleLength / 2);
+    UIOffset offset = UIOffsetMake(size.width / 2 - triangleLength * tan(M_PI / 6) / 2, size.width / 2 - triangleLength / 2);
     [triangle applyTransform:CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical)];
     [triangle fill];
     
@@ -428,14 +426,6 @@
 }
 
 #pragma mark - 监听方法
-
-- (void)playToggle {
-    if (self.videoPlayButton.hidden) {
-        [self playPause];
-    } else {
-        [self playStart];
-    }
-}
 
 - (void)playStart {
     [self.videoPlayer play];
