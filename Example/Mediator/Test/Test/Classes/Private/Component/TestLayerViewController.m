@@ -276,18 +276,6 @@
     
         path = [UIBezierPath fwShapeTriangle:CGRectMake(70, 625, 30, 20) direction:UISwipeGestureRecognizerDirectionDown];
         [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-    
-        path = [UIBezierPath fwShapeLabel:CGRectMake(120, 620, 30, 30) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionLeft];
-        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-    
-        path = [UIBezierPath fwShapeLabel:CGRectMake(170, 625, 30, 20) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionRight];
-        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-    
-        path = [UIBezierPath fwShapeLabel:CGRectMake(220, 620, 30, 30) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionUp];
-        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
-    
-        path = [UIBezierPath fwShapeLabel:CGRectMake(270, 625, 30, 20) arrow:CGSizeMake(5, 5) direction:UISwipeGestureRecognizerDirectionDown];
-        [self fwDrawBezierPath:path strokeWidth:2.0 strokeColor:[UIColor orangeColor] fillColor:nil];
     }
 }
 

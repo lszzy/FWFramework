@@ -49,9 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 // "🔺" 三角形形状，可指定方向
 + (UIBezierPath *)fwShapeTriangle:(CGRect)frame direction:(UISwipeGestureRecognizerDirection)direction;
 
-// "💬" 标签形状，可指定方向
-+ (UIBezierPath *)fwShapeLabel:(CGRect)frame arrow:(CGSize)arrow direction:(UISwipeGestureRecognizerDirection)direction;
-
 @end
 
 NS_ASSUME_NONNULL_END
