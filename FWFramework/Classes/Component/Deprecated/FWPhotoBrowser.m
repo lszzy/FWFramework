@@ -288,6 +288,10 @@
     
     self.videoPlayerView.hidden = NO;
     self.videoPlayButton.hidden = NO;
+    
+    if (self.autoplayVideo) {
+        [self playStart];
+    }
 }
 
 - (void)setShowAnimation:(BOOL)showAnimation {

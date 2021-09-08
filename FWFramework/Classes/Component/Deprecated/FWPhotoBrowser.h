@@ -235,6 +235,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) AVPlayerLayer *videoPlayerLayer;
 // 自定义video播放按钮
 @property (nonatomic, strong, readonly) UIButton *videoPlayButton;
+// 是否自动播放video，默认NO
+@property(nonatomic, assign) BOOL autoplayVideo;
 // 图片事件代理
 @property (nonatomic, weak, nullable) id<FWPhotoViewDelegate> pictureDelegate;
 
