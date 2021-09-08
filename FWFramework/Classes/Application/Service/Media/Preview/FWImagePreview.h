@@ -130,10 +130,10 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 @property(nonatomic, assign) FWImagePreviewTransitioningStyle dismissingStyle;
 
 /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 nil，则会强制使用 fade 动画。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
-@property(nullable, nonatomic, copy) UIView * _Nullable (^sourceImageView)(void);
+@property(nullable, nonatomic, copy) UIView * _Nullable (^sourceImageView)(NSInteger index);
 
 /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 CGRectZero，则会强制使用 fade 动画。注意返回值要进行坐标系转换。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
-@property(nullable, nonatomic, copy) CGRect (^sourceImageRect)(void);
+@property(nullable, nonatomic, copy) CGRect (^sourceImageRect)(NSInteger index);
 
 /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 FWImagePreviewCornerRadiusAutomaticDimension，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
 @property(nonatomic, assign) CGFloat sourceImageCornerRadius;

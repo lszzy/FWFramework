@@ -27,6 +27,10 @@ import FWFramework
         result.showsPageLabel = true
         result.dismissingWhenTapped = true
         result.presentingStyle = .zoom
+        result.sourceImageView = { [weak self] index in
+            let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0))
+            return cell?.imageView
+        }
         return result
     }()
     
@@ -136,11 +140,7 @@ import FWFramework
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isAlbum {
             if isPreview {
-                let cell = tableView.cellForRow(at: indexPath)
                 self.imagePreview.imagePreviewView.currentImageIndex = indexPath.row
-                self.imagePreview.sourceImageView = {
-                    return cell?.imageView
-                }
                 present(self.imagePreview, animated: true, completion: nil)
             } else {
                 let cell = tableView.cellForRow(at: indexPath)
@@ -243,13 +243,6 @@ import FWFramework
                     zoomImageView.progress = CGFloat(progress)
                 }
             }
-        }
-    }
-    
-    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, didScrollTo index: Int) {
-        let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
-        self.imagePreview.sourceImageView = {
-            return cell?.imageView
         }
     }
 }

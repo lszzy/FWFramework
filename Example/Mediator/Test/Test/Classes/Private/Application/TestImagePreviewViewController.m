@@ -103,10 +103,12 @@
     if (!self.imagePreviewViewController) {
         self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
         self.imagePreviewViewController.showsPageLabel = YES;
-        self.imagePreviewViewController.imagePreviewView.delegate = self;// 将内部的图片查看器 delegate 指向当前 viewController，以获取要查看的图片数据
+        self.imagePreviewViewController.imagePreviewView.delegate = self;
+        __weak __typeof(self) weakSelf = self;
+        self.imagePreviewViewController.sourceImageView = ^UIView *(NSInteger index) {
+            return weakSelf.floatLayoutView.subviews[index];
+        };
         
-        // 当需要在退出大图预览时做一些事情的时候，可配合 UIViewController (FW) 的 qmui_visibleStateDidChangeBlock 来实现。
-        __weak __typeof(self)weakSelf = self;
         self.imagePreviewViewController.fwVisibleStateChanged = ^(FWImagePreviewViewController *viewController, FWViewControllerVisibleState visibleState) {
             if (visibleState == FWViewControllerVisibleStateWillDisappear) {
                 NSInteger exitAtIndex = viewController.imagePreviewView.currentImageIndex;
@@ -125,13 +127,6 @@
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index
-    
-    // 如果使用 zoom 动画，则需要在 sourceImageView 里返回一个 UIView，由这个 UIView 的布局位置决定动画的起点/终点，如果用 fade 则不需要使用 sourceImageView。
-    // 另外当 sourceImageView 返回 nil 时会强制使用 fade 动画，常见的使用场景是 present 时 sourceImageView 还在屏幕内，但 dismiss 时 sourceImageView 已经不在可视区域，即可通过返回 nil 来改用 fade 动画。
-    self.imagePreviewViewController.sourceImageView = ^UIView *{
-        return button;
-    };
-    
     [self presentViewController:self.imagePreviewViewController animated:YES completion:nil];
 }
 
@@ -172,14 +167,6 @@
 
 - (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index {
     return FWImagePreviewMediaTypeImage;
-}
-
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView didScrollToIndex:(NSInteger)index {
-    // 由于进入大图查看模式后可以左右滚动切换图片，最终退出时要退出到当前大图所对应的小图那，所以需要在适当的时机（这里选择 imagePreviewView:didScrollToIndex:）更新 sourceImageView 的值
-    __weak __typeof(self)weakSelf = self;
-    self.imagePreviewViewController.sourceImageView = ^UIView *{
-        return weakSelf.floatLayoutView.subviews[index];
-    };
 }
 
 @end
