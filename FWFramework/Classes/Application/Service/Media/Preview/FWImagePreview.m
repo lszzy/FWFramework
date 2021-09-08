@@ -568,10 +568,14 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)dismissingGestureChanged:(BOOL)finished {
-    self.pageLabel.alpha = finished ? 1 : 0;
     if (self.gestureZoomImageView.showsVideoToolbar && self.gestureZoomImageView.videoPlayerItem) {
         self.gestureZoomImageView.videoToolbar.alpha = finished ? 1 : 0;
     }
+    [self.view.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
+        if (obj != self.imagePreviewView) {
+            obj.alpha = finished ? 1 : 0;
+        }
+    }];
 }
 
 // 不使用 qmui_visibleViewControllerIfExist 是因为不想考虑 presentedViewController
@@ -591,6 +595,10 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
     if (!self.dismissingWhenTapped || !self.fwIsPresented) return;
+    
+    if (zoomImageView.showsVideoToolbar && zoomImageView.videoPlayerItem) {
+        zoomImageView.videoToolbar.hidden = YES;
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
