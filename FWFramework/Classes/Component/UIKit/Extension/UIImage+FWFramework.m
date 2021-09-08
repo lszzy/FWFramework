@@ -885,6 +885,24 @@
 - (void)fwInnerImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
     void (^block)(NSError *error) = objc_getAssociatedObject(self, @selector(fwSaveImageWithBlock:));
+    objc_setAssociatedObject(self, @selector(fwSaveImageWithBlock:), nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (block) {
+        block(error);
+    }
+}
+
++ (void)fwSaveVideo:(NSString *)videoPath withBlock:(void (^)(NSError *error))block
+{
+    objc_setAssociatedObject(self, @selector(fwSaveVideo:withBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath)) {
+        UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, @selector(fwInnerVideo:didFinishSavingWithError:contextInfo:), NULL);
+    }
+}
+
++ (void)fwInnerVideo:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    void (^block)(NSError *error) = objc_getAssociatedObject(self, @selector(fwSaveVideo:withBlock:));
+    objc_setAssociatedObject(self, @selector(fwSaveVideo:withBlock:), nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
     if (block) {
         block(error);
     }
