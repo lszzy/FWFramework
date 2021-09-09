@@ -626,7 +626,7 @@
     return _videoPlayerLayer;
 }
 
-- (FWZoomImageViewVideoToolbar *)videoToolbar {
+- (FWZoomImageVideoToolbar *)videoToolbar {
     [self initVideoToolbarIfNeeded];
     return _videoToolbar;
 }
@@ -647,7 +647,7 @@
 - (void)initVideoToolbarIfNeeded {
     if (_videoToolbar) return;
     _videoToolbar = ({
-        FWZoomImageViewVideoToolbar *videoToolbar = [[FWZoomImageViewVideoToolbar alloc] init];
+        FWZoomImageVideoToolbar *videoToolbar = [[FWZoomImageVideoToolbar alloc] init];
         [videoToolbar.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
         [videoToolbar.pauseButton addTarget:self action:@selector(handlePauseButton) forControlEvents:UIControlEventTouchUpInside];
         videoToolbar.hidden = YES;
@@ -890,9 +890,9 @@
 
 @end
 
-#pragma mark - FWZoomImageViewVideoToolbar
+#pragma mark - FWZoomImageVideoToolbar
 
-@implementation FWZoomImageViewVideoToolbar
+@implementation FWZoomImageVideoToolbar
 
 + (void)initialize {
     static dispatch_once_t onceToken;
@@ -902,7 +902,7 @@
 }
 
 + (void)setDefaultAppearance {
-    FWZoomImageViewVideoToolbar *appearance = [FWZoomImageViewVideoToolbar appearance];
+    FWZoomImageVideoToolbar *appearance = [FWZoomImageVideoToolbar appearance];
     appearance.playButtonImage = [FWZoomImageVideoPlayerView smallPlayImage];
     appearance.pauseButtonImage = [FWZoomImageVideoPlayerView pauseImage];
 }

@@ -10,7 +10,7 @@
 
 @interface TestImagePreviewViewController () <FWImagePreviewViewDelegate>
 
-@property(nonatomic, strong) FWImagePreviewViewController *imagePreviewViewController;
+@property(nonatomic, strong) FWImagePreviewController *imagePreviewViewController;
 @property(nonatomic, strong) NSArray<UIImage *> *images;
 @property(nonatomic, strong) FWFloatLayoutView *floatLayoutView;
 @property(nonatomic, strong) UILabel *tipsLabel;
@@ -101,7 +101,7 @@
 
 - (void)handleImageButtonEvent:(UIButton *)button {
     if (!self.imagePreviewViewController) {
-        self.imagePreviewViewController = [[FWImagePreviewViewController alloc] init];
+        self.imagePreviewViewController = [[FWImagePreviewController alloc] init];
         self.imagePreviewViewController.showsPageLabel = YES;
         self.imagePreviewViewController.imagePreviewView.delegate = self;
         __weak __typeof(self) weakSelf = self;
@@ -109,7 +109,7 @@
             return weakSelf.floatLayoutView.subviews[index];
         };
         
-        self.imagePreviewViewController.fwVisibleStateChanged = ^(FWImagePreviewViewController *viewController, FWViewControllerVisibleState visibleState) {
+        self.imagePreviewViewController.fwVisibleStateChanged = ^(FWImagePreviewController *viewController, FWViewControllerVisibleState visibleState) {
             if (visibleState == FWViewControllerVisibleStateWillDisappear) {
                 NSInteger exitAtIndex = viewController.imagePreviewView.currentImageIndex;
                 weakSelf.tipsLabel.text = [NSString stringWithFormat:@"浏览到第%@张就退出了", @(exitAtIndex + 1)];

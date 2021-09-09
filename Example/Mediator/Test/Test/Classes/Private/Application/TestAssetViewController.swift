@@ -21,8 +21,8 @@ import FWFramework
         return result
     }()
     
-    private lazy var imagePreview: FWImagePreviewViewController = {
-        let result = FWImagePreviewViewController()
+    private lazy var imagePreview: FWImagePreviewController = {
+        let result = FWImagePreviewController()
         result.imagePreviewView.delegate = self
         result.showsPageLabel = true
         result.dismissingWhenTapped = true

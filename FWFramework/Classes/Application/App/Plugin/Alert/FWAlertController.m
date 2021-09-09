@@ -9,7 +9,7 @@
 #import "FWAlertController.h"
 #import "FWAdaptive.h"
 
-#pragma mark ---------------------------- FWAlertStyle begin --------------------------------
+#pragma mark ---------------------------- FWAlertControllerAppearance begin --------------------------------
 
 @implementation FWAlertControllerAppearance
 
@@ -83,7 +83,7 @@
 
 @end
 
-#pragma mark ---------------------------- FWAlertStyle end ----------------------------
+#pragma mark ---------------------------- FWAlertControllerAppearance end ----------------------------
 
 #pragma mark ---------------------------- FWAlertAction begin --------------------------------
 

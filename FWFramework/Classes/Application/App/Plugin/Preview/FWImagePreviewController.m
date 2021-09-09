@@ -301,11 +301,11 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 @end
 
-#pragma mark - FWImagePreviewViewController
+#pragma mark - FWImagePreviewController
 
 const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
-@interface FWImagePreviewViewController () <FWImagePreviewViewDelegate>
+@interface FWImagePreviewController () <FWImagePreviewViewDelegate>
 
 @property(nonatomic, strong) UIPanGestureRecognizer *dismissingGesture;
 @property(nonatomic, assign) CGPoint gestureBeganLocation;
@@ -315,7 +315,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 @end
 
-@implementation FWImagePreviewViewController
+@implementation FWImagePreviewController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
