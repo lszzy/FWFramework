@@ -10,10 +10,20 @@
 #import "FWAlertPluginImpl.h"
 #import "FWPlugin.h"
 #import "FWToolkit.h"
+#import "FWLanguage.h"
 
 #pragma mark - FWAlertPluginController
 
 @implementation UIViewController (FWAlertPluginController)
+
+- (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
+{
+    [self fwShowAlertWithTitle:title
+                       message:message
+                        cancel:nil
+                   cancelBlock:nil];
+}
 
 - (void)fwShowAlertWithTitle:(id)title
                      message:(id)message
@@ -38,10 +48,10 @@
                     priority:(FWAlertPriority)priority
 {
     if (!cancel) {
-        if (actions.count > 0 && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
-            cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
-        } else if (actions.count < 1 && FWAlertPluginImpl.sharedInstance.defaultCloseButton) {
-            cancel = FWAlertPluginImpl.sharedInstance.defaultCloseButton();
+        if (actions.count > 0) {
+            cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton ? FWAlertPluginImpl.sharedInstance.defaultCancelButton() : [FWFrameworkBundle localizedString:@"取消"];
+        } else {
+            cancel = FWAlertPluginImpl.sharedInstance.defaultCloseButton ? FWAlertPluginImpl.sharedInstance.defaultCloseButton() : [FWFrameworkBundle localizedString:@"关闭"];
         }
     }
     
@@ -83,11 +93,11 @@
                    cancelBlock:(void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority
 {
-    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
-        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    if (!cancel) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton ? FWAlertPluginImpl.sharedInstance.defaultCancelButton() : [FWFrameworkBundle localizedString:@"取消"];
     }
-    if (!confirm && FWAlertPluginImpl.sharedInstance.defaultConfirmButton) {
-        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton();
+    if (!confirm) {
+        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton ? FWAlertPluginImpl.sharedInstance.defaultConfirmButton() : [FWFrameworkBundle localizedString:@"确定"];
     }
     
     [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
@@ -155,11 +165,11 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
-    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
-        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    if (!cancel) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton ? FWAlertPluginImpl.sharedInstance.defaultCancelButton() : [FWFrameworkBundle localizedString:@"取消"];
     }
-    if (!confirm && FWAlertPluginImpl.sharedInstance.defaultConfirmButton) {
-        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton();
+    if (!confirm) {
+        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton ? FWAlertPluginImpl.sharedInstance.defaultConfirmButton() : [FWFrameworkBundle localizedString:@"确定"];
     }
     
     [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
@@ -200,8 +210,8 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
-    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
-        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    if (!cancel) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton ? FWAlertPluginImpl.sharedInstance.defaultCancelButton() : [FWFrameworkBundle localizedString:@"取消"];
     }
     
     [self fwShowAlertWithStyle:UIAlertControllerStyleActionSheet
@@ -242,6 +252,14 @@
 @end
 
 @implementation UIView (FWAlertPluginController)
+
+- (void)fwShowAlertWithTitle:(id)title
+                     message:(id)message
+{
+    UIViewController *ctrl = self.fwViewController;
+    [ctrl fwShowAlertWithTitle:title
+                       message:message];
+}
 
 - (void)fwShowAlertWithTitle:(id)title
                      message:(id)message

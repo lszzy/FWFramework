@@ -59,7 +59,7 @@
 
 - (void)onInvalid {
     FWWeakifySelf();
-    [UIWindow.fwMainWindow.fwTopPresentedController fwShowConfirmWithTitle:@"模拟登录失效" message:nil cancel:FWLocalizedString(@"取消") confirm:FWLocalizedString(@"确定") confirmBlock:^{
+    [UIWindow.fwMainWindow.fwTopPresentedController fwShowConfirmWithTitle:@"模拟登录失效" message:nil cancel:nil confirm:nil confirmBlock:^{
         FWStrongifySelf();
         [UIWindow.fwMainWindow fwDismissViewControllers:^{
             FWStrongifySelf();

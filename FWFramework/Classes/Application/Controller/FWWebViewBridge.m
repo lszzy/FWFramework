@@ -846,7 +846,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:[FWFrameworkBundle localizedString:@"关闭"] cancelBlock:^{
+    [webView.fwViewController fwShowAlertWithTitle:nil message:message cancel:nil cancelBlock:^{
         completionHandler();
     }];
 }
@@ -858,7 +858,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:[FWFrameworkBundle localizedString:@"取消"] confirm:[FWFrameworkBundle localizedString:@"确定"] confirmBlock:^{
+    [webView.fwViewController fwShowConfirmWithTitle:nil message:message cancel:nil confirm:nil confirmBlock:^{
         completionHandler(YES);
     } cancelBlock:^{
         completionHandler(NO);
@@ -872,7 +872,7 @@ NSString * FWWebViewJsBridge_js() {
         return;
     }
     
-    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:[FWFrameworkBundle localizedString:@"取消"] confirm:[FWFrameworkBundle localizedString:@"确定"] promptBlock:^(UITextField *textField) {
+    [webView.fwViewController fwShowPromptWithTitle:nil message:prompt cancel:nil confirm:nil promptBlock:^(UITextField *textField) {
         textField.text = defaultText;
     } confirmBlock:^(NSString *text) {
         completionHandler(text);
