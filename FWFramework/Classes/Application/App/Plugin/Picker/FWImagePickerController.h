@@ -12,42 +12,41 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWAlbumViewController
+#pragma mark - FWImageAlbumController
 
-@class FWImagePickerViewController;
-@class FWAlbumViewController;
-@class FWTableViewCell;
+@class FWImagePickerController;
+@class FWImageAlbumController;
 
-@protocol FWAlbumViewControllerDelegate <NSObject>
+@protocol FWImageAlbumControllerDelegate <NSObject>
 
 @required
-/// 点击相簿里某一行时，需要给一个 FWImagePickerViewController 对象用于展示九宫格图片列表
-- (FWImagePickerViewController *)imagePickerViewControllerForAlbumViewController:(FWAlbumViewController *)albumViewController;
+/// 点击相簿里某一行时，需要给一个 FWImagePickerController 对象用于展示九宫格图片列表
+- (FWImagePickerController *)imagePickerControllerForAlbumController:(FWImageAlbumController *)albumController;
 
 @optional
 /**
  *  取消查看相册列表后被调用
  */
-- (void)albumViewControllerDidCancel:(FWAlbumViewController *)albumViewController;
+- (void)albumControllerDidCancel:(FWImageAlbumController *)albumController;
 
 /**
  *  即将需要显示 Loading 时调用
  *
  *  @see shouldShowDefaultLoadingView
  */
-- (void)albumViewControllerWillStartLoading:(FWAlbumViewController *)albumViewController;
+- (void)albumControllerWillStartLoading:(FWImageAlbumController *)albumController;
 
 /**
  *  即将需要隐藏 Loading 时调用
  *
  *  @see shouldShowDefaultLoadingView
  */
-- (void)albumViewControllerWillFinishLoading:(FWAlbumViewController *)albumViewController;
+- (void)albumControllerWillFinishLoading:(FWImageAlbumController *)albumController;
 
 @end
 
 
-@interface FWAlbumTableViewCell : UITableViewCell
+@interface FWImageAlbumTableCell : UITableViewCell
 
 @property(nonatomic, assign) CGFloat albumImageSize UI_APPEARANCE_SELECTOR; // 相册缩略图的大小
 @property(nonatomic, assign) CGFloat albumImageMarginLeft UI_APPEARANCE_SELECTOR; // 相册缩略图的 left，-1 表示自动保持与上下 margin 相等
@@ -62,16 +61,16 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  当前设备照片里的相簿列表，使用方式：
  *  1. 使用 init 初始化。
- *  2. 指定一个 albumViewControllerDelegate，并实现 @required 方法。
+ *  2. 指定一个 albumControllerDelegate，并实现 @required 方法。
  *
- *  @warning 注意，iOS 访问相册需要得到授权，建议先询问用户授权，通过了再进行 FWAlbumViewController 的初始化工作。关于授权的代码，可参考 FW Demo 项目里的 [QDImagePickerExampleViewController authorizationPresentAlbumViewControllerWithTitle] 方法。
+ *  @warning 注意，iOS 访问相册需要得到授权，建议先询问用户授权，通过了再进行 FWImageAlbumController 的初始化工作。关于授权的代码，可参考 FW Demo 项目里的 [QDImagePickerExampleViewController authorizationPresentAlbumViewControllerWithTitle] 方法。
  *  @see [FWAssetsManager requestAuthorization:]
  */
-@interface FWAlbumViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FWImageAlbumController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong, readonly) UITableView *tableView;
 
-@property(nullable, nonatomic, weak) id<FWAlbumViewControllerDelegate> albumViewControllerDelegate;
+@property(nullable, nonatomic, weak) id<FWImageAlbumControllerDelegate> albumControllerDelegate;
 
 /// 相册列表 cell 的高度，同时也是相册预览图的宽高，默认57
 @property(nonatomic, assign) CGFloat albumTableViewCellHeight UI_APPEARANCE_SELECTOR;
@@ -84,21 +83,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  加载相册列表时会出现 loading，若需要自定义 loading 的形式，可将该属性置为 NO，默认为 YES。
- *  @see albumViewControllerWillStartLoading: & albumViewControllerWillFinishLoading:
+ *  @see albumControllerWillStartLoading: & albumControllerWillFinishLoading:
  */
 @property(nonatomic, assign) BOOL shouldShowDefaultLoadingView;
 
-/// 在 FWAlbumViewController 被放到 UINavigationController 里之后，可通过调用这个方法，来尝试直接进入上一次选中的相册列表
+/// 在 FWImageAlbumController 被放到 UINavigationController 里之后，可通过调用这个方法，来尝试直接进入上一次选中的相册列表
 - (void)pickLastAlbumGroupDirectlyIfCan;
 
 @end
 
-#pragma mark - FWImagePickerCollectionViewCell
+#pragma mark - FWImagePickerCollectionCell
 
 /**
  *  图片选择空间里的九宫格 cell，支持显示 checkbox、饼状进度条及重试按钮（iCloud 图片需要）
  */
-@interface FWImagePickerCollectionViewCell : UICollectionViewCell
+@interface FWImagePickerCollectionCell : UICollectionViewCell
 
 /// 收藏的资源的心形图片
 @property(nonatomic, strong) UIImage *favoriteImage UI_APPEARANCE_SELECTOR;
@@ -142,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWImagePickerHelper
 
 /**
- *  配合 FWImagePickerViewController 使用的工具类
+ *  配合 FWImagePickerController 使用的工具类
  */
 @interface FWImagePickerHelper : NSObject
 
@@ -205,34 +204,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWImagePickerPreviewViewController
+#pragma mark - FWImagePickerPreviewController
 
 @class FWNavigationButton;
-@class FWImagePickerViewController;
+@class FWImagePickerController;
 @class FWImagePreviewController;
-@class FWImagePickerPreviewViewController;
+@class FWImagePickerPreviewController;
 
-@protocol FWImagePickerPreviewViewControllerDelegate <NSObject>
+@protocol FWImagePickerPreviewControllerDelegate <NSObject>
 
 @optional
 
 /// 取消选择图片后被调用
-- (void)imagePickerPreviewViewControllerDidCancel:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController;
+- (void)imagePickerPreviewControllerDidCancel:(FWImagePickerPreviewController *)imagePickerPreviewController;
 /// 即将选中图片
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController willCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willCheckImageAtIndex:(NSInteger)index;
 /// 已经选中图片
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController didCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didCheckImageAtIndex:(NSInteger)index;
 /// 即将取消选中图片
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController willUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willUncheckImageAtIndex:(NSInteger)index;
 /// 已经取消选中图片
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController didUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didUncheckImageAtIndex:(NSInteger)index;
 
 @end
 
 
-@interface FWImagePickerPreviewViewController : FWImagePreviewController <FWImagePreviewViewDelegate>
+@interface FWImagePickerPreviewController : FWImagePreviewController <FWImagePreviewViewDelegate>
 
-@property(nullable, nonatomic, weak) id<FWImagePickerPreviewViewControllerDelegate> delegate;
+@property(nullable, nonatomic, weak) id<FWImagePickerPreviewControllerDelegate> delegate;
 
 @property(nullable, nonatomic, strong) UIColor *toolBarBackgroundColor UI_APPEARANCE_SELECTOR;
 @property(nullable, nonatomic, strong) UIColor *toolBarTintColor UI_APPEARANCE_SELECTOR;
@@ -271,82 +270,82 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWImagePickerViewController
+#pragma mark - FWImagePickerController
 
-@class FWImagePickerViewController;
+@class FWImagePickerController;
 
-@protocol FWImagePickerViewControllerDelegate <NSObject>
+@protocol FWImagePickerControllerDelegate <NSObject>
 
 @optional
 
 /**
  *  创建一个 ImagePickerPreviewViewController 用于预览图片
  */
-- (FWImagePickerPreviewViewController *)imagePickerPreviewViewControllerForImagePickerViewController:(FWImagePickerViewController *)imagePickerViewController;
+- (FWImagePickerPreviewController *)imagePickerPreviewControllerForImagePickerController:(FWImagePickerController *)imagePickerController;
 
 /**
  *  控制照片的排序，若不实现，默认为 FWAlbumSortTypePositive
  *  @note 注意返回值会决定第一次进来相片列表时列表默认的滚动位置，如果为 FWAlbumSortTypePositive，则列表默认滚动到底部，如果为 FWAlbumSortTypeReverse，则列表默认滚动到顶部。
  */
-- (FWAlbumSortType)albumSortTypeForImagePickerViewController:(FWImagePickerViewController *)imagePickerViewController;
+- (FWAlbumSortType)albumSortTypeForImagePickerController:(FWImagePickerController *)imagePickerController;
 
 /**
  *  多选模式下选择图片完毕后被调用（点击 sendButton 后被调用），单选模式下没有底部发送按钮，所以也不会走到这个delegate
  *
- *  @param imagePickerViewController 对应的 FWImagePickerViewController
+ *  @param imagePickerController 对应的 FWImagePickerController
  *  @param imagesAssetArray          包含被选择的图片的 FWAsset 对象的数组。
  */
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray;
 
 /**
  *  cell 被点击时调用（先调用这个接口，然后才去走预览大图的逻辑），注意这并非指选中 checkbox 事件
  *
- *  @param imagePickerViewController        对应的 FWImagePickerViewController
+ *  @param imagePickerController        对应的 FWImagePickerController
  *  @param imageAsset                       被选中的图片的 FWAsset 对象
- *  @param imagePickerPreviewViewController 选中图片后进行图片预览的 viewController
+ *  @param imagePickerPreviewController 选中图片后进行图片预览的 viewController
  */
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController didSelectImageWithImagesAsset:(FWAsset *)imageAsset afterImagePickerPreviewViewControllerUpdate:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController didSelectImageWithImagesAsset:(FWAsset *)imageAsset afterImagePickerPreviewControllerUpdate:(FWImagePickerPreviewController *)imagePickerPreviewController;
 
 /// 是否能够选中 checkbox
-- (BOOL)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController shouldCheckImageAtIndex:(NSInteger)index;
+- (BOOL)imagePickerController:(FWImagePickerController *)imagePickerController shouldCheckImageAtIndex:(NSInteger)index;
 
 /// 即将选中 checkbox 时调用
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController willCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController willCheckImageAtIndex:(NSInteger)index;
 
 /// 选中了 checkbox 之后调用
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController didCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController didCheckImageAtIndex:(NSInteger)index;
 
 /// 即将取消选中 checkbox 时调用
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController willUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController willUncheckImageAtIndex:(NSInteger)index;
 
 /// 取消了 checkbox 选中之后调用
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController didUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController didUncheckImageAtIndex:(NSInteger)index;
 
 /**
  *  取消选择图片后被调用
  */
-- (void)imagePickerViewControllerDidCancel:(FWImagePickerViewController *)imagePickerViewController;
+- (void)imagePickerControllerDidCancel:(FWImagePickerController *)imagePickerController;
 
 /**
  *  即将需要显示 Loading 时调用
  *
  *  @see shouldShowDefaultLoadingView
  */
-- (void)imagePickerViewControllerWillStartLoading:(FWImagePickerViewController *)imagePickerViewController;
+- (void)imagePickerControllerWillStartLoading:(FWImagePickerController *)imagePickerController;
 
 /**
  *  即将需要隐藏 Loading 时调用
  *
  *  @see shouldShowDefaultLoadingView
  */
-- (void)imagePickerViewControllerDidFinishLoading:(FWImagePickerViewController *)imagePickerViewController;
+- (void)imagePickerControllerDidFinishLoading:(FWImagePickerController *)imagePickerController;
 
 @end
 
 
-@interface FWImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, FWImagePickerPreviewViewControllerDelegate>
+@interface FWImagePickerController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, FWImagePickerPreviewControllerDelegate>
 
-@property(nullable, nonatomic, weak) id<FWImagePickerViewControllerDelegate> imagePickerViewControllerDelegate;
+@property(nullable, nonatomic, weak) id<FWImagePickerControllerDelegate> imagePickerControllerDelegate;
 
 /*
  * 图片的最小尺寸，布局时如果有剩余空间，会将空间分配给图片大小，所以最终显示出来的大小不一定等于minimumImageWidth。默认是75。
@@ -388,7 +387,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  加载相册列表时会出现 loading，若需要自定义 loading 的形式，可将该属性置为 NO，默认为 YES。
- *  @see imagePickerViewControllerWillStartLoading: & imagePickerViewControllerDidFinishLoading:
+ *  @see imagePickerControllerWillStartLoading: & imagePickerControllerDidFinishLoading:
  */
 @property(nonatomic, assign) BOOL shouldShowDefaultLoadingView;
 
