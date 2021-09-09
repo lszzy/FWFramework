@@ -20,20 +20,20 @@
 #import "FWSwizzle.h"
 #import "UIScrollView+FWFramework.h"
 
-#pragma mark - FWAlbumTableViewCell
+#pragma mark - FWImageAlbumTableCell
 
-@implementation FWAlbumTableViewCell
+@implementation FWImageAlbumTableCell
 
 + (void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWAlbumTableViewCell appearance].albumImageSize = 72;
-        [FWAlbumTableViewCell appearance].albumImageMarginLeft = 16;
-        [FWAlbumTableViewCell appearance].albumNameInsets = UIEdgeInsetsMake(0, 14, 0, 3);
-        [FWAlbumTableViewCell appearance].albumNameFont = [UIFont systemFontOfSize:17];
-        [FWAlbumTableViewCell appearance].albumNameColor = nil;
-        [FWAlbumTableViewCell appearance].albumAssetsNumberFont = [UIFont systemFontOfSize:17];
-        [FWAlbumTableViewCell appearance].albumAssetsNumberColor = nil;
+        [FWImageAlbumTableCell appearance].albumImageSize = 72;
+        [FWImageAlbumTableCell appearance].albumImageMarginLeft = 16;
+        [FWImageAlbumTableCell appearance].albumNameInsets = UIEdgeInsetsMake(0, 14, 0, 3);
+        [FWImageAlbumTableCell appearance].albumNameFont = [UIFont systemFontOfSize:17];
+        [FWImageAlbumTableCell appearance].albumNameColor = nil;
+        [FWImageAlbumTableCell appearance].albumAssetsNumberFont = [UIFont systemFontOfSize:17];
+        [FWImageAlbumTableCell appearance].albumAssetsNumberColor = nil;
     });
 }
 
@@ -97,17 +97,17 @@
 
 @end
 
-#pragma mark - FWAlbumViewController
+#pragma mark - FWImageAlbumController
 
-@interface FWAlbumViewController ()
+@interface FWImageAlbumController ()
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray<FWAssetGroup *> *albumsArray;
-@property(nonatomic, strong) FWImagePickerViewController *imagePickerViewController;
+@property(nonatomic, strong) FWImagePickerController *imagePickerController;
 
 @end
 
-@implementation FWAlbumViewController
+@implementation FWImageAlbumController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
@@ -162,8 +162,8 @@
     } else {
         self.albumsArray = [[NSMutableArray alloc] init];
         // 获取相册列表较为耗时，交给子线程去处理，因此这里需要显示 Loading
-        if ([self.albumViewControllerDelegate respondsToSelector:@selector(albumViewControllerWillStartLoading:)]) {
-            [self.albumViewControllerDelegate albumViewControllerWillStartLoading:self];
+        if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillStartLoading:)]) {
+            [self.albumControllerDelegate albumControllerWillStartLoading:self];
         }
         if (self.shouldShowDefaultLoadingView) {
             [self fwShowLoading];
@@ -201,8 +201,8 @@
 
 - (void)refreshAlbumAndShowEmptyTipIfNeed {
     if ([self.albumsArray count] > 0) {
-        if ([self.albumViewControllerDelegate respondsToSelector:@selector(albumViewControllerWillFinishLoading:)]) {
-            [self.albumViewControllerDelegate albumViewControllerWillFinishLoading:self];
+        if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillFinishLoading:)]) {
+            [self.albumControllerDelegate albumControllerWillFinishLoading:self];
         }
         if (self.shouldShowDefaultLoadingView) {
             [self fwHideLoading];
@@ -217,13 +217,13 @@
 - (void)pickAlbumsGroup:(FWAssetGroup *)assetsGroup animated:(BOOL)animated {
     if (!assetsGroup) return;
     
-    if (!self.imagePickerViewController) {
-        self.imagePickerViewController = [self.albumViewControllerDelegate imagePickerViewControllerForAlbumViewController:self];
+    if (!self.imagePickerController) {
+        self.imagePickerController = [self.albumControllerDelegate imagePickerControllerForAlbumController:self];
     }
     
-    [self.imagePickerViewController refreshWithAssetsGroup:assetsGroup];
-    self.imagePickerViewController.title = [assetsGroup name];
-    [self.navigationController pushViewController:self.imagePickerViewController animated:animated];
+    [self.imagePickerController refreshWithAssetsGroup:assetsGroup];
+    self.imagePickerController.title = [assetsGroup name];
+    [self.navigationController pushViewController:self.imagePickerController animated:animated];
 }
 
 - (void)pickLastAlbumGroupDirectlyIfCan {
@@ -243,9 +243,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *kCellIdentifer = @"cell";
-    FWAlbumTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifer];
+    FWImageAlbumTableCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifer];
     if (!cell) {
-        cell = [[FWAlbumTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellIdentifer];
+        cell = [[FWImageAlbumTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellIdentifer];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     FWAssetGroup *assetsGroup = self.albumsArray[indexPath.row];
@@ -262,18 +262,18 @@
 
 - (void)handleCancelSelectAlbum:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^(void) {
-        if (self.albumViewControllerDelegate && [self.albumViewControllerDelegate respondsToSelector:@selector(albumViewControllerDidCancel:)]) {
-            [self.albumViewControllerDelegate albumViewControllerDidCancel:self];
+        if (self.albumControllerDelegate && [self.albumControllerDelegate respondsToSelector:@selector(albumControllerDidCancel:)]) {
+            [self.albumControllerDelegate albumControllerDidCancel:self];
         }
-        [self.imagePickerViewController.selectedImageAssetArray removeAllObjects];
+        [self.imagePickerController.selectedImageAssetArray removeAllObjects];
     }];
 }
 
 @end
 
-#pragma mark - FWImagePickerCollectionViewCell
+#pragma mark - FWImagePickerCollectionCell
 
-@interface FWImagePickerCollectionViewCell ()
+@interface FWImagePickerCollectionCell ()
 
 @property(nonatomic, strong, readwrite) UIImageView *favoriteImageView;
 @property(nonatomic, strong, readwrite) UIButton *checkboxButton;
@@ -281,21 +281,21 @@
 
 @end
 
-@implementation FWImagePickerCollectionViewCell
+@implementation FWImagePickerCollectionCell
 
 @synthesize videoDurationLabel = _videoDurationLabel;
 
 + (void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWImagePickerCollectionViewCell appearance].favoriteImage = [UIImage fwImageWithColor:[UIColor blueColor] size:CGSizeMake(20, 20)];
-        [FWImagePickerCollectionViewCell appearance].favoriteImageMargins = UIEdgeInsetsMake(6, 6, 6, 6);
-        [FWImagePickerCollectionViewCell appearance].checkboxImage = [UIImage fwImageWithColor:[UIColor redColor] size:CGSizeMake(20, 20)];
-        [FWImagePickerCollectionViewCell appearance].checkboxCheckedImage = [UIImage fwImageWithColor:[UIColor brownColor] size:CGSizeMake(20, 20)];
-        [FWImagePickerCollectionViewCell appearance].checkboxButtonMargins = UIEdgeInsetsMake(6, 6, 6, 6);
-        [FWImagePickerCollectionViewCell appearance].videoDurationLabelFont = [UIFont systemFontOfSize:12];
-        [FWImagePickerCollectionViewCell appearance].videoDurationLabelTextColor = UIColor.whiteColor;
-        [FWImagePickerCollectionViewCell appearance].videoDurationLabelMargins = UIEdgeInsetsMake(5, 5, 5, 7);
+        [FWImagePickerCollectionCell appearance].favoriteImage = [UIImage fwImageWithColor:[UIColor blueColor] size:CGSizeMake(20, 20)];
+        [FWImagePickerCollectionCell appearance].favoriteImageMargins = UIEdgeInsetsMake(6, 6, 6, 6);
+        [FWImagePickerCollectionCell appearance].checkboxImage = [UIImage fwImageWithColor:[UIColor redColor] size:CGSizeMake(20, 20)];
+        [FWImagePickerCollectionCell appearance].checkboxCheckedImage = [UIImage fwImageWithColor:[UIColor brownColor] size:CGSizeMake(20, 20)];
+        [FWImagePickerCollectionCell appearance].checkboxButtonMargins = UIEdgeInsetsMake(6, 6, 6, 6);
+        [FWImagePickerCollectionCell appearance].videoDurationLabelFont = [UIFont systemFontOfSize:12];
+        [FWImagePickerCollectionCell appearance].videoDurationLabelTextColor = UIColor.whiteColor;
+        [FWImagePickerCollectionCell appearance].videoDurationLabelMargins = UIEdgeInsetsMake(5, 5, 5, 7);
     });
 }
 
@@ -587,9 +587,9 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
 
 @end
 
-#pragma mark - FWImagePickerPreviewViewController
+#pragma mark - FWImagePickerPreviewController
 
-@implementation FWImagePickerPreviewViewController {
+@implementation FWImagePickerPreviewController {
     BOOL _singleCheckMode;
 }
 
@@ -744,8 +744,8 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
     if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewViewControllerDidCancel:)]) {
-        [self.delegate imagePickerPreviewViewControllerDidCancel:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerDidCancel:)]) {
+        [self.delegate imagePickerPreviewControllerDidCancel:self];
     }
 }
 
@@ -753,16 +753,16 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
     [FWImagePickerHelper removeSpringAnimationOfImageCheckedWithCheckboxButton:button];
     
     if (button.selected) {
-        if ([self.delegate respondsToSelector:@selector(imagePickerPreviewViewController:willUncheckImageAtIndex:)]) {
-            [self.delegate imagePickerPreviewViewController:self willUncheckImageAtIndex:self.imagePreviewView.currentImageIndex];
+        if ([self.delegate respondsToSelector:@selector(imagePickerPreviewController:willUncheckImageAtIndex:)]) {
+            [self.delegate imagePickerPreviewController:self willUncheckImageAtIndex:self.imagePreviewView.currentImageIndex];
         }
         
         button.selected = NO;
         FWAsset *imageAsset = self.imagesAssetArray[self.imagePreviewView.currentImageIndex];
         [self.selectedImageAssetArray removeObject:imageAsset];
         
-        if ([self.delegate respondsToSelector:@selector(imagePickerPreviewViewController:didUncheckImageAtIndex:)]) {
-            [self.delegate imagePickerPreviewViewController:self didUncheckImageAtIndex:self.imagePreviewView.currentImageIndex];
+        if ([self.delegate respondsToSelector:@selector(imagePickerPreviewController:didUncheckImageAtIndex:)]) {
+            [self.delegate imagePickerPreviewController:self didUncheckImageAtIndex:self.imagePreviewView.currentImageIndex];
         }
     } else {
         if ([self.selectedImageAssetArray count] >= self.maximumSelectImageCount) {
@@ -777,8 +777,8 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
             return;
         }
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewViewController:willCheckImageAtIndex:)]) {
-            [self.delegate imagePickerPreviewViewController:self willCheckImageAtIndex:self.imagePreviewView.currentImageIndex];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewController:willCheckImageAtIndex:)]) {
+            [self.delegate imagePickerPreviewController:self willCheckImageAtIndex:self.imagePreviewView.currentImageIndex];
         }
         
         button.selected = YES;
@@ -786,8 +786,8 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
         FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:self.imagePreviewView.currentImageIndex];
         [self.selectedImageAssetArray addObject:imageAsset];
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewViewController:didCheckImageAtIndex:)]) {
-            [self.delegate imagePickerPreviewViewController:self didCheckImageAtIndex:self.imagePreviewView.currentImageIndex];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewController:didCheckImageAtIndex:)]) {
+            [self.delegate imagePickerPreviewController:self didCheckImageAtIndex:self.imagePreviewView.currentImageIndex];
         }
     }
 }
@@ -924,22 +924,22 @@ static NSString * const kContentTypeOfLastAlbumKeyPrefix = @"FWContentTypeOfLast
 
 @end
 
-#pragma mark - FWImagePickerViewController
+#pragma mark - FWImagePickerController
 
 static NSString * const kVideoCellIdentifier = @"video";
 static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
-#pragma mark - FWImagePickerViewController
+#pragma mark - FWImagePickerController
 
-@interface FWImagePickerViewController ()
+@interface FWImagePickerController ()
 
-@property(nonatomic, strong) FWImagePickerPreviewViewController *imagePickerPreviewViewController;
+@property(nonatomic, strong) FWImagePickerPreviewController *imagePickerPreviewController;
 @property(nonatomic, assign) BOOL isImagesAssetLoaded;// 这个属性的作用描述：https://github.com/Tencent/FW_iOS/issues/219
 @property(nonatomic, assign) BOOL hasScrollToInitialPosition;
 @property(nonatomic, assign) BOOL canScrollToInitialPosition;// 要等数据加载完才允许滚动
 @end
 
-@implementation FWImagePickerViewController
+@implementation FWImagePickerController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
@@ -1044,12 +1044,12 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     // 通过 FWAssetGroup 获取该相册所有的图片 FWAsset，并且储存到数组中
     FWAlbumSortType albumSortType = FWAlbumSortTypePositive;
     // 从 delegate 中获取相册内容的排序方式，如果没有实现这个 delegate，则使用 FWAlbumSortType 的默认值，即最新的内容排在最后面
-    if (self.imagePickerViewControllerDelegate && [self.imagePickerViewControllerDelegate respondsToSelector:@selector(albumSortTypeForImagePickerViewController:)]) {
-        albumSortType = [self.imagePickerViewControllerDelegate albumSortTypeForImagePickerViewController:self];
+    if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(albumSortTypeForImagePickerController:)]) {
+        albumSortType = [self.imagePickerControllerDelegate albumSortTypeForImagePickerController:self];
     }
     // 遍历相册内的资源较为耗时，交给子线程去处理，因此这里需要显示 Loading
-    if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewControllerWillStartLoading:)]) {
-        [self.imagePickerViewControllerDelegate imagePickerViewControllerWillStartLoading:self];
+    if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
+        [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
     }
     if (self.shouldShowDefaultLoadingView) {
         [self fwShowLoading];
@@ -1071,8 +1071,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                         if (self.shouldShowDefaultLoadingView) {
                           [self fwHideLoading];
                         }
-                        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewControllerDidFinishLoading:)]) {
-                            [self.imagePickerViewControllerDelegate imagePickerViewControllerDidFinishLoading:self];
+                        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidFinishLoading:)]) {
+                            [self.imagePickerControllerDelegate imagePickerControllerDidFinishLoading:self];
                         }
                     }];
                 }
@@ -1082,10 +1082,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 }
 
 - (void)initPreviewViewControllerIfNeeded {
-    if (!self.imagePickerPreviewViewController) {
-        self.imagePickerPreviewViewController = [self.imagePickerViewControllerDelegate imagePickerPreviewViewControllerForImagePickerViewController:self];
-        self.imagePickerPreviewViewController.maximumSelectImageCount = self.maximumSelectImageCount;
-        self.imagePickerPreviewViewController.minimumSelectImageCount = self.minimumSelectImageCount;
+    if (!self.imagePickerPreviewController) {
+        self.imagePickerPreviewController = [self.imagePickerControllerDelegate imagePickerPreviewControllerForImagePickerController:self];
+        self.imagePickerPreviewController.maximumSelectImageCount = self.maximumSelectImageCount;
+        self.imagePickerPreviewController.minimumSelectImageCount = self.minimumSelectImageCount;
     }
 }
 
@@ -1118,7 +1118,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         isVisible = YES;
     }
     if (isVisible && self.isImagesAssetLoaded && !self.hasScrollToInitialPosition) {
-        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(albumSortTypeForImagePickerViewController:)] && [self.imagePickerViewControllerDelegate albumSortTypeForImagePickerViewController:self] == FWAlbumSortTypeReverse) {
+        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(albumSortTypeForImagePickerController:)] && [self.imagePickerControllerDelegate albumSortTypeForImagePickerController:self] == FWAlbumSortTypeReverse) {
             [_collectionView fwScrollToEdge:UIRectEdgeTop animated:NO];
         } else {
             [_collectionView fwScrollToEdge:UIRectEdgeBottom animated:NO];
@@ -1154,8 +1154,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.alwaysBounceHorizontal = NO;
         _collectionView.backgroundColor = UIColor.clearColor;
-        [_collectionView registerClass:[FWImagePickerCollectionViewCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
-        [_collectionView registerClass:[FWImagePickerCollectionViewCell class] forCellWithReuseIdentifier:kImageOrUnknownCellIdentifier];
+        [_collectionView registerClass:[FWImagePickerCollectionCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
+        [_collectionView registerClass:[FWImagePickerCollectionCell class] forCellWithReuseIdentifier:kImageOrUnknownCellIdentifier];
         if (@available(iOS 11, *)) {
             _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
@@ -1261,7 +1261,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     } else {
         identifier = kImageOrUnknownCellIdentifier;
     }
-    FWImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    FWImagePickerCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [cell renderWithAsset:imageAsset referenceSize:[self referenceImageSize]];
     
     cell.fwTempObject = indexPath;
@@ -1276,33 +1276,33 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     FWAsset *imageAsset = self.imagesAssetArray[indexPath.item];
-    if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:didSelectImageWithImagesAsset:afterImagePickerPreviewViewControllerUpdate:)]) {
-        [self.imagePickerViewControllerDelegate imagePickerViewController:self didSelectImageWithImagesAsset:imageAsset afterImagePickerPreviewViewControllerUpdate:self.imagePickerPreviewViewController];
+    if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:didSelectImageWithImagesAsset:afterImagePickerPreviewControllerUpdate:)]) {
+        [self.imagePickerControllerDelegate imagePickerController:self didSelectImageWithImagesAsset:imageAsset afterImagePickerPreviewControllerUpdate:self.imagePickerPreviewController];
     }
-    if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerPreviewViewControllerForImagePickerViewController:)]) {
+    if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerForImagePickerController:)]) {
         [self initPreviewViewControllerIfNeeded];
         if (!self.allowsMultipleSelection) {
             // 单选的情况下
-            [self.imagePickerPreviewViewController updateImagePickerPreviewViewWithImagesAssetArray:@[imageAsset].mutableCopy
+            [self.imagePickerPreviewController updateImagePickerPreviewViewWithImagesAssetArray:@[imageAsset].mutableCopy
                                                                         selectedImageAssetArray:nil
                                                                               currentImageIndex:0
                                                                                 singleCheckMode:YES];
         } else {
             // cell 处于编辑状态，即图片允许多选
-            [self.imagePickerPreviewViewController updateImagePickerPreviewViewWithImagesAssetArray:self.imagesAssetArray
+            [self.imagePickerPreviewController updateImagePickerPreviewViewWithImagesAssetArray:self.imagesAssetArray
                                                                         selectedImageAssetArray:self.selectedImageAssetArray
                                                                               currentImageIndex:indexPath.item
                                                                                 singleCheckMode:NO];
         }
-        [self.navigationController pushViewController:self.imagePickerPreviewViewController animated:YES];
+        [self.navigationController pushViewController:self.imagePickerPreviewController animated:YES];
     }
 }
 
 #pragma mark - 按钮点击回调
 
 - (void)handleSendButtonClick:(id)sender {
-    if (self.imagePickerViewControllerDelegate && [self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:didFinishPickingImageWithImagesAssetArray:)]) {
-        [self.imagePickerViewControllerDelegate imagePickerViewController:self didFinishPickingImageWithImagesAssetArray:self.selectedImageAssetArray];
+    if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingImageWithImagesAssetArray:)]) {
+        [self.imagePickerControllerDelegate imagePickerController:self didFinishPickingImageWithImagesAssetArray:self.selectedImageAssetArray];
     }
     [self.selectedImageAssetArray removeAllObjects];
     [self dismissViewControllerAnimated:YES completion:NULL];
@@ -1311,17 +1311,17 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 - (void)handlePreviewButtonClick:(id)sender {
     [self initPreviewViewControllerIfNeeded];
     // 手工更新图片预览界面
-    [self.imagePickerPreviewViewController updateImagePickerPreviewViewWithImagesAssetArray:[self.selectedImageAssetArray copy]
+    [self.imagePickerPreviewController updateImagePickerPreviewViewWithImagesAssetArray:[self.selectedImageAssetArray copy]
                                                                 selectedImageAssetArray:self.selectedImageAssetArray
                                                                       currentImageIndex:0
                                                                         singleCheckMode:NO];
-    [self.navigationController pushViewController:self.imagePickerPreviewViewController animated:YES];
+    [self.navigationController pushViewController:self.imagePickerPreviewController animated:YES];
 }
 
 - (void)handleCancelPickerImage:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^() {
-        if (self.imagePickerViewControllerDelegate && [self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewControllerDidCancel:)]) {
-            [self.imagePickerViewControllerDelegate imagePickerViewControllerDidCancel:self];
+        if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidCancel:)]) {
+            [self.imagePickerControllerDelegate imagePickerControllerDidCancel:self];
         }
         [self.selectedImageAssetArray removeAllObjects];
     }];
@@ -1329,23 +1329,23 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)handleCheckBoxButtonClick:(UIButton *)checkboxButton {
     NSIndexPath *indexPath = checkboxButton.fwTempObject;
-    if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:shouldCheckImageAtIndex:)] && ![self.imagePickerViewControllerDelegate imagePickerViewController:self shouldCheckImageAtIndex:indexPath.item]) {
+    if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:shouldCheckImageAtIndex:)] && ![self.imagePickerControllerDelegate imagePickerController:self shouldCheckImageAtIndex:indexPath.item]) {
         return;
     }
     
-    FWImagePickerCollectionViewCell *cell = (FWImagePickerCollectionViewCell *)[_collectionView cellForItemAtIndexPath:indexPath];
+    FWImagePickerCollectionCell *cell = (FWImagePickerCollectionCell *)[_collectionView cellForItemAtIndexPath:indexPath];
     FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:indexPath.item];
     if (cell.checked) {
         // 移除选中状态
-        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:willUncheckImageAtIndex:)]) {
-            [self.imagePickerViewControllerDelegate imagePickerViewController:self willUncheckImageAtIndex:indexPath.item];
+        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:willUncheckImageAtIndex:)]) {
+            [self.imagePickerControllerDelegate imagePickerController:self willUncheckImageAtIndex:indexPath.item];
         }
         
         cell.checked = NO;
         [self.selectedImageAssetArray removeObject:imageAsset];
         
-        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:didUncheckImageAtIndex:)]) {
-            [self.imagePickerViewControllerDelegate imagePickerViewController:self didUncheckImageAtIndex:indexPath.item];
+        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:didUncheckImageAtIndex:)]) {
+            [self.imagePickerControllerDelegate imagePickerController:self didUncheckImageAtIndex:indexPath.item];
         }
         
         // 根据选择图片数控制预览和发送按钮的 enable，以及修改已选中的图片数
@@ -1364,15 +1364,15 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             return;
         }
         
-        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:willCheckImageAtIndex:)]) {
-            [self.imagePickerViewControllerDelegate imagePickerViewController:self willCheckImageAtIndex:indexPath.item];
+        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:willCheckImageAtIndex:)]) {
+            [self.imagePickerControllerDelegate imagePickerController:self willCheckImageAtIndex:indexPath.item];
         }
         
         cell.checked = YES;
         [self.selectedImageAssetArray addObject:imageAsset];
         
-        if ([self.imagePickerViewControllerDelegate respondsToSelector:@selector(imagePickerViewController:didCheckImageAtIndex:)]) {
-            [self.imagePickerViewControllerDelegate imagePickerViewController:self didCheckImageAtIndex:indexPath.item];
+        if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:didCheckImageAtIndex:)]) {
+            [self.imagePickerControllerDelegate imagePickerController:self didCheckImageAtIndex:indexPath.item];
         }
         
         // 根据选择图片数控制预览和发送按钮的 enable，以及修改已选中的图片数
@@ -1403,7 +1403,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 - (void)requestImageWithIndexPath:(NSIndexPath *)indexPath {
     // 发出请求获取大图，如果图片在 iCloud，则会发出网络请求下载图片。这里同时保存请求 id，供取消请求使用
     FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:indexPath.item];
-    FWImagePickerCollectionViewCell *cell = (FWImagePickerCollectionViewCell *)[_collectionView cellForItemAtIndexPath:indexPath];
+    FWImagePickerCollectionCell *cell = (FWImagePickerCollectionCell *)[_collectionView cellForItemAtIndexPath:indexPath];
     imageAsset.requestID = [imageAsset requestOriginImageWithCompletion:^(UIImage *result, NSDictionary *info) {
         
         BOOL downloadSucceed = (result && !info) || (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
@@ -1436,7 +1436,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                 if (cell.downloadStatus != FWAssetDownloadStatusDownloading) {
                     cell.downloadStatus = FWAssetDownloadStatusDownloading;
                     // 预先设置预览界面的下载状态
-                    self.imagePickerPreviewViewController.downloadStatus = FWAssetDownloadStatusDownloading;
+                    self.imagePickerPreviewController.downloadStatus = FWAssetDownloadStatusDownloading;
                 }
                 if (error) {
                     cell.downloadStatus = FWAssetDownloadStatusFailed;

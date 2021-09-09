@@ -10,14 +10,14 @@
 
 @class QDMultipleImagePickerPreviewViewController;
 
-@protocol QDMultipleImagePickerPreviewViewControllerDelegate <FWImagePickerPreviewViewControllerDelegate>
+@protocol QDMultipleImagePickerPreviewViewControllerDelegate <FWImagePickerPreviewControllerDelegate>
 
 @required
-- (void)imagePickerPreviewViewController:(QDMultipleImagePickerPreviewViewController *)imagePickerPreviewViewController sendImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray;
+- (void)imagePickerPreviewController:(QDMultipleImagePickerPreviewViewController *)imagePickerPreviewController sendImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray;
 
 @end
 
-@interface QDMultipleImagePickerPreviewViewController : FWImagePickerPreviewViewController
+@interface QDMultipleImagePickerPreviewViewController : FWImagePickerPreviewController
 
 @property(nonatomic, weak) id<QDMultipleImagePickerPreviewViewControllerDelegate> delegate;
 @property(nonatomic, strong) UILabel *imageCountLabel;
@@ -122,13 +122,13 @@
 
 - (void)handleSendButtonClick:(id)sender {
     [self.navigationController dismissViewControllerAnimated:YES completion:^(void) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewViewController:sendImageWithImagesAssetArray:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewController:sendImageWithImagesAssetArray:)]) {
             if (self.selectedImageAssetArray.count == 0) {
                 // 如果没选中任何一张，则点击发送按钮直接发送当前这张大图
                 FWAsset *currentAsset = self.imagesAssetArray[self.imagePreviewView.currentImageIndex];
                 [self.selectedImageAssetArray addObject:currentAsset];
             }
-            [self.delegate imagePickerPreviewViewController:self sendImageWithImagesAssetArray:self.selectedImageAssetArray];
+            [self.delegate imagePickerPreviewController:self sendImageWithImagesAssetArray:self.selectedImageAssetArray];
         }
     }];
 }
@@ -189,7 +189,7 @@
 
 static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
 
-@interface TestImagePickerViewController () <FWTableViewController, FWAlbumViewControllerDelegate, FWImagePickerViewControllerDelegate, QDMultipleImagePickerPreviewViewControllerDelegate>
+@interface TestImagePickerViewController () <FWTableViewController, FWImageAlbumControllerDelegate, FWImagePickerControllerDelegate, QDMultipleImagePickerPreviewViewControllerDelegate>
 
 @property(nonatomic, strong) UIImage *selectedAvatarImage;
 
@@ -220,23 +220,23 @@ static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
 - (void)presentAlbumViewControllerWithTitle:(NSString *)title {
     
     // 创建一个 QMUIAlbumViewController 实例用于呈现相簿列表
-    FWAlbumViewController *albumViewController = [[FWAlbumViewController alloc] init];
-    albumViewController.albumViewControllerDelegate = self;
-    albumViewController.contentType = kAlbumContentType;
-    albumViewController.title = title;
+    FWImageAlbumController *albumController = [[FWImageAlbumController alloc] init];
+    albumController.albumControllerDelegate = self;
+    albumController.contentType = kAlbumContentType;
+    albumController.title = title;
     if ([title isEqualToString:@"选择多张图片"]) {
-        albumViewController.view.tag = MultipleImagePickingTag;
+        albumController.view.tag = MultipleImagePickingTag;
     } else if ([title isEqualToString:@"调整界面"]) {
-        albumViewController.view.tag = ModifiedImagePickingTag;
-        albumViewController.albumTableViewCellHeight = 70;
+        albumController.view.tag = ModifiedImagePickingTag;
+        albumController.albumTableViewCellHeight = 70;
     } else {
-        albumViewController.view.tag = NormalImagePickingTag;
+        albumController.view.tag = NormalImagePickingTag;
     }
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:albumViewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:albumController];
     
     // 获取最近发送图片时使用过的相簿，如果有则直接进入该相簿
-    [albumViewController pickLastAlbumGroupDirectlyIfCan];
+    [albumController pickLastAlbumGroupDirectlyIfCan];
     
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
@@ -261,63 +261,63 @@ static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
 
 #pragma mark - <QMUIAlbumViewControllerDelegate>
 
-- (FWImagePickerViewController *)imagePickerViewControllerForAlbumViewController:(FWAlbumViewController *)albumViewController {
-    FWImagePickerViewController *imagePickerViewController = [[FWImagePickerViewController alloc] init];
-    imagePickerViewController.imagePickerViewControllerDelegate = self;
-    imagePickerViewController.maximumSelectImageCount = MaxSelectedImageCount;
-    imagePickerViewController.view.tag = albumViewController.view.tag;
-    if (albumViewController.view.tag == ModifiedImagePickingTag) {
-        imagePickerViewController.minimumImageWidth = 65;
+- (FWImagePickerController *)imagePickerControllerForAlbumController:(FWImageAlbumController *)albumController {
+    FWImagePickerController *imagePickerController = [[FWImagePickerController alloc] init];
+    imagePickerController.imagePickerControllerDelegate = self;
+    imagePickerController.maximumSelectImageCount = MaxSelectedImageCount;
+    imagePickerController.view.tag = albumController.view.tag;
+    if (albumController.view.tag == ModifiedImagePickingTag) {
+        imagePickerController.minimumImageWidth = 65;
     }
-    return imagePickerViewController;
+    return imagePickerController;
 }
 
 #pragma mark - <QMUIImagePickerViewControllerDelegate>
 
-- (void)imagePickerViewController:(FWImagePickerViewController *)imagePickerViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray {
+- (void)imagePickerController:(FWImagePickerController *)imagePickerController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray {
     // 储存最近选择了图片的相册，方便下次直接进入该相册
-    [FWImagePickerHelper updateLastestAlbumWithAssetsGroup:imagePickerViewController.assetsGroup ablumContentType:kAlbumContentType userIdentify:nil];
+    [FWImagePickerHelper updateLastestAlbumWithAssetsGroup:imagePickerController.assetsGroup ablumContentType:kAlbumContentType userIdentify:nil];
     
     [self sendImageWithImagesAssetArray:imagesAssetArray];
 }
 
-- (FWImagePickerPreviewViewController *)imagePickerPreviewViewControllerForImagePickerViewController:(FWImagePickerViewController *)imagePickerViewController {
-    if (imagePickerViewController.view.tag == MultipleImagePickingTag) {
-        QDMultipleImagePickerPreviewViewController *imagePickerPreviewViewController = [[QDMultipleImagePickerPreviewViewController alloc] init];
-        imagePickerPreviewViewController.delegate = self;
-        imagePickerPreviewViewController.maximumSelectImageCount = MaxSelectedImageCount;
-        imagePickerPreviewViewController.assetsGroup = imagePickerViewController.assetsGroup;
-        imagePickerPreviewViewController.view.tag = imagePickerViewController.view.tag;
-        return imagePickerPreviewViewController;
-    } else if (imagePickerViewController.view.tag == ModifiedImagePickingTag) {
-        FWImagePickerPreviewViewController *imagePickerPreviewViewController = [[FWImagePickerPreviewViewController alloc] init];
-        imagePickerPreviewViewController.delegate = self;
-        imagePickerPreviewViewController.view.tag = imagePickerViewController.view.tag;
-        imagePickerPreviewViewController.toolBarBackgroundColor = FWColorRgb(66, 66, 66);
-        return imagePickerPreviewViewController;
+- (FWImagePickerPreviewController *)imagePickerPreviewControllerForImagePickerController:(FWImagePickerController *)imagePickerController {
+    if (imagePickerController.view.tag == MultipleImagePickingTag) {
+        QDMultipleImagePickerPreviewViewController *imagePickerPreviewController = [[QDMultipleImagePickerPreviewViewController alloc] init];
+        imagePickerPreviewController.delegate = self;
+        imagePickerPreviewController.maximumSelectImageCount = MaxSelectedImageCount;
+        imagePickerPreviewController.assetsGroup = imagePickerController.assetsGroup;
+        imagePickerPreviewController.view.tag = imagePickerController.view.tag;
+        return imagePickerPreviewController;
+    } else if (imagePickerController.view.tag == ModifiedImagePickingTag) {
+        FWImagePickerPreviewController *imagePickerPreviewController = [[FWImagePickerPreviewController alloc] init];
+        imagePickerPreviewController.delegate = self;
+        imagePickerPreviewController.view.tag = imagePickerController.view.tag;
+        imagePickerPreviewController.toolBarBackgroundColor = FWColorRgb(66, 66, 66);
+        return imagePickerPreviewController;
     } else {
-        FWImagePickerPreviewViewController *imagePickerPreviewViewController = [[FWImagePickerPreviewViewController alloc] init];
-        imagePickerPreviewViewController.delegate = self;
-        imagePickerPreviewViewController.view.tag = imagePickerViewController.view.tag;
-        return imagePickerPreviewViewController;
+        FWImagePickerPreviewController *imagePickerPreviewController = [[FWImagePickerPreviewController alloc] init];
+        imagePickerPreviewController.delegate = self;
+        imagePickerPreviewController.view.tag = imagePickerController.view.tag;
+        return imagePickerPreviewController;
     }
 }
 
 #pragma mark - <QMUIImagePickerPreviewViewControllerDelegate>
 
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController didCheckImageAtIndex:(NSInteger)index {
-    [self updateImageCountLabelForPreviewView:imagePickerPreviewViewController];
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didCheckImageAtIndex:(NSInteger)index {
+    [self updateImageCountLabelForPreviewView:imagePickerPreviewController];
 }
 
-- (void)imagePickerPreviewViewController:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController didUncheckImageAtIndex:(NSInteger)index {
-    [self updateImageCountLabelForPreviewView:imagePickerPreviewViewController];
+- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didUncheckImageAtIndex:(NSInteger)index {
+    [self updateImageCountLabelForPreviewView:imagePickerPreviewController];
 }
 
 // 更新选中的图片数量
-- (void)updateImageCountLabelForPreviewView:(FWImagePickerPreviewViewController *)imagePickerPreviewViewController {
-    if (imagePickerPreviewViewController.view.tag == MultipleImagePickingTag) {
-        QDMultipleImagePickerPreviewViewController *customImagePickerPreviewViewController = (QDMultipleImagePickerPreviewViewController *)imagePickerPreviewViewController;
-        NSUInteger selectedCount = [imagePickerPreviewViewController.selectedImageAssetArray count];
+- (void)updateImageCountLabelForPreviewView:(FWImagePickerPreviewController *)imagePickerPreviewController {
+    if (imagePickerPreviewController.view.tag == MultipleImagePickingTag) {
+        QDMultipleImagePickerPreviewViewController *customImagePickerPreviewViewController = (QDMultipleImagePickerPreviewViewController *)imagePickerPreviewController;
+        NSUInteger selectedCount = [imagePickerPreviewController.selectedImageAssetArray count];
         if (selectedCount > 0) {
             customImagePickerPreviewViewController.imageCountLabel.text = [[NSString alloc] initWithFormat:@"%@", @(selectedCount)];
             customImagePickerPreviewViewController.imageCountLabel.hidden = NO;
@@ -330,9 +330,9 @@ static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
 
 #pragma mark - <QDMultipleImagePickerPreviewViewControllerDelegate>
 
-- (void)imagePickerPreviewViewController:(QDMultipleImagePickerPreviewViewController *)imagePickerPreviewViewController sendImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray {
+- (void)imagePickerPreviewController:(QDMultipleImagePickerPreviewViewController *)imagePickerPreviewController sendImageWithImagesAssetArray:(NSMutableArray<FWAsset *> *)imagesAssetArray {
     // 储存最近选择了图片的相册，方便下次直接进入该相册
-    [FWImagePickerHelper updateLastestAlbumWithAssetsGroup:imagePickerPreviewViewController.assetsGroup ablumContentType:kAlbumContentType userIdentify:nil];
+    [FWImagePickerHelper updateLastestAlbumWithAssetsGroup:imagePickerPreviewController.assetsGroup ablumContentType:kAlbumContentType userIdentify:nil];
     
     [self sendImageWithImagesAssetArray:imagesAssetArray];
 }
