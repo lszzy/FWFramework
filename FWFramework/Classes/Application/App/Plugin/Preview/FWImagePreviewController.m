@@ -668,7 +668,13 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 }
                 
                 NSInteger sourceImageIndex = animator.imagePreviewViewController.imagePreviewView.currentImageIndex;
-                CGFloat cornerRadius = animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView ? animator.imagePreviewViewController.sourceImageView(sourceImageIndex).layer.cornerRadius : MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
+                CGFloat cornerRadius = MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
+                if (animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView) {
+                    UIView *sourceImageView = animator.imagePreviewViewController.sourceImageView(sourceImageIndex);
+                    if ([sourceImageView isKindOfClass:[UIView class]]) {
+                        cornerRadius = sourceImageView.layer.cornerRadius;
+                    }
+                }
                 cornerRadius = cornerRadius / maskFinalRatio;
                 CGFloat fromCornerRadius = isPresenting ? cornerRadius : 0;
                 CGFloat toCornerRadius = isPresenting ? 0 : cornerRadius;
@@ -755,9 +761,11 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
         if (self.imagePreviewViewController.sourceImageRect) {
             sourceImageRect = [self.imagePreviewViewController.view convertRect:self.imagePreviewViewController.sourceImageRect(currentImageIndex) fromView:nil];
         } else if (self.imagePreviewViewController.sourceImageView) {
-            UIView *sourceImageView = self.imagePreviewViewController.sourceImageView(currentImageIndex);
-            if (sourceImageView) {
-                sourceImageRect = [self.imagePreviewViewController.view convertRect:sourceImageView.frame fromView:sourceImageView.superview];
+            id sourceImageView = self.imagePreviewViewController.sourceImageView(currentImageIndex);
+            if ([sourceImageView isKindOfClass:[UIView class]]) {
+                sourceImageRect = [self.imagePreviewViewController.view convertRect:((UIView *)sourceImageView).frame fromView:((UIView *)sourceImageView).superview];
+            } else if ([sourceImageView isKindOfClass:[NSValue class]]) {
+                sourceImageRect = [self.imagePreviewViewController.view convertRect:((NSValue *)sourceImageView).CGRectValue fromView:nil];
             }
         }
         if (!CGRectEqualToRect(sourceImageRect, CGRectZero) && !CGRectIntersectsRect(sourceImageRect, self.imagePreviewViewController.view.bounds)) {

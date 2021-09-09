@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 单例模式
 @property (class, nonatomic, readonly) FWImagePreviewPluginImpl *sharedInstance;
 
+/// 图片预览自定义句柄，show方法自动调用
+@property (nonatomic, copy, nullable) void (^customBlock)(FWImagePreviewController *previewController);
+
 @end
 
 NS_ASSUME_NONNULL_END

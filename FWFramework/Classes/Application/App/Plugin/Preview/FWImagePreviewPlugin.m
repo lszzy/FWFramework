@@ -8,7 +8,65 @@
  */
 
 #import "FWImagePreviewPlugin.h"
+#import "FWImagePreviewPluginImpl.h"
+#import "FWPlugin.h"
+#import "FWToolkit.h"
 
-@implementation UIViewController (FWImagePreviewPlugin)
+#pragma mark - FWImagePreviewPluginController
+
+@implementation UIViewController (FWImagePreviewPluginController)
+
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(id  _Nullable (^)(NSInteger))sourceView
+{
+    [self fwShowImagePreviewWithImageURLs:imageURLs
+                             currentIndex:currentIndex
+                               sourceView:sourceView
+                         placeholderImage:nil
+                              customBlock:nil];
+}
+
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(id  _Nullable (^)(NSInteger))sourceView
+                       placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+                            customBlock:(void (^)(id _Nonnull))customBlock
+{
+    // 优先调用插件，不存在时使用默认
+    id<FWImagePreviewPlugin> imagePreviewPlugin = [FWPluginManager loadPlugin:@protocol(FWImagePreviewPlugin)];
+    if (!imagePreviewPlugin || ![imagePreviewPlugin respondsToSelector:@selector(fwViewController:showImagePreview:currentIndex:sourceView:placeholderImage:customBlock:)]) {
+        imagePreviewPlugin = FWImagePreviewPluginImpl.sharedInstance;
+    }
+    [imagePreviewPlugin fwViewController:self showImagePreview:imageURLs currentIndex:currentIndex sourceView:sourceView placeholderImage:placeholderImage customBlock:customBlock];
+}
+
+@end
+
+@implementation UIView (FWImagePreviewPluginController)
+
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(id  _Nullable (^)(NSInteger))sourceView
+{
+    UIViewController *ctrl = self.fwViewController;
+    [ctrl fwShowImagePreviewWithImageURLs:imageURLs
+                             currentIndex:currentIndex
+                               sourceView:sourceView];
+}
+
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(id  _Nullable (^)(NSInteger))sourceView
+                       placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+                            customBlock:(void (^)(id _Nonnull))customBlock
+{
+    UIViewController *ctrl = self.fwViewController;
+    [ctrl fwShowImagePreviewWithImageURLs:imageURLs
+                             currentIndex:currentIndex
+                               sourceView:sourceView
+                         placeholderImage:placeholderImage
+                              customBlock:customBlock];
+}
 
 @end
