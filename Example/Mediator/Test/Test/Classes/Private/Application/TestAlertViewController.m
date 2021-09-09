@@ -112,8 +112,8 @@
 {
     [self fwShowConfirmWithTitle:@"确认框标题"
                          message:@"确认框消息"
-                          cancel:@"取消"
-                         confirm:@"确定"
+                          cancel:nil
+                         confirm:nil
                     confirmBlock:^{
                         NSLog(@"点击了确定按钮");
                     }];
@@ -123,7 +123,7 @@
 {
     [self fwShowConfirmWithTitle:@"确认框标题"
                          message:@"确认框消息"
-                          cancel:@"取消"
+                          cancel:nil
                          confirm:@"我是很长的确定按钮"
                     confirmBlock:^{
                         NSLog(@"点击了确定按钮");
@@ -138,8 +138,8 @@
 {
     [self fwShowPromptWithTitle:@"输入框标题"
                         message:@"输入框消息"
-                         cancel:@"取消"
-                        confirm:@"确定"
+                         cancel:nil
+                        confirm:nil
                    confirmBlock:^(NSString *text){
                        NSLog(@"输入内容：%@", text);
                    }];
@@ -149,8 +149,8 @@
 {
     [self fwShowPromptWithTitle:@"输入框标题"
                         message:@"输入框消息"
-                         cancel:@"取消"
-                        confirm:@"确定"
+                         cancel:nil
+                        confirm:nil
                     promptBlock:^(UITextField *textField){
                         textField.placeholder = @"请输入密码";
                         textField.secureTextEntry = YES;
@@ -168,8 +168,8 @@
 {
     [self fwShowPromptWithTitle:@"输入框标题"
                         message:@"输入框消息"
-                         cancel:@"取消"
-                        confirm:@"确定"
+                         cancel:nil
+                        confirm:nil
                     promptCount:2
                     promptBlock:^(UITextField *textField, NSInteger index) {
                         if (index == 0) {

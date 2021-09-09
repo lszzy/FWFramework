@@ -52,11 +52,20 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
 @required
 
 /**
+ *  显示警告框(精简版)，默认关闭按钮
+ *
+ *  @param title       警告框标题
+ *  @param message   警告框消息
+ */
+- (void)fwShowAlertWithTitle:(nullable id)title
+                     message:(nullable id)message;
+
+/**
  *  显示警告框(简单版)
  *
  *  @param title       警告框标题
  *  @param message     警告框消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，默认关闭
  *  @param cancelBlock 取消按钮事件
  */
 - (void)fwShowAlertWithTitle:(nullable id)title
@@ -69,7 +78,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title       警告框标题
  *  @param message     警告框消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，默认单按钮关闭，多按钮取消
  *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
@@ -88,8 +97,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        确认框标题
  *  @param message      确认框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，默认取消
+ *  @param confirm      确认按钮文字，默认确定
  *  @param confirmBlock 确认按钮事件
  */
 - (void)fwShowConfirmWithTitle:(nullable id)title
@@ -103,8 +112,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        确认框标题
  *  @param message      确认框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，默认取消
+ *  @param confirm      确认按钮文字，默认确定
  *  @param confirmBlock 确认按钮事件
  *  @param cancelBlock  取消按钮事件
  *  @param priority     警告框优先级
@@ -122,8 +131,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        输入框标题
  *  @param message      输入框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，默认取消
+ *  @param confirm      确认按钮文字，默认确定
  *  @param confirmBlock 确认按钮事件，参数为输入值
  */
 - (void)fwShowPromptWithTitle:(nullable id)title
@@ -137,8 +146,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        输入框标题
  *  @param message      输入框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，默认取消
+ *  @param confirm      确认按钮文字，默认确定
  *  @param promptBlock  输入框初始化事件，参数为输入框
  *  @param confirmBlock 确认按钮事件，参数为输入值
  *  @param cancelBlock  取消按钮事件
@@ -158,8 +167,8 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title        输入框标题
  *  @param message      输入框消息
- *  @param cancel       取消按钮文字
- *  @param confirm      确认按钮文字
+ *  @param cancel       取消按钮文字，默认取消
+ *  @param confirm      确认按钮文字，默认确定
  *  @param promptCount  输入框数量
  *  @param promptBlock  输入框初始化事件，参数为输入框和索引index
  *  @param confirmBlock 确认按钮事件，参数为输入值数组
@@ -181,7 +190,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title       操作表标题
  *  @param message     操作表消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，默认取消
  *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  */
@@ -196,7 +205,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *
  *  @param title       操作表标题
  *  @param message     操作表消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，默认取消
  *  @param actions     动作按钮标题列表
  *  @param actionBlock 动作按钮点击事件，参数为索引index
  *  @param cancelBlock 取消按钮事件
@@ -216,7 +225,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param style       弹出框样式
  *  @param title       操作表标题
  *  @param message     操作表消息
- *  @param cancel      取消按钮标题
+ *  @param cancel      取消按钮标题，无默认值
  *  @param actions     动作按钮标题列表
  *  @param promptCount 输入框数量
  *  @param promptBlock 输入框初始化事件，参数为输入框和索引index

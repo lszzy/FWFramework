@@ -82,7 +82,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onLogout() {
-        fwShowConfirm(withTitle: FWLocalizedString("logoutConfirm"), message: nil, cancel: FWLocalizedString("取消"), confirm: FWLocalizedString("确定")) { [weak self] in
+        fwShowConfirm(withTitle: FWLocalizedString("logoutConfirm"), message: nil, cancel: nil, confirm: nil) { [weak self] in
             Mediator.userModule.logout {
                 self?.renderData()
             }

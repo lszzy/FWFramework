@@ -543,7 +543,7 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
     BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
     //Prepare the localized options
-    NSString *cancelButtonTitle = [FWFrameworkBundle localizedString:@"取消"];
+    NSString *cancelButtonTitle = _cancelButtonTitle ?: [FWFrameworkBundle localizedString:@"取消"];
     NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : [FWFrameworkBundle localizedString:@"原有"];
     
     //Prepare the list that will be fed to the alert view/controller
