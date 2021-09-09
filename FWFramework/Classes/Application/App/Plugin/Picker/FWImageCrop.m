@@ -7,7 +7,7 @@
  @updated    2020/6/22
  */
 
-#import "FWCropViewController.h"
+#import "FWImageCrop.h"
 #import "UIImagePickerController+FWFramework.h"
 #import "FWLanguage.h"
 

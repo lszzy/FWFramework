@@ -12,6 +12,8 @@
 #import "FWEmptyPluginImpl.h"
 #import "FWRefreshPluginImpl.h"
 #import "FWToastPluginImpl.h"
+#import "FWImagePickerPluginImpl.h"
+#import "FWImagePreviewPluginImpl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
