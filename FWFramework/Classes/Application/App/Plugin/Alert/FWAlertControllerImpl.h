@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 弹窗自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(FWAlertController *alertController);
 
-/// 显示自定义视图弹窗
+/// 显示自定义视图弹窗，无默认按钮
 - (void)fwViewController:(UIViewController *)viewController
                showAlert:(UIAlertControllerStyle)style
               headerView:(UIView *)headerView
