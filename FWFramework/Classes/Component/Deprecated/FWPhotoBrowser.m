@@ -307,6 +307,7 @@
     _urlString = urlString;
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
+    if ([urlString isKindOfClass:[NSURL class]]) urlString = ((NSURL *)urlString).absoluteString;
     if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
         self.progress = 0.01;
         // 优先使用插件，否则使用默认
@@ -690,6 +691,12 @@
         if ([v isKindOfClass:[NSValue class]]) {
             rect = [((NSValue *)v) CGRectValue];
         }
+    } else if (self.sourceImageView) {
+        id v = self.sourceImageView(_currentPage);
+        endView = [v isKindOfClass:[UIView class]] ? (UIView *)v : nil;
+        if ([v isKindOfClass:[NSValue class]]) {
+            rect = [((NSValue *)v) CGRectValue];
+        }
     }
     if (endView.superview != nil) {
         rect = [endView convertRect:endView.bounds toView:nil];
@@ -810,9 +817,13 @@
     // 1. 判断是否实现图片大小的方法
     if ([_delegate respondsToSelector:@selector(photoBrowser:imageSizeForIndex:)]) {
         view.pictureSize = [_delegate photoBrowser:self imageSizeForIndex:index];
-    }else if ([_delegate respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
+    } else if ([_delegate respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
         UIImage *image = [_delegate photoBrowser:self placeholderImageForIndex:index];
-        // 2. 如果没有实现，判断是否有默认图片，获取默认图片大小
+        // 2.1. 如果没有实现，判断是否有默认图片，获取默认图片大小
+        view.pictureSize = image != nil ? image.size : defaultSize;
+    } else if (self.placeholderImage) {
+        UIImage *image = self.placeholderImage(index);
+        // 2.2. 如果没有实现，判断是否有默认图片，获取默认图片大小
         view.pictureSize = image != nil ? image.size : defaultSize;
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:viewForIndex:)]) {
         id v = [_delegate photoBrowser:self viewForIndex:index];
@@ -824,7 +835,17 @@
         }else {
             view.pictureSize = defaultSize;
         }
-    }else {
+    } else if (self.sourceImageView) {
+        id v = self.sourceImageView(index);
+        if (v && [v isKindOfClass:[UIImageView class]]) {
+            UIImage *image = ((UIImageView *)v).image;
+            view.pictureSize = image != nil ? image.size : defaultSize;
+            // 并且设置占位图片
+            view.placeholderImage = image;
+        }else {
+            view.pictureSize = defaultSize;
+        }
+    } else {
         // 3. 如果都没有就设置为屏幕宽度，待下载完成之后再次计算
         view.pictureSize = defaultSize;
     }
@@ -832,6 +853,8 @@
     // 设置占位图
     if ([_delegate respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
         view.placeholderImage = [_delegate photoBrowser:self placeholderImageForIndex:index];
+    } else if (self.placeholderImage) {
+        view.placeholderImage = self.placeholderImage(index);
     }
     
     if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
@@ -913,6 +936,40 @@
     if ([_delegate respondsToSelector:@selector(photoBrowser:finishLoadPhotoView:)]) {
         [_delegate photoBrowser:self finishLoadPhotoView:photoView];
     }
+}
+
+@end
+
+#pragma mark - FWPhotoBrowserPlugin
+
+@implementation FWPhotoBrowserPlugin
+
++ (FWPhotoBrowserPlugin *)sharedInstance
+{
+    static FWPhotoBrowserPlugin *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[FWPhotoBrowserPlugin alloc] init];
+    });
+    return instance;
+}
+
+- (void)fwViewController:(UIViewController *)viewController
+        showImagePreview:(NSArray *)imageURLs
+            currentIndex:(NSInteger)currentIndex
+              sourceView:(id  _Nullable (^)(NSInteger))sourceView
+        placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+             customBlock:(void (^)(id _Nonnull))customBlock
+{
+    FWPhotoBrowser *photoBrowser = [[FWPhotoBrowser alloc] init];
+    photoBrowser.pictureUrls = imageURLs;
+    photoBrowser.currentIndex = currentIndex;
+    photoBrowser.placeholderImage = placeholderImage;
+    photoBrowser.sourceImageView = sourceView;
+    
+    if (customBlock) customBlock(photoBrowser);
+    UIView *fromView = sourceView ? sourceView(currentIndex) : nil;
+    [photoBrowser showFromView:[fromView isKindOfClass:[UIView class]] ? fromView : nil];
 }
 
 @end
