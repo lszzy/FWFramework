@@ -8,31 +8,11 @@
 
 import FWFramework
 
-@objcMembers class TestAssetViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate, FWImagePreviewViewDelegate {
+@objcMembers class TestAssetViewController: TestViewController, FWTableViewController {
     var albums: [FWAssetGroup] = []
     var photos: [FWAsset] = []
     var isAlbum: Bool = false
     var album: FWAssetGroup = FWAssetGroup()
-    var isPreview: Bool = true
-    
-    private lazy var photoBrowser: FWPhotoBrowser = {
-        let result = FWPhotoBrowser()
-        result.delegate = self
-        return result
-    }()
-    
-    private lazy var imagePreview: FWImagePreviewController = {
-        let result = FWImagePreviewController()
-        result.imagePreviewView.delegate = self
-        result.showsPageLabel = true
-        result.dismissingWhenTapped = true
-        result.presentingStyle = .zoom
-        result.sourceImageView = { [weak self] index in
-            let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0))
-            return cell?.imageView
-        }
-        return result
-    }()
     
     override func renderModel() {
         if isAlbum {
@@ -59,10 +39,13 @@ import FWFramework
     }
     
     private func loadPhotos() {
-        fwSetRightBarItem(FWIcon.refreshImage) { [weak self] sender in
-            let isPreview = self?.isPreview ?? false
-            self?.fwShowSheet(withTitle: nil, message: nil, cancel: "取消", actions: ["\(isPreview ? "- " : "")FWImagePreview", "\(isPreview ? "" : "- ")FWPhotoBrowser"]) { index in
-                self?.isPreview = index == 0 ? true : false
+        fwSetRightBarItem("切换") { sender in
+            let plugin = FWPluginManager.loadPlugin(FWImagePreviewPlugin.self)
+            if plugin != nil {
+                FWPluginManager.unloadPlugin(FWImagePreviewPlugin.self)
+                FWPluginManager.unregisterPlugin(FWImagePreviewPlugin.self)
+            } else {
+                FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
             }
         }
         
@@ -74,7 +57,6 @@ import FWFramework
                 } else {
                     DispatchQueue.main.async {
                         self?.fwHideLoading()
-                        self?.photoBrowser.picturesCount = self?.photos.count ?? 0
                         self?.tableView.reloadData()
                     }
                 }
@@ -139,13 +121,85 @@ import FWFramework
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isAlbum {
-            if isPreview {
-                self.imagePreview.imagePreviewView.currentImageIndex = indexPath.row
-                present(self.imagePreview, animated: true, completion: nil)
-            } else {
-                let cell = tableView.cellForRow(at: indexPath)
-                self.photoBrowser.currentIndex = indexPath.row
-                self.photoBrowser.show(from: cell?.imageView)
+            fwShowImagePreview(withImageURLs: photos, currentIndex: indexPath.row) { [weak self] index in
+                let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0))
+                return cell?.imageView
+            } placeholderImage: { index in
+                return nil
+            } renderBlock: { [weak self] view, index in
+                guard let photo = self?.photos[index] else { return }
+                if let zoomImageView = view as? FWZoomImageView {
+                    if photo.assetSubType == .GIF {
+                        zoomImageView.progress = 0.01
+                        photo.requestImageData { data, info, _, _ in
+                            zoomImageView.progress = 1
+                            zoomImageView.image = UIImage.fwImage(with:data)
+                        }
+                    } else if photo.assetSubType == .livePhoto {
+                        zoomImageView.progress = 0.01
+                        photo.requestLivePhoto { livePhoto, info in
+                            zoomImageView.progress = 1
+                            zoomImageView.livePhoto = livePhoto
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                zoomImageView.progress = CGFloat(progress)
+                            }
+                        }
+                    } else if photo.assetType == .video {
+                        zoomImageView.progress = 0.01
+                        photo.requestPlayerItem { playerItem, info in
+                            zoomImageView.progress = 1
+                            zoomImageView.videoPlayerItem = playerItem
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                zoomImageView.progress = CGFloat(progress)
+                            }
+                        }
+                    } else {
+                        zoomImageView.progress = 0.01
+                        photo.requestPreviewImage { image, info in
+                            zoomImageView.progress = 1
+                            zoomImageView.image = image
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                zoomImageView.progress = CGFloat(progress)
+                            }
+                        }
+                    }
+                } else if let photoView = view as? FWPhotoView {
+                    if photo.assetSubType == .GIF {
+                        photo.requestImageData { data, info, _, _ in
+                            photoView.urlString = UIImage.fwImage(with:data)
+                        }
+                    } else if photo.assetSubType == .livePhoto {
+                        photo.requestLivePhoto { livePhoto, info in
+                            photoView.urlString = livePhoto
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                photoView.progress = CGFloat(progress)
+                            }
+                        }
+                    } else if photo.assetType == .video {
+                        photo.requestPlayerItem { playerItem, info in
+                            photoView.urlString = playerItem
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                photoView.progress = CGFloat(progress)
+                            }
+                        }
+                    } else {
+                        photoView.progress = 0.01
+                        photo.requestPreviewImage { image, info in
+                            photoView.progress = 1
+                            photoView.urlString = image
+                        } withProgressHandler: { progress, error, stop, info in
+                            DispatchQueue.main.async {
+                                photoView.progress = CGFloat(progress)
+                            }
+                        }
+                    }
+                }
+            } customBlock: { preview in
             }
         } else {
             let album = albums[indexPath.row]
@@ -154,95 +208,6 @@ import FWFramework
             viewController.album = album
             viewController.isAlbum = true
             fwOpen(viewController, animated: true)
-        }
-    }
-    
-    // MARK: - FWPhotoBrowserDelegate
-    
-    func photoBrowser(_ photoBrowser: FWPhotoBrowser, loadPhotoFor index: Int, photoView: FWPhotoView) {
-        let photo = photos[index]
-        if photo.assetSubType == .GIF {
-            photo.requestImageData { data, info, _, _ in
-                photoView.urlString = UIImage.fwImage(with:data)
-            }
-        } else if photo.assetSubType == .livePhoto {
-            photo.requestLivePhoto { livePhoto, info in
-                photoView.urlString = livePhoto
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    photoView.progress = CGFloat(progress)
-                }
-            }
-        } else if photo.assetType == .video {
-            photo.requestPlayerItem { playerItem, info in
-                photoView.urlString = playerItem
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    photoView.progress = CGFloat(progress)
-                }
-            }
-        } else {
-            photoView.progress = 0.01
-            photo.requestPreviewImage { image, info in
-                photoView.progress = 1
-                photoView.urlString = image
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    photoView.progress = CGFloat(progress)
-                }
-            }
-        }
-    }
-    
-    func photoBrowser(_ photoBrowser: FWPhotoBrowser, viewFor index: Int) -> Any? {
-        let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
-        return cell?.imageView
-    }
-    
-    // MARK: - FWImagePreviewViewDelegate
-    
-    func numberOfImages(in imagePreviewView: FWImagePreviewView) -> Int {
-        return photos.count
-    }
-    
-    func imagePreviewView(_ imagePreviewView: FWImagePreviewView, renderZoomImageView zoomImageView: FWZoomImageView, at index: Int) {
-        let photo = photos[index]
-        if photo.assetSubType == .GIF {
-            zoomImageView.progress = 0.01
-            photo.requestImageData { data, info, _, _ in
-                zoomImageView.progress = 1
-                zoomImageView.image = UIImage.fwImage(with:data)
-            }
-        } else if photo.assetSubType == .livePhoto {
-            zoomImageView.progress = 0.01
-            photo.requestLivePhoto { livePhoto, info in
-                zoomImageView.progress = 1
-                zoomImageView.livePhoto = livePhoto
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    zoomImageView.progress = CGFloat(progress)
-                }
-            }
-        } else if photo.assetType == .video {
-            zoomImageView.progress = 0.01
-            photo.requestPlayerItem { playerItem, info in
-                zoomImageView.progress = 1
-                zoomImageView.videoPlayerItem = playerItem
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    zoomImageView.progress = CGFloat(progress)
-                }
-            }
-        } else {
-            zoomImageView.progress = 0.01
-            photo.requestPreviewImage { image, info in
-                zoomImageView.progress = 1
-                zoomImageView.image = image
-            } withProgressHandler: { progress, error, stop, info in
-                DispatchQueue.main.async {
-                    zoomImageView.progress = CGFloat(progress)
-                }
-            }
         }
     }
 }

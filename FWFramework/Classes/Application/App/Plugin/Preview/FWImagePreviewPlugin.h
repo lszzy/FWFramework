@@ -23,12 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param currentIndex 当前索引，默认0
 /// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
 /// @param placeholderImage 占位图或缩略图句柄，默认nil
-/// @param customBlock 自定义句柄，默认nil
+/// @param renderBlock 自定义渲染句柄，默认nil
+/// @param customBlock 自定义配置句柄，默认nil
 - (void)fwViewController:(UIViewController *)viewController
         showImagePreview:(NSArray *)imageURLs
             currentIndex:(NSInteger)currentIndex
               sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
         placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
+             renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
              customBlock:(nullable void (^)(id imagePreview))customBlock;
 
 @end
@@ -52,11 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param currentIndex 当前索引，默认0
 /// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
 /// @param placeholderImage 占位图或缩略图句柄，默认nil
+/// @param renderBlock 自定义渲染句柄，默认nil
 /// @param customBlock 自定义句柄，默认nil
 - (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
                            currentIndex:(NSInteger)currentIndex
                              sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
                        placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
+                            renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
                             customBlock:(nullable void (^)(id imagePreview))customBlock;
 
 @end

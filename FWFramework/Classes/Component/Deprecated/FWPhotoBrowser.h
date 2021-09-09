@@ -182,6 +182,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
 
 /**
+ 自定义加载对应索引的高质量图片地址字符串或UIImage句柄
+ */
+@property (nonatomic, copy, nullable) void (^loadPhotoBlock)(FWPhotoView *photoView, NSInteger index);
+
+/**
  长按图片要执行的事件，将长按图片索引回调
  */
 @property (nonatomic, copy, nullable) void(^longPressBlock)(NSInteger index);

@@ -28,6 +28,7 @@
             currentIndex:(NSInteger)currentIndex
               sourceView:(id  _Nullable (^)(NSInteger))sourceView
         placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+             renderBlock:(void (^)(__kindof UIView * _Nonnull, NSInteger))renderBlock
              customBlock:(void (^)(id _Nonnull))customBlock
 {
     FWImagePreviewController *previewController = [[FWImagePreviewController alloc] init];
@@ -38,6 +39,7 @@
     previewController.imagePreviewView.placeholderImage = placeholderImage;
     previewController.imagePreviewView.imageURLs = imageURLs;
     previewController.imagePreviewView.currentImageIndex = currentIndex;
+    previewController.imagePreviewView.renderZoomImageView = renderBlock;
     
     if (customBlock) customBlock(previewController);
     [viewController presentViewController:previewController animated:YES completion:nil];

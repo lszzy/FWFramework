@@ -307,8 +307,8 @@
     _urlString = urlString;
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
-    if ([urlString isKindOfClass:[NSURL class]]) urlString = ((NSURL *)urlString).absoluteString;
-    if ([urlString isKindOfClass:[NSString class]] && [[urlString lowercaseString] hasPrefix:@"http"]) {
+    if ([urlString isKindOfClass:[NSString class]] ||
+        [urlString isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
@@ -336,12 +336,7 @@
         
         [_pictureDelegate photoViewLoaded:self];
     } else {
-        UIImage *image = nil;
-        if ([urlString isKindOfClass:[NSString class]]) {
-            image = [UIImage fwImageNamed:urlString];
-        } else if ([urlString isKindOfClass:[UIImage class]]) {
-            image = (UIImage *)urlString;
-        }
+        UIImage *image = [urlString isKindOfClass:[UIImage class]] ? (UIImage *)urlString : nil;
         [self showImage:image];
         self.progress = 1;
         self.imageLoaded = image ? YES : NO;
@@ -861,6 +856,8 @@
         view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:loadPhotoForIndex:photoView:)]) {
         [_delegate photoBrowser:self loadPhotoForIndex:index photoView:view];
+    } else if (self.loadPhotoBlock) {
+        self.loadPhotoBlock(view, index);
     } else {
         view.urlString = index < self.pictureUrls.count ? self.pictureUrls[index] : nil;
     }
@@ -959,6 +956,7 @@
             currentIndex:(NSInteger)currentIndex
               sourceView:(id  _Nullable (^)(NSInteger))sourceView
         placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+             renderBlock:(void (^)(__kindof UIView * _Nonnull, NSInteger))renderBlock
              customBlock:(void (^)(id _Nonnull))customBlock
 {
     FWPhotoBrowser *photoBrowser = [[FWPhotoBrowser alloc] init];
@@ -966,6 +964,7 @@
     photoBrowser.currentIndex = currentIndex;
     photoBrowser.placeholderImage = placeholderImage;
     photoBrowser.sourceImageView = sourceView;
+    photoBrowser.loadPhotoBlock = renderBlock;
     
     if (customBlock) customBlock(photoBrowser);
     UIView *fromView = sourceView ? sourceView(currentIndex) : nil;
