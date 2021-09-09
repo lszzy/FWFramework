@@ -116,7 +116,7 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 @interface FWImagePreviewController : UIViewController<UIViewControllerTransitioningDelegate>
 
 /// 图片背后的黑色背景，默认为配置表里的 UIColorBlack
-@property(nullable, nonatomic, strong) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+@property(nullable, nonatomic, strong) UIColor *backgroundColor;
 
 @property(null_resettable, nonatomic, strong, readonly) FWImagePreviewView *imagePreviewView;
 
@@ -129,8 +129,8 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 /// dismiss 时的动画，默认为 fade，默认与 presentingStyle 的值相同，若需要与之不同，请在设置完 presentingStyle 之后再设置 dismissingStyle。
 @property(nonatomic, assign) FWImagePreviewTransitioningStyle dismissingStyle;
 
-/// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 nil，则会强制使用 fade 动画。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
-@property(nullable, nonatomic, copy) UIView * _Nullable (^sourceImageView)(NSInteger index);
+/// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 nil，则会强制使用 fade 动画。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。支持UIView|NSValue.CGRect类型
+@property(nullable, nonatomic, copy) id _Nullable (^sourceImageView)(NSInteger index);
 
 /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 CGRectZero，则会强制使用 fade 动画。注意返回值要进行坐标系转换。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
 @property(nullable, nonatomic, copy) CGRect (^sourceImageRect)(NSInteger index);
