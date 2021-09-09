@@ -16,44 +16,44 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The shape of the cropping region of this crop view controller
  */
-typedef NS_ENUM(NSInteger, FWCropViewCroppingStyle) {
-    FWCropViewCroppingStyleDefault,     // The regular, rectangular crop box
-    FWCropViewCroppingStyleCircular     // A fixed, circular crop box
+typedef NS_ENUM(NSInteger, FWImageCropCroppingStyle) {
+    FWImageCropCroppingStyleDefault,     // The regular, rectangular crop box
+    FWImageCropCroppingStyleCircular     // A fixed, circular crop box
 };
 
 /**
  Preset values of the most common aspect ratios that can be used to quickly configure
  the crop view controller.
  */
-typedef NS_ENUM(NSInteger, FWCropViewControllerAspectRatioPreset) {
-    FWCropViewControllerAspectRatioPresetOriginal,
-    FWCropViewControllerAspectRatioPresetSquare,
-    FWCropViewControllerAspectRatioPreset3x2,
-    FWCropViewControllerAspectRatioPreset5x3,
-    FWCropViewControllerAspectRatioPreset4x3,
-    FWCropViewControllerAspectRatioPreset5x4,
-    FWCropViewControllerAspectRatioPreset7x5,
-    FWCropViewControllerAspectRatioPreset16x9,
-    FWCropViewControllerAspectRatioPresetCustom
+typedef NS_ENUM(NSInteger, FWImageCropAspectRatioPreset) {
+    FWImageCropAspectRatioPresetOriginal,
+    FWImageCropAspectRatioPresetSquare,
+    FWImageCropAspectRatioPreset3x2,
+    FWImageCropAspectRatioPreset5x3,
+    FWImageCropAspectRatioPreset4x3,
+    FWImageCropAspectRatioPreset5x4,
+    FWImageCropAspectRatioPreset7x5,
+    FWImageCropAspectRatioPreset16x9,
+    FWImageCropAspectRatioPresetCustom
 };
 
 /**
  Whether the control toolbar is placed at the bottom or the top
  */
-typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
-    FWCropViewControllerToolbarPositionBottom,  // Bar is placed along the bottom in portrait
-    FWCropViewControllerToolbarPositionTop     // Bar is placed along the top in portrait (Respects the status bar)
+typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
+    FWImageCropToolbarPositionBottom,  // Bar is placed along the bottom in portrait
+    FWImageCropToolbarPositionTop     // Bar is placed along the top in portrait (Respects the status bar)
 };
 
-@class FWCropViewController;
-@class FWCropView;
-@class FWCropToolbar;
+@class FWImageCropController;
+@class FWImageCropView;
+@class FWImageCropToolbar;
 
 ///------------------------------------------------
 /// @name Delegate
 ///------------------------------------------------
 
-@protocol FWCropViewControllerDelegate <NSObject>
+@protocol FWImageCropControllerDelegate <NSObject>
 @optional
 
 /**
@@ -63,7 +63,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropViewController:(nonnull FWCropViewController *)cropViewController
+- (void)cropController:(nonnull FWImageCropController *)cropController
         didCropImageToRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropViewController:(nonnull FWCropViewController *)cropViewController
+- (void)cropController:(nonnull FWImageCropController *)cropController
             didCropToImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropViewController:(nonnull FWCropViewController *)cropViewController
+- (void)cropController:(nonnull FWImageCropController *)cropController
     didCropToCircularImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -99,17 +99,17 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param cancelled Whether a cropping action was actually performed, or if the user explicitly hit 'Cancel'
  
  */
-- (void)cropViewController:(nonnull FWCropViewController *)cropViewController
+- (void)cropController:(nonnull FWImageCropController *)cropController
         didFinishCancelled:(BOOL)cancelled;
 
 @end
 
 /*!
- @brief FWCropViewController
+ @brief FWImageCropController
 
  @see https://github.com/TimOliver/TOCropViewController
  */
-@interface FWCropViewController : UIViewController
+@interface FWImageCropController : UIViewController
 
 /**
  The original, uncropped image that was passed to this controller.
@@ -125,12 +125,12 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  The view controller's delegate that will receive the resulting
  cropped image, as well as crop information.
  */
-@property (nullable, nonatomic, weak) id<FWCropViewControllerDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FWImageCropControllerDelegate> delegate;
 
 /**
  The crop view managed by this view controller.
  */
-@property (nonnull, nonatomic, strong, readonly) FWCropView *cropView;
+@property (nonnull, nonatomic, strong, readonly) FWImageCropView *cropView;
 
 /**
  In the coordinate space of the image itself, the region that is currently
@@ -153,17 +153,17 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 /**
  The toolbar view managed by this view controller.
  */
-@property (nonnull, nonatomic, strong, readonly) FWCropToolbar *toolbar;
+@property (nonnull, nonatomic, strong, readonly) FWImageCropToolbar *toolbar;
 
 /**
  The cropping style of this particular crop view controller
  */
-@property (nonatomic, readonly) FWCropViewCroppingStyle croppingStyle;
+@property (nonatomic, readonly) FWImageCropCroppingStyle croppingStyle;
 
 /**
  A choice from one of the pre-defined aspect ratio presets
  */
-@property (nonatomic, assign) FWCropViewControllerAspectRatioPreset aspectRatioPreset;
+@property (nonatomic, assign) FWImageCropAspectRatioPreset aspectRatioPreset;
 
 /**
  A CGSize value representing a custom aspect ratio, not listed in the presets.
@@ -231,9 +231,9 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 @property (nonatomic, assign) BOOL resetAspectRatioEnabled;
 
 /**
- The position of the Toolbar the default value is `FWCropViewControllerToolbarPositionBottom`.
+ The position of the Toolbar the default value is `FWImageCropToolbarPositionBottom`.
  */
-@property (nonatomic, assign) FWCropViewControllerToolbarPosition toolbarPosition;
+@property (nonatomic, assign) FWImageCropToolbarPosition toolbarPosition;
 
 /**
  When disabled, an additional rotation button that rotates the canvas in
@@ -284,7 +284,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 @property (nonatomic, assign) BOOL cancelButtonHidden;
 
 /**
- An array of `FWCropViewControllerAspectRatioPreset` enum values denoting which
+ An array of `FWImageCropAspectRatioPreset` enum values denoting which
  aspect ratios the crop view controller may display (Default is nil. All are shown)
  */
 @property (nullable, nonatomic, strong) NSArray<NSNumber *> *allowedAspectRatios;
@@ -343,10 +343,10 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param style The cropping style that will be used with this view controller (eg, rectangular, or circular)
  @param image The image that will be cropped
  */
-- (nonnull instancetype)initWithCroppingStyle:(FWCropViewCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
+- (nonnull instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
 
 /**
- Resets object of FWCropViewController class as if user pressed reset button in the bottom bar themself
+ Resets object of FWImageCropController class as if user pressed reset button in the bottom bar themself
  */
 - (void)resetCropViewLayout;
 
@@ -357,7 +357,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
  @param aspectRatioPreset The aspect ratio preset
  @param animated Whether the transition to the aspect ratio is animated
  */
-- (void)setAspectRatioPreset:(FWCropViewControllerAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
+- (void)setAspectRatioPreset:(FWImageCropAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
 
 @end
 
@@ -370,7 +370,7 @@ typedef NS_ENUM(NSInteger, FWCropViewControllerToolbarPosition) {
 @interface UIImagePickerController (FWCropRotate)
 
 /** Custom cropController for UIImagePickerController, if nil, consistent with the system effect  */
-+ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
++ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 
@@ -378,18 +378,18 @@ API_AVAILABLE(ios(14.0))
 @interface PHPickerViewController (FWCropRotate)
 
 /** Custom cropController for PHPickerViewController, if nil, consistent with the system effect  */
-+ (instancetype)fwPickerControllerWithCropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
++ (instancetype)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 
 @interface PHPhotoLibrary (FWCropRotate)
 
 /** Custom cropController for UIImagePickerController and PHPickerViewController iOS14+ */
-+ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWCropViewController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
++ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 
-@interface FWCropOverlayView : UIView
+@interface FWImageCropOverlayView : UIView
 
 /** Hides the interior grid lines, sans animation. */
 @property (nonatomic, assign) BOOL gridHidden;
@@ -409,7 +409,7 @@ API_AVAILABLE(ios(14.0))
  Subclassing UIScrollView was necessary in order to directly capture
  touch events that weren't otherwise accessible via UIGestureRecognizer objects.
  */
-@interface FWCropScrollView : UIScrollView
+@interface FWImageCropScrollView : UIScrollView
 
 @property (nullable, nonatomic, copy) void (^touchesBegan)(void);
 @property (nullable, nonatomic, copy) void (^touchesCancelled)(void);
@@ -417,7 +417,7 @@ API_AVAILABLE(ios(14.0))
 
 @end
 
-@interface FWCropToolbar : UIView
+@interface FWImageCropToolbar : UIView
 
 /* In horizontal mode, offsets all of the buttons vertically by height of status bar. */
 @property (nonatomic, assign) CGFloat statusBarHeightInset;
@@ -475,16 +475,16 @@ API_AVAILABLE(ios(14.0))
 
 @end
 
-@class FWCropView;
+@class FWImageCropView;
 
-@protocol FWCropViewDelegate<NSObject>
+@protocol FWImageCropViewDelegate<NSObject>
 
-- (void)cropViewDidBecomeResettable:(nonnull FWCropView *)cropView;
-- (void)cropViewDidBecomeNonResettable:(nonnull FWCropView *)cropView;
+- (void)cropViewDidBecomeResettable:(nonnull FWImageCropView *)cropView;
+- (void)cropViewDidBecomeNonResettable:(nonnull FWImageCropView *)cropView;
 
 @end
 
-@interface FWCropView : UIView
+@interface FWImageCropView : UIView
 
 /**
  The image that the crop view is displaying. This cannot be changed once the crop view is instantiated.
@@ -494,12 +494,12 @@ API_AVAILABLE(ios(14.0))
 /**
  The cropping style of the crop view (eg, rectangular or circular)
  */
-@property (nonatomic, assign, readonly) FWCropViewCroppingStyle croppingStyle;
+@property (nonatomic, assign, readonly) FWImageCropCroppingStyle croppingStyle;
 
 /**
  A grid view overlaid on top of the foreground image view's container.
  */
-@property (nonnull, nonatomic, strong, readonly) FWCropOverlayView *gridOverlayView;
+@property (nonnull, nonatomic, strong, readonly) FWImageCropOverlayView *gridOverlayView;
 
 /**
  A container view that clips the a copy of the image so it appears over the dimming view
@@ -509,7 +509,7 @@ API_AVAILABLE(ios(14.0))
 /**
  A delegate object that receives notifications from the crop view
  */
-@property (nullable, nonatomic, weak) id<FWCropViewDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FWImageCropViewDelegate> delegate;
 
 /**
  If false, the user cannot resize the crop box frame using a pan gesture from a corner.
@@ -641,7 +641,7 @@ The minimum croping aspect ratio. If set, user is prevented from setting croppin
 /**
  Create a new instance of the crop view with the specified image and cropping
  */
-- (nonnull instancetype)initWithCroppingStyle:(FWCropViewCroppingStyle)style image:(nonnull UIImage *)image;
+- (nonnull instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(nonnull UIImage *)image;
 
 /**
  Performs the initial set up, including laying out the image and applying any restore properties.

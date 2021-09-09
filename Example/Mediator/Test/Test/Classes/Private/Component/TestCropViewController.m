@@ -8,12 +8,12 @@
 
 #import "TestCropViewController.h"
 
-@interface TestCropViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FWCropViewControllerDelegate>
+@interface TestCropViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FWImageCropControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;           // The image we'll be cropping
 @property (nonatomic, strong) UIImageView *imageView;   // The image view to present the cropped image
 
-@property (nonatomic, assign) FWCropViewCroppingStyle croppingStyle; //The cropping style
+@property (nonatomic, assign) FWImageCropCroppingStyle croppingStyle; //The cropping style
 @property (nonatomic, assign) CGRect croppedFrame;
 @property (nonatomic, assign) NSInteger angle;
 
@@ -25,7 +25,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:image];
+    FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:image];
     cropController.delegate = self;
 
     // Uncomment this if you wish to provide extra instructions via a title label
@@ -36,18 +36,18 @@
     //cropController.imageCropFrame = CGRectMake(0,0,2848,4288); //The initial frame that the crop controller will have visible.
     
     // -- Uncomment the following lines of code to test out the aspect ratio features --
-    //cropController.aspectRatioPreset = FWCropViewControllerAspectRatioPresetSquare; //Set the initial aspect ratio as a square
+    //cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare; //Set the initial aspect ratio as a square
     //cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
     //cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
     //cropController.aspectRatioPickerButtonHidden = YES;
 
     // -- Uncomment this line of code to place the toolbar at the top of the view controller --
-    //cropController.toolbarPosition = FWCropViewControllerToolbarPositionTop;
+    //cropController.toolbarPosition = FWImageCropToolbarPositionTop;
     
     // -- Uncomment this line of code to include only certain type of preset ratios
-    //cropController.allowedAspectRatios = @[@(FWCropViewControllerAspectRatioPresetOriginal),
-    //                                       @(FWCropViewControllerAspectRatioPresetSquare),
-    //                                       @(FWCropViewControllerAspectRatioPreset3x2)];
+    //cropController.allowedAspectRatios = @[@(FWImageCropAspectRatioPresetOriginal),
+    //                                       @(FWImageCropAspectRatioPresetSquare),
+    //                                       @(FWImageCropAspectRatioPreset3x2)];
 
     //cropController.rotateButtonsHidden = YES;
     //cropController.rotateClockwiseButtonHidden = NO;
@@ -64,7 +64,7 @@
     self.image = image;
     
     //If profile picture, push onto the same navigation stack
-    if (self.croppingStyle == FWCropViewCroppingStyleCircular) {
+    if (self.croppingStyle == FWImageCropCroppingStyleCircular) {
         if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             [picker dismissViewControllerAnimated:YES completion:^{
                 [self presentViewController:cropController animated:YES completion:nil];
@@ -90,32 +90,32 @@
 - (void)didTapImageView
 {
     // When tapping the image view, restore the image to the previous cropping state
-    FWCropViewController *cropController = [[FWCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
+    FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
     cropController.delegate = self;
     [self presentViewController:cropController animated:YES completion:nil];
 }
 
 #pragma mark - Cropper Delegate -
-- (void)cropViewController:(FWCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
+- (void)cropController:(FWImageCropController *)cropController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
     self.croppedFrame = cropRect;
     self.angle = angle;
-    [self updateImageViewWithImage:image fromCropViewController:cropViewController];
+    [self updateImageViewWithImage:image fromCropViewController:cropController];
 }
 
-- (void)cropViewController:(FWCropViewController *)cropViewController didCropToCircularImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
+- (void)cropController:(FWImageCropController *)cropController didCropToCircularImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
     self.croppedFrame = cropRect;
     self.angle = angle;
-    [self updateImageViewWithImage:image fromCropViewController:cropViewController];
+    [self updateImageViewWithImage:image fromCropViewController:cropController];
 }
 
-- (void)updateImageViewWithImage:(UIImage *)image fromCropViewController:(FWCropViewController *)cropViewController
+- (void)updateImageViewWithImage:(UIImage *)image fromCropViewController:(FWImageCropController *)cropViewController
 {
     self.imageView.image = image;
     [self layoutImageView];
     
-    if (cropViewController.croppingStyle != FWCropViewCroppingStyleCircular) {
+    if (cropViewController.croppingStyle != FWImageCropCroppingStyleCircular) {
         self.imageView.hidden = YES;
         [cropViewController dismissViewControllerAnimated:YES completion:^{
             self.imageView.hidden = NO;
@@ -165,7 +165,7 @@
     [self fwShowSheetWithTitle:nil message:nil cancel:nil actions:@[@"Crop Image", @"Make Profile"] actionBlock:^(NSInteger index) {
         FWStrongifySelf();
         if (index == 0) {
-            self.croppingStyle = FWCropViewCroppingStyleDefault;
+            self.croppingStyle = FWImageCropCroppingStyleDefault;
             
             UIImagePickerController *standardPicker = [[UIImagePickerController alloc] init];
             standardPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -173,7 +173,7 @@
             standardPicker.delegate = self;
             [self presentViewController:standardPicker animated:YES completion:nil];
         } else {
-            self.croppingStyle = FWCropViewCroppingStyleCircular;
+            self.croppingStyle = FWImageCropCroppingStyleCircular;
             
             UIImagePickerController *profilePicker = [[UIImagePickerController alloc] init];
             profilePicker.modalPresentationStyle = UIModalPresentationPopover;
@@ -205,7 +205,7 @@
 #pragma mark - View Creation/Lifecycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.fwNavigationItem.title = NSLocalizedString(@"FWCropViewController", @"");
+    self.fwNavigationItem.title = NSLocalizedString(@"FWImageCropController", @"");
     
     self.navigationController.navigationBar.translucent = NO;
     

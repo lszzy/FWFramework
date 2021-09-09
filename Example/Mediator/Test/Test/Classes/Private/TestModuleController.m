@@ -155,7 +155,7 @@
               @[@"FWPagingView", @"TestNestScrollViewController"],
               @[@"FWPasscodeView", @"TestPasscodeViewController"],
               @[@"FWPhotoBrowser", @"Test.TestPhotoBrowserViewController"],
-              @[@"FWCropViewController", @"TestCropViewController"],
+              @[@"FWImageCropController", @"TestCropViewController"],
               @[@"MKMapView", @"TestMapViewController"],
               @[@"FWDrawerView", @"TestDrawerViewController"],
               @[@"FWDrawerView+Menu", @"TestMenuViewController"],
