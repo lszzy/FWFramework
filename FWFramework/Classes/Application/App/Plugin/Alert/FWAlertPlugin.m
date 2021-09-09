@@ -37,6 +37,14 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
+    if (!cancel) {
+        if (actions.count > 0 && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
+            cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+        } else if (actions.count < 1 && FWAlertPluginImpl.sharedInstance.defaultCloseButton) {
+            cancel = FWAlertPluginImpl.sharedInstance.defaultCloseButton();
+        }
+    }
+    
     [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
                          title:title
                        message:message
@@ -75,14 +83,25 @@
                    cancelBlock:(void (^)(void))cancelBlock
                       priority:(FWAlertPriority)priority
 {
-    [self fwShowAlertWithTitle:title
+    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    }
+    if (!confirm && FWAlertPluginImpl.sharedInstance.defaultConfirmButton) {
+        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton();
+    }
+    
+    [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
+                         title:title
                        message:message
                         cancel:cancel
                        actions:[NSArray arrayWithObjects:confirm, nil]
-                   actionBlock:^(NSInteger index) {
+                   promptCount:0
+                   promptBlock:nil
+                   actionBlock:^(NSArray<NSString *> *values, NSInteger index) {
                        if (confirmBlock) confirmBlock();
                    }
                    cancelBlock:cancelBlock
+                   customBlock:nil
                       priority:priority];
 }
 
@@ -136,6 +155,13 @@
                   cancelBlock:(void (^)(void))cancelBlock
                      priority:(FWAlertPriority)priority
 {
+    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    }
+    if (!confirm && FWAlertPluginImpl.sharedInstance.defaultConfirmButton) {
+        confirm = FWAlertPluginImpl.sharedInstance.defaultConfirmButton();
+    }
+    
     [self fwShowAlertWithStyle:UIAlertControllerStyleAlert
                          title:title
                        message:message
@@ -174,6 +200,10 @@
                  cancelBlock:(void (^)(void))cancelBlock
                     priority:(FWAlertPriority)priority
 {
+    if (!cancel && FWAlertPluginImpl.sharedInstance.defaultCancelButton) {
+        cancel = FWAlertPluginImpl.sharedInstance.defaultCancelButton();
+    }
+    
     [self fwShowAlertWithStyle:UIAlertControllerStyleActionSheet
                          title:title
                        message:message

@@ -96,7 +96,7 @@
                 pickerController.allowsEditing = YES;
                 [self presentViewController:pickerController animated:YES completion:nil];
             } else {
-                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
+                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:nil cancelBlock:nil];
             }
         } else {
             UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 completion:^(NSArray<UIImage *> * _Nonnull images, NSArray * _Nonnull results, BOOL cancel) {
@@ -122,7 +122,7 @@
                 }];
                 [self presentViewController:pickerController animated:YES completion:nil];
             } else {
-                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:@"关闭" cancelBlock:nil];
+                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:nil cancelBlock:nil];
             }
         } else {
             UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithCropController:nil completion:^(UIImage * _Nullable image, BOOL cancel) {

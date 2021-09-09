@@ -32,7 +32,7 @@
     // 相机授权
     [[FWAuthorizeManager managerWithType:FWAuthorizeTypeCamera] authorize:^(FWAuthorizeStatus status) {
         if (status != FWAuthorizeStatusAuthorized) {
-            [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:@"确定" cancelBlock:NULL];
+            [self fwShowAlertWithTitle:(status == FWAuthorizeStatusRestricted ? @"未检测到您的摄像头" : @"未打开摄像头权限") message:nil cancel:nil cancelBlock:NULL];
         } else {
             [self setupScanManager];
             [self.fwView addSubview:self.scanView];
@@ -204,7 +204,7 @@
 - (void)onScanResult:(NSString *)result
 {
     FWWeakifySelf();
-    [self fwShowAlertWithTitle:@"扫描结果" message:FWSafeString(result) cancel:@"确定" cancelBlock:^{
+    [self fwShowAlertWithTitle:@"扫描结果" message:FWSafeString(result) cancel:nil cancelBlock:^{
         FWStrongifySelf();
         [self startScanManager];
     }];

@@ -36,18 +36,18 @@
     [[FWVersionManager sharedInstance] checkDataVersion:@"1.2.1" migrator:^{
         FWStrongifySelf();
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self fwShowAlertWithTitle:nil message:@"数据更新至1.2.1版本" cancel:@"确定" cancelBlock:nil];
+            [self fwShowAlertWithTitle:nil message:@"数据更新至1.2.1版本" cancel:nil cancelBlock:nil];
         });
     }];
     [[FWVersionManager sharedInstance] checkDataVersion:@"1.0.0" migrator:^{
         FWStrongifySelf();
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self fwShowAlertWithTitle:nil message:@"数据更新至1.0.0版本" cancel:@"确定" cancelBlock:nil];
+            [self fwShowAlertWithTitle:nil message:@"数据更新至1.0.0版本" cancel:nil cancelBlock:nil];
         });
     }];
     [[FWVersionManager sharedInstance] migrateData:^{
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:nil message:@"数据更新完毕" cancel:@"确定" cancelBlock:nil];
+        [self fwShowAlertWithTitle:nil message:@"数据更新完毕" cancel:nil cancelBlock:nil];
     }];
     
     // 版本更新
@@ -58,7 +58,7 @@
         NSLog(@"version status: %@", @([FWVersionManager sharedInstance].status));
         
         if ([FWVersionManager sharedInstance].status == FWVersionStatusAudit) {
-            [self fwShowAlertWithTitle:nil message:@"当前版本正在审核中" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+            [self fwShowAlertWithTitle:nil message:@"当前版本正在审核中" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
         } else if ([FWVersionManager sharedInstance].status == FWVersionStatusUpdate) {
             BOOL isForce = NO;
             if (isForce) {

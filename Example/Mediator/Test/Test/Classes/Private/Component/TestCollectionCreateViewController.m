@@ -171,7 +171,7 @@
     };
     self.collectionView.fwDelegate.didSelectItem = ^(NSIndexPath * indexPath) {
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.item)] cancel:@"关闭" cancelBlock:nil];
+        [self fwShowAlertWithTitle:nil message:[NSString stringWithFormat:@"点击了%@", @(indexPath.item)] cancel:nil cancelBlock:nil];
     };
     
     self.collectionView.fwDelegate.headerViewClass = [TestCollectionCreateHeaderView class];
