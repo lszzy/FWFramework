@@ -1,13 +1,13 @@
 /*!
- @header     FWCropViewController.m
+ @header     FWImageCropController.m
  @indexgroup FWFramework
- @brief      FWCropViewController
+ @brief      FWImageCropController
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/6/22
  */
 
-#import "FWImageCrop.h"
+#import "FWImageCropController.h"
 #import "UIImagePickerController+FWFramework.h"
 #import "FWLanguage.h"
 

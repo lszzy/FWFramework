@@ -1,14 +1,14 @@
 /*!
- @header     FWImagePicker.h
+ @header     FWImagePickerController.h
  @indexgroup FWFramework
- @brief      FWImagePicker
+ @brief      FWImagePickerController
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
  */
 
 #import <UIKit/UIKit.h>
-#import "FWImagePreview.h"
+#import "FWImagePreviewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
