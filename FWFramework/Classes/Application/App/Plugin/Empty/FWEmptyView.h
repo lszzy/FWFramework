@@ -105,13 +105,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIScrollView+FWEmptyPluginImpl
+#pragma mark - UIScrollView+FWScrollOverlayView
 
 @interface FWScrollOverlayView : UIView
 
 @end
 
-@interface UIScrollView (FWEmptyPluginImpl)
+@interface UIScrollView (FWScrollOverlayView)
 
 /// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
 @property (nonatomic, strong, readonly) UIView *fwOverlayView;

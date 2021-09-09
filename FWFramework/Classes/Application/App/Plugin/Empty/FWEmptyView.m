@@ -330,7 +330,7 @@
 
 @end
 
-#pragma mark - UIScrollView+FWEmptyPluginImpl
+#pragma mark - UIScrollView+FWScrollOverlayView
 
 @interface FWScrollOverlayView ()
 
@@ -358,7 +358,7 @@
 
 @end
 
-@implementation UIScrollView (FWEmptyPluginImpl)
+@implementation UIScrollView (FWScrollOverlayView)
 
 - (UIView *)fwOverlayView
 {
