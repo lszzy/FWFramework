@@ -24,6 +24,7 @@
                              currentIndex:currentIndex
                                sourceView:sourceView
                          placeholderImage:nil
+                              renderBlock:nil
                               customBlock:nil];
 }
 
@@ -31,14 +32,15 @@
                            currentIndex:(NSInteger)currentIndex
                              sourceView:(id  _Nullable (^)(NSInteger))sourceView
                        placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+                            renderBlock:(void (^)(__kindof UIView * _Nonnull, NSInteger))renderBlock
                             customBlock:(void (^)(id _Nonnull))customBlock
 {
     // 优先调用插件，不存在时使用默认
     id<FWImagePreviewPlugin> imagePreviewPlugin = [FWPluginManager loadPlugin:@protocol(FWImagePreviewPlugin)];
-    if (!imagePreviewPlugin || ![imagePreviewPlugin respondsToSelector:@selector(fwViewController:showImagePreview:currentIndex:sourceView:placeholderImage:customBlock:)]) {
+    if (!imagePreviewPlugin || ![imagePreviewPlugin respondsToSelector:@selector(fwViewController:showImagePreview:currentIndex:sourceView:placeholderImage:renderBlock:customBlock:)]) {
         imagePreviewPlugin = FWImagePreviewPluginImpl.sharedInstance;
     }
-    [imagePreviewPlugin fwViewController:self showImagePreview:imageURLs currentIndex:currentIndex sourceView:sourceView placeholderImage:placeholderImage customBlock:customBlock];
+    [imagePreviewPlugin fwViewController:self showImagePreview:imageURLs currentIndex:currentIndex sourceView:sourceView placeholderImage:placeholderImage renderBlock:renderBlock customBlock:customBlock];
 }
 
 @end
@@ -59,6 +61,7 @@
                            currentIndex:(NSInteger)currentIndex
                              sourceView:(id  _Nullable (^)(NSInteger))sourceView
                        placeholderImage:(UIImage * _Nullable (^)(NSInteger))placeholderImage
+                            renderBlock:(void (^)(__kindof UIView * _Nonnull, NSInteger))renderBlock
                             customBlock:(void (^)(id _Nonnull))customBlock
 {
     UIViewController *ctrl = self.fwViewController;
@@ -66,6 +69,7 @@
                              currentIndex:currentIndex
                                sourceView:sourceView
                          placeholderImage:placeholderImage
+                              renderBlock:renderBlock
                               customBlock:customBlock];
 }
 

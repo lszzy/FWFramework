@@ -167,12 +167,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     zoomView.videoPlayerItem = nil;
     zoomView.livePhoto = nil;
     
-    if (self.zoomImageView) {
-        self.zoomImageView(zoomView, indexPath.item);
-    }
-    
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:renderZoomImageView:atIndex:)]) {
         [self.delegate imagePreviewView:self renderZoomImageView:zoomView atIndex:indexPath.item];
+    } else if (self.renderZoomImageView) {
+        self.renderZoomImageView(zoomView, indexPath.item);
     } else if (self.imageURLs.count > indexPath.item) {
         zoomView.reusedIdentifier = @(indexPath.item);
         UIImage *placeholderImage = self.placeholderImage ? self.placeholderImage(indexPath.item) : nil;

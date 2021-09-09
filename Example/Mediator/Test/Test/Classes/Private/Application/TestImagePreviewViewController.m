@@ -117,12 +117,6 @@
         };
     }
     
-    FWWeakifySelf();
-    self.imagePreviewViewController.imagePreviewView.zoomImageView = ^(FWZoomImageView * _Nonnull zoomImageView, NSInteger index) {
-        FWStrongifySelf();
-        zoomImageView.showsVideoToolbar = self.showsToolbar;
-        zoomImageView.autoplayVideo = self.autoplayVideo;
-    };
     self.imagePreviewViewController.dismissingWhenTapped = self.dismissTapped;
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
@@ -138,6 +132,8 @@
 
 - (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     zoomImageView.reusedIdentifier = @(index);
+    zoomImageView.showsVideoToolbar = self.showsToolbar;
+    zoomImageView.autoplayVideo = self.autoplayVideo;
     
     if (self.mockProgress) {
         FWWeakifySelf();
