@@ -112,6 +112,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 弹窗自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(UIAlertController *alertController);
 
+/// 默认close按钮文本句柄，仅封装alert单按钮生效，原始方法不生效
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultCloseButton)(void);
+/// 默认cancel按钮文本句柄，仅封装alert多按钮|confirm|prompt|sheet生效，原始方法不生效
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultCancelButton)(void);
+/// 默认confirm按钮文本句柄，仅封装confirm|prompt生效，原始方法不生效
+@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultConfirmButton)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END

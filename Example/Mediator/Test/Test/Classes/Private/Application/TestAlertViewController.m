@@ -87,7 +87,7 @@
 {
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
-                        cancel:@"确定"
+                        cancel:nil
                    cancelBlock:^{
                         NSLog(@"顶部控制器：%@", UIWindow.fwMainWindow.fwTopPresentedController);
                     }];
@@ -97,7 +97,7 @@
 {
     [self fwShowAlertWithTitle:@"警告框标题"
                        message:@"警告框消息"
-                        cancel:@"取消"
+                        cancel:nil
                        actions:@[@"按钮1", @"按钮2"]
                    actionBlock:^(NSInteger index) {
                        NSLog(@"点击的按钮index: %@", @(index));
@@ -319,7 +319,7 @@
     
     [self fwShowAlertWithTitle:title
                        message:message
-                        cancel:@"取消"
+                        cancel:nil
                        actions:@[@"按钮1", @"按钮2", @"按钮3", @"按钮4"]
                    actionBlock:nil
                    cancelBlock:nil
@@ -357,16 +357,16 @@
 
 - (void)onAlertP
 {
-    [self fwShowAlertWithTitle:@"普通优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
-    [self fwShowAlertWithTitle:@"低优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
-    [self fwShowAlertWithTitle:@"高优先级" message:@"警告框消息" cancel:@"确定" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+    [self fwShowAlertWithTitle:@"普通优先级" message:@"警告框消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowAlertWithTitle:@"低优先级" message:@"警告框消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
+    [self fwShowAlertWithTitle:@"高优先级" message:@"警告框消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
 }
 
 - (void)onSheetP
 {
-    [self fwShowSheetWithTitle:@"普通优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
-    [self fwShowSheetWithTitle:@"高优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
-    [self fwShowSheetWithTitle:@"低优先级" message:@"操作表消息" cancel:@"取消" actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
+    [self fwShowSheetWithTitle:@"普通优先级" message:@"操作表消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityNormal];
+    [self fwShowSheetWithTitle:@"高优先级" message:@"操作表消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityHigh];
+    [self fwShowSheetWithTitle:@"低优先级" message:@"操作表消息" cancel:nil actions:nil actionBlock:nil cancelBlock:nil priority:FWAlertPriorityLow];
 }
 
 @end

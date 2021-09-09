@@ -487,7 +487,7 @@
     FWWeakifySelf();
     [image fwSaveImageWithBlock:^(NSError * _Nonnull error) {
         FWStrongifySelf();
-        [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:@"确定" cancelBlock:nil];
+        [self fwShowAlertWithTitle:(error ? @"保存失败" : @"保存成功") message:nil cancel:nil cancelBlock:nil];
     }];
 }
 

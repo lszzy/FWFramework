@@ -86,6 +86,15 @@ extension Theme {
     
     private static func setupPlugin() {
         // 吐司等插件设置
+        FWAlertPluginImpl.sharedInstance.defaultCloseButton = {
+            return FWFrameworkBundle.localizedString("关闭")
+        }
+        FWAlertPluginImpl.sharedInstance.defaultCancelButton = {
+            return FWFrameworkBundle.localizedString("取消")
+        }
+        FWAlertPluginImpl.sharedInstance.defaultConfirmButton = {
+            return FWFrameworkBundle.localizedString("确定")
+        }
         FWToastPluginImpl.sharedInstance.defaultLoadingText = {
             return NSAttributedString(string: "加载中...")
         }
