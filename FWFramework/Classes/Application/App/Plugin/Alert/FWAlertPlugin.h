@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, FWAlertPriority) {
  *  @param style       弹出框样式
  *  @param title       操作表标题
  *  @param message     操作表消息
- *  @param cancel      取消按钮标题，无默认值
+ *  @param cancel      取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
  *  @param actions     动作按钮标题列表
  *  @param promptCount 输入框数量
  *  @param promptBlock 输入框初始化事件，参数为输入框和索引index

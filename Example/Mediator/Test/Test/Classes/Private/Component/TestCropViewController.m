@@ -161,41 +161,30 @@
 #pragma mark - Bar Button Items -
 - (void)showCropViewController
 {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Crop Image", @"")
-                                             style:UIAlertActionStyleDefault
-                                           handler:^(UIAlertAction *action) {
-                                               self.croppingStyle = FWCropViewCroppingStyleDefault;
-                                               
-                                               UIImagePickerController *standardPicker = [[UIImagePickerController alloc] init];
-                                               standardPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                               standardPicker.allowsEditing = NO;
-                                               standardPicker.delegate = self;
-                                               [self presentViewController:standardPicker animated:YES completion:nil];
-                                           }];
-    
-    UIAlertAction *profileAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Make Profile Picture", @"")
-                                           style:UIAlertActionStyleDefault
-                                         handler:^(UIAlertAction *action) {
-                                             self.croppingStyle = FWCropViewCroppingStyleCircular;
-                                             
-                                             UIImagePickerController *profilePicker = [[UIImagePickerController alloc] init];
-                                             profilePicker.modalPresentationStyle = UIModalPresentationPopover;
-                                             profilePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                             profilePicker.allowsEditing = NO;
-                                             profilePicker.delegate = self;
-                                             profilePicker.preferredContentSize = CGSizeMake(512,512);
-                                             profilePicker.popoverPresentationController.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
-                                             [self presentViewController:profilePicker animated:YES completion:nil];
-                                         }];
-    
-    [alertController addAction:defaultAction];
-    [alertController addAction:profileAction];
-    [alertController setModalPresentationStyle:UIModalPresentationPopover];
-    
-    UIPopoverPresentationController *popPresenter = [alertController popoverPresentationController];
-    popPresenter.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
-    [self presentViewController:alertController animated:YES completion:nil];
+    FWWeakifySelf();
+    [self fwShowSheetWithTitle:nil message:nil cancel:nil actions:@[@"Crop Image", @"Make Profile"] actionBlock:^(NSInteger index) {
+        FWStrongifySelf();
+        if (index == 0) {
+            self.croppingStyle = FWCropViewCroppingStyleDefault;
+            
+            UIImagePickerController *standardPicker = [[UIImagePickerController alloc] init];
+            standardPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            standardPicker.allowsEditing = NO;
+            standardPicker.delegate = self;
+            [self presentViewController:standardPicker animated:YES completion:nil];
+        } else {
+            self.croppingStyle = FWCropViewCroppingStyleCircular;
+            
+            UIImagePickerController *profilePicker = [[UIImagePickerController alloc] init];
+            profilePicker.modalPresentationStyle = UIModalPresentationPopover;
+            profilePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            profilePicker.allowsEditing = NO;
+            profilePicker.delegate = self;
+            profilePicker.preferredContentSize = CGSizeMake(512,512);
+            profilePicker.popoverPresentationController.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
+            [self presentViewController:profilePicker animated:YES completion:nil];
+        }
+    }];
 }
 
 - (void)sharePhoto:(id)sender
