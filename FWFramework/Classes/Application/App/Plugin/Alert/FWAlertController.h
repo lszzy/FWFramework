@@ -213,7 +213,7 @@ typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
 + (instancetype)animationIsPresenting:(BOOL)presenting;
 @end
 
-@interface FWAlertStyle : NSObject
+@interface FWAlertControllerAppearance : NSObject
 + (instancetype)appearance;
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) UIEdgeInsets contentInsets;
