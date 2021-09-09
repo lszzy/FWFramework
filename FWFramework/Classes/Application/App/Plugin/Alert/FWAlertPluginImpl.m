@@ -418,9 +418,8 @@
     }
     
     // 自定义Alert
-    if (customBlock) {
-        customBlock(alertController);
-    }
+    if (self.customBlock) self.customBlock(alertController);
+    if (customBlock) customBlock(alertController);
     
     // 显示Alert
     alertController.fwAlertPriorityEnabled = YES;
