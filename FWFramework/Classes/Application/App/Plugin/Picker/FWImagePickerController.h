@@ -209,7 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWNavigationButton;
 @class FWImagePickerViewController;
-@class FWImagePreviewViewController;
+@class FWImagePreviewController;
 @class FWImagePickerPreviewViewController;
 
 @protocol FWImagePickerPreviewViewControllerDelegate <NSObject>
@@ -230,7 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface FWImagePickerPreviewViewController : FWImagePreviewViewController <FWImagePreviewViewDelegate>
+@interface FWImagePickerPreviewViewController : FWImagePreviewController <FWImagePreviewViewDelegate>
 
 @property(nullable, nonatomic, weak) id<FWImagePickerPreviewViewControllerDelegate> delegate;
 

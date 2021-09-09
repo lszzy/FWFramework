@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@class FWZoomImageViewVideoToolbar;
+@class FWZoomImageVideoToolbar;
 @protocol FWProgressViewPlugin;
 
 /**
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL showsVideoToolbar;
 
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式
-@property(nonatomic, strong, readonly) FWZoomImageViewVideoToolbar *videoToolbar;
+@property(nonatomic, strong, readonly) FWZoomImageVideoToolbar *videoToolbar;
 
 // 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 25, 25, 18}
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
@@ -133,9 +133,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWZoomImageViewVideoToolbar
+#pragma mark - FWZoomImageVideoToolbar
 
-@interface FWZoomImageViewVideoToolbar : UIView
+@interface FWZoomImageVideoToolbar : UIView
 
 @property(nonatomic, strong, readonly) UIButton *playButton;
 @property(nonatomic, strong, readonly) UIButton *pauseButton;

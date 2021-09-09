@@ -90,7 +90,7 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 
 @end
 
-#pragma mark - FWImagePreviewViewController
+#pragma mark - FWImagePreviewController
 
 @class FWImagePreviewTransitionAnimator;
 
@@ -113,7 +113,7 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
  *  2. 添加 self.imagePreviewView 的 delegate
  *  3. 以 push 或 present 的方式打开界面。如果是 present，则支持 FWImagePreviewTransitioningStyle 里定义的动画。特别地，如果使用 zoom 方式，则需要通过 sourceImageView() 返回一个原界面上的 view 以作为 present 动画的起点和 dismiss 动画的终点。
  */
-@interface FWImagePreviewViewController : UIViewController<UIViewControllerTransitioningDelegate>
+@interface FWImagePreviewController : UIViewController<UIViewControllerTransitioningDelegate>
 
 /// 图片背后的黑色背景，默认为配置表里的 UIColorBlack
 @property(nullable, nonatomic, strong) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
@@ -159,12 +159,12 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 #pragma mark - FWImagePreviewTransitionAnimator
 
 /**
- 负责处理 FWImagePreviewViewController 被 present/dismiss 时的动画，如果需要自定义动画效果，可按需修改 animationEnteringBlock、animationBlock、animationCompletionBlock。
+ 负责处理 FWImagePreviewController 被 present/dismiss 时的动画，如果需要自定义动画效果，可按需修改 animationEnteringBlock、animationBlock、animationCompletionBlock。
  */
 @interface FWImagePreviewTransitionAnimator : NSObject<UIViewControllerAnimatedTransitioning>
 
-/// 当前图片预览控件的引用，在为 FWImagePreviewViewController.transitioningAnimator 赋值时会自动建立这个引用关系
-@property(nonatomic, weak, nullable) FWImagePreviewViewController *imagePreviewViewController;
+/// 当前图片预览控件的引用，在为 FWImagePreviewController.transitioningAnimator 赋值时会自动建立这个引用关系
+@property(nonatomic, weak, nullable) FWImagePreviewController *imagePreviewViewController;
 
 /// 转场动画的持续时长，默认为 0.25
 @property(nonatomic, assign) NSTimeInterval duration;
