@@ -1,13 +1,13 @@
 /*!
- @header     FWImagePicker.h
+ @header     FWImagePickerController.h
  @indexgroup FWFramework
- @brief      FWImagePicker
+ @brief      FWImagePickerController
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/7
  */
 
-#import "FWImagePicker.h"
+#import "FWImagePickerController.h"
 #import "FWAdaptive.h"
 #import "FWToolkit.h"
 #import "FWBlock.h"

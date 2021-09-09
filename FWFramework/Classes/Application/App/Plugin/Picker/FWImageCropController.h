@@ -1,7 +1,7 @@
 /*!
- @header     FWCropViewController.h
+ @header     FWImageCropController.h
  @indexgroup FWFramework
- @brief      FWCropViewController
+ @brief      FWImageCropController
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/6/22
