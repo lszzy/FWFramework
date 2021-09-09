@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <PhotosUI/PhotosUI.h>
 #import <AVFoundation/AVFoundation.h>
+#import "FWImagePreviewPlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -171,6 +172,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *pageTextColor;
 
 /**
+ 来源视图句柄，获取对应索引的视图或相对于window的位置NSValue
+ */
+@property(nullable, nonatomic, copy) id _Nullable (^sourceImageView)(NSInteger index);
+
+/**
+ 获取对应索引默认图片，可以是占位图片，可以是缩略图
+ */
+@property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
+
+/**
  长按图片要执行的事件，将长按图片索引回调
  */
 @property (nonatomic, copy, nullable) void(^longPressBlock)(NSInteger index);
@@ -217,7 +228,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize pictureSize;
 // 显示的默认图片
 @property (nonatomic, strong, nullable) UIImage *placeholderImage;
-// 图片的地址，支持NSString、UIImage、PHLivePhoto、AVPlayerItem
+// 图片的地址，支持NSString、NSURL、UIImage、PHLivePhoto、AVPlayerItem
 @property (nonatomic, strong, nullable) id urlString;
 // 图片是否加载成功，加载成功可获取imageView.image
 @property (nonatomic, assign) BOOL imageLoaded;
@@ -257,6 +268,19 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionBlock 结束的回调
  */
 - (void)animationDismissWithToRect:(CGRect)rect animationBlock:(nullable void(^)(void))animationBlock completionBlock:(nullable void(^)(void))completionBlock;
+
+@end
+
+#pragma mark - FWPhotoBrowserPlugin
+
+/// FWPhotoBrowser图片预览插件
+@interface FWPhotoBrowserPlugin : NSObject <FWImagePreviewPlugin>
+
+/// 单例模式
+@property (class, nonatomic, readonly) FWPhotoBrowserPlugin *sharedInstance;
+
+/// 图片预览自定义句柄，show方法自动调用
+@property (nonatomic, copy, nullable) void (^customBlock)(FWPhotoBrowser *photoBrowser);
 
 @end
 

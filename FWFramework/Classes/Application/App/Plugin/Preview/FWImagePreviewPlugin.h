@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
 /// @param currentIndex 当前索引，默认0
 /// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
-/// @param placeholderImage 占位图片句柄，默认nil
+/// @param placeholderImage 占位图或缩略图句柄，默认nil
 /// @param customBlock 自定义句柄，默认nil
 - (void)fwViewController:(UIViewController *)viewController
         showImagePreview:(NSArray *)imageURLs
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
 /// @param currentIndex 当前索引，默认0
 /// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
-/// @param placeholderImage 占位图片句柄，默认nil
+/// @param placeholderImage 占位图或缩略图句柄，默认nil
 /// @param customBlock 自定义句柄，默认nil
 - (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
                            currentIndex:(NSInteger)currentIndex

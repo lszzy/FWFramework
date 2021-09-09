@@ -8,18 +8,21 @@
 
 import FWFramework
 
-@objcMembers class TestPhotoBrowserViewController: TestViewController, FWTableViewController, FWPhotoBrowserDelegate {
+@objcMembers class TestPhotoBrowserViewController: TestViewController, FWTableViewController {
     private var results: [Any] = []
-    
-    private lazy var photoBrowser: FWPhotoBrowser = {
-        let result = FWPhotoBrowser()
-        result.delegate = self
-        return result
-    }()
     
     override func renderModel() {
         fwSetRightBarItem("浏览") { [weak self] sender in
             self?.showData(self?.results ?? [])
+        }
+        fwAddRightBarItem("切换") { sender in
+            let plugin = FWPluginManager.loadPlugin(FWImagePreviewPlugin.self)
+            if plugin != nil {
+                FWPluginManager.unloadPlugin(FWImagePreviewPlugin.self)
+                FWPluginManager.unregisterPlugin(FWImagePreviewPlugin.self)
+            } else {
+                FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
+            }
         }
     }
     
@@ -44,14 +47,12 @@ import FWFramework
             return
         }
         
-        photoBrowser.pictureUrls = results.map({ result in
+        fwShowImagePreview(withImageURLs: results.map({ result in
             if let url = result as? URL {
                 return AVPlayerItem(url: url)
             }
             return result
-        })
-        photoBrowser.currentIndex = 0
-        photoBrowser.show()
+        }), currentIndex: 0, sourceView: nil)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
