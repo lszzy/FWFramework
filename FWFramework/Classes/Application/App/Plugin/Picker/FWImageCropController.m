@@ -9,6 +9,7 @@
 
 #import "FWImageCropController.h"
 #import "UIImagePickerController+FWFramework.h"
+#import "FWAlertPlugin.h"
 #import "FWLanguage.h"
 
 static const CGFloat kFWCropViewControllerTitleTopPadding = 14.0f;
@@ -577,24 +578,12 @@ static const CGFloat kFWCropViewControllerToolbarHeight = 44.0f;
         [ratioValues addObject:@(FWCropViewControllerAspectRatioPresetCustom)];
     }
 
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    [alertController addAction:[UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:nil]];
-
-    //Add each item to the alert controller
-    for (NSInteger i = 0; i < itemStrings.count; i++) {
-        id handlerBlock = ^(UIAlertAction *action) {
-            [self setAspectRatioPreset:[ratioValues[i] integerValue] animated:YES];
-            self.aspectRatioLockEnabled = YES;
-        };
-        UIAlertAction *action = [UIAlertAction actionWithTitle:itemStrings[i] style:UIAlertActionStyleDefault handler:handlerBlock];
-        [alertController addAction:action];
-    }
-
-    alertController.modalPresentationStyle = UIModalPresentationPopover;
-    UIPopoverPresentationController *presentationController = [alertController popoverPresentationController];
-    presentationController.sourceView = self.toolbar;
-    presentationController.sourceRect = self.toolbar.clampButtonFrame;
-    [self presentViewController:alertController animated:YES completion:nil];
+    __weak __typeof__(self) self_weak_ = self;
+    [self fwShowSheetWithTitle:nil message:nil cancel:cancelButtonTitle actions:itemStrings actionBlock:^(NSInteger index) {
+        __typeof__(self) self = self_weak_;
+        [self setAspectRatioPreset:[ratioValues[index] integerValue] animated:YES];
+        self.aspectRatioLockEnabled = YES;
+    }];
 }
 
 - (void)setAspectRatioPreset:(FWCropViewControllerAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated
