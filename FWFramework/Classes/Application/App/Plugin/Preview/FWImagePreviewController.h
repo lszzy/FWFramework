@@ -81,6 +81,8 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 /// 占位图片句柄，仅imageURLs生效，默认nil
 @property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
 
+/// 自定义zoomImageView样式句柄，cellForItem方法自动调用，先于renderZoomImageView
+@property(nonatomic, copy, nullable) void (^customZoomImageView)(FWZoomImageView *zoomImageView, NSInteger index);
 /// 自定义渲染zoomImageView句柄，cellForItem方法自动调用，优先级低于delegate
 @property(nonatomic, copy, nullable) void (^renderZoomImageView)(FWZoomImageView *zoomImageView, NSInteger index);
 /// 获取某个 FWZoomImageView 所对应的 index，若当前的 zoomImageView 不可见，会返回NSNotFound
@@ -141,15 +143,20 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 /// 是否支持手势拖拽退出预览模式，默认为 YES。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingGestureEnabled;
 
-/// 手势单击时是否退出预览模式，默认NO。仅对以 present 方式进入大图预览的场景有效。
-@property(nonatomic, assign) BOOL dismissingWhenTapped;
+/// 手势单击图片时是否退出预览模式，默认NO。仅对以 present 方式进入大图预览的场景有效。
+@property(nonatomic, assign) BOOL dismissingWhenTappedImage;
+
+/// 手势单击视频时是否退出预览模式，默认NO。仅对以 present 方式进入大图预览的场景有效。
+@property(nonatomic, assign) BOOL dismissingWhenTappedVideo;
 
 /// 是否显示页数标签，默认NO
 @property(nonatomic, assign) BOOL showsPageLabel;
-/// 页数标签中心垂直偏移，默认0，位于底部20+安全距离
-@property(nonatomic, assign) CGFloat pageLabelOffset;
+/// 页数标签中心，默认离底部安全距离+20
+@property(nonatomic, assign) CGPoint pageLabelCenter;
 /// 页数标签，默认字号16、白色
 @property(nonatomic, strong, readonly) UILabel *pageLabel;
+/// 页数标签需要更新，子类可重写
+- (void)updatePageLabel;
 
 /// 手势拖动开始时隐藏子视图，拖动完毕后还原，子类可重写
 - (void)dismissingGestureChanged:(BOOL)finished;
