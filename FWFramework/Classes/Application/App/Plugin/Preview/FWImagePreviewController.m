@@ -8,6 +8,7 @@
  */
 
 #import "FWImagePreviewController.h"
+#import "FWAdaptive.h"
 #import "FWToolkit.h"
 
 #pragma mark - FWImagePreviewView
@@ -166,6 +167,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     zoomView.image = nil;
     zoomView.videoPlayerItem = nil;
     zoomView.livePhoto = nil;
+    
+    if (self.customZoomImageView) {
+        self.customZoomImageView(zoomView, indexPath.item);
+    }
     
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:renderZoomImageView:atIndex:)]) {
         [self.delegate imagePreviewView:self renderZoomImageView:zoomView atIndex:indexPath.item];
@@ -333,6 +338,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
+    self.pageLabelCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fwSafeAreaInsets.bottom + 20));
     
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;
@@ -386,7 +392,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
         [self updatePageLabel];
     }
-    self.pageLabel.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height - (20 + self.view.fwSafeAreaInsets.bottom - self.pageLabelOffset));
+    self.pageLabel.center = self.pageLabelCenter;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -566,8 +572,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)dismissingGestureChanged:(BOOL)finished {
-    if (self.gestureZoomImageView.showsVideoToolbar && self.gestureZoomImageView.videoPlayerItem) {
-        self.gestureZoomImageView.videoToolbar.alpha = finished ? 1 : 0;
+    if (self.gestureZoomImageView.videoPlayerItem) {
+        if (self.gestureZoomImageView.showsVideoToolbar) self.gestureZoomImageView.videoToolbar.alpha = finished ? 1 : 0;
+        if (self.gestureZoomImageView.showsVideoCloseButton) self.gestureZoomImageView.videoCloseButton.alpha = finished ? 1 : 0;
     }
     [self.view.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
         if (obj != self.imagePreviewView) {
@@ -579,12 +586,17 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 #pragma mark - FWImagePreviewViewDelegate
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
-    if (!self.dismissingWhenTapped || !self.fwIsPresented) return;
+    if (!self.fwIsPresented) return;
     
-    if (zoomImageView.showsVideoToolbar && zoomImageView.videoPlayerItem) {
-        zoomImageView.videoToolbar.hidden = YES;
+    BOOL shouldDismiss = NO;
+    if (zoomImageView.videoPlayerItem) {
+        if (self.dismissingWhenTappedVideo) shouldDismiss = YES;
+    } else {
+        if (self.dismissingWhenTappedImage) shouldDismiss = YES;
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (shouldDismiss) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {

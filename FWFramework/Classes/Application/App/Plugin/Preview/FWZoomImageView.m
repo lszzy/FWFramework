@@ -57,6 +57,25 @@
     } size:size];
 }
 
++ (UIImage *)closeImage {
+    CGSize size = CGSizeMake(16, 16);
+    return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
+        UIColor *color = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:.75];
+        CGContextSetStrokeColorWithColor(contextRef, color.CGColor);
+        CGFloat lineWidth = 2;
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        [path moveToPoint:CGPointMake(0, 0)];
+        [path addLineToPoint:CGPointMake(size.width, size.height)];
+        [path closePath];
+        [path moveToPoint:CGPointMake(size.width, 0)];
+        [path addLineToPoint:CGPointMake(0, size.height)];
+        [path closePath];
+        [path setLineWidth:lineWidth];
+        [path setLineCapStyle:kCGLineCapRound];
+        [path stroke];
+    } size:size];
+}
+
 + (UIImage *)pauseImage {
     CGSize size = CGSizeMake(12, 18);
     return [UIImage fwImageWithBlock:^(CGContextRef contextRef) {
@@ -104,6 +123,7 @@
 @synthesize videoPlayerLayer = _videoPlayerLayer;
 @synthesize videoToolbar = _videoToolbar;
 @synthesize videoPlayButton = _videoPlayButton;
+@synthesize videoCloseButton = _videoCloseButton;
 @synthesize progressView = _progressView;
 
 + (void)initialize {
@@ -115,8 +135,10 @@
 
 + (void)setDefaultAppearance {
     FWZoomImageView *appearance = [FWZoomImageView appearance];
-    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 25, 25, 18);
+    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 18, 25, 18);
+    appearance.videoCloseButtonCenter = CGPointMake(UIScreen.fwSafeAreaInsets.left + 25, FWStatusBarHeight + FWNavigationBarHeight / 2);
     appearance.videoPlayButtonImage = [FWZoomImageVideoPlayerView largePlayImage];
+    appearance.videoCloseButtonImage = [FWZoomImageVideoPlayerView closeImage];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -176,6 +198,10 @@
     if (_videoPlayButton) {
         [_videoPlayButton sizeToFit];
         _videoPlayButton.center = CGPointMake(CGRectGetMidX(viewportRect), CGRectGetMidY(viewportRect));
+    }
+    if (_videoCloseButton) {
+        [_videoCloseButton sizeToFit];
+        _videoCloseButton.center = self.videoCloseButtonCenter;
     }
     
     if (_videoToolbar) {
@@ -481,11 +507,21 @@
     self.videoPlayerLayer.hidden = NO;
     self.videoPlayButton.hidden = NO;
     self.videoToolbar.playButton.hidden = NO;
+    if (!self.showsVideoToolbar && self.showsVideoCloseButton) {
+        self.videoCloseButton.hidden = NO;
+    }
     
     [self revertZooming];
     
     if (self.autoplayVideo) {
         [self handlePlayButton:nil];
+    }
+}
+
+- (void)handleCloseButton:(UIButton *)button {
+    UIViewController *viewController = self.fwViewController;
+    if (viewController && viewController.fwIsPresented) {
+        [viewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -498,6 +534,7 @@
     if (button.tag == 1) {
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = YES;
+            self.videoCloseButton.hidden = YES;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
                 [self.delegate zoomImageView:self didHideVideoToolbar:YES];
             }
@@ -618,6 +655,9 @@
     [self pauseVideo];
     [self syncVideoProgressSlider];
     self.videoToolbar.hidden = YES;
+    if (self.showsVideoToolbar) {
+        self.videoCloseButton.hidden = YES;
+    }
     self.videoPlayButton.hidden = NO;
 }
 
@@ -634,6 +674,11 @@
 - (UIButton *)videoPlayButton {
     [self initVideoPlayButtonIfNeeded];
     return _videoPlayButton;
+}
+
+- (UIButton *)videoCloseButton {
+    [self initVideoCloseButtonIfNeeded];
+    return _videoCloseButton;
 }
 
 - (void)initVideoPlayerLayerIfNeeded {
@@ -671,10 +716,25 @@
     });
 }
 
+- (void)initVideoCloseButtonIfNeeded {
+    if (_videoCloseButton) return;
+    
+    _videoCloseButton = ({
+        UIButton *closeButton = [[UIButton alloc] init];
+        closeButton.fwTouchInsets = UIEdgeInsetsMake(12, 16, 12, 16);
+        [closeButton setImage:self.videoCloseButtonImage forState:UIControlStateNormal];
+        [closeButton addTarget:self action:@selector(handleCloseButton:) forControlEvents:UIControlEventTouchUpInside];
+        closeButton.hidden = YES;
+        [self addSubview:closeButton];
+        closeButton;
+    });
+}
+
 - (void)initVideoRelatedViewsIfNeeded {
     [self initVideoPlayerLayerIfNeeded];
     [self initVideoToolbarIfNeeded];
     [self initVideoPlayButtonIfNeeded];
+    [self initVideoCloseButtonIfNeeded];
     [self setNeedsLayout];
 }
 
@@ -692,6 +752,9 @@
     [self.videoPlayButton removeFromSuperview];
     _videoPlayButton = nil;
     
+    [self.videoCloseButton removeFromSuperview];
+    _videoCloseButton = nil;
+    
     self.videoPlayer = nil;
     _videoPlayerLayer.player = nil;
 }
@@ -706,6 +769,21 @@
     if (!self.videoPlayButton) return;
     
     [self.videoPlayButton setImage:videoPlayButtonImage forState:UIControlStateNormal];
+    [self setNeedsLayout];
+}
+
+- (void)setVideoCloseButtonCenter:(CGPoint)videoCloseButtonCenter {
+    _videoCloseButtonCenter = videoCloseButtonCenter;
+    if (!self.videoCloseButton) return;
+    
+    [self setNeedsLayout];
+}
+
+- (void)setVideoCloseButtonImage:(UIImage *)videoCloseButtonImage {
+    _videoCloseButtonImage = videoCloseButtonImage;
+    if (!self.videoCloseButton) return;
+    
+    [self.videoCloseButton setImage:videoCloseButtonImage forState:UIControlStateNormal];
     [self setNeedsLayout];
 }
 
@@ -783,6 +861,7 @@
     if (self.videoPlayerItem) {
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = !self.videoToolbar.hidden;
+            self.videoCloseButton.hidden = self.showsVideoCloseButton ? self.videoToolbar.hidden : YES;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
                 [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
             }
@@ -872,6 +951,7 @@
     _videoPlayButton.hidden = YES;
     _videoPlayerLayer.hidden = YES;
     _videoToolbar.hidden = YES;
+    _videoCloseButton.hidden = YES;
     _videoToolbar.pauseButton.hidden = YES;
     _videoToolbar.playButton.hidden = YES;
 }

@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式
 @property(nonatomic, strong, readonly) FWZoomImageVideoToolbar *videoToolbar;
 
-// 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 25, 25, 18}
+// 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 18, 25, 18}
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
 
 // 播放 video 时屏幕中央的播放按钮
@@ -103,6 +103,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 可通过此属性修改 video 播放时屏幕中央的播放按钮图片
 @property(nonatomic, strong) UIImage *videoPlayButtonImage UI_APPEARANCE_SELECTOR;
+
+// 是否显示播放 video 时屏幕左上角的关闭按钮，默认NO，仅播放视频时生效
+@property(nonatomic, assign) BOOL showsVideoCloseButton;
+
+// 播放 video 时屏幕左上角的关闭按钮，默认自动关闭所在present控制器
+@property(nonatomic, strong, readonly) UIButton *videoCloseButton;
+
+// 播放 video 时屏幕左上角的关闭按钮中心，默认同导航栏关闭按钮
+@property(nonatomic, assign) CGPoint videoCloseButtonCenter UI_APPEARANCE_SELECTOR;
+
+// 可通过此属性修改 video 播放时屏幕左上角的关闭按钮图片
+@property(nonatomic, strong) UIImage *videoCloseButtonImage UI_APPEARANCE_SELECTOR;
 
 // 进度视图，居中显示
 @property(nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;

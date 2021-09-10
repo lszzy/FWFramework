@@ -852,6 +852,10 @@
         view.placeholderImage = self.placeholderImage(index);
     }
     
+    if (self.customPhotoBlock) {
+        self.customPhotoBlock(view, index);
+    }
+    
     if ([_delegate respondsToSelector:@selector(photoBrowser:photoUrlForIndex:)]) {
         view.urlString = [_delegate photoBrowser:self photoUrlForIndex:index];
     } else if ([_delegate respondsToSelector:@selector(photoBrowser:loadPhotoForIndex:photoView:)]) {

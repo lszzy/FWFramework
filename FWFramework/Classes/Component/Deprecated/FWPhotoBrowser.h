@@ -182,6 +182,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
 
 /**
+ 自定义photoView样式句柄，先于loadPhotoBlock调用
+ */
+@property (nonatomic, copy, nullable) void (^customPhotoBlock)(FWPhotoView *photoView, NSInteger index);
+
+/**
  自定义加载对应索引的高质量图片地址字符串或UIImage句柄
  */
 @property (nonatomic, copy, nullable) void (^loadPhotoBlock)(FWPhotoView *photoView, NSInteger index);

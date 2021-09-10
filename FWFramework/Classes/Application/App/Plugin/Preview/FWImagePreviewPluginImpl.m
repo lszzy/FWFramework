@@ -33,7 +33,8 @@
 {
     FWImagePreviewController *previewController = [[FWImagePreviewController alloc] init];
     previewController.showsPageLabel = YES;
-    previewController.dismissingWhenTapped = YES;
+    previewController.dismissingWhenTappedImage = YES;
+    previewController.dismissingWhenTappedVideo = YES;
     previewController.presentingStyle = FWImagePreviewTransitioningStyleZoom;
     previewController.sourceImageView = sourceView;
     previewController.imagePreviewView.placeholderImage = placeholderImage;

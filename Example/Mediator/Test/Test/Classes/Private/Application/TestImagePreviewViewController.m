@@ -17,8 +17,10 @@
 @property(nonatomic, assign) BOOL mockProgress;
 @property(nonatomic, assign) BOOL previewFade;
 @property(nonatomic, assign) BOOL showsToolbar;
+@property(nonatomic, assign) BOOL showsClose;
 @property(nonatomic, assign) BOOL autoplayVideo;
-@property(nonatomic, assign) BOOL dismissTapped;
+@property(nonatomic, assign) BOOL dismissTappedImage;
+@property(nonatomic, assign) BOOL dismissTappedVideo;
 
 @end
 
@@ -39,7 +41,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.dismissTapped = YES;
+    self.dismissTappedImage = YES;
+    self.dismissTappedVideo = YES;
     
     FWWeakifySelf();
     [self fwSetRightBarItem:FWIcon.refreshImage block:^(id  _Nonnull sender) {
@@ -48,8 +51,10 @@
         NSString *fadeText = self.previewFade ? @"关闭渐变效果" : @"开启渐变效果";
         NSString *toolbarText = self.showsToolbar ? @"隐藏视频工具栏" : @"开启视频工具栏";
         NSString *autoText = self.autoplayVideo ? @"关闭自动播放" : @"开启自动播放";
-        NSString *dismissText = self.dismissTapped ? @"单击时不关闭" : @"单击时自动关闭";
-        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText, autoText, dismissText] actionBlock:^(NSInteger index) {
+        NSString *dismissImageText = self.dismissTappedImage ? @"单击图片时不关闭" : @"单击图片时自动关闭";
+        NSString *dismissVideoText = self.dismissTappedVideo ? @"单击视频时不关闭" : @"单击视频时自动关闭";
+        NSString *closeText = self.showsClose ? @"隐藏视频关闭按钮" : @"开启视频关闭按钮";
+        [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[progressText, fadeText, toolbarText, autoText, dismissImageText, dismissVideoText, closeText] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             if (index == 0) {
                 self.mockProgress = !self.mockProgress;
@@ -59,8 +64,12 @@
                 self.showsToolbar = !self.showsToolbar;
             } else if (index == 3) {
                 self.autoplayVideo = !self.autoplayVideo;
-            } else {
-                self.dismissTapped = !self.dismissTapped;
+            } else if (index == 4) {
+                self.dismissTappedImage = !self.dismissTappedImage;
+            } else if (index == 5) {
+                self.dismissTappedVideo = !self.dismissTappedVideo;
+            } else if (index == 6) {
+                self.showsClose = !self.showsClose;
             }
         }];
     }];
@@ -117,7 +126,8 @@
         };
     }
     
-    self.imagePreviewViewController.dismissingWhenTapped = self.dismissTapped;
+    self.imagePreviewViewController.dismissingWhenTappedImage = self.dismissTappedImage;
+    self.imagePreviewViewController.dismissingWhenTappedVideo = self.dismissTappedVideo;
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index
@@ -134,6 +144,7 @@
     zoomImageView.reusedIdentifier = @(index);
     zoomImageView.showsVideoToolbar = self.showsToolbar;
     zoomImageView.autoplayVideo = self.autoplayVideo;
+    zoomImageView.showsVideoCloseButton = self.showsClose;
     
     if (self.mockProgress) {
         FWWeakifySelf();
