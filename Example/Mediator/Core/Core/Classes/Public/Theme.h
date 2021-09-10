@@ -11,6 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static const FWNavigationBarStyle FWNavigationBarStyleWhite = 2;
+static const FWNavigationBarStyle FWNavigationBarStyleWhite = 3;
 
 NS_ASSUME_NONNULL_END

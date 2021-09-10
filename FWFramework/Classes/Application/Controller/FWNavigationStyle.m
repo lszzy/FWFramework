@@ -172,6 +172,7 @@
     if (!appearance && styleNum) appearance = [FWNavigationBarAppearance appearanceForStyle:styleNum.integerValue];
     BOOL isHidden = (styleNum.integerValue == FWNavigationBarStyleHidden) || hiddenNum.boolValue || appearance.isHidden;
     BOOL isTransparent = (styleNum.integerValue == FWNavigationBarStyleTransparent) || appearance.isTransparent;
+    BOOL isTranslucent = (styleNum.integerValue == FWNavigationBarStyleTranslucent) || appearance.isTranslucent;
     
     // 自定义导航栏，隐藏系统默认导航栏，切换自定义导航栏显示状态
     if ([self fwNavigationViewEnabled]) {
@@ -188,6 +189,9 @@
     
     if (isTransparent) {
         [self.fwNavigationBar fwSetBackgroundTransparent];
+    }
+    if (isTranslucent != self.fwNavigationBar.fwIsTranslucent) {
+        self.fwNavigationBar.fwIsTranslucent = isTranslucent;
     }
     if (appearance.backgroundColor) {
         self.fwNavigationBar.fwBackgroundColor = appearance.backgroundColor;
@@ -634,6 +638,24 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     }
 }
 
+- (BOOL)fwIsTranslucent
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsTranslucent)) boolValue];
+}
+
+- (void)setFwIsTranslucent:(BOOL)fwIsTranslucent
+{
+    if (fwIsTranslucent == self.fwIsTranslucent) return;
+    objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (fwIsTranslucent) {
+        self.translucent = YES;
+        [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    } else {
+        self.translucent = NO;
+        self.backgroundColor = nil;
+    }
+}
+
 - (UIColor *)fwBackgroundColor
 {
     return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
@@ -643,15 +665,24 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
     if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
-        self.fwAppearance.backgroundImage = image;
+        if (self.fwIsTranslucent) {
+            self.fwAppearance.backgroundColor = color;
+        } else {
+            UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
+            self.fwAppearance.backgroundImage = image;
+        }
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
         return;
     }}
     
-    [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    if (self.fwIsTranslucent) {
+        self.backgroundColor = color;
+    } else {
+        UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
+        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    }
     [self setShadowImage:[UIImage new]];
 }
 
@@ -696,15 +727,24 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     [super fwThemeChanged:style];
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
-        UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
         if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
-            self.fwAppearance.backgroundImage = image;
+            if (self.fwIsTranslucent) {
+                self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
+            } else {
+                UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
+                self.fwAppearance.backgroundImage = image;
+            }
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
             return;
         }}
         
-        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        if (self.fwIsTranslucent) {
+            self.backgroundColor = self.fwBackgroundColor.fwColor;
+        } else {
+            UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
+            [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        }
         [self setShadowImage:[UIImage new]];
         return;
     }
@@ -805,6 +845,24 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     self.tintColor = color;
 }
 
+- (BOOL)fwIsTranslucent
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsTranslucent)) boolValue];
+}
+
+- (void)setFwIsTranslucent:(BOOL)fwIsTranslucent
+{
+    if (fwIsTranslucent == self.fwIsTranslucent) return;
+    objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (fwIsTranslucent) {
+        self.translucent = YES;
+        self.backgroundImage = nil;
+    } else {
+        self.translucent = NO;
+        self.backgroundColor = nil;
+    }
+}
+
 - (UIColor *)fwBackgroundColor
 {
     return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
@@ -815,13 +873,21 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
-        self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
+        if (self.fwIsTranslucent) {
+            self.fwAppearance.backgroundColor = color;
+        } else {
+            self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
+        }
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
         return;
     }}
     
-    self.backgroundImage = [UIImage fwImageWithColor:color];
+    if (self.fwIsTranslucent) {
+        self.backgroundColor = color;
+    } else {
+        self.backgroundImage = [UIImage fwImageWithColor:color];
+    }
     self.shadowImage = [UIImage new];
 }
 
@@ -851,13 +917,21 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
         if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
-            self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+            if (self.fwIsTranslucent) {
+                self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
+            } else {
+                self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+            }
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
             return;
         }}
         
-        self.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+        if (self.fwIsTranslucent) {
+            self.backgroundColor = self.fwBackgroundColor.fwColor;
+        } else {
+            self.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+        }
         self.shadowImage = [UIImage new];
         return;
     }
