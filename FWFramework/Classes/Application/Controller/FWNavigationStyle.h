@@ -15,9 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 导航栏全局样式可扩展枚举
 typedef NSInteger FWNavigationBarStyle NS_TYPED_EXTENSIBLE_ENUM;
+/// 默认样式，不透明
 static const FWNavigationBarStyle FWNavigationBarStyleDefault     = 0;
+/// 隐藏样式，不显示
 static const FWNavigationBarStyle FWNavigationBarStyleHidden      = -1;
+/// 透明样式，全透明
 static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
+/// 半透明样式，半透明，需edgesForExtendedLayout为Top|All，contentInsetAdjustmentBehavior为Automatic|Always
+static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 
 /// 导航栏样式配置
 @interface FWNavigationBarAppearance : NSObject
@@ -28,6 +33,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 @property (nullable, nonatomic, strong) UIImage *backgroundImage;
 @property (nonatomic, assign) BOOL isHidden;
 @property (nonatomic, assign) BOOL isTransparent;
+@property (nonatomic, assign) BOOL isTranslucent;
 @property (nullable, nonatomic, copy) void (^appearanceBlock)(UINavigationBar *navigationBar);
 
 + (nullable FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style;
@@ -153,6 +159,9 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 /// 设置返回按钮图片，包含图片和转场Mask图片
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
 
+/// 导航栏是否半透明，需先设置，默认NO。YES时使用backgroundColor，NO时使用backgroundImage
+@property (nonatomic, assign) BOOL fwIsTranslucent;
+
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
@@ -199,6 +208,9 @@ static const FWNavigationBarStyle FWNavigationBarStyleTransparent = 1;
 
 /// 手工更新标签栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+
+/// 标签栏是否半透明，需先设置，默认NO。YES时使用backgroundColor，NO时使用backgroundImage
+@property (nonatomic, assign) BOOL fwIsTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
