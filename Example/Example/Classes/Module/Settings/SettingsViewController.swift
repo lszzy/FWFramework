@@ -145,7 +145,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     @objc func onOption() {
-        fwShowSheet(withTitle: FWLocalizedString("optionTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [AppConfig.isRootLogin ? FWLocalizedString("loginOptional") : FWLocalizedString("loginRequired"), Theme.isNavBarCustom ? FWLocalizedString("navBarSystem") : FWLocalizedString("navBarCustom"), Theme.isNavStyleCustom ? FWLocalizedString("navStyleDefault") : FWLocalizedString("navStyleCustom"), Theme.isLargeTitles ? FWLocalizedString("normalTitles") : FWLocalizedString("largeTitles")]) { (index) in
+        fwShowSheet(withTitle: FWLocalizedString("optionTitle"), message: nil, cancel: FWLocalizedString("取消"), actions: [AppConfig.isRootLogin ? FWLocalizedString("loginOptional") : FWLocalizedString("loginRequired"), Theme.isNavBarCustom ? FWLocalizedString("navBarSystem") : FWLocalizedString("navBarCustom"), Theme.isNavStyleCustom ? FWLocalizedString("navStyleDefault") : FWLocalizedString("navStyleCustom"), Theme.isLargeTitles ? FWLocalizedString("normalTitles") : FWLocalizedString("largeTitles"), Theme.isBarTranslucent ? "导航栏不透明" : "导航栏半透明", Theme.isBarSmooth ? "导航栏系统磨砂" : "导航栏自定义磨砂"]) { (index) in
             switch index {
             case 0:
                 AppConfig.isRootLogin = !AppConfig.isRootLogin
@@ -155,6 +155,10 @@ class SettingsViewController: UIViewController, FWTableViewController {
                 Theme.isNavStyleCustom = !Theme.isNavStyleCustom
             case 3:
                 Theme.isLargeTitles = !Theme.isLargeTitles
+            case 4:
+                Theme.isBarTranslucent = !Theme.isBarTranslucent
+            case 5:
+                Theme.isBarSmooth = !Theme.isBarSmooth
             default:
                 break
             }
