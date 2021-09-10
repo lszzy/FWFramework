@@ -434,7 +434,7 @@
 {
     _titleView = titleView;
     
-    if (self.style == FWNavigationBarStyleDefault) {
+    if (self.style == FWNavigationViewStyleDefault) {
         self.navigationItem.titleView = titleView;
     } else {
         self.contentView.titleView = titleView;
