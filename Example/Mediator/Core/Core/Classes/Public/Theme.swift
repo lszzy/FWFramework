@@ -17,6 +17,12 @@ import FWFramework
     @FWUserDefaultAnnotation("isLargeTitles", defaultValue: false)
     public static var isLargeTitles: Bool
     
+    @FWUserDefaultAnnotation("isBarTranslucent", defaultValue: false)
+    public static var isBarTranslucent: Bool
+    
+    @FWUserDefaultAnnotation("isBarSmooth", defaultValue: false)
+    public static var isBarSmooth: Bool
+    
     public static var backgroundColor: UIColor {
         UIColor.fwThemeLight(.white, dark: .black)
     }
@@ -73,9 +79,11 @@ extension Theme {
         let defaultAppearance = FWNavigationBarAppearance()
         defaultAppearance.foregroundColor = Theme.textColor
         defaultAppearance.backgroundColor = Theme.barColor
+        defaultAppearance.isTranslucent = Theme.isBarTranslucent
         let whiteAppearance = FWNavigationBarAppearance()
         whiteAppearance.foregroundColor = .black
         whiteAppearance.backgroundColor = .white
+        whiteAppearance.isTranslucent = Theme.isBarTranslucent
         let transparentAppearance = FWNavigationBarAppearance()
         transparentAppearance.foregroundColor = Theme.textColor
         transparentAppearance.isTransparent = true
@@ -119,9 +127,9 @@ extension Theme {
 
 @objc extension FWViewControllerManager {
     func viewControllerInit(_ viewController: UIViewController) {
-        viewController.edgesForExtendedLayout = []
+        viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
         viewController.extendedLayoutIncludesOpaqueBars = true
-        viewController.automaticallyAdjustsScrollViewInsets = false
+        viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
         viewController.hidesBottomBarWhenPushed = true
         viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
         viewController.fwNavigationBarStyle = .default

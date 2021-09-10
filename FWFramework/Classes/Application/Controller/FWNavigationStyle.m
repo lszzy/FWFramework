@@ -648,11 +648,9 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     if (fwIsTranslucent == self.fwIsTranslucent) return;
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (fwIsTranslucent) {
-        self.translucent = YES;
         [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     } else {
-        self.translucent = NO;
-        self.backgroundColor = nil;
+        self.barTintColor = nil;
     }
 }
 
@@ -678,7 +676,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     }}
     
     if (self.fwIsTranslucent) {
-        self.backgroundColor = color;
+        self.barTintColor = color;
     } else {
         UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
@@ -740,7 +738,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
         }}
         
         if (self.fwIsTranslucent) {
-            self.backgroundColor = self.fwBackgroundColor.fwColor;
+            self.barTintColor = self.fwBackgroundColor.fwColor;
         } else {
             UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
             [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
@@ -855,11 +853,9 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     if (fwIsTranslucent == self.fwIsTranslucent) return;
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (fwIsTranslucent) {
-        self.translucent = YES;
         self.backgroundImage = nil;
     } else {
-        self.translucent = NO;
-        self.backgroundColor = nil;
+        self.barTintColor = nil;
     }
 }
 
@@ -884,7 +880,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     }}
     
     if (self.fwIsTranslucent) {
-        self.backgroundColor = color;
+        self.barTintColor = color;
     } else {
         self.backgroundImage = [UIImage fwImageWithColor:color];
     }
@@ -928,7 +924,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
         }}
         
         if (self.fwIsTranslucent) {
-            self.backgroundColor = self.fwBackgroundColor.fwColor;
+            self.barTintColor = self.fwBackgroundColor.fwColor;
         } else {
             self.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
         }
