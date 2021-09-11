@@ -59,6 +59,25 @@ import FWFramework
         button.fwSetDimension(.height, toSize: 50)
         return button
     }
+    
+    public static func themeChanged() {
+        UINavigationBar.fwAppearanceEnabled = Theme.isBarAppearance
+        UITabBar.fwAppearanceEnabled = Theme.isBarAppearance
+        let defaultAppearance = FWNavigationBarAppearance()
+        defaultAppearance.foregroundColor = Theme.textColor
+        defaultAppearance.backgroundColor = Theme.isBarTranslucent ? Theme.barColor.fwColor(withAlpha: 0.8) : Theme.barColor
+        defaultAppearance.isTranslucent = Theme.isBarTranslucent
+        let whiteAppearance = FWNavigationBarAppearance()
+        whiteAppearance.foregroundColor = .black
+        whiteAppearance.backgroundColor = Theme.isBarTranslucent ? .white.fwColor(withAlpha: 0.8) : .white
+        whiteAppearance.isTranslucent = Theme.isBarTranslucent
+        let transparentAppearance = FWNavigationBarAppearance()
+        transparentAppearance.foregroundColor = Theme.textColor
+        transparentAppearance.isTransparent = true
+        FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
+        FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .white)
+        FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+    }
 }
 
 extension Theme {
@@ -68,30 +87,15 @@ extension Theme {
     }
     
     private static func setupAppearance() {
+        // 导航栏样式设置
+        themeChanged()
+        
         // 控制器样式设置
         let intercepter = FWViewControllerIntercepter()
         intercepter.initIntercepter = #selector(FWViewControllerManager.viewControllerInit(_:))
         intercepter.loadViewIntercepter = #selector(FWViewControllerManager.viewControllerLoadView(_:))
         intercepter.viewDidLoadIntercepter = #selector(FWViewControllerManager.viewControllerViewDidLoad(_:))
         FWViewControllerManager.sharedInstance.register(FWViewController.self, with: intercepter)
-        
-        // 导航栏样式设置
-        UINavigationBar.fwAppearanceEnabled = Theme.isBarAppearance
-        UITabBar.fwAppearanceEnabled = Theme.isBarAppearance
-        let defaultAppearance = FWNavigationBarAppearance()
-        defaultAppearance.foregroundColor = Theme.textColor
-        defaultAppearance.backgroundColor = Theme.barColor
-        defaultAppearance.isTranslucent = Theme.isBarTranslucent
-        let whiteAppearance = FWNavigationBarAppearance()
-        whiteAppearance.foregroundColor = .black
-        whiteAppearance.backgroundColor = .white
-        whiteAppearance.isTranslucent = Theme.isBarTranslucent
-        let transparentAppearance = FWNavigationBarAppearance()
-        transparentAppearance.foregroundColor = Theme.textColor
-        transparentAppearance.isTransparent = true
-        FWNavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
-        FWNavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .init(2))
-        FWNavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
     }
     
     private static func setupPlugin() {
