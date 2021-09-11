@@ -136,7 +136,6 @@
 + (void)setDefaultAppearance {
     FWZoomImageView *appearance = [FWZoomImageView appearance];
     appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
-    appearance.videoCloseButtonCenter = CGPointMake(UIScreen.fwSafeAreaInsets.left + 24, FWStatusBarHeight + FWNavigationBarHeight / 2);
     appearance.videoPlayButtonImage = [FWZoomImageVideoPlayerView largePlayImage];
     appearance.videoCloseButtonImage = [FWZoomImageVideoPlayerView closeImage];
 }
@@ -201,7 +200,8 @@
     }
     if (_videoCloseButton) {
         [_videoCloseButton sizeToFit];
-        _videoCloseButton.center = self.videoCloseButtonCenter;
+        CGPoint videoCloseButtonCenter = self.videoCloseButtonCenter ? self.videoCloseButtonCenter() : CGPointMake(UIScreen.fwSafeAreaInsets.left + 24, FWStatusBarHeight + FWNavigationBarHeight / 2);
+        _videoCloseButton.center = videoCloseButtonCenter;
     }
     
     if (_videoToolbar) {
@@ -722,7 +722,7 @@
     
     _videoCloseButton = ({
         UIButton *closeButton = [[UIButton alloc] init];
-        closeButton.fwTouchInsets = UIEdgeInsetsMake(12, 16, 12, 16);
+        closeButton.fwTouchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [closeButton setImage:self.videoCloseButtonImage forState:UIControlStateNormal];
         [closeButton addTarget:self action:@selector(handleCloseButton:) forControlEvents:UIControlEventTouchUpInside];
         closeButton.hidden = YES;
@@ -773,7 +773,7 @@
     [self setNeedsLayout];
 }
 
-- (void)setVideoCloseButtonCenter:(CGPoint)videoCloseButtonCenter {
+- (void)setVideoCloseButtonCenter:(CGPoint (^)(void))videoCloseButtonCenter {
     _videoCloseButtonCenter = videoCloseButtonCenter;
     if (!self.videoCloseButton) return;
     

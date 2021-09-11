@@ -336,10 +336,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)didInitialize {
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
-    self.pageLabelCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fwSafeAreaInsets.bottom + 18));
-    
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;
     
@@ -392,7 +389,8 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
         [self updatePageLabel];
     }
-    self.pageLabel.center = self.pageLabelCenter;
+    CGPoint pageLabelCenter = self.pageLabelCenter ? self.pageLabelCenter() : CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fwSafeAreaInsets.bottom + 18));
+    self.pageLabel.center = pageLabelCenter;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
