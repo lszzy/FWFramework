@@ -57,12 +57,19 @@ static const FWViewControllerState FWViewControllerStateFailure = 3;
 
 /*!
  @brief 视图控制器管理器
- @discussion 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，注册该拦截器即可
+ @discussion 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，使用全局自定义block即可
  */
 @interface FWViewControllerManager : NSObject
 
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance;
+
+/// 默认全局控制器init句柄
+@property (nonatomic, copy, nullable) void (^renderInit)(UIViewController *viewController);
+/// 默认全局控制器loadView句柄
+@property (nonatomic, copy, nullable) void (^renderLoadView)(UIViewController *viewController);
+/// 默认全局控制器viewDidLoad句柄
+@property (nonatomic, copy, nullable) void (^renderViewDidLoad)(UIViewController *viewController);
 
 /// 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;

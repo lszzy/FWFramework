@@ -91,11 +91,37 @@ extension Theme {
         themeChanged()
         
         // 控制器样式设置
-        let intercepter = FWViewControllerIntercepter()
-        intercepter.initIntercepter = #selector(FWViewControllerManager.viewControllerInit(_:))
-        intercepter.loadViewIntercepter = #selector(FWViewControllerManager.viewControllerLoadView(_:))
-        intercepter.viewDidLoadIntercepter = #selector(FWViewControllerManager.viewControllerViewDidLoad(_:))
-        FWViewControllerManager.sharedInstance.register(FWViewController.self, with: intercepter)
+        FWViewControllerManager.sharedInstance.renderInit = { viewController in
+            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
+            viewController.extendedLayoutIncludesOpaqueBars = true
+            viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
+            viewController.hidesBottomBarWhenPushed = true
+            viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
+            viewController.fwNavigationBarStyle = .default
+            viewController.fwForcePopGesture = true
+        }
+        FWViewControllerManager.sharedInstance.renderLoadView = { viewController in
+            viewController.view.backgroundColor = Theme.tableColor
+            viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
+        }
+        FWViewControllerManager.sharedInstance.renderViewDidLoad = { viewController in
+            viewController.fwBackBarItem = FWIcon.backImage
+            if #available(iOS 11.0, *) {
+                viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
+                
+                var scrollView: UIScrollView?
+                if let tableController = viewController as? UIViewController & FWTableViewController {
+                    scrollView = tableController.tableView
+                } else if let scrollController = viewController as? UIViewController & FWScrollViewController {
+                    scrollView = scrollController.scrollView
+                } else if let collectionController = viewController as? UIViewController & FWCollectionViewController {
+                    scrollView = collectionController.collectionView
+                } else if let webController = viewController as? UIViewController & FWWebViewController {
+                    scrollView = webController.webView.scrollView
+                }
+                scrollView?.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+            }
+        }
     }
     
     private static func setupPlugin() {
@@ -127,42 +153,6 @@ extension Theme {
         }
         FWEmptyPluginImpl.sharedInstance.defaultAction = {
             return "重新加载"
-        }
-    }
-}
-
-@objc extension FWViewControllerManager {
-    func viewControllerInit(_ viewController: UIViewController) {
-        viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
-        viewController.extendedLayoutIncludesOpaqueBars = true
-        viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
-        viewController.hidesBottomBarWhenPushed = true
-        viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
-        viewController.fwNavigationBarStyle = .default
-        viewController.fwForcePopGesture = true
-    }
-    
-    func viewControllerLoadView(_ viewController: UIViewController) {
-        viewController.view.backgroundColor = Theme.tableColor
-        viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
-    }
-    
-    func viewControllerViewDidLoad(_ viewController: UIViewController) {
-        viewController.fwBackBarItem = FWIcon.backImage
-        if #available(iOS 11.0, *) {
-            viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
-            
-            var scrollView: UIScrollView?
-            if let tableController = viewController as? UIViewController & FWTableViewController {
-                scrollView = tableController.tableView
-            } else if let scrollController = viewController as? UIViewController & FWScrollViewController {
-                scrollView = scrollController.scrollView
-            } else if let collectionController = viewController as? UIViewController & FWCollectionViewController {
-                scrollView = collectionController.collectionView
-            } else if let webController = viewController as? UIViewController & FWWebViewController {
-                scrollView = webController.webView.scrollView
-            }
-            scrollView?.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
         }
     }
 }
