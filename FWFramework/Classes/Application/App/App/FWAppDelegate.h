@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FWSceneDelegate.h"
+#import "FWAppConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
