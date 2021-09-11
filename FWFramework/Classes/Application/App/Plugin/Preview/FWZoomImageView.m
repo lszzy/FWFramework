@@ -532,9 +532,11 @@
     self.videoToolbar.playButton.hidden = YES;
     self.videoToolbar.pauseButton.hidden = NO;
     if (button.tag == 1) {
+        if (self.showsVideoCloseButton) {
+            self.videoCloseButton.hidden = YES;
+        }
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = YES;
-            self.videoCloseButton.hidden = YES;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
                 [self.delegate zoomImageView:self didHideVideoToolbar:YES];
             }
@@ -655,9 +657,7 @@
     [self pauseVideo];
     [self syncVideoProgressSlider];
     self.videoToolbar.hidden = YES;
-    if (self.showsVideoToolbar) {
-        self.videoCloseButton.hidden = YES;
-    }
+    self.videoCloseButton.hidden = YES;
     self.videoPlayButton.hidden = NO;
 }
 
@@ -860,9 +860,11 @@
 
 - (void)handleSingleTapGestureWithPoint:(UITapGestureRecognizer *)gestureRecognizer {
     if (self.videoPlayerItem) {
+        if (self.showsVideoCloseButton) {
+            self.videoCloseButton.hidden = !self.videoCloseButton.hidden;
+        }
         if (self.showsVideoToolbar) {
             self.videoToolbar.hidden = !self.videoToolbar.hidden;
-            self.videoCloseButton.hidden = self.showsVideoCloseButton ? self.videoToolbar.hidden : YES;
             if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
                 [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
             }
