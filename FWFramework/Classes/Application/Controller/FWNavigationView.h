@@ -112,10 +112,11 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
  *
  * 原则：优先用系统导航栏，不满足时才使用自定义导航栏
  * 注意：启用自定义导航栏后，自动绑定控制器，虽然兼容FWNavigationStyle方法，但有几点不同，列举如下：
- * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout
+ * 1. VC容器视图为fwView，所有子视图应该添加到fwView；fwView兼容系统导航栏view和edgesForExtendedLayout(详见fwNavigationExtendedLayout)
  * 2. fwNavigationView位于VC.view顶部；fwView位于VC.view底部，顶部对齐fwNavigationView.底部
  * 3. VC返回按钮会使用自身的backBarButtonItem，兼容系统导航栏动态切换；而系统VC会使用前一个控制器的backBarButtonItem
  * 4. 不支持iOS11+自带largeTitles效果，需要时可使用bottomView自行实现
+ * 5. 不兼容框架导航栏半透明效果，如需该效果请使用系统导航栏
  * 如果从系统导航栏动态迁移到自定义导航栏，注意检查导航相关功能是否异常
  */
 @interface UIViewController (FWNavigationView)
@@ -134,6 +135,9 @@ typedef NS_ENUM(NSInteger, FWNavigationViewStyle) {
 
 /// 启用自定义导航栏后的内容容器视图，位于导航栏下方或底部，建议通过fwView方法调用
 @property (nonatomic, strong, readonly) UIView *fwContainerView;
+
+/// 自定义导航栏是否兼容edgesForExtendedLayout(不支持scrollView边缘自适应)，默认YES
+@property (nonatomic, assign) BOOL fwNavigationExtendedLayout;
 
 @end
 

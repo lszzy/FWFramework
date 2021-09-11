@@ -97,6 +97,7 @@ extension Theme {
             viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
             viewController.hidesBottomBarWhenPushed = true
             viewController.fwNavigationViewEnabled = Theme.isNavBarCustom
+            viewController.fwNavigationExtendedLayout = !Theme.isBarTranslucent
             viewController.fwNavigationBarStyle = .default
             viewController.fwForcePopGesture = true
         }
