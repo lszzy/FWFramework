@@ -20,8 +20,8 @@ import FWFramework
     @FWUserDefaultAnnotation("isBarTranslucent", defaultValue: false)
     public static var isBarTranslucent: Bool
     
-    @FWUserDefaultAnnotation("isBarSmooth", defaultValue: false)
-    public static var isBarSmooth: Bool
+    @FWUserDefaultAnnotation("isBarAppearance", defaultValue: false)
+    public static var isBarAppearance: Bool
     
     public static var backgroundColor: UIColor {
         UIColor.fwThemeLight(.white, dark: .black)
@@ -76,6 +76,8 @@ extension Theme {
         FWViewControllerManager.sharedInstance.register(FWViewController.self, with: intercepter)
         
         // 导航栏样式设置
+        UINavigationBar.fwAppearanceEnabled = Theme.isBarAppearance
+        UITabBar.fwAppearanceEnabled = Theme.isBarAppearance
         let defaultAppearance = FWNavigationBarAppearance()
         defaultAppearance.foregroundColor = Theme.textColor
         defaultAppearance.backgroundColor = Theme.barColor
@@ -145,6 +147,18 @@ extension Theme {
         viewController.fwBackBarItem = FWIcon.backImage
         if #available(iOS 11.0, *) {
             viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
+            
+            var scrollView: UIScrollView?
+            if let tableController = viewController as? UIViewController & FWTableViewController {
+                scrollView = tableController.tableView
+            } else if let scrollController = viewController as? UIViewController & FWScrollViewController {
+                scrollView = scrollController.scrollView
+            } else if let collectionController = viewController as? UIViewController & FWCollectionViewController {
+                scrollView = collectionController.collectionView
+            } else if let webController = viewController as? UIViewController & FWWebViewController {
+                scrollView = webController.webView.scrollView
+            }
+            scrollView?.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
         }
     }
 }

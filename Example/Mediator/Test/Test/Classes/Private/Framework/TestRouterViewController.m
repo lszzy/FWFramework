@@ -233,7 +233,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)renderTableLayout
 {
-    [self.tableView fwPinEdgesToSuperviewSafeArea];
+    [self.tableView fwPinEdgesToSuperview];
 }
 
 - (void)renderModel

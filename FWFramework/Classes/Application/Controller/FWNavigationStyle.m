@@ -647,6 +647,16 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 {
     if (fwIsTranslucent == self.fwIsTranslucent) return;
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (fwIsTranslucent) {
+            self.fwAppearance.backgroundImage = nil;
+        } else {
+            self.fwAppearance.backgroundColor = nil;
+        }
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
     if (fwIsTranslucent) {
         [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     } else {
@@ -852,6 +862,16 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 {
     if (fwIsTranslucent == self.fwIsTranslucent) return;
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (fwIsTranslucent) {
+            self.fwAppearance.backgroundImage = nil;
+        } else {
+            self.fwAppearance.backgroundColor = nil;
+        }
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
     if (fwIsTranslucent) {
         self.backgroundImage = nil;
     } else {
