@@ -174,7 +174,12 @@
         viewController.hidesBottomBarWhenPushed = YES;
         */
         
-        // 1. 拦截器init
+        // 1. 默认init
+        if (self.renderInit) {
+            self.renderInit(viewController);
+        }
+        
+        // 2. 拦截器init
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
             FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
@@ -186,7 +191,7 @@
             }
         }
         
-        // 2. 控制器renderInit
+        // 3. 控制器renderInit
         if ([viewController respondsToSelector:@selector(renderInit)]) {
             [(id<FWViewController>)viewController renderInit];
         }
@@ -196,7 +201,12 @@
 - (void)hookLoadView:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 1. 拦截器loadView
+        // 1. 默认loadView
+        if (self.renderLoadView) {
+            self.renderLoadView(viewController);
+        }
+        
+        // 2. 拦截器loadView
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
             FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
@@ -208,7 +218,7 @@
             }
         }
         
-        // 2. 控制器renderView
+        // 3. 控制器renderView
         if ([viewController respondsToSelector:@selector(renderView)]) {
             [(id<FWViewController>)viewController renderView];
         }
@@ -218,7 +228,12 @@
 - (void)hookViewDidLoad:(UIViewController *)viewController
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-        // 1. 拦截器viewDidLoad
+        // 1. 默认viewDidLoad
+        if (self.renderViewDidLoad) {
+            self.renderViewDidLoad(viewController);
+        }
+        
+        // 2. 拦截器viewDidLoad
         NSArray *protocolNames = [self protocolsWithClass:viewController.class];
         for (NSString *protocolName in protocolNames) {
             FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
@@ -230,17 +245,17 @@
             }
         }
         
-        // 2. 控制器renderModel
+        // 3. 控制器renderModel
         if ([viewController respondsToSelector:@selector(renderModel)]) {
             [(id<FWViewController>)viewController renderModel];
         }
         
-        // 3. 控制器renderData
+        // 4. 控制器renderData
         if ([viewController respondsToSelector:@selector(renderData)]) {
             [(id<FWViewController>)viewController renderData];
         }
         
-        // 4. 控制器renderState
+        // 5. 控制器renderState
         if ([viewController respondsToSelector:@selector(renderState:withObject:)]) {
             [(id<FWViewController>)viewController renderState:FWViewControllerStateReady withObject:nil];
         }
