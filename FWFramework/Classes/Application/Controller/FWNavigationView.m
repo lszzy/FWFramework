@@ -508,7 +508,7 @@
             FWSwizzleOriginal(edges);
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            BOOL topEdges = (edges & UIRectEdgeTop) == UIRectEdgeTop;
+            BOOL topEdges = selfObject.fwNavigationExtendedLayout ? (edges & UIRectEdgeTop) == UIRectEdgeTop : NO;
             selfObject.fwNavigationView.noneEdgeConstraint.active = !topEdges;
             selfObject.fwNavigationView.topEdgeConstraint.active = topEdges;
         }));
@@ -523,7 +523,7 @@
             FWSwizzleOriginal();
             if (!selfObject.fwNavigationViewEnabled) return;
             
-            BOOL topEdges = (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop;
+            BOOL topEdges = selfObject.fwNavigationExtendedLayout ? (selfObject.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop : NO;
             [selfObject.view addSubview:selfObject.fwNavigationView];
             [selfObject.view addSubview:selfObject.fwContainerView];
             [selfObject.fwNavigationView fwPinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
@@ -617,6 +617,22 @@
         objc_setAssociatedObject(self, _cmd, containerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return containerView;
+}
+
+- (BOOL)fwNavigationExtendedLayout
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fwNavigationExtendedLayout));
+    return value ? value.boolValue : YES;
+}
+
+- (void)setFwNavigationExtendedLayout:(BOOL)extendedLayout
+{
+    objc_setAssociatedObject(self, @selector(fwNavigationExtendedLayout), @(extendedLayout), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!self.fwNavigationViewEnabled) return;
+    
+    BOOL topEdges = extendedLayout ? (self.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop : NO;
+    self.fwNavigationView.noneEdgeConstraint.active = !topEdges;
+    self.fwNavigationView.topEdgeConstraint.active = topEdges;
 }
 
 @end
