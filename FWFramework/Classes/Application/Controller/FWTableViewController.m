@@ -36,6 +36,10 @@
     tableView.delegate = viewController;
     [viewController.fwView addSubview:tableView];
     
+    if (self.hookTableViewController) {
+        self.hookTableViewController(viewController);
+    }
+    
     if ([viewController respondsToSelector:@selector(renderTableView)]) {
         [viewController renderTableView];
     }

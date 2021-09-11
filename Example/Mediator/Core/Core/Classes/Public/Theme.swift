@@ -91,7 +91,7 @@ extension Theme {
         themeChanged()
         
         // 控制器样式设置
-        FWViewControllerManager.sharedInstance.renderInit = { viewController in
+        FWViewControllerManager.sharedInstance.hookInit = { viewController in
             viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
             viewController.extendedLayoutIncludesOpaqueBars = true
             viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
@@ -101,26 +101,35 @@ extension Theme {
             viewController.fwNavigationBarStyle = .default
             viewController.fwForcePopGesture = true
         }
-        FWViewControllerManager.sharedInstance.renderLoadView = { viewController in
+        FWViewControllerManager.sharedInstance.hookLoadView = { viewController in
             viewController.view.backgroundColor = Theme.tableColor
             viewController.fwNavigationView.style = Theme.isNavStyleCustom ? .custom : .default
         }
-        FWViewControllerManager.sharedInstance.renderViewDidLoad = { viewController in
+        FWViewControllerManager.sharedInstance.hookViewDidLoad = { viewController in
             viewController.fwBackBarItem = FWIcon.backImage
             if #available(iOS 11.0, *) {
                 viewController.fwNavigationBar?.prefersLargeTitles = Theme.isLargeTitles
-                
-                var scrollView: UIScrollView?
-                if let tableController = viewController as? UIViewController & FWTableViewController {
-                    scrollView = tableController.tableView
-                } else if let scrollController = viewController as? UIViewController & FWScrollViewController {
-                    scrollView = scrollController.scrollView
-                } else if let collectionController = viewController as? UIViewController & FWCollectionViewController {
-                    scrollView = collectionController.collectionView
-                } else if let webController = viewController as? UIViewController & FWWebViewController {
-                    scrollView = webController.webView.scrollView
-                }
-                scrollView?.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+            }
+        }
+        
+        FWViewControllerManager.sharedInstance.hookScrollViewController = { viewController in
+            if #available(iOS 11.0, *) {
+                viewController.scrollView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+            }
+        }
+        FWViewControllerManager.sharedInstance.hookTableViewController = { viewController in
+            if #available(iOS 11.0, *) {
+                viewController.tableView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+            }
+        }
+        FWViewControllerManager.sharedInstance.hookCollectionViewController = { viewController in
+            if #available(iOS 11.0, *) {
+                viewController.collectionView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+            }
+        }
+        FWViewControllerManager.sharedInstance.hookWebViewController = { viewController in
+            if #available(iOS 11.0, *) {
+                viewController.webView.scrollView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
             }
         }
     }

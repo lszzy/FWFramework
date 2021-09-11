@@ -37,6 +37,10 @@
     [scrollView addSubview:contentView];
     [contentView fwPinEdgesToSuperview];
     
+    if (self.hookScrollViewController) {
+        self.hookScrollViewController(viewController);
+    }
+    
     if ([viewController respondsToSelector:@selector(renderScrollView)]) {
         [viewController renderScrollView];
     }

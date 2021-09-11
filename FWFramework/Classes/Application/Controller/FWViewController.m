@@ -175,8 +175,8 @@
         */
         
         // 1. 默认init
-        if (self.renderInit) {
-            self.renderInit(viewController);
+        if (self.hookInit) {
+            self.hookInit(viewController);
         }
         
         // 2. 拦截器init
@@ -202,8 +202,8 @@
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
         // 1. 默认loadView
-        if (self.renderLoadView) {
-            self.renderLoadView(viewController);
+        if (self.hookLoadView) {
+            self.hookLoadView(viewController);
         }
         
         // 2. 拦截器loadView
@@ -229,8 +229,8 @@
 {
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
         // 1. 默认viewDidLoad
-        if (self.renderViewDidLoad) {
-            self.renderViewDidLoad(viewController);
+        if (self.hookViewDidLoad) {
+            self.hookViewDidLoad(viewController);
         }
         
         // 2. 拦截器viewDidLoad

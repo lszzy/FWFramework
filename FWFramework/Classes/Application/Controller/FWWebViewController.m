@@ -46,6 +46,10 @@
         weakController.fwNavigationItem.title = webView.title;
     }];
     
+    if (self.hookWebViewController) {
+        self.hookWebViewController(viewController);
+    }
+    
     if ([viewController respondsToSelector:@selector(renderWebView)]) {
         [viewController renderWebView];
     }

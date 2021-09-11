@@ -55,6 +55,11 @@ static const FWViewControllerState FWViewControllerStateFailure = 3;
 
 @end
 
+@protocol FWScrollViewController;
+@protocol FWTableViewController;
+@protocol FWCollectionViewController;
+@protocol FWWebViewController;
+
 /*!
  @brief 视图控制器管理器
  @discussion 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，使用全局自定义block即可
@@ -64,12 +69,21 @@ static const FWViewControllerState FWViewControllerStateFailure = 3;
 /*! @brief 单例模式 */
 @property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance;
 
-/// 默认全局控制器init句柄
-@property (nonatomic, copy, nullable) void (^renderInit)(UIViewController *viewController);
-/// 默认全局控制器loadView句柄
-@property (nonatomic, copy, nullable) void (^renderLoadView)(UIViewController *viewController);
-/// 默认全局控制器viewDidLoad句柄
-@property (nonatomic, copy, nullable) void (^renderViewDidLoad)(UIViewController *viewController);
+/// 默认全局控制器init钩子句柄，init优先自动调用
+@property (nonatomic, copy, nullable) void (^hookInit)(UIViewController *viewController);
+/// 默认全局控制器loadView钩子句柄，loadView优先自动调用
+@property (nonatomic, copy, nullable) void (^hookLoadView)(UIViewController *viewController);
+/// 默认全局控制器viewDidLoad钩子句柄，viewDidLoad优先自动调用
+@property (nonatomic, copy, nullable) void (^hookViewDidLoad)(UIViewController *viewController);
+
+/// 默认全局scrollViewController钩子句柄，loadView自动调用，先于renderScrollView
+@property (nonatomic, copy, nullable) void (^hookScrollViewController)(UIViewController<FWScrollViewController> *viewController);
+/// 默认全局tableViewController钩子句柄，loadView自动调用，先于renderTableView
+@property (nonatomic, copy, nullable) void (^hookTableViewController)(UIViewController<FWTableViewController> *viewController);
+/// 默认全局collectionViewController钩子句柄，loadView自动调用，先于renderCollectionView
+@property (nonatomic, copy, nullable) void (^hookCollectionViewController)(UIViewController<FWCollectionViewController> *viewController);
+/// 默认全局webViewController钩子句柄，loadView自动调用，先于renderWebView
+@property (nonatomic, copy, nullable) void (^hookWebViewController)(UIViewController<FWWebViewController> *viewController);
 
 /// 注册协议拦截器，提供拦截和跳转方法
 - (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
