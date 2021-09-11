@@ -158,8 +158,8 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 /// 页数标签需要更新，子类可重写
 - (void)updatePageLabel;
 
-/// 手势拖动开始时隐藏子视图，拖动完毕后还原，子类可重写
-- (void)dismissingGestureChanged:(BOOL)finished;
+/// 触发拖动手势或dismiss时切换子视图显示或隐藏，子类可重写
+- (void)dismissingGestureChanged:(BOOL)isHidden;
 
 @end
 

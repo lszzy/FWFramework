@@ -490,7 +490,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             self.gestureZoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
             self.gestureZoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
             if (self.dismissingGestureEnabled) {
-                [self dismissingGestureChanged:NO];
+                [self dismissingGestureChanged:YES];
             }
             break;
             
@@ -565,22 +565,29 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     self.gestureZoomImageView.transform = CGAffineTransformIdentity;
     self.gestureBeganLocation = CGPointZero;
     if (self.dismissingGestureEnabled) {
-        [self dismissingGestureChanged:YES];
+        [self dismissingGestureChanged:NO];
     }
     self.gestureZoomImageView = nil;
     self.view.backgroundColor = self.backgroundColor;
 }
 
-- (void)dismissingGestureChanged:(BOOL)finished {
-    if (self.gestureZoomImageView.videoPlayerItem) {
-        if (self.gestureZoomImageView.showsVideoToolbar) self.gestureZoomImageView.videoToolbar.alpha = finished ? 1 : 0;
-        if (self.gestureZoomImageView.showsVideoCloseButton) self.gestureZoomImageView.videoCloseButton.alpha = finished ? 1 : 0;
+- (void)dismissingGestureChanged:(BOOL)isHidden {
+    FWZoomImageView *zoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
+    if (zoomImageView.videoPlayerItem) {
+        if (zoomImageView.showsVideoToolbar) zoomImageView.videoToolbar.alpha = isHidden ? 0 : 1;
+        if (zoomImageView.showsVideoCloseButton) zoomImageView.videoCloseButton.alpha = isHidden ? 0 : 1;
     }
     [self.view.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
         if (obj != self.imagePreviewView) {
-            obj.alpha = finished ? 1 : 0;
+            obj.alpha = isHidden ? 0 : 1;
         }
     }];
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [self dismissingGestureChanged:YES];
+    [super dismissViewControllerAnimated:animated completion:completion];
 }
 
 #pragma mark - FWImagePreviewViewDelegate
