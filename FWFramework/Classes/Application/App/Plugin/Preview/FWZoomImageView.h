@@ -110,11 +110,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 播放 video 时屏幕左上角的关闭按钮，默认自动关闭所在present控制器
 @property(nonatomic, strong, readonly) UIButton *videoCloseButton;
 
-// 播放 video 时屏幕左上角的关闭按钮中心，默认同导航栏关闭按钮
-@property(nonatomic, assign) CGPoint videoCloseButtonCenter UI_APPEARANCE_SELECTOR;
-
 // 可通过此属性修改 video 播放时屏幕左上角的关闭按钮图片
 @property(nonatomic, strong) UIImage *videoCloseButtonImage UI_APPEARANCE_SELECTOR;
+
+// 播放 video 时屏幕左上角的关闭按钮中心句柄，默认同导航栏关闭按钮
+@property(nonatomic, copy, nullable) CGPoint (^videoCloseButtonCenter)(void);
 
 // 进度视图，居中显示
 @property(nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
