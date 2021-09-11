@@ -135,8 +135,8 @@
 
 + (void)setDefaultAppearance {
     FWZoomImageView *appearance = [FWZoomImageView appearance];
-    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 15, 15, 8);
-    appearance.videoCloseButtonCenter = CGPointMake(UIScreen.fwSafeAreaInsets.left + 25, FWStatusBarHeight + FWNavigationBarHeight / 2);
+    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
+    appearance.videoCloseButtonCenter = CGPointMake(UIScreen.fwSafeAreaInsets.left + 24, FWStatusBarHeight + FWNavigationBarHeight / 2);
     appearance.videoPlayButtonImage = [FWZoomImageVideoPlayerView largePlayImage];
     appearance.videoCloseButtonImage = [FWZoomImageVideoPlayerView closeImage];
 }
