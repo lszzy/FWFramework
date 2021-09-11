@@ -338,7 +338,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
-    self.pageLabelCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fwSafeAreaInsets.bottom + 20));
+    self.pageLabelCenter = CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fwSafeAreaInsets.bottom + 18));
     
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;

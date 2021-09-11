@@ -151,7 +151,7 @@ extern const CGFloat FWImagePreviewCornerRadiusAutomaticDimension;
 
 /// 是否显示页数标签，默认NO
 @property(nonatomic, assign) BOOL showsPageLabel;
-/// 页数标签中心，默认离底部安全距离+20
+/// 页数标签中心，默认离底部安全距离+18
 @property(nonatomic, assign) CGPoint pageLabelCenter;
 /// 页数标签，默认字号16、白色
 @property(nonatomic, strong, readonly) UILabel *pageLabel;
