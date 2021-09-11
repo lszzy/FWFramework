@@ -135,7 +135,7 @@
 
 + (void)setDefaultAppearance {
     FWZoomImageView *appearance = [FWZoomImageView appearance];
-    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 18, 25, 18);
+    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 15, 15, 8);
     appearance.videoCloseButtonCenter = CGPointMake(UIScreen.fwSafeAreaInsets.left + 25, FWStatusBarHeight + FWNavigationBarHeight / 2);
     appearance.videoPlayButtonImage = [FWZoomImageVideoPlayerView largePlayImage];
     appearance.videoCloseButtonImage = [FWZoomImageVideoPlayerView closeImage];
@@ -693,6 +693,7 @@
     if (_videoToolbar) return;
     _videoToolbar = ({
         FWZoomImageVideoToolbar *videoToolbar = [[FWZoomImageVideoToolbar alloc] init];
+        videoToolbar.paddings = UIEdgeInsetsMake(10, 10, 10, 10);
         [videoToolbar.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
         [videoToolbar.pauseButton addTarget:self action:@selector(handlePauseButton) forControlEvents:UIControlEventTouchUpInside];
         videoToolbar.hidden = YES;

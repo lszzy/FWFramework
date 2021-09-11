@@ -36,6 +36,10 @@
     collectionView.delegate = viewController;
     [viewController.fwView addSubview:collectionView];
     
+    if (self.hookCollectionViewController) {
+        self.hookCollectionViewController(viewController);
+    }
+    
     if ([viewController respondsToSelector:@selector(renderCollectionView)]) {
         [viewController renderCollectionView];
     }
