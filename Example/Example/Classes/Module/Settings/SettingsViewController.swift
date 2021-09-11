@@ -159,8 +159,7 @@ class SettingsViewController: UIViewController, FWTableViewController {
                 Theme.isBarTranslucent = !Theme.isBarTranslucent
             case 5:
                 Theme.isBarAppearance = !Theme.isBarAppearance
-                UINavigationBar.fwAppearanceEnabled = Theme.isBarAppearance
-                UITabBar.fwAppearanceEnabled = Theme.isBarAppearance
+                Theme.themeChanged()
             default:
                 break
             }

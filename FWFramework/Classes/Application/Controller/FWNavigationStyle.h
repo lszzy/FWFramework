@@ -159,7 +159,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 设置返回按钮图片，包含图片和转场Mask图片
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
 
-/// 导航栏是否半透明，需先于背景色设置，默认NO。YES时使用barTintColor，NO时使用backgroundImage
+/// 导航栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
@@ -209,7 +209,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 手工更新标签栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 标签栏是否半透明，需先于背景色设置，默认NO。YES时使用barTintColor，NO时使用backgroundImage
+/// 标签栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
