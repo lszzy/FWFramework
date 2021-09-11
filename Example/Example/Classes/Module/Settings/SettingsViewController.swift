@@ -29,7 +29,6 @@ class SettingsViewController: UIViewController, FWTableViewController {
     }
     
     func renderTableView() {
-        tableView.backgroundColor = Theme.tableColor
         fwNavigationView.scrollView = tableView
         
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: FWScreenWidth, height: 90))

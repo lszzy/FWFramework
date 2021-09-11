@@ -43,7 +43,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[@"Associated不加锁", @"onLock1"],
                                          @[@"Associated加锁", @"onLock2"],

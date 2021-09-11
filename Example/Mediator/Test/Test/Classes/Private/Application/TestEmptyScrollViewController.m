@@ -31,7 +31,6 @@
 
 - (void)renderView
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwEmptyViewDelegate = self;
     FWWeakifySelf();
     [self.tableView fwAddPullRefreshWithBlock:^{

@@ -45,7 +45,6 @@ class TestNavigationTitleLabel: UILabel, FWNavigationTitleViewProtocol {
     }
     
     override func renderView() {
-        tableView.backgroundColor = Theme.tableColor
         tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top
         tableView.fwSetRefreshingTarget(self, action: #selector(onRefreshing))
     }

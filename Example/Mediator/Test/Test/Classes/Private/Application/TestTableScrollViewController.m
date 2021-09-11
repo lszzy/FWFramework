@@ -130,7 +130,6 @@
 
 - (void)renderTableView
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableView registerClass:[TestTableScrollCell class] forCellReuseIdentifier:@"Cell"];
 }
 

@@ -94,7 +94,6 @@
 
 - (void)renderView
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwPullRefreshHeight = FWPullRefreshView.height + UIScreen.fwSafeAreaInsets.top;
     [self.tableView fwSetRefreshingTarget:self action:@selector(onRefreshing)];
     self.tableView.fwInfiniteScrollHeight = FWInfiniteScrollView.height + UIScreen.fwSafeAreaInsets.bottom;

@@ -120,6 +120,7 @@ extension Theme {
         FWViewControllerManager.sharedInstance.hookTableViewController = { viewController in
             if #available(iOS 11.0, *) {
                 viewController.tableView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
+                viewController.tableView.backgroundColor = Theme.tableColor
             }
         }
         FWViewControllerManager.sharedInstance.hookCollectionViewController = { viewController in

@@ -63,7 +63,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
         @"显示左边的loading",
         @"显示右边的accessoryView",

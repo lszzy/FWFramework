@@ -87,7 +87,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[@"push", @"onPush"],
                                          @[@"present", @"onPresent"],
