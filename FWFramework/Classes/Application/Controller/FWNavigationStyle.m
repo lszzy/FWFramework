@@ -542,7 +542,10 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 
 + (BOOL)fwAppearanceEnabled
 {
-    return fwStaticNavigationBarAppearanceEnabled;
+    if (@available(iOS 13.0, *)) {
+        return fwStaticNavigationBarAppearanceEnabled;
+    }
+    return NO;
 }
 
 + (void)setFwAppearanceEnabled:(BOOL)enabled
@@ -813,7 +816,10 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 
 + (BOOL)fwAppearanceEnabled
 {
-    return fwStaticTabBarAppearanceEnabled;
+    if (@available(iOS 13.0, *)) {
+        return fwStaticTabBarAppearanceEnabled;
+    }
+    return NO;
 }
 
 + (void)setFwAppearanceEnabled:(BOOL)enabled

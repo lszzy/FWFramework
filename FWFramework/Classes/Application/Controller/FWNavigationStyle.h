@@ -147,7 +147,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
  */
 @interface UINavigationBar (FWStyle)
 
-/// 是否启用iOS13+样式，iOS15+必须启用。默认Xcode13+为YES，Xcode12及以下为NO
+/// 是否启用iOS13+样式，iOS15+必须启用，iOS13以下始终为NO。默认Xcode13+为YES，Xcode12及以下为NO
 @property (class, nonatomic, assign) BOOL fwAppearanceEnabled;
 
 /// 导航栏iOS13+样式对象，用于自定义样式
@@ -200,7 +200,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
  */
 @interface UITabBar (FWStyle)
 
-/// 是否启用iOS13+样式，iOS15+必须启用。默认Xcode13+为YES，Xcode12及以下为NO
+/// 是否启用iOS13+样式，iOS15+必须启用，iOS13以下始终为NO。默认Xcode13+为YES，Xcode12及以下为NO
 @property (class, nonatomic, assign) BOOL fwAppearanceEnabled;
 
 /// 标签栏iOS13+样式对象，用于自定义样式
