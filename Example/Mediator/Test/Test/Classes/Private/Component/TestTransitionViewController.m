@@ -299,7 +299,6 @@ FWDealloc();
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                           @[@"默认Present", @"onPresent"],
                                           @[@"转场present", @"onPresentTransition"],

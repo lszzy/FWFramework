@@ -22,7 +22,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[@"无文本", @"onIndicator"],
                                          @[@"有文本", @"onIndicator2"],

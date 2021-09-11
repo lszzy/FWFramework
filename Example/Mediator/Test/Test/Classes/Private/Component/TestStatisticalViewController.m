@@ -110,7 +110,6 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
 
 - (void)renderTableLayout
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     self.tableView.fwLayoutChain.edges();
 }
 

@@ -38,7 +38,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[@"定位", @(FWAuthorizeTypeLocationWhenInUse)],
                                          @[@"后台定位", @(FWAuthorizeTypeLocationAlways)],

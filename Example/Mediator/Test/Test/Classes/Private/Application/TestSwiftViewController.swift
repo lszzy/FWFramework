@@ -203,7 +203,6 @@ import FWFramework
 @objcMembers class SwiftTestTableViewController: UIViewController, FWTableViewController {
     func renderTableView() {
         view.backgroundColor = Theme.backgroundColor
-        tableView.backgroundColor = Theme.tableColor
     }
     
     func renderData() {

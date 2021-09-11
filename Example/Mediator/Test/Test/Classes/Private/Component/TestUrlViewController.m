@@ -33,7 +33,6 @@
     self.to = @"29.5302033389,106.4601725638";
     self.target = @"港城凤鸣香山";
     
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                          @[@"Google Maps(gps)", @"onGoogleMaps1"],
                                          @[@"Google Maps(address)", @"onGoogleMaps2"],

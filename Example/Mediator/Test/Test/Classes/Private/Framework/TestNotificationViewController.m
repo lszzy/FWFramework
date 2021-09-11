@@ -21,7 +21,6 @@
 
 - (void)renderData
 {
-    self.tableView.backgroundColor = Theme.tableColor;
     [self.tableData addObjectsFromArray:@[
                                           @[@"本地通知(不重复，立即)", @"onNotification1"],
                                           @[@"本地通知(不重复，5秒后)", @"onNotification2"],
