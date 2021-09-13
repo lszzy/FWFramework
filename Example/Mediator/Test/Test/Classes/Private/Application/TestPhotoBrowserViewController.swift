@@ -10,19 +10,26 @@ import FWFramework
 
 @objcMembers class TestPhotoBrowserViewController: TestViewController, FWTableViewController {
     private var results: [Any] = []
+    private var allowsEditing: Bool = false
     
     override func renderModel() {
-        fwSetRightBarItem("浏览") { [weak self] sender in
-            self?.showData(self?.results ?? [])
-        }
-        fwAddRightBarItem("切换") { sender in
-            let plugin = FWPluginManager.loadPlugin(FWImagePreviewPlugin.self)
-            if plugin != nil {
-                FWPluginManager.unloadPlugin(FWImagePreviewPlugin.self)
-                FWPluginManager.unregisterPlugin(FWImagePreviewPlugin.self)
-            } else {
-                FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
-            }
+        fwSetRightBarItem(FWIcon.refreshImage) { [weak self] sender in
+            let allowsEditing = self?.allowsEditing ?? false
+            self?.fwShowSheet(withTitle: nil, message: nil, cancel: nil, actions: ["浏览已选图片", "切换图片插件", allowsEditing ? "切换不可编辑" : "切换可编辑"], actionBlock: { index in
+                if index == 0 {
+                    self?.showData(self?.results ?? [])
+                } else if index == 1 {
+                    let plugin = FWPluginManager.loadPlugin(FWImagePreviewPlugin.self)
+                    if plugin != nil {
+                        FWPluginManager.unloadPlugin(FWImagePreviewPlugin.self)
+                        FWPluginManager.unregisterPlugin(FWImagePreviewPlugin.self)
+                    } else {
+                        FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
+                    }
+                } else {
+                    self?.allowsEditing = !allowsEditing
+                }
+            })
         }
     }
     
@@ -74,11 +81,17 @@ import FWFramework
             let pickerController = PHPhotoLibrary.fwPickerController(with: .image, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
                 self?.showData(objects)
             }
+            if let picker = pickerController as? UIImagePickerController {
+                picker.allowsEditing = allowsEditing
+            }
             present(pickerController!, animated: true)
             break
         case 1:
             let pickerController = PHPhotoLibrary.fwPickerController(with: .livePhoto, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
                 self?.showData(objects)
+            }
+            if let picker = pickerController as? UIImagePickerController {
+                picker.allowsEditing = allowsEditing
             }
             present(pickerController!, animated: true)
             break
@@ -86,42 +99,51 @@ import FWFramework
             let pickerController = PHPhotoLibrary.fwPickerController(with: .video, selectionLimit: 9, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
                 self?.showData(objects)
             }
+            if let picker = pickerController as? UIImagePickerController {
+                picker.allowsEditing = allowsEditing
+            }
             present(pickerController!, animated: true)
             break
         case 3:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             present(pickerController!, animated: true)
             break
         case 4:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             present(pickerController!, animated: true)
             break
         case 5:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             present(pickerController!, animated: true)
             break
         case 6:
             let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .image, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             present(pickerController!, animated: true)
             break
         case 7:
             let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .livePhoto, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             present(pickerController!, animated: true)
             break
         case 8:
             let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .video, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
+            pickerController?.allowsEditing = allowsEditing
             pickerController?.cameraCaptureMode = .video
             present(pickerController!, animated: true)
             break
