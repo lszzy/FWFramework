@@ -227,6 +227,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 
 /*!
  @brief 工具栏视图分类，全局设置用[UIToolbar appearance]
+ @discussion 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
  */
 @interface UIToolbar (FWStyle)
 
@@ -250,6 +251,17 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 
 /// 设置背景图片并隐藏顶部线条，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+
+#pragma mark - View
+
+/// 工具栏内容视图，iOS11+才存在，显示item等
+@property (nonatomic, readonly, nullable) UIView *fwContentView;
+
+/// 工具栏背景视图，显示背景色和背景图片等
+@property (nonatomic, readonly, nullable) UIView *fwBackgroundView;
+
+/// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
+@property (nonatomic, assign) UIBarPosition fwBarPosition;
 
 @end
 

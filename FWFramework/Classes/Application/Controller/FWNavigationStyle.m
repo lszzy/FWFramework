@@ -975,6 +975,21 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 
 #pragma mark - UIToolbar+FWStyle
 
+@interface FWToolbarDelegate : NSObject <UIToolbarDelegate>
+
+@property (nonatomic, assign) UIBarPosition barPosition;
+
+@end
+
+@implementation FWToolbarDelegate
+
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar
+{
+    return self.barPosition;
+}
+
+@end
+
 #if __IPHONE_15_0
 static BOOL fwStaticToolbarAppearanceEnabled = YES;
 #else
@@ -1139,6 +1154,43 @@ static BOOL fwStaticToolbarAppearanceEnabled = NO;
         [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
         return;
     }
+}
+
+#pragma mark - View
+
+- (UIView *)fwContentView
+{
+    for (UIView *subview in self.subviews) {
+        if ([NSStringFromClass(subview.class) hasSuffix:@"ContentView"]) return subview;
+    }
+    return nil;
+}
+
+- (UIView *)fwBackgroundView
+{
+    return [self fwPerformGetter:@"_backgroundView"];
+}
+
+- (UIBarPosition)fwBarPosition
+{
+    return [objc_getAssociatedObject(self, @selector(fwBarPosition)) integerValue];
+}
+
+- (void)setFwBarPosition:(UIBarPosition)fwBarPosition
+{
+    objc_setAssociatedObject(self, @selector(fwBarPosition), @(fwBarPosition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fwToolbarDelegate.barPosition = fwBarPosition;
+}
+
+- (FWToolbarDelegate *)fwToolbarDelegate
+{
+    FWToolbarDelegate *delegate = objc_getAssociatedObject(self, _cmd);
+    if (!delegate) {
+        delegate = [[FWToolbarDelegate alloc] init];
+        self.delegate = delegate;
+        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return delegate;
 }
 
 @end
