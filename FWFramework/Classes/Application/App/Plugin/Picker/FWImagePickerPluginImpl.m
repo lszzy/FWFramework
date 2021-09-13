@@ -17,6 +17,7 @@
 
 @interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 
+@property (nonatomic, assign) BOOL allowsEditing;
 @property (nonatomic, assign) BOOL shouldDismiss;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
@@ -143,15 +144,17 @@
 @implementation UIImagePickerController (FWImagePickerPluginImpl)
 
 + (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
+                                   allowsEditing:(BOOL)allowsEditing
                                       completion:(nonnull void (^)(UIImage * _Nullable, NSDictionary * _Nullable, BOOL))completion
 {
-    return [self fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerFilterTypeImage shouldDismiss:YES completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
+    return [self fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerFilterTypeImage allowsEditing:allowsEditing shouldDismiss:YES completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
         if (completion) completion(object, info, cancel);
     }];
 }
 
 + (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
                                       filterType:(FWImagePickerFilterType)filterType
+                                   allowsEditing:(BOOL)allowsEditing
                                    shouldDismiss:(BOOL)shouldDismiss
                                       completion:(void (^)(UIImagePickerController * _Nullable, id _Nullable, NSDictionary * _Nullable, BOOL))completion
 {
@@ -175,6 +178,7 @@
     
     UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
     pickerController.sourceType = sourceType;
+    pickerController.allowsEditing = allowsEditing;
     if (mediaTypes.count > 0) {
         pickerController.mediaTypes = [mediaTypes copy];
     }
@@ -183,7 +187,7 @@
     pickerDelegate.shouldDismiss = shouldDismiss;
     pickerDelegate.completionBlock = completion;
     
-    objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithSourceType:filterType:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(pickerController, @selector(fwPickerControllerWithSourceType:filterType:allowsEditing:shouldDismiss:completion:), pickerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     pickerController.delegate = pickerDelegate;
     return pickerController;
 }
@@ -191,7 +195,7 @@
 + (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(FWImageCropController *)cropViewController
                                       completion:(void (^)(UIImage * _Nullable, BOOL))completion
 {
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerFilterTypeImage shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
+    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerFilterTypeImage allowsEditing:NO shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
         UIImage *originalImage = cancel ? nil : object;
         if (originalImage) {
             FWImageCropController *cropController = cropViewController;
@@ -223,7 +227,6 @@
             }];
         }
     }];
-    pickerController.allowsEditing = NO;
     return pickerController;
 }
 
@@ -311,15 +314,17 @@
 @implementation PHPhotoLibrary (FWImagePickerPluginImpl)
 
 + (__kindof UIViewController *)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
+                                                      allowsEditing:(BOOL)allowsEditing
                                                          completion:(void (^)(NSArray<UIImage *> *, NSArray *, BOOL))completion
 {
-    return [self fwPickerControllerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:selectionLimit shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray *objects, NSArray *results, BOOL cancel) {
+    return [self fwPickerControllerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:selectionLimit allowsEditing:allowsEditing shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray *objects, NSArray *results, BOOL cancel) {
         if (completion) completion(objects, results, cancel);
     }];
 }
 
 + (__kindof UIViewController *)fwPickerControllerWithFilterType:(FWImagePickerFilterType)filterType
                                                  selectionLimit:(NSInteger)selectionLimit
+                                                  allowsEditing:(BOOL)allowsEditing
                                                   shouldDismiss:(BOOL)shouldDismiss
                                                      completion:(void (^)(__kindof UIViewController * _Nullable, NSArray *, NSArray *, BOOL))completion
 {
@@ -328,7 +333,7 @@
             if (completion) completion(picker, objects, results, cancel);
         }];
     } else {
-        return [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary filterType:filterType shouldDismiss:shouldDismiss completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
+        return [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary filterType:filterType allowsEditing:allowsEditing shouldDismiss:shouldDismiss completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
             if (completion) completion(picker, object ? @[object] : @[], info ? @[info] : @[], cancel);
         }];
     }
