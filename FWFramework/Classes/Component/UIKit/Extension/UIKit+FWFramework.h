@@ -20,7 +20,6 @@
 #import "UIGestureRecognizer+FWFramework.h"
 #import "UIImage+FWFramework.h"
 #import "UIImageView+FWFramework.h"
-#import "UIImagePickerController+FWFramework.h"
 #import "UILabel+FWFramework.h"
 #import "UILocalNotification+FWFramework.h"
 #import "UIScrollView+FWFramework.h"
