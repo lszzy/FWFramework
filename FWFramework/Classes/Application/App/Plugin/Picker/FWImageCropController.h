@@ -8,8 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <Photos/Photos.h>
-#import <PhotosUI/PhotosUI.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -364,28 +362,6 @@ typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
 @interface UIImage (FWCropRotate)
 
 - (nonnull UIImage *)fwCroppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular;
-
-@end
-
-@interface UIImagePickerController (FWCropRotate)
-
-/** Custom cropController for UIImagePickerController, if nil, consistent with the system effect  */
-+ (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
-
-@end
-
-API_AVAILABLE(ios(14.0))
-@interface PHPickerViewController (FWCropRotate)
-
-/** Custom cropController for PHPickerViewController, if nil, consistent with the system effect  */
-+ (instancetype)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
-
-@end
-
-@interface PHPhotoLibrary (FWCropRotate)
-
-/** Custom cropController for UIImagePickerController and PHPickerViewController iOS14+ */
-+ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
 @end
 

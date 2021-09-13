@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWAssetManager.h"
 #import "FWImagePreviewController.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -13,15 +13,72 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWImagePickerPlugin
 
+/// 图片选择插件过滤类型
+typedef NS_OPTIONS(NSUInteger, FWImagePickerFilterType) {
+    FWImagePickerFilterTypeImage      = 1 << 0,
+    FWImagePickerFilterTypeLivePhoto  = 1 << 1,
+    FWImagePickerFilterTypeVideo      = 1 << 2,
+};
+
 /// 图片选取插件协议，应用可自定义图片选取插件实现
 @protocol FWImagePickerPlugin <NSObject>
-
 @optional
+
+/// 显示图片预览方法
+/// @param viewController 当前视图控制器
+/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
+/// @param currentIndex 当前索引，默认0
+/// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
+/// @param placeholderImage 占位图或缩略图句柄，默认nil
+/// @param renderBlock 自定义渲染句柄，默认nil
+/// @param customBlock 自定义配置句柄，默认nil
+- (void)fwViewController:(UIViewController *)viewController
+        showImagePreview:(NSArray *)imageURLs
+            currentIndex:(NSInteger)currentIndex
+              sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
+        placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
+             renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
+             customBlock:(nullable void (^)(id imagePreview))customBlock;
 
 @end
 
-/// UIViewController使用图片选取插件
-@interface UIViewController (FWImagePickerPlugin)
+#pragma mark - FWImagePickerPluginController
+
+/// 图片选取插件控制器协议，使用图片选取插件
+@protocol FWImagePickerPluginController <NSObject>
+@required
+
+/// 显示图片预览(简单版)
+/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
+/// @param currentIndex 当前索引，默认0
+/// @param sourceView 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView;
+
+/// 显示图片预览(详细版)
+/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
+/// @param currentIndex 当前索引，默认0
+/// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
+/// @param placeholderImage 占位图或缩略图句柄，默认nil
+/// @param renderBlock 自定义渲染句柄，默认nil
+/// @param customBlock 自定义句柄，默认nil
+- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
+                           currentIndex:(NSInteger)currentIndex
+                             sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
+                       placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
+                            renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
+                            customBlock:(nullable void (^)(id imagePreview))customBlock;
+
+@end
+
+/// UIViewController使用图片选取插件，全局可使用UIWindow.fwMainWindow.fwTopPresentedController
+@interface UIViewController (FWImagePickerPluginController) <FWImagePickerPluginController>
+
+@end
+
+/// UIView使用图片选取插件，内部使用UIView.fwViewController
+@interface UIView (FWImagePickerPluginController) <FWImagePickerPluginController>
 
 @end
 

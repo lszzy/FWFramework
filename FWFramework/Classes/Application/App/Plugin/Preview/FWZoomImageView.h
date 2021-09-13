@@ -9,7 +9,6 @@
 
 #import <UIKit/UIKit.h>
 #import <PhotosUI/PhotosUI.h>
-#import "FWAssetManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

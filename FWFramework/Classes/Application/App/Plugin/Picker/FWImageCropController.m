@@ -8,7 +8,6 @@
  */
 
 #import "FWImageCropController.h"
-#import "UIImagePickerController+FWFramework.h"
 #import "FWAlertPlugin.h"
 #import "FWLanguage.h"
 
@@ -1073,96 +1072,6 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
     UIGraphicsEndImageContext();
     
     return [UIImage imageWithCGImage:croppedImage.CGImage scale: self.scale orientation:UIImageOrientationUp];
-}
-
-@end
-
-@implementation UIImagePickerController (FWCropRotate)
-
-+ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(FWImageCropController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
-{
-    UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerControllerFilterTypeImage shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
-        UIImage *originalImage = cancel ? nil : object;
-        if (originalImage) {
-            FWImageCropController *cropController = cropViewController;
-            if (!cropController) {
-                cropController = [[FWImageCropController alloc] initWithImage:originalImage];
-                cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare;
-                cropController.aspectRatioLockEnabled = YES;
-                cropController.resetAspectRatioEnabled = NO;
-                cropController.aspectRatioPickerButtonHidden = YES;
-            }
-            cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
-                [picker dismissViewControllerAnimated:YES completion:^{
-                    if (completion) completion(image, NO);
-                }];
-            };
-            cropController.onDidFinishCancelled = ^(BOOL isFinished) {
-                if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-                    [picker dismissViewControllerAnimated:YES completion:^{
-                        if (completion) completion(nil, YES);
-                    }];
-                } else {
-                    [picker popViewControllerAnimated:YES];
-                }
-            };
-            [picker pushViewController:cropController animated:YES];
-        } else {
-            [picker dismissViewControllerAnimated:YES completion:^{
-                if (completion) completion(nil, YES);
-            }];
-        }
-    }];
-    pickerController.allowsEditing = NO;
-    return pickerController;
-}
-
-@end
-
-@implementation PHPickerViewController (FWCropRotate)
-
-+ (instancetype)fwPickerControllerWithCropController:(FWImageCropController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
-{
-    PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithFilterType:FWImagePickerControllerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
-        UIImage *originalImage = objects.firstObject;
-        if (originalImage) {
-            FWImageCropController *cropController = cropViewController;
-            if (!cropController) {
-                cropController = [[FWImageCropController alloc] initWithImage:originalImage];
-                cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare;
-                cropController.aspectRatioLockEnabled = YES;
-                cropController.resetAspectRatioEnabled = NO;
-                cropController.aspectRatioPickerButtonHidden = YES;
-            }
-            cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
-                [picker.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                    if (completion) completion(image, NO);
-                }];
-            };
-            cropController.onDidFinishCancelled = ^(BOOL isFinished) {
-                [picker dismissViewControllerAnimated:YES completion:nil];
-            };
-            [picker presentViewController:cropController animated:YES completion:nil];
-        } else {
-            [picker dismissViewControllerAnimated:YES completion:^{
-                if (completion) completion(nil, YES);
-            }];
-        }
-    }];
-    return pickerController;
-}
-
-@end
-
-@implementation PHPhotoLibrary (FWCropRotate)
-
-+ (__kindof UIViewController *)fwPickerControllerWithCropController:(FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable, BOOL))completion
-{
-    if (@available(iOS 14, *)) {
-        return [PHPickerViewController fwPickerControllerWithCropController:cropController completion:completion];
-    } else {
-        return [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:cropController completion:completion];
-    }
 }
 
 @end
