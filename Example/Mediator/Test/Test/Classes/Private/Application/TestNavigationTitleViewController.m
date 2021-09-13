@@ -10,6 +10,7 @@
 
 @interface TestNavigationTitleViewController () <FWTableViewController, FWNavigationTitleViewDelegate, FWPopupMenuDelegate>
 
+@property(nonatomic, strong) UIToolbar *toolbar;
 @property(nonatomic, strong) FWNavigationTitleView *titleView;
 @property(nonatomic, assign) UIControlContentHorizontalAlignment horizontalAlignment;
 
@@ -24,6 +25,20 @@
 
 - (void)renderView
 {
+    UIToolbar *toolbar = [UIToolbar new];
+    toolbar.fwBarPosition = UIBarPositionBottom;
+    _toolbar = toolbar;
+    toolbar.fwForegroundColor = Theme.textColor;
+    toolbar.fwBackgroundColor = Theme.barColor;
+    [self.fwView addSubview:toolbar];
+    toolbar.fwLayoutChain.edgesToSafeAreaWithInsetsExcludingEdge(UIEdgeInsetsZero, NSLayoutAttributeTop);
+    
+    UIBarButtonItem *leftItem = [UIBarButtonItem fwBarItemWithObject:@"取消" block:nil];
+    UIBarButtonItem *flexibleItem = [UIBarButtonItem fwBarItemWithObject:@(UIBarButtonSystemItemFlexibleSpace) block:nil];
+    UIBarButtonItem *rightItem = [UIBarButtonItem fwBarItemWithObject:@"确定" block:nil];
+    toolbar.items = @[leftItem, flexibleItem, rightItem];
+    [toolbar sizeToFit];
+    
     FWNavigationTitleView *titleView = [[FWNavigationTitleView alloc] init];
     self.titleView = titleView;
     titleView.showsLoadingView = YES;

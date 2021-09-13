@@ -63,6 +63,7 @@ import FWFramework
     public static func themeChanged() {
         UINavigationBar.fwAppearanceEnabled = Theme.isBarAppearance
         UITabBar.fwAppearanceEnabled = Theme.isBarAppearance
+        UIToolbar.fwAppearanceEnabled = Theme.isBarAppearance
         let defaultAppearance = FWNavigationBarAppearance()
         defaultAppearance.foregroundColor = Theme.textColor
         defaultAppearance.backgroundColor = Theme.isBarTranslucent ? Theme.barColor.fwColor(withAlpha: 0.8) : Theme.barColor
