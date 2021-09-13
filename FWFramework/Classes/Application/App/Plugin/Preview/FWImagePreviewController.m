@@ -266,6 +266,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     return cell.zoomImageView;
 }
 
+- (FWZoomImageView *)currentZoomImageView {
+    return [self zoomImageViewAtIndex:self.currentImageIndex];
+}
+
 #pragma mark - <FWZoomImageViewDelegate>
 
 - (void)singleTouchInZoomingImageView:(FWZoomImageView *)imageView location:(CGPoint)location {
@@ -485,7 +489,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:
             self.gestureBeganLocation = [gesture locationInView:self.view];
-            self.gestureZoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
+            self.gestureZoomImageView = self.imagePreviewView.currentZoomImageView;
             self.gestureZoomImageView.scrollView.clipsToBounds = NO;// 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
             if (self.dismissingGestureEnabled) {
                 [self dismissingGestureChanged:YES];
@@ -570,7 +574,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)dismissingGestureChanged:(BOOL)isHidden {
-    FWZoomImageView *zoomImageView = [self.imagePreviewView zoomImageViewAtIndex:self.imagePreviewView.currentImageIndex];
+    FWZoomImageView *zoomImageView = self.imagePreviewView.currentZoomImageView;
     if (zoomImageView.videoPlayerItem) {
         if (zoomImageView.showsVideoToolbar) zoomImageView.videoToolbar.alpha = isHidden ? 0 : 1;
         if (zoomImageView.showsVideoCloseButton) zoomImageView.videoCloseButton.alpha = isHidden ? 0 : 1;
