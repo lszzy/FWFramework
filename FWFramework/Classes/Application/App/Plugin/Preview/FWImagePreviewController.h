@@ -80,6 +80,8 @@ typedef NS_ENUM (NSUInteger, FWImagePreviewMediaType) {
 @property(nonatomic, copy, nullable) NSArray *imageURLs;
 /// 占位图片句柄，仅imageURLs生效，默认nil
 @property(nonatomic, copy, nullable) UIImage * _Nullable (^placeholderImage)(NSInteger index);
+/// 是否自动播放video，默认NO
+@property(nonatomic, assign) BOOL autoplayVideo;
 
 /// 自定义zoomImageView样式句柄，cellForItem方法自动调用，先于renderZoomImageView
 @property(nonatomic, copy, nullable) void (^customZoomImageView)(FWZoomImageView *zoomImageView, NSInteger index);

@@ -45,6 +45,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 @interface FWImagePreviewView ()
 
 @property(nonatomic, assign) BOOL isChangingCollectionViewBounds;
+@property(nonatomic, assign) BOOL isChangingIndexWhenScrolling;
 @property(nonatomic, assign) CGFloat previousIndexWhenScrolling;
 @property(nonatomic, weak) id<FWImagePreviewViewDelegate> controllerDelegate;
 
@@ -113,6 +114,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)setCurrentImageIndex:(NSInteger)currentImageIndex animated:(BOOL)animated {
     _currentImageIndex = currentImageIndex;
+    _isChangingIndexWhenScrolling = NO;
     if ([self.controllerDelegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
         [self.controllerDelegate imagePreviewView:self willScrollHalfToIndex:currentImageIndex];
     }
@@ -181,6 +183,13 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         UIImage *placeholderImage = self.placeholderImage ? self.placeholderImage(indexPath.item) : nil;
         [zoomView setImageURL:imageURL placeholderImage:placeholderImage];
     }
+    
+    // 自动播放视频
+    if (self.autoplayVideo && !self.isChangingIndexWhenScrolling) {
+        if (zoomView && zoomView.videoPlayerItem) {
+            [zoomView playVideo];
+        }
+    }
     return cell;
 }
 
@@ -208,6 +217,14 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     // 当前滚动到的页数
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:didScrollToIndex:)]) {
         [self.delegate imagePreviewView:self didScrollToIndex:self.currentImageIndex];
+    }
+    
+    // 自动播放视频
+    if (self.autoplayVideo && self.isChangingIndexWhenScrolling) {
+        FWZoomImageView *zoomImageView = [self zoomImageViewAtIndex:self.currentImageIndex];
+        if (zoomImageView && zoomImageView.videoPlayerItem) {
+            [zoomImageView playVideo];
+        }
     }
 }
 
@@ -242,6 +259,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             
             // 不调用 setter，避免又走一次 scrollToItem
             _currentImageIndex = index;
+            _isChangingIndexWhenScrolling = YES;
             if ([self.controllerDelegate respondsToSelector:@selector(imagePreviewView:willScrollHalfToIndex:)]) {
                 [self.controllerDelegate imagePreviewView:self willScrollHalfToIndex:index];
             }
