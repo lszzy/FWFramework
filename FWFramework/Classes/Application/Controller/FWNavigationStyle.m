@@ -868,7 +868,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 {
     if (fwIsTranslucent == self.fwIsTranslucent) return;
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (fwIsTranslucent) {
             [self.fwAppearance configureWithDefaultBackground];
             self.fwAppearance.backgroundImage = nil;
@@ -967,6 +967,176 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
         
         self.backgroundImage = self.fwBackgroundImage.fwImage;
         self.shadowImage = [UIImage new];
+        return;
+    }
+}
+
+@end
+
+#pragma mark - UIToolbar+FWStyle
+
+#if __IPHONE_15_0
+static BOOL fwStaticToolbarAppearanceEnabled = YES;
+#else
+static BOOL fwStaticToolbarAppearanceEnabled = NO;
+#endif
+
+@implementation UIToolbar (FWStyle)
+
++ (BOOL)fwAppearanceEnabled
+{
+    if (@available(iOS 13.0, *)) {
+        return fwStaticToolbarAppearanceEnabled;
+    }
+    return NO;
+}
+
++ (void)setFwAppearanceEnabled:(BOOL)enabled
+{
+    fwStaticToolbarAppearanceEnabled = enabled;
+}
+
+- (UIToolbarAppearance *)fwAppearance
+{
+    UIToolbarAppearance *appearance = objc_getAssociatedObject(self, _cmd);
+    if (!appearance) {
+        appearance = [[UIToolbarAppearance alloc] init];
+        [appearance configureWithTransparentBackground];
+        appearance.shadowColor = nil;
+        objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return appearance;
+}
+
+- (void)fwUpdateAppearance
+{
+    self.standardAppearance = self.fwAppearance;
+    self.compactAppearance = self.fwAppearance;
+#if __IPHONE_15_0
+    if (@available(iOS 15.0, *)) {
+        self.scrollEdgeAppearance = self.fwAppearance;
+    }
+#endif
+}
+
+- (UIColor *)fwForegroundColor
+{
+    return self.tintColor;
+}
+
+- (void)setFwForegroundColor:(UIColor *)color
+{
+    self.tintColor = color;
+}
+
+- (BOOL)fwIsTranslucent
+{
+    return [objc_getAssociatedObject(self, @selector(fwIsTranslucent)) boolValue];
+}
+
+- (void)setFwIsTranslucent:(BOOL)fwIsTranslucent
+{
+    if (fwIsTranslucent == self.fwIsTranslucent) return;
+    objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(fwIsTranslucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (fwIsTranslucent) {
+            [self.fwAppearance configureWithDefaultBackground];
+            self.fwAppearance.backgroundImage = nil;
+        } else {
+            [self.fwAppearance configureWithTransparentBackground];
+            self.fwAppearance.backgroundColor = nil;
+        }
+        self.fwAppearance.shadowColor = nil;
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    if (fwIsTranslucent) {
+        [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    } else {
+        self.barTintColor = nil;
+    }
+}
+
+- (UIColor *)fwBackgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(fwBackgroundColor));
+}
+
+- (void)setFwBackgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (self.fwIsTranslucent) {
+            self.fwAppearance.backgroundColor = color;
+        } else {
+            self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
+        }
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    if (self.fwIsTranslucent) {
+        self.barTintColor = color;
+    } else {
+        [self setBackgroundImage:[UIImage fwImageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    }
+    [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+}
+
+- (UIImage *)fwBackgroundImage
+{
+    return objc_getAssociatedObject(self, @selector(fwBackgroundImage));
+}
+
+- (void)setFwBackgroundImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        self.fwAppearance.backgroundImage = image.fwImage;
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    [self setBackgroundImage:image.fwImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+}
+
+- (void)fwThemeChanged:(FWThemeStyle)style
+{
+    [super fwThemeChanged:style];
+    
+    if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
+        if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+            if (self.fwIsTranslucent) {
+                self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
+            } else {
+                self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+            }
+            [self fwUpdateAppearance];
+            return;
+        }}
+        
+        if (self.fwIsTranslucent) {
+            self.barTintColor = self.fwBackgroundColor.fwColor;
+        } else {
+            [self setBackgroundImage:[UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        }
+        [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+        return;
+    }
+    
+    if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
+        if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+            self.fwAppearance.backgroundImage = self.fwBackgroundImage.fwImage;
+            [self fwUpdateAppearance];
+            return;
+        }}
+        
+        [self setBackgroundImage:self.fwBackgroundImage.fwImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
         return;
     }
 }
