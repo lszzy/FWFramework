@@ -90,21 +90,17 @@
         FWStrongifySelf();
         if (index == 0) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
+                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera allowsEditing:YES completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
                     [self onPickerResult:cancel ? nil : image cancelled:cancel];
                 }];
-                pickerController.allowsEditing = YES;
                 [self presentViewController:pickerController animated:YES completion:nil];
             } else {
                 [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:nil cancelBlock:nil];
             }
         } else {
-            UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 completion:^(NSArray<UIImage *> * _Nonnull images, NSArray * _Nonnull results, BOOL cancel) {
+            UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 allowsEditing:YES completion:^(NSArray<UIImage *> * _Nonnull images, NSArray * _Nonnull results, BOOL cancel) {
                 [self onPickerResult:cancel ? nil : images.firstObject cancelled:cancel];
             }];
-            if ([pickerController isKindOfClass:[UIImagePickerController class]]) {
-                ((UIImagePickerController *)pickerController).allowsEditing = YES;
-            }
             [self presentViewController:pickerController animated:YES completion:nil];
         }
     }];

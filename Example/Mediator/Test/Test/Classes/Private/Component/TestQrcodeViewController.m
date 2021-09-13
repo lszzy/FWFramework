@@ -181,7 +181,7 @@
     [self stopScanManager];
     
     FWWeakifySelf();
-    UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 completion:^(NSArray<UIImage *> *images, NSArray *results, BOOL cancel) {
+    UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 allowsEditing:NO completion:^(NSArray<UIImage *> *images, NSArray *results, BOOL cancel) {
         FWStrongifySelf();
         if (cancel) {
             [self startScanManager];
