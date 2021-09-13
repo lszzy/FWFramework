@@ -128,6 +128,7 @@
     
     self.imagePreviewViewController.dismissingWhenTappedImage = self.dismissTappedImage;
     self.imagePreviewViewController.dismissingWhenTappedVideo = self.dismissTappedVideo;
+    self.imagePreviewViewController.imagePreviewView.autoplayVideo = self.autoplayVideo;
     self.imagePreviewViewController.presentingStyle = self.previewFade ? FWImagePreviewTransitioningStyleFade : FWImagePreviewTransitioningStyleZoom;
     NSInteger buttonIndex = [self.floatLayoutView.subviews indexOfObject:button];
     self.imagePreviewViewController.imagePreviewView.currentImageIndex = buttonIndex;// 默认展示的图片 index
@@ -143,7 +144,6 @@
 - (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     zoomImageView.reusedIdentifier = @(index);
     zoomImageView.showsVideoToolbar = self.showsToolbar;
-    zoomImageView.autoplayVideo = self.autoplayVideo;
     zoomImageView.showsVideoCloseButton = self.showsClose;
     
     if (self.mockProgress) {

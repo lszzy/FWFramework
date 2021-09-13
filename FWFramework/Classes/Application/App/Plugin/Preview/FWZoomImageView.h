@@ -86,9 +86,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取当前正在显示的图片/视频的容器
 @property(nonatomic, weak, nullable, readonly) __kindof UIView *contentView;
 
-/// 是否自动播放video，默认NO
-@property(nonatomic, assign) BOOL autoplayVideo;
-
 /// 是否播放video时显示底部的工具栏，默认NO
 @property(nonatomic, assign) BOOL showsVideoToolbar;
 

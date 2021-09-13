@@ -512,10 +512,6 @@
     }
     
     [self revertZooming];
-    
-    if (self.autoplayVideo) {
-        [self handlePlayButton:nil];
-    }
 }
 
 - (void)handleCloseButton:(UIButton *)button {
