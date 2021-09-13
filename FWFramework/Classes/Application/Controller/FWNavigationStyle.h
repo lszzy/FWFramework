@@ -223,4 +223,34 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 
 @end
 
+#pragma mark - UIToolbar+FWStyle
+
+/*!
+ @brief 工具栏视图分类，全局设置用[UIToolbar appearance]
+ */
+@interface UIToolbar (FWStyle)
+
+/// 是否启用iOS13+样式，iOS15+必须启用，iOS13以下始终为NO。默认Xcode13+为YES，Xcode12及以下为NO
+@property (class, nonatomic, assign) BOOL fwAppearanceEnabled;
+
+/// 工具栏iOS13+样式对象，用于自定义样式
+@property (nonatomic, strong, readonly) UIToolbarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+
+/// 手工更新工具栏样式
+- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+
+/// 工具栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
+@property (nonatomic, assign) BOOL fwIsTranslucent;
+
+/// 设置前景颜色，包含文字和按钮等
+@property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
+
+/// 设置背景颜色并隐藏顶部线条，兼容主题颜色
+@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
+
+/// 设置背景图片并隐藏顶部线条，兼容主题图片
+@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+
+@end
+
 NS_ASSUME_NONNULL_END
