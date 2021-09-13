@@ -122,7 +122,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     [self.collectionView reloadData];
     if (currentImageIndex < [self.collectionView numberOfItemsInSection:0]) {
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:currentImageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:animated];
-        [self.collectionView layoutIfNeeded];// scroll immediately
+        // [self.collectionView layoutIfNeeded];// scroll immediately
     }
 }
 
