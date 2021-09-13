@@ -18,7 +18,6 @@
 #import "FWNavigationView.h"
 #import "FWViewPlugin.h"
 #import "FWSwizzle.h"
-#import "UIScrollView+FWFramework.h"
 
 #pragma mark - FWImageAlbumTableCell
 
@@ -1119,9 +1118,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
     if (isVisible && self.isImagesAssetLoaded && !self.hasScrollToInitialPosition) {
         if ([self.imagePickerControllerDelegate respondsToSelector:@selector(albumSortTypeForImagePickerController:)] && [self.imagePickerControllerDelegate albumSortTypeForImagePickerController:self] == FWAlbumSortTypeReverse) {
-            [_collectionView fwScrollToEdge:UIRectEdgeTop animated:NO];
+            [_collectionView setContentOffset:CGPointMake(_collectionView.contentOffset.x, -_collectionView.fwContentInset.top) animated:NO];
         } else {
-            [_collectionView fwScrollToEdge:UIRectEdgeBottom animated:NO];
+            [_collectionView setContentOffset:CGPointMake(_collectionView.contentOffset.x, _collectionView.contentSize.height - _collectionView.bounds.size.height + _collectionView.fwContentInset.bottom) animated:NO];
         }
         self.hasScrollToInitialPosition = YES;
     }
