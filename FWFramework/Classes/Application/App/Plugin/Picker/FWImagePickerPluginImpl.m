@@ -17,7 +17,7 @@
 
 @interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 
-@property (nonatomic, assign) BOOL allowsEditing;
+@property (nonatomic, assign) FWImagePickerFilterType filterType;
 @property (nonatomic, assign) BOOL shouldDismiss;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
@@ -33,9 +33,11 @@
 {
     id object = nil;
     NSString *mediaType = info[UIImagePickerControllerMediaType];
-    if ([mediaType isEqualToString:(NSString *)kUTTypeLivePhoto]) {
+    BOOL checkLivePhoto = (self.filterType & FWImagePickerFilterTypeLivePhoto) || self.filterType < 1;
+    BOOL checkVideo = (self.filterType & FWImagePickerFilterTypeVideo) || self.filterType < 1;
+    if (checkLivePhoto && [mediaType isEqualToString:(NSString *)kUTTypeLivePhoto]) {
         object = info[UIImagePickerControllerLivePhoto];
-    } else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
+    } else if (checkVideo && [mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
         object = info[UIImagePickerControllerMediaURL];
     } else {
         object = info[UIImagePickerControllerEditedImage] ?: info[UIImagePickerControllerOriginalImage];
@@ -67,17 +69,18 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
+    FWImagePickerFilterType filterType = self.filterType;
     void (^completion)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
     if (self.shouldDismiss) {
         [picker dismissViewControllerAnimated:YES completion:^{
-            [FWImagePickerControllerDelegate picker:nil didFinishPicking:results completion:completion];
+            [FWImagePickerControllerDelegate picker:nil didFinishPicking:results filterType:filterType completion:completion];
         }];
     } else {
-        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results completion:completion];
+        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:completion];
     }
 }
 
-+ (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results completion:(void (^)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel))completion API_AVAILABLE(ios(14))
++ (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results filterType:(FWImagePickerFilterType)filterType completion:(void (^)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel))completion API_AVAILABLE(ios(14))
 {
     if (!completion) return;
     if (results.count < 1) {
@@ -88,15 +91,13 @@
     NSMutableArray *objects = [NSMutableArray array];
     NSInteger totalCount = results.count;
     __block NSInteger finishCount = 0;
+    BOOL checkLivePhoto = (filterType & FWImagePickerFilterTypeLivePhoto) || filterType < 1;
+    BOOL checkVideo = (filterType & FWImagePickerFilterTypeVideo) || filterType < 1;
     [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
-        Class objectClass = NULL;
-        if ([result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]]) {
-            objectClass = [PHLivePhoto class];
-        } else if ([result.itemProvider canLoadObjectOfClass:[UIImage class]]) {
-            objectClass = [UIImage class];
-        }
-        
-        if (objectClass) {
+        BOOL isLivePhoto = [result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]];
+        BOOL isImage = [result.itemProvider canLoadObjectOfClass:[UIImage class]];
+        if (isLivePhoto || isImage || !checkVideo) {
+            Class objectClass = (checkLivePhoto && isLivePhoto) ? [PHLivePhoto class] : [UIImage class];
             [result.itemProvider loadObjectOfClass:objectClass completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([object isKindOfClass:[UIImage class]] ||
@@ -113,10 +114,11 @@
             return;
         }
         
+        // completionHandler完成后，临时文件url会被系统删除，所以在此期间移动临时文件到FWImagePicker目录
         [result.itemProvider loadFileRepresentationForTypeIdentifier:(NSString *)kUTTypeMovie completionHandler:^(NSURL * _Nullable url, NSError * _Nullable error) {
             NSURL *fileURL = nil;
             if (url) {
-                NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"FWImagePicker"];
+                NSString *filePath = [PHPickerViewController fwPickerControllerVideoCachePath];
                 [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
                 filePath = [[filePath stringByAppendingPathComponent:[url.absoluteString fwMd5Encode]] stringByAppendingPathExtension:url.pathExtension];
                 fileURL = [NSURL fileURLWithPath:filePath];
@@ -184,6 +186,7 @@
     }
     
     FWImagePickerControllerDelegate *pickerDelegate = [[FWImagePickerControllerDelegate alloc] init];
+    pickerDelegate.filterType = filterType;
     pickerDelegate.shouldDismiss = shouldDismiss;
     pickerDelegate.completionBlock = completion;
     
@@ -237,6 +240,12 @@
 
 @implementation PHPickerViewController (FWImagePickerPluginImpl)
 
++ (NSString *)fwPickerControllerVideoCachePath
+{
+    NSString *videoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"FWImagePicker"];
+    return videoPath;
+}
+
 + (instancetype)fwPickerControllerWithSelectionLimit:(NSInteger)selectionLimit
                                           completion:(nonnull void (^)(NSArray<UIImage *> * _Nonnull, NSArray<PHPickerResult *> * _Nonnull, BOOL))completion
 {
@@ -269,6 +278,7 @@
     PHPickerViewController *pickerController = [[PHPickerViewController alloc] initWithConfiguration:configuration];
     
     FWImagePickerControllerDelegate *pickerDelegate = [[FWImagePickerControllerDelegate alloc] init];
+    pickerDelegate.filterType = filterType;
     pickerDelegate.shouldDismiss = shouldDismiss;
     pickerDelegate.photosCompletionBlock = completion;
     

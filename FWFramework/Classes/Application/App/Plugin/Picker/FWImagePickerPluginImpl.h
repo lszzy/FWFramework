@@ -70,6 +70,11 @@ API_AVAILABLE(ios(14.0))
 @interface PHPickerViewController (FWImagePickerPluginImpl)
 
 /*!
+ @brief 图片选择器选择视频时临时文件存放目录，使用完成后需自行删除
+ */
+@property (class, nonatomic, copy, readonly) NSString *fwPickerControllerVideoCachePath;
+
+/*!
  @brief 快速创建多选照片选择器(仅图片)，自动设置delegate
  
  @param selectionLimit 最大选择数量
