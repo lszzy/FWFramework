@@ -399,6 +399,7 @@ typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
 @property (nonatomic, assign) CGFloat statusBarHeightInset;
 
 /* Set an inset that will expand the background view beyond the bounds. */
+@property (nonatomic, strong, readonly) UIView *backgroundView;
 @property (nonatomic, assign) UIEdgeInsets backgroundViewOutsets;
 
 /* The 'Done' buttons to commit the crop. The text button is displayed
