@@ -570,6 +570,11 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     self.standardAppearance = self.fwAppearance;
     self.compactAppearance = self.fwAppearance;
     self.scrollEdgeAppearance = self.fwAppearance;
+#if __IPHONE_15_0
+    if (@available(iOS 15.0, *)) {
+        self.compactScrollEdgeAppearance = self.fwAppearance;
+    }
+#endif
 }
 
 - (UIImage *)fwBackImage
@@ -1030,6 +1035,7 @@ static BOOL fwStaticToolbarAppearanceEnabled = NO;
 #if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.scrollEdgeAppearance = self.fwAppearance;
+        self.compactScrollEdgeAppearance = self.fwAppearance;
     }
 #endif
 }
