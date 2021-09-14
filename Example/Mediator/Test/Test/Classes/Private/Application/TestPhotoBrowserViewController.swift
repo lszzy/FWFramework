@@ -11,11 +11,13 @@ import FWFramework
 @objcMembers class TestPhotoBrowserViewController: TestViewController, FWTableViewController {
     private var results: [Any] = []
     private var allowsEditing: Bool = false
+    private var isFullscreen: Bool = false
     
     override func renderModel() {
         fwSetRightBarItem(FWIcon.refreshImage) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
-            self?.fwShowSheet(withTitle: nil, message: nil, cancel: nil, actions: ["浏览已选图片", "切换图片插件", allowsEditing ? "切换不可编辑" : "切换可编辑", FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪"], actionBlock: { index in
+            let isFullscreen = self?.isFullscreen ?? false
+            self?.fwShowSheet(withTitle: nil, message: nil, cancel: nil, actions: ["浏览已选图片", "切换图片插件", allowsEditing ? "切换不可编辑" : "切换可编辑", FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪", isFullscreen ? "默认弹出样式" : "全屏弹出样式"], actionBlock: { index in
                 if index == 0 {
                     self?.showData(self?.results ?? [])
                 } else if index == 1 {
@@ -26,10 +28,19 @@ import FWFramework
                     } else {
                         FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
                     }
-                } else if (index == 2) {
+                } else if index == 2 {
                     self?.allowsEditing = !allowsEditing
-                } else {
+                } else if index == 3 {
                     FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled = !FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled;
+                } else {
+                    self?.isFullscreen = !isFullscreen
+                    if self?.isFullscreen ?? false {
+                        FWImagePickerPluginImpl.sharedInstance.customBlock = { viewController in
+                            viewController.modalPresentationStyle = .fullScreen
+                        }
+                    } else {
+                        FWImagePickerPluginImpl.sharedInstance.customBlock = nil
+                    }
                 }
             })
         }

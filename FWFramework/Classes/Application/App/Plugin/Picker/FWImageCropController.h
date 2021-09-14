@@ -11,18 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- The shape of the cropping region of this crop view controller
- */
+/// 图片裁剪样式
 typedef NS_ENUM(NSInteger, FWImageCropCroppingStyle) {
-    FWImageCropCroppingStyleDefault,     // The regular, rectangular crop box
-    FWImageCropCroppingStyleCircular     // A fixed, circular crop box
+    /// 默认样式，矩形
+    FWImageCropCroppingStyleDefault,
+    /// 圆形样式
+    FWImageCropCroppingStyleCircular
 };
 
-/**
- Preset values of the most common aspect ratios that can be used to quickly configure
- the crop view controller.
- */
+/// 常用裁剪比率枚举
 typedef NS_ENUM(NSInteger, FWImageCropAspectRatioPreset) {
     FWImageCropAspectRatioPresetOriginal,
     FWImageCropAspectRatioPresetSquare,
@@ -35,22 +32,19 @@ typedef NS_ENUM(NSInteger, FWImageCropAspectRatioPreset) {
     FWImageCropAspectRatioPresetCustom
 };
 
-/**
- Whether the control toolbar is placed at the bottom or the top
- */
+/// 工具栏位置枚举
 typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
-    FWImageCropToolbarPositionBottom,  // Bar is placed along the bottom in portrait
-    FWImageCropToolbarPositionTop     // Bar is placed along the top in portrait (Respects the status bar)
+    /// 底部工具栏，默认
+    FWImageCropToolbarPositionBottom,
+    /// 顶部工具栏
+    FWImageCropToolbarPositionTop
 };
 
 @class FWImageCropController;
 @class FWImageCropView;
 @class FWImageCropToolbar;
 
-///------------------------------------------------
-/// @name Delegate
-///------------------------------------------------
-
+/// 裁剪控制器事件代理协议
 @protocol FWImageCropControllerDelegate <NSObject>
 @optional
 
@@ -153,6 +147,9 @@ typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
  */
 @property (nonnull, nonatomic, strong, readonly) FWImageCropToolbar *toolbar;
 
+/// 自定义工具栏高度，默认44
+@property (nonatomic, assign) CGFloat toolbarHeight;
+
 /**
  The cropping style of this particular crop view controller
  */
@@ -185,6 +182,9 @@ typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
  Title label which can be used to show instruction on the top of the crop view controller
  */
 @property (nullable, nonatomic, readonly) UILabel *titleLabel;
+
+/// 自定义标题顶部间距，默认14
+@property (nonatomic, assign) CGFloat titleTopPadding;
 
 /**
  Title for the 'Done' button.
@@ -397,6 +397,8 @@ typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
 
 /* In horizontal mode, offsets all of the buttons vertically by height of status bar. */
 @property (nonatomic, assign) CGFloat statusBarHeightInset;
+/// 按钮内边距，默认10
+@property (nonatomic, assign) CGFloat buttonInsetPadding;
 
 /* Set an inset that will expand the background view beyond the bounds. */
 @property (nonatomic, strong, readonly) UIView *backgroundView;
