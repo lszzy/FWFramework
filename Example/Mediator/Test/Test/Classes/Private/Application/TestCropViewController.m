@@ -59,13 +59,15 @@
     cropController.delegate = self;
     cropController.aspectRatioPickerButtonHidden = YES;
     cropController.rotateButtonsHidden = YES;
+    //cropController.toolbarHeight = 56.f;
+    //cropController.toolbar.buttonInsetPadding = 12;
     cropController.toolbar.backgroundView.backgroundColor = [UIColor fwColorWithHex:0x121212];
     [cropController.toolbar.cancelTextButton fwSetImage:FWIconImage(@"ion-android-close", 22)];
     [cropController.toolbar.cancelTextButton setTitle:nil forState:UIControlStateNormal];
     [cropController.toolbar.doneTextButton fwSetImage:FWIconImage(@"ion-android-done", 22)];
     [cropController.toolbar.doneTextButton setTitle:nil forState:UIControlStateNormal];
-    [cropController.toolbar.resetButton fwSetImage:nil];
-    [cropController.toolbar.resetButton setTitle:@"撤销" forState:UIControlStateNormal];
+    //[cropController.toolbar.resetButton fwSetImage:nil];
+    //[cropController.toolbar.resetButton setTitle:@"撤销" forState:UIControlStateNormal];
     return cropController;
 }
 

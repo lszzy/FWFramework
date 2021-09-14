@@ -11,9 +11,6 @@
 #import "FWAlertPlugin.h"
 #import "FWLanguage.h"
 
-static const CGFloat kFWImageCropControllerTitleTopPadding = 14.0f;
-static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
-
 @interface FWImageCropController () <FWImageCropViewDelegate>
 
 /* The target image */
@@ -68,7 +65,9 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
         self.hidesNavigationBar = true;
 
         // Default initial behaviour
+        _titleTopPadding = 14.0f;
         _aspectRatioPreset = FWImageCropAspectRatioPresetOriginal;
+        _toolbarHeight = 44.0f;
         _toolbarPosition = FWImageCropToolbarPositionBottom;
     }
     
@@ -244,13 +243,13 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
     if (!verticalLayout) { // In landscape laying out toolbar to the left
         frame.origin.x = insets.left;
         frame.origin.y = 0.0f;
-        frame.size.width = kFWImageCropControllerToolbarHeight;
+        frame.size.width = self.toolbarHeight;
         frame.size.height = CGRectGetHeight(self.view.frame);
     }
     else {
         frame.origin.x = 0.0f;
         frame.size.width = CGRectGetWidth(self.view.bounds);
-        frame.size.height = kFWImageCropControllerToolbarHeight;
+        frame.size.height = self.toolbarHeight;
 
         if (self.toolbarPosition == FWImageCropToolbarPositionBottom) {
             frame.origin.y = CGRectGetHeight(self.view.bounds) - (frame.size.height + insets.bottom);
@@ -282,7 +281,7 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
 
     // Horizontal layout (eg landscape)
     if (!verticalLayout) {
-        frame.origin.x = kFWImageCropControllerToolbarHeight + insets.left;
+        frame.origin.x = self.toolbarHeight + insets.left;
         frame.size.width = CGRectGetWidth(bounds) - frame.origin.x;
         frame.size.height = CGRectGetHeight(bounds);
     }
@@ -292,9 +291,9 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
 
         // Set Y and adjust for height
         if (self.toolbarPosition == FWImageCropToolbarPositionBottom) {
-            frame.size.height -= (insets.bottom + kFWImageCropControllerToolbarHeight);
+            frame.size.height -= (insets.bottom + self.toolbarHeight);
         } else if (self.toolbarPosition == FWImageCropToolbarPositionTop) {
-            frame.origin.y = kFWImageCropControllerToolbarHeight + insets.top;
+            frame.origin.y = self.toolbarHeight + insets.top;
             frame.size.height -= frame.origin.y;
         }
     }
@@ -310,7 +309,7 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
 
     // Adjust for landscape layout
     if (!verticalLayout) {
-        x = kFWImageCropControllerTitleTopPadding;
+        x = self.titleTopPadding;
         if (@available(iOS 11.0, *)) {
             x += self.view.safeAreaInsets.left;
         }
@@ -324,10 +323,10 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
 
     // Work out vertical position
     if (@available(iOS 11.0, *)) {
-        frame.origin.y = self.view.safeAreaInsets.top + kFWImageCropControllerTitleTopPadding;
+        frame.origin.y = self.view.safeAreaInsets.top + self.titleTopPadding;
     }
     else {
-        frame.origin.y = self.statusBarHeight + kFWImageCropControllerTitleTopPadding;
+        frame.origin.y = self.statusBarHeight + self.titleTopPadding;
     }
 
     return frame;
@@ -361,7 +360,7 @@ static const CGFloat kFWImageCropControllerToolbarHeight = 44.0f;
 
     // Set out the appropriate inset for that
     CGFloat verticalInset = self.statusBarHeight;
-    verticalInset += kFWImageCropControllerTitleTopPadding;
+    verticalInset += self.titleTopPadding;
     verticalInset += self.titleLabel.frame.size.height;
     self.cropView.cropRegionInsets = UIEdgeInsetsMake(verticalInset, 0, insets.bottom, 0);
 }
@@ -1343,6 +1342,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 }
 
 - (void)setup {
+    _buttonInsetPadding = 10.f;
     self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
     self.backgroundView.backgroundColor = [UIColor colorWithWhite:0.12f alpha:1.0f];
     [self addSubview:self.backgroundView];
@@ -1432,10 +1432,11 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     self.backgroundView.frame = frame;
     
     if (verticalLayout == NO) {
-        CGFloat insetPadding = 10.0f;
+        CGFloat insetPadding = self.buttonInsetPadding;
         
         // Work out the cancel button frame
         CGRect frame = CGRectZero;
+        frame.origin.y = (CGRectGetHeight(self.bounds) - 44.0f) / 2.0;
         frame.size.height = 44.0f;
         frame.size.width = MIN(self.frame.size.width / 3.0, self.cancelTextButton.frame.size.width);
 
@@ -1470,7 +1471,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
             width = CGRectGetMinX(self.cancelTextButton.frame) - CGRectGetMaxX(self.doneTextButton.frame);
         }
         
-        CGRect containerRect = CGRectIntegral((CGRect){x,frame.origin.y,width,44.0f});
+        CGRect containerRect = CGRectIntegral((CGRect){x,frame.origin.y,width,CGRectGetHeight(self.bounds) - frame.origin.y});
         
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
@@ -1494,6 +1495,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     }
     else {
         CGRect frame = CGRectZero;
+        frame.origin.x = (CGRectGetWidth(self.bounds) - 44.f) / 2.0;
         frame.size.height = 44.0f;
         frame.size.width = 44.0f;
         frame.origin.y = CGRectGetHeight(self.bounds) - 44.0f;
@@ -1504,7 +1506,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
         frame.size.height = 44.0f;
         self.doneIconButton.frame = frame;
         
-        CGRect containerRect = (CGRect){0,CGRectGetMaxY(self.doneIconButton.frame),44.0f,CGRectGetMinY(self.cancelIconButton.frame)-CGRectGetMaxY(self.doneIconButton.frame)};
+        CGRect containerRect = (CGRect){frame.origin.x,CGRectGetMaxY(self.doneIconButton.frame),CGRectGetWidth(self.bounds) - frame.origin.x,CGRectGetMinY(self.cancelIconButton.frame)-CGRectGetMaxY(self.doneIconButton.frame)};
         
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
@@ -1881,6 +1883,12 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 - (void)setStatusBarHeightInset:(CGFloat)statusBarHeightInset
 {
     _statusBarHeightInset = statusBarHeightInset;
+    [self setNeedsLayout];
+}
+
+- (void)setButtonInsetPadding:(CGFloat)buttonInsetPadding
+{
+    _buttonInsetPadding = buttonInsetPadding;
     [self setNeedsLayout];
 }
 
