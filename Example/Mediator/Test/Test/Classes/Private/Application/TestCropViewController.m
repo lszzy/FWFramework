@@ -57,39 +57,15 @@
 {
     FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
     cropController.delegate = self;
-
-    // Uncomment this if you wish to provide extra instructions via a title label
-    //cropController.title = @"Crop Image";
-
-    // -- Uncomment these if you want to test out restoring to a previous crop setting --
-    //cropController.angle = 90; // The initial angle in which the image will be rotated
-    //cropController.imageCropFrame = CGRectMake(0,0,2848,4288); //The initial frame that the crop controller will have visible.
-    
-    // -- Uncomment the following lines of code to test out the aspect ratio features --
-    //cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare; //Set the initial aspect ratio as a square
-    //cropController.aspectRatioLockEnabled = YES; // The crop box is locked to the aspect ratio and can't be resized away from it
-    //cropController.resetAspectRatioEnabled = NO; // When tapping 'reset', the aspect ratio will NOT be reset back to default
-    //cropController.aspectRatioPickerButtonHidden = YES;
-
-    // -- Uncomment this line of code to place the toolbar at the top of the view controller --
-    //cropController.toolbarPosition = FWImageCropToolbarPositionTop;
-    
-    // -- Uncomment this line of code to include only certain type of preset ratios
-    //cropController.allowedAspectRatios = @[@(FWImageCropAspectRatioPresetOriginal),
-    //                                       @(FWImageCropAspectRatioPresetSquare),
-    //                                       @(FWImageCropAspectRatioPreset3x2)];
-
-    //cropController.rotateButtonsHidden = YES;
-    //cropController.rotateClockwiseButtonHidden = NO;
-    
-    //cropController.doneButtonTitle = @"Title";
-    //cropController.cancelButtonTitle = @"Title";
-
-    // Uncomment this if you wish to always show grid
-    //cropController.cropView.alwaysShowCroppingGrid = YES;
-
-    // Uncomment this if you do not want translucency effect
-    //cropController.cropView.translucencyAlwaysHidden = YES;
+    cropController.aspectRatioPickerButtonHidden = YES;
+    cropController.rotateButtonsHidden = YES;
+    cropController.toolbar.backgroundView.backgroundColor = [UIColor fwColorWithHex:0x121212];
+    [cropController.toolbar.cancelTextButton fwSetImage:FWIconImage(@"ion-android-close", 22)];
+    [cropController.toolbar.cancelTextButton setTitle:nil forState:UIControlStateNormal];
+    [cropController.toolbar.doneTextButton fwSetImage:FWIconImage(@"ion-android-done", 22)];
+    [cropController.toolbar.doneTextButton setTitle:nil forState:UIControlStateNormal];
+    [cropController.toolbar.resetButton fwSetImage:nil];
+    [cropController.toolbar.resetButton setTitle:@"撤销" forState:UIControlStateNormal];
     return cropController;
 }
 
