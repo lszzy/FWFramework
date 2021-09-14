@@ -54,13 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
  @brief 快速创建单选照片选择器，使用自定义裁剪控制器编辑
  
  @param sourceType 选择器类型
- @param cropController 自定义裁剪控制器，nil时自动创建默认裁剪控制器
- @param completion 完成回调。参数1为图片，2为是否取消
+ @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+ @param completion 完成回调。参数1为图片，2为信息字典，3为是否取消
  @return 照片选择器，不支持的返回nil
  */
 + (nullable instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
-                                           cropController:(nullable FWImageCropController *)cropController
-                                               completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
+                                           cropController:(nullable FWImageCropController * _Nullable (^)(UIImage *image))cropController
+                                               completion:(void (^)(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel))completion;
 
 @end
 
@@ -97,12 +97,12 @@ API_AVAILABLE(ios(14.0))
 /*!
  @brief 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
- @param cropController 自定义裁剪控制器，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为是否取消
+ @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+ @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
  @return 照片选择器
  */
-+ (instancetype)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController
-                                          completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
++ (instancetype)fwPickerControllerWithCropController:(nullable FWImageCropController * _Nullable (^)(UIImage *image))cropController
+                                          completion:(void (^)(UIImage * _Nullable image, PHPickerResult * _Nullable result, BOOL cancel))completion;
 
 @end
 
@@ -141,12 +141,12 @@ API_AVAILABLE(ios(14.0))
 /*!
  @brief 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
- @param cropController 自定义裁剪控制器，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为是否取消
+ @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+ @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
  @return 照片选择器
  */
-+ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWImageCropController *)cropController
-                                                                  completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
++ (nullable __kindof UIViewController *)fwPickerControllerWithCropController:(nullable FWImageCropController * _Nullable (^)(UIImage *image))cropController
+                                                                  completion:(void (^)(UIImage * _Nullable image, id _Nullable result, BOOL cancel))completion;
 
 @end
 
@@ -160,6 +160,12 @@ API_AVAILABLE(ios(14.0))
 
 /// 图片选取自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(__kindof UIViewController *pickerController);
+
+/// 编辑单张图片时是否启用自定义裁剪控制器，默认NO，使用系统方式
+@property (nonatomic, assign) BOOL cropControllerEnabled;
+
+/// 自定义裁剪控制器句柄，启用自定义裁剪后生效
+@property (nonatomic, copy, nullable) FWImageCropController * _Nullable (^cropControllerBlock)(UIImage *image);
 
 @end
 

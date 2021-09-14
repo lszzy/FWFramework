@@ -24,21 +24,31 @@ typedef NS_OPTIONS(NSUInteger, FWImagePickerFilterType) {
 @protocol FWImagePickerPlugin <NSObject>
 @optional
 
-/// 显示图片预览方法
+/// 从Camera选取单张图片插件方法
 /// @param viewController 当前视图控制器
-/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
-/// @param currentIndex 当前索引，默认0
-/// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
-/// @param placeholderImage 占位图或缩略图句柄，默认nil
-/// @param renderBlock 自定义渲染句柄，默认nil
+/// @param filterType 过滤类型，默认0同系统
+/// @param allowsEditing 是否允许编辑
 /// @param customBlock 自定义配置句柄，默认nil
+/// @param completion 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
 - (void)fwViewController:(UIViewController *)viewController
-        showImagePreview:(NSArray *)imageURLs
-            currentIndex:(NSInteger)currentIndex
-              sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
-        placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
-             renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
-             customBlock:(nullable void (^)(id imagePreview))customBlock;
+         showImageCamera:(FWImagePickerFilterType)filterType
+           allowsEditing:(BOOL)allowsEditing
+             customBlock:(nullable void (^)(id imagePicker))customBlock
+              completion:(void (^)(id _Nullable object, id _Nullable result, BOOL cancel))completion;
+
+/// 从图片库选取多张图片插件方法
+/// @param viewController 当前视图控制器
+/// @param filterType 过滤类型，默认0同系统
+/// @param selectionLimit 最大选择数量
+/// @param allowsEditing 是否允许编辑
+/// @param customBlock 自定义配置句柄，默认nil
+/// @param completion 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
+- (void)fwViewController:(UIViewController *)viewController
+         showImagePicker:(FWImagePickerFilterType)filterType
+          selectionLimit:(NSInteger)selectionLimit
+           allowsEditing:(BOOL)allowsEditing
+             customBlock:(nullable void (^)(id imagePicker))customBlock
+              completion:(void (^)(NSArray *objects, NSArray *results, BOOL cancel))completion;
 
 @end
 
@@ -48,27 +58,47 @@ typedef NS_OPTIONS(NSUInteger, FWImagePickerFilterType) {
 @protocol FWImagePickerPluginController <NSObject>
 @required
 
-/// 显示图片预览(简单版)
-/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
-/// @param currentIndex 当前索引，默认0
-/// @param sourceView 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
-                           currentIndex:(NSInteger)currentIndex
-                             sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView;
+/// 从Camera选取单张图片(简单版)
+/// @param allowsEditing 是否允许编辑
+/// @param completion 完成回调，主线程。参数1为图片，2为是否取消
+- (void)fwShowImageCameraWithAllowsEditing:(BOOL)allowsEditing
+                                completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
 
-/// 显示图片预览(详细版)
-/// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
-/// @param currentIndex 当前索引，默认0
-/// @param sourceView 来源视图句柄，支持UIView|NSValue.CGRect，默认nil
-/// @param placeholderImage 占位图或缩略图句柄，默认nil
-/// @param renderBlock 自定义渲染句柄，默认nil
-/// @param customBlock 自定义句柄，默认nil
-- (void)fwShowImagePreviewWithImageURLs:(NSArray *)imageURLs
-                           currentIndex:(NSInteger)currentIndex
-                             sourceView:(nullable id _Nullable (^)(NSInteger index))sourceView
-                       placeholderImage:(nullable UIImage * _Nullable (^)(NSInteger index))placeholderImage
-                            renderBlock:(nullable void (^)(__kindof UIView *view, NSInteger index))renderBlock
-                            customBlock:(nullable void (^)(id imagePreview))customBlock;
+/// 从Camera选取单张图片(详细版)
+/// @param filterType 过滤类型，默认0同系统
+/// @param allowsEditing 是否允许编辑
+/// @param customBlock 自定义配置句柄，默认nil
+/// @param completion 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
+- (void)fwShowImageCameraWithFilterType:(FWImagePickerFilterType)filterType
+                          allowsEditing:(BOOL)allowsEditing
+                            customBlock:(nullable void (^)(id imagePicker))customBlock
+                             completion:(void (^)(id _Nullable object, id _Nullable result, BOOL cancel))completion;
+
+/// 从图片库选取单张图片(简单版)
+/// @param allowsEditing 是否允许编辑
+/// @param completion 完成回调，主线程。参数1为图片，2为是否取消
+- (void)fwShowImagePickerWithAllowsEditing:(BOOL)allowsEditing
+                                completion:(void (^)(UIImage * _Nullable image, BOOL cancel))completion;
+
+/// 从图片库选取多张图片(简单版)
+/// @param selectionLimit 最大选择数量
+/// @param allowsEditing 是否允许编辑
+/// @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
+- (void)fwShowImagePickerWithSelectionLimit:(NSInteger)selectionLimit
+                              allowsEditing:(BOOL)allowsEditing
+                                 completion:(void (^)(NSArray<UIImage *> *images, NSArray *results, BOOL cancel))completion;
+
+/// 从图片库选取多张图片(详细版)
+/// @param filterType 过滤类型，默认0同系统
+/// @param selectionLimit 最大选择数量
+/// @param allowsEditing 是否允许编辑
+/// @param customBlock 自定义配置句柄，默认nil
+/// @param completion 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
+- (void)fwShowImagePickerWithFilterType:(FWImagePickerFilterType)filterType
+                         selectionLimit:(NSInteger)selectionLimit
+                          allowsEditing:(BOOL)allowsEditing
+                            customBlock:(nullable void (^)(id imagePicker))customBlock
+                             completion:(void (^)(NSArray *objects, NSArray *results, BOOL cancel))completion;
 
 @end
 

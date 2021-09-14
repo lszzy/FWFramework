@@ -192,13 +192,14 @@
     return pickerController;
 }
 
-+ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(FWImageCropController *)cropViewController
-                                      completion:(void (^)(UIImage * _Nullable, BOOL))completion
++ (instancetype)fwPickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType
+                                  cropController:(nullable FWImageCropController * _Nullable (^)(UIImage * _Nonnull))cropControllerBlock
+                                      completion:(void (^)(UIImage * _Nullable, NSDictionary * _Nullable, BOOL))completion
 {
     UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:sourceType filterType:FWImagePickerFilterTypeImage allowsEditing:NO shouldDismiss:NO completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
         UIImage *originalImage = cancel ? nil : object;
         if (originalImage) {
-            FWImageCropController *cropController = cropViewController;
+            FWImageCropController *cropController = cropControllerBlock ? cropControllerBlock(originalImage) : nil;
             if (!cropController) {
                 cropController = [[FWImageCropController alloc] initWithImage:originalImage];
                 cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare;
@@ -208,13 +209,13 @@
             }
             cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
                 [picker dismissViewControllerAnimated:YES completion:^{
-                    if (completion) completion(image, NO);
+                    if (completion) completion(image, info, NO);
                 }];
             };
             cropController.onDidFinishCancelled = ^(BOOL isFinished) {
                 if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
                     [picker dismissViewControllerAnimated:YES completion:^{
-                        if (completion) completion(nil, YES);
+                        if (completion) completion(nil, nil, YES);
                     }];
                 } else {
                     [picker popViewControllerAnimated:YES];
@@ -223,7 +224,7 @@
             [picker pushViewController:cropController animated:YES];
         } else {
             [picker dismissViewControllerAnimated:YES completion:^{
-                if (completion) completion(nil, YES);
+                if (completion) completion(nil, nil, YES);
             }];
         }
     }];
@@ -276,12 +277,12 @@
     return pickerController;
 }
 
-+ (instancetype)fwPickerControllerWithCropController:(FWImageCropController *)cropViewController completion:(void (^)(UIImage * _Nullable, BOOL))completion
++ (instancetype)fwPickerControllerWithCropController:(FWImageCropController * _Nullable (^)(UIImage * _Nonnull))cropControllerBlock completion:(void (^)(UIImage * _Nullable, PHPickerResult * _Nullable, BOOL))completion
 {
     PHPickerViewController *pickerController = [PHPickerViewController fwPickerControllerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
         UIImage *originalImage = objects.firstObject;
         if (originalImage) {
-            FWImageCropController *cropController = cropViewController;
+            FWImageCropController *cropController = cropControllerBlock ? cropControllerBlock(originalImage) : nil;
             if (!cropController) {
                 cropController = [[FWImageCropController alloc] initWithImage:originalImage];
                 cropController.aspectRatioPreset = FWImageCropAspectRatioPresetSquare;
@@ -291,7 +292,7 @@
             }
             cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
                 [picker.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                    if (completion) completion(image, NO);
+                    if (completion) completion(image, results.firstObject, NO);
                 }];
             };
             cropController.onDidFinishCancelled = ^(BOOL isFinished) {
@@ -300,7 +301,7 @@
             [picker presentViewController:cropController animated:YES completion:nil];
         } else {
             [picker dismissViewControllerAnimated:YES completion:^{
-                if (completion) completion(nil, YES);
+                if (completion) completion(nil, nil, YES);
             }];
         }
     }];
@@ -339,7 +340,7 @@
     }
 }
 
-+ (__kindof UIViewController *)fwPickerControllerWithCropController:(FWImageCropController *)cropController completion:(void (^)(UIImage * _Nullable, BOOL))completion
++ (__kindof UIViewController *)fwPickerControllerWithCropController:(FWImageCropController * _Nullable (^)(UIImage * _Nonnull))cropController completion:(void (^)(UIImage * _Nullable, id _Nullable, BOOL))completion
 {
     if (@available(iOS 14, *)) {
         return [PHPickerViewController fwPickerControllerWithCropController:cropController completion:completion];
@@ -362,6 +363,65 @@
         instance = [[FWImagePickerPluginImpl alloc] init];
     });
     return instance;
+}
+
+- (void)fwViewController:(UIViewController *)viewController
+         showImageCamera:(FWImagePickerFilterType)filterType
+           allowsEditing:(BOOL)allowsEditing
+             customBlock:(void (^)(id _Nonnull))customBlock
+              completion:(void (^)(id _Nullable, id _Nullable, BOOL))completion
+{
+    UIImagePickerController *pickerController = nil;
+    if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && allowsEditing) {
+        pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera cropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
+            if (completion) completion(image, info, cancel);
+        }];
+    } else {
+        pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera filterType:filterType allowsEditing:allowsEditing shouldDismiss:YES completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
+            if (completion) completion(object, info, cancel);
+        }];
+    }
+    
+    if (!pickerController) {
+        if (completion) completion(nil, nil, YES);
+        return;
+    }
+    
+    if (self.customBlock) {
+        self.customBlock(pickerController);
+    }
+    
+    [viewController presentViewController:pickerController animated:YES completion:nil];
+}
+
+- (void)fwViewController:(UIViewController *)viewController
+         showImagePicker:(FWImagePickerFilterType)filterType
+          selectionLimit:(NSInteger)selectionLimit
+           allowsEditing:(BOOL)allowsEditing
+             customBlock:(void (^)(id _Nonnull))customBlock
+              completion:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull, BOOL))completion
+{
+    UIViewController *pickerController = nil;
+    if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
+        pickerController = [PHPhotoLibrary fwPickerControllerWithCropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, id  _Nullable result, BOOL cancel) {
+            if (completion) completion(image ? @[image] : @[], result ? @[result] : @[], cancel);
+        }];
+    } else {
+        pickerController = [PHPhotoLibrary fwPickerControllerWithFilterType:filterType selectionLimit:selectionLimit allowsEditing:allowsEditing shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray * _Nonnull objects, NSArray * _Nonnull results, BOOL cancel) {
+            if (completion) completion(objects, results, cancel);
+        }];
+    }
+    
+    if (!pickerController) {
+        if (completion) completion(@[], @[], YES);
+        return;
+    }
+    
+    if (self.customBlock) {
+        self.customBlock(pickerController);
+    }
+    
+    [viewController presentViewController:pickerController animated:YES completion:nil];
 }
 
 @end

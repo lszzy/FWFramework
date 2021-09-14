@@ -34,8 +34,7 @@
         [drawerView setPosition:position animated:YES];
     }];
     
-    [self fwAddRightBarItem:@"系统" target:self action:@selector(onSystemSheet:)];
-    [self fwAddRightBarItem:@"自定义" target:self action:@selector(onPhotoSheet:)];
+    [self fwAddRightBarItem:@"相册" target:self action:@selector(onPhotoSheet:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -83,48 +82,26 @@
     imageView.fwLayoutChain.center().size(CGSizeMake(200, 200));
 }
 
-- (void)onSystemSheet:(UIBarButtonItem *)sender
-{
-    FWWeakifySelf();
-    [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"拍照", @"选取相册"] actionBlock:^(NSInteger index) {
-        FWStrongifySelf();
-        if (index == 0) {
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera allowsEditing:YES completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
-                    [self onPickerResult:cancel ? nil : image cancelled:cancel];
-                }];
-                [self presentViewController:pickerController animated:YES completion:nil];
-            } else {
-                [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:nil cancelBlock:nil];
-            }
-        } else {
-            UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 allowsEditing:YES completion:^(NSArray<UIImage *> * _Nonnull images, NSArray * _Nonnull results, BOOL cancel) {
-                [self onPickerResult:cancel ? nil : images.firstObject cancelled:cancel];
-            }];
-            [self presentViewController:pickerController animated:YES completion:nil];
-        }
-    }];
-}
-
 - (void)onPhotoSheet:(UIBarButtonItem *)sender
 {
     FWWeakifySelf();
     [self fwShowSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"拍照", @"选取相册"] actionBlock:^(NSInteger index) {
         FWStrongifySelf();
         if (index == 0) {
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera cropController:nil completion:^(UIImage * _Nonnull image, BOOL cancel) {
-                    [self onPickerResult:cancel ? nil : image cancelled:cancel];
-                }];
-                [self presentViewController:pickerController animated:YES completion:nil];
-            } else {
+            if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 [self fwShowAlertWithTitle:@"未检测到您的摄像头" message:nil cancel:nil cancelBlock:nil];
+                return;
             }
-        } else {
-            UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithCropController:nil completion:^(UIImage * _Nullable image, BOOL cancel) {
-                [self onPickerResult:cancel ? nil : image cancelled:cancel];
+            
+            [self fwShowImageCameraWithAllowsEditing:YES completion:^(UIImage * _Nullable image, BOOL cancel) {
+                FWStrongifySelf();
+                [self onPickerResult:image cancelled:cancel];
             }];
-            [self presentViewController:pickerController animated:YES completion:nil];
+        } else {
+            [self fwShowImagePickerWithAllowsEditing:YES completion:^(UIImage * _Nullable image, BOOL cancel) {
+                FWStrongifySelf();
+                [self onPickerResult:image cancelled:cancel];
+            }];
         }
     }];
 }

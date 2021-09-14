@@ -15,7 +15,7 @@ import FWFramework
     override func renderModel() {
         fwSetRightBarItem(FWIcon.refreshImage) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
-            self?.fwShowSheet(withTitle: nil, message: nil, cancel: nil, actions: ["浏览已选图片", "切换图片插件", allowsEditing ? "切换不可编辑" : "切换可编辑"], actionBlock: { index in
+            self?.fwShowSheet(withTitle: nil, message: nil, cancel: nil, actions: ["浏览已选图片", "切换图片插件", allowsEditing ? "切换不可编辑" : "切换可编辑", FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪"], actionBlock: { index in
                 if index == 0 {
                     self?.showData(self?.results ?? [])
                 } else if index == 1 {
@@ -26,8 +26,10 @@ import FWFramework
                     } else {
                         FWPluginManager.registerPlugin(FWImagePreviewPlugin.self, with: FWPhotoBrowserPlugin.self)
                     }
-                } else {
+                } else if (index == 2) {
                     self?.allowsEditing = !allowsEditing
+                } else {
+                    FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled = !FWImagePickerPluginImpl.sharedInstance.cropControllerEnabled;
                 }
             })
         }
@@ -35,12 +37,12 @@ import FWFramework
     
     override func renderData() {
         tableData.addObjects(from: [
-            "照片选择器(图片兼容)",
-            "照片选择器(LivePhoto兼容)",
-            "照片选择器(视频兼容)",
-            "照片选择器(图片旧版)",
-            "照片选择器(LivePhoto旧版)",
-            "照片选择器(视频旧版)",
+            "照片选择器(图片)",
+            "照片选择器(LivePhoto)",
+            "照片选择器(视频)",
+            "照片选择器(图片-旧版)",
+            "照片选择器(LivePhoto-旧版)",
+            "照片选择器(视频-旧版)",
             "照相机(图片)",
             "照相机(LivePhoto)",
             "照相机(视频)",
@@ -78,22 +80,19 @@ import FWFramework
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .image, selectionLimit: 9, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+            fwShowImagePicker(with: .image, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
-            present(pickerController!, animated: true)
             break
         case 1:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+            fwShowImagePicker(with: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
-            present(pickerController!, animated: true)
             break
         case 2:
-            let pickerController = PHPhotoLibrary.fwPickerController(with: .video, selectionLimit: 9, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, objects, results, cancel in
+            fwShowImagePicker(with: .video, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
-            present(pickerController!, animated: true)
             break
         case 3:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
@@ -114,23 +113,19 @@ import FWFramework
             present(pickerController!, animated: true)
             break
         case 6:
-            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .image, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+            fwShowImageCamera(with: .image, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
-            present(pickerController!, animated: true)
             break
         case 7:
-            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .livePhoto, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+            fwShowImageCamera(with: .livePhoto, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
-            present(pickerController!, animated: true)
             break
         case 8:
-            let pickerController = UIImagePickerController.fwPickerController(with: .camera, filterType: .video, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+            fwShowImageCamera(with: .video, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
-            pickerController?.cameraCaptureMode = .video
-            present(pickerController!, animated: true)
             break
         default:
             break
