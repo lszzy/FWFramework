@@ -25,7 +25,37 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:image];
+    self.image = image;
+    FWImageCropController *cropController = [self createCropController];
+    
+    //If profile picture, push onto the same navigation stack
+    if (self.croppingStyle == FWImageCropCroppingStyleCircular) {
+        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+            [picker dismissViewControllerAnimated:YES completion:^{
+                [self presentViewController:cropController animated:YES completion:nil];
+            }];
+        } else {
+            [picker pushViewController:cropController animated:YES];
+        }
+    }
+    else { //otherwise dismiss, and then present from the main controller
+        [picker dismissViewControllerAnimated:YES completion:^{
+            [self presentViewController:cropController animated:YES completion:nil];
+            //[self.navigationController pushViewController:cropController animated:YES];
+        }];
+    }
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Gesture Recognizer -
+
+- (FWImageCropController *)createCropController
+{
+    FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
     cropController.delegate = self;
 
     // Uncomment this if you wish to provide extra instructions via a title label
@@ -60,38 +90,12 @@
 
     // Uncomment this if you do not want translucency effect
     //cropController.cropView.translucencyAlwaysHidden = YES;
-
-    self.image = image;
-    
-    //If profile picture, push onto the same navigation stack
-    if (self.croppingStyle == FWImageCropCroppingStyleCircular) {
-        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-            [picker dismissViewControllerAnimated:YES completion:^{
-                [self presentViewController:cropController animated:YES completion:nil];
-            }];
-        } else {
-            [picker pushViewController:cropController animated:YES];
-        }
-    }
-    else { //otherwise dismiss, and then present from the main controller
-        [picker dismissViewControllerAnimated:YES completion:^{
-            [self presentViewController:cropController animated:YES completion:nil];
-            //[self.navigationController pushViewController:cropController animated:YES];
-        }];
-    }
+    return cropController;
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - Gesture Recognizer -
 - (void)didTapImageView
 {
-    // When tapping the image view, restore the image to the previous cropping state
-    FWImageCropController *cropController = [[FWImageCropController alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
-    cropController.delegate = self;
+    FWImageCropController *cropController = [self createCropController];
     [self presentViewController:cropController animated:YES completion:nil];
 }
 
@@ -223,6 +227,11 @@
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapImageView)];
     [self.imageView addGestureRecognizer:tapRecognizer];
+    
+    self.image = [TestBundle imageNamed:@"public_sunset"];
+    self.imageView.image = self.image;
+    [self layoutImageView];
+    self.imageView.hidden = NO;
 }
 
 - (void)viewDidLayoutSubviews
