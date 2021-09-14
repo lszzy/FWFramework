@@ -181,12 +181,20 @@
     [self stopScanManager];
     
     FWWeakifySelf();
-    UIViewController *pickerController = [PHPhotoLibrary fwPickerControllerWithSelectionLimit:1 allowsEditing:NO completion:^(NSArray<UIImage *> *images, NSArray *results, BOOL cancel) {
+    [self fwShowImagePickerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:1 allowsEditing:NO customBlock:^(UIViewController *imagePicker) {
+        FWStrongifySelf();
+        if ([imagePicker isKindOfClass:[UIViewController class]]) {
+            imagePicker.fwPresentationDidDismiss = ^{
+                FWStrongifySelf();
+                [self startScanManager];
+            };
+        }
+    } completion:^(NSArray * _Nonnull objects, NSArray * _Nonnull results, BOOL cancel) {
         FWStrongifySelf();
         if (cancel) {
             [self startScanManager];
         } else {
-            UIImage *image = images.firstObject;
+            UIImage *image = objects.firstObject;
             image = [image fwCompressImageWithMaxWidth:1200];
             image = [image fwCompressImageWithMaxLength:300 * 1024];
             NSString *result = [FWQrcodeScanManager scanQrcodeWithImage:image];
@@ -194,11 +202,6 @@
             [self onScanResult:result];
         }
     }];
-    pickerController.fwPresentationDidDismiss = ^{
-        FWStrongifySelf();
-        [self startScanManager];
-    };
-    [self presentViewController:pickerController animated:YES completion:nil];
 }
 
 - (void)onScanResult:(NSString *)result
