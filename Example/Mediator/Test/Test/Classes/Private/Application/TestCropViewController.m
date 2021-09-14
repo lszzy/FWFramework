@@ -8,7 +8,7 @@
 
 #import "TestCropViewController.h"
 
-@interface TestCropViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FWImageCropControllerDelegate>
+@interface TestCropViewController () <FWImageCropControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;           // The image we'll be cropping
 @property (nonatomic, strong) UIImageView *imageView;   // The image view to present the cropped image
@@ -20,36 +20,6 @@
 @end
 
 @implementation TestCropViewController
-
-#pragma mark - Image Picker Delegate -
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-{
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    self.image = image;
-    FWImageCropController *cropController = [self createCropController];
-    
-    //If profile picture, push onto the same navigation stack
-    if (self.croppingStyle == FWImageCropCroppingStyleCircular) {
-        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-            [picker dismissViewControllerAnimated:YES completion:^{
-                [self presentViewController:cropController animated:YES completion:nil];
-            }];
-        } else {
-            [picker pushViewController:cropController animated:YES];
-        }
-    }
-    else { //otherwise dismiss, and then present from the main controller
-        [picker dismissViewControllerAnimated:YES completion:^{
-            [self presentViewController:cropController animated:YES completion:nil];
-            //[self.navigationController pushViewController:cropController animated:YES];
-        }];
-    }
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
 
 #pragma mark - Gesture Recognizer -
 
@@ -96,17 +66,8 @@
 {
     self.imageView.image = image;
     [self layoutImageView];
-    
-    if (cropViewController.croppingStyle != FWImageCropCroppingStyleCircular) {
-        self.imageView.hidden = YES;
-        [cropViewController dismissViewControllerAnimated:YES completion:^{
-            self.imageView.hidden = NO;
-        }];
-    }
-    else {
-        self.imageView.hidden = NO;
-        [cropViewController dismissViewControllerAnimated:YES completion:nil];
-    }
+    self.imageView.hidden = NO;
+    [cropViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Image Layout -
@@ -146,26 +107,14 @@
     FWWeakifySelf();
     [self fwShowSheetWithTitle:nil message:nil cancel:nil actions:@[@"Crop Image", @"Make Profile"] actionBlock:^(NSInteger index) {
         FWStrongifySelf();
-        if (index == 0) {
-            self.croppingStyle = FWImageCropCroppingStyleDefault;
-            
-            UIImagePickerController *standardPicker = [[UIImagePickerController alloc] init];
-            standardPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            standardPicker.allowsEditing = NO;
-            standardPicker.delegate = self;
-            [self presentViewController:standardPicker animated:YES completion:nil];
-        } else {
-            self.croppingStyle = FWImageCropCroppingStyleCircular;
-            
-            UIImagePickerController *profilePicker = [[UIImagePickerController alloc] init];
-            profilePicker.modalPresentationStyle = UIModalPresentationPopover;
-            profilePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            profilePicker.allowsEditing = NO;
-            profilePicker.delegate = self;
-            profilePicker.preferredContentSize = CGSizeMake(512,512);
-            profilePicker.popoverPresentationController.barButtonItem = self.fwNavigationItem.leftBarButtonItem;
-            [self presentViewController:profilePicker animated:YES completion:nil];
-        }
+        self.croppingStyle = index == 0 ? FWImageCropCroppingStyleDefault : FWImageCropCroppingStyleCircular;
+        [self fwShowImagePickerWithAllowsEditing:NO completion:^(UIImage * _Nullable image, BOOL cancel) {
+            FWStrongifySelf();
+            if (image) {
+                self.image = image;
+                [self didTapImageView];
+            }
+        }];
     }];
 }
 
@@ -178,10 +127,6 @@
     activityController.modalPresentationStyle = UIModalPresentationPopover;
     activityController.popoverPresentationController.barButtonItem = sender;
     [self presentViewController:activityController animated:YES completion:nil];
-}
-
-- (void)dismissViewController {
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - View Creation/Lifecycle -
