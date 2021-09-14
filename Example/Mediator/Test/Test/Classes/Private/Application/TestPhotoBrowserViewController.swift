@@ -40,12 +40,15 @@ import FWFramework
             "照片选择器(图片)",
             "照片选择器(LivePhoto)",
             "照片选择器(视频)",
+            "照片选择器(默认)",
             "照片选择器(图片-旧版)",
             "照片选择器(LivePhoto-旧版)",
             "照片选择器(视频-旧版)",
+            "照片选择器(默认-旧版)",
             "照相机(图片)",
             "照相机(LivePhoto)",
             "照相机(视频)",
+            "照相机(默认)",
         ])
     }
     
@@ -95,35 +98,51 @@ import FWFramework
             }
             break
         case 3:
+            fwShowImagePicker(with: [], selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+                self?.showData(objects)
+            }
+            break
+        case 4:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .image, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break
-        case 4:
+        case 5:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .livePhoto, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break
-        case 5:
+        case 6:
             let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: .video, allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             present(pickerController!, animated: true)
             break
-        case 6:
+        case 7:
+            let pickerController = UIImagePickerController.fwPickerController(with: .photoLibrary, filterType: [], allowsEditing: allowsEditing, shouldDismiss: true) { [weak self] picker, object, info, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            present(pickerController!, animated: true)
+            break
+        case 8:
             fwShowImageCamera(with: .image, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
-        case 7:
+        case 9:
             fwShowImageCamera(with: .livePhoto, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
-        case 8:
+        case 10:
             fwShowImageCamera(with: .video, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
+                self?.showData(object != nil ? [object!] : [])
+            }
+            break
+        case 11:
+            fwShowImageCamera(with: [], allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
