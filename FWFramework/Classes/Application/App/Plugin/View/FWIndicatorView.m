@@ -183,7 +183,7 @@
     
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.shadowPath = bezierPath.CGPath;
-    gradientLayer.frame = CGRectMake(size.width / 2, 0, size.width / 2, size.height);
+    gradientLayer.frame = CGRectMake(0, 0, size.width / 2, size.height);
     gradientLayer.startPoint = CGPointMake(1, 0);
     gradientLayer.endPoint = CGPointMake(1, 1);
     gradientLayer.colors = @[(id)color.CGColor, (id)[color colorWithAlphaComponent:0.5].CGColor];
@@ -191,7 +191,7 @@
     
     gradientLayer = [CAGradientLayer layer];
     gradientLayer.shadowPath = bezierPath.CGPath;
-    gradientLayer.frame = CGRectMake(0, 0, size.width / 2, size.height);
+    gradientLayer.frame = CGRectMake(size.width / 2, 0, size.width / 2, size.height);
     gradientLayer.startPoint = CGPointMake(0, 1);
     gradientLayer.endPoint = CGPointMake(0, 0);
     gradientLayer.colors = @[(id)[color colorWithAlphaComponent:0.5].CGColor, (id)[color colorWithAlphaComponent:0].CGColor];
