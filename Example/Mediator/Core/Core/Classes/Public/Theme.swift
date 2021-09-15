@@ -20,7 +20,7 @@ import FWFramework
     @FWUserDefaultAnnotation("isBarTranslucent", defaultValue: false)
     public static var isBarTranslucent: Bool
     
-    @FWUserDefaultAnnotation("isBarAppearance", defaultValue: false)
+    @FWUserDefaultAnnotation("isBarAppearance", defaultValue: UINavigationBar.fwAppearanceEnabled)
     public static var isBarAppearance: Bool
     
     public static var backgroundColor: UIColor {
