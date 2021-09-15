@@ -34,7 +34,7 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallSpin =
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallPulse = 3;
 /// 三圆圈三角形旋转
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriangle = 4;
-/// 单圆圈旋转
+/// 单圆圈渐变旋转
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeCircleSpin = 5;
 /// 圆形向外扩散，类似水波纹
 static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
