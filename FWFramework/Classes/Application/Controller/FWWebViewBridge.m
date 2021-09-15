@@ -45,6 +45,8 @@ static int logMaxLength = 500;
     self.startupMessageQueue = nil;
     self.responseCallbacks = nil;
     self.messageHandlers = nil;
+    self.errorHandler = nil;
+    self.filterHandler = nil;
 }
 
 - (void)reset {
@@ -109,17 +111,21 @@ static int logMaxLength = 500;
                 };
             }
             
-            FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
-            
-            if (!handler) {
-                NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
-                if (self.errorHandler) {
-                    self.errorHandler(message[@"handlerName"], message[@"data"], responseCallback);
-                }
-                continue;
+            if (self.filterHandler) {
+                BOOL filterResult = self.filterHandler(message[@"handlerName"], message[@"data"], responseCallback);
+                if (!filterResult) continue;
             }
             
-            handler(message[@"data"], responseCallback);
+            FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
+            if (handler) {
+                handler(message[@"data"], responseCallback);
+                continue;;
+            }
+            
+            NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+            if (self.errorHandler) {
+                self.errorHandler(message[@"handlerName"], message[@"data"], responseCallback);
+            }
         }
     }
 }
@@ -281,8 +287,16 @@ static int logMaxLength = 500;
     [_base.messageHandlers removeObjectForKey:handlerName];
 }
 
+- (NSArray<NSString *> *)getRegisteredHandlers {
+    return _base.messageHandlers.allKeys ?: @[];
+}
+
 - (void)setErrorHandler:(FWJsBridgeErrorHandler)handler {
     _base.errorHandler = handler;
+}
+
+- (void)setFilterHandler:(FWJsBridgeFilterHandler)handler {
+    _base.filterHandler = handler;
 }
 
 - (void)reset {
@@ -437,7 +451,9 @@ NSString * FWWebViewJsBridge_js() {
     }
     window.WebViewJavascriptBridge = {
         registerHandler: registerHandler,
+        getRegisteredHandlers: getRegisteredHandlers,
         setErrorHandler: setErrorHandler,
+        setFilterHandler: setFilterHandler,
         callHandler: callHandler,
         disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
         _fetchQueue: _fetchQueue,
@@ -448,6 +464,7 @@ NSString * FWWebViewJsBridge_js() {
     var sendMessageQueue = [];
     var messageHandlers = {};
     var errorHandler = null;
+    var filterHandler = null;
     
     var CUSTOM_PROTOCOL_SCHEME = 'https';
     var QUEUE_HAS_MESSAGE = '__wvjb_queue_message__';
@@ -460,8 +477,22 @@ NSString * FWWebViewJsBridge_js() {
         messageHandlers[handlerName] = handler;
     }
     
+    function getRegisteredHandlers() {
+        var registeredHandlers = [];
+        for (handlerName in messageHandlers) {
+            if (handlerName != '_disableJavascriptAlertBoxSafetyTimeout') {
+                registeredHandlers.push(handlerName);
+            }
+        }
+        return registeredHandlers;
+    }
+    
     function setErrorHandler(handler) {
         errorHandler = handler;
+    }
+    
+    function setFilterHandler(handler) {
+        filterHandler = handler;
     }
     
     function callHandler(handlerName, data, responseCallback) {
@@ -505,9 +536,7 @@ NSString * FWWebViewJsBridge_js() {
 
             if (message.responseId) {
                 responseCallback = responseCallbacks[message.responseId];
-                if (!responseCallback) {
-                    return;
-                }
+                if (!responseCallback) { return; }
                 responseCallback(message.responseData);
                 delete responseCallbacks[message.responseId];
             } else {
@@ -520,14 +549,19 @@ NSString * FWWebViewJsBridge_js() {
                     responseCallback = function(ignoreResponseData) {};
                 }
                 
+                if (filterHandler) {
+                    var filterResult = filterHandler(message.handlerName, message.data, responseCallback);
+                    if (!filterResult) { return; }
+                }
+                
                 var handler = messageHandlers[message.handlerName];
-                if (!handler) {
+                if (handler) {
+                    handler(message.data, responseCallback);
+                } else {
                     console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
                     if (errorHandler) {
                         errorHandler(message.handlerName, message.data, responseCallback);
                     }
-                } else {
-                    handler(message.data, responseCallback);
                 }
             }
         }

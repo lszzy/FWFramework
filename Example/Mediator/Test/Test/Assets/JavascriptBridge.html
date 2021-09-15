@@ -44,18 +44,30 @@
             log('JS responding with', responseData)
             responseCallback(responseData)
         })
+        
+        bridge.setFilterHandler(function(handlerName, data, responseCallback) {
+            log('ObjC called ' + handlerName + ' with', data)
+            if (handlerName == 'testFilterHandler') {
+                var responseData = { 'Javascript Says':'Filter Handler!' }
+                log('JS responding with', responseData)
+                responseCallback(responseData)
+                return false
+            }
+            
+            return true
+        })
 
 		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
-			log('ObjC called testJavascriptHandler with', data)
 			var responseData = { 'Javascript Says':'Right back atcha!' }
 			log('JS responding with', responseData)
 			responseCallback(responseData)
 		})
-
+        
+        log('registeredHandlers: ', bridge.getRegisteredHandlers())
 		document.body.appendChild(document.createElement('br'))
 
 		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
-		callbackButton.innerHTML = 'Fire testObjcCallback'
+		callbackButton.innerHTML = 'testObjc'
 		callbackButton.onclick = function(e) {
 			e.preventDefault()
 			log('JS calling handler "testObjcCallback"')
@@ -65,11 +77,21 @@
 		}
         
         var errorButton = document.getElementById('buttons').appendChild(document.createElement('button'))
-        errorButton.innerHTML = 'Fire testErrorCallback'
+        errorButton.innerHTML = 'testError'
         errorButton.onclick = function(e) {
             e.preventDefault()
             log('JS calling handler "testErrorCallback"')
             bridge.callHandler('testErrorCallback', {'foo': 'bar'}, function(response) {
+                log('JS got response', response)
+            })
+        }
+        
+        var filterButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+        filterButton.innerHTML = 'testFilter'
+        filterButton.onclick = function(e) {
+            e.preventDefault()
+            log('JS calling handler "testFilterCallback"')
+            bridge.callHandler('testFilterCallback', {'foo': 'bar'}, function(response) {
                 log('JS got response', response)
             })
         }

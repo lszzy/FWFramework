@@ -18,10 +18,21 @@
             responseCallback(@"Response from errorHandler");
         }];
     }];
+    [bridge setFilterHandler:^BOOL(NSString * _Nonnull handlerName, id  _Nonnull data, FWJsBridgeResponseCallback  _Nonnull responseCallback) {
+        if ([handlerName isEqualToString:@"testFilterCallback"]) {
+            NSLog(@"testFilterCallback called: %@", data);
+            responseCallback(@"Response from testFilterCallback");
+            return false;
+        }
+        
+        return true;
+    }];
     [bridge registerHandler:@"testObjcCallback" handler:^(id data, FWJsBridgeResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
         responseCallback(@"Response from testObjcCallback");
     }];
+    
+    NSLog(@"registeredHandlers: %@", [bridge getRegisteredHandlers]);
     [bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
 }
 
@@ -36,6 +47,13 @@
     id data = @{ @"greetingFromObjC": @"Hi there, Error!" };
     [self.webView.fwJsBridge callHandler:@"notFoundHandler" data:data responseCallback:^(id  _Nonnull responseData) {
         NSLog(@"notFoundHandler responded: %@", responseData);
+    }];
+}
+
+- (void)filterHandler:(id)sender {
+    id data = @{ @"greetingFromObjC": @"Hi there, Error!" };
+    [self.webView.fwJsBridge callHandler:@"testFilterHandler" data:data responseCallback:^(id  _Nonnull responseData) {
+        NSLog(@"testFilterHandler responded: %@", responseData);
     }];
 }
 
@@ -55,21 +73,28 @@
     [callbackButton setTitle:@"Call" forState:UIControlStateNormal];
     [callbackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:callbackButton aboveSubview:webView];
-    callbackButton.frame = CGRectMake(10, y, 100, 35);
+    callbackButton.frame = CGRectMake(10, y, 60, 35);
     callbackButton.titleLabel.font = font;
     
     UIButton *errorButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [errorButton setTitle:@"Error" forState:UIControlStateNormal];
     [errorButton addTarget:self action:@selector(errorHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:errorButton aboveSubview:webView];
-    errorButton.frame = CGRectMake(80, y, 100, 35);
+    errorButton.frame = CGRectMake(70, y, 60, 35);
     errorButton.titleLabel.font = font;
+    
+    UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [filterButton addTarget:self action:@selector(filterHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:filterButton aboveSubview:webView];
+    filterButton.frame = CGRectMake(130, y, 60, 35);
+    filterButton.titleLabel.font = font;
     
     UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [reloadButton setTitle:@"Reload" forState:UIControlStateNormal];
     [reloadButton addTarget:webView action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:reloadButton aboveSubview:webView];
-    reloadButton.frame = CGRectMake(150, y, 100, 35);
+    reloadButton.frame = CGRectMake(190, y, 60, 35);
     reloadButton.titleLabel.font = font;
     
     UIButton* jumpButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -80,7 +105,7 @@
         self.webRequest = @"http://kvm.wuyong.site/test.php";
     }];
     [self.view insertSubview:jumpButton aboveSubview:webView];
-    jumpButton.frame = CGRectMake(220, y, 100, 35);
+    jumpButton.frame = CGRectMake(250, y, 60, 35);
     jumpButton.titleLabel.font = font;
 }
 
