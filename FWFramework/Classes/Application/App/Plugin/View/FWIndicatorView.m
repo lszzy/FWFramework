@@ -142,9 +142,9 @@
 }
 
 - (CALayer *)circleLayer:(CGFloat)angle size:(CGFloat)size origin:(CGPoint)origin containerSize:(CGSize)containerSize color:(UIColor *)color {
-    CGFloat radius = containerSize.width / 2;
+    CGFloat radius = containerSize.width / 2 - size / 2;
     CALayer *circle = [self createLayerWith:CGSizeMake(size, size) color:color];
-    CGRect frame = CGRectMake((origin.x + radius * (cos(angle) + 1) - size / 2), origin.y + radius * (sin(angle) + 1) - size / 2, size, size);
+    CGRect frame = CGRectMake(origin.x + radius * (cos(angle) + 1), origin.y + radius * (sin(angle) + 1), size, size);
     circle.frame = frame;
     return circle;
 }
@@ -161,53 +161,51 @@
 
 @end
 
-@interface FWIndicatorViewAnimationBallRotate : NSObject <FWIndicatorViewAnimationProtocol>
+@interface FWIndicatorViewAnimationCircleSpin : NSObject <FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationBallRotate
+@implementation FWIndicatorViewAnimationCircleSpin
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
-    CFTimeInterval beginTime = 0.5;
-    CFTimeInterval strokeStartDuration = 1.2;
-    CFTimeInterval strokeEndDuration = 0.7;
-    
-    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
-    rotationAnimation.byValue = @(M_PI * 2);
-    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    
-    CABasicAnimation *strokeEndAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    strokeEndAnimation.duration = strokeEndDuration;
-    strokeEndAnimation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.4 :0.0 :0.2 :1.0];
-    strokeEndAnimation.fromValue = @0;
-    strokeEndAnimation.toValue = @1;
-    
-    CABasicAnimation *strokeStartAnimation = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
-    strokeStartAnimation.duration = strokeStartDuration;
-    strokeStartAnimation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.4 :0.0 :0.2 :1.0];
-    strokeStartAnimation.fromValue = @0;
-    strokeStartAnimation.toValue = @1;
-    strokeStartAnimation.beginTime = beginTime;
-    
-    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
-    animationGroup.animations = @[rotationAnimation, strokeEndAnimation, strokeStartAnimation];
-    animationGroup.duration = strokeStartDuration + beginTime;
-    animationGroup.repeatCount = HUGE_VALF;
-    animationGroup.removedOnCompletion = NO;
-    animationGroup.fillMode = kCAFillModeForwards;
-    
-    CAShapeLayer *circle = [[CAShapeLayer alloc] init];
-    UIBezierPath *path = [UIBezierPath bezierPath];
     CGFloat lineWidth = 3;
-    [path addArcWithCenter:CGPointMake(size.width / 2, size.height / 2) radius:size.width / 2 startAngle:-(M_PI / 2) endAngle:M_PI + M_PI / 2 clockwise:YES];
-    circle.fillColor = nil;
-    circle.strokeColor = color.CGColor;
-    circle.lineWidth = lineWidth;
-    circle.backgroundColor = nil;
-    circle.path = path.CGPath;
-    circle.frame = CGRectMake((layer.bounds.size.width - size.width) / 2, (layer.bounds.size.height - size.height) / 2, size.width, size.height);
-    [circle addAnimation:animationGroup forKey:@"animation"];
-    [layer addSublayer:circle];
+    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(size.width / 2, size.height / 2) radius:(size.width - lineWidth) / 2 startAngle:0 endAngle:M_PI * 2 clockwise:YES];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.fillColor = nil;
+    shapeLayer.strokeColor = color.CGColor;
+    shapeLayer.lineWidth = lineWidth;
+    shapeLayer.strokeStart = 0;
+    shapeLayer.strokeEnd = 1;
+    shapeLayer.lineCap = kCALineCapRound;
+    shapeLayer.lineDashPhase = 0.8;
+    shapeLayer.path = bezierPath.CGPath;
+    [layer setMask:shapeLayer];
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.shadowPath = bezierPath.CGPath;
+    gradientLayer.frame = CGRectMake(size.width / 2, 0, size.width / 2, size.height);
+    gradientLayer.startPoint = CGPointMake(1, 0);
+    gradientLayer.endPoint = CGPointMake(1, 1);
+    gradientLayer.colors = @[(id)color.CGColor, (id)[color colorWithAlphaComponent:0.5].CGColor];
+    [layer addSublayer:gradientLayer];
+    
+    gradientLayer = [CAGradientLayer layer];
+    gradientLayer.shadowPath = bezierPath.CGPath;
+    gradientLayer.frame = CGRectMake(0, 0, size.width / 2, size.height);
+    gradientLayer.startPoint = CGPointMake(0, 1);
+    gradientLayer.endPoint = CGPointMake(0, 0);
+    gradientLayer.colors = @[(id)[color colorWithAlphaComponent:0.5].CGColor, (id)[color colorWithAlphaComponent:0].CGColor];
+    [layer addSublayer:gradientLayer];
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    animation.removedOnCompletion = NO;
+    animation.fromValue = @(0);
+    animation.toValue = @(M_PI * 2);
+    animation.repeatCount = HUGE_VALF;
+    animation.duration = 1;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animation.fillMode = kCAFillModeForwards;
+    [layer addAnimation:animation forKey:@"animation"];
 }
 
 @end
@@ -505,7 +503,7 @@
         case FWIndicatorViewAnimationTypeBallSpin:
             return [[FWIndicatorViewAnimationBallSpin alloc] init];
         case FWIndicatorViewAnimationTypeCircleSpin:
-            return [[FWIndicatorViewAnimationBallRotate alloc] init];
+            return [[FWIndicatorViewAnimationCircleSpin alloc] init];
         case FWIndicatorViewAnimationTypeBallPulse:
             return [[FWIndicatorViewAnimationBallPulse alloc] init];
         case FWIndicatorViewAnimationTypeBallTriangle:
