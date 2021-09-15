@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^FWJsBridgeResponseCallback)(id responseData);
 typedef void (^FWJsBridgeHandler)(id data, FWJsBridgeResponseCallback responseCallback);
 typedef void (^FWJsBridgeErrorHandler)(NSString *handlerName, id data, FWJsBridgeResponseCallback responseCallback);
+typedef BOOL (^FWJsBridgeFilterHandler)(NSString *handlerName, id data, FWJsBridgeResponseCallback responseCallback);
 typedef NSDictionary FWJsBridgeMessage;
 
 @protocol FWWebViewJsBridgeDelegate <NSObject>
@@ -29,6 +30,7 @@ typedef NSDictionary FWJsBridgeMessage;
 @property (strong, nonatomic, nullable) NSMutableDictionary *responseCallbacks;
 @property (strong, nonatomic, nullable) NSMutableDictionary *messageHandlers;
 @property (copy, nonatomic, nullable) FWJsBridgeErrorHandler errorHandler;
+@property (copy, nonatomic, nullable) FWJsBridgeFilterHandler filterHandler;
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
@@ -58,7 +60,9 @@ typedef NSDictionary FWJsBridgeMessage;
 
 - (void)registerHandler:(NSString *)handlerName handler:(FWJsBridgeHandler)handler;
 - (void)removeHandler:(NSString *)handlerName;
+- (NSArray<NSString *> *)getRegisteredHandlers;
 - (void)setErrorHandler:(nullable FWJsBridgeErrorHandler)handler;
+- (void)setFilterHandler:(nullable FWJsBridgeFilterHandler)handler;
 - (void)callHandler:(NSString *)handlerName;
 - (void)callHandler:(NSString *)handlerName data:(nullable id)data;
 - (void)callHandler:(NSString *)handlerName data:(nullable id)data responseCallback:(nullable FWJsBridgeResponseCallback)responseCallback;
