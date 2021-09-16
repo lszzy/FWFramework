@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWImagePickerController;
 @class FWImageAlbumController;
 
+/// 相册列表事件代理
 @protocol FWImageAlbumControllerDelegate <NSObject>
 
 @required
@@ -25,37 +26,40 @@ NS_ASSUME_NONNULL_BEGIN
 - (FWImagePickerController *)imagePickerControllerForAlbumController:(FWImageAlbumController *)albumController;
 
 @optional
-/**
- *  取消查看相册列表后被调用
- */
+/// 取消查看相册列表后被调用
 - (void)albumControllerDidCancel:(FWImageAlbumController *)albumController;
 
-/**
- *  即将需要显示 Loading 时调用
- *
- *  @see shouldShowDefaultLoadingView
- */
+/// 即将需要显示 Loading 时调用，可自定义Loading效果
 - (void)albumControllerWillStartLoading:(FWImageAlbumController *)albumController;
 
-/**
- *  即将需要隐藏 Loading 时调用
- *
- *  @see shouldShowDefaultLoadingView
- */
+/// 即将需要隐藏 Loading 时调用，可自定义Loading效果
 - (void)albumControllerWillFinishLoading:(FWImageAlbumController *)albumController;
+
+/// 相册列表未授权时调用，可自定义空界面等
+- (void)albumControllerWillShowDenied:(FWImageAlbumController *)albumController;
+
+/// 相册列表为空时调用，可自定义空界面等
+- (void)albumControllerWillShowEmpty:(FWImageAlbumController *)albumController;
 
 @end
 
-
+/// 相册列表默认Cell
 @interface FWImageAlbumTableCell : UITableViewCell
 
-@property(nonatomic, assign) CGFloat albumImageSize UI_APPEARANCE_SELECTOR; // 相册缩略图的大小
-@property(nonatomic, assign) CGFloat albumImageMarginLeft UI_APPEARANCE_SELECTOR; // 相册缩略图的 left，-1 表示自动保持与上下 margin 相等
-@property(nonatomic, assign) UIEdgeInsets albumNameInsets UI_APPEARANCE_SELECTOR; // 相册名称的上下左右间距
-@property(nullable, nonatomic, strong) UIFont *albumNameFont UI_APPEARANCE_SELECTOR; // 相册名的字体
-@property(nullable, nonatomic, strong) UIColor *albumNameColor UI_APPEARANCE_SELECTOR; // 相册名的颜色
-@property(nullable, nonatomic, strong) UIFont *albumAssetsNumberFont UI_APPEARANCE_SELECTOR; // 相册资源数量的字体
-@property(nullable, nonatomic, strong) UIColor *albumAssetsNumberColor UI_APPEARANCE_SELECTOR; // 相册资源数量的颜色
+// 相册缩略图的大小
+@property(nonatomic, assign) CGFloat albumImageSize UI_APPEARANCE_SELECTOR;
+// 相册缩略图的 left，-1 表示自动保持与上下 margin 相等
+@property(nonatomic, assign) CGFloat albumImageMarginLeft UI_APPEARANCE_SELECTOR;
+// 相册名称的上下左右间距
+@property(nonatomic, assign) UIEdgeInsets albumNameInsets UI_APPEARANCE_SELECTOR;
+// 相册名的字体
+@property(nullable, nonatomic, strong) UIFont *albumNameFont UI_APPEARANCE_SELECTOR;
+// 相册名的颜色
+@property(nullable, nonatomic, strong) UIColor *albumNameColor UI_APPEARANCE_SELECTOR;
+// 相册资源数量的字体
+@property(nullable, nonatomic, strong) UIFont *albumAssetsNumberFont UI_APPEARANCE_SELECTOR;
+// 相册资源数量的颜色
+@property(nullable, nonatomic, strong) UIColor *albumAssetsNumberColor UI_APPEARANCE_SELECTOR;
 
 @end
 
@@ -64,32 +68,30 @@ NS_ASSUME_NONNULL_BEGIN
  *  1. 使用 init 初始化。
  *  2. 指定一个 albumControllerDelegate，并实现 @required 方法。
  *
- *  @warning 注意，iOS 访问相册需要得到授权，建议先询问用户授权，通过了再进行 FWImageAlbumController 的初始化工作。关于授权的代码，可参考 FW Demo 项目里的 [QDImagePickerExampleViewController authorizationPresentAlbumViewControllerWithTitle] 方法。
- *  @see [FWAssetsManager requestAuthorization:]
+ *  注意，iOS 访问相册需要得到授权，建议先询问用户授权([FWAssetsManager requestAuthorization:])，通过了再进行 FWImageAlbumController 的初始化工作。
  */
 @interface FWImageAlbumController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+/// 相册只读列表视图
 @property (nonatomic, strong, readonly) UITableView *tableView;
 
+/// 当前相册列表，异步加载
+@property(nonatomic, strong, readonly) NSMutableArray<FWAssetGroup *> *albumsArray;
+
+/// 相册列表事件代理
 @property(nullable, nonatomic, weak) id<FWImageAlbumControllerDelegate> albumControllerDelegate;
 
 /// 相册列表 cell 的高度，同时也是相册预览图的宽高，默认57
-@property(nonatomic, assign) CGFloat albumTableViewCellHeight UI_APPEARANCE_SELECTOR;
+@property(nonatomic, assign) CGFloat albumTableViewCellHeight;
 
 /// 相册展示内容的类型，可以控制只展示照片、视频或音频的其中一种，也可以同时展示所有类型的资源，默认展示所有类型的资源。
 @property(nonatomic, assign) FWAlbumContentType contentType;
 
-@property(nullable, nonatomic, copy) NSString *tipTextWhenNoPhotosAuthorization;
-@property(nullable, nonatomic, copy) NSString *tipTextWhenPhotosEmpty;
-
-/**
- *  加载相册列表时会出现 loading，若需要自定义 loading 的形式，可将该属性置为 NO，默认为 YES。
- *  @see albumControllerWillStartLoading: & albumControllerWillFinishLoading:
- */
-@property(nonatomic, assign) BOOL shouldShowDefaultLoadingView;
+/// 加载相册列表时会出现 loading，若需要自定义 loading 的形式，可将该属性置为 NO，默认为 YES
+@property(nonatomic, assign) BOOL showsDefaultLoading;
 
 /// 在 FWImageAlbumController 被放到 UINavigationController 里之后，可通过调用这个方法，来尝试直接进入上一次选中的相册列表
-- (void)pickLastAlbumGroupDirectlyIfCan;
+- (void)pickLastAlbumGroup;
 
 @end
 

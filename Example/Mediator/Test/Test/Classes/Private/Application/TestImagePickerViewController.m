@@ -221,6 +221,8 @@ static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
     
     // 创建一个 QMUIAlbumViewController 实例用于呈现相簿列表
     FWImageAlbumController *albumController = [[FWImageAlbumController alloc] init];
+    albumController.fwNavigationBarStyle = FWNavigationBarStyleDefault;
+    albumController.fwBackBarItem = FWIcon.backImage;
     albumController.albumControllerDelegate = self;
     albumController.contentType = kAlbumContentType;
     albumController.title = title;
@@ -236,7 +238,7 @@ static FWAlbumContentType const kAlbumContentType = FWAlbumContentTypeAll;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:albumController];
     
     // 获取最近发送图片时使用过的相簿，如果有则直接进入该相簿
-    [albumController pickLastAlbumGroupDirectlyIfCan];
+    [albumController pickLastAlbumGroup];
     
     [self presentViewController:navigationController animated:YES completion:NULL];
 }

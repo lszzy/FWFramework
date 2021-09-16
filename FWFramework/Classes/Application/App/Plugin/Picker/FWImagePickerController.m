@@ -18,6 +18,7 @@
 #import "FWNavigationView.h"
 #import "FWViewPlugin.h"
 #import "FWSwizzle.h"
+#import "FWLanguage.h"
 
 #pragma mark - FWImageAlbumTableCell
 
@@ -44,15 +45,14 @@
 }
 
 - (void)didInitializeWithStyle:(UITableViewCellStyle)style {
-    //[self qmui_applyAppearance];
-    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
     self.imageView.layer.borderWidth = [UIScreen fwPixelOne];
     self.imageView.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1].CGColor;
 }
 
-- (void)updateCellAppearanceWithIndexPath:(NSIndexPath *)indexPath {
+- (void)updateCellAppearance:(NSIndexPath *)indexPath {
     self.textLabel.font = self.albumNameFont;
     self.detailTextLabel.font = self.albumAssetsNumberFont;
 }
@@ -123,14 +123,17 @@
 }
 
 - (void)didInitialize {
-    _shouldShowDefaultLoadingView = YES;
-    self.albumTableViewCellHeight = 88;
+    _albumsArray = [[NSMutableArray alloc] init];
+    _showsDefaultLoading = YES;
+    _albumTableViewCellHeight = 88;
 }
 
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:self.isViewLoaded ? self.view.bounds : CGRectZero style:UITableViewStylePlain];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.showsHorizontalScrollIndicator = NO;
         _tableView.delegate = self;
         _tableView.dataSource = self;
     }
@@ -141,32 +144,26 @@
     [super viewDidLoad];
     [self.view addSubview:self.tableView];
     
-    if (!self.title) {
-        self.title = @"照片";
-    }
-    self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:@"取消" target:self action:@selector(handleCancelSelectAlbum:)];
+    if (!self.title) self.title = @"照片";
+    self.navigationItem.rightBarButtonItem = [UIBarButtonItem fwBarItemWithObject:[FWFrameworkBundle localizedString:@"取消"] target:self action:@selector(cancelItemClicked:)];
     
     if ([FWAssetManager authorizationStatus] == FWAssetAuthorizationStatusNotAuthorized) {
-        // 如果没有获取访问授权，或者访问授权状态已经被明确禁止，则显示提示语，引导用户开启授权
-        NSString *tipString = self.tipTextWhenNoPhotosAuthorization;
-        if (!tipString) {
-            NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
-            NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
-            if (!appName) {
-                appName = [mainInfoDictionary objectForKey:(NSString *)kCFBundleNameKey];
-            }
-            tipString = [NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName];
+        if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillShowDenied:)]) {
+            [self.albumControllerDelegate albumControllerWillShowDenied:self];
+        } else {
+            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+            NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
+            NSString *tipText = [NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName];
+            [self fwShowEmptyViewWithText:tipText];
         }
-        [self fwShowEmptyViewWithText:tipString];
     } else {
-        self.albumsArray = [[NSMutableArray alloc] init];
-        // 获取相册列表较为耗时，交给子线程去处理，因此这里需要显示 Loading
+        if (self.showsDefaultLoading) {
+            [self fwShowLoading];
+        }
         if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillStartLoading:)]) {
             [self.albumControllerDelegate albumControllerWillStartLoading:self];
         }
-        if (self.shouldShowDefaultLoadingView) {
-            [self fwShowLoading];
-        }
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[FWAssetManager sharedInstance] enumerateAllAlbumsWithAlbumContentType:self.contentType usingBlock:^(FWAssetGroup *resultAssetsGroup) {
                 if (resultAssetsGroup) {
@@ -175,7 +172,7 @@
                     // 意味着遍历完所有的相簿了
                     [self sortAlbumArray];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self refreshAlbumAndShowEmptyTipIfNeed];
+                        [self refreshAlbumGroups];
                     });
                 }
             }];
@@ -198,18 +195,22 @@
     }
 }
 
-- (void)refreshAlbumAndShowEmptyTipIfNeed {
+- (void)refreshAlbumGroups {
     if ([self.albumsArray count] > 0) {
+        [self.tableView reloadData];
+        
+        if (self.showsDefaultLoading) {
+            [self fwHideLoading];
+        }
         if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillFinishLoading:)]) {
             [self.albumControllerDelegate albumControllerWillFinishLoading:self];
         }
-        if (self.shouldShowDefaultLoadingView) {
-            [self fwHideLoading];
-        }
-        [self.tableView reloadData];
     } else {
-        NSString *tipString = self.tipTextWhenPhotosEmpty ? : @"空照片";
-        [self fwShowEmptyViewWithText:tipString];
+        if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillShowEmpty:)]) {
+            [self.albumControllerDelegate albumControllerWillShowEmpty:self];
+        } else {
+            [self fwShowEmptyViewWithText:@"空照片"];
+        }
     }
 }
 
@@ -225,7 +226,7 @@
     [self.navigationController pushViewController:self.imagePickerController animated:animated];
 }
 
-- (void)pickLastAlbumGroupDirectlyIfCan {
+- (void)pickLastAlbumGroup {
     FWAssetGroup *assetsGroup = [FWImagePickerHelper assetsGroupOfLastPickerAlbumWithUserIdentify:nil];
     [self pickAlbumsGroup:assetsGroup animated:NO];
 }
@@ -251,15 +252,16 @@
     cell.imageView.image = [assetsGroup posterImageWithSize:CGSizeMake(self.albumTableViewCellHeight, self.albumTableViewCellHeight)];
     cell.textLabel.text = [assetsGroup name];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"· %@", @(assetsGroup.numberOfAssets)];
-    [cell updateCellAppearanceWithIndexPath:indexPath];
+    [cell updateCellAppearance:indexPath];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self pickAlbumsGroup:self.albumsArray[indexPath.row] animated:YES];
 }
 
-- (void)handleCancelSelectAlbum:(id)sender {
+- (void)cancelItemClicked:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^(void) {
         if (self.albumControllerDelegate && [self.albumControllerDelegate respondsToSelector:@selector(albumControllerDidCancel:)]) {
             [self.albumControllerDelegate albumControllerDidCancel:self];
