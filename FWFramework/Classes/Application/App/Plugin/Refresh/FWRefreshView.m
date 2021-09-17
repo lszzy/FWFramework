@@ -507,7 +507,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 - (void)setPullingPercent:(CGFloat)pullingPercent
 {
     _pullingPercent = pullingPercent;
-    if (self.shouldChangeAlpha) self.alpha = pullingPercent;
+    self.alpha = self.shouldChangeAlpha ? pullingPercent : 1;
     
     if (pullingPercent > 0 && !self.showsArrowView) {
         id customView = [self.viewForState objectAtIndex:self.state];
