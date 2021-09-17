@@ -94,10 +94,9 @@
     BOOL checkLivePhoto = (filterType & FWImagePickerFilterTypeLivePhoto) || filterType < 1;
     BOOL checkVideo = (filterType & FWImagePickerFilterTypeVideo) || filterType < 1;
     [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
-        BOOL isLivePhoto = [result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]];
-        BOOL isImage = [result.itemProvider canLoadObjectOfClass:[UIImage class]];
-        if (isLivePhoto || isImage || !checkVideo) {
-            Class objectClass = (checkLivePhoto && isLivePhoto) ? [PHLivePhoto class] : [UIImage class];
+        BOOL isVideo = checkVideo && [result.itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie];
+        if (!isVideo) {
+            Class objectClass = (checkLivePhoto && [result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]]) ? [PHLivePhoto class] : [UIImage class];
             [result.itemProvider loadObjectOfClass:objectClass completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([object isKindOfClass:[UIImage class]] ||
