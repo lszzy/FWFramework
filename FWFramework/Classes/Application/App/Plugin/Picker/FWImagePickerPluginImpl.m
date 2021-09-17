@@ -96,7 +96,15 @@
     [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
         BOOL isVideo = checkVideo && [result.itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie];
         if (!isVideo) {
-            Class objectClass = (checkLivePhoto && [result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]]) ? [PHLivePhoto class] : [UIImage class];
+            Class objectClass = [UIImage class];
+            if (checkLivePhoto) {
+                @try {
+                    if ([result.itemProvider canLoadObjectOfClass:[PHLivePhoto class]]) {
+                        objectClass = [PHLivePhoto class];
+                    }
+                } @catch (NSException *exception) {}
+            }
+            
             [result.itemProvider loadObjectOfClass:objectClass completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([object isKindOfClass:[UIImage class]] ||
