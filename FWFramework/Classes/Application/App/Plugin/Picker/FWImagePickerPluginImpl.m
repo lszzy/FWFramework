@@ -415,14 +415,30 @@
               completion:(void (^)(NSArray * _Nonnull, NSArray * _Nonnull, BOOL))completion
 {
     UIViewController *pickerController = nil;
-    if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
-        pickerController = [PHPhotoLibrary fwPickerControllerWithCropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, id  _Nullable result, BOOL cancel) {
-            if (completion) completion(image ? @[image] : @[], result ? @[result] : @[], cancel);
-        }];
+    BOOL usePhotoPicker = NO;
+    if (@available(iOS 14, *)) {
+        usePhotoPicker = !self.photoPickerDisabled;
+    }
+    if (usePhotoPicker) {
+        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
+            pickerController = [PHPhotoLibrary fwPickerControllerWithCropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, id  _Nullable result, BOOL cancel) {
+                if (completion) completion(image ? @[image] : @[], result ? @[result] : @[], cancel);
+            }];
+        } else {
+            pickerController = [PHPhotoLibrary fwPickerControllerWithFilterType:filterType selectionLimit:selectionLimit allowsEditing:allowsEditing shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray * _Nonnull objects, NSArray * _Nonnull results, BOOL cancel) {
+                if (completion) completion(objects, results, cancel);
+            }];
+        }
     } else {
-        pickerController = [PHPhotoLibrary fwPickerControllerWithFilterType:filterType selectionLimit:selectionLimit allowsEditing:allowsEditing shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray * _Nonnull objects, NSArray * _Nonnull results, BOOL cancel) {
-            if (completion) completion(objects, results, cancel);
-        }];
+        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && allowsEditing) {
+            pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
+                if (completion) completion(image ? @[image] : @[], info ? @[info] : @[], cancel);
+            }];
+        } else {
+            pickerController = [UIImagePickerController fwPickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary filterType:filterType allowsEditing:allowsEditing shouldDismiss:YES completion:^(UIImagePickerController * _Nullable picker, id  _Nullable object, NSDictionary * _Nullable info, BOOL cancel) {
+                if (completion) completion(object ? @[object] : @[], info ? @[info] : @[], cancel);
+            }];
+        }
     }
     
     if (!pickerController) {

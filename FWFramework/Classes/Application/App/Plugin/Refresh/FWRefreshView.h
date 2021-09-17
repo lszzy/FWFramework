@@ -37,6 +37,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 @property (nonatomic, assign) BOOL showsTitleLabel;
 @property (nonatomic, assign) BOOL showsArrowView;
+@property (nonatomic, assign) BOOL shouldChangeAlpha;
 
 @property (nonatomic, readonly) FWPullRefreshState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;

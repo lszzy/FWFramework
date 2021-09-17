@@ -130,6 +130,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.showsTitleLabel = [self.indicatorView isKindOfClass:[UIActivityIndicatorView class]];
         self.showsArrowView = self.showsTitleLabel;
+        self.shouldChangeAlpha = YES;
         self.state = FWPullRefreshStateStopped;
         self.pullingPercent = 0;
         
@@ -506,7 +507,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 - (void)setPullingPercent:(CGFloat)pullingPercent
 {
     _pullingPercent = pullingPercent;
-    self.alpha = pullingPercent;
+    if (self.shouldChangeAlpha) self.alpha = pullingPercent;
     
     if (pullingPercent > 0 && !self.showsArrowView) {
         id customView = [self.viewForState objectAtIndex:self.state];
