@@ -183,7 +183,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             [self addSubview:customView];
         }
         CGRect viewBounds = [customView bounds];
-        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
+        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), self.indicatorPadding > 0 ? self.indicatorPadding : roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
     }
     else {
@@ -268,7 +268,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                                       (self.bounds.size.height / 2) - (self.arrowView.bounds.size.height / 2),
                                       self.arrowView.bounds.size.width,
                                       self.arrowView.bounds.size.height);
-        self.indicatorView.center = self.arrowView.center;
+        
+        CGPoint indicatorOrigin = CGPointMake(self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, self.indicatorPadding > 0 ? self.indicatorPadding : (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2));
+        self.indicatorView.frame = CGRectMake(indicatorOrigin.x, indicatorOrigin.y, self.indicatorView.bounds.size.width, self.indicatorView.bounds.size.height);
     }
 }
 
@@ -504,8 +506,12 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     self.indicatorView.color = indicatorColor;
 }
 
-- (void)setPullingPercent:(CGFloat)pullingPercent
-{
+- (void)setIndicatorPadding:(CGFloat)indicatorPadding {
+    _indicatorPadding = indicatorPadding;
+    [self setNeedsLayout];
+}
+
+- (void)setPullingPercent:(CGFloat)pullingPercent {
     _pullingPercent = pullingPercent;
     self.alpha = self.shouldChangeAlpha ? pullingPercent : 1;
     
@@ -730,7 +736,9 @@ static char UIScrollViewFWPullRefreshView;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.indicatorView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    
+    CGPoint indicatorOrigin = CGPointMake(self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, self.indicatorPadding > 0 ? self.indicatorPadding : (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2));
+    self.indicatorView.frame = CGRectMake(indicatorOrigin.x, indicatorOrigin.y, self.indicatorView.bounds.size.width, self.indicatorView.bounds.size.height);
 }
 
 #pragma mark - Static
@@ -864,6 +872,11 @@ static char UIScrollViewFWPullRefreshView;
     self.indicatorView.color = indicatorColor;
 }
 
+- (void)setIndicatorPadding:(CGFloat)indicatorPadding {
+    _indicatorPadding = indicatorPadding;
+    [self setNeedsLayout];
+}
+
 #pragma mark -
 
 - (void)startAnimating{
@@ -900,7 +913,7 @@ static char UIScrollViewFWPullRefreshView;
             [self addSubview:customView];
         }
         CGRect viewBounds = [customView bounds];
-        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
+        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), self.indicatorPadding > 0 ? self.indicatorPadding : roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         
         switch (newState) {
@@ -921,7 +934,7 @@ static char UIScrollViewFWPullRefreshView;
     }
     else {
         CGRect viewBounds = [self.indicatorView bounds];
-        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), roundf((self.bounds.size.height-viewBounds.size.height)/2));
+        CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), self.indicatorPadding > 0 ? self.indicatorPadding : roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [self.indicatorView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         
         switch (newState) {
