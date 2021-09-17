@@ -54,28 +54,86 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self renderToolbar];
     [self loadRequestUrl];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)renderWebView
 {
     self.fwView.backgroundColor = [Theme tableColor];
-    self.webView.backgroundColor = [Theme tableColor];
-    self.webView.scrollView.backgroundColor = [UIColor clearColor];
     self.webView.scrollView.showsVerticalScrollIndicator = NO;
     self.webView.scrollView.showsHorizontalScrollIndicator = NO;
-    
-    // 显示网页host来源
-    UILabel *tipLabel = [UILabel new];
-    tipLabel.font = [UIFont systemFontOfSize:12];
-    tipLabel.textColor = [Theme detailColor];
-    [self.fwView insertSubview:tipLabel belowSubview:self.webView];
-    tipLabel.fwLayoutChain.centerX().topWithInset(10);
-    [self.webView fwObserveProperty:@"URL" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
-        if (webView.URL.host.length > 0) {
-            tipLabel.text = [NSString stringWithFormat:@"此网页由 %@ 提供", webView.URL.host];
-        }
+}
+
+- (void)renderToolbar
+{
+    FWWeakifySelf();
+    UIBarButtonItem *backItem = [UIBarButtonItem fwBarItemWithObject:FWIconImage(@"ion-ios-arrow-back", 24) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        if ([self.webView canGoBack]) [self.webView goBack];
     }];
+    backItem.enabled = NO;
+    [self.webView fwObserveProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
+        FWStrongifySelf();
+        backItem.enabled = webView.canGoBack;
+        [self reloadToolbar];
+    }];
+    
+    UIBarButtonItem *forwardItem = [UIBarButtonItem fwBarItemWithObject:FWIconImage(@"ion-ios-arrow-forward", 24) block:^(id  _Nonnull sender) {
+        FWStrongifySelf();
+        if ([self.webView canGoForward]) [self.webView goForward];
+    }];
+    forwardItem.enabled = NO;
+    [self.webView fwObserveProperty:@"canGoForward" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
+        FWStrongifySelf();
+        forwardItem.enabled = webView.canGoForward;
+        [self reloadToolbar];
+    }];
+    
+    [self.webView fwObserveProperty:@"isLoading" block:^(id  _Nonnull object, NSDictionary * _Nonnull change) {
+        FWStrongifySelf();
+        [self reloadToolbar];
+    }];
+    [self.webView fwObserveProperty:@"scrollView.contentOffset" block:^(WKWebView *webView, NSDictionary * _Nonnull change) {
+        FWStrongifySelf();
+        if (webView.scrollView.isDragging) [self reloadToolbar];
+    }];
+    
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spaceItem.width = 79;
+    self.toolbarItems = @[flexibleItem, backItem, spaceItem, forwardItem, flexibleItem];
+    
+    self.navigationController.toolbar.fwBackgroundColor = Theme.barColor;
+    self.navigationController.toolbar.fwForegroundColor = Theme.textColor;
+}
+
+- (void)reloadToolbar
+{
+    if (self.webView.canGoBack || [self.webView canGoForward]) {
+        if (self.webView.scrollView.isDragging && self.webView.scrollView.fwCanScroll) {
+            UISwipeGestureRecognizerDirection scrollDirection = self.webView.scrollView.fwScrollDirection;
+            if (scrollDirection == UISwipeGestureRecognizerDirectionUp) {
+                if (!self.navigationController.toolbarHidden) {
+                    [self.navigationController setToolbarHidden:YES animated:YES];
+                }
+            } else if (scrollDirection == UISwipeGestureRecognizerDirectionDown) {
+                if (self.navigationController.toolbarHidden) {
+                    [self.navigationController setToolbarHidden:NO animated:YES];
+                }
+            }
+        } else {
+            self.navigationController.toolbarHidden = NO;
+        }
+    } else {
+        self.navigationController.toolbarHidden = YES;
+    }
 }
 
 - (void)shareRequestUrl

@@ -788,6 +788,60 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     }
 }
 
+- (BOOL)fwCanScroll
+{
+    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
+        return NO;
+    }
+    
+    if (self.contentSize.width + self.fwContentInset.left + self.fwContentInset.right > CGRectGetWidth(self.bounds)) {
+        return YES;
+    }
+    
+    return self.contentSize.height + self.fwContentInset.top + self.fwContentInset.bottom > CGRectGetHeight(self.bounds);
+}
+
+- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
+{
+    CGPoint contentOffset = self.contentOffset;
+    switch (edge) {
+        case UIRectEdgeTop:
+            contentOffset.y = -self.fwContentInset.top;
+            break;
+        case UIRectEdgeLeft:
+            contentOffset.x = -self.fwContentInset.left;
+            break;
+        case UIRectEdgeBottom:
+            contentOffset.y = self.contentSize.height - self.bounds.size.height + self.fwContentInset.bottom;
+            break;
+        case UIRectEdgeRight:
+            contentOffset.x = self.contentSize.width - self.bounds.size.width + self.fwContentInset.right;
+            break;
+        default:
+            break;
+    }
+    [self setContentOffset:contentOffset animated:animated];
+}
+
+- (UISwipeGestureRecognizerDirection)fwScrollDirection
+{
+    CGPoint transition = [self.panGestureRecognizer translationInView:self.panGestureRecognizer.view];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        if (transition.x < 0.0f) {
+            return UISwipeGestureRecognizerDirectionLeft;
+        } else if (transition.x > 0.0f) {
+            return UISwipeGestureRecognizerDirectionRight;
+        }
+    } else {
+        if (transition.y > 0.0f) {
+            return UISwipeGestureRecognizerDirectionDown;
+        } else if (transition.y < 0.0f) {
+            return UISwipeGestureRecognizerDirectionUp;
+        }
+    }
+    return 0;
+}
+
 @end
 
 #pragma mark - UISlider+FWToolkit

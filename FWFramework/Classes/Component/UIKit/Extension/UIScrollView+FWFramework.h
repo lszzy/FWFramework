@@ -56,14 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否已滚动到指定边
 - (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
 
-// 滚动到指定边
-- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
-
 // 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
 - (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge;
-
-// 当前滚动方向，如果多个方向滚动，取绝对值较大的一方，失败返回0
-@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection fwScrollDirection;
 
 // 当前滚动进度，滚动绝对值相对于当前视图的宽或高
 @property (nonatomic, assign, readonly) CGFloat fwScrollPercent;

@@ -153,12 +153,6 @@
     }
 }
 
-- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
-{
-    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
-    [self setContentOffset:contentOffset animated:animated];
-}
-
 - (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge
 {
     CGPoint contentOffset = self.contentOffset;
@@ -179,11 +173,6 @@
             break;
     }
     return contentOffset;
-}
-
-- (UISwipeGestureRecognizerDirection)fwScrollDirection
-{
-    return [self.panGestureRecognizer fwSwipeDirection];
 }
 
 - (CGFloat)fwScrollPercent
