@@ -60,6 +60,7 @@
 - (void)renderWebView
 {
     self.fwView.backgroundColor = [Theme tableColor];
+    self.webView.backgroundColor = [Theme tableColor];
     self.webView.scrollView.backgroundColor = [UIColor clearColor];
     self.webView.scrollView.showsVerticalScrollIndicator = NO;
     self.webView.scrollView.showsHorizontalScrollIndicator = NO;
