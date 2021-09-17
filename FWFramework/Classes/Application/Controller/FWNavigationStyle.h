@@ -72,7 +72,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 工具栏是否隐藏，默认为YES。需设置toolbarItems，立即生效
 @property (nonatomic, assign) BOOL fwToolBarHidden;
 
-/// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，All为全部延伸(全部Bar覆盖视图)
+/// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，Top|Bottom为顶部|底部延伸，All为全部延伸
 @property (nonatomic, assign) UIRectEdge fwExtendedLayoutEdge;
 
 #pragma mark - Height
