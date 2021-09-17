@@ -163,11 +163,14 @@ API_AVAILABLE(ios(14.0))
 /// 单例模式
 @property (class, nonatomic, readonly) FWImagePickerPluginImpl *sharedInstance;
 
-/// 图片选取自定义句柄，show方法自动调用
-@property (nonatomic, copy, nullable) void (^customBlock)(__kindof UIViewController *pickerController);
+/// 是否禁用iOS14+PHPickerViewController(支持多选)，默认NO；设为YES后始终使用UIImagePickerController(仅支持单选)
+@property (nonatomic, assign) BOOL photoPickerDisabled;
 
 /// 编辑单张图片时是否启用自定义裁剪控制器，默认NO，使用系统方式
 @property (nonatomic, assign) BOOL cropControllerEnabled;
+
+/// 图片选取自定义句柄，show方法自动调用
+@property (nonatomic, copy, nullable) void (^customBlock)(__kindof UIViewController *pickerController);
 
 /// 自定义裁剪控制器句柄，启用自定义裁剪后生效
 @property (nonatomic, copy, nullable) FWImageCropController * _Nullable (^cropControllerBlock)(UIImage *image);
