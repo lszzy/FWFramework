@@ -93,7 +93,7 @@ extension Theme {
         
         // 控制器样式设置
         FWViewControllerManager.sharedInstance.hookInit = { viewController in
-            viewController.edgesForExtendedLayout = []
+            viewController.edgesForExtendedLayout = .bottom
             viewController.extendedLayoutIncludesOpaqueBars = true
             viewController.automaticallyAdjustsScrollViewInsets = Theme.isBarTranslucent
             viewController.hidesBottomBarWhenPushed = true
@@ -114,26 +114,26 @@ extension Theme {
         }
         
         FWViewControllerManager.sharedInstance.hookScrollViewController = { viewController in
-            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
+            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : .bottom
             if #available(iOS 11.0, *) {
                 viewController.scrollView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
             }
         }
         FWViewControllerManager.sharedInstance.hookTableViewController = { viewController in
-            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
+            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : .bottom
             if #available(iOS 11.0, *) {
                 viewController.tableView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
                 viewController.tableView.backgroundColor = Theme.tableColor
             }
         }
         FWViewControllerManager.sharedInstance.hookCollectionViewController = { viewController in
-            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
+            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : .bottom
             if #available(iOS 11.0, *) {
                 viewController.collectionView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
             }
         }
         FWViewControllerManager.sharedInstance.hookWebViewController = { viewController in
-            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : []
+            viewController.edgesForExtendedLayout = Theme.isBarTranslucent ? .all : .bottom
             if #available(iOS 11.0, *) {
                 viewController.webView.scrollView.contentInsetAdjustmentBehavior = Theme.isBarTranslucent ? .automatic : .never
             }

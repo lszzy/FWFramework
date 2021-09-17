@@ -164,8 +164,8 @@
     if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
         /*
         // FWViewController全局拦截器init方法示例：
-        // 默认不被导航栏等遮挡，隐藏TabBar；如果不同，覆盖即可
-        viewController.edgesForExtendedLayout = UIRectEdgeNone;
+        // 视图默认不被顶部导航栏遮挡，如果UIToolbar顶部出现空白，需设为Bottom|All
+        viewController.edgesForExtendedLayout = UIRectEdgeBottom;
         // 开启不透明bar(translucent为NO)情况下延伸包括bar，占满全屏
         viewController.extendedLayoutIncludesOpaqueBars = YES;
         // 解决iOS7-10时scrollView占不满导航栏问题
