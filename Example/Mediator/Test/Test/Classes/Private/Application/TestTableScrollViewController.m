@@ -114,6 +114,7 @@
     
     UIImageView *pullView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     pullView.image = [TestBundle imageNamed:@"test.gif"];
+    self.tableView.fwPullRefreshView.shouldChangeAlpha = NO;
     [self.tableView.fwPullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
