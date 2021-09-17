@@ -274,6 +274,15 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// UIScrollView真正的inset，iOS11+使用adjustedContentInset，iOS11以下使用contentInset
 @property (nonatomic, assign, readonly) UIEdgeInsets fwContentInset;
 
+/// 判断当前scrollView内容是否足够滚动
+@property (nonatomic, assign, readonly) BOOL fwCanScroll;
+
+/// 当前滚动方向，如果多个方向滚动，取绝对值较大的一方，失败返回0
+@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection fwScrollDirection;
+
+/// 当前scrollView滚动到指定边
+- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
+
 @end
 
 #pragma mark - UISlider+FWToolkit
