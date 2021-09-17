@@ -35,6 +35,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 @property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
+@property (nonatomic, assign) CGFloat indicatorPadding;
 @property (nonatomic, assign) BOOL showsTitleLabel;
 @property (nonatomic, assign) BOOL showsArrowView;
 @property (nonatomic, assign) BOOL shouldChangeAlpha;
@@ -90,6 +91,7 @@ typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
 @property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
+@property (nonatomic, assign) CGFloat indicatorPadding;
 
 @property (nonatomic, readonly) FWInfiniteScrollState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
