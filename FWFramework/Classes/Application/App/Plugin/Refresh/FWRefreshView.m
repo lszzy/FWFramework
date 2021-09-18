@@ -269,8 +269,12 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
                                       self.arrowView.bounds.size.width,
                                       self.arrowView.bounds.size.height);
         
-        CGPoint indicatorOrigin = CGPointMake(self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, self.indicatorPadding > 0 ? self.indicatorPadding : (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2));
-        self.indicatorView.frame = CGRectMake(indicatorOrigin.x, indicatorOrigin.y, self.indicatorView.bounds.size.width, self.indicatorView.bounds.size.height);
+        if (self.showsArrowView) {
+            self.indicatorView.center = self.arrowView.center;
+        } else {
+            CGPoint indicatorOrigin = CGPointMake(self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, self.indicatorPadding > 0 ? self.indicatorPadding : (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2));
+            self.indicatorView.frame = CGRectMake(indicatorOrigin.x, indicatorOrigin.y, self.indicatorView.bounds.size.width, self.indicatorView.bounds.size.height);
+        }
     }
 }
 
