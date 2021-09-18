@@ -119,7 +119,7 @@ static int logMaxLength = 500;
             FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
             if (handler) {
                 handler(message[@"data"], responseCallback);
-                continue;;
+                continue;
             }
             
             NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);

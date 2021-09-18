@@ -102,7 +102,7 @@
     FWWeakifySelf();
     [jumpButton fwAddTouchBlock:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        self.webRequest = @"http://kvm.wuyong.site/test.php";
+        self.webRequest = @"http://kvm.wuyong.site/jssdk.html";
     }];
     [self.view insertSubview:jumpButton aboveSubview:webView];
     jumpButton.frame = CGRectMake(250, y, 60, 35);
