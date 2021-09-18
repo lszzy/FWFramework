@@ -199,6 +199,9 @@
     if (appearance.backgroundImage) {
         self.fwNavigationBar.fwBackgroundImage = appearance.backgroundImage;
     }
+    if (appearance.shadowImage) {
+        self.fwNavigationBar.fwShadowImage = appearance.shadowImage;
+    }
     if (appearance.foregroundColor) {
         self.fwNavigationBar.fwForegroundColor = appearance.foregroundColor;
     }
@@ -725,6 +728,23 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     [self setShadowImage:[UIImage new]];
 }
 
+- (UIImage *)fwShadowImage
+{
+    return objc_getAssociatedObject(self, @selector(fwShadowImage));
+}
+
+- (void)setFwShadowImage:(UIImage *)shadowImage
+{
+    objc_setAssociatedObject(self, @selector(fwShadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        self.fwAppearance.shadowImage = shadowImage.fwImage;
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    [self setShadowImage:shadowImage.fwImage ?: [UIImage new]];
+}
+
 - (void)fwSetBackgroundTransparent
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -775,6 +795,17 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
         
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
+        return;
+    }
+    
+    if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
+        if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+            self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
+            [self fwUpdateAppearance];
+            return;
+        }}
+        
+        [self setShadowImage:self.fwShadowImage.fwImage ?: [UIImage new]];
         return;
     }
 }
@@ -939,6 +970,23 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     self.shadowImage = [UIImage new];
 }
 
+- (UIImage *)fwShadowImage
+{
+    return objc_getAssociatedObject(self, @selector(fwShadowImage));
+}
+
+- (void)setFwShadowImage:(UIImage *)image
+{
+    objc_setAssociatedObject(self, @selector(fwShadowImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        self.fwAppearance.shadowImage = image.fwImage;
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    self.shadowImage = image.fwImage ?: [UIImage new];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
@@ -972,6 +1020,17 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
         
         self.backgroundImage = self.fwBackgroundImage.fwImage;
         self.shadowImage = [UIImage new];
+        return;
+    }
+    
+    if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
+        if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+            self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
+            [self fwUpdateAppearance];
+            return;
+        }}
+        
+        self.shadowImage = self.fwShadowImage.fwImage ?: [UIImage new];
         return;
     }
 }
@@ -1125,6 +1184,23 @@ static BOOL fwStaticToolbarAppearanceEnabled = NO;
     [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
 }
 
+- (UIImage *)fwShadowImage
+{
+    return objc_getAssociatedObject(self, @selector(fwShadowImage));
+}
+
+- (void)setFwShadowImage:(UIImage *)fwShadowImage
+{
+    objc_setAssociatedObject(self, @selector(fwShadowImage), fwShadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        self.fwAppearance.shadowImage = fwShadowImage.fwImage;
+        [self fwUpdateAppearance];
+        return;
+    }}
+    
+    [self setShadowImage:fwShadowImage.fwImage ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+}
+
 - (void)fwThemeChanged:(FWThemeStyle)style
 {
     [super fwThemeChanged:style];
@@ -1158,6 +1234,17 @@ static BOOL fwStaticToolbarAppearanceEnabled = NO;
         
         [self setBackgroundImage:self.fwBackgroundImage.fwImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+        return;
+    }
+    
+    if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
+        if (UIToolbar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+            self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
+            [self fwUpdateAppearance];
+            return;
+        }}
+        
+        [self setShadowImage:self.fwShadowImage.fwImage ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         return;
     }
 }
