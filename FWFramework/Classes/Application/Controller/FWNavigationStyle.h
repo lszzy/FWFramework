@@ -31,6 +31,7 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 @property (nullable, nonatomic, strong) UIColor *titleColor;
 @property (nullable, nonatomic, strong) UIColor *backgroundColor;
 @property (nullable, nonatomic, strong) UIImage *backgroundImage;
+@property (nullable, nonatomic, strong) UIImage *shadowImage;
 @property (nonatomic, assign) BOOL isHidden;
 @property (nonatomic, assign) BOOL isTransparent;
 @property (nonatomic, assign) BOOL isTranslucent;
@@ -168,11 +169,14 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 单独设置标题颜色，nil时显示前景颜色
 @property (nonatomic, strong, nullable) UIColor *fwTitleColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色(nil时透明)并隐藏底部线条，兼容主题颜色
+/// 设置背景颜色(nil时透明)，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景图片(nil时透明)并隐藏底部线条，兼容主题图片
+/// 设置背景图片(nil时透明)，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片
+@property (nonatomic, strong, nullable) UIImage *fwShadowImage UI_APPEARANCE_SELECTOR;
 
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
@@ -215,11 +219,14 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色并隐藏顶部线条，兼容主题颜色
+/// 设置背景颜色，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置背景图片并隐藏顶部线条，兼容主题图片
+/// 设置背景图片，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片
+@property (nonatomic, strong, nullable) UIImage *fwShadowImage;
 
 @end
 
@@ -246,11 +253,14 @@ static const FWNavigationBarStyle FWNavigationBarStyleTranslucent = 2;
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色并隐藏顶部线条，兼容主题颜色
+/// 设置背景颜色，兼容主题颜色
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置背景图片并隐藏顶部线条，兼容主题图片
+/// 设置背景图片，兼容主题图片
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片
+@property (nonatomic, strong, nullable) UIImage *fwShadowImage;
 
 #pragma mark - View
 
