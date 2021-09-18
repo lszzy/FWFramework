@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '1.10.0'
+  s.version               = '2.0.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
   s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.swift_version         = '5.0'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
