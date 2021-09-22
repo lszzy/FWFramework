@@ -350,6 +350,9 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 生命周期变化时通知句柄，默认nil
 @property (nonatomic, copy, nullable) void (^fwVisibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
 
+/// 将要dealloc时执行句柄，默认nil
+@property (nonatomic, copy, nullable) void (^fwWillDeallocBlock)(__kindof UIViewController *viewController);
+
 @end
 
 NS_ASSUME_NONNULL_END
