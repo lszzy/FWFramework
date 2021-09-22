@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIPageControl (FWPageControl)
 
 /// 自定义圆点大小，默认{10, 10}
-- (void)fwSetIndicatorSize:(CGSize)indicatorSize;
+- (void)fwSetSize:(CGSize)size;
 
 @end
 

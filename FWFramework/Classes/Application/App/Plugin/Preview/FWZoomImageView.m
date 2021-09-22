@@ -10,6 +10,7 @@
 #import "FWZoomImageView.h"
 #import "FWAutoLayout.h"
 #import "FWAdaptive.h"
+#import "FWEncode.h"
 #import "FWToolkit.h"
 #import "FWImage.h"
 #import "FWViewPlugin.h"
@@ -824,9 +825,18 @@
 #pragma mark - ImageURL
 
 - (void)setImageURL:(id)imageURL placeholderImage:(UIImage *)placeholderImage {
+    if ([imageURL isKindOfClass:[NSString class]]) {
+        imageURL = [NSURL fwURLWithString:imageURL];
+    }
+    if ([imageURL isKindOfClass:[NSURL class]]) {
+        // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
+        NSString *pathExt = [imageURL pathExtension];
+        BOOL isVideo = pathExt && [@[@"mp4", @"mov", @"m4v", @"3gp", @"avi"] containsObject:pathExt];
+        if (isVideo) imageURL = [AVPlayerItem playerItemWithURL:imageURL];
+    }
+
     [self.imageView fwCancelImageRequest];
-    if ([imageURL isKindOfClass:[NSString class]] ||
-        [imageURL isKindOfClass:[NSURL class]]) {
+    if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView fwSetImageWithURL:imageURL placeholderImage:placeholderImage options:0 completion:^(UIImage * _Nullable image, NSError * _Nullable error) {

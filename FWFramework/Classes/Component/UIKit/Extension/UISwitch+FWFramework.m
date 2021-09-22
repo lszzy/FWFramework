@@ -11,9 +11,20 @@
 
 @implementation UISwitch (FWFramework)
 
-- (void)fwToggle
+- (void)fwSetSize:(CGSize)size
 {
-    [self setOn:!self.isOn animated:YES];
+    CGFloat height = self.bounds.size.height;
+    if (height <= 0) {
+        height = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
+        if (height <= 0) height = 31;
+    }
+    CGFloat scale = size.height / height;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+- (void)fwToggle:(BOOL)animated
+{
+    [self setOn:!self.isOn animated:animated];
 }
 
 @end

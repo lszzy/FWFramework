@@ -9,6 +9,7 @@
 
 #import "FWPhotoBrowser.h"
 #import "FWViewPlugin.h"
+#import "FWEncode.h"
 #import "FWNavigation.h"
 #import "FWMessage.h"
 #import "FWToolkit.h"
@@ -304,11 +305,20 @@
 }
 
 - (void)setUrlString:(id)urlString {
+    if ([urlString isKindOfClass:[NSString class]]) {
+        urlString = [NSURL fwURLWithString:urlString];
+    }
+    if ([urlString isKindOfClass:[NSURL class]]) {
+        // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
+        NSString *pathExt = [urlString pathExtension];
+        BOOL isVideo = pathExt && [@[@"mp4", @"mov", @"m4v", @"3gp", @"avi"] containsObject:pathExt];
+        if (isVideo) urlString = [AVPlayerItem playerItemWithURL:urlString];
+    }
     _urlString = urlString;
+    
     [self.imageView fwCancelImageRequest];
     self.imageLoaded = NO;
-    if ([urlString isKindOfClass:[NSString class]] ||
-        [urlString isKindOfClass:[NSURL class]]) {
+    if ([urlString isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
         // 优先使用插件，否则使用默认
         __weak __typeof__(self) self_weak_ = self;
