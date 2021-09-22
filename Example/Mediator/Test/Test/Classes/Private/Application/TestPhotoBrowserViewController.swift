@@ -68,12 +68,7 @@ import FWFramework
             return
         }
         
-        fwShowImagePreview(withImageURLs: results.map({ result in
-            if let url = result as? URL {
-                return AVPlayerItem(url: url)
-            }
-            return result
-        }), currentIndex: 0, sourceView: nil)
+        fwShowImagePreview(withImageURLs: results, currentIndex: 0, sourceView: nil)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

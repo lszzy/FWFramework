@@ -16,10 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UISwitch (FWFramework)
 
+/// 自定义尺寸大小，默认{51,31}
+- (void)fwSetSize:(CGSize)size;
+
 /*!
  @brief 切换开关状态
  */
-- (void)fwToggle;
+- (void)fwToggle:(BOOL)animated;
 
 @end
 

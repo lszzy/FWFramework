@@ -313,14 +313,14 @@
 
 @implementation UIPageControl (FWPageControl)
 
-- (void)fwSetIndicatorSize:(CGSize)indicatorSize
+- (void)fwSetSize:(CGSize)size
 {
     CGFloat height = self.bounds.size.height;
     if (height <= 0) {
         height = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
         if (height <= 0) height = 10;
     }
-    CGFloat scale = indicatorSize.height / height;
+    CGFloat scale = size.height / height;
     self.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
