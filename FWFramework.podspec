@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   s.default_subspecs      = 'FWFramework'
 
   s.subspec 'FWFramework' do |ss|
-    ss.source_files = 'FWFramework/Classes/FWFramework.h'
     ss.dependency 'FWFramework/Kernel'
     ss.dependency 'FWFramework/Service'
     ss.dependency 'FWFramework/Toolkit'
