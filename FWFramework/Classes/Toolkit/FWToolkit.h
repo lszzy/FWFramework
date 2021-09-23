@@ -231,24 +231,6 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 获取响应的视图控制器
 @property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
 
-/// 设置额外热区(点击区域)
-@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
-
-@end
-
-#pragma mark - UIButton+FWToolkit
-
-/*!
- @brief UIButton+FWToolkit
- */
-@interface UIButton (FWToolkit)
-
-/// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fwDisabledAlpha;
-
-/// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fwHighlightedAlpha;
-
 @end
 
 #pragma mark - UIViewController+FWToolkit
