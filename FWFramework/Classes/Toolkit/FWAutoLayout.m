@@ -393,11 +393,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
-    if (@available(iOS 11.0, *)) {
-        return [self fwConstrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
-    } else {
-        return [self fwConstrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual];
-    }
+    return [self fwConstrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
 }
 
 - (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeArea
@@ -461,11 +457,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSLayoutConstraint *)fwPinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
 {
-    if (@available(iOS 11.0, *)) {
-        return [self fwConstrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation];
-    } else {
-        return [self fwConstrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation];
-    }
+    return [self fwConstrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation];
 }
 
 #pragma mark - Dimension
@@ -579,11 +571,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSLayoutConstraint *)fwConstraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation
 {
-    if (@available(iOS 11.0, *)) {
-        return [self fwConstraint:attribute toSuperview:self.superview.safeAreaLayoutGuide relation:relation];
-    } else {
-        return [self fwConstraint:attribute toSuperview:self.superview relation:relation];
-    }
+    return [self fwConstraint:attribute toSuperview:self.superview.safeAreaLayoutGuide relation:relation];
 }
 
 - (NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toSuperview:(id)superview relation:(NSLayoutRelation)relation

@@ -187,11 +187,7 @@ static CGFloat fwStaticScaleFactorHeight = 812;
 
 + (UIEdgeInsets)fwSafeAreaInsets
 {
-    if (@available(iOS 11.0, *)) {
-        return UIWindow.fwMainWindow.safeAreaInsets;
-    } else {
-        return UIEdgeInsetsZero;
-    }
+    return UIWindow.fwMainWindow.safeAreaInsets;
 }
 
 + (CGFloat)fwStatusBarHeight
