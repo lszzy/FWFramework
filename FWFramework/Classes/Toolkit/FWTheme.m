@@ -184,11 +184,8 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
             return [color resolvedColorWithTraitCollection:traitCollection];
         } else {
-            if (@available(iOS 11.0, *)) {
-                UIColor *color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
-                if (color) return color;
-            }
-            return UIColor.clearColor;
+            UIColor *color = [UIColor colorNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
+            return color ?: UIColor.clearColor;
         }
     }];
 }
