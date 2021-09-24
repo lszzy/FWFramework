@@ -11,11 +11,12 @@
 #import "FWNavigation.h"
 #import "FWSwizzle.h"
 #import <SafariServices/SafariServices.h>
+#import <StoreKit/StoreKit.h>
 #import <objc/runtime.h>
 
 #pragma mark - UIApplication+FWToolkit
 
-@interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate>
+@interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @end
 
@@ -37,6 +38,22 @@
     if (completion) {
         completion();
     }
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    void (^completion)(BOOL) = objc_getAssociatedObject(controller, @selector(messageComposeViewController:didFinishWithResult:));
+    [controller dismissViewControllerAnimated:YES completion:^{
+        if (completion) completion(result == MessageComposeResultSent);
+    }];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    void (^completion)(BOOL) = objc_getAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:));
+    [controller dismissViewControllerAnimated:YES completion:^{
+        if (completion) completion(result == MFMailComposeResultSent);
+    }];
 }
 
 @end
@@ -107,9 +124,35 @@
     [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
 }
 
++ (void)fwOpenAppStoreReview:(NSString *)appId
+{
+    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
+}
+
++ (void)fwOpenAppReview
+{
+    [SKStoreReviewController requestReview];
+}
+
 + (void)fwOpenAppSettings
 {
     [self fwOpenURL:UIApplicationOpenSettingsURLString];
+}
+
++ (void)fwOpenMailApp:(NSString *)email
+{
+    [self fwOpenURL:[NSString stringWithFormat:@"mailto://%@", email]];
+}
+
++ (void)fwOpenMessageApp:(NSString *)phone
+{
+    [self fwOpenURL:[NSString stringWithFormat:@"sms://%@", phone]];
+}
+
++ (void)fwOpenPhoneApp:(NSString *)phone
+{
+    // tel:为直接拨打电话
+    [self fwOpenURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
 }
 
 + (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
@@ -135,6 +178,76 @@
         safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
     }
     [UIWindow.fwMainWindow fwPresentViewController:safariController animated:YES completion:nil];
+}
+
++ (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
+{
+    if (!controller || ![MFMessageComposeViewController canSendText]) {
+        if (completion) completion(NO);
+        return;
+    }
+    
+    if (completion) {
+        objc_setAssociatedObject(controller, @selector(messageComposeViewController:didFinishWithResult:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+    controller.messageComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
+    [UIWindow.fwMainWindow fwPresentViewController:controller animated:YES completion:nil];
+}
+
++ (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
+{
+    if (!controller || ![MFMailComposeViewController canSendMail]) {
+        if (completion) completion(NO);
+        return;
+    }
+    
+    if (completion) {
+        objc_setAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+    controller.mailComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
+    [UIWindow.fwMainWindow fwPresentViewController:controller animated:YES completion:nil];
+}
+
++ (AVPlayerViewController *)fwOpenVideoPlayer:(id)url
+{
+    AVPlayer *player = nil;
+    if ([url isKindOfClass:[AVPlayerItem class]]) {
+        player = [AVPlayer playerWithPlayerItem:(AVPlayerItem *)url];
+    } else if ([url isKindOfClass:[NSURL class]]) {
+        player = [AVPlayer playerWithURL:(NSURL *)url];
+    } else if ([url isKindOfClass:[NSString class]]) {
+        NSURL *videoURL = [self fwNSURLWithURL:url];
+        if (videoURL) player = [AVPlayer playerWithURL:videoURL];
+    }
+    if (!player) return nil;
+    
+    AVPlayerViewController *viewController = [[AVPlayerViewController alloc] init];
+    viewController.player = player;
+    return viewController;
+}
+
++ (AVAudioPlayer *)fwOpenAudioPlayer:(id)url
+{
+    // 设置播放模式示例
+    // [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+    
+    NSURL *audioURL = nil;
+    if ([url isKindOfClass:[NSURL class]]) {
+        audioURL = (NSURL *)url;
+    } else if ([url isKindOfClass:[NSString class]]) {
+        if ([url isAbsolutePath]) {
+            audioURL = [NSURL fileURLWithPath:url];
+        } else {
+            audioURL = [[NSBundle mainBundle] URLForResource:url withExtension:nil];
+        }
+    }
+    if (!audioURL) return nil;
+    
+    AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioURL error:NULL];
+    if (![audioPlayer prepareToPlay]) return nil;
+    
+    [audioPlayer play];
+    return audioPlayer;
 }
 
 + (NSURL *)fwNSURLWithURL:(id)url

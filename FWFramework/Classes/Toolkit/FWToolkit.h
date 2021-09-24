@@ -8,6 +8,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
+#import <MessageUI/MessageUI.h>
 #import "FWAdaptive.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
@@ -51,8 +54,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// 打开AppStore下载页
 + (void)fwOpenAppStore:(NSString *)appId;
 
+/// 打开AppStore评价页
++ (void)fwOpenAppStoreReview:(NSString *)appId;
+
+/// 打开应用内评价，有次数限制
++ (void)fwOpenAppReview;
+
 /// 打开系统应用设置页
 + (void)fwOpenAppSettings;
+
+/// 打开系统邮件App
++ (void)fwOpenMailApp:(NSString *)email;
+
+/// 打开系统短信App
++ (void)fwOpenMessageApp:(NSString *)phone;
+
+/// 打开系统电话App
++ (void)fwOpenPhoneApp:(NSString *)phone;
 
 /// 打开系统分享
 + (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
@@ -62,6 +80,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
 + (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
+
+/// 打开短信控制器，完成时回调
++ (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+
+/// 打开邮件控制器，完成时回调
++ (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+
+/// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
++ (nullable AVPlayerViewController *)fwOpenVideoPlayer:(id)url;
+
+/// 打开音频播放器，支持NSURL|NSString
++ (nullable AVAudioPlayer *)fwOpenAudioPlayer:(id)url;
 
 @end
 
