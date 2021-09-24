@@ -83,6 +83,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UIPageControl+FWUIKit
+
+/*!
+ @brief UIPageControl+FWUIKit
+ */
+@interface UIPageControl (FWUIKit)
+
+/// 自定义圆点大小，默认{10, 10}
+@property (nonatomic, assign) CGSize fwPreferredSize;
+
+@end
+
 #pragma mark - UISlider+FWUIKit
 
 /*!
@@ -106,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UISwitch (FWUIKit)
 
 /// 自定义尺寸大小，默认{51,31}
-- (void)fwSetSize:(CGSize)size;
+@property (nonatomic, assign) CGSize fwPreferredSize;
 
 @end
 

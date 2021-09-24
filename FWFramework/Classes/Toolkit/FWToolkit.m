@@ -734,6 +734,16 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     }
 }
 
+- (UIImage *)fwOriginalImage
+{
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+- (UIImage *)fwTemplateImage
+{
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+}
+
 - (BOOL)fwHasAlpha
 {
     if (self.CGImage == NULL) return NO;

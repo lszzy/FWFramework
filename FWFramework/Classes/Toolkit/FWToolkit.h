@@ -227,6 +227,12 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 通过指定图片最长边，获取等比例的图片size
 - (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
 
+/// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
+@property (nonatomic, readonly) UIImage *fwOriginalImage;
+
+/// 获取模板渲染模式图片，始终显示tintColor，不显示原色。默认自动根据上下文
+@property (nonatomic, readonly) UIImage *fwTemplateImage;
+
 /// 判断图片是否有透明通道
 @property (nonatomic, assign, readonly) BOOL fwHasAlpha;
 
