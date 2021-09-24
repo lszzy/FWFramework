@@ -24,6 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// NSAttributedString对象转换为html字符串
 - (nullable NSString *)fwHtmlString;
 
+/// 计算所占尺寸，需设置Font等
+@property (nonatomic, assign, readonly) CGSize fwSize;
+
+/// 计算在指定绘制区域内所占尺寸，需设置Font等
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize;
+
 @end
 
 #pragma mark - NSDate+FWFoundation
@@ -35,6 +41,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
 @property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
+
+@end
+
+#pragma mark - NSString+FWFoundation
+
+/*!
+ @brief NSString+FWFoundation
+ */
+@interface NSString (FWFoundation)
+
+/// 计算单行字符串指定字体所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font;
+
+/// 计算多行字符串指定字体在指定绘制区域内所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize;
+
+/// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 @end
 

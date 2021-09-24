@@ -39,17 +39,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
 + (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
-/// 打开AppStore下载页
-+ (void)fwOpenAppStore:(NSString *)appId;
-
-/// 判断URL是否是AppStore链接，支持NSString|NSURL
-+ (BOOL)fwIsAppStoreURL:(id)url;
-
 /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
 + (BOOL)fwIsSystemURL:(id)url;
 
 /// 判断URL是否HTTP链接，支持NSString|NSURL
 + (BOOL)fwIsHttpURL:(id)url;
+
+/// 判断URL是否是AppStore链接，支持NSString|NSURL
++ (BOOL)fwIsAppStoreURL:(id)url;
+
+/// 打开AppStore下载页
++ (void)fwOpenAppStore:(NSString *)appId;
+
+/// 打开系统应用设置页
++ (void)fwOpenAppSettings;
+
+/// 打开系统分享
++ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
 
 /// 打开内部浏览器，支持NSString|NSURL
 + (void)fwOpenSafariController:(id)url;
