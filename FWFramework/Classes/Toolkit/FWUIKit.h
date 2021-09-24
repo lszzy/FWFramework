@@ -45,6 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取响应的视图控制器
 @property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
 
+/// 设置额外热区(点击区域)
+@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
+
+/// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
+@property(nonatomic, assign) CGRect fwFrameApplyTransform;
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -59,6 +65,48 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
 @property (nonatomic, assign) CGFloat fwHighlightedAlpha;
+
+@end
+
+#pragma mark - UIScrollView+FWUIKit
+
+/*!
+ @brief UIScrollView+FWUIKit
+ */
+@interface UIScrollView (FWUIKit)
+
+/// 判断当前scrollView内容是否足够滚动
+@property (nonatomic, assign, readonly) BOOL fwCanScroll;
+
+/// 当前scrollView滚动到指定边
+- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
+
+@end
+
+#pragma mark - UISlider+FWUIKit
+
+/*!
+ @brief UISlider+FWUIKit
+ */
+@interface UISlider (FWUIKit)
+
+/// 中间圆球的大小，默认zero
+@property (nonatomic, assign) CGSize fwThumbSize UI_APPEARANCE_SELECTOR;
+
+/// 中间圆球的颜色，默认nil
+@property (nonatomic, strong, nullable) UIColor *fwThumbColor UI_APPEARANCE_SELECTOR;
+
+@end
+
+#pragma mark - UISwitch+FWUIKit
+
+/*!
+ @brief UISwitch+FWUIKit
+ */
+@interface UISwitch (FWUIKit)
+
+/// 自定义尺寸大小，默认{51,31}
+- (void)fwSetSize:(CGSize)size;
 
 @end
 

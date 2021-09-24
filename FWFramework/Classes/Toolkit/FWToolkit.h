@@ -148,6 +148,93 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
+#pragma mark - UIImage+FWToolkit
+
+/*!
+ @brief UIImage+FWToolkit
+ */
+@interface UIImage (FWToolkit)
+
+/// 从视图创建UIImage，生成截图，主线程调用
++ (nullable UIImage *)fwImageWithView:(UIView *)view;
+
+/// 从颜色创建UIImage，默认尺寸1x1
++ (nullable UIImage *)fwImageWithColor:(UIColor *)color;
+
+/// 从颜色创建UIImage，指定尺寸
++ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
+
+/// 从颜色创建UIImage，指定尺寸和圆角
++ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius;
+
+/// 从block创建UIImage，指定尺寸
++ (nullable UIImage *)fwImageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
+
+/// 从当前图片创建指定透明度的图片
+- (nullable UIImage *)fwImageWithAlpha:(CGFloat)alpha;
+
+/// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
+- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor;
+
+/// 从当前UIImage混合颜色创建UIImage，自定义模式
+- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
+
+/// 缩放图片到指定大小
+- (nullable UIImage *)fwImageWithScaleSize:(CGSize)size;
+
+/// 缩放图片到指定大小，指定模式
+- (nullable UIImage *)fwImageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
+
+/// 按指定模式绘制图片
+- (void)fwDrawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds;
+
+/// 裁剪指定区域图片
+- (nullable UIImage *)fwImageWithCropRect:(CGRect)rect;
+
+/// 指定颜色填充图片边缘
+- (nullable UIImage *)fwImageWithInsets:(UIEdgeInsets)insets color:(nullable UIColor *)color;
+
+/// 拉伸图片(平铺模式)，指定端盖区域（不拉伸区域）
+- (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets;
+
+/// 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
+- (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode;
+
+/// 生成圆角图片
+- (nullable UIImage *)fwImageWithCornerRadius:(CGFloat)radius;
+
+/// 按角度常数(0~360)转动图片，默认图片尺寸适应内容
+- (nullable UIImage *)fwImageWithRotateDegree:(CGFloat)degree;
+
+/// 按角度常数(0~360)转动图片，指定图片尺寸是否延伸来适应内容，否则图片尺寸不变，内容被裁剪
+- (nullable UIImage *)fwImageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize;
+
+/// 生成mark图片
+- (nullable UIImage *)fwImageWithMaskImage:(UIImage *)maskImage;
+
+/// 图片合并，并制定叠加图片的起始位置
+- (nullable UIImage *)fwImageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point;
+
+/// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
+- (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
+
+/// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
+- (nullable NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
+
+/// 长边压缩图片尺寸，获取等比例的图片
+- (nullable UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth;
+
+/// 通过指定图片最长边，获取等比例的图片size
+- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
+
+/// 判断图片是否有透明通道
+@property (nonatomic, assign, readonly) BOOL fwHasAlpha;
+
+/// 获取当前图片的像素大小，多倍图会放大到一倍
+@property (nonatomic, assign, readonly) CGSize fwPixelSize;
+
+@end
+
 #pragma mark - UIView+FWToolkit
 
 /*!
