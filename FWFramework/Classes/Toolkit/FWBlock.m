@@ -100,6 +100,18 @@
     }
 }
 
+- (void)fwPauseTimer
+{
+    if (![self isValid]) return;
+    [self setFireDate:[NSDate distantFuture]];
+}
+
+- (void)fwResumeTimer
+{
+    if (![self isValid]) return;
+    [self setFireDate:[NSDate date]];
+}
+
 @end
 
 #pragma mark - FWInnerBlockTarget

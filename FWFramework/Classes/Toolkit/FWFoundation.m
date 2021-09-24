@@ -9,6 +9,61 @@
 
 #import "FWFoundation.h"
 #import <sys/sysctl.h>
+#import <objc/runtime.h>
+
+#pragma mark - NSArray+FWFoundation
+
+@implementation NSArray (FWFoundation)
+
+- (instancetype)fwFilterWithBlock:(BOOL (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj)) {
+            [result addObject:obj];
+        }
+    }];
+    return result;
+}
+
+- (NSArray *)fwMapWithBlock:(id (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        id value = block(obj);
+        if (value) {
+            [result addObject:value];
+        }
+    }];
+    return result;
+}
+
+- (id)fwMatchWithBlock:(BOOL (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
+- (id)fwRandomObject
+{
+    if (self.count < 1) return nil;
+    
+    return self[arc4random_uniform((u_int32_t)self.count)];
+}
+
+@end
 
 #pragma mark - NSAttributedString+FWFoundation
 
@@ -46,6 +101,46 @@
                                      options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                      context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+@end
+
+#pragma mark - NSData+FWFoundation
+
+@implementation NSData (FWFoundation)
+
++ (NSData *)fwArchiveObject:(id)object
+{
+    NSData *data = nil;
+    @try {
+        data = [NSKeyedArchiver archivedDataWithRootObject:object];
+    } @catch (NSException *exception) { }
+    return data;
+}
+
+- (id)fwUnarchiveObject
+{
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithData:self];
+    } @catch (NSException *exception) { }
+    return object;
+}
+
++ (void)fwArchiveObject:(id)object toFile:(NSString *)path
+{
+    @try {
+        [NSKeyedArchiver archiveRootObject:object toFile:path];
+    } @catch (NSException *exception) { }
+}
+
++ (id)fwUnarchiveObjectWithFile:(NSString *)path
+{
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    } @catch (NSException *exception) { }
+    return object;
 }
 
 @end
@@ -111,6 +206,142 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return uptime;
 }
 
++ (NSDate *)fwDateWithString:(NSString *)string
+{
+    return [self fwDateWithString:string format:@"yyyy-MM-dd HH:mm:ss"];
+}
+
++ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format
+{
+    return [self fwDateWithString:string format:format timeZone:nil];
+}
+
++ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = format;
+    if (timeZone) {
+        formatter.timeZone = timeZone;
+    }
+    NSDate *date = [formatter dateFromString:string];
+    return date;
+}
+
+- (NSString *)fwStringValue
+{
+    return [self fwStringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
+}
+
+- (NSString *)fwStringWithFormat:(NSString *)format
+{
+    return [self fwStringWithFormat:format timeZone:nil];
+}
+
+- (NSString *)fwStringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = format;
+    if (timeZone) {
+        formatter.timeZone = timeZone;
+    }
+    NSString *string = [formatter stringFromDate:self];
+    return string;
+}
+
++ (NSString *)fwFormatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour
+{
+    long long seconds = (long long)duration;
+    if (hasHour) {
+        long long minute = seconds / 60;
+        long long hour   = minute / 60;
+        seconds -= minute * 60;
+        minute -= hour * 60;
+        return [NSString stringWithFormat:@"%02d:%02d:%02d", (int)hour, (int)minute, (int)seconds];
+    } else {
+        long long minute = seconds / 60;
+        long long second = seconds % 60;
+        return [NSString stringWithFormat:@"%02ld:%02ld", (long)minute, (long)second];
+    }
+}
+
+@end
+
+#pragma mark - NSDictionary+FWFoundation
+
+@implementation NSDictionary (FWFoundation)
+
+- (instancetype)fwFilterWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result[key] = obj;
+        }
+    }];
+    return result;
+}
+
+- (NSDictionary *)fwMapWithBlock:(id (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        id value = block(key, obj);
+        if (value) {
+            result[key] = value;
+        }
+    }];
+    return result;
+}
+
+- (id)fwMatchWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
+@end
+
+#pragma mark - NSObject+FWFoundation
+
+@implementation NSObject (FWFoundation)
+
+- (void)fwLock
+{
+    dispatch_semaphore_wait([self fwLockSemaphore], DISPATCH_TIME_FOREVER);
+}
+
+- (void)fwUnlock
+{
+    dispatch_semaphore_signal([self fwLockSemaphore]);
+}
+
+- (dispatch_semaphore_t)fwLockSemaphore
+{
+    dispatch_semaphore_t semaphore = objc_getAssociatedObject(self, _cmd);
+    if (!semaphore) {
+        @synchronized (self) {
+            semaphore = objc_getAssociatedObject(self, _cmd);
+            if (!semaphore) {
+                semaphore = dispatch_semaphore_create(1);
+                objc_setAssociatedObject(self, _cmd, semaphore, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+        }
+    }
+    return semaphore;
+}
+
 @end
 
 #pragma mark - NSString+FWFoundation
@@ -139,6 +370,65 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
                                   attributes:attr
                                      context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
++ (NSString *)fwSizeString:(NSUInteger)aFileSize
+{
+    NSString *sizeStr;
+    if (aFileSize <= 0) {
+        sizeStr = @"0K";
+    } else {
+        double fileSize = aFileSize / 1024.f;
+        if (fileSize >= 1024.f) {
+            fileSize = fileSize / 1024.f;
+            if (fileSize >= 1024.f) {
+                fileSize = fileSize / 1024.f;
+                sizeStr = [NSString stringWithFormat:@"%0.1fG", fileSize];
+            } else {
+                sizeStr = [NSString stringWithFormat:@"%0.1fM", fileSize];
+            }
+        } else {
+            sizeStr = [NSString stringWithFormat:@"%dK", (int)ceil(fileSize)];
+        }
+    }
+    return sizeStr;
+}
+
+- (BOOL)fwMatchesRegex:(NSString *)regex
+{
+    NSPredicate *regexPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    return [regexPredicate evaluateWithObject:self] == YES;
+}
+
+@end
+
+#pragma mark - NSUserDefaults+FWFoundation
+
+@implementation NSUserDefaults (FWFoundation)
+
++ (id)fwObjectForKey:(NSString *)key
+{
+    return [NSUserDefaults.standardUserDefaults fwObjectForKey:key];
+}
+
++ (void)fwSetObject:(id)object forKey:(NSString *)key
+{
+    [NSUserDefaults.standardUserDefaults fwSetObject:object forKey:key];
+}
+
+- (id)fwObjectForKey:(NSString *)key
+{
+    return [self objectForKey:key];
+}
+
+- (void)fwSetObject:(id)object forKey:(NSString *)key
+{
+    if (object == nil) {
+        [self removeObjectForKey:key];
+    } else {
+        [self setObject:object forKey:key];
+    }
+    [self synchronize];
 }
 
 @end
