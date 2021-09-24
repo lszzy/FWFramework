@@ -12,37 +12,12 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
+#import "FWFoundation.h"
 #import "FWIcon.h"
 #import "FWTheme.h"
+#import "FWUIKit.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#pragma mark - NSAttributedString+FWToolkit
-
-/*!
- @brief NSAttributedString+FWToolkit
- */
-@interface NSAttributedString (FWToolkit)
-
-/// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
-+ (nullable instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString;
-
-/// NSAttributedString对象转换为html字符串
-- (nullable NSString *)fwHtmlString;
-
-@end
-
-#pragma mark - NSDate+FWToolkit
-
-/*!
- @brief NSDate+FWToolkit
- */
-@interface NSDate (FWToolkit)
-
-/// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
-@property (class, nonatomic, assign) NSTimeInterval fwCurrentTime;
-
-@end
 
 #pragma mark - UIApplication+FWToolkit
 
@@ -167,30 +142,6 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 @end
 
-#pragma mark - UIDevice+FWToolkit
-
-/*!
- @brief UIDevice+FWToolkit
- */
-@interface UIDevice (FWToolkit)
-
-/// 设置设备token原始Data，格式化并保存
-+ (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
-
-/// 获取设备Token格式化后的字符串
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceToken;
-
-/// 获取设备模型，格式："iPhone6,1"
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceModel;
-
-/// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFV;
-
-/// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Component_Tracking组件后生效
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFA;
-
-@end
-
 #pragma mark - UIView+FWToolkit
 
 /*!
@@ -234,9 +185,6 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 大小，frame.size
 @property (nonatomic, assign) CGSize fwSize;
 
-/// 获取响应的视图控制器
-@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
-
 @end
 
 #pragma mark - UIViewController+FWToolkit
@@ -261,24 +209,6 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
  @brief UIViewController+FWToolkit
  */
 @interface UIViewController (FWToolkit)
-
-/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsRoot;
-
-/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsChild;
-
-/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsPresented;
-
-/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
-
-/// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
-
-/// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-@property (nonatomic, assign) BOOL fwIsLoaded;
 
 /// 当前生命周期状态，默认Ready
 @property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;

@@ -12,100 +12,6 @@
 #import "FWSwizzle.h"
 #import <SafariServices/SafariServices.h>
 #import <objc/runtime.h>
-#import <sys/sysctl.h>
-#if FWCOMPONENT_TRACKING_ENABLED
-#import <AdSupport/ASIdentifierManager.h>
-#endif
-
-#pragma mark - NSAttributedString+FWToolkit
-
-@implementation NSAttributedString (FWToolkit)
-
-+ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
-{
-    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
-    if (!htmlData || htmlData.length < 1) return nil;
-    
-    return [[self alloc] initWithData:htmlData options:@{
-        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
-    } documentAttributes:nil error:nil];
-}
-
-- (NSString *)fwHtmlString
-{
-    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
-        NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-    } error:nil];
-    if (!htmlData || htmlData.length < 1) return nil;
-    
-    return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-}
-
-@end
-
-#pragma mark - NSDate+FWToolkit
-
-// 当前基准时间值
-static NSTimeInterval fwStaticCurrentBaseTime = 0;
-// 本地基准时间值
-static NSTimeInterval fwStaticLocalBaseTime = 0;
-
-@implementation NSDate (FWToolkit)
-
-+ (NSTimeInterval)fwCurrentTime
-{
-    // 没有同步过返回本地时间
-    if (fwStaticCurrentBaseTime == 0) {
-        // 是否本地有服务器时间
-        NSNumber *preCurrentTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWCurrentTime"];
-        NSNumber *preLocalTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalTime"];
-        if (preCurrentTime && preLocalTime) {
-            // 计算当前服务器时间
-            NSTimeInterval offsetTime = [[NSDate date] timeIntervalSince1970] - preLocalTime.doubleValue;
-            return preCurrentTime.doubleValue + offsetTime;
-        } else {
-            return [[NSDate date] timeIntervalSince1970];
-        }
-    // 同步过计算当前服务器时间
-    } else {
-        NSTimeInterval offsetTime = [self fwCurrentSystemUptime] - fwStaticLocalBaseTime;
-        return fwStaticCurrentBaseTime + offsetTime;
-    }
-}
-
-+ (void)setFwCurrentTime:(NSTimeInterval)currentTime
-{
-    fwStaticCurrentBaseTime = currentTime;
-    // 取运行时间，调整系统时间不会影响
-    fwStaticLocalBaseTime = [self fwCurrentSystemUptime];
-    
-    // 保存当前服务器时间到本地
-    [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
-    [[NSUserDefaults standardUserDefaults] setObject:@([[NSDate date] timeIntervalSince1970]) forKey:@"FWLocalTime"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSTimeInterval)fwCurrentSystemUptime
-{
-    struct timeval bootTime;
-    int mib[2] = {CTL_KERN, KERN_BOOTTIME};
-    size_t size = sizeof(bootTime);
-    int resctl = sysctl(mib, 2, &bootTime, &size, NULL, 0);
-
-    struct timeval now;
-    struct timezone tz;
-    gettimeofday(&now, &tz);
-    
-    NSTimeInterval uptime = 0;
-    if (resctl != -1 && bootTime.tv_sec != 0) {
-        uptime = now.tv_sec - bootTime.tv_sec;
-        uptime += (now.tv_usec - bootTime.tv_usec) / 1.e6;
-    }
-    return uptime;
-}
-
-@end
 
 #pragma mark - UIApplication+FWToolkit
 
@@ -433,63 +339,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @end
 
-#pragma mark - UIDevice+FWToolkit
-
-@implementation UIDevice (FWToolkit)
-
-+ (void)fwSetDeviceTokenData:(NSData *)tokenData
-{
-    if (tokenData) {
-        NSMutableString *deviceToken = [NSMutableString string];
-        const char *bytes = tokenData.bytes;
-        NSInteger count = tokenData.length;
-        for (int i = 0; i < count; i++) {
-            [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
-        }
-        [[NSUserDefaults standardUserDefaults] setObject:[deviceToken copy] forKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-}
-
-+ (NSString *)fwDeviceToken
-{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
-}
-
-+ (NSString *)fwDeviceModel
-{
-    static NSString *model;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        model = [NSString stringWithUTF8String:machine];
-        free(machine);
-    });
-    return model;
-}
-
-+ (NSString *)fwDeviceIDFV
-{
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-}
-
-+ (NSString *)fwDeviceIDFA
-{
-#if FWCOMPONENT_TRACKING_ENABLED
-    return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
-#else
-    return nil;
-#endif
-}
-
-@end
-
 #pragma mark - UIView+FWToolkit
 
 @implementation UIView (FWToolkit)
@@ -630,18 +479,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     self.frame = frame;
 }
 
-- (UIViewController *)fwViewController
-{
-    UIResponder *responder = [self nextResponder];
-    while (responder) {
-        if ([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)responder;
-        }
-        responder = [responder nextResponder];
-    }
-    return nil;
-}
-
 @end
 
 #pragma mark - UIViewController+FWToolkit
@@ -682,57 +519,6 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
             FWSwizzleOriginal();
         }));
     });
-}
-
-- (BOOL)fwIsRoot
-{
-    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
-}
-
-- (BOOL)fwIsChild
-{
-    UIViewController *parentController = self.parentViewController;
-    if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
-        ![parentController isKindOfClass:[UITabBarController class]]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)fwIsPresented
-{
-    UIViewController *viewController = self;
-    if (self.navigationController) {
-        if (self.navigationController.viewControllers.firstObject != self) return NO;
-        viewController = self.navigationController;
-    }
-    return viewController.presentingViewController.presentedViewController == viewController;
-}
-
-- (BOOL)fwIsPageSheet
-{
-    if (@available(iOS 13.0, *)) {
-        UIViewController *controller = self.navigationController ?: self;
-        if (!controller.presentingViewController) return NO;
-        UIModalPresentationStyle style = controller.modalPresentationStyle;
-        if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
-    }
-    return NO;
-}
-
-- (BOOL)fwIsViewVisible
-{
-    return self.isViewLoaded && self.view.window;
-}
-
-- (BOOL)fwIsLoaded
-{
-    return [objc_getAssociatedObject(self, @selector(fwIsLoaded)) boolValue];
-}
-
-- (void)setFwIsLoaded:(BOOL)fwIsLoaded
-{
-    objc_setAssociatedObject(self, @selector(fwIsLoaded), @(fwIsLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (FWViewControllerVisibleState)fwVisibleState
