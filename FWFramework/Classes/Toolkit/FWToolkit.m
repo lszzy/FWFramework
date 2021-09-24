@@ -382,6 +382,11 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor fwColorWithHexString:string alpha:alpha];
 }
 
+- (UIColor *)fwColorWithAlpha:(CGFloat)alpha
+{
+    return [self colorWithAlphaComponent:alpha];
+}
+
 - (long)fwHexValue
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;

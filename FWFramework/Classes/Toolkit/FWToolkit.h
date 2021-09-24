@@ -131,6 +131,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear
 + (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
 
+/// 获取当前颜色指定透明度的新颜色
+- (UIColor *)fwColorWithAlpha:(CGFloat)alpha;
+
 /// 读取颜色的十六进制值RGB，不含透明度
 @property (nonatomic, assign, readonly) long fwHexValue;
 
