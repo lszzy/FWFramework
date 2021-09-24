@@ -96,6 +96,49 @@
             return FWSwizzleOriginal(point, event);
         }));
         
+        FWSwizzleClass(UILabel, @selector(drawTextInRect:), FWSwizzleReturn(void), FWSwizzleArgs(CGRect rect), FWSwizzleCode({
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue) {
+                rect = UIEdgeInsetsInsetRect(rect, [contentInsetValue UIEdgeInsetsValue]);
+            }
+            
+            UIControlContentVerticalAlignment verticalAlignment = [objc_getAssociatedObject(selfObject, @selector(fwVerticalAlignment)) integerValue];
+            if (verticalAlignment == UIControlContentVerticalAlignmentTop) {
+                CGSize fitsSize = [selfObject sizeThatFits:rect.size];
+                rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, fitsSize.height);
+            } else if (verticalAlignment == UIControlContentVerticalAlignmentBottom) {
+                CGSize fitsSize = [selfObject sizeThatFits:rect.size];
+                rect = CGRectMake(rect.origin.x, rect.origin.y + (rect.size.height - fitsSize.height), rect.size.width, fitsSize.height);
+            }
+            
+            FWSwizzleOriginal(rect);
+        }));
+        
+        FWSwizzleClass(UILabel, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
+            CGSize size = FWSwizzleOriginal();
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue && !CGSizeEqualToSize(size, CGSizeZero)) {
+                UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                size = CGSizeMake(size.width + contentInset.left + contentInset.right, size.height + contentInset.top + contentInset.bottom);
+            }
+            return size;
+        }));
+        
+        FWSwizzleClass(UILabel, @selector(sizeThatFits:), FWSwizzleReturn(CGSize), FWSwizzleArgs(CGSize size), FWSwizzleCode({
+            NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fwContentInset));
+            if (contentInsetValue) {
+                UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                size = CGSizeMake(size.width - contentInset.left - contentInset.right, size.height - contentInset.top - contentInset.bottom);
+                CGSize fitsSize = FWSwizzleOriginal(size);
+                if (!CGSizeEqualToSize(fitsSize, CGSizeZero)) {
+                    fitsSize = CGSizeMake(fitsSize.width + contentInset.left + contentInset.right, fitsSize.height + contentInset.top + contentInset.bottom);
+                }
+                return fitsSize;
+            }
+            
+            return FWSwizzleOriginal(size);
+        }));
+        
         FWSwizzleClass(UIButton, @selector(setEnabled:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL enabled), FWSwizzleCode({
             FWSwizzleOriginal(enabled);
             
@@ -177,6 +220,108 @@
     return result;
 }
 
+- (void)fwSetShadowColor:(UIColor *)color
+                  offset:(CGSize)offset
+                  radius:(CGFloat)radius
+{
+    self.layer.shadowColor = color.CGColor;
+    self.layer.shadowOffset = offset;
+    self.layer.shadowRadius = radius;
+    self.layer.shadowOpacity = 1.0;
+}
+
+@end
+
+#pragma mark - CAAnimation+FWUIKit
+
+@interface FWInnerAnimationTarget : NSObject <CAAnimationDelegate>
+
+@property (nonatomic, copy) void (^startBlock)(CAAnimation *animation);
+
+@property (nonatomic, copy) void (^stopBlock)(CAAnimation *animation, BOOL finished);
+
+@end
+
+@implementation FWInnerAnimationTarget
+
+- (void)animationDidStart:(CAAnimation *)anim
+{
+    if (self.startBlock) self.startBlock(anim);
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    if (self.stopBlock) self.stopBlock(anim, flag);
+}
+
+@end
+
+@implementation CAAnimation (FWUIKit)
+
+- (FWInnerAnimationTarget *)fwInnerAnimationTarget:(BOOL)lazyload
+{
+    FWInnerAnimationTarget *target = objc_getAssociatedObject(self, _cmd);
+    if (!target && lazyload) {
+        target = [[FWInnerAnimationTarget alloc] init];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
+}
+
+- (void (^)(CAAnimation * _Nonnull))fwStartBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    return target.startBlock;
+}
+
+- (void)setFwStartBlock:(void (^)(CAAnimation * _Nonnull))startBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
+    target.startBlock = startBlock;
+    self.delegate = target;
+}
+
+- (void (^)(CAAnimation * _Nonnull, BOOL))fwStopBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    return target.stopBlock;
+}
+
+- (void)setFwStopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
+{
+    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
+    target.stopBlock = stopBlock;
+    self.delegate = target;
+}
+
+@end
+
+#pragma mark - UILabel+FWUIKit
+
+@implementation UILabel (FWUIKit)
+
+- (UIEdgeInsets)fwContentInset
+{
+    return [objc_getAssociatedObject(self, @selector(fwContentInset)) UIEdgeInsetsValue];
+}
+
+- (void)setFwContentInset:(UIEdgeInsets)fwContentInset
+{
+    objc_setAssociatedObject(self, @selector(fwContentInset), [NSValue valueWithUIEdgeInsets:fwContentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsDisplay];
+}
+
+- (UIControlContentVerticalAlignment)fwVerticalAlignment
+{
+    return [objc_getAssociatedObject(self, @selector(fwVerticalAlignment)) integerValue];
+}
+
+- (void)setFwVerticalAlignment:(UIControlContentVerticalAlignment)fwVerticalAlignment
+{
+    objc_setAssociatedObject(self, @selector(fwVerticalAlignment), @(fwVerticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsDisplay];
+}
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -219,18 +364,45 @@
 
 - (BOOL)fwCanScroll
 {
-    if (self.bounds.size.width <= 0 || self.bounds.size.height <= 0) {
-        return NO;
-    }
-    
-    if (self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)) {
-        return YES;
-    }
-    
+    return [self fwCanScrollVertical] || [self fwCanScrollHorizontal];
+}
+
+- (BOOL)fwCanScrollHorizontal
+{
+    if (self.bounds.size.width <= 0) return NO;
+    return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds);
+}
+
+- (BOOL)fwCanScrollVertical
+{
+    if (self.bounds.size.height <= 0) return NO;
     return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds);
 }
 
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
+{
+    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
+    [self setContentOffset:contentOffset animated:animated];
+}
+
+- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
+{
+    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
+    switch (edge) {
+        case UIRectEdgeTop:
+            return self.contentOffset.y <= contentOffset.y;
+        case UIRectEdgeLeft:
+            return self.contentOffset.x <= contentOffset.x;
+        case UIRectEdgeBottom:
+            return self.contentOffset.y >= contentOffset.y;
+        case UIRectEdgeRight:
+            return self.contentOffset.x >= contentOffset.x;
+        default:
+            return NO;
+    }
+}
+
+- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge
 {
     CGPoint contentOffset = self.contentOffset;
     switch (edge) {
@@ -249,7 +421,54 @@
         default:
             break;
     }
-    [self setContentOffset:contentOffset animated:animated];
+    return contentOffset;
+}
+
+- (NSInteger)fwTotalPage
+{
+    if ([self fwCanScrollVertical]) {
+        return (NSInteger)ceil((self.contentSize.height / self.frame.size.height));
+    } else {
+        return (NSInteger)ceil((self.contentSize.width / self.frame.size.width));
+    }
+}
+
+- (NSInteger)fwCurrentPage
+{
+    if ([self fwCanScrollVertical]) {
+        CGFloat pageHeight = self.frame.size.height;
+        return (NSInteger)floor((self.contentOffset.y - pageHeight / 2) / pageHeight) + 1;
+    } else {
+        CGFloat pageWidth = self.frame.size.width;
+        return (NSInteger)floor((self.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    }
+}
+
+- (void)setFwCurrentPage:(NSInteger)page
+{
+    if ([self fwCanScrollVertical]) {
+        CGFloat offset = (self.frame.size.height * page);
+        self.contentOffset = CGPointMake(0.f, offset);
+    } else {
+        CGFloat offset = (self.frame.size.width * page);
+        self.contentOffset = CGPointMake(offset, 0.f);
+    }
+}
+
+- (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated
+{
+    if ([self fwCanScrollVertical]) {
+        CGFloat offset = (self.frame.size.height * page);
+        [self setContentOffset:CGPointMake(0.f, offset) animated:animated];
+    } else {
+        CGFloat offset = (self.frame.size.width * page);
+        [self setContentOffset:CGPointMake(offset, 0.f) animated:animated];
+    }
+}
+
+- (BOOL)fwIsLastPage
+{
+    return (self.fwCurrentPage == (self.fwTotalPage - 1));
 }
 
 @end

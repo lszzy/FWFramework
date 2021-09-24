@@ -51,6 +51,39 @@ NS_ASSUME_NONNULL_BEGIN
 /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
 @property(nonatomic, assign) CGRect fwFrameApplyTransform;
 
+/// 设置阴影颜色、偏移和半径
+- (void)fwSetShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
+
+@end
+
+#pragma mark - CAAnimation+FWUIKit
+
+/*!
+ @brief CAAnimation+FWUIKit
+ */
+@interface CAAnimation (FWUIKit)
+
+/// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
+@property (nonatomic, copy, nullable) void (^fwStartBlock)(CAAnimation *animation);
+
+/// 设置动画停止回调
+@property (nonatomic, copy, nullable) void (^fwStopBlock)(CAAnimation *animation, BOOL finished);
+
+@end
+
+#pragma mark - UILabel+FWUIKit
+
+/*!
+ @brief UILabel+FWUIKit
+ */
+@interface UILabel (FWUIKit)
+
+/// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
+@property (nonatomic, assign) UIEdgeInsets fwContentInset;
+
+/// 纵向分布方式，默认居中
+@property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -78,8 +111,32 @@ NS_ASSUME_NONNULL_BEGIN
 /// 判断当前scrollView内容是否足够滚动
 @property (nonatomic, assign, readonly) BOOL fwCanScroll;
 
+/// 判断当前的scrollView内容是否足够水平滚动
+@property (nonatomic, assign, readonly) BOOL fwCanScrollHorizontal;
+
+/// 判断当前的scrollView内容是否足够纵向滚动
+@property (nonatomic, assign, readonly) BOOL fwCanScrollVertical;
+
 /// 当前scrollView滚动到指定边
 - (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
+
+/// 是否已滚动到指定边
+- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
+
+/// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
+- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge;
+
+/// 总页数，自动识别翻页方向
+@property (nonatomic, assign, readonly) NSInteger fwTotalPage;
+
+/// 当前页数，不支持动画，自动识别翻页方向
+@property (nonatomic, assign) NSInteger fwCurrentPage;
+
+/// 设置当前页数，支持动画，自动识别翻页方向
+- (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated;
+
+/// 是否是最后一页，自动识别翻页方向
+@property (nonatomic, assign, readonly) BOOL fwIsLastPage;
 
 @end
 
