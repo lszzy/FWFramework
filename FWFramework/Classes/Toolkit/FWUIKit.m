@@ -254,6 +254,29 @@
 
 @end
 
+#pragma mark - UIPageControl+FWUIKit
+
+@implementation UIPageControl (FWUIKit)
+
+- (CGSize)fwPreferredSize
+{
+    CGSize size = self.bounds.size;
+    if (size.height <= 0) {
+        size = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+        if (size.height <= 0) size = CGSizeMake(10, 10);
+    }
+    return size;
+}
+
+- (void)setFwPreferredSize:(CGSize)size
+{
+    CGFloat height = [self fwPreferredSize].height;
+    CGFloat scale = size.height / height;
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+@end
+
 #pragma mark - UISlider+FWUIKit
 
 @implementation UISlider (FWUIKit)
@@ -302,13 +325,19 @@
 
 @implementation UISwitch (FWUIKit)
 
-- (void)fwSetSize:(CGSize)size
+- (CGSize)fwPreferredSize
 {
-    CGFloat height = self.bounds.size.height;
-    if (height <= 0) {
-        height = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
-        if (height <= 0) height = 31;
+    CGSize size = self.bounds.size;
+    if (size.height <= 0) {
+        size = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+        if (size.height <= 0) size = CGSizeMake(51, 31);
     }
+    return size;
+}
+
+- (void)setFwPreferredSize:(CGSize)size
+{
+    CGFloat height = [self fwPreferredSize].height;
     CGFloat scale = size.height / height;
     self.transform = CGAffineTransformMakeScale(scale, scale);
 }
