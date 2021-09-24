@@ -47,6 +47,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UIButton+FWUIKit
+
+/*!
+ @brief UIButton+FWUIKit
+ */
+@interface UIButton (FWUIKit)
+
+/// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+@property (nonatomic, assign) CGFloat fwDisabledAlpha;
+
+/// 自定义按钮高亮时的alpha，如0.5，默认0不生效
+@property (nonatomic, assign) CGFloat fwHighlightedAlpha;
+
+@end
+
 #pragma mark - UIViewController+FWUIKit
 
 /*!

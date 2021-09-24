@@ -66,26 +66,6 @@
     [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
 }
 
-+ (void)fwOpenAppStore:(NSString *)appId
-{
-    // SKStoreProductViewController可以内部打开，但需要加载
-    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
-}
-
-+ (BOOL)fwIsAppStoreURL:(id)url
-{
-    // itms-apps等
-    NSURL *nsurl = [self fwNSURLWithURL:url];
-    if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
-        return YES;
-    // https://apps.apple.com/等
-    } else if ([nsurl.host.lowercaseString isEqualToString:@"itunes.apple.com"] ||
-               [nsurl.host.lowercaseString isEqualToString:@"apps.apple.com"]) {
-        return YES;
-    }
-    return NO;
-}
-
 + (BOOL)fwIsSystemURL:(id)url
 {
     NSURL *nsurl = [self fwNSURLWithURL:url];
@@ -105,6 +85,38 @@
 {
     NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;
     return [urlString.lowercaseString hasPrefix:@"http://"] || [urlString.lowercaseString hasPrefix:@"https://"];
+}
+
++ (BOOL)fwIsAppStoreURL:(id)url
+{
+    // itms-apps等
+    NSURL *nsurl = [self fwNSURLWithURL:url];
+    if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
+        return YES;
+    // https://apps.apple.com/等
+    } else if ([nsurl.host.lowercaseString isEqualToString:@"itunes.apple.com"] ||
+               [nsurl.host.lowercaseString isEqualToString:@"apps.apple.com"]) {
+        return YES;
+    }
+    return NO;
+}
+
++ (void)fwOpenAppStore:(NSString *)appId
+{
+    // SKStoreProductViewController可以内部打开
+    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
+}
+
++ (void)fwOpenAppSettings
+{
+    [self fwOpenURL:UIApplicationOpenSettingsURLString];
+}
+
++ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
+{
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityController.excludedActivityTypes = excludedTypes;
+    [[UIWindow fwMainWindow] fwPresentViewController:activityController animated:YES completion:nil];
 }
 
 + (void)fwOpenSafariController:(id)url

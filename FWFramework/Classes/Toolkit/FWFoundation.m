@@ -35,6 +35,19 @@
     return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
 }
 
+- (CGSize)fwSize
+{
+    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
 @end
 
 #pragma mark - NSDate+FWFoundation
@@ -96,6 +109,36 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         uptime += (now.tv_usec - bootTime.tv_usec) / 1.e6;
     }
     return uptime;
+}
+
+@end
+
+#pragma mark - NSString+FWFoundation
+
+@implementation NSString (FWFoundation)
+
+- (CGSize)fwSizeWithFont:(UIFont *)font
+{
+    return [self fwSizeWithFont:font drawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize
+{
+    return [self fwSizeWithFont:font drawSize:drawSize attributes:nil];
+}
+
+- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize attributes:(NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSFontAttributeName] = font;
+    if (attributes != nil) {
+        [attr addEntriesFromDictionary:attributes];
+    }
+    CGSize size = [self boundingRectWithSize:drawSize
+                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                  attributes:attr
+                                     context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end
