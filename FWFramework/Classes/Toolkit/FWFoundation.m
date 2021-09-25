@@ -402,6 +402,30 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @end
 
+#pragma mark - NSTimer+FWFoundation
+
+@implementation NSTimer (FWFoundation)
+
+- (void)fwPauseTimer
+{
+    if (![self isValid]) return;
+    [self setFireDate:[NSDate distantFuture]];
+}
+
+- (void)fwResumeTimer
+{
+    if (![self isValid]) return;
+    [self setFireDate:[NSDate date]];
+}
+
+- (void)fwResumeTimerAfterDelay:(NSTimeInterval)delay
+{
+    if (![self isValid]) return;
+    [self setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
+}
+
+@end
+
 #pragma mark - NSUserDefaults+FWFoundation
 
 @implementation NSUserDefaults (FWFoundation)
