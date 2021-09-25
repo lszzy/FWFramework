@@ -48,11 +48,26 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置额外热区(点击区域)
 @property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
 
-/// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-@property(nonatomic, assign) CGRect fwFrameApplyTransform;
-
 /// 设置阴影颜色、偏移和半径
 - (void)fwSetShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
+
+/// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+
+/// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+
+/// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius;
+
+/// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width;
+
+/// 绘制单边或多边边框视图。使用AutoLayout
+- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+
+/// 绘制单边或多边边框。使用AutoLayout
+- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
 @end
 
@@ -224,36 +239,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
 @property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
-
-/// 占位文本，默认nil
-@property (nullable, nonatomic, strong) NSString *fwPlaceholder;
-
-/// 占位颜色，默认系统颜色
-@property (nullable, nonatomic, strong) UIColor *fwPlaceholderColor;
-
-/// 带属性占位文本，默认nil
-@property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
-
-/// 自定义占位文本内间距，默认zero与内容一致
-@property (nonatomic, assign) UIEdgeInsets fwPlaceholderInset;
-
-/// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
-@property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
-
-/// 是否启用自动高度功能，随文字改变高度
-@property (nonatomic, assign) BOOL fwAutoHeightEnabled;
-
-/// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
-@property (nonatomic, assign) CGFloat fwMaxHeight;
-
-/// 最小高度，默认0，启用自动高度后生效
-@property (nonatomic, assign) CGFloat fwMinHeight;
-
-/// 高度改变回调句柄，默认nil，启用自动高度后生效
-@property (nullable, nonatomic, copy) void (^fwHeightDidChange)(CGFloat height);
-
-/// 快捷启用自动高度，并设置最大高度和回调句柄
-- (void)fwAutoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(nullable void (^)(CGFloat height))didChange;
 
 @end
 
