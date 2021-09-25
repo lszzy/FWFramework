@@ -16,7 +16,7 @@
 
 #pragma mark - UIApplication+FWToolkit
 
-@interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate>
 
 @end
 
@@ -53,6 +53,14 @@
     void (^completion)(BOOL) = objc_getAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:));
     [controller dismissViewControllerAnimated:YES completion:^{
         if (completion) completion(result == MFMailComposeResultSent);
+    }];
+}
+
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)controller
+{
+    void (^completion)(BOOL) = objc_getAssociatedObject(controller, @selector(productViewControllerDidFinish:));
+    [controller dismissViewControllerAnimated:YES completion:^{
+        if (completion) completion(YES);
     }];
 }
 
@@ -206,6 +214,21 @@
     }
     controller.mailComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
     [UIWindow.fwMainWindow fwPresentViewController:controller animated:YES completion:nil];
+}
+
++ (void)fwOpenStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
+{
+    SKStoreProductViewController *viewController = [[SKStoreProductViewController alloc] init];
+    viewController.delegate = [FWSafariViewControllerDelegate sharedInstance];
+    [viewController loadProductWithParameters:parameters completionBlock:^(BOOL result, NSError * _Nullable error) {
+        if (!result) {
+            if (completion) completion(NO);
+            return;
+        }
+        
+        objc_setAssociatedObject(viewController, @selector(productViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        [UIWindow.fwMainWindow fwPresentViewController:viewController animated:YES completion:nil];
+    }];
 }
 
 + (AVPlayerViewController *)fwOpenVideoPlayer:(id)url

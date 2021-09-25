@@ -87,6 +87,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 打开邮件控制器，完成时回调
 + (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
 
+/// 打开Store控制器，完成时回调
++ (void)fwOpenStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
+
 /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
 + (nullable AVPlayerViewController *)fwOpenVideoPlayer:(id)url;
 
