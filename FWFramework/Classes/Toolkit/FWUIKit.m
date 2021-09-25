@@ -8,6 +8,7 @@
  */
 
 #import "FWUIKit.h"
+#import "FWAutoLayout.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
@@ -76,6 +77,18 @@
 @end
 
 #pragma mark - UIView+FWUIKit
+
+static void *kUIViewFWBorderLayerTopKey = &kUIViewFWBorderLayerTopKey;
+static void *kUIViewFWBorderLayerLeftKey = &kUIViewFWBorderLayerLeftKey;
+static void *kUIViewFWBorderLayerBottomKey = &kUIViewFWBorderLayerBottomKey;
+static void *kUIViewFWBorderLayerRightKey = &kUIViewFWBorderLayerRightKey;
+
+static void *kUIViewFWBorderLayerCornerKey = &kUIViewFWBorderLayerCornerKey;
+
+static void *kUIViewFWBorderViewTopKey = &kUIViewFWBorderViewTopKey;
+static void *kUIViewFWBorderViewLeftKey = &kUIViewFWBorderViewLeftKey;
+static void *kUIViewFWBorderViewBottomKey = &kUIViewFWBorderViewBottomKey;
+static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UIView (FWUIKit)
 
@@ -181,47 +194,6 @@
     objc_setAssociatedObject(self, @selector(fwTouchInsets), [NSValue valueWithUIEdgeInsets:fwTouchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CGRect)fwFrameApplyTransform
-{
-    return self.frame;
-}
-
-- (void)setFwFrameApplyTransform:(CGRect)fwFrameApplyTransform
-{
-    self.frame = [UIView fwRectApplyTransform:fwFrameApplyTransform transform:self.transform anchorPoint:self.layer.anchorPoint];
-}
-
-/// 计算目标点 targetPoint 围绕坐标点 coordinatePoint 通过 transform 之后此点的坐标。@see https://github.com/Tencent/QMUI_iOS
-+ (CGPoint)fwPointApplyTransform:(CGPoint)coordinatePoint targetPoint:(CGPoint)targetPoint transform:(CGAffineTransform)transform
-{
-    CGPoint p;
-    p.x = (targetPoint.x - coordinatePoint.x) * transform.a + (targetPoint.y - coordinatePoint.y) * transform.c + coordinatePoint.x;
-    p.y = (targetPoint.x - coordinatePoint.x) * transform.b + (targetPoint.y - coordinatePoint.y) * transform.d + coordinatePoint.y;
-    p.x += transform.tx;
-    p.y += transform.ty;
-    return p;
-}
-
-/// 系统的 CGRectApplyAffineTransform 只会按照 anchorPoint 为 (0, 0) 的方式去计算，但通常情况下我们面对的是 UIView/CALayer，它们默认的 anchorPoint 为 (.5, .5)，所以增加这个函数，在计算 transform 时可以考虑上 anchorPoint 的影响。@see https://github.com/Tencent/QMUI_iOS
-+ (CGRect)fwRectApplyTransform:(CGRect)rect transform:(CGAffineTransform)transform anchorPoint:(CGPoint)anchorPoint
-{
-    CGFloat width = CGRectGetWidth(rect);
-    CGFloat height = CGRectGetHeight(rect);
-    CGPoint oPoint = CGPointMake(rect.origin.x + width * anchorPoint.x, rect.origin.y + height * anchorPoint.y);
-    CGPoint top_left = [self fwPointApplyTransform:oPoint targetPoint:CGPointMake(rect.origin.x, rect.origin.y) transform:transform];
-    CGPoint bottom_left = [self fwPointApplyTransform:oPoint targetPoint:CGPointMake(rect.origin.x, rect.origin.y + height) transform:transform];
-    CGPoint top_right = [self fwPointApplyTransform:oPoint targetPoint:CGPointMake(rect.origin.x + width, rect.origin.y) transform:transform];
-    CGPoint bottom_right = [self fwPointApplyTransform:oPoint targetPoint:CGPointMake(rect.origin.x + width, rect.origin.y + height) transform:transform];
-    CGFloat minX = MIN(MIN(MIN(top_left.x, bottom_left.x), top_right.x), bottom_right.x);
-    CGFloat maxX = MAX(MAX(MAX(top_left.x, bottom_left.x), top_right.x), bottom_right.x);
-    CGFloat minY = MIN(MIN(MIN(top_left.y, bottom_left.y), top_right.y), bottom_right.y);
-    CGFloat maxY = MAX(MAX(MAX(top_left.y, bottom_left.y), top_right.y), bottom_right.y);
-    CGFloat newWidth = maxX - minX;
-    CGFloat newHeight = maxY - minY;
-    CGRect result = CGRectMake(minX, minY, newWidth, newHeight);
-    return result;
-}
-
 - (void)fwSetShadowColor:(UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius
@@ -230,6 +202,144 @@
     self.layer.shadowOffset = offset;
     self.layer.shadowRadius = radius;
     self.layer.shadowOpacity = 1.0;
+}
+
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width
+{
+    [self fwSetBorderLayer:edge color:color width:width leftInset:0 rightInset:0];
+}
+
+- (void)fwSetBorderLayer:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset
+{
+    CALayer *borderLayer;
+    
+    if ((edge & UIRectEdgeTop) == UIRectEdgeTop) {
+        borderLayer = [self fwInnerBorderLayer:kUIViewFWBorderLayerTopKey edge:UIRectEdgeTop];
+        borderLayer.frame = CGRectMake(leftInset, 0, self.bounds.size.width - leftInset - rightInset, width);
+        borderLayer.backgroundColor = color.CGColor;
+    }
+    
+    if ((edge & UIRectEdgeLeft) == UIRectEdgeLeft) {
+        borderLayer = [self fwInnerBorderLayer:kUIViewFWBorderLayerLeftKey edge:UIRectEdgeLeft];
+        borderLayer.frame = CGRectMake(0, leftInset, width, self.bounds.size.height - leftInset - rightInset);
+        borderLayer.backgroundColor = color.CGColor;
+    }
+    
+    if ((edge & UIRectEdgeBottom) == UIRectEdgeBottom) {
+        borderLayer = [self fwInnerBorderLayer:kUIViewFWBorderLayerBottomKey edge:UIRectEdgeBottom];
+        borderLayer.frame = CGRectMake(leftInset, self.bounds.size.height - width, self.bounds.size.width - leftInset - rightInset, width);
+        borderLayer.backgroundColor = color.CGColor;
+    }
+    
+    if ((edge & UIRectEdgeRight) == UIRectEdgeRight) {
+        borderLayer = [self fwInnerBorderLayer:kUIViewFWBorderLayerRightKey edge:UIRectEdgeRight];
+        borderLayer.frame = CGRectMake(self.bounds.size.width - width, leftInset, width, self.bounds.size.height - leftInset - rightInset);
+        borderLayer.backgroundColor = color.CGColor;
+    }
+}
+
+- (CALayer *)fwInnerBorderLayer:(const void *)edgeKey edge:(UIRectEdge)edge
+{
+    CALayer *borderLayer = objc_getAssociatedObject(self, edgeKey);
+    if (!borderLayer) {
+        borderLayer = [CALayer layer];
+        [self.layer addSublayer:borderLayer];
+        objc_setAssociatedObject(self, edgeKey, borderLayer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return borderLayer;
+}
+
+- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius
+{
+    CAShapeLayer *cornerLayer = [CAShapeLayer layer];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
+    cornerLayer.frame = self.bounds;
+    cornerLayer.path = path.CGPath;
+    self.layer.mask = cornerLayer;
+}
+
+- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(UIColor *)color width:(CGFloat)width
+{
+    [self fwSetCornerLayer:corner radius:radius];
+    
+    CAShapeLayer *borderLayer = objc_getAssociatedObject(self, kUIViewFWBorderLayerCornerKey);
+    if (!borderLayer) {
+        borderLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:borderLayer];
+        objc_setAssociatedObject(self, kUIViewFWBorderLayerCornerKey, borderLayer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
+    borderLayer.frame = self.bounds;
+    borderLayer.path = path.CGPath;
+    borderLayer.strokeColor = color.CGColor;
+    borderLayer.lineWidth = width * 2;
+    borderLayer.fillColor = nil;
+}
+
+- (void)fwSetBorderView:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width
+{
+    [self fwSetBorderView:edge color:color width:width leftInset:0 rightInset:0];
+}
+
+- (void)fwSetBorderView:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset
+{
+    UIView *borderView;
+    
+    if ((edge & UIRectEdgeTop) == UIRectEdgeTop) {
+        borderView = [self fwInnerBorderView:kUIViewFWBorderViewTopKey edge:UIRectEdgeTop];
+        [borderView fwConstraintForKey:@(NSLayoutAttributeHeight)].constant = width;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeLeft)].constant = leftInset;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeRight)].constant = -rightInset;
+        borderView.backgroundColor = color;
+    }
+    
+    if ((edge & UIRectEdgeLeft) == UIRectEdgeLeft) {
+        borderView = [self fwInnerBorderView:kUIViewFWBorderViewLeftKey edge:UIRectEdgeLeft];
+        [borderView fwConstraintForKey:@(NSLayoutAttributeWidth)].constant = width;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeTop)].constant = leftInset;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeBottom)].constant = -rightInset;
+        borderView.backgroundColor = color;
+    }
+    
+    if ((edge & UIRectEdgeBottom) == UIRectEdgeBottom) {
+        borderView = [self fwInnerBorderView:kUIViewFWBorderViewBottomKey edge:UIRectEdgeBottom];
+        [borderView fwConstraintForKey:@(NSLayoutAttributeHeight)].constant = width;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeLeft)].constant = leftInset;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeRight)].constant = -rightInset;
+        borderView.backgroundColor = color;
+    }
+    
+    if ((edge & UIRectEdgeRight) == UIRectEdgeRight) {
+        borderView = [self fwInnerBorderView:kUIViewFWBorderViewRightKey edge:UIRectEdgeRight];
+        [borderView fwConstraintForKey:@(NSLayoutAttributeWidth)].constant = width;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeTop)].constant = leftInset;
+        [borderView fwConstraintForKey:@(NSLayoutAttributeBottom)].constant = -rightInset;
+        borderView.backgroundColor = color;
+    }
+}
+
+- (UIView *)fwInnerBorderView:(const void *)edgeKey edge:(UIRectEdge)edge
+{
+    UIView *borderView = objc_getAssociatedObject(self, edgeKey);
+    if (!borderView) {
+        borderView = [UIView fwAutoLayoutView];
+        [self addSubview:borderView];
+        objc_setAssociatedObject(self, edgeKey, borderView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        if (edge == UIRectEdgeTop || edge == UIRectEdgeBottom) {
+            [borderView fwPinEdgeToSuperview:(edge == UIRectEdgeTop ? NSLayoutAttributeTop : NSLayoutAttributeBottom)];
+            [borderView fwSetConstraint:[borderView fwSetDimension:NSLayoutAttributeHeight toSize:0] forKey:@(NSLayoutAttributeHeight)];
+            [borderView fwSetConstraint:[borderView fwPinEdgeToSuperview:NSLayoutAttributeLeft] forKey:@(NSLayoutAttributeLeft)];
+            [borderView fwSetConstraint:[borderView fwPinEdgeToSuperview:NSLayoutAttributeRight] forKey:@(NSLayoutAttributeRight)];
+        } else {
+            [borderView fwPinEdgeToSuperview:(edge == UIRectEdgeLeft ? NSLayoutAttributeLeft : NSLayoutAttributeRight)];
+            [borderView fwSetConstraint:[borderView fwSetDimension:NSLayoutAttributeWidth toSize:0] forKey:@(NSLayoutAttributeWidth)];
+            [borderView fwSetConstraint:[borderView fwPinEdgeToSuperview:NSLayoutAttributeTop] forKey:@(NSLayoutAttributeTop)];
+            [borderView fwSetConstraint:[borderView fwPinEdgeToSuperview:NSLayoutAttributeBottom] forKey:@(NSLayoutAttributeBottom)];
+        }
+    }
+    return borderView;
 }
 
 @end
@@ -817,247 +927,6 @@
             });
         }
     }
-}
-
-- (UILabel *)fwPlaceholderLabel
-{
-    UILabel *label = objc_getAssociatedObject(self, @selector(fwPlaceholderLabel));
-    if (!label) {
-        static UIColor *defaultPlaceholderColor = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            UITextField *textField = [[UITextField alloc] init];
-            textField.placeholder = @" ";
-            UILabel *placeholderLabel = [textField fwPerformGetter:@"_placeholderLabel"];
-            defaultPlaceholderColor = placeholderLabel.textColor;
-        });
-        
-        NSAttributedString *originalText = self.attributedText;
-        self.text = @" ";
-        self.attributedText = originalText;
-        
-        label = [[UILabel alloc] init];
-        label.textColor = defaultPlaceholderColor;
-        label.numberOfLines = 0;
-        label.userInteractionEnabled = NO;
-        label.font = self.font;
-        objc_setAssociatedObject(self, @selector(fwPlaceholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self fwSetNeedsUpdatePlaceholder];
-        [self insertSubview:label atIndex:0];
-        
-        [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwSetNeedsUpdateText)];
-
-        [self fwObserveProperty:@"attributedText" target:self action:@selector(fwSetNeedsUpdateText)];
-        [self fwObserveProperty:@"text" target:self action:@selector(fwSetNeedsUpdateText)];
-        [self fwObserveProperty:@"bounds" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"frame" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"textAlignment" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"textContainerInset" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        
-        [self fwObserveProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
-            if (change[NSKeyValueChangeNewKey] != nil) textView.fwPlaceholderLabel.font = textView.font;
-            [textView fwSetNeedsUpdatePlaceholder];
-        }];
-    }
-    return label;
-}
-
-- (void)fwSetNeedsUpdatePlaceholder
-{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdatePlaceholder) object:nil];
-    [self performSelector:@selector(fwUpdatePlaceholder) withObject:nil afterDelay:0];
-}
-
-- (void)fwSetNeedsUpdateText
-{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fwUpdateText) object:nil];
-    [self performSelector:@selector(fwUpdateText) withObject:nil afterDelay:0];
-}
-
-- (void)fwUpdatePlaceholder
-{
-    // 调整contentInset实现垂直分布，不使用contentOffset是因为光标移动会不正常
-    UIEdgeInsets contentInset = self.contentInset;
-    contentInset.top = 0;
-    if (self.contentSize.height < self.bounds.size.height) {
-        CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-        switch (self.fwVerticalAlignment) {
-            case UIControlContentVerticalAlignmentCenter:
-                contentInset.top = (self.bounds.size.height - height) / 2.0;
-                break;
-            case UIControlContentVerticalAlignmentBottom:
-                contentInset.top = self.bounds.size.height - height;
-                break;
-            default:
-                break;
-        }
-    }
-    self.contentInset = contentInset;
-    
-    if (self.text.length) {
-        self.fwPlaceholderLabel.hidden = YES;
-    } else {
-        CGRect targetFrame;
-        UIEdgeInsets inset = [self fwPlaceholderInset];
-        if (!UIEdgeInsetsEqualToEdgeInsets(inset, UIEdgeInsetsZero)) {
-            targetFrame = CGRectMake(inset.left, inset.top, CGRectGetWidth(self.bounds) - inset.left - inset.right, CGRectGetHeight(self.bounds) - inset.top - inset.bottom);
-        } else {
-            CGFloat x = self.textContainer.lineFragmentPadding + self.textContainerInset.left;
-            CGFloat width = CGRectGetWidth(self.bounds) - x - self.textContainer.lineFragmentPadding - self.textContainerInset.right;
-            CGFloat height = ceil([self.fwPlaceholderLabel sizeThatFits:CGSizeMake(width, 0)].height);
-            height = MIN(height, self.bounds.size.height - self.textContainerInset.top - self.textContainerInset.bottom);
-            
-            CGFloat y = self.textContainerInset.top;
-            switch (self.fwVerticalAlignment) {
-                case UIControlContentVerticalAlignmentCenter:
-                    y = (self.bounds.size.height - height) / 2.0 - self.contentInset.top;
-                    break;
-                case UIControlContentVerticalAlignmentBottom:
-                    y = self.bounds.size.height - height - self.textContainerInset.bottom - self.contentInset.top;
-                    break;
-                default:
-                    break;
-            }
-            targetFrame = CGRectMake(x, y, width, height);
-        }
-        
-        self.fwPlaceholderLabel.hidden = NO;
-        self.fwPlaceholderLabel.textAlignment = self.textAlignment;
-        self.fwPlaceholderLabel.frame = targetFrame;
-    }
-}
-
-- (void)fwUpdateText
-{
-    [self fwUpdatePlaceholder];
-    if (!self.fwAutoHeightEnabled) return;
-    
-    CGFloat height = ceil([self sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)].height);
-    height = MAX(self.fwMinHeight, MIN(height, self.fwMaxHeight));
-    if (height == self.fwLastHeight) return;
-    
-    CGRect targetFrame = self.frame;
-    targetFrame.size.height = height;
-    self.frame = targetFrame;
-    if (self.fwHeightDidChange) self.fwHeightDidChange(height);
-    self.fwLastHeight = height;
-}
-
-- (NSString *)fwPlaceholder
-{
-    return self.fwPlaceholderLabel.text;
-}
-
-- (void)setFwPlaceholder:(NSString *)fwPlaceholder
-{
-    self.fwPlaceholderLabel.text = fwPlaceholder;
-    [self fwSetNeedsUpdatePlaceholder];
-}
-
-- (NSAttributedString *)fwAttributedPlaceholder
-{
-    return self.fwPlaceholderLabel.attributedText;
-}
-
-- (void)setFwAttributedPlaceholder:(NSAttributedString *)fwAttributedPlaceholder
-{
-    self.fwPlaceholderLabel.attributedText = fwAttributedPlaceholder;
-    [self fwSetNeedsUpdatePlaceholder];
-}
-
-- (UIColor *)fwPlaceholderColor
-{
-    return self.fwPlaceholderLabel.textColor;
-}
-
-- (void)setFwPlaceholderColor:(UIColor *)fwPlaceholderColor
-{
-    self.fwPlaceholderLabel.textColor = fwPlaceholderColor;
-}
-
-- (UIEdgeInsets)fwPlaceholderInset
-{
-    NSValue *value = objc_getAssociatedObject(self, @selector(fwPlaceholderInset));
-    return value ? value.UIEdgeInsetsValue : UIEdgeInsetsZero;
-}
-
-- (void)setFwPlaceholderInset:(UIEdgeInsets)inset
-{
-    objc_setAssociatedObject(self, @selector(fwPlaceholderInset), [NSValue valueWithUIEdgeInsets:inset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwSetNeedsUpdatePlaceholder];
-}
-
-- (UIControlContentVerticalAlignment)fwVerticalAlignment
-{
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fwVerticalAlignment));
-    return value ? value.integerValue : UIControlContentVerticalAlignmentTop;
-}
-
-- (void)setFwVerticalAlignment:(UIControlContentVerticalAlignment)fwVerticalAlignment
-{
-    objc_setAssociatedObject(self, @selector(fwVerticalAlignment), @(fwVerticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwSetNeedsUpdatePlaceholder];
-}
-
-- (BOOL)fwAutoHeightEnabled
-{
-    return [objc_getAssociatedObject(self, @selector(fwAutoHeightEnabled)) boolValue];
-}
-
-- (void)setFwAutoHeightEnabled:(BOOL)enabled
-{
-    objc_setAssociatedObject(self, @selector(fwAutoHeightEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwSetNeedsUpdateText];
-}
-
-- (CGFloat)fwMaxHeight
-{
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fwMaxHeight));
-    return value ? value.doubleValue : CGFLOAT_MAX;
-}
-
-- (void)setFwMaxHeight:(CGFloat)height
-{
-    objc_setAssociatedObject(self, @selector(fwMaxHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwSetNeedsUpdateText];
-}
-
-- (CGFloat)fwMinHeight
-{
-    return [objc_getAssociatedObject(self, @selector(fwMinHeight)) doubleValue];
-}
-
-- (void)setFwMinHeight:(CGFloat)height
-{
-    objc_setAssociatedObject(self, @selector(fwMinHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwSetNeedsUpdateText];
-}
-
-- (void (^)(CGFloat))fwHeightDidChange
-{
-    return objc_getAssociatedObject(self, @selector(fwHeightDidChange));
-}
-
-- (void)setFwHeightDidChange:(void (^)(CGFloat))block
-{
-    objc_setAssociatedObject(self, @selector(fwHeightDidChange), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (CGFloat)fwLastHeight
-{
-    return [objc_getAssociatedObject(self, @selector(fwLastHeight)) doubleValue];
-}
-
-- (void)setFwLastHeight:(CGFloat)height
-{
-    objc_setAssociatedObject(self, @selector(fwLastHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fwAutoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(void (^)(CGFloat))didChange
-{
-    self.fwMaxHeight = maxHeight;
-    if (didChange) self.fwHeightDidChange = didChange;
-    self.fwAutoHeightEnabled = YES;
 }
 
 @end
