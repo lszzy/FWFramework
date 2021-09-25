@@ -17,6 +17,7 @@
 #import "FWDynamicLayout.h"
 #import "FWFoundation.h"
 #import "FWIcon.h"
+#import "FWKeyboard.h"
 #import "FWTheme.h"
 #import "FWUIKit.h"
 
