@@ -106,12 +106,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
-/// 暂停NSTimer
-- (void)fwPauseTimer;
-
-/// 开始NSTimer
-- (void)fwResumeTimer;
-
 @end
 
 #pragma mark - UIGestureRecognizer+FWBlock
