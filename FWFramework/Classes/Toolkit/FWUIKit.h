@@ -179,6 +179,84 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UITextField+FWUIKit
+
+/*!
+ @brief UITextField+FWUIKit
+ */
+@interface UITextField (FWUIKit)
+
+/// 最大字数限制，0为无限制，二选一
+@property (nonatomic, assign) NSInteger fwMaxLength;
+
+/// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
+@property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
+
+/// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
+- (void)fwTextLengthChanged;
+
+/// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval UI_APPEARANCE_SELECTOR;
+
+/// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
+@property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
+
+@end
+
+#pragma mark - UITextView+FWUIKit
+
+/*!
+ @brief UITextView+FWUIKit
+ */
+@interface UITextView (FWUIKit)
+
+/// 最大字数限制，0为无限制，二选一
+@property (nonatomic, assign) NSInteger fwMaxLength;
+
+/// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
+@property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
+
+/// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
+- (void)fwTextLengthChanged;
+
+/// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval UI_APPEARANCE_SELECTOR;
+
+/// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
+@property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
+
+/// 占位文本，默认nil
+@property (nullable, nonatomic, strong) NSString *fwPlaceholder;
+
+/// 占位颜色，默认系统颜色
+@property (nullable, nonatomic, strong) UIColor *fwPlaceholderColor;
+
+/// 带属性占位文本，默认nil
+@property (nullable, nonatomic, strong) NSAttributedString *fwAttributedPlaceholder;
+
+/// 自定义占位文本内间距，默认zero与内容一致
+@property (nonatomic, assign) UIEdgeInsets fwPlaceholderInset;
+
+/// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
+@property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
+
+/// 是否启用自动高度功能，随文字改变高度
+@property (nonatomic, assign) BOOL fwAutoHeightEnabled;
+
+/// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
+@property (nonatomic, assign) CGFloat fwMaxHeight;
+
+/// 最小高度，默认0，启用自动高度后生效
+@property (nonatomic, assign) CGFloat fwMinHeight;
+
+/// 高度改变回调句柄，默认nil，启用自动高度后生效
+@property (nullable, nonatomic, copy) void (^fwHeightDidChange)(CGFloat height);
+
+/// 快捷启用自动高度，并设置最大高度和回调句柄
+- (void)fwAutoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(nullable void (^)(CGFloat height))didChange;
+
+@end
+
 #pragma mark - UIViewController+FWUIKit
 
 /*!
