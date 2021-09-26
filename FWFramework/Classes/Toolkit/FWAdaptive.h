@@ -135,6 +135,8 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
 /// 屏幕一像素的大小
 #define FWPixelOne [UIScreen fwPixelOne]
+/// 屏幕安全区域距离
+#define FWSafeAreaInsets [UIScreen fwSafeAreaInsets]
 
 /// 状态栏高度，与是否隐藏无关
 #define FWStatusBarHeight [UIScreen fwStatusBarHeight]
