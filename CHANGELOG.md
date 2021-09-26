@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0] - 2021-10-01
+
+### Changed
+* Split out FWApplication to maintain a separate warehouse
+* Refactor the implementation of FWFramework
+
 ## [1.9.3] - 2021-08-28
 
 ### Added

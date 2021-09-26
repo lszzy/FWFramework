@@ -5,6 +5,8 @@
 [![Pod License](https://img.shields.io/cocoapods/l/FWFramework.svg?style=flat)](https://github.com/lszzy/FWFramework/blob/master/LICENSE)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/lszzy/FWFramework)
 
+# [FWApplication](https://github.com/lszzy/FWApplication)
+
 # [中文](README_CN.md)
 
 ## Tutorial
@@ -26,20 +28,14 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Tracking']
 	end
-
-A brief description of the subspecs:
-
-	Framework: framework layer, core architecture, has nothing to do with the application, the bottom layer depends on
-	Application: application layer, AOP solution, no need to inherit, components can be replaced
-	Component: component layer, optional import, common functions, convenient for development
 
 ## [Changelog](CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '1.0.0'
-	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Component/Deprecated submodule as appropriate, and will be deleted in subsequent versions
+	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
 ## Vendor
 This framework uses a lot of third-party libraries. Thanks to the authors of all third-party libraries. I will not list them all here. For details, please refer to the relevant links of the source file.
