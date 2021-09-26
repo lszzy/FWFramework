@@ -204,6 +204,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     self.layer.shadowOpacity = 1.0;
 }
 
+- (void)fwSetBorderColor:(UIColor *)color width:(CGFloat)width
+{
+    self.layer.borderColor = color.CGColor;
+    self.layer.borderWidth = width;
+}
+
+- (void)fwSetBorderColor:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius
+{
+    [self fwSetBorderColor:color width:width];
+    [self fwSetCornerRadius:radius];
+}
+
+- (void)fwSetCornerRadius:(CGFloat)radius
+{
+    self.layer.cornerRadius = radius;
+    self.layer.masksToBounds = YES;
+}
+
 - (void)fwSetBorderLayer:(UIRectEdge)edge color:(UIColor *)color width:(CGFloat)width
 {
     [self fwSetBorderLayer:edge color:color width:width leftInset:0 rightInset:0];
@@ -434,6 +452,19 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [self setNeedsDisplay];
 }
 
++ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
+{
+    UILabel *label = [[self alloc] init];
+    [label fwSetFont:font textColor:textColor];
+    return label;
+}
+
+- (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor
+{
+    if (font) self.font = font;
+    if (textColor) self.textColor = textColor;
+}
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -465,6 +496,66 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     
     if (self.enabled && alpha > 0) {
         self.alpha = self.isHighlighted ? alpha : 1;
+    }
+}
+
++ (instancetype)fwButtonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+{
+    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
+    [button fwSetTitle:title font:font titleColor:titleColor];
+    return button;
+}
+
+- (void)fwSetTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+{
+    if (title) [self setTitle:title forState:UIControlStateNormal];
+    if (font) self.titleLabel.font = font;
+    if (titleColor) [self setTitleColor:titleColor forState:UIControlStateNormal];
+}
+
++ (instancetype)fwButtonWithImage:(UIImage *)image
+{
+    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
+    [button fwSetImage:image];
+    return button;
+}
+
+- (void)fwSetImage:(UIImage *)image
+{
+    [self setImage:image forState:UIControlStateNormal];
+}
+
+- (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
+{
+    CGFloat imageWith = self.imageView.image.size.width;
+    CGFloat imageHeight = self.imageView.image.size.height;
+    CGSize labelSize = [self.titleLabel.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.titleLabel.font, NSFontAttributeName, nil]];
+    CGFloat labelWidth = labelSize.width;
+    CGFloat labelHeight = labelSize.height;
+    CGFloat imageOffsetX = (imageWith + labelWidth) / 2 - imageWith / 2;
+    CGFloat imageOffsetY = imageHeight / 2 + spacing / 2;
+    CGFloat labelOffsetX = (imageWith + labelWidth / 2) - (imageWith + labelWidth) / 2;
+    CGFloat labelOffsetY = labelHeight / 2 + spacing / 2;
+    
+    switch (edge) {
+        case UIRectEdgeLeft:
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, -spacing / 2, 0, spacing / 2);
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, spacing / 2, 0, -spacing / 2);
+            break;
+        case UIRectEdgeRight:
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, labelWidth + spacing / 2, 0, -(labelWidth + spacing / 2));
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, -(imageHeight + spacing / 2), 0, imageHeight + spacing / 2);
+            break;
+        case UIRectEdgeTop:
+            self.imageEdgeInsets = UIEdgeInsetsMake(-imageOffsetY, imageOffsetX, imageOffsetY, -imageOffsetX);
+            self.titleEdgeInsets = UIEdgeInsetsMake(labelOffsetY, -labelOffsetX, -labelOffsetY, labelOffsetX);
+            break;
+        case UIRectEdgeBottom:
+            self.imageEdgeInsets = UIEdgeInsetsMake(imageOffsetY, imageOffsetX, -imageOffsetY, -imageOffsetX);
+            self.titleEdgeInsets = UIEdgeInsetsMake(-labelOffsetY, -labelOffsetX, labelOffsetY, labelOffsetX);
+            break;
+        default:
+            break;
     }
 }
 

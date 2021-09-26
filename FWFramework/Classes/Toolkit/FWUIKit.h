@@ -51,6 +51,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置阴影颜色、偏移和半径
 - (void)fwSetShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 
+/// 绘制四边边框
+- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width;
+
+/// 绘制四边边框和四角圆角
+- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
+
+/// 绘制四角圆角
+- (void)fwSetCornerRadius:(CGFloat)radius;
+
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
 - (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
 
@@ -99,6 +108,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
 
+/// 快速创建标签
++ (instancetype)fwLabelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
+/// 快速设置标签
+- (void)fwSetFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -113,6 +128,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
 @property (nonatomic, assign) CGFloat fwHighlightedAlpha;
+
+/// 快速创建文本按钮
++ (instancetype)fwButtonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+
+/// 快速设置文本按钮
+- (void)fwSetTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+
+/// 快速创建图片按钮
++ (instancetype)fwButtonWithImage:(nullable UIImage *)image;
+
+/// 快速设置图片
+- (void)fwSetImage:(nullable UIImage *)image;
+
+/// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
+- (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
 
 @end
 
