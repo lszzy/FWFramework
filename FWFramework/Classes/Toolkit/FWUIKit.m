@@ -452,17 +452,28 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [self setNeedsDisplay];
 }
 
-+ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
++ (instancetype)fwLabelWithText:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor
 {
     UILabel *label = [[self alloc] init];
-    [label fwSetFont:font textColor:textColor];
+    [label fwSetText:text font:font textColor:textColor];
     return label;
+}
+
++ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
+{
+    return [self fwLabelWithText:nil font:font textColor:textColor];
+}
+
+- (void)fwSetText:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor
+{
+    if (text) self.text = text;
+    if (font) self.font = font;
+    if (textColor) self.textColor = textColor;
 }
 
 - (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor
 {
-    if (font) self.font = font;
-    if (textColor) self.textColor = textColor;
+    [self fwSetText:nil font:font textColor:textColor];
 }
 
 @end
