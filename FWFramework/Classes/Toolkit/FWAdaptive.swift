@@ -67,6 +67,8 @@ public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsS
 public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen }
 /// 屏幕一像素的大小
 public var FWPixelOne: CGFloat { return UIScreen.fwPixelOne }
+/// 屏幕安全区域距离
+public var FWSafeAreaInsets: UIEdgeInsets { return UIScreen.fwSafeAreaInsets }
 
 /// 状态栏高度，与是否隐藏无关
 public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight }

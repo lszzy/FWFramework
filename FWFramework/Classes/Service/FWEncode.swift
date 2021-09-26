@@ -360,6 +360,8 @@ extension Array {
     public var fwNSArray: NSArray { return self as NSArray }
 }
 extension Data {
+    public static func fwJsonEncode(_ object: Any) -> Data? { return NSData.fwJsonEncode(object) }
+    public var fwJsonDecode: Any? { return fwNSData.fwJsonDecode }
     public var fwNSData: NSData { return self as NSData }
     public var fwUTF8String: String? { return String(data: self, encoding: .utf8) }
 }
@@ -370,6 +372,9 @@ extension Dictionary {
     public var fwNSDictionary: NSDictionary { return self as NSDictionary }
 }
 extension String {
+    public static func fwJsonEncode(_ object: Any) -> String? { return NSString.fwJsonEncode(object) }
+    public var fwJsonDecode: Any? { return fwNSString.fwJsonDecode }
+    public var fwMd5Encode: String { return fwNSString.fwMd5Encode() }
     public var fwTrimString: String { return trimmingCharacters(in: .whitespacesAndNewlines) }
     public var fwNSString: NSString { return self as NSString }
     public var fwUTF8Data: Data? { return self.data(using: .utf8) }
