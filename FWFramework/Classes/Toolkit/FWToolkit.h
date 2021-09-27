@@ -352,8 +352,11 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 生命周期变化时通知句柄，默认nil
 @property (nonatomic, copy, nullable) void (^fwVisibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
 
-/// 将要dealloc时执行句柄，默认nil
-@property (nonatomic, copy, nullable) void (^fwWillDeallocBlock)(__kindof UIViewController *viewController);
+/// 自定义完成结果对象，默认nil
+@property (nonatomic, strong, nullable) id fwCompletionResult;
+
+/// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
+@property (nonatomic, copy, nullable) void (^fwCompletionHandler)(id _Nullable result);
 
 @end
 

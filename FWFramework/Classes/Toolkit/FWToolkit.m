@@ -1078,7 +1078,7 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
         }));
         
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"dealloc"), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            if (selfObject.fwWillDeallocBlock) selfObject.fwWillDeallocBlock(selfObject);
+            if (selfObject.fwCompletionHandler) selfObject.fwCompletionHandler(selfObject.fwCompletionResult);
             FWSwizzleOriginal();
         }));
     });
@@ -1108,14 +1108,24 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     objc_setAssociatedObject(self, @selector(fwVisibleStateChanged), fwVisibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (void (^)(__kindof UIViewController * _Nonnull))fwWillDeallocBlock
+- (id)fwCompletionResult
 {
-    return objc_getAssociatedObject(self, @selector(fwWillDeallocBlock));
+    return objc_getAssociatedObject(self, @selector(fwCompletionResult));
 }
 
-- (void)setFwWillDeallocBlock:(void (^)(__kindof UIViewController * _Nonnull))fwWillDeallocBlock
+- (void)setFwCompletionResult:(id)fwCompletionResult
 {
-    objc_setAssociatedObject(self, @selector(fwWillDeallocBlock), fwWillDeallocBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwCompletionResult), fwCompletionResult, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void (^)(id _Nullable))fwCompletionHandler
+{
+    return objc_getAssociatedObject(self, @selector(fwCompletionHandler));
+}
+
+- (void)setFwCompletionHandler:(void (^)(id _Nullable))fwCompletionHandler
+{
+    objc_setAssociatedObject(self, @selector(fwCompletionHandler), fwCompletionHandler, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end
