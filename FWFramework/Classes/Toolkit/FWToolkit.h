@@ -252,6 +252,9 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 /// 图片合并，并制定叠加图片的起始位置
 - (nullable UIImage *)fwImageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point;
 
+/// 图片应用CIFilter滤镜处理
+- (nullable UIImage *)fwImageWithFilter:(CIFilter *)filter;
+
 /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
 - (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
 

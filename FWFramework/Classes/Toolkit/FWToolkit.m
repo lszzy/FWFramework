@@ -818,6 +818,30 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
     return image;
 }
 
+- (UIImage *)fwImageWithFilter:(CIFilter *)filter
+{
+    CIImage *inputImage;
+    if (self.CIImage) {
+        inputImage = self.CIImage;
+    } else {
+        CGImageRef imageRef = self.CGImage;
+        if (!imageRef) return nil;
+        inputImage = [CIImage imageWithCGImage:imageRef];
+    }
+    if (!inputImage) return nil;
+    
+    CIContext *context = [CIContext context];
+    [filter setValue:inputImage forKey:kCIInputImageKey];
+    CIImage *outputImage = filter.outputImage;
+    if (!outputImage) return nil;
+    
+    CGImageRef imageRef = [context createCGImage:outputImage fromRect:outputImage.extent];
+    if (!imageRef) return nil;
+    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
+    CGImageRelease(imageRef);
+    return image;
+}
+
 - (UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength
 {
     NSData *data = [self fwCompressDataWithMaxLength:maxLength compressRatio:0];
