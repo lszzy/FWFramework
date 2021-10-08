@@ -8,7 +8,6 @@
  */
 
 #import "FWLanguage.h"
-#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification";
@@ -33,27 +32,6 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 
 @end
 
-#pragma mark - NSLocale+FWLanguage
-
-static NSString *fwStaticPreferredLanguage = nil;
-
-@interface NSLocale (FWLanguage)
-
-@end
-
-@implementation NSLocale (FWLanguage)
-
-+ (NSArray<NSString *> *)fwInnerPreferredLanguages
-{
-    NSArray<NSString *> *languages = [self fwInnerPreferredLanguages];
-    if (fwStaticPreferredLanguage && fwStaticPreferredLanguage.length > 0) {
-        return [NSArray arrayWithObjects:fwStaticPreferredLanguage, nil];
-    }
-    return languages;
-}
-
-@end
-
 #pragma mark - NSBundle+FWLanguage
 
 @implementation NSBundle (FWLanguage)
@@ -73,17 +51,9 @@ static NSString *fwStaticPreferredLanguage = nil;
 
 + (NSString *)fwSystemLanguage
 {
-    return [NSLocale preferredLanguages].firstObject;
-}
-
-+ (void)setFwSystemLanguage:(NSString *)language
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [NSLocale fwSwizzleClassMethod:@selector(preferredLanguages) with:@selector(fwInnerPreferredLanguages)];
-    });
-    
-    fwStaticPreferredLanguage = language;
+    // preferredLanguages包含语言和区域信息，示例：zh-Hans-CN
+    // return [NSLocale preferredLanguages].firstObject;
+    return [[NSBundle mainBundle] preferredLocalizations].firstObject;
 }
 
 + (NSString *)fwLocalizedLanguage
