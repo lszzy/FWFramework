@@ -93,6 +93,9 @@ static const NSUInteger FWModulePriorityDefault = 100;
 /// 名称(String)=>图片(UIImage)映射字典，如果bundle图片不存在，会调用本方法。可支持自定义图片处理
 + (nullable NSDictionary<NSString *, UIImage *> *)namedImages;
 
+/// 名称(String)=>文件(String)映射字典，如果bundle文件不存在，会调用本方法。可支持自定义文件处理
++ (nullable NSDictionary<NSString *, NSString *> *)namedFiles;
+
 /// 键名(String)=>多语言(String)映射字典，如果bundle多语言不存在，会调用本方法。可支持自定义多语言处理
 + (nullable NSDictionary<NSString *, NSString *> *)localizedStrings:(nullable NSString *)table;
 
@@ -106,13 +109,16 @@ static const NSUInteger FWModulePriorityDefault = 100;
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
 
-/// 获取当前模块图片
+/// 获取当前模块图片，图片不存在时会调用namedImages
 + (nullable UIImage *)imageNamed:(NSString *)name;
 
-/// 获取当前模块多语言
+/// 获取当前模块文件，文件不存在时会调用namedFiles
++ (nullable NSString *)fileNamed:(NSString *)name;
+
+/// 获取当前模块多语言，多语言不存在时会调用localizedStrings:
 + (NSString *)localizedString:(NSString *)key;
 
-/// 获取当前模块指定文件多语言
+/// 获取当前模块指定文件多语言，多语言不存在时会调用localizedStrings:
 + (NSString *)localizedString:(NSString *)key table:(nullable NSString *)table;
 
 @end

@@ -301,6 +301,15 @@
     return image;
 }
 
++ (NSString *)fileNamed:(NSString *)name
+{
+    NSString *file = [[self bundle] pathForResource:name ofType:nil];
+    if (!file && [self respondsToSelector:@selector(namedFiles)]) {
+        file = [self namedFiles][name];
+    }
+    return file;
+}
+
 + (NSString *)localizedString:(NSString *)key
 {
     return [self localizedString:key table:nil];
