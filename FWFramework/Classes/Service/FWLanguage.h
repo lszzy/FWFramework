@@ -30,7 +30,7 @@ extern NSString *const FWLanguageChangedNotification;
 
 #pragma mark - Main
 
-/// 读取系统语言，返回preferredLocalizations(支持应用设置，不含区域)，示例：zh-Hans|en
+/// 读取应用系统语言，返回preferredLocalizations(支持应用设置，不含区域)，示例：zh-Hans|en
 @property (nullable, class, nonatomic, copy, readonly) NSString *fwSystemLanguage;
 
 /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
