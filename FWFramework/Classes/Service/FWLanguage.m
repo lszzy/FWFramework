@@ -49,6 +49,11 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
     });
 }
 
++ (NSString *)fwCurrentLanguage
+{
+    return [self fwLocalizedLanguage] ?: [self fwSystemLanguage];
+}
+
 + (NSString *)fwSystemLanguage
 {
     // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN

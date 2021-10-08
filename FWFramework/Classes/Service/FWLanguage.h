@@ -30,6 +30,9 @@ extern NSString *const FWLanguageChangedNotification;
 
 #pragma mark - Main
 
+/// 读取应用当前语言，如果fwLocalizedLanguage存在则返回，否则返回fwSystemLanguage
+@property (nullable, class, nonatomic, copy, readonly) NSString *fwCurrentLanguage;
+
 /// 读取应用系统语言，返回preferredLocalizations(支持应用设置，不含区域)，示例：zh-Hans|en
 @property (nullable, class, nonatomic, copy, readonly) NSString *fwSystemLanguage;
 
