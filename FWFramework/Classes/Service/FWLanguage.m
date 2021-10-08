@@ -51,8 +51,9 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 
 + (NSString *)fwSystemLanguage
 {
-    // preferredLanguages包含语言和区域信息，示例：zh-Hans-CN
+    // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN
     // return [NSLocale preferredLanguages].firstObject;
+    // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans
     return [[NSBundle mainBundle] preferredLocalizations].firstObject;
 }
 
