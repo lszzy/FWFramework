@@ -13,6 +13,8 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 
+#pragma mark - FWMediator
+
 @interface FWMediator ()
 
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
@@ -269,6 +271,8 @@
 
 @end
 
+#pragma mark - FWModuleBundle
+
 @interface UIImage ()
 
 + (UIImage *)fwImageNamed:(NSString *)name bundle:(NSBundle *)bundle;
@@ -284,17 +288,17 @@
 
 + (UIImage *)imageNamed:(NSString *)name
 {
-    static BOOL imageHook = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        imageHook = [UIImage respondsToSelector:@selector(fwImageNamed:bundle:)];
-    });
-    
-    if (imageHook) {
-        return [UIImage fwImageNamed:name bundle:[self bundle]];
+    UIImage *image;
+    if ([UIImage respondsToSelector:@selector(fwImageNamed:bundle:)]) {
+        image = [UIImage fwImageNamed:name bundle:[self bundle]];
     } else {
-        return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+        image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }
+    
+    if (!image && [self respondsToSelector:@selector(namedImages)]) {
+        image = [self namedImages][name];
+    }
+    return image;
 }
 
 + (NSString *)localizedString:(NSString *)key
@@ -304,7 +308,13 @@
 
 + (NSString *)localizedString:(NSString *)key table:(NSString *)table
 {
-    return [[self bundle] localizedStringForKey:key value:nil table:table];
+    if (![self respondsToSelector:@selector(localizedStrings:)]) {
+        return [[self bundle] localizedStringForKey:key value:nil table:table];
+    }
+    
+    NSString *localized = [[self bundle] localizedStringForKey:key value:@" " table:table];
+    if (![localized isEqualToString:@" "]) return localized;
+    return [self localizedStrings:table][key] ?: key;
 }
 
 @end

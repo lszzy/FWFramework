@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWMediator
+
 /// 加载指定业务模块
 #define FWModule(serviceProtocol) \
     ((id<serviceProtocol>)[FWMediator loadModule:@protocol(serviceProtocol)])
@@ -80,10 +82,26 @@ static const NSUInteger FWModulePriorityDefault = 100;
 
 @end
 
+#pragma mark - FWModuleBundle
+
+/*!
+ @brief 业务模块Bundle可选协议，自定义图片和多语言实现
+ */
+@protocol FWModuleBundle <NSObject>
+@optional
+
+/// 名称(String)=>图片(UIImage)映射字典，如果bundle图片不存在，会调用本方法。可支持自定义图片处理
++ (nullable NSDictionary<NSString *, UIImage *> *)namedImages;
+
+/// 键名(String)=>多语言(String)映射字典，如果bundle多语言不存在，会调用本方法。可支持自定义多语言处理
++ (nullable NSDictionary<NSString *, NSString *> *)localizedStrings:(nullable NSString *)table;
+
+@end
+
 /*!
  @brief 业务模块Bundle基类，各模块可继承
  */
-@interface FWModuleBundle : NSObject
+@interface FWModuleBundle : NSObject <FWModuleBundle>
 
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
