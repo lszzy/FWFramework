@@ -288,17 +288,11 @@
 
 + (UIImage *)imageNamed:(NSString *)name
 {
-    UIImage *image;
     if ([UIImage respondsToSelector:@selector(fwImageNamed:bundle:)]) {
-        image = [UIImage fwImageNamed:name bundle:[self bundle]];
+        return [UIImage fwImageNamed:name bundle:[self bundle]];
     } else {
-        image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+        return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }
-    
-    if (!image && [self respondsToSelector:@selector(namedImages)]) {
-        image = [self namedImages][name];
-    }
-    return image;
 }
 
 + (NSString *)localizedString:(NSString *)key
@@ -308,13 +302,7 @@
 
 + (NSString *)localizedString:(NSString *)key table:(NSString *)table
 {
-    if (![self respondsToSelector:@selector(localizedStrings:)]) {
-        return [[self bundle] localizedStringForKey:key value:nil table:table];
-    }
-    
-    NSString *localized = [[self bundle] localizedStringForKey:key value:@" " table:table];
-    if (![localized isEqualToString:@" "]) return localized;
-    return [self localizedStrings:table][key] ?: key;
+    return [[self bundle] localizedStringForKey:key value:nil table:table];
 }
 
 + (NSString *)resourcePath:(NSString *)name
