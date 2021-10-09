@@ -301,15 +301,6 @@
     return image;
 }
 
-+ (NSString *)fileNamed:(NSString *)name
-{
-    NSString *file = [[self bundle] pathForResource:name ofType:nil];
-    if (!file && [self respondsToSelector:@selector(namedFiles)]) {
-        file = [self namedFiles][name];
-    }
-    return file;
-}
-
 + (NSString *)localizedString:(NSString *)key
 {
     return [self localizedString:key table:nil];
@@ -324,6 +315,16 @@
     NSString *localized = [[self bundle] localizedStringForKey:key value:@" " table:table];
     if (![localized isEqualToString:@" "]) return localized;
     return [self localizedStrings:table][key] ?: key;
+}
+
++ (NSString *)resourcePath:(NSString *)name
+{
+    return [[self bundle] pathForResource:name ofType:nil];
+}
+
++ (NSURL *)resourceURL:(NSString *)name
+{
+    return [[self bundle] URLForResource:name withExtension:nil];
 }
 
 @end
