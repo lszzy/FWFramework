@@ -85,40 +85,26 @@ static const NSUInteger FWModulePriorityDefault = 100;
 #pragma mark - FWModuleBundle
 
 /*!
- @brief 业务模块Bundle可选协议，自定义图片和多语言实现
- */
-@protocol FWModuleBundle <NSObject>
-@optional
-
-/// 名称(String)=>图片(UIImage)映射字典，如果bundle图片不存在，会调用本方法。可支持自定义图片处理
-+ (nullable NSDictionary<NSString *, UIImage *> *)namedImages;
-
-/// 键名(String)=>多语言(String)映射字典，如果bundle多语言不存在，会调用本方法。可支持自定义多语言处理
-+ (nullable NSDictionary<NSString *, NSString *> *)localizedStrings:(nullable NSString *)table;
-
-@end
-
-/*!
  @brief 业务模块Bundle基类，各模块可继承
  */
-@interface FWModuleBundle : NSObject <FWModuleBundle>
+@interface FWModuleBundle : NSObject
 
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
 
-/// 获取当前模块图片，图片不存在时会调用namedImages
+/// 获取当前模块图片
 + (nullable UIImage *)imageNamed:(NSString *)name;
 
-/// 获取当前模块多语言，多语言不存在时会调用localizedStrings:
+/// 获取当前模块多语言
 + (NSString *)localizedString:(NSString *)key;
 
-/// 获取当前模块指定文件多语言，多语言不存在时会调用localizedStrings:
+/// 获取当前模块指定文件多语言
 + (NSString *)localizedString:(NSString *)key table:(nullable NSString *)table;
 
-/// 获取当前模块资源文件路径，文件不存在时返回nil
+/// 获取当前模块资源文件路径
 + (nullable NSString *)resourcePath:(NSString *)name;
 
-/// 获取当前模块资源文件URL，文件不存在时返回nil
+/// 获取当前模块资源文件URL
 + (nullable NSURL *)resourceURL:(NSString *)name;
 
 @end
