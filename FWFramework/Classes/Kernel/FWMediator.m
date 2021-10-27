@@ -288,10 +288,32 @@
 
 + (UIImage *)imageNamed:(NSString *)name
 {
+    UIImage *image;
     if ([UIImage respondsToSelector:@selector(fwImageNamed:bundle:)]) {
-        return [UIImage fwImageNamed:name bundle:[self bundle]];
+        image = [UIImage fwImageNamed:name bundle:[self bundle]];
     } else {
-        return [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+        image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+    }
+    
+    if (!image) {
+        NSMutableDictionary *nameImages = objc_getAssociatedObject([self class], @selector(imageNamed:));
+        if (nameImages) image = [nameImages objectForKey:name];
+    }
+    return image;
+}
+
++ (void)setImage:(UIImage *)image forName:(NSString *)name
+{
+    NSMutableDictionary *nameImages = objc_getAssociatedObject([self class], @selector(imageNamed:));
+    if (!nameImages) {
+        nameImages = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject([self class], @selector(imageNamed:), nameImages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    if (image) {
+        [nameImages setObject:image forKey:name];
+    } else {
+        [nameImages removeObjectForKey:name];
     }
 }
 
