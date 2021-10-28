@@ -12,6 +12,7 @@
 #import <AVKit/AVKit.h>
 #import <MessageUI/MessageUI.h>
 #import "FWAdaptive.h"
+#import "FWAppearance.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
