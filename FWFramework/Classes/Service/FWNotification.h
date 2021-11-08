@@ -58,8 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Local
 
-/// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，重复触发时最少间隔1分钟(60)。(iOS10以下只支持重复NSCalendarUnit标准单位时间，如60|900|3600|86400|86400*7|86400*30|86400*365，否则不生效)
-- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(NSInteger)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats;
+/// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
+- (void)registerLocalNotification:(NSString *)identifier title:(nullable NSString *)title subtitle:(nullable NSString *)subtitle body:(nullable NSString *)body userInfo:(nullable NSDictionary *)userInfo badge:(NSInteger)badge soundName:(nullable NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats block:(nullable void (NS_NOESCAPE ^)(UNMutableNotificationContent *content))block;
 
 /// 批量删除本地通知(未发出和已发出)
 - (void)removeLocalNotification:(NSArray<NSString *> *)identifiers;
