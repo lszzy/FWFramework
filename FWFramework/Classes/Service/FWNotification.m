@@ -117,7 +117,7 @@
 
 #pragma mark - Local
 
-- (void)registerLocalNotification:(NSString *)identifier title:(NSString *)title subtitle:(NSString *)subtitle body:(NSString *)body userInfo:(NSDictionary *)userInfo badge:(NSInteger)badge soundName:(NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats
+- (void)registerLocalNotification:(NSString *)identifier title:(NSString *)title subtitle:(NSString *)subtitle body:(NSString *)body userInfo:(NSDictionary *)userInfo badge:(NSInteger)badge soundName:(NSString *)soundName timeInterval:(NSInteger)timeInterval repeats:(BOOL)repeats block:(void (NS_NOESCAPE ^)(UNMutableNotificationContent *))block
 {
     UNMutableNotificationContent *notification = [[UNMutableNotificationContent alloc] init];
     if (title) notification.title = title;
@@ -125,9 +125,8 @@
     if (body) notification.body = body;
     if (userInfo) notification.userInfo = userInfo;
     notification.badge = badge > 0 ? [NSNumber numberWithInteger:badge] : nil;
-    if (soundName) {
-        notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
-    }
+    if (soundName) notification.sound = [@"default" isEqualToString:soundName] ? [UNNotificationSound defaultSound] : [UNNotificationSound soundNamed:soundName];
+    if (block) block(notification);
     
     UNNotificationTrigger *trigger = timeInterval > 0 ? [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeats] : nil;
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:notification trigger:trigger];
