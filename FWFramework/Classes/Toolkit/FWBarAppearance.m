@@ -8,6 +8,7 @@
  */
 
 #import "FWBarAppearance.h"
+#import "FWSwizzle.h"
 #import "FWTheme.h"
 #import "FWToolkit.h"
 #import <objc/runtime.h>
@@ -15,6 +16,63 @@
 #pragma mark - UINavigationBar+FWBarAppearance
 
 @implementation UINavigationBar (FWBarAppearance)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            UIView *titleView = selfObject.topItem.titleView;
+            if (![titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+                FWSwizzleOriginal();
+                return;
+            }
+            
+            CGFloat titleMaximumWidth = CGRectGetWidth(titleView.bounds);
+            CGSize titleViewSize = [titleView sizeThatFits:CGSizeMake(titleMaximumWidth, CGFLOAT_MAX)];
+            titleViewSize.height = ceil(titleViewSize.height);
+            
+            if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
+                CGFloat titleViewMinY = FWFlatValue(CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0));
+                titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
+            }
+            
+            if (CGRectGetWidth(titleView.bounds) != titleViewSize.width) {
+                CGRect titleFrame = titleView.frame;
+                titleFrame.size.width = titleViewSize.width;
+                titleView.frame = titleFrame;
+            }
+            
+            FWSwizzleOriginal();
+        }));
+        
+        FWSwizzleClass(UIViewController, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
+            FWSwizzleOriginal(title);
+            
+            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+                ((id<FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
+            }
+        }));
+        
+        FWSwizzleClass(UINavigationItem, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
+            FWSwizzleOriginal(title);
+            
+            if ([selfObject.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+                ((id<FWTitleViewProtocol>)selfObject.titleView).title = title;
+            }
+        }));
+        
+        FWSwizzleClass(UINavigationItem, @selector(setTitleView:), FWSwizzleReturn(void), FWSwizzleArgs(UIView<FWTitleViewProtocol> *titleView), FWSwizzleCode({
+            FWSwizzleOriginal(titleView);
+            
+            if ([titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+                if (titleView.title.length <= 0) {
+                    titleView.title = selfObject.title;
+                }
+            }
+        }));
+    });
+}
 
 - (UINavigationBarAppearance *)fwAppearance
 {

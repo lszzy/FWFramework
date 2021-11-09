@@ -13,6 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UINavigationBar+FWBarAppearance
 
+/// 自定义titleView协议
+@protocol FWTitleViewProtocol <NSObject>
+
+@required
+/// 当前标题文字，自动兼容VC.title和navigationItem.title调用
+@property(nonatomic, copy, nullable) NSString *title;
+
+@end
+
 /*!
  @brief 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS13+启用appearance(iOS15+必须)，iOS12及以下使用旧版本api
  */
