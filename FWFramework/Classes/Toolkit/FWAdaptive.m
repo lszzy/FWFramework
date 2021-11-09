@@ -11,6 +11,8 @@
 #import "FWNavigation.h"
 #import "FWToolkit.h"
 
+#pragma mark - UIApplication+FWAdaptive
+
 @implementation UIApplication (FWAdaptive)
 
 + (BOOL)fwIsDebug
@@ -301,6 +303,88 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     } else {
         return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorWidth;
     }
+}
+
+@end
+
+#pragma mark - UIViewController+FWAdaptive
+
+@implementation UIViewController (FWAdaptive)
+
+- (CGFloat)fwStatusBarHeight
+{
+    // 1. 导航栏隐藏时不占用布局高度始终为0
+    if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
+    
+    // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
+    BOOL isPortrait = ![UIDevice fwIsLandscape];
+    if (isPortrait && self.fwIsPageSheet) return 0.0;
+    
+    // 3. 竖屏且异形屏，导航栏显示时布局高度固定
+    if (isPortrait && [UIScreen fwIsNotchedScreen]) {
+        // 也可以这样计算：CGRectGetMinY(self.navigationController.navigationBar.frame)
+        return [UIScreen fwStatusBarHeight];
+    }
+    
+    // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0
+    if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+    return [UIApplication sharedApplication].statusBarFrame.size.height;
+    
+    /*
+     // 系统状态栏可见高度算法：
+     // 1. 竖屏且为iOS13+弹出pageSheet样式时安全高度为0
+     if (![UIDevice fwIsLandscape] && self.fwIsPageSheet) return 0.0;
+     
+     // 2. 其他情况状态栏显示时安全高度固定，隐藏时安全高度为0
+     if (UIApplication.sharedApplication.statusBarHidden) return 0.0;
+     return [UIApplication sharedApplication].statusBarFrame.size.height;
+     */
+}
+
+- (CGFloat)fwNavigationBarHeight
+{
+    // 系统导航栏
+    if (!self.navigationController || self.navigationController.navigationBarHidden) return 0.0;
+    return self.navigationController.navigationBar.frame.size.height;
+}
+
+- (CGFloat)fwTopBarHeight
+{
+    // 通常情况下导航栏显示时可以这样计算：CGRectGetMaxY(self.navigationController.navigationBar.frame)
+    return [self fwStatusBarHeight] + [self fwNavigationBarHeight];
+    
+    /*
+     // 系统顶部栏可见高度算法：
+     // 1. 导航栏隐藏时和状态栏安全高度相同
+     if (!self.navigationController || self.navigationController.navigationBarHidden) {
+         return [self fwSafeStatusBarHeight];
+     }
+     
+     // 2. 导航栏显示时和顶部栏布局高度相同
+     return [self fwTopBarHeight];
+     */
+}
+
+- (CGFloat)fwTabBarHeight
+{
+    if (!self.tabBarController || self.tabBarController.tabBar.hidden) return 0.0;
+    return self.tabBarController.tabBar.frame.size.height;
+}
+
+- (CGFloat)fwToolBarHeight
+{
+    if (!self.navigationController || self.navigationController.toolbarHidden) return 0.0;
+    // 如果未同时显示标签栏，高度需要加上安全区域高度
+    CGFloat height = self.navigationController.toolbar.frame.size.height;
+    if (!self.tabBarController || self.tabBarController.tabBar.hidden) {
+        height += [UIScreen fwSafeAreaInsets].bottom;
+    }
+    return height;
+}
+
+- (CGFloat)fwBottomBarHeight
+{
+    return [self fwTabBarHeight] + [self fwToolBarHeight];
 }
 
 @end
