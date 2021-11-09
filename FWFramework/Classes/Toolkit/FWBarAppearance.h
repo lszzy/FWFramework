@@ -24,9 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 手工更新导航栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 设置返回按钮图片，包含图片和转场Mask图片
-@property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
-
 /// 导航栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent UI_APPEARANCE_SELECTOR;
 
@@ -47,6 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
+
+/// 设置返回按钮图片，包含图片和转场Mask图片
+@property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
+
+/// 设置返回按钮图片并自动偏移，和系统左侧按钮位置保持一致
+- (void)fwSetOffsetBackImage:(nullable UIImage *)backImage;
 
 @end
 
