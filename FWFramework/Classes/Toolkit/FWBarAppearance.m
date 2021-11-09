@@ -40,26 +40,6 @@
 #endif
 }
 
-- (UIImage *)fwBackImage
-{
-    if (@available(iOS 13.0, *)) {
-        return self.fwAppearance.backIndicatorImage;
-    } else {
-        return self.backIndicatorImage;
-    }
-}
-
-- (void)setFwBackImage:(UIImage *)image
-{
-    if (@available(iOS 13.0, *)) {
-        [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
-        [self fwUpdateAppearance];
-    } else {
-        self.backIndicatorImage = image;
-        self.backIndicatorTransitionMaskImage = image;
-    }
-}
-
 - (UIColor *)fwForegroundColor
 {
     return self.tintColor;
@@ -208,6 +188,31 @@
         [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
     }
+}
+
+- (UIImage *)fwBackImage
+{
+    if (@available(iOS 13.0, *)) {
+        return self.fwAppearance.backIndicatorImage;
+    } else {
+        return self.backIndicatorImage;
+    }
+}
+
+- (void)setFwBackImage:(UIImage *)image
+{
+    if (@available(iOS 13.0, *)) {
+        [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
+        [self fwUpdateAppearance];
+    } else {
+        self.backIndicatorImage = image;
+        self.backIndicatorTransitionMaskImage = image;
+    }
+}
+
+- (void)fwSetOffsetBackImage:(UIImage *)backImage
+{
+    self.fwBackImage = [backImage fwImageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
 }
 
 - (void)fwThemeChanged:(FWThemeStyle)style
