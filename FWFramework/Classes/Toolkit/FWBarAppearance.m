@@ -199,8 +199,9 @@
     }
 }
 
-- (void)setFwBackImage:(UIImage *)image
+- (void)setFwBackImage:(UIImage *)backImage
 {
+    UIImage *image = [backImage fwImageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
     if (@available(iOS 13.0, *)) {
         [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fwUpdateAppearance];
@@ -208,11 +209,6 @@
         self.backIndicatorImage = image;
         self.backIndicatorTransitionMaskImage = image;
     }
-}
-
-- (void)fwSetOffsetBackImage:(UIImage *)backImage
-{
-    self.fwBackImage = [backImage fwImageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
 }
 
 - (void)fwThemeChanged:(FWThemeStyle)style
