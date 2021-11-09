@@ -45,11 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置透明背景并隐藏底部线条，自动清空主题背景
 - (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
 
-/// 设置返回按钮图片，包含图片和转场Mask图片
+/// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
-
-/// 设置返回按钮图片并自动偏移，和系统左侧按钮位置保持一致
-- (void)fwSetOffsetBackImage:(nullable UIImage *)backImage;
 
 @end
 
