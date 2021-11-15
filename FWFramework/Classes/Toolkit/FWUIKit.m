@@ -538,32 +538,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
 {
-    CGFloat imageWith = self.imageView.image.size.width;
-    CGFloat imageHeight = self.imageView.image.size.height;
-    CGSize labelSize = [self.titleLabel.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.titleLabel.font, NSFontAttributeName, nil]];
-    CGFloat labelWidth = labelSize.width;
-    CGFloat labelHeight = labelSize.height;
-    CGFloat imageOffsetX = (imageWith + labelWidth) / 2 - imageWith / 2;
-    CGFloat imageOffsetY = imageHeight / 2 + spacing / 2;
-    CGFloat labelOffsetX = (imageWith + labelWidth / 2) - (imageWith + labelWidth) / 2;
-    CGFloat labelOffsetY = labelHeight / 2 + spacing / 2;
-    
+    CGSize imageSize = self.imageView.image.size;
+    CGSize labelSize = self.titleLabel.frame.size;
     switch (edge) {
         case UIRectEdgeLeft:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, -spacing / 2, 0, spacing / 2);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, spacing / 2, 0, -spacing / 2);
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, spacing);
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, spacing, 0, 0);
             break;
         case UIRectEdgeRight:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, labelWidth + spacing / 2, 0, -(labelWidth + spacing / 2));
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, -(imageHeight + spacing / 2), 0, imageHeight + spacing / 2);
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, labelSize.width + spacing, 0, -labelSize.width);
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width - spacing, 0, imageSize.width);
             break;
         case UIRectEdgeTop:
-            self.imageEdgeInsets = UIEdgeInsetsMake(-imageOffsetY, imageOffsetX, imageOffsetY, -imageOffsetX);
-            self.titleEdgeInsets = UIEdgeInsetsMake(labelOffsetY, -labelOffsetX, -labelOffsetY, labelOffsetX);
+            self.imageEdgeInsets = UIEdgeInsetsMake(-labelSize.height - spacing, 0, 0, -labelSize.width);
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -imageSize.height - spacing, 0);
             break;
         case UIRectEdgeBottom:
-            self.imageEdgeInsets = UIEdgeInsetsMake(imageOffsetY, imageOffsetX, -imageOffsetY, -imageOffsetX);
-            self.titleEdgeInsets = UIEdgeInsetsMake(-labelOffsetY, -labelOffsetX, labelOffsetY, labelOffsetX);
+            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, -labelSize.height - spacing, -labelSize.width);
+            self.titleEdgeInsets = UIEdgeInsetsMake(-imageSize.height - spacing, -imageSize.width, 0, 0);
             break;
         default:
             break;
