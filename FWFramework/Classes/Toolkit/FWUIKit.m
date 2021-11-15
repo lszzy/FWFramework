@@ -539,7 +539,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
 {
     CGSize imageSize = self.imageView.image.size;
-    CGSize labelSize = self.titleLabel.frame.size;
+    CGSize labelSize = self.titleLabel.intrinsicContentSize;
     switch (edge) {
         case UIRectEdgeLeft:
             self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, spacing);
