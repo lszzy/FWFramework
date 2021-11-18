@@ -108,17 +108,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
 
-/// 快速创建标签并指定文本
-+ (instancetype)fwLabelWithText:(nullable NSString *)text font:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
-
 /// 快速创建标签
 + (instancetype)fwLabelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
 
-/// 快速设置标签并指定文本
-- (void)fwSetText:(nullable NSString *)text font:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+/// 快速创建标签并指定文本
++ (instancetype)fwLabelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
 
 /// 快速设置标签
 - (void)fwSetFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
+/// 快速设置标签并指定文本
+- (void)fwSetFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
 
 @end
 
@@ -140,6 +140,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速设置文本按钮
 - (void)fwSetTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+
+/// 快速设置文本
+- (void)fwSetTitle:(nullable NSString *)title;
 
 /// 快速创建图片按钮
 + (instancetype)fwButtonWithImage:(nullable UIImage *)image;

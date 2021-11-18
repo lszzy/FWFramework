@@ -452,28 +452,28 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [self setNeedsDisplay];
 }
 
-+ (instancetype)fwLabelWithText:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor
-{
-    UILabel *label = [[self alloc] init];
-    [label fwSetText:text font:font textColor:textColor];
-    return label;
-}
-
 + (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
 {
-    return [self fwLabelWithText:nil font:font textColor:textColor];
+    return [self fwLabelWithFont:font textColor:textColor text:nil];
 }
 
-- (void)fwSetText:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor
++ (instancetype)fwLabelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
 {
-    if (text) self.text = text;
-    if (font) self.font = font;
-    if (textColor) self.textColor = textColor;
+    UILabel *label = [[self alloc] init];
+    [label fwSetFont:font textColor:textColor text:text];
+    return label;
 }
 
 - (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor
 {
-    [self fwSetText:nil font:font textColor:textColor];
+    [self fwSetFont:font textColor:textColor text:nil];
+}
+
+- (void)fwSetFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
+{
+    if (font) self.font = font;
+    if (textColor) self.textColor = textColor;
+    if (text) self.text = text;
 }
 
 @end
@@ -524,10 +524,15 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (titleColor) [self setTitleColor:titleColor forState:UIControlStateNormal];
 }
 
+- (void)fwSetTitle:(NSString *)title
+{
+    [self setTitle:title forState:UIControlStateNormal];
+}
+
 + (instancetype)fwButtonWithImage:(UIImage *)image
 {
     UIButton *button = [self buttonWithType:UIButtonTypeCustom];
-    [button fwSetImage:image];
+    [button setImage:image forState:UIControlStateNormal];
     return button;
 }
 
