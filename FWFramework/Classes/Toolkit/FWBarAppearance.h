@@ -18,13 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UINavigationBar (FWBarAppearance)
 
-/// 导航栏iOS13+样式对象，用于自定义样式
+/// 导航栏iOS13+样式对象，用于自定义样式，默认透明
 @property (nonatomic, strong, readonly) UINavigationBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新导航栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 导航栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
+/// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent UI_APPEARANCE_SELECTOR;
 
 /// 设置前景颜色，包含文字和按钮等
@@ -33,17 +33,20 @@ NS_ASSUME_NONNULL_BEGIN
 /// 单独设置标题颜色，nil时显示前景颜色
 @property (nonatomic, strong, nullable) UIColor *fwTitleColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色(nil时透明)，兼容主题颜色
+/// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景图片(nil时透明)，兼容主题图片
+/// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
 
-/// 设置阴影图片(nil时透明)，兼容主题图片
-@property (nonatomic, strong, nullable) UIImage *fwShadowImage UI_APPEARANCE_SELECTOR;
+/// 设置背景是否全透明，默认NO，后设置生效
+@property (nonatomic, assign) BOOL fwBackgroundTransparent UI_APPEARANCE_SELECTOR;
 
-/// 设置透明背景并隐藏底部线条，自动清空主题背景
-- (void)fwSetBackgroundTransparent UI_APPEARANCE_SELECTOR;
+/// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
+@property (nonatomic, strong, nullable) UIColor *fwShadowColor UI_APPEARANCE_SELECTOR;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
+@property (nonatomic, strong, nullable) UIImage *fwShadowImage UI_APPEARANCE_SELECTOR;
 
 /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
 @property (nonatomic, strong, nullable) UIImage *fwBackImage UI_APPEARANCE_SELECTOR;
@@ -57,25 +60,31 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UITabBar (FWBarAppearance)
 
-/// 标签栏iOS13+样式对象，用于自定义样式
+/// 标签栏iOS13+样式对象，用于自定义样式，默认透明
 @property (nonatomic, strong, readonly) UITabBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新标签栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 标签栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
+/// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
 
-/// 设置背景颜色，兼容主题颜色
+/// 设置背景颜色，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
 
-/// 设置背景图片，兼容主题图片
+/// 设置背景图片，兼容主题图片，后设置生效
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
 
-/// 设置阴影图片(nil时透明)，兼容主题图片
+/// 设置背景是否全透明，默认NO，后设置生效
+@property (nonatomic, assign) BOOL fwBackgroundTransparent;
+
+/// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
+@property (nonatomic, strong, nullable) UIColor *fwShadowColor;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
 @property (nonatomic, strong, nullable) UIImage *fwShadowImage;
 
 @end
@@ -88,25 +97,31 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIToolbar (FWBarAppearance)
 
-/// 工具栏iOS13+样式对象，用于自定义样式
+/// 工具栏iOS13+样式对象，用于自定义样式，默认透明
 @property (nonatomic, strong, readonly) UIToolbarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新工具栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 工具栏是否半透明，需先于背景色设置，默认NO。注意启用iOS13+样式后，背景色需带有alpha时半透明才会生效
+/// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent UI_APPEARANCE_SELECTOR;
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *fwForegroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景颜色，兼容主题颜色
+/// 设置背景颜色，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *fwBackgroundColor UI_APPEARANCE_SELECTOR;
 
-/// 设置背景图片，兼容主题图片
+/// 设置背景图片，兼容主题图片，后设置生效
 @property (nonatomic, strong, nullable) UIImage *fwBackgroundImage UI_APPEARANCE_SELECTOR;
 
-/// 设置阴影图片(nil时透明)，兼容主题图片
+/// 设置背景是否全透明，默认NO，后设置生效
+@property (nonatomic, assign) BOOL fwBackgroundTransparent UI_APPEARANCE_SELECTOR;
+
+/// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
+@property (nonatomic, strong, nullable) UIColor *fwShadowColor UI_APPEARANCE_SELECTOR;
+
+/// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
 @property (nonatomic, strong, nullable) UIImage *fwShadowImage UI_APPEARANCE_SELECTOR;
 
 /// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
