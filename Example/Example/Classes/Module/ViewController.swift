@@ -15,7 +15,6 @@ class ViewController: UIViewController {
             let navigationBar = navigationController?.navigationBar
             navigationBar?.fwIsTranslucent = style == 1
             navigationBar?.fwForegroundColor = UIColor.fwThemeLight(.black, dark: .white)
-            navigationBar?.fwShadowColor = nil
             if style == 0 {
                 navigationBar?.fwBackgroundColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA), dark: .fwColor(withHex: 0x121212))
             } else if style == 1 {

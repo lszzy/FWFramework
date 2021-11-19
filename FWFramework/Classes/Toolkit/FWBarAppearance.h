@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 手工更新导航栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
+/// 导航栏是否半透明，会重置背景清空阴影，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent UI_APPEARANCE_SELECTOR;
 
 /// 设置前景颜色，包含文字和按钮等
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 手工更新标签栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
+/// 标签栏是否半透明，会重置背景清空阴影，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 手工更新工具栏样式
 - (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
 
-/// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
+/// 工具栏是否半透明，会重置背景清空阴影，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
 @property (nonatomic, assign) BOOL fwIsTranslucent UI_APPEARANCE_SELECTOR;
 
 /// 设置前景颜色，包含文字和按钮等
