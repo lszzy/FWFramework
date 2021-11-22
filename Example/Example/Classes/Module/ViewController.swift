@@ -14,6 +14,7 @@ class ViewController: UIViewController {
         didSet {
             let navigationBar = navigationController?.navigationBar
             navigationBar?.fwIsTranslucent = style == 1
+            navigationBar?.fwShadowColor = nil
             navigationBar?.fwForegroundColor = UIColor.fwThemeLight(.black, dark: .white)
             if style == 0 {
                 navigationBar?.fwBackgroundColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA), dark: .fwColor(withHex: 0x121212))
@@ -27,7 +28,6 @@ class ViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: view.bounds)
-        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height * 2)
         
         for i in 0 ..< 10 {
