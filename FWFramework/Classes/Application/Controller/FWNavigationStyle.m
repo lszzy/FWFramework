@@ -603,7 +603,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 
 - (UIImage *)fwBackImage
 {
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         return self.fwAppearance.backIndicatorImage;
     }}
     
@@ -612,7 +612,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 
 - (void)setFwBackImage:(UIImage *)image
 {
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fwUpdateAppearance];
         return;
@@ -646,7 +646,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 
 - (void)fwUpdateTitleColor
 {
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         UIColor *titleColor = self.fwTitleColor ?: self.tintColor;
         NSMutableDictionary *titleAttrs = self.fwAppearance.titleTextAttributes ? [self.fwAppearance.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
         titleAttrs[NSForegroundColorAttributeName] = titleColor;
@@ -681,7 +681,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundImage = image;
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
@@ -702,7 +702,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = backgroundImage.fwImage ?: [UIImage new];
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundImage = image;
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
@@ -717,7 +717,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundImage = [UIImage new];
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
@@ -734,7 +734,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
         UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
-        if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundImage = image;
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
@@ -748,7 +748,7 @@ static BOOL fwStaticNavigationBarAppearanceEnabled = NO;
     
     if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
         UIImage *image = self.fwBackgroundImage.fwImage ?: [UIImage new];
-        if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (UINavigationBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundImage = image;
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
@@ -851,7 +851,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
@@ -871,7 +871,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+    if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundImage = image.fwImage;
         self.fwAppearance.shadowImage = [UIImage new];
         [self fwUpdateAppearance];
@@ -887,7 +887,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     [super fwThemeChanged:style];
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
-        if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
@@ -900,7 +900,7 @@ static BOOL fwStaticTabBarAppearanceEnabled = NO;
     }
     
     if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
-        if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 13.0, *)) {
+        if (UITabBar.fwAppearanceEnabled) { if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundImage = self.fwBackgroundImage.fwImage;
             self.fwAppearance.shadowImage = [UIImage new];
             [self fwUpdateAppearance];
