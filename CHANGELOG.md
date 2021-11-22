@@ -6,6 +6,11 @@
 * Split out FWApplication to maintain a separate warehouse
 * Refactor the implementation of FWFramework
 
+## [1.9.4] - 2021-11-22
+
+### Fixed
+* Fix the compatibility problem of navigation bar style when compiling with Xcode13
+
 ## [1.9.3] - 2021-08-28
 
 ### Added
