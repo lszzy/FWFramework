@@ -22,7 +22,6 @@
     if (!appearance) {
         appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        appearance.shadowColor = nil;
         objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
@@ -48,13 +47,12 @@
 - (void)setFwIsTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (translucent) {
             [self.fwAppearance configureWithDefaultBackground];
         } else {
             [self.fwAppearance configureWithTransparentBackground];
         }
-        self.fwAppearance.shadowColor = nil;
         [self fwUpdateAppearance];
     } else {
         if (translucent) {
@@ -62,7 +60,6 @@
         } else {
             self.barTintColor = nil;
         }
-        self.shadowImage = [UIImage new];
     }
 }
 
@@ -90,7 +87,7 @@
 
 - (void)fwUpdateTitleColor
 {
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         UIColor *titleColor = self.fwTitleColor ?: self.tintColor;
         NSMutableDictionary *titleAttrs = self.fwAppearance.titleTextAttributes ? [self.fwAppearance.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
         titleAttrs[NSForegroundColorAttributeName] = titleColor;
@@ -121,7 +118,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (self.fwIsTranslucent) {
             self.fwAppearance.backgroundColor = color;
             self.fwAppearance.backgroundImage = nil;
@@ -153,7 +150,7 @@
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = backgroundImage.fwImage ?: [UIImage new];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image;
         [self fwUpdateAppearance];
@@ -174,7 +171,7 @@
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image;
         [self fwUpdateAppearance];
@@ -193,7 +190,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = shadowColor;
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
@@ -211,7 +208,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = nil;
         self.fwAppearance.shadowImage = shadowImage.fwImage;
         [self fwUpdateAppearance];
@@ -222,7 +219,7 @@
 
 - (UIImage *)fwBackImage
 {
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         return self.fwAppearance.backIndicatorImage;
     } else {
         return self.backIndicatorImage;
@@ -232,7 +229,7 @@
 - (void)setFwBackImage:(UIImage *)backImage
 {
     UIImage *image = [backImage fwImageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fwUpdateAppearance];
     } else {
@@ -246,7 +243,7 @@
     [super fwThemeChanged:style];
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             if (self.fwIsTranslucent) {
                 self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
                 self.fwAppearance.backgroundImage = nil;
@@ -270,7 +267,7 @@
     
     if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
         UIImage *image = self.fwBackgroundImage.fwImage ?: [UIImage new];
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundColor = nil;
             self.fwAppearance.backgroundImage = image;
             [self fwUpdateAppearance];
@@ -281,7 +278,7 @@
     }
     
     if (self.fwShadowColor && self.fwShadowColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = self.fwShadowColor.fwColor;
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
@@ -291,7 +288,7 @@
     }
     
     if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = nil;
             self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
             [self fwUpdateAppearance];
@@ -313,7 +310,6 @@
     if (!appearance) {
         appearance = [[UITabBarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        appearance.shadowColor = nil;
         objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
@@ -337,13 +333,12 @@
 - (void)setFwIsTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (translucent) {
             [self.fwAppearance configureWithDefaultBackground];
         } else {
             [self.fwAppearance configureWithTransparentBackground];
         }
-        self.fwAppearance.shadowColor = nil;
         [self fwUpdateAppearance];
     } else {
         if (translucent) {
@@ -351,7 +346,6 @@
         } else {
             self.barTintColor = nil;
         }
-        self.shadowImage = [UIImage new];
     }
 }
 
@@ -374,7 +368,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (self.fwIsTranslucent) {
             self.fwAppearance.backgroundColor = color;
             self.fwAppearance.backgroundImage = nil;
@@ -403,7 +397,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image.fwImage;
         [self fwUpdateAppearance];
@@ -424,7 +418,7 @@
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image;
         [self fwUpdateAppearance];
@@ -443,7 +437,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = shadowColor;
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
@@ -461,7 +455,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = nil;
         self.fwAppearance.shadowImage = image.fwImage;
         [self fwUpdateAppearance];
@@ -475,7 +469,7 @@
     [super fwThemeChanged:style];
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             if (self.fwIsTranslucent) {
                 self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
                 self.fwAppearance.backgroundImage = nil;
@@ -496,7 +490,7 @@
     }
     
     if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundColor = nil;
             self.fwAppearance.backgroundImage = self.fwBackgroundImage.fwImage;
             [self fwUpdateAppearance];
@@ -507,7 +501,7 @@
     }
     
     if (self.fwShadowColor && self.fwShadowColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = self.fwShadowColor.fwColor;
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
@@ -517,7 +511,7 @@
     }
     
     if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = nil;
             self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
             [self fwUpdateAppearance];
@@ -554,7 +548,6 @@
     if (!appearance) {
         appearance = [[UIToolbarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        appearance.shadowColor = nil;
         objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
@@ -580,13 +573,12 @@
 - (void)setFwIsTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fwIsTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (translucent) {
             [self.fwAppearance configureWithDefaultBackground];
         } else {
             [self.fwAppearance configureWithTransparentBackground];
         }
-        self.fwAppearance.shadowColor = nil;
         [self fwUpdateAppearance];
     } else {
         if (translucent) {
@@ -594,7 +586,6 @@
         } else {
             self.barTintColor = nil;
         }
-        [self setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
 
@@ -617,7 +608,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         if (self.fwIsTranslucent) {
             self.fwAppearance.backgroundColor = color;
             self.fwAppearance.backgroundImage = nil;
@@ -646,7 +637,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image.fwImage;
         [self fwUpdateAppearance];
@@ -667,7 +658,7 @@
     objc_setAssociatedObject(self, @selector(fwBackgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwBackgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.backgroundColor = nil;
         self.fwAppearance.backgroundImage = image;
         [self fwUpdateAppearance];
@@ -686,7 +677,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = shadowColor;
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
@@ -704,7 +695,7 @@
 {
     objc_setAssociatedObject(self, @selector(fwShadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fwShadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 13.0, *)) {
+    if (@available(iOS 15.0, *)) {
         self.fwAppearance.shadowColor = nil;
         self.fwAppearance.shadowImage = shadowImage.fwImage;
         [self fwUpdateAppearance];
@@ -718,7 +709,7 @@
     [super fwThemeChanged:style];
     
     if (self.fwBackgroundColor && self.fwBackgroundColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             if (self.fwIsTranslucent) {
                 self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
                 self.fwAppearance.backgroundImage = nil;
@@ -739,7 +730,7 @@
     }
     
     if (self.fwBackgroundImage && self.fwBackgroundImage.fwIsThemeImage) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.backgroundColor = nil;
             self.fwAppearance.backgroundImage = self.fwBackgroundImage.fwImage;
             [self fwUpdateAppearance];
@@ -750,7 +741,7 @@
     }
     
     if (self.fwShadowColor && self.fwShadowColor.fwIsThemeColor) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = self.fwShadowColor.fwColor;
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
@@ -760,7 +751,7 @@
     }
     
     if (self.fwShadowImage && self.fwShadowImage.fwIsThemeImage) {
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 15.0, *)) {
             self.fwAppearance.shadowColor = nil;
             self.fwAppearance.shadowImage = self.fwShadowImage.fwImage;
             [self fwUpdateAppearance];
