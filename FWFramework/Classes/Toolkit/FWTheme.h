@@ -160,6 +160,30 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
+#pragma mark - UIImageAsset+FWTheme
+
+/*!
+ @brief UIImageAsset主题分类
+ */
+@interface UIImageAsset (FWTheme)
+
+/// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
++ (UIImageAsset *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
+
+/// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
++ (UIImageAsset *)fwThemeAsset:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
+
+/// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
+@property (nullable, nonatomic, readonly) UIImage *fwImage;
+
+/// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
+- (nullable UIImage *)fwImageForStyle:(FWThemeStyle)style;
+
+/// 是否是主题图片资源，仅支持判断使用fwTheme创建的图片资源
+@property (nonatomic, assign, readonly) BOOL fwIsThemeAsset;
+
+@end
+
 #pragma mark - NSObject+FWTheme
 
 /*!
@@ -189,8 +213,11 @@ extern NSString *const FWThemeChangedNotification;
 */
 @interface UIImageView (FWTheme)
 
-/// 设置主题图片，自动跟随系统改变，清空时需置为nil
+/// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
 @property (nullable, nonatomic, strong) UIImage *fwThemeImage;
+
+/// 设置主题图片资源，自动跟随系统改变，清空时需置为nil，二选一
+@property (nullable, nonatomic, strong) UIImageAsset *fwThemeAsset;
 
 @end
 
