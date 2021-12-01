@@ -358,6 +358,68 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 @end
 
+#pragma mark - UIImageAsset+FWTheme
+
+@implementation UIImageAsset (FWTheme)
+
++ (UIImageAsset *)fwThemeLight:(UIImage *)light dark:(UIImage *)dark
+{
+    if (@available(iOS 13, *)) {
+        UIImageAsset *asset = [[UIImageAsset alloc] init];
+        if (light) [asset registerImage:light withTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight]];
+        if (dark) [asset registerImage:dark withTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark]];
+        objc_setAssociatedObject(asset, @selector(fwIsThemeAsset), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return asset;
+    } else {
+        return [self fwThemeAsset:^UIImage * (FWThemeStyle style) {
+            return style == FWThemeStyleDark ? dark : light;
+        }];
+    }
+}
+
++ (UIImageAsset *)fwThemeAsset:(UIImage * _Nullable (^)(FWThemeStyle))provider
+{
+    UIImageAsset *asset = [[UIImageAsset alloc] init];
+    asset.fwThemeObject = [FWThemeObject<UIImage *> objectWithProvider:provider];
+    return asset;
+}
+
+- (FWThemeObject<UIImage *> *)fwThemeObject
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeObject));
+}
+
+- (void)setFwThemeObject:(FWThemeObject<UIImage *> *)fwThemeObject
+{
+    objc_setAssociatedObject(self, @selector(fwThemeObject), fwThemeObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIImage *)fwImage
+{
+    return [self fwImageForStyle:FWThemeManager.sharedInstance.style];
+}
+
+- (UIImage *)fwImageForStyle:(FWThemeStyle)style
+{
+    BOOL isThemeAsset = [objc_getAssociatedObject(self, @selector(fwIsThemeAsset)) boolValue];
+    if (isThemeAsset) {
+        if (@available(iOS 13, *)) {
+            UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:style == FWThemeStyleDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight];
+            return [self imageWithTraitCollection:traitCollection];
+        }
+    }
+    
+    return self.fwThemeObject ? [self.fwThemeObject objectForStyle:style] : nil;
+}
+
+- (BOOL)fwIsThemeAsset
+{
+    BOOL isThemeAsset = [objc_getAssociatedObject(self, @selector(fwIsThemeAsset)) boolValue];
+    return isThemeAsset || self.fwThemeObject != nil;
+}
+
+@end
+
 #pragma mark - NSObject+FWTheme
 
 @implementation NSObject (FWTheme)
@@ -510,7 +572,20 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 - (void)setFwThemeImage:(UIImage *)fwThemeImage
 {
     objc_setAssociatedObject(self, @selector(fwThemeImage), fwThemeImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwThemeAsset), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.image = fwThemeImage.fwImage;
+}
+
+- (UIImageAsset *)fwThemeAsset
+{
+    return objc_getAssociatedObject(self, @selector(fwThemeAsset));
+}
+
+- (void)setFwThemeAsset:(UIImageAsset *)fwThemeAsset
+{
+    objc_setAssociatedObject(self, @selector(fwThemeAsset), fwThemeAsset, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fwThemeImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.image = fwThemeAsset.fwImage;
 }
 
 - (void)fwThemeChanged:(FWThemeStyle)style
@@ -519,6 +594,9 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     
     if (self.fwThemeImage && self.fwThemeImage.fwIsThemeImage) {
         self.image = self.fwThemeImage.fwImage;
+    }
+    if (self.fwThemeAsset && self.fwThemeAsset.fwIsThemeAsset) {
+        self.image = self.fwThemeAsset.fwImage;
     }
 }
 
