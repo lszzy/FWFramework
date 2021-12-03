@@ -403,6 +403,12 @@
                 <a href="Constants.html#/c:FWAuthorize.h@FWAuthorizeTypeTracking">FWAuthorizeTypeTracking</a>
               </li>
               <li class="nav-group-task">
+                <a href="Constants.html#/c:@FWFrameworkVersionNumber">FWFrameworkVersionNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Constants.html#/c:@FWFrameworkVersionString">FWFrameworkVersionString</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Constants.html#/c:@FWHeadingUpdatedNotification">FWHeadingUpdatedNotification</a>
               </li>
               <li class="nav-group-task">
@@ -948,6 +954,73 @@
           <section class="section task-group-section">
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/UIScreen%2BFWAdaptive"></a>
+                <a name="//apple_ref/swift/Section/UIScreen+FWAdaptive" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UIScreen%2BFWAdaptive"></a>
+                  <h3 class="section-name"><span>UIScreen+FWAdaptive</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:FWAdaptive.h@F@FWFlatScale"></a>
+                    <a name="//apple_ref/swift/Function/FWFlatScale" class="dashAnchor"></a>
+                    <a class="token" href="#/c:FWAdaptive.h@F@FWFlatScale">FWFlatScale</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="kr">inline</span> <span class="n">CGFloat</span> <span class="n">FWFlatScale</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">floatValue</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">scale</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:FWAdaptive.h@F@FWFlatValue"></a>
+                    <a name="//apple_ref/swift/Function/FWFlatValue" class="dashAnchor"></a>
+                    <a class="token" href="#/c:FWAdaptive.h@F@FWFlatValue">FWFlatValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="kr">inline</span> <span class="n">CGFloat</span> <span class="n">FWFlatValue</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">floatValue</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/FWSafeType"></a>
                 <a name="//apple_ref/swift/Section/FWSafeType" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -1041,6 +1114,60 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:@F@FWIconNamed"></a>
+                    <a name="//apple_ref/swift/Function/FWIconNamed" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@F@FWIconNamed">FWIconNamed</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定名称和大小初始化图标对象</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n"><a href="Classes/FWIcon.html">FWIcon</a></span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">FWIconNamed</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">name</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">size</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@F@FWIconImage"></a>
+                    <a name="//apple_ref/swift/Function/FWIconImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@F@FWIconImage">FWIconImage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定名称和大小初始化图标图像</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">FWIconImage</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">name</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">size</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@F@FWLocationStringWithCoordinate"></a>
                     <a name="//apple_ref/swift/Function/FWLocationStringWithCoordinate" class="dashAnchor"></a>
                     <a class="token" href="#/c:@F@FWLocationStringWithCoordinate">FWLocationStringWithCoordinate</a>
@@ -1088,127 +1215,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">CLLocationCoordinate2D</span>
 <span class="n">FWLocationCoordinateWithString</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">string</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/UIScreen%2BFWAdaptive"></a>
-                <a name="//apple_ref/swift/Section/UIScreen+FWAdaptive" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/UIScreen%2BFWAdaptive"></a>
-                  <h3 class="section-name"><span>UIScreen+FWAdaptive</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:FWAdaptive.h@F@FWFlatScale"></a>
-                    <a name="//apple_ref/swift/Function/FWFlatScale" class="dashAnchor"></a>
-                    <a class="token" href="#/c:FWAdaptive.h@F@FWFlatScale">FWFlatScale</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="kr">inline</span> <span class="n">CGFloat</span> <span class="n">FWFlatScale</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">floatValue</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">scale</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:FWAdaptive.h@F@FWFlatValue"></a>
-                    <a name="//apple_ref/swift/Function/FWFlatValue" class="dashAnchor"></a>
-                    <a class="token" href="#/c:FWAdaptive.h@F@FWFlatValue">FWFlatValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="kr">inline</span> <span class="n">CGFloat</span> <span class="n">FWFlatValue</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">floatValue</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@F@FWIconNamed"></a>
-                    <a name="//apple_ref/swift/Function/FWIconNamed" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@F@FWIconNamed">FWIconNamed</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>指定名称和大小初始化图标对象</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n"><a href="Classes/FWIcon.html">FWIcon</a></span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">FWIconNamed</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">name</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">size</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@F@FWIconImage"></a>
-                    <a name="//apple_ref/swift/Function/FWIconImage" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@F@FWIconImage">FWIconImage</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>指定名称和大小初始化图标图像</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">FWIconImage</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">name</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">size</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>

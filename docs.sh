@@ -1,20 +1,20 @@
 #! /bin/bash
 
+framework_name=FWFramework
+
 rm -rf docs
 mkdir docs
+mkdir "docs/$framework_name"
 
-sourcekitten doc -- -project _Pods.xcodeproj -target FWFramework > docs/FWSwift.json
-sourcekitten doc --objc FWFramework/Classes/Kernel/FWFramework.h -- -x objective-c -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) -I $(pwd) -fmodules > docs/FWKernel.json
-sourcekitten doc --objc FWFramework/Classes/Service/FWNotification.h -- -x objective-c -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) -I $(pwd) -fmodules > docs/FWService.json
-sourcekitten doc --objc FWFramework/Classes/Toolkit/FWToolkit.h -- -x objective-c -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) -I $(pwd) -fmodules > docs/FWToolkit.json
-jazzy --sourcekitten-sourcefile docs/FWKernel.json,docs/FWService.json,docs/FWToolkit.json,docs/FWSwift.json
+umbrella_name="$framework_name-umbrella.h"
+umbrella_path=Example/Pods/Target\ Support\ Files
+cp "$umbrella_path/$framework_name/$umbrella_name" "docs/$framework_name/"
+find "$framework_name/Classes" -type f ! -regex '*.h' -name '*.h' \
+    -exec cp {} "docs/$framework_name/" \;
 
-rm -f docs/FWSwift.json
-rm -f docs/FWKernel.json
-rm -f docs/FWService.json
-rm -f docs/FWToolkit.json
+sourcekitten doc -- -project _Pods.xcodeproj -target $framework_name > "docs/$framework_name/swift.json"
+sourcekitten doc --objc "docs/$framework_name/$umbrella_name" -- -x objective-c -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) -I $(pwd) -fmodules > "docs/$framework_name/objc.json"
+jazzy --sourcekitten-sourcefile "docs/$framework_name/swift.json","docs/$framework_name/objc.json"
 
-cp README.md docs/README.md
-cp README_CN.md docs/README_CN.md
-cp CHANGELOG.md docs/CHANGELOG.md
-cp CHANGELOG_CN.md docs/CHANGELOG_CN.md
+rm -rf "docs/$framework_name"
+cp *.md docs/
