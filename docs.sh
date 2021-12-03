@@ -14,8 +14,8 @@ rm -f docs/FWKernel.json
 rm -f docs/FWService.json
 rm -f docs/FWToolkit.json
 
-ln -s README.md docs/README.md
-ln -s README_CN.md docs/README_CN.md
-ln -s CHANGELOG.md docs/CHANGELOG.md
-ln -s CHANGELOG_CN.md docs/CHANGELOG_CN.md
+cp README.md docs/README.md
+cp README_CN.md docs/README_CN.md
+cp CHANGELOG.md docs/CHANGELOG.md
+cp CHANGELOG_CN.md docs/CHANGELOG_CN.md
 
