@@ -17,7 +17,7 @@
     <a title="UIApplication(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,12 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>UIApplication+FWToolkit</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+
+</div>
 
           </section>
           <section class="section task-group-section">

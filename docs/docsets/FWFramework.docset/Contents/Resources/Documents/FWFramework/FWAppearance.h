@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWAppearance.h
  @indexgroup FWFramework
- @brief      FWAppearance
+      FWAppearance
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
@@ -11,9 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @brief UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力
- @discussion 系统默认时机是在didMoveToWindow处理UIAppearance
+/**
+ UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力
+ @note 系统默认时机是在didMoveToWindow处理UIAppearance
  
  @see https://github.com/Tencent/QMUI_iOS
  */

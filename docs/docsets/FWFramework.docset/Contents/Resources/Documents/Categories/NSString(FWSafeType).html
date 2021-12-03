@@ -17,7 +17,7 @@
     <a title="NSString(FWSafeType) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,7 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>NSString类型安全分类</p>
 
           </section>
           <section class="section task-group-section">
@@ -974,7 +974,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>去掉空白字符</p>
 
                       </div>
                       <div class="declaration">
@@ -984,6 +984,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">fwTrimString</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>trim字符串</p>
                       </div>
                     </section>
                   </div>
@@ -1001,7 +1005,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>过滤JSON解码特殊字符</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
+规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
+参考：<a href="https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m">https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m</a></p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1011,6 +1022,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">fwEscapeJson</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>JSON过滤字符串</p>
                       </div>
                     </section>
                   </div>
@@ -1028,7 +1043,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>转换为UTF8编码数据</p>
 
                       </div>
                       <div class="declaration">
@@ -1038,6 +1053,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSData</span> <span class="o">*</span><span class="n">fwUTF8Data</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>UTF8编码数据</p>
                       </div>
                     </section>
                   </div>
@@ -1055,7 +1074,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>转换为NSURL</p>
 
                       </div>
                       <div class="declaration">
@@ -1065,6 +1084,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSURL</span> <span class="o">*</span><span class="n">fwURL</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>NSURL</p>
                       </div>
                     </section>
                   </div>
@@ -1082,7 +1105,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>转换为NSNumber</p>
 
                       </div>
                       <div class="declaration">
@@ -1092,6 +1115,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="n">fwNumber</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>NSNumber</p>
                       </div>
                     </section>
                   </div>
@@ -1109,7 +1136,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>从指定位置截取子串</p>
 
                       </div>
                       <div class="declaration">
@@ -1119,6 +1146,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwSubstringFromIndex</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">from</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>起始位置</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>子串</p>
                       </div>
                     </section>
                   </div>
@@ -1136,7 +1186,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>截取子串到指定位置</p>
 
                       </div>
                       <div class="declaration">
@@ -1146,6 +1196,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwSubstringToIndex</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">to</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>to</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>结束位置</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>子串</p>
                       </div>
                     </section>
                   </div>
@@ -1163,7 +1236,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>截取指定范围的子串</p>
 
                       </div>
                       <div class="declaration">
@@ -1173,6 +1246,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwSubstringWithRange</span><span class="p">:(</span><span class="n">NSRange</span><span class="p">)</span><span class="nv">range</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>range</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定范围</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>子串</p>
                       </div>
                     </section>
                   </div>

@@ -18,7 +18,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIApplication+FWAdaptive",
           "key.doc.file" : "docs\/FWFramework\/FWAdaptive.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 26,
           "key.filepath" : "docs\/FWFramework\/FWAdaptive.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -64,7 +66,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIDevice+FWAdaptive",
           "key.doc.file" : "docs\/FWFramework\/FWAdaptive.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 73,
           "key.filepath" : "docs\/FWFramework\/FWAdaptive.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -542,7 +546,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIScreen+FWAdaptive",
           "key.doc.file" : "docs\/FWFramework\/FWAdaptive.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 173,
           "key.filepath" : "docs\/FWFramework\/FWAdaptive.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -876,7 +882,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIViewController+FWAdaptive",
           "key.doc.file" : "docs\/FWFramework\/FWAdaptive.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 220,
           "key.filepath" : "docs\/FWFramework\/FWAdaptive.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -1009,7 +1017,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力\n- note: 系统默认时机是在didMoveToWindow处理UIAppearance\n\n- see: https:\/\/github.com\/Tencent\/QMUI_iOS",
           "key.doc.file" : "docs\/FWFramework\/FWAppearance.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 20,
           "key.filepath" : "docs\/FWFramework\/FWAppearance.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -1098,7 +1108,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 19,
+          "key.doc.comment" : "权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明\n- note: 开启指定权限方法：\n一、Pod项目：添加pod时同时指定\npod 'FWFramework', :subspecs => ['Component-Contacts']\n二、Pod项目：在Podfile最后添加\npost_install do |installer_representation|\n   installer_representation.pods_project.targets.each do |target|\n       if target.name == 'FWFramework'\n           target.build_configurations.each do |config|\n               config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']\n               config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FWCOMPONENT_CONTACTS_ENABLED=1'\n           end\n       end\n   end\nend\n三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWCOMPONENT_CONTACTS_ENABLED=1",
           "key.doc.file" : "docs\/FWFramework\/FWAuthorize.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 33,
           "key.filepath" : "docs\/FWFramework\/FWAuthorize.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -1516,7 +1528,7 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
-          "key.doc.comment" : "@brief 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用\n@discussion 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等",
+          "key.doc.comment" : "权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用\n- note: 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等",
           "key.doc.file" : "docs\/FWFramework\/FWAuthorize.h",
           "key.doc.full_as_xml" : "",
           "key.doc.line" : 95,
@@ -1561,7 +1573,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)\n- note: 如果约束条件完全相同，会自动更新约束而不是重新添加。\n另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用",
           "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -1585,7 +1599,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 43,
+              "key.doc.comment" : "是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO\n- note: 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码\n手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 28,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1601,7 +1617,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "是否启用自动布局",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 33,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1617,7 +1635,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "创建自动布局视图\n\n- returns: 自动布局视图",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 40,
               "key.doc.result_discussion" : [
                 {
@@ -1639,7 +1659,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 45,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -1655,7 +1677,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 12,
+              "key.doc.comment" : "计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 50,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -1671,7 +1695,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 12,
+              "key.doc.comment" : "计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 55,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -1697,7 +1723,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 48,
+              "key.doc.comment" : "设置水平方向抗压缩优先级",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 62,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1713,7 +1741,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 48,
+              "key.doc.comment" : "设置垂直方向抗压缩优先级",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 67,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1729,7 +1759,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 48,
+              "key.doc.comment" : "设置水平方向抗拉伸优先级",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 72,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1745,7 +1777,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 48,
+              "key.doc.comment" : "设置垂直方向抗拉伸优先级",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 77,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1771,7 +1805,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 84,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1787,7 +1823,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "设置视图是否自动收缩，如image为nil，text为nil、@\"\"时自动收缩，默认NO",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 89,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1803,7 +1841,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "设置视图是否隐藏时自动收缩、显示时自动展开，默认NO",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 94,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -1819,7 +1859,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "添加视图的收缩常量，必须先添加才能生效\n\n- see: https:\/\/github.com\/forkingdog\/UIView-FDCollapsibleConstraints",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 101,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -1845,7 +1887,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "父视图居中\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 110,
               "key.doc.result_discussion" : [
                 {
@@ -1867,7 +1911,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "父视图居中偏移指定距离\n\n- parameter: offset 偏移距离\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 118,
               "key.doc.parameters" : [
                 {
@@ -1900,7 +1946,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "父视图属性居中\n\n- parameter: axis 居中属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 126,
               "key.doc.parameters" : [
                 {
@@ -1933,7 +1981,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "父视图属性居中偏移指定距离\n\n- parameter: axis 居中属性\n- parameter: offset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 135,
               "key.doc.parameters" : [
                 {
@@ -1975,7 +2025,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与另一视图居中相同\n\n- parameter: axis 居中属性\n- parameter: otherView 另一视图或UILayoutGuide，下同\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 144,
               "key.doc.parameters" : [
                 {
@@ -2017,7 +2069,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与另一视图居中偏移指定距离\n\n- parameter: axis 居中属性\n- parameter: otherView 另一视图\n- parameter: offset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 154,
               "key.doc.parameters" : [
                 {
@@ -2068,7 +2122,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与另一视图居中指定比例\n\n- parameter: axis 居中属性\n- parameter: otherView 另一视图\n- parameter: multiplier 指定比例\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 164,
               "key.doc.parameters" : [
                 {
@@ -2129,7 +2185,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图四条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 173,
               "key.doc.result_discussion" : [
                 {
@@ -2151,7 +2209,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图四条边属性距离指定距离\n\n- parameter: insets 指定距离insets\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 181,
               "key.doc.parameters" : [
                 {
@@ -2184,7 +2244,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图三条边属性距离指定距离\n\n- parameter: insets 指定距离insets\n- parameter: edge 排除的边\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 190,
               "key.doc.parameters" : [
                 {
@@ -2226,7 +2288,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图水平方向两条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 197,
               "key.doc.result_discussion" : [
                 {
@@ -2248,7 +2312,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图垂直方向两条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 204,
               "key.doc.result_discussion" : [
                 {
@@ -2270,7 +2336,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图边属性相同\n\n- parameter: edge 指定边属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 212,
               "key.doc.parameters" : [
                 {
@@ -2303,7 +2371,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图边属性偏移指定距离\n\n- parameter: edge 指定边属性\n- parameter: inset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 221,
               "key.doc.parameters" : [
                 {
@@ -2345,7 +2415,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图边属性偏移指定距离，指定关系\n\n- parameter: edge 指定边属性\n- parameter: inset 偏移距离\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 231,
               "key.doc.parameters" : [
                 {
@@ -2396,7 +2468,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图边属性相同\n\n- parameter: edge 指定边属性\n- parameter: toEdge 另一视图边属性\n- parameter: otherView 另一视图\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 241,
               "key.doc.parameters" : [
                 {
@@ -2447,7 +2521,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图边属性偏移指定距离\n\n- parameter: edge 指定边属性\n- parameter: toEdge 另一视图边属性\n- parameter: otherView 另一视图\n- parameter: offset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 252,
               "key.doc.parameters" : [
                 {
@@ -2507,7 +2583,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图边属性偏移指定距离，指定关系\n\n- parameter: edge 指定边属性\n- parameter: toEdge 另一视图边属性\n- parameter: otherView 另一视图\n- parameter: offset 偏移距离\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 264,
               "key.doc.parameters" : [
                 {
@@ -2586,7 +2664,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "父视图安全区域居中。iOS11以下使用Superview实现，下同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 273,
               "key.doc.result_discussion" : [
                 {
@@ -2608,7 +2688,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "父视图安全区域居中偏移指定距离。iOS11以下使用Superview实现，下同\n\n- parameter: offset 偏移距离\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 281,
               "key.doc.parameters" : [
                 {
@@ -2641,7 +2723,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "父视图安全区域属性居中\n\n- parameter: axis 居中属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 289,
               "key.doc.parameters" : [
                 {
@@ -2674,7 +2758,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "父视图安全区域属性居中偏移指定距离\n\n- parameter: axis 居中属性\n- parameter: offset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 298,
               "key.doc.parameters" : [
                 {
@@ -2716,7 +2802,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图安全区域四条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 305,
               "key.doc.result_discussion" : [
                 {
@@ -2738,7 +2826,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图安全区域四条边属性距离指定距离\n\n- parameter: insets 指定距离insets\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 313,
               "key.doc.parameters" : [
                 {
@@ -2771,7 +2861,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图安全区域三条边属性距离指定距离\n\n- parameter: insets 指定距离insets\n- parameter: edge 排除的边\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 322,
               "key.doc.parameters" : [
                 {
@@ -2813,7 +2905,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图安全区域水平方向两条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 329,
               "key.doc.result_discussion" : [
                 {
@@ -2835,7 +2929,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "与父视图安全区域垂直方向两条边属性相同\n\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 336,
               "key.doc.result_discussion" : [
                 {
@@ -2857,7 +2953,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图安全区域边属性相同\n\n- parameter: edge 指定边属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 344,
               "key.doc.parameters" : [
                 {
@@ -2890,7 +2988,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图安全区域边属性偏移指定距离\n\n- parameter: edge 指定边属性\n- parameter: inset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 353,
               "key.doc.parameters" : [
                 {
@@ -2932,7 +3032,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与父视图安全区域边属性偏移指定距离，指定关系\n\n- parameter: edge 指定边属性\n- parameter: inset 偏移距离\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 363,
               "key.doc.parameters" : [
                 {
@@ -2993,7 +3095,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "设置宽高尺寸\n\n- parameter: size 尺寸大小\n- returns: 约束数组",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 373,
               "key.doc.parameters" : [
                 {
@@ -3026,7 +3130,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "设置某个尺寸\n\n- parameter: dimension 尺寸属性\n- parameter: size 尺寸大小\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 382,
               "key.doc.parameters" : [
                 {
@@ -3068,7 +3174,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "设置某个尺寸，指定关系\n\n- parameter: dimension 尺寸属性\n- parameter: size 尺寸大小\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 392,
               "key.doc.parameters" : [
                 {
@@ -3119,7 +3227,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与视图自身尺寸属性指定比例\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: multiplier 指定比例\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 402,
               "key.doc.parameters" : [
                 {
@@ -3170,7 +3280,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与视图自身尺寸属性指定比例，指定关系\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: multiplier 指定比例\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 413,
               "key.doc.parameters" : [
                 {
@@ -3230,7 +3342,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图尺寸属性相同\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: otherView 目标视图\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 423,
               "key.doc.parameters" : [
                 {
@@ -3281,7 +3395,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图尺寸属性相差指定大小\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: otherView 目标视图\n- parameter: offset 相差大小\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 434,
               "key.doc.parameters" : [
                 {
@@ -3341,7 +3457,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图尺寸属性相差指定大小，指定关系\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: otherView 目标视图\n- parameter: offset 相差大小\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 446,
               "key.doc.parameters" : [
                 {
@@ -3410,7 +3528,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图尺寸属性指定比例\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 457,
               "key.doc.parameters" : [
                 {
@@ -3470,7 +3590,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图尺寸属性指定比例，指定关系\n\n- parameter: dimension 尺寸属性\n- parameter: toDimension 目标尺寸属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 469,
               "key.doc.parameters" : [
                 {
@@ -3549,7 +3671,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图属性相同\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 481,
               "key.doc.parameters" : [
                 {
@@ -3600,7 +3724,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图属性偏移指定距离\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: offset 偏移距离\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 492,
               "key.doc.parameters" : [
                 {
@@ -3660,7 +3786,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图属性偏移指定距离，指定关系\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: offset 偏移距离\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 504,
               "key.doc.parameters" : [
                 {
@@ -3729,7 +3857,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图属性指定比例\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 515,
               "key.doc.parameters" : [
                 {
@@ -3789,7 +3919,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 25,
+              "key.doc.comment" : "与指定视图属性指定比例，指定关系\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 527,
               "key.doc.parameters" : [
                 {
@@ -3868,7 +4000,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 63,
+              "key.doc.comment" : "最近一条添加或更新的布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 534,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -3884,7 +4018,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与父视图属性的约束\n\n- parameter: attribute 指定属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 542,
               "key.doc.parameters" : [
                 {
@@ -3917,7 +4053,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与父视图属性的约束，指定关系\n\n- parameter: attribute 指定属性\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 551,
               "key.doc.parameters" : [
                 {
@@ -3959,7 +4097,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与父视图安全区域属性的约束\n\n- parameter: attribute 指定属性\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 559,
               "key.doc.parameters" : [
                 {
@@ -3992,7 +4132,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与父视图安全区域属性的约束，指定关系\n\n- parameter: attribute 指定属性\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 568,
               "key.doc.parameters" : [
                 {
@@ -4034,7 +4176,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与指定视图属性的约束\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 578,
               "key.doc.parameters" : [
                 {
@@ -4085,7 +4229,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与指定视图属性的约束，指定关系\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 589,
               "key.doc.parameters" : [
                 {
@@ -4145,7 +4291,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与指定视图属性指定比例的约束\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 600,
               "key.doc.parameters" : [
                 {
@@ -4205,7 +4353,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取添加的与指定视图属性指定比例的约束，指定关系\n\n- parameter: attribute 指定属性\n- parameter: toAttribute 目标视图属性\n- parameter: otherView 目标视图\n- parameter: multiplier 指定比例\n- parameter: relation 约束关系\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 612,
               "key.doc.parameters" : [
                 {
@@ -4284,7 +4434,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "设置约束保存键名，方便更新约束常量\n\n- parameter: constraint 布局约束\n- parameter: key 保存key",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 622,
               "key.doc.parameters" : [
                 {
@@ -4320,7 +4472,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 34,
+              "key.doc.comment" : "获取键名对应约束\n\n- parameter: key 保存key\n- returns: 布局约束",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 630,
               "key.doc.parameters" : [
                 {
@@ -4363,7 +4517,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 70,
+              "key.doc.comment" : "获取当前所有约束，不包含Key\n\n- returns: 约束列表",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 639,
               "key.doc.result_discussion" : [
                 {
@@ -4385,7 +4541,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "移除当前指定约束，不包含Key",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 644,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -4401,7 +4559,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "移除当前所有约束，不包含Key",
               "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 649,
               "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -4431,7 +4591,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "视图链式布局类\n- note: 如果约束条件完全相同，会自动更新约束而不是重新添加。\n另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用",
           "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 661,
           "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -6069,7 +6231,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "视图链式布局分类",
           "key.doc.file" : "docs\/FWFramework\/FWAutoLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 792,
           "key.filepath" : "docs\/FWFramework\/FWAutoLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6140,7 +6304,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api",
           "key.doc.file" : "docs\/FWFramework\/FWBarAppearance.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWBarAppearance.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6393,7 +6559,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api",
           "key.doc.file" : "docs\/FWFramework\/FWBarAppearance.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 61,
           "key.filepath" : "docs\/FWFramework\/FWBarAppearance.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6583,7 +6751,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api\n- note: 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)",
           "key.doc.file" : "docs\/FWFramework\/FWBarAppearance.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 98,
           "key.filepath" : "docs\/FWFramework\/FWBarAppearance.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6819,7 +6989,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "CADisplayLink分类\n- note: 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 20,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6833,7 +7005,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 20,
+              "key.doc.comment" : "创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: target 目标\n- parameter: selector 方法\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 29,
               "key.doc.parameters" : [
                 {
@@ -6875,7 +7049,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 20,
+              "key.doc.comment" : "创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: block 代码块\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 37,
               "key.doc.parameters" : [
                 {
@@ -6908,7 +7084,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 20,
+              "key.doc.comment" : "创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。\n- note: 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]\n\n- parameter: block 代码块\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 46,
               "key.doc.parameters" : [
                 {
@@ -6955,7 +7133,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSTimer分类",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 55,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -6969,7 +7149,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: seconds 时间\n- parameter: target 目标\n- parameter: selector 方法\n- parameter: userInfo 参数\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 67,
               "key.doc.parameters" : [
                 {
@@ -7038,7 +7220,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 77,
               "key.doc.parameters" : [
                 {
@@ -7089,7 +7273,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "创建倒计时定时器\n\n- parameter: seconds 倒计时描述\n- parameter: block 每秒执行block，为0时自动停止\n- returns: 定时器，可手工停止",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 86,
               "key.doc.parameters" : [
                 {
@@ -7131,7 +7317,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。\n- note: 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 97,
               "key.doc.parameters" : [
                 {
@@ -7182,7 +7370,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "创建NSTimer，使用block，默认模式安排到当前的运行循环中\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 107,
               "key.doc.parameters" : [
                 {
@@ -7583,7 +7773,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 176,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -7672,7 +7864,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用不带参数block",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 32,
           "key.filepath" : "docs\/FWFramework\/FWDefine.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -7688,7 +7882,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用id参数block\n\n- parameter: param id参数",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 39,
           "key.doc.parameters" : [
             {
@@ -7715,7 +7911,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用bool参数block\n\n- parameter: isTrue bool参数",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 46,
           "key.doc.parameters" : [
             {
@@ -7742,7 +7940,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用NSInteger参数block\n\n- parameter: index NSInteger参数",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 53,
           "key.doc.parameters" : [
             {
@@ -7769,7 +7969,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用double参数block\n\n- parameter: value double参数",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 60,
           "key.doc.parameters" : [
             {
@@ -7796,7 +7998,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "通用(BOOL,id)参数block\n\n- parameter: isTrue BOOL参数\n- parameter: param id参数",
           "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 68,
           "key.doc.parameters" : [
             {
@@ -7921,7 +8125,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UITableViewCell+FWDynamicLayout",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 22,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -8191,7 +8397,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UITableViewHeaderFooterView+FWDynamicLayout",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 67,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -8345,7 +8553,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现\n\n- see: https:\/\/github.com\/liangdahong\/UITableViewDynamicLayoutCacheHeight",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 102,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -8740,7 +8950,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UICollectionViewCell+FWDynamicLayout",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 172,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -8962,7 +9174,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UICollectionReusableView+FWDynamicLayout",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 219,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -9152,7 +9366,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现",
           "key.doc.file" : "docs\/FWFramework\/FWDynamicLayout.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 268,
           "key.filepath" : "docs\/FWFramework\/FWDynamicLayout.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -10250,7 +10466,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "Foundation对象编码为json字符串\n\n- parameter: object 编码对象\n- returns: json字符串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 29,
               "key.doc.parameters" : [
                 {
@@ -10720,7 +10938,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 22,
+              "key.doc.comment" : "Foundation对象编码为json数据\n\n- parameter: object 编码对象\n- returns: json数据",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 165,
               "key.doc.parameters" : [
                 {
@@ -10753,7 +10973,7 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
-              "key.doc.comment" : "@brief json数据解码为Foundation对象\n\n- returns: Foundation对象",
+              "key.doc.comment" : "json数据解码为Foundation对象\n\n- returns: Foundation对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 172,
@@ -10849,7 +11069,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 30,
+          "key.doc.comment" : "安全数字，不为nil\n\n- parameter: value 参数\n- returns: 数字",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 200,
           "key.doc.parameters" : [
             {
@@ -10882,7 +11104,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 30,
+          "key.doc.comment" : "安全字符串，不为nil\n\n- parameter: value 参数\n- returns: 字符串",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 208,
           "key.doc.parameters" : [
             {
@@ -10915,7 +11139,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 27,
+          "key.doc.comment" : "安全URL，不为nil\n\n- parameter: value 参数\n- returns: URL",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 216,
           "key.doc.parameters" : [
             {
@@ -10958,7 +11184,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSObject类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 223,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -10972,7 +11200,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 46,
+              "key.doc.comment" : "是否是非Null(nil, NSNull)\n\n- returns: 如果为非Null返回YES，为Null返回NO",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 230,
               "key.doc.result_discussion" : [
                 {
@@ -10994,7 +11224,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 46,
+              "key.doc.comment" : "是否是非空对象(nil, NSNull, count为0, length为0)\n\n- returns: 如果是非空对象返回YES，为空对象返回NO",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 237,
               "key.doc.result_discussion" : [
                 {
@@ -11016,7 +11248,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 51,
+              "key.doc.comment" : "检测并转换为NSInteger\n\n- returns: NSInteger",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 244,
               "key.doc.result_discussion" : [
                 {
@@ -11038,7 +11272,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 47,
+              "key.doc.comment" : "检测并转换为Float\n\n- returns: Float",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 251,
               "key.doc.result_discussion" : [
                 {
@@ -11060,7 +11296,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 48,
+              "key.doc.comment" : "检测并转换为Double\n\n- returns: Double",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 258,
               "key.doc.result_discussion" : [
                 {
@@ -11082,7 +11320,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 46,
+              "key.doc.comment" : "检测并转换为Bool\n\n- returns: Bool",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 265,
               "key.doc.result_discussion" : [
                 {
@@ -11104,7 +11344,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 53,
+              "key.doc.comment" : "检测并转换为NSNumber\n\n- returns: NSNumber",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 272,
               "key.doc.result_discussion" : [
                 {
@@ -11126,7 +11368,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "检测并转换为NSString\n\n- returns: NSString",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 279,
               "key.doc.result_discussion" : [
                 {
@@ -11148,7 +11392,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 51,
+              "key.doc.comment" : "检测并转换为NSDate\n\n- returns: NSDate",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 286,
               "key.doc.result_discussion" : [
                 {
@@ -11170,7 +11416,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 51,
+              "key.doc.comment" : "检测并转换为NSData\n\n- returns: NSData",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 293,
               "key.doc.result_discussion" : [
                 {
@@ -11192,7 +11440,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 52,
+              "key.doc.comment" : "检测并转换为NSArray\n\n- returns: NSArray",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 300,
               "key.doc.result_discussion" : [
                 {
@@ -11214,7 +11464,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "检测并转换为NSMutableArray\n\n- returns: NSMutableArray",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 307,
               "key.doc.result_discussion" : [
                 {
@@ -11236,7 +11488,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 57,
+              "key.doc.comment" : "检测并转换为NSDictionary\n\n- returns: NSDictionary",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 314,
               "key.doc.result_discussion" : [
                 {
@@ -11258,7 +11512,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 64,
+              "key.doc.comment" : "检测并转换为NSMutableDictionary\n\n- returns: NSMutableDictionary",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 321,
               "key.doc.result_discussion" : [
                 {
@@ -11280,7 +11536,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "检测并转换为指定Class对象\n\n- returns: 指定Class对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 328,
               "key.doc.result_discussion" : [
                 {
@@ -11316,7 +11574,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSNumber类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 337,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11330,7 +11590,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "比较NSNumber是否相等，如果参数为nil，判定为不相等\n\n- parameter: number 比较的number\n- returns: 是否相等",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 345,
               "key.doc.parameters" : [
                 {
@@ -11363,7 +11625,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 23,
+              "key.doc.comment" : "比较NSNumber大小，如果参数为nil，判定为NSOrderedDescending\n\n- parameter: number 比较的number\n- returns: 比较结果",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 353,
               "key.doc.parameters" : [
                 {
@@ -11410,7 +11674,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSString类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 362,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11424,7 +11690,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 49,
+              "key.doc.comment" : "去掉空白字符\n\n- returns: trim字符串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 369,
               "key.doc.result_discussion" : [
                 {
@@ -11446,7 +11714,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 49,
+              "key.doc.comment" : "过滤JSON解码特殊字符\n- note: 兼容\\uD800-\\uDFFF引起JSON解码报错3840问题，不报错时无需调用\n规则：只允许以\\uD800-\\uDBFF高位开头，紧跟\\uDC00-\\uDFFF低位；其他全不允许\n参考：https:\/\/github.com\/SBJson\/SBJson\/blob\/trunk\/Classes\/SBJson5StreamTokeniser.m\n\n- returns: JSON过滤字符串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 379,
               "key.doc.result_discussion" : [
                 {
@@ -11468,7 +11738,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "转换为UTF8编码数据\n\n- returns: UTF8编码数据",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 386,
               "key.doc.result_discussion" : [
                 {
@@ -11490,7 +11762,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 56,
+              "key.doc.comment" : "转换为NSURL\n\n- returns: NSURL",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 393,
               "key.doc.result_discussion" : [
                 {
@@ -11512,7 +11786,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 53,
+              "key.doc.comment" : "转换为NSNumber\n\n- returns: NSNumber",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 400,
               "key.doc.result_discussion" : [
                 {
@@ -11534,7 +11810,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "从指定位置截取子串\n\n- parameter: from 起始位置\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 408,
               "key.doc.parameters" : [
                 {
@@ -11567,7 +11845,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "截取子串到指定位置\n\n- parameter: to 结束位置\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 416,
               "key.doc.parameters" : [
                 {
@@ -11600,7 +11880,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "截取指定范围的子串\n\n- parameter: range 指定范围\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 424,
               "key.doc.parameters" : [
                 {
@@ -11647,7 +11929,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSData类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 433,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11661,7 +11945,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "转换为UTF8编码字符串\n\n- returns: UTF8编码字符串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 440,
               "key.doc.result_discussion" : [
                 {
@@ -11697,7 +11983,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSNull分类，解决值为NSNull时调用不存在方法崩溃问题，如JSON中包含null\n- note: 默认调试环境不处理崩溃，正式环境才处理崩溃，尽量开发阶段避免此问题\n\n- see: https:\/\/github.com\/nicklockwood\/NullSafe",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 452,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11723,7 +12011,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSURL类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 461,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11823,7 +12113,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSArray类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 482,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11837,7 +12129,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "安全获取对象\n\n- parameter: index 索引\n- returns: 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 490,
               "key.doc.parameters" : [
                 {
@@ -11870,7 +12164,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 23,
+              "key.doc.comment" : "安全获取子数组\n\n- parameter: range 范围\n- returns: 对象数组",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 498,
               "key.doc.parameters" : [
                 {
@@ -11917,7 +12213,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSMutableArray类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 507,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -11931,7 +12229,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全添加对象\n\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 514,
               "key.doc.parameters" : [
                 {
@@ -11958,7 +12258,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全移除指定索引对象\n\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 521,
               "key.doc.parameters" : [
                 {
@@ -11985,7 +12287,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全插入对象到指定位置\n\n- parameter: object 对象\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 529,
               "key.doc.parameters" : [
                 {
@@ -12021,7 +12325,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全替换对象到指定位置\n\n- parameter: index 索引\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 537,
               "key.doc.parameters" : [
                 {
@@ -12057,7 +12363,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全移除子数组\n\n- parameter: range 范围",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 544,
               "key.doc.parameters" : [
                 {
@@ -12084,7 +12392,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全插入数组到指定位置\n\n- parameter: objects 要插入的数组\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 552,
               "key.doc.parameters" : [
                 {
@@ -12134,7 +12444,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSDictionary类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 561,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12148,7 +12460,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "安全读取对象（过滤NSNull）\n\n- parameter: key 键名\n- returns: 键值",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 569,
               "key.doc.parameters" : [
                 {
@@ -12195,7 +12509,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSMutableDictionary类型安全分类",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 578,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12209,7 +12525,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全移除指定键名\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 585,
               "key.doc.parameters" : [
                 {
@@ -12236,7 +12554,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "安全设置对象（过滤NSNull）\n\n- parameter: object 键值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 593,
               "key.doc.parameters" : [
                 {
@@ -12293,7 +12613,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSArray+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12393,7 +12715,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSAttributedString+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 40,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12493,7 +12817,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSData+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 61,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12593,7 +12919,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSDate+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 82,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12765,7 +13093,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSDictionary+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 115,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12847,7 +13177,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSObject+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 133,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -12911,7 +13243,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSString+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 148,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -13029,7 +13363,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSTimer+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 172,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -13111,7 +13447,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSUserDefaults+FWFoundation",
           "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 190,
           "key.filepath" : "docs\/FWFramework\/FWFoundation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -13283,7 +13621,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "字体图标抽象基类，子类需继承\n- note: Foundation icons: https:\/\/zurb.com\/playground\/foundation-icon-fonts-3#allicons\nFontAwesome: https:\/\/fontawesome.com\/\nionicons: https:\/\/ionic.io\/ionicons\/\nOcticons: https:\/\/primer.style\/octicons\/\nMaterial: https:\/\/google.github.io\/material-design-icons\/#icons-for-ios\n\n- see: https:\/\/github.com\/PrideChung\/FontAwesomeKit",
           "key.doc.file" : "docs\/FWFramework\/FWIcon.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 33,
           "key.filepath" : "docs\/FWFramework\/FWIcon.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -14553,7 +14893,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "单例模式",
               "key.doc.file" : "docs\/FWFramework\/FWKeychain.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 17,
               "key.filepath" : "docs\/FWFramework\/FWKeychain.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -14752,7 +15094,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见Bundle分类\n- note: 如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。\n如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value\n当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能",
           "key.doc.file" : "docs\/FWFramework\/FWLanguage.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 29,
           "key.filepath" : "docs\/FWFramework\/FWLanguage.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -14995,7 +15339,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "加载器，处理swift不支持load方法问题\n- note: 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1\/200)，使用简单\n   使用方法：新增FWLoader扩展objc类方法，以load开头即会自动调用，注意方法名不要重复，建议load+类名+扩展名",
           "key.doc.file" : "docs\/FWFramework\/FWLoader.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWLoader.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -15210,7 +15556,7 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
-          "key.doc.comment" : "@brief 位置服务\n@discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项\n如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项\niOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器",
+          "key.doc.comment" : "位置服务\n- note: 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项\n如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项\niOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器",
           "key.doc.file" : "docs\/FWFramework\/FWLocation.h",
           "key.doc.full_as_xml" : "",
           "key.doc.line" : 35,
@@ -15491,7 +15837,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 32,
+          "key.doc.comment" : "日志类型定义\n\n@const FWLogTypeError 错误类型，0...00001\n@const FWLogTypeWarn 警告类型，0...00010\n@const FWLogTypeInfo 信息类型，0...00100\n@const FWLogTypeDebug 调试类型，0...01000\n@const FWLogTypeTrace 跟踪类型，0...10000",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 65,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -15507,7 +15855,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 32,
+          "key.doc.comment" : "日志类型定义\n\n@const FWLogTypeError 错误类型，0...00001\n@const FWLogTypeWarn 警告类型，0...00010\n@const FWLogTypeInfo 信息类型，0...00100\n@const FWLogTypeDebug 调试类型，0...01000\n@const FWLogTypeTrace 跟踪类型，0...10000",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 65,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.enum",
@@ -15605,7 +15955,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 29,
+          "key.doc.comment" : "日志级别定义\n\n@const FWLogLevelOff 关闭日志，0...00000\n@const FWLogLevelError 错误以上级别，0...00001\n@const FWLogLevelWarn 警告以上级别，0...00011\n@const FWLogLevelInfo 信息以上级别，0...00111\n@const FWLogLevelDebug 调试以上级别，0...01111\n@const FWLogLevelTrace 跟踪以上级别，0...11111\n@const FWLogLevelAll 所有级别，1...11111",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 84,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -15621,7 +15973,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 29,
+          "key.doc.comment" : "日志级别定义\n\n@const FWLogLevelOff 关闭日志，0...00000\n@const FWLogLevelError 错误以上级别，0...00001\n@const FWLogLevelWarn 警告以上级别，0...00011\n@const FWLogLevelInfo 信息以上级别，0...00111\n@const FWLogLevelDebug 调试以上级别，0...01111\n@const FWLogLevelTrace 跟踪以上级别，0...11111\n@const FWLogLevelAll 所有级别，1...11111",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 84,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.enum",
@@ -15751,7 +16105,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 99,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -15765,7 +16121,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 49,
+              "key.doc.comment" : "全局日志级别，默认调试为All，正式为Off",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 102,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -15781,7 +16139,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "跟踪日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 109,
               "key.doc.parameters" : [
                 {
@@ -15808,7 +16168,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "调试日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 116,
               "key.doc.parameters" : [
                 {
@@ -15835,7 +16197,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "信息日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 123,
               "key.doc.parameters" : [
                 {
@@ -15862,7 +16226,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "警告日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 130,
               "key.doc.parameters" : [
                 {
@@ -15889,7 +16255,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "错误日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 137,
               "key.doc.parameters" : [
                 {
@@ -15916,7 +16284,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "记录类型日志\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 145,
               "key.doc.parameters" : [
                 {
@@ -15966,7 +16336,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 11,
+          "key.doc.comment" : "日志插件协议",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 154,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
@@ -15980,7 +16352,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "记录日志协议方法\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 164,
               "key.doc.parameters" : [
                 {
@@ -16030,7 +16404,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "默认NSLog日志插件",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 173,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -16101,7 +16477,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 11,
+          "key.doc.comment" : "业务模块协议，各业务必须实现",
           "key.doc.file" : "docs\/FWFramework\/FWMediator.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 30,
           "key.filepath" : "docs\/FWFramework\/FWMediator.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
@@ -16191,7 +16569,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计\n\n- see: https:\/\/github.com\/youzan\/Bifrost",
           "key.doc.file" : "docs\/FWFramework\/FWMediator.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 57,
           "key.filepath" : "docs\/FWFramework\/FWMediator.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -16363,7 +16743,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "业务模块Bundle基类，各模块可继承",
           "key.doc.file" : "docs\/FWFramework\/FWMediator.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 90,
           "key.filepath" : "docs\/FWFramework\/FWMediator.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -16534,7 +16916,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "点对点消息分类",
           "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 61,
           "key.filepath" : "docs\/FWFramework\/FWMessage.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -16558,7 +16942,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name  消息名称\n- parameter: block 消息句柄\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 72,
               "key.doc.parameters" : [
                 {
@@ -16600,7 +16986,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   消息名称\n- parameter: object 消息对象，值为nil时表示所有\n- parameter: block  消息句柄\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 82,
               "key.doc.parameters" : [
                 {
@@ -16651,7 +17039,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   消息名称\n- parameter: target 消息目标\n- parameter: action 目标动作，参数为通知对象\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 92,
               "key.doc.parameters" : [
                 {
@@ -16702,7 +17092,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   消息名称\n- parameter: object 消息对象，值为nil时表示所有\n- parameter: target 消息目标\n- parameter: action 目标动作，参数为通知对象\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 103,
               "key.doc.parameters" : [
                 {
@@ -16762,7 +17154,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个点对点消息指定监听\n\n- parameter: name   消息名称\n- parameter: target 消息目标\n- parameter: action 目标动作",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 112,
               "key.doc.parameters" : [
                 {
@@ -16807,7 +17201,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象点对点消息指定监听\n\n- parameter: name   消息名称\n- parameter: object 消息对象，值为nil时表示所有\n- parameter: target 消息目标\n- parameter: action 目标动作",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 122,
               "key.doc.parameters" : [
                 {
@@ -16861,7 +17257,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象点对点消息指定监听\n\n- parameter: name       消息名称\n- parameter: identifier 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 130,
               "key.doc.parameters" : [
                 {
@@ -16897,7 +17295,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个点对点消息所有监听\n\n- parameter: name 消息名称",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 137,
               "key.doc.parameters" : [
                 {
@@ -16924,7 +17324,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象点对点消息所有监听\n\n- parameter: name   消息名称\n- parameter: object 消息对象，值为nil时表示所有",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 145,
               "key.doc.parameters" : [
                 {
@@ -16960,7 +17362,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除所有点对点消息监听",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 150,
               "key.filepath" : "docs\/FWFramework\/FWMessage.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -16986,7 +17390,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送类点对点消息\n\n- parameter: name 消息名称\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 160,
               "key.doc.parameters" : [
                 {
@@ -17022,7 +17428,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送类点对点消息，附带对象\n\n- parameter: name   消息名称\n- parameter: object 消息对象\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 169,
               "key.doc.parameters" : [
                 {
@@ -17067,7 +17475,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送类点对点消息，附带对象和用户信息\n\n- parameter: name     消息名称\n- parameter: object   消息对象\n- parameter: userInfo 用户信息\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 179,
               "key.doc.parameters" : [
                 {
@@ -17121,7 +17531,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送点对点消息\n\n- parameter: name 消息名称\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 187,
               "key.doc.parameters" : [
                 {
@@ -17157,7 +17569,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送点对点消息，附带对象\n\n- parameter: name   消息名称\n- parameter: object 消息对象\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 196,
               "key.doc.parameters" : [
                 {
@@ -17202,7 +17616,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送点对点消息，附带对象和用户信息\n\n- parameter: name     消息名称\n- parameter: object   消息对象\n- parameter: userInfo 用户信息\n- parameter: receiver 消息接收者",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 206,
               "key.doc.parameters" : [
                 {
@@ -17270,7 +17686,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "广播通知分类",
           "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 215,
           "key.filepath" : "docs\/FWFramework\/FWMessage.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -17294,7 +17712,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个广播通知，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name  通知名称\n- parameter: block 通知句柄\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 226,
               "key.doc.parameters" : [
                 {
@@ -17336,7 +17756,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   通知名称\n- parameter: object 通知对象，值为nil时表示所有\n- parameter: block  通知句柄\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 236,
               "key.doc.parameters" : [
                 {
@@ -17387,7 +17809,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个广播通知，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   通知名称\n- parameter: target 通知目标\n- parameter: action 目标动作，参数为通知对象\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 246,
               "key.doc.parameters" : [
                 {
@@ -17438,7 +17862,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: name   通知名称\n- parameter: object 通知对象，值为nil时表示所有\n- parameter: target 通知目标\n- parameter: action 目标动作，参数为通知对象\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 257,
               "key.doc.parameters" : [
                 {
@@ -17498,7 +17924,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个广播通知指定监听\n\n- parameter: name   通知名称\n- parameter: target 通知目标\n- parameter: action 目标动作",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 266,
               "key.doc.parameters" : [
                 {
@@ -17543,7 +17971,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象广播通知指定监听\n\n- parameter: name   通知名称\n- parameter: object 通知对象，值为nil时表示所有\n- parameter: target 通知目标\n- parameter: action 目标动作",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 276,
               "key.doc.parameters" : [
                 {
@@ -17597,7 +18027,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象广播通知指定监听\n\n- parameter: name       通知名称\n- parameter: identifier 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 284,
               "key.doc.parameters" : [
                 {
@@ -17633,7 +18065,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个广播通知所有监听\n\n- parameter: name 通知名称",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 291,
               "key.doc.parameters" : [
                 {
@@ -17660,7 +18094,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个指定对象广播通知所有监听\n\n- parameter: name   通知名称\n- parameter: object 通知对象，值为nil时表示所有",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 299,
               "key.doc.parameters" : [
                 {
@@ -17696,7 +18132,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除所有广播通知监听",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 304,
               "key.filepath" : "docs\/FWFramework\/FWMessage.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -17722,7 +18160,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知\n\n- parameter: name 通知名称",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 313,
               "key.doc.parameters" : [
                 {
@@ -17749,7 +18189,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知，附带对象\n\n- parameter: name   通知名称\n- parameter: object 通知对象",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 321,
               "key.doc.parameters" : [
                 {
@@ -17785,7 +18227,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知，附带对象和用户信息\n\n- parameter: name     通知名称\n- parameter: object   通知对象\n- parameter: userInfo 用户信息",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 330,
               "key.doc.parameters" : [
                 {
@@ -17830,7 +18274,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知\n\n- parameter: name 通知名称",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 337,
               "key.doc.parameters" : [
                 {
@@ -17857,7 +18303,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知，附带对象\n\n- parameter: name   通知名称\n- parameter: object 通知对象",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 345,
               "key.doc.parameters" : [
                 {
@@ -17893,7 +18341,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "发送广播通知，附带对象和用户信息\n\n- parameter: name     通知名称\n- parameter: object   通知对象\n- parameter: userInfo 用户信息",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 354,
               "key.doc.parameters" : [
                 {
@@ -17952,7 +18402,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "KVO属性监听分类",
           "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 363,
           "key.filepath" : "docs\/FWFramework\/FWMessage.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -17966,7 +18418,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听对象某个属性，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: property 属性名称\n- parameter: block    目标句柄，block参数依次为object、优化的change字典(不含NSNull)\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 372,
               "key.doc.parameters" : [
                 {
@@ -18008,7 +18462,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 24,
+              "key.doc.comment" : "监听对象某个属性，对象释放时自动移除监听，添加多次执行多次\n\n- parameter: property 属性名称\n- parameter: target   目标对象\n- parameter: action   目标动作，action参数依次为object、优化的change字典(不含NSNull)\n- returns: 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 382,
               "key.doc.parameters" : [
                 {
@@ -18059,7 +18515,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个属性指定监听\n\n- parameter: property 属性名称\n- parameter: target   目标对象，值为nil时移除所有对象(同UIControl)\n- parameter: action   目标动作，值为nil时移除所有动作(同UIControl)",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 391,
               "key.doc.parameters" : [
                 {
@@ -18104,7 +18562,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个属性指定监听\n\n- parameter: property   属性名称\n- parameter: identifier 监听唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 399,
               "key.doc.parameters" : [
                 {
@@ -18140,7 +18600,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除某个属性所有监听\n\n- parameter: property 属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 406,
               "key.doc.parameters" : [
                 {
@@ -18167,7 +18629,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "手工移除所有属性所有监听",
               "key.doc.file" : "docs\/FWFramework\/FWMessage.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 411,
               "key.filepath" : "docs\/FWFramework\/FWMessage.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -18204,7 +18668,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "窗口导航分类",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -18394,7 +18860,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "控制器导航分类",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 55,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -18458,7 +18926,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "视图控制器工作流分类",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 70,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -18472,7 +18942,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 39,
+              "key.doc.comment" : "自定义工作流名称，支持二级(\".\"分隔)；默认返回小写类名(去掉ViewController、Controller)",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 73,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -18492,7 +18964,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "导航控制器工作流分类",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 80,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -18506,7 +18980,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
+              "key.doc.comment" : "当前最外层工作流名称，即topViewController的工作流名称\n\n- returns: 工作流名称",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 87,
               "key.doc.result_discussion" : [
                 {
@@ -18528,7 +19004,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "push控制器，并清理最外层工作流（不属于工作流则不清理）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 96,
               "key.doc.parameters" : [
                 {
@@ -18564,7 +19042,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "push控制器，并清理非根控制器（只保留根控制器）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 105,
               "key.doc.parameters" : [
                 {
@@ -18600,7 +19080,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n\n- parameter: viewController push的控制器\n- parameter: workflows 指定工作流\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 115,
               "key.doc.parameters" : [
                 {
@@ -18645,7 +19127,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）\n\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 123,
               "key.doc.parameters" : [
                 {
@@ -18672,7 +19156,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4\n\n- parameter: workflows 指定工作流\n- parameter: animated  是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 132,
               "key.doc.parameters" : [
                 {
@@ -18735,7 +19221,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "通知管理器",
           "key.doc.file" : "docs\/FWFramework\/FWNotification.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 24,
           "key.filepath" : "docs\/FWFramework\/FWNotification.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -18749,7 +19237,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 63,
+              "key.doc.comment" : "单例模式",
               "key.doc.file" : "docs\/FWFramework\/FWNotification.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 27,
               "key.filepath" : "docs\/FWFramework\/FWNotification.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19106,7 +19596,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)\n- note: 和Mediator对比如下：\n   Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等\n   Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等",
           "key.doc.file" : "docs\/FWFramework\/FWPlugin.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 48,
           "key.filepath" : "docs\/FWFramework\/FWPlugin.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -19249,7 +19741,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "弱引用代理类，用于解决NSTimer和CADisplayLink中的循环引用target问题(默认NSTimer会强引用target,直到invalidate)",
           "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWProxy.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -19263,7 +19757,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 52,
+              "key.doc.comment" : "原target对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 22,
               "key.filepath" : "docs\/FWFramework\/FWProxy.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19279,7 +19775,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化代理对象\n\n- parameter: target 原target对象\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 30,
               "key.doc.parameters" : [
                 {
@@ -19312,7 +19810,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化代理对象\n\n- parameter: target 原target对象\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 38,
               "key.doc.parameters" : [
                 {
@@ -19359,7 +19859,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "弱引用对象容器类，用于解决关联对象weak引用等",
           "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 47,
           "key.filepath" : "docs\/FWFramework\/FWProxy.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -19423,7 +19925,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "Block代理\n\n- see: https:\/\/github.com\/BlocksKit\/BlocksKit",
           "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 64,
           "key.filepath" : "docs\/FWFramework\/FWProxy.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -19437,7 +19941,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 42,
+              "key.doc.comment" : "只读block",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 67,
               "key.filepath" : "docs\/FWFramework\/FWProxy.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19453,7 +19959,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 60,
+              "key.doc.comment" : "block签名",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 70,
               "key.filepath" : "docs\/FWFramework\/FWProxy.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19469,7 +19977,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 33,
+              "key.doc.comment" : "解析block签名\n\n- parameter: block block代码\n- returns: 方法签名",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 78,
               "key.doc.parameters" : [
                 {
@@ -19502,7 +20012,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化代理\n\n- parameter: block 代理block\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 86,
               "key.doc.parameters" : [
                 {
@@ -19535,7 +20047,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化代理\n\n- parameter: block 代理block\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 94,
               "key.doc.parameters" : [
                 {
@@ -19568,7 +20082,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "指定invocation调用block，并设置返回值\n\n- parameter: invocation 调用对象\n- parameter: returnValue 返回值\n- returns: 是否调用成功",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 103,
               "key.doc.parameters" : [
                 {
@@ -19610,7 +20126,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "指定invocation调用block，并设置返回值\n\n- parameter: invocation 调用对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 110,
               "key.doc.parameters" : [
                 {
@@ -19651,7 +20169,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "事件协议代理基类，可继承重写事件代理方法",
           "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 119,
           "key.filepath" : "docs\/FWFramework\/FWProxy.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -19665,7 +20185,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 43,
+              "key.doc.comment" : "代理事件协议",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 122,
               "key.filepath" : "docs\/FWFramework\/FWProxy.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19681,7 +20203,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 42,
+              "key.doc.comment" : "事件代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 125,
               "key.filepath" : "docs\/FWFramework\/FWProxy.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -19697,7 +20221,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化事件协议代理对象\n\n- parameter: protocol 代理协议\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 133,
               "key.doc.parameters" : [
                 {
@@ -19730,7 +20256,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "初始化事件协议代理对象\n\n- parameter: protocol 代理协议\n- returns: 代理对象",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 141,
               "key.doc.parameters" : [
                 {
@@ -19763,7 +20291,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用block动态实现selector\n\n- parameter: selector 目标方法\n- parameter: block 实现的block",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 149,
               "key.doc.parameters" : [
                 {
@@ -19799,7 +20329,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "获取动态实现block\n\n- parameter: selector 目标方法\n- returns: 实现的block",
               "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 157,
               "key.doc.parameters" : [
                 {
@@ -19846,7 +20378,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "多代理转发类",
           "key.doc.file" : "docs\/FWFramework\/FWProxy.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 166,
           "key.filepath" : "docs\/FWFramework\/FWProxy.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -20043,7 +20577,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 24,
+          "key.doc.comment" : "路由处理句柄，仅支持openURL时可返回nil",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 20,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -20059,7 +20595,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 16,
+          "key.doc.comment" : "路由完成句柄，openURL时可设置完成回调",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 22,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
@@ -20075,7 +20613,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "URL路由上下文",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 25,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -20089,7 +20629,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 49,
+              "key.doc.comment" : "路由URL",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 28,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -20105,7 +20647,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 63,
+              "key.doc.comment" : "路由用户信息",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 30,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -20121,7 +20665,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 68,
+              "key.doc.comment" : "路由完成回调",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 32,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -20137,7 +20683,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 77,
+              "key.doc.comment" : "路由URL解析参数字典",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 35,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -20153,7 +20701,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 53,
+              "key.doc.comment" : "路由userInfo和URLParameters合并参数，URL参数优先级高",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 37,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -20185,7 +20735,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 17,
+              "key.doc.comment" : "创建路由参数对象",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 42,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -20215,7 +20767,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 11,
+          "key.doc.comment" : "URL路由协议",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 49,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
@@ -20279,7 +20833,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "URL路由器\n\n- see: https:\/\/github.com\/meili\/MGJRouter",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 66,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -20985,7 +21541,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "URL路由Rewrite\n\n- see: https:\/\/github.com\/imlifengfeng\/FFRouter",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 237,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -21191,7 +21749,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "URL路由导航",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 288,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -21766,7 +22326,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "有限状态机\n\n- see: https:\/\/github.com\/blakewatters\/TransitionKit",
           "key.doc.file" : "docs\/FWFramework\/FWState.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 108,
           "key.filepath" : "docs\/FWFramework\/FWState.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -22260,7 +22822,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "NSObject方法交换分类\n- note: 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写",
           "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 64,
           "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -22284,7 +22848,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类实例方法。复杂情况可能会冲突\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  替换方法\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 75,
               "key.doc.parameters" : [
                 {
@@ -22326,7 +22892,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类静态方法。复杂情况可能会冲突\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  替换方法\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 84,
               "key.doc.parameters" : [
                 {
@@ -22368,7 +22936,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类实例方法为block实现。复杂情况可能会冲突\n- note: swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  替换方法\n- parameter: swizzleBlock 实现block\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 95,
               "key.doc.parameters" : [
                 {
@@ -22419,7 +22989,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类静态方法为block实现。复杂情况可能会冲突\n- note: swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  替换方法\n- parameter: swizzleBlock 实现block\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 106,
               "key.doc.parameters" : [
                 {
@@ -22470,7 +23042,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 8,
+              "key.doc.comment" : "生成原始方法对应的随机替换方法\n\n- parameter: selector 原始方法\n- returns: 替换方法",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 114,
               "key.doc.parameters" : [
                 {
@@ -22513,7 +23087,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "通用swizzle替换实例方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用\n\n- parameter: target 目标类或对象\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识，有值且相同时仅执行一次\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 127,
               "key.doc.parameters" : [
                 {
@@ -22573,7 +23149,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 137,
               "key.doc.parameters" : [
                 {
@@ -22624,7 +23202,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 148,
               "key.doc.parameters" : [
                 {
@@ -22684,7 +23264,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合fwIsSwizzleMethod使用\n\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 158,
               "key.doc.parameters" : [
                 {
@@ -22735,7 +23317,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "判断对象是否使用swizzle替换过指定identifier实例方法。结合fwSwizzleMethod使用\n- note: 因为实际替换的是类方法，为了防止影响该类其它对象，需先判断该对象是否替换过，仅替换过才执行自定义流程\n\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识\n- returns: 是否替换",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 168,
               "key.doc.parameters" : [
                 {
@@ -22787,7 +23371,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "安全调用方法，如果不能响应，则忽略之\n\n- parameter: aSelector 要执行的方法\n- returns: id 方法执行后返回的值。如果无返回值，则为nil",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 178,
               "key.doc.parameters" : [
                 {
@@ -22820,7 +23406,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "安全调用方法，如果不能响应，则忽略之\n\n- parameter: aSelector 要执行的方法\n- parameter: object 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a\n- returns: id 方法执行后返回的值。如果无返回值，则为nil",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 187,
               "key.doc.parameters" : [
                 {
@@ -22862,7 +23450,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "对super发送消息\n\n- parameter: aSelector 要执行的方法，需返回id类型\n- returns: id 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 195,
               "key.doc.parameters" : [
                 {
@@ -22895,7 +23485,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "对super发送消息，可传递参数\n\n- parameter: aSelector 要执行的方法，需返回id类型\n- parameter: object 传递的方法参数\n- returns: id 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 204,
               "key.doc.parameters" : [
                 {
@@ -22937,7 +23529,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "安全调用内部属性获取方法，如果属性不存在，则忽略之\n- note: 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法\n\n- parameter: name 内部属性名称\n- returns: 属性值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 213,
               "key.doc.parameters" : [
                 {
@@ -22970,7 +23564,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "安全调用内部属性设置方法，如果属性不存在，则忽略之\n- note: 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法\n\n- parameter: name 内部属性名称\n- parameter: object 传递的方法参数\n- returns: 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 223,
               "key.doc.parameters" : [
                 {
@@ -23022,7 +23618,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 44,
+              "key.doc.comment" : "临时对象，强引用，支持KVO\n- note: 备注：key的几种形式的声明和使用，下同\n   1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey\n   2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey\n   3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd\n   4. 声明和使用直接用c字符串，如\"kAssociatedObjectKey\"",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 235,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -23038,7 +23636,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "读取关联属性\n\n- parameter: name 属性名称\n- returns: 属性值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 243,
               "key.doc.parameters" : [
                 {
@@ -23071,7 +23671,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "设置强关联属性，支持KVO\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 251,
               "key.doc.parameters" : [
                 {
@@ -23107,7 +23709,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "设置赋值关联属性，支持KVO，注意可能会产生野指针\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 259,
               "key.doc.parameters" : [
                 {
@@ -23143,7 +23747,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "设置拷贝关联属性，支持KVO\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 267,
               "key.doc.parameters" : [
                 {
@@ -23179,7 +23785,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "设置弱引用关联属性，支持KVO，OC不支持weak关联属性\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 275,
               "key.doc.parameters" : [
                 {
@@ -23225,7 +23833,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象\n\n- parameter: object 对象，会被 strong 强引用\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 285,
               "key.doc.parameters" : [
                 {
@@ -23261,7 +23871,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象\n\n- parameter: object 对象，不会被 strong 强引用\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 293,
               "key.doc.parameters" : [
                 {
@@ -23297,7 +23909,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "取出之前使用 bind 方法绑定的对象\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 300,
               "key.doc.parameters" : [
                 {
@@ -23324,7 +23938,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "给对象绑定上一个 double 值以供后续取出使用\n\n- parameter: doubleValue double值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 308,
               "key.doc.parameters" : [
                 {
@@ -23360,7 +23976,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 11,
+              "key.doc.comment" : "取出之前用 bindDouble:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 315,
               "key.doc.parameters" : [
                 {
@@ -23387,7 +24005,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "给对象绑定上一个 BOOL 值以供后续取出使用\n\n- parameter: boolValue 布尔值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 323,
               "key.doc.parameters" : [
                 {
@@ -23423,7 +24043,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "取出之前用 bindBool:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 330,
               "key.doc.parameters" : [
                 {
@@ -23450,7 +24072,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "给对象绑定上一个 NSInteger 值以供后续取出使用\n\n- parameter: integerValue 整数值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 339,
               "key.doc.parameters" : [
                 {
@@ -23486,7 +24110,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 14,
+              "key.doc.comment" : "取出之前用 bindInt:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 346,
               "key.doc.parameters" : [
                 {
@@ -23513,7 +24139,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "移除之前使用 bind 方法绑定的对象\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 353,
               "key.doc.parameters" : [
                 {
@@ -23540,7 +24168,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "移除之前使用 bind 方法绑定的所有对象",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 358,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -23556,7 +24186,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 26,
+              "key.doc.comment" : "返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 363,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
@@ -23572,7 +24204,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "返回是否设置了某个 key\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 370,
               "key.doc.parameters" : [
                 {
@@ -23636,7 +24270,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 52,
+              "key.doc.comment" : "错误信息",
               "key.doc.file" : "docs\/FWFramework\/FWTask.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 19,
               "key.filepath" : "docs\/FWFramework\/FWTask.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -23736,7 +24372,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 55,
+              "key.doc.comment" : "单例模式",
               "key.doc.file" : "docs\/FWFramework\/FWTask.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 38,
               "key.filepath" : "docs\/FWFramework\/FWTask.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -23752,7 +24390,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 41,
+              "key.doc.comment" : "并发操作的最大任务数",
               "key.doc.file" : "docs\/FWFramework\/FWTask.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 41,
               "key.filepath" : "docs\/FWFramework\/FWTask.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -23768,7 +24408,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 36,
+              "key.doc.comment" : "是否暂停，可恢复",
               "key.doc.file" : "docs\/FWFramework\/FWTask.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 44,
               "key.filepath" : "docs\/FWFramework\/FWTask.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
@@ -24039,7 +24681,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "主题管理器，iOS13+可跟随系统改变\n- note: 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效\n注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 40,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -24147,7 +24791,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "主题动态对象，可获取当前主题静态对象",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 62,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
@@ -24247,7 +24893,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIColor主题分类",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 83,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -24437,7 +25085,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIImage主题分类\n- note: 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。\n为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 121,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -24691,7 +25341,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIImageAsset主题分类",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 168,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -24809,7 +25461,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 192,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -24917,7 +25571,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS13主题订阅UIImageView分类",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 214,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -24971,7 +25627,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS13主题订阅CALayer分类",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 227,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -25061,7 +25719,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "iOS13主题订阅CALayer分类",
           "key.doc.file" : "docs\/FWFramework\/FWTheme.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 246,
           "key.filepath" : "docs\/FWFramework\/FWTheme.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -25114,7 +25774,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIApplication+FWToolkit\n- note: 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 34,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -25538,7 +26200,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIColor+FWToolkit",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 117,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -25854,7 +26518,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIFont+FWToolkit",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 174,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -25972,7 +26638,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIImage+FWToolkit",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 195,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -26522,7 +27190,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIView+FWToolkit",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 291,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -26912,7 +27582,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIViewController+FWToolkit",
           "key.doc.file" : "docs\/FWFramework\/FWToolkit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 352,
           "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27019,7 +27691,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIDevice+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 19,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27137,7 +27811,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIView+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 43,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27381,7 +28057,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "CAAnimation+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 88,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27445,7 +28123,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UILabel+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 103,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27581,7 +28261,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIButton+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 130,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27753,7 +28435,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIScrollView+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 163,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -27961,7 +28645,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIPageControl+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 202,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28007,7 +28693,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UISlider+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 214,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28077,7 +28765,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UISwitch+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 229,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28123,7 +28813,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UITextField+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 241,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28244,7 +28936,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UITextView+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 265,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28365,7 +29059,9 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
+          "key.doc.comment" : "UIViewController+FWUIKit",
           "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
+          "key.doc.full_as_xml" : "",
           "key.doc.line" : 289,
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
@@ -28606,7 +29302,9 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 58,
+              "key.doc.comment" : "单例模式",
               "key.doc.file" : "docs\/FWFramework\/FWVersion.h",
+              "key.doc.full_as_xml" : "",
               "key.doc.line" : 27,
               "key.filepath" : "docs\/FWFramework\/FWVersion.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",

@@ -17,7 +17,7 @@
     <a title="UIView(FWAutoLayout) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,13 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果约束条件完全相同，会自动更新约束而不是重新添加。
+另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
+
+</div>
 
           </section>
           <section class="section task-group-section">
@@ -983,7 +989,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
+手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1010,7 +1022,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>是否启用自动布局</p>
 
                       </div>
                       <div class="declaration">
@@ -1037,7 +1049,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>创建自动布局视图</p>
 
                       </div>
                       <div class="declaration">
@@ -1047,6 +1059,10 @@
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">fwAutoLayoutView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>自动布局视图</p>
                       </div>
                     </section>
                   </div>
@@ -1064,7 +1080,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)</p>
 
                       </div>
                       <div class="declaration">
@@ -1091,7 +1107,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法</p>
 
                       </div>
                       <div class="declaration">
@@ -1118,7 +1134,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法</p>
 
                       </div>
                       <div class="declaration">
@@ -1158,7 +1174,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置水平方向抗压缩优先级</p>
 
                       </div>
                       <div class="declaration">
@@ -1185,7 +1201,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置垂直方向抗压缩优先级</p>
 
                       </div>
                       <div class="declaration">
@@ -1212,7 +1228,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置水平方向抗拉伸优先级</p>
 
                       </div>
                       <div class="declaration">
@@ -1239,7 +1255,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置垂直方向抗拉伸优先级</p>
 
                       </div>
                       <div class="declaration">
@@ -1279,7 +1295,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值</p>
 
                       </div>
                       <div class="declaration">
@@ -1306,7 +1322,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置视图是否自动收缩，如image为nil，text为nil、@&ldquo;&quot;时自动收缩，默认NO</p>
 
                       </div>
                       <div class="declaration">
@@ -1333,7 +1349,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置视图是否隐藏时自动收缩、显示时自动展开，默认NO</p>
 
                       </div>
                       <div class="declaration">
@@ -1360,7 +1376,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>添加视图的收缩常量，必须先添加才能生效</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/forkingdog/UIView-FDCollapsibleConstraints">https://github.com/forkingdog/UIView-FDCollapsibleConstraints</a>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1400,7 +1421,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图居中</p>
 
                       </div>
                       <div class="declaration">
@@ -1410,6 +1431,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwAlignCenterToSuperview</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1427,7 +1452,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图居中偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1438,6 +1463,29 @@
     <span class="p">(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1455,7 +1503,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图属性居中</p>
 
                       </div>
                       <div class="declaration">
@@ -1465,6 +1513,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwAlignAxisToSuperview</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">axis</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1482,7 +1553,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图属性居中偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1493,6 +1564,41 @@
                                             <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1510,7 +1616,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与另一视图居中相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1521,6 +1627,41 @@
                                      <span class="nf">toView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图或UILayoutGuide，下同</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1538,7 +1679,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与另一视图居中偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1550,6 +1691,53 @@
                                  <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1567,7 +1755,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与另一视图居中指定比例</p>
 
                       </div>
                       <div class="declaration">
@@ -1579,6 +1767,53 @@
                              <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1609,7 +1844,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图四条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1619,6 +1854,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwPinEdgesToSuperview</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1636,7 +1875,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图四条边属性距离指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1647,6 +1886,29 @@
     <span class="p">(</span><span class="n">UIEdgeInsets</span><span class="p">)</span><span class="nv">insets</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>insets</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定距离insets</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1664,7 +1926,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图三条边属性距离指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1676,6 +1938,41 @@
                       <span class="nf">excludingEdge</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>insets</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定距离insets</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>排除的边</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1693,7 +1990,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图水平方向两条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1703,6 +2000,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwPinEdgesToSuperviewHorizontal</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1720,7 +2021,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图垂直方向两条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1730,6 +2031,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwPinEdgesToSuperviewVertical</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1747,7 +2052,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1757,6 +2062,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwPinEdgeToSuperview</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1774,7 +2102,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图边属性偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1785,6 +2113,41 @@
                                            <span class="nf">withInset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">inset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1802,7 +2165,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图边属性偏移指定距离，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -1814,6 +2177,53 @@
                                             <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1831,7 +2241,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -1843,6 +2253,53 @@
                                    <span class="nf">ofView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toEdge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1860,7 +2317,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图边属性偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -1873,6 +2330,65 @@
                                <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toEdge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1890,7 +2406,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图边属性偏移指定距离，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -1904,6 +2420,77 @@
                                  <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toEdge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>另一视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -1934,7 +2521,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图安全区域居中。iOS11以下使用Superview实现，下同</p>
 
                       </div>
                       <div class="declaration">
@@ -1944,6 +2531,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwAlignCenterToSuperviewSafeArea</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1961,7 +2552,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图安全区域居中偏移指定距离。iOS11以下使用Superview实现，下同</p>
 
                       </div>
                       <div class="declaration">
@@ -1972,6 +2563,29 @@
     <span class="nf">fwAlignCenterToSuperviewSafeAreaWithOffset</span><span class="p">:(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -1989,7 +2603,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图安全区域属性居中</p>
 
                       </div>
                       <div class="declaration">
@@ -2000,6 +2614,29 @@
     <span class="p">(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">axis</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2017,7 +2654,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>父视图安全区域属性居中偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -2029,6 +2666,41 @@
                                                     <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>axis</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>居中属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2046,7 +2718,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域四条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2056,6 +2728,10 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">fwPinEdgesToSuperviewSafeArea</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2073,7 +2749,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域四条边属性距离指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -2084,6 +2760,29 @@
     <span class="nf">fwPinEdgesToSuperviewSafeAreaWithInsets</span><span class="p">:(</span><span class="n">UIEdgeInsets</span><span class="p">)</span><span class="nv">insets</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>insets</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定距离insets</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2101,7 +2800,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域三条边属性距离指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -2113,6 +2812,41 @@
                               <span class="nf">excludingEdge</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>insets</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定距离insets</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>排除的边</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2130,7 +2864,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域水平方向两条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2141,6 +2875,10 @@
     <span class="n">fwPinEdgesToSuperviewSafeAreaHorizontal</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2158,7 +2896,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域垂直方向两条边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2169,6 +2907,10 @@
     <span class="n">fwPinEdgesToSuperviewSafeAreaVertical</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2186,7 +2928,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域边属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2197,6 +2939,29 @@
     <span class="p">(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2214,7 +2979,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域边属性偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -2226,6 +2991,41 @@
                                                    <span class="nf">withInset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">inset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2243,7 +3043,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与父视图安全区域边属性偏移指定距离，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2256,6 +3056,53 @@
                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edge</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定边属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2286,7 +3133,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置宽高尺寸</p>
 
                       </div>
                       <div class="declaration">
@@ -2296,6 +3143,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwSetDimensionsToSize</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>size</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸大小</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束数组</p>
                       </div>
                     </section>
                   </div>
@@ -2313,7 +3183,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置某个尺寸</p>
 
                       </div>
                       <div class="declaration">
@@ -2324,6 +3194,41 @@
                                         <span class="nf">toSize</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">size</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>size</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸大小</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2341,7 +3246,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置某个尺寸，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2353,6 +3258,53 @@
                                       <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>size</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸大小</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2370,7 +3322,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与视图自身尺寸属性指定比例</p>
 
                       </div>
                       <div class="declaration">
@@ -2382,6 +3334,53 @@
                                   <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2399,7 +3398,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与视图自身尺寸属性指定比例，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2412,6 +3411,65 @@
                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2429,7 +3487,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图尺寸属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2441,6 +3499,53 @@
                                           <span class="nf">ofView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2458,7 +3563,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图尺寸属性相差指定大小</p>
 
                       </div>
                       <div class="declaration">
@@ -2471,6 +3576,65 @@
                                       <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>相差大小</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2488,7 +3652,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图尺寸属性相差指定大小，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2502,6 +3666,77 @@
                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>相差大小</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2519,7 +3754,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图尺寸属性指定比例</p>
 
                       </div>
                       <div class="declaration">
@@ -2532,6 +3767,65 @@
                                   <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2549,7 +3843,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图尺寸属性指定比例，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2563,6 +3857,77 @@
                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDimension</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标尺寸属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2593,7 +3958,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图属性相同</p>
 
                       </div>
                       <div class="declaration">
@@ -2606,6 +3971,53 @@
                   <span class="nf">ofView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2623,7 +4035,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图属性偏移指定距离</p>
 
                       </div>
                       <div class="declaration">
@@ -2637,6 +4049,65 @@
               <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2654,7 +4125,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图属性偏移指定距离，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2669,6 +4140,77 @@
                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>offset</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>偏移距离</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2686,7 +4228,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图属性指定比例</p>
 
                       </div>
                       <div class="declaration">
@@ -2700,6 +4242,65 @@
           <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2717,7 +4318,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>与指定视图属性指定比例，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2732,6 +4333,77 @@
                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2762,7 +4434,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>最近一条添加或更新的布局约束</p>
 
                       </div>
                       <div class="declaration">
@@ -2789,7 +4461,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与父视图属性的约束</p>
 
                       </div>
                       <div class="declaration">
@@ -2800,6 +4472,29 @@
     <span class="p">(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">attribute</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2817,7 +4512,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与父视图属性的约束，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2829,6 +4524,41 @@
                    <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2846,7 +4576,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与父视图安全区域属性的约束</p>
 
                       </div>
                       <div class="declaration">
@@ -2857,6 +4587,29 @@
     <span class="p">(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">attribute</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2874,7 +4627,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与父视图安全区域属性的约束，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2886,6 +4639,41 @@
                            <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2903,7 +4691,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与指定视图属性的约束</p>
 
                       </div>
                       <div class="declaration">
@@ -2915,6 +4703,53 @@
                                        <span class="nf">ofView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2932,7 +4767,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与指定视图属性的约束，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -2945,6 +4780,65 @@
                                      <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2962,7 +4856,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与指定视图属性指定比例的约束</p>
 
                       </div>
                       <div class="declaration">
@@ -2975,6 +4869,65 @@
                                <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -2992,7 +4945,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取添加的与指定视图属性指定比例的约束，指定关系</p>
 
                       </div>
                       <div class="declaration">
@@ -3006,6 +4959,77 @@
                                      <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toAttribute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图属性</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>otherView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>目标视图</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>multiplier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定比例</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>relation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -3036,7 +5060,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>设置约束保存键名，方便更新约束常量</p>
 
                       </div>
                       <div class="declaration">
@@ -3047,6 +5071,37 @@
                  <span class="nf">forKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constraint</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>布局约束</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>key</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保存key</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -3064,7 +5119,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取键名对应约束</p>
 
                       </div>
                       <div class="declaration">
@@ -3074,6 +5129,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fwConstraintForKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>key</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保存key</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>布局约束</p>
                       </div>
                     </section>
                   </div>
@@ -3104,7 +5182,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>获取当前所有约束，不包含Key</p>
 
                       </div>
                       <div class="declaration">
@@ -3114,6 +5192,10 @@
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">fwAllConstraints</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>约束列表</p>
                       </div>
                     </section>
                   </div>
@@ -3131,7 +5213,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>移除当前指定约束，不包含Key</p>
 
                       </div>
                       <div class="declaration">
@@ -3158,7 +5240,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>移除当前所有约束，不包含Key</p>
 
                       </div>
                       <div class="declaration">

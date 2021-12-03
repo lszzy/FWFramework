@@ -17,7 +17,7 @@
     <a title="UIImage(FWTheme) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,13 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>UIImage主题分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
+为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
+
+</div>
 
           </section>
           <section class="section task-group-section">

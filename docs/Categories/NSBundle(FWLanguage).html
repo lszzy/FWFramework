@@ -17,7 +17,7 @@
     <a title="NSBundle(FWLanguage) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,14 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见Bundle分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
+如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
+当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能
+
+</div>
 
           </section>
           <section class="section task-group-section">

@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWTest.h
  @indexgroup FWFramework
- @brief      单元测试
+      单元测试
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018-05-11
@@ -14,8 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @brief 测试断言
+/**
+ 测试断言
  
  @param ... 断言表达式
  */
@@ -24,24 +24,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTestCase
 
-/*!
- @brief 单元测试用例基类，所有单元测试用例必须继承
- @discussion 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name
+/**
+ 单元测试用例基类，所有单元测试用例必须继承
+ @note 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name
  */
 @interface FWTestCase : NSObject
 
-/*!
- @brief 测试初始化，每次执行测试方法开始都会调用
+/**
+ 测试初始化，每次执行测试方法开始都会调用
  */
 - (void)setUp;
 
-/*!
- @brief 测试收尾，每次执行测试方法结束都会调用
+/**
+ 测试收尾，每次执行测试方法结束都会调用
  */
 - (void)tearDown;
 
-/*!
- @brief 断言方法，请勿直接调用，请调用FWAssertTrue
+/**
+ 断言方法，请勿直接调用，请调用FWAssertTrue
  
  @param value 布尔表达式
  @param expression 当前表达式，一般使用宏@(#__VA_ARGS__)或@(__FUNCTION__)

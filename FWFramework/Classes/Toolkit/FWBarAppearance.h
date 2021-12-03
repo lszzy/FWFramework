@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWBarAppearance.h
  @indexgroup FWFramework
- @brief      FWBarAppearance
+      FWBarAppearance
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/10/22
@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UINavigationBar+FWBarAppearance
 
-/*!
- @brief 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+/**
+ 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
 @interface UINavigationBar (FWBarAppearance)
 
@@ -55,8 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UITabBar+FWBarAppearance
 
-/*!
- @brief 标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+/**
+ 标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
 @interface UITabBar (FWBarAppearance)
 
@@ -91,9 +91,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIToolbar+FWBarAppearance
 
-/*!
- @brief 工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
- @discussion 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
+/**
+ 工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+ @note 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
  */
 @interface UIToolbar (FWBarAppearance)
 

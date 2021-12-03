@@ -17,7 +17,7 @@
     <a title="FWBlockProxy Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,12 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>Block代理</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/BlocksKit/BlocksKit">https://github.com/BlocksKit/BlocksKit</a>
+
+</div>
 
           </section>
           <section class="section task-group-section">
@@ -974,7 +979,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>只读block</p>
 
                       </div>
                       <div class="declaration">
@@ -1001,7 +1006,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>block签名</p>
 
                       </div>
                       <div class="declaration">
@@ -1028,7 +1033,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>解析block签名</p>
 
                       </div>
                       <div class="declaration">
@@ -1038,6 +1043,29 @@
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForBlock</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>block</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>block代码</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>方法签名</p>
                       </div>
                     </section>
                   </div>
@@ -1055,7 +1083,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>初始化代理</p>
 
                       </div>
                       <div class="declaration">
@@ -1065,6 +1093,29 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithBlock</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>block</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>代理block</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>代理对象</p>
                       </div>
                     </section>
                   </div>
@@ -1082,7 +1133,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>初始化代理</p>
 
                       </div>
                       <div class="declaration">
@@ -1092,6 +1143,29 @@
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">proxyWithBlock</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>block</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>代理block</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>代理对象</p>
                       </div>
                     </section>
                   </div>
@@ -1109,7 +1183,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>指定invocation调用block，并设置返回值</p>
 
                       </div>
                       <div class="declaration">
@@ -1120,6 +1194,41 @@
                  <span class="nf">returnValue</span><span class="p">:(</span><span class="n">out</span> <span class="n">NSValue</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="o">*</span><span class="n">_Nonnull</span><span class="p">)</span><span class="nv">returnValue</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>invocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>调用对象</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>返回值</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>是否调用成功</p>
                       </div>
                     </section>
                   </div>
@@ -1137,7 +1246,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>指定invocation调用block，并设置返回值</p>
 
                       </div>
                       <div class="declaration">
@@ -1147,6 +1256,25 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">invokeWithInvocation</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">invocation</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>invocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>调用对象</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>

@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWPlugin.h
  @indexgroup FWFramework
- @brief      插件管理器
+      插件管理器
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018-05-11
@@ -39,9 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FWLoader<InputType, OutputType>;
 
-/*!
- @brief 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
- @discussion 和Mediator对比如下：
+/**
+ 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
+ @note 和Mediator对比如下：
     Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
     Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
  */

@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Enum
 
-/*!
- @brief 权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
- @discussion 开启指定权限方法：
+/**
+ 权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
+ @note 开启指定权限方法：
  一、Pod项目：添加pod时同时指定
  pod 'FWFramework', :subspecs => ['Component-Contacts']
  二、Pod项目：在Podfile最后添加
@@ -89,8 +89,8 @@ typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {
 #pragma mark - FWAuthorizeManager
 
 /**
- @brief 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用
- @discussion 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等
+ 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用
+ @note 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等
  */
 @interface FWAuthorizeManager : NSObject <FWAuthorizeProtocol>
 

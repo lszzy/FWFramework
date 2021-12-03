@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWFoundation.h
  @indexgroup FWFramework
- @brief      FWFoundation
+      FWFoundation
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/10/22
@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSArray+FWFoundation
 
-/*!
- @brief NSArray+FWFoundation
+/**
+ NSArray+FWFoundation
  */
 @interface NSArray<__covariant ObjectType> (FWFoundation)
 
@@ -34,8 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSAttributedString+FWFoundation
 
-/*!
- @brief NSAttributedString+FWFoundation
+/**
+ NSAttributedString+FWFoundation
  */
 @interface NSAttributedString (FWFoundation)
 
@@ -55,8 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSData+FWFoundation
 
-/*!
- @brief NSData+FWFoundation
+/**
+ NSData+FWFoundation
  */
 @interface NSData (FWFoundation)
 
@@ -76,8 +76,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSDate+FWFoundation
 
-/*!
- @brief NSDate+FWFoundation
+/**
+ NSDate+FWFoundation
  */
 @interface NSDate (FWFoundation)
 
@@ -109,8 +109,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSDictionary+FWFoundation
 
-/*!
- @brief NSDictionary+FWFoundation
+/**
+ NSDictionary+FWFoundation
  */
 @interface NSDictionary<__covariant KeyType, __covariant ObjectType> (FWFoundation)
 
@@ -127,8 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSObject+FWFoundation
 
-/*!
- @brief NSObject+FWFoundation
+/**
+ NSObject+FWFoundation
  */
 @interface NSObject (FWFoundation)
 
@@ -142,8 +142,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSString+FWFoundation
 
-/*!
- @brief NSString+FWFoundation
+/**
+ NSString+FWFoundation
  */
 @interface NSString (FWFoundation)
 
@@ -166,8 +166,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSTimer+FWFoundation
 
-/*!
- @brief NSTimer+FWFoundation
+/**
+ NSTimer+FWFoundation
  */
 @interface NSTimer (FWFoundation)
 
@@ -184,8 +184,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSUserDefaults+FWFoundation
 
-/*!
- @brief NSUserDefaults+FWFoundation
+/**
+ NSUserDefaults+FWFoundation
  */
 @interface NSUserDefaults (FWFoundation)
 

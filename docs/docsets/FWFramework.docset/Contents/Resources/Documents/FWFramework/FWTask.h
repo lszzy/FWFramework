@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 任务基类
 @interface FWTask : NSOperation
 
-/*! @brief 错误信息 */
+/** 错误信息 */
 @property (nonatomic, readonly, nullable) NSError *error;
 
 /// 子类重写，任务执行完成，需调用finishWithError:
@@ -34,13 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 @interface FWTaskManager : NSObject
 
-/*! @brief 单例模式 */
+/** 单例模式 */
 @property (class, nonatomic, readonly) FWTaskManager *sharedInstance;
 
-/*! @brief 并发操作的最大任务数 */
+/** 并发操作的最大任务数 */
 @property (nonatomic, assign) NSInteger maxConcurrentTaskCount;
 
-/*! @brief 是否暂停，可恢复 */
+/** 是否暂停，可恢复 */
 @property (nonatomic, assign) BOOL isSuspended;
 
 /// 添加单个任务

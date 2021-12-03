@@ -17,7 +17,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -976,7 +976,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件</p>
 
                         <a href="Classes/FWLog.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1004,7 +1004,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>系统默认时机是在didMoveToWindow处理UIAppearance</p>
+
+</div><div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://github.com/Tencent/QMUI_iOS">https://github.com/Tencent/QMUI_iOS</a></p>
+
+</div>
 
                         <a href="Classes/FWAppearance.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1045,8 +1054,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>@brief 权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用
-@discussion 部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等</p>
+                        <p>权限管理器。备注：iOS应用运行时到设置中修改部分权限会导致系统自动重启应用</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    部分权限需配置编译时FWCOMPONENT_CONTACTS_ENABLED为1才可用，如麦克风、日历、联系人等
+
+</div>
 
                         <a href="Classes/FWAuthorizeManager.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1087,7 +1100,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>视图链式布局类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果约束条件完全相同，会自动更新约束而不是重新添加。
+另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
+
+</div>
 
                         <a href="Classes/FWLayoutChain.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1116,7 +1135,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>字体图标抽象基类，子类需继承</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>Foundation icons: <a href="https://zurb.com/playground/foundation-icon-fonts-3#allicons">https://zurb.com/playground/foundation-icon-fonts-3#allicons</a>
+FontAwesome: <a href="https://fontawesome.com/">https://fontawesome.com/</a>
+ionicons: <a href="https://ionic.io/ionicons/">https://ionic.io/ionicons/</a>
+Octicons: <a href="https://primer.style/octicons/">https://primer.style/octicons/</a>
+Material: <a href="https://google.github.io/material-design-icons/#icons-for-ios">https://google.github.io/material-design-icons/#icons-for-ios</a></p>
+
+</div><div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://github.com/PrideChung/FontAwesomeKit">https://github.com/PrideChung/FontAwesomeKit</a></p>
+
+</div>
 
                         <a href="Classes/FWIcon.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1172,7 +1204,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>加载器，处理swift不支持load方法问题</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单
+使用方法：新增FWLoader扩展objc类方法，以load开头即会自动调用，注意方法名不要重复，建议load+类名+扩展名
+
+</div>
 
                         <a href="Classes/FWLoader.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1213,10 +1251,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>@brief 位置服务
-@discussion 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项
+                        <p>位置服务</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项
 如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项
-iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器</p>
+iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
+
+</div>
 
                         <a href="Classes/FWLocationManager.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1257,7 +1299,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>默认NSLog日志插件</p>
 
                         <a href="Classes/FWLogPluginImpl.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1298,7 +1340,12 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/youzan/Bifrost">https://github.com/youzan/Bifrost</a>
+
+</div>
 
                         <a href="Classes/FWMediator.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1339,7 +1386,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>业务模块Bundle基类，各模块可继承</p>
 
                         <a href="Classes/FWModuleBundle.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1367,7 +1414,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通知管理器</p>
 
                         <a href="Classes/FWNotificationManager.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1395,7 +1442,14 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    和Mediator对比如下：
+Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
+Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
+
+</div>
 
                         <a href="Classes/FWPluginManager.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1436,7 +1490,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>弱引用代理类，用于解决NSTimer和CADisplayLink中的循环引用target问题(默认NSTimer会强引用target,直到invalidate)</p>
 
                         <a href="Classes/FWWeakProxy.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1477,7 +1531,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>弱引用对象容器类，用于解决关联对象weak引用等</p>
 
                         <a href="Classes/FWWeakObject.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1518,7 +1572,12 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Block代理</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/BlocksKit/BlocksKit">https://github.com/BlocksKit/BlocksKit</a>
+
+</div>
 
                         <a href="Classes/FWBlockProxy.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1559,7 +1618,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>事件协议代理基类，可继承重写事件代理方法</p>
 
                         <a href="Classes/FWDelegateProxy.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1600,7 +1659,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>多代理转发类</p>
 
                         <a href="Classes/FWMulticastDelegate.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1641,7 +1700,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>URL路由上下文</p>
 
                         <a href="Classes/FWRouterContext.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1682,7 +1741,12 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>URL路由器</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/meili/MGJRouter">https://github.com/meili/MGJRouter</a>
+
+</div>
 
                         <a href="Classes/FWRouter.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1846,7 +1910,12 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>有限状态机</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/blakewatters/TransitionKit">https://github.com/blakewatters/TransitionKit</a>
+
+</div>
 
                         <a href="Classes/FWStateMachine.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1969,7 +2038,13 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>主题管理器，iOS13+可跟随系统改变</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
+注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法
+
+</div>
 
                         <a href="Classes/FWThemeManager.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1997,7 +2072,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>主题动态对象，可获取当前主题静态对象</p>
 
                         <a href="Classes/FWThemeObject.html" class="slightly-smaller">See more</a>
                       </div>

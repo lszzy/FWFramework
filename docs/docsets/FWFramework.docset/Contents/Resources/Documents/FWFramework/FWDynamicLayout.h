@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWDynamicLayout.h
  @indexgroup FWFramework
- @brief      FWDynamicLayout
+      FWDynamicLayout
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/14
@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
 typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath);
 
-/*!
- @brief UITableViewCell+FWDynamicLayout
+/**
+ UITableViewCell+FWDynamicLayout
  */
 @interface UITableViewCell (FWDynamicLayout)
 
@@ -61,8 +61,8 @@ typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
 typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
 typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section);
 
-/*!
- @brief UITableViewHeaderFooterView+FWDynamicLayout
+/**
+ UITableViewHeaderFooterView+FWDynamicLayout
  */
 @interface UITableViewHeaderFooterView (FWDynamicLayout)
 
@@ -94,8 +94,8 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 #pragma mark - UITableView+FWDynamicLayout
 
-/*!
- @brief 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
+/**
+ 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 
  @see https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight
 */
@@ -166,8 +166,8 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell);
 typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath);
 
-/*!
- @brief UICollectionViewCell+FWDynamicLayout
+/**
+ UICollectionViewCell+FWDynamicLayout
  */
 @interface UICollectionViewCell (FWDynamicLayout)
 
@@ -213,8 +213,8 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView);
 typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
 
-/*!
- @brief UICollectionReusableView+FWDynamicLayout
+/**
+ UICollectionReusableView+FWDynamicLayout
  */
 @interface UICollectionReusableView (FWDynamicLayout)
 
@@ -262,8 +262,8 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 
 #pragma mark - UICollectionView+FWDynamicLayout
 
-/*!
- @brief 集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
+/**
+ 集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 */
 @interface UICollectionView (FWDynamicLayout)
 

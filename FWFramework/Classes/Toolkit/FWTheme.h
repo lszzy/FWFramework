@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWTheme.h
  @indexgroup FWFramework
- @brief      FWTheme
+      FWTheme
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
@@ -32,9 +32,9 @@ static const FWThemeMode FWThemeModeDark = FWThemeStyleDark;
 /// iOS13主题改变通知，object为FWThemeManager时表示手工切换，object为UIScreen时为系统切换
 extern NSString *const FWThemeChangedNotification;
 
-/*!
- @brief 主题管理器，iOS13+可跟随系统改变
- @discussion 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
+/**
+ 主题管理器，iOS13+可跟随系统改变
+ @note 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
  注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法
  */
 @interface FWThemeManager : NSObject
@@ -56,8 +56,8 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
-/*!
- @brief 主题动态对象，可获取当前主题静态对象
+/**
+ 主题动态对象，可获取当前主题静态对象
  */
 @interface FWThemeObject<__covariant ObjectType> : NSObject
 
@@ -77,8 +77,8 @@ extern NSString *const FWThemeChangedNotification;
 
 #pragma mark - UIColor+FWTheme
 
-/*!
- @brief UIColor主题分类
+/**
+ UIColor主题分类
  */
 @interface UIColor (FWTheme)
 
@@ -113,9 +113,9 @@ extern NSString *const FWThemeChangedNotification;
 
 #pragma mark - UIImage+FWTheme
 
-/*!
- @brief UIImage主题分类
- @discussion 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
+/**
+ UIImage主题分类
+ @note 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
  为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
  */
 @interface UIImage (FWTheme)
@@ -162,8 +162,8 @@ extern NSString *const FWThemeChangedNotification;
 
 #pragma mark - UIImageAsset+FWTheme
 
-/*!
- @brief UIImageAsset主题分类
+/**
+ UIImageAsset主题分类
  */
 @interface UIImageAsset (FWTheme)
 
@@ -186,8 +186,8 @@ extern NSString *const FWThemeChangedNotification;
 
 #pragma mark - NSObject+FWTheme
 
-/*!
- @brief iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展
+/**
+ iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展
  */
 @interface NSObject (FWTheme)
 
@@ -208,8 +208,8 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
-/*!
- @brief iOS13主题订阅UIImageView分类
+/**
+ iOS13主题订阅UIImageView分类
 */
 @interface UIImageView (FWTheme)
 
@@ -221,8 +221,8 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
-/*!
- @brief iOS13主题订阅CALayer分类
+/**
+ iOS13主题订阅CALayer分类
 */
 @interface CALayer (FWTheme)
 
@@ -240,8 +240,8 @@ extern NSString *const FWThemeChangedNotification;
 
 @end
 
-/*!
- @brief iOS13主题订阅CALayer分类
+/**
+ iOS13主题订阅CALayer分类
 */
 @interface CAGradientLayer (FWTheme)
 

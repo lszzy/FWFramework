@@ -17,7 +17,7 @@
     <a title="Categories  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -967,7 +967,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果约束条件完全相同，会自动更新约束而不是重新添加。
+另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
+
+</div>
 
                         <a href="Categories/UIView%28FWAutoLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1008,7 +1014,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIApplication+FWAdaptive</p>
 
                         <a href="Categories/UIApplication%28FWAdaptive%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1049,7 +1055,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIDevice+FWAdaptive</p>
 
                         <a href="Categories/UIDevice%28FWAdaptive%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1090,7 +1096,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIScreen+FWAdaptive</p>
 
                         <a href="Categories/UIScreen%28FWAdaptive%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1131,7 +1137,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIViewController+FWAdaptive</p>
 
                         <a href="Categories/UIViewController%28FWAdaptive%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1205,7 +1211,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api</p>
 
                         <a href="Categories/UINavigationBar%28FWBarAppearance%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1246,7 +1252,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api</p>
 
                         <a href="Categories/UITabBar%28FWBarAppearance%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1287,7 +1293,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
+
+</div>
 
                         <a href="Categories/UIToolbar%28FWBarAppearance%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1328,7 +1339,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>CADisplayLink分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
+
+</div>
 
                         <a href="Categories/CADisplayLink%28FWBlock%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1369,7 +1385,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSTimer分类</p>
 
                         <a href="Categories/NSTimer%28FWBlock%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1526,7 +1542,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可</p>
 
                         <a href="Categories/UIBarButtonItem%28FWBlock%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1567,7 +1583,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UITableViewCell+FWDynamicLayout</p>
 
                         <a href="Categories/UITableViewCell%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1608,7 +1624,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UITableViewHeaderFooterView+FWDynamicLayout</p>
 
                         <a href="Categories/UITableViewHeaderFooterView%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1649,7 +1665,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight">https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight</a>
+
+</div>
 
                         <a href="Categories/UITableView%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1690,7 +1711,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UICollectionViewCell+FWDynamicLayout</p>
 
                         <a href="Categories/UICollectionViewCell%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1731,7 +1752,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UICollectionReusableView+FWDynamicLayout</p>
 
                         <a href="Categories/UICollectionReusableView%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1772,7 +1793,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现</p>
 
                         <a href="Categories/UICollectionView%28FWDynamicLayout%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1895,7 +1916,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSObject类型安全分类</p>
 
                         <a href="Categories/NSObject%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1936,7 +1957,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSNumber类型安全分类</p>
 
                         <a href="Categories/NSNumber%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1977,7 +1998,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSString类型安全分类</p>
 
                         <a href="Categories/NSString%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2018,7 +2039,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSData类型安全分类</p>
 
                         <a href="Categories/NSData%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2059,7 +2080,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSURL类型安全分类</p>
 
                         <a href="Categories/NSURL%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2100,7 +2121,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSArray类型安全分类</p>
 
                         <a href="Categories/NSArray%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2141,7 +2162,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSMutableArray类型安全分类</p>
 
                         <a href="Categories/NSMutableArray%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2182,7 +2203,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSDictionary类型安全分类</p>
 
                         <a href="Categories/NSDictionary%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2224,7 +2245,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSMutableDictionary类型安全分类</p>
 
                         <a href="Categories/NSMutableDictionary%28FWSafeType%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2265,7 +2286,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSArray+FWFoundation</p>
 
                         <a href="Categories/NSArray%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2306,7 +2327,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSAttributedString+FWFoundation</p>
 
                         <a href="Categories/NSAttributedString%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2347,7 +2368,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSData+FWFoundation</p>
 
                         <a href="Categories/NSData%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2388,7 +2409,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSDate+FWFoundation</p>
 
                         <a href="Categories/NSDate%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2429,7 +2450,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSDictionary+FWFoundation</p>
 
                         <a href="Categories/NSDictionary%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2471,7 +2492,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSObject+FWFoundation</p>
 
                         <a href="Categories/NSObject%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2512,7 +2533,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSString+FWFoundation</p>
 
                         <a href="Categories/NSString%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2553,7 +2574,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSTimer+FWFoundation</p>
 
                         <a href="Categories/NSTimer%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2594,7 +2615,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSUserDefaults+FWFoundation</p>
 
                         <a href="Categories/NSUserDefaults%28FWFoundation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2758,7 +2779,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SDK和系统组件语言，详见Bundle分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    如果系统组件无法正确显示语言，需Info.plist设置CFBundleAllowMixedLocalizations为YES，从而允许应用程序获取框架库内语言。
+如果key为nil，value为nil，返回空串；key为nil，value非nil，返回value；如果key不存在，value为nil或空，返回key；如果key不存在，value非空，返回value
+当前使用修改bundle类方式实现，也可以使用动态替换localizedStringForKey方法来实现，但需注意此方式的性能
+
+</div>
 
                         <a href="Categories/NSBundle%28FWLanguage%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2799,7 +2827,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>点对点消息分类</p>
 
                         <a href="Categories/NSObject%28FWMessage%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2840,7 +2868,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>广播通知分类</p>
 
                         <a href="Categories/NSObject%28FWNotification%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2881,7 +2909,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>KVO属性监听分类</p>
 
                         <a href="Categories/NSObject%28FWKvo%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2922,7 +2950,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>窗口导航分类</p>
 
                         <a href="Categories/UIWindow%28FWNavigation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -2963,7 +2991,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>控制器导航分类</p>
 
                         <a href="Categories/UIViewController%28FWNavigation%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3004,7 +3032,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>视图控制器工作流分类</p>
 
                         <a href="Categories/UIViewController%28FWWorkflow%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3032,7 +3060,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>导航控制器工作流分类</p>
 
                         <a href="Categories/UINavigationController%28FWWorkflow%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3073,7 +3101,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>NSObject方法交换分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
+
+</div>
 
                         <a href="Categories/NSObject%28FWSwizzle%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3114,7 +3147,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIColor主题分类</p>
 
                         <a href="Categories/UIColor%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3155,7 +3188,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIImage主题分类</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
+为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
+
+</div>
 
                         <a href="Categories/UIImage%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3196,7 +3235,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIImageAsset主题分类</p>
 
                         <a href="Categories/UIImageAsset%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3237,7 +3276,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展</p>
 
                         <a href="Categories/NSObject%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3265,7 +3304,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS13主题订阅UIImageView分类</p>
 
                         <a href="Categories/UIImageView%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3293,7 +3332,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS13主题订阅CALayer分类</p>
 
                         <a href="Categories/CALayer%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3321,7 +3360,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>iOS13主题订阅CALayer分类</p>
 
                         <a href="Categories/CAGradientLayer%28FWTheme%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3362,7 +3401,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIApplication+FWToolkit</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+
+</div>
 
                         <a href="Categories/UIApplication%28FWToolkit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3403,7 +3447,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIColor+FWToolkit</p>
 
                         <a href="Categories/UIColor%28FWToolkit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3444,7 +3488,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIFont+FWToolkit</p>
 
                         <a href="Categories/UIFont%28FWToolkit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3485,7 +3529,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIImage+FWToolkit</p>
 
                         <a href="Categories/UIImage%28FWToolkit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3526,7 +3570,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIViewController+FWToolkit</p>
 
                         <a href="Categories/UIViewController%28FWToolkit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3567,7 +3611,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIDevice+FWUIKit</p>
 
                         <a href="Categories/UIDevice%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3608,7 +3652,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>CAAnimation+FWUIKit</p>
 
                         <a href="Categories/CAAnimation%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3649,7 +3693,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UILabel+FWUIKit</p>
 
                         <a href="Categories/UILabel%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3690,7 +3734,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIButton+FWUIKit</p>
 
                         <a href="Categories/UIButton%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3731,7 +3775,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIScrollView+FWUIKit</p>
 
                         <a href="Categories/UIScrollView%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3772,7 +3816,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIPageControl+FWUIKit</p>
 
                         <a href="Categories/UIPageControl%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3813,7 +3857,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UISlider+FWUIKit</p>
 
                         <a href="Categories/UISlider%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3854,7 +3898,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UISwitch+FWUIKit</p>
 
                         <a href="Categories/UISwitch%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3895,7 +3939,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UITextField+FWUIKit</p>
 
                         <a href="Categories/UITextField%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3936,7 +3980,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UITextView+FWUIKit</p>
 
                         <a href="Categories/UITextView%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3977,7 +4021,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>UIViewController+FWUIKit</p>
 
                         <a href="Categories/UIViewController%28FWUIKit%29.html" class="slightly-smaller">See more</a>
                       </div>

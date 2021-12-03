@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWUIKit.h
  @indexgroup FWFramework
- @brief      FWUIKit
+      FWUIKit
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/10/22
@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIDevice+FWUIKit
 
-/*!
- @brief UIDevice+FWUIKit
+/**
+ UIDevice+FWUIKit
  */
 @interface UIDevice (FWUIKit)
 
@@ -37,8 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIView+FWUIKit
 
-/*!
- @brief UIView+FWUIKit
+/**
+ UIView+FWUIKit
  */
 @interface UIView (FWUIKit)
 
@@ -82,8 +82,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - CAAnimation+FWUIKit
 
-/*!
- @brief CAAnimation+FWUIKit
+/**
+ CAAnimation+FWUIKit
  */
 @interface CAAnimation (FWUIKit)
 
@@ -97,8 +97,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UILabel+FWUIKit
 
-/*!
- @brief UILabel+FWUIKit
+/**
+ UILabel+FWUIKit
  */
 @interface UILabel (FWUIKit)
 
@@ -124,8 +124,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIButton+FWUIKit
 
-/*!
- @brief UIButton+FWUIKit
+/**
+ UIButton+FWUIKit
  */
 @interface UIButton (FWUIKit)
 
@@ -157,8 +157,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIScrollView+FWUIKit
 
-/*!
- @brief UIScrollView+FWUIKit
+/**
+ UIScrollView+FWUIKit
  */
 @interface UIScrollView (FWUIKit)
 
@@ -196,8 +196,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIPageControl+FWUIKit
 
-/*!
- @brief UIPageControl+FWUIKit
+/**
+ UIPageControl+FWUIKit
  */
 @interface UIPageControl (FWUIKit)
 
@@ -208,8 +208,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UISlider+FWUIKit
 
-/*!
- @brief UISlider+FWUIKit
+/**
+ UISlider+FWUIKit
  */
 @interface UISlider (FWUIKit)
 
@@ -223,8 +223,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UISwitch+FWUIKit
 
-/*!
- @brief UISwitch+FWUIKit
+/**
+ UISwitch+FWUIKit
  */
 @interface UISwitch (FWUIKit)
 
@@ -235,8 +235,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UITextField+FWUIKit
 
-/*!
- @brief UITextField+FWUIKit
+/**
+ UITextField+FWUIKit
  */
 @interface UITextField (FWUIKit)
 
@@ -259,8 +259,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UITextView+FWUIKit
 
-/*!
- @brief UITextView+FWUIKit
+/**
+ UITextView+FWUIKit
  */
 @interface UITextView (FWUIKit)
 
@@ -283,8 +283,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIViewController+FWUIKit
 
-/*!
- @brief UIViewController+FWUIKit
+/**
+ UIViewController+FWUIKit
  */
 @interface UIViewController (FWUIKit)
 

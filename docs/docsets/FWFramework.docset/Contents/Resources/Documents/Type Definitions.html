@@ -17,7 +17,7 @@
     <a title="Type Definitions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1016,7 +1016,26 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>权限类型枚举。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    开启指定权限方法：
+一、Pod项目：添加pod时同时指定
+pod &lsquo;FWFramework&rsquo;, :subspecs =&gt; [&lsquo;Component-Contacts&rsquo;]
+二、Pod项目：在Podfile最后添加
+post_install do |installer_representation|
+installer_representation.pods_project.targets.each do |target|
+   if target.name == &lsquo;FWFramework&rsquo;
+       target.build_configurations.each do |config|
+           config.build_settings[&lsquo;GCC_PREPROCESSOR_DEFINITIONS&rsquo;] ||= [&lsquo;$(inherited)&rsquo;]
+           config.build_settings[&lsquo;GCC_PREPROCESSOR_DEFINITIONS&rsquo;] &lt;&lt; &lsquo;FWCOMPONENT_CONTACTS_ENABLED=1&rsquo;
+       end
+   end
+end
+end
+三、Framework项目：修改项目GCC_PREPROCESSOR_DEFINITIONS添加配置：FWCOMPONENT_CONTACTS_ENABLED=1
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1056,7 +1075,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用不带参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1083,7 +1102,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用id参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1093,6 +1112,25 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">FWBlockParam</span><span class="p">)(</span><span class="n">id</span> <span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>param</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>id参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1110,7 +1148,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用bool参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1120,6 +1158,25 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">FWBlockBool</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isTrue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>bool参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1137,7 +1194,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用NSInteger参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1147,6 +1204,25 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">FWBlockInt</span><span class="p">)(</span><span class="n">NSInteger</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>index</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>NSInteger参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1164,7 +1240,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用double参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1174,6 +1250,25 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">FWBlockDouble</span><span class="p">)(</span><span class="kt">double</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>double参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1191,7 +1286,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>通用(BOOL,id)参数block</p>
 
                       </div>
                       <div class="declaration">
@@ -1201,6 +1296,37 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">FWBlockBoolParam</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">,</span> <span class="n">id</span> <span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isTrue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>BOOL参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>param</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>id参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -1499,7 +1625,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>路由处理句柄，仅支持openURL时可返回nil</p>
 
                       </div>
                       <div class="declaration">
@@ -1526,7 +1652,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>路由完成句柄，openURL时可设置完成回调</p>
 
                       </div>
                       <div class="declaration">

@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWNotification.h
  @indexgroup FWFramework
- @brief      FWNotification
+      FWNotification
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/5/17
@@ -18,12 +18,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @brief 通知管理器
+/**
+ 通知管理器
  */
 @interface FWNotificationManager : NSObject
 
-/*! @brief 单例模式 */
+/** 单例模式 */
 @property (class, nonatomic, readonly) FWNotificationManager *sharedInstance;
 
 #pragma mark - Authorize

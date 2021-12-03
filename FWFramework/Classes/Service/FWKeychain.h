@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Keychain管理器
 @interface FWKeychainManager : NSObject
 
-/*! @brief 单例模式 */
+/** 单例模式 */
 @property (class, nonatomic, readonly) FWKeychainManager *sharedInstance;
 
 /// 分组对象

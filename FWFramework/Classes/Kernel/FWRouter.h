@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWRouter.h
  @indexgroup FWFramework
- @brief      URL路由
+      URL路由
  @author     wuyong
  @copyright  Copyright © 2018 wuyong.site. All rights reserved.
  @updated    2018/11/29
@@ -16,36 +16,36 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWRouterContext;
 @class FWLoader<InputType, OutputType>;
 
-/*! @brief 路由处理句柄，仅支持openURL时可返回nil */
+/** 路由处理句柄，仅支持openURL时可返回nil */
 typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context);
-/*! @brief 路由完成句柄，openURL时可设置完成回调 */
+/** 路由完成句柄，openURL时可设置完成回调 */
 typedef void (^FWRouterCompletion)(id _Nullable result);
 
-/*! @brief URL路由上下文 */
+/** URL路由上下文 */
 @interface FWRouterContext : NSObject <NSCopying>
 
-/*! @brief 路由URL */
+/** 路由URL */
 @property (nonatomic, copy, readonly) NSString *URL;
-/*! @brief 路由用户信息 */
+/** 路由用户信息 */
 @property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
-/*! @brief 路由完成回调 */
+/** 路由完成回调 */
 @property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
 
-/*! @brief 路由URL解析参数字典 */
+/** 路由URL解析参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *URLParameters;
-/*! @brief 路由userInfo和URLParameters合并参数，URL参数优先级高 */
+/** 路由userInfo和URLParameters合并参数，URL参数优先级高 */
 @property (nonatomic, copy, readonly) NSDictionary *parameters;
-/*！@brief 路由是否以openURL方式打开，区别于objectForURL */
+/*！路由是否以openURL方式打开，区别于objectForURL */
 @property (nonatomic, assign, readonly) BOOL isOpening;
 
-/*! @brief 创建路由参数对象 */
+/** 创建路由参数对象 */
 - (instancetype)initWithURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
 
 @end
 
 #pragma mark - FWRouterProtocol
 
-/*! @brief URL路由协议 */
+/** URL路由协议 */
 @protocol FWRouterProtocol <NSObject>
 
 @required
@@ -58,8 +58,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 #pragma mark - FWRouter
 
-/*!
- @brief URL路由器
+/**
+ URL路由器
  
  @see https://github.com/meili/MGJRouter
  */
@@ -229,8 +229,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 #pragma mark - FWRouter+Rewrite
 
-/*!
- @brief URL路由Rewrite
+/**
+ URL路由Rewrite
  
  @see https://github.com/imlifengfeng/FFRouter
  */
@@ -282,8 +282,8 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 #pragma mark - FWRouter+Navigation
 
-/*!
- @brief URL路由导航
+/**
+ URL路由导航
  */
 @interface FWRouter (Navigation)
 

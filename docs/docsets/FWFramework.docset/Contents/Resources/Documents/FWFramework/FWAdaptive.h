@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWAdaptive.h
  @indexgroup FWFramework
- @brief      FWAdaptive
+      FWAdaptive
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/9/8
@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
     #define FWIsDebug NO
 #endif
 
-/*!
- @brief UIApplication+FWAdaptive
+/**
+ UIApplication+FWAdaptive
  */
 @interface UIApplication (FWAdaptive)
 
@@ -67,8 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设备分辨率，跟横竖屏无关
 #define FWDeviceResolution CGSizeMake(FWDeviceWidth * [UIScreen mainScreen].scale, FWDeviceHeight * [UIScreen mainScreen].scale)
 
-/*!
- @brief UIDevice+FWAdaptive
+/**
+ UIDevice+FWAdaptive
  */
 @interface UIDevice (FWAdaptive)
 
@@ -167,8 +167,8 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
     return FWFlatScale(floatValue, 0);
 }
 
-/*!
- @brief UIScreen+FWAdaptive
+/**
+ UIScreen+FWAdaptive
  */
 @interface UIScreen (FWAdaptive)
 
@@ -214,8 +214,8 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 
 #pragma mark - UIViewController+FWAdaptive
 
-/*!
- @brief UIViewController+FWAdaptive
+/**
+ UIViewController+FWAdaptive
  */
 @interface UIViewController (FWAdaptive)
 

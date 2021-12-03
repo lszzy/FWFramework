@@ -17,7 +17,7 @@
     <a title="FWThemeManager Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (53% documented)</p>
+        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -955,7 +955,13 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>主题管理器，iOS13+可跟随系统改变</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
+注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法
+
+</div>
 
           </section>
           <section class="section task-group-section">
