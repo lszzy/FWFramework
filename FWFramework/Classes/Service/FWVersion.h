@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, FWVersionStatus) {
 /// 版本管理器
 @interface FWVersionManager : NSObject
 
-/*! @brief 单例模式 */
+/** 单例模式 */
 @property (class, nonatomic, readonly) FWVersionManager *sharedInstance;
 
 #pragma mark - Store

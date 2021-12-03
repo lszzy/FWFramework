@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWDefine.h
  @indexgroup FWFramework
- @brief      核心宏定义
+      核心宏定义
  @author     wuyong
  @copyright  Copyright © 2018年 wuyong.site. All rights reserved.
  @updated    2018-05-11
@@ -26,41 +26,41 @@
 
 #pragma mark - Block
 
-/*!
- @brief 通用不带参数block
+/**
+ 通用不带参数block
  */
 typedef void (^FWBlockVoid)(void);
 
-/*!
- @brief 通用id参数block
+/**
+ 通用id参数block
  
  @param param id参数
  */
 typedef void (^FWBlockParam)(id _Nullable param);
 
-/*!
- @brief 通用bool参数block
+/**
+ 通用bool参数block
  
  @param isTrue bool参数
  */
 typedef void (^FWBlockBool)(BOOL isTrue);
 
-/*!
- @brief 通用NSInteger参数block
+/**
+ 通用NSInteger参数block
  
  @param index NSInteger参数
  */
 typedef void (^FWBlockInt)(NSInteger index);
 
-/*!
- @brief 通用double参数block
+/**
+ 通用double参数block
  
  @param value double参数
  */
 typedef void (^FWBlockDouble)(double value);
 
-/*!
- @brief 通用(BOOL,id)参数block
+/**
+ 通用(BOOL,id)参数block
  
  @param isTrue BOOL参数
  @param param id参数
@@ -69,8 +69,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 #ifndef weakify
 
-/*!
- @brief 解决block循环引用，@weakify，和@strongify配对使用
+/**
+ 解决block循环引用，@weakify，和@strongify配对使用
  
  @param x 变量名，如self
  */
@@ -84,8 +84,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 #ifndef strongify
 
-/*!
- @brief 解决block循环引用，@strongify，和@weakify配对使用
+/**
+ 解决block循环引用，@strongify，和@weakify配对使用
  
  @param x 变量名，如self
  */
@@ -97,8 +97,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 #endif /* strongify */
 
-/*!
- @brief 解决block循环引用，和FWStrongify配对使用
+/**
+ 解决block循环引用，和FWStrongify配对使用
  
  @param x 变量名，如self
  */
@@ -108,8 +108,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
     autoreleasepool{} __weak __typeof__(x) x##_weak_ = x; \
     _Pragma("clang diagnostic pop")
 
-/*!
- @brief 解决block循环引用，和FWWeakify配对使用
+/**
+ 解决block循环引用，和FWWeakify配对使用
  
  @param x 变量名，如self
  */
@@ -119,30 +119,30 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
     try{} @finally{} __typeof__(x) x = x##_weak_; \
     _Pragma("clang diagnostic pop")
 
-/*!
- @brief 解决self循环引用。等价于：typeof(self) __weak self_weak_ = self;
+/**
+ 解决self循环引用。等价于：typeof(self) __weak self_weak_ = self;
  */
 #define FWWeakifySelf( ) \
     FWWeakify( self )
 
-/*!
- @brief 解决self循环引用。等价于：typeof(self_weak_) __strong self = self_weak_;
+/**
+ 解决self循环引用。等价于：typeof(self_weak_) __strong self = self_weak_;
  */
 #define FWStrongifySelf( ) \
     FWStrongify( self )
 
 #pragma mark - Singleton
 
-/*!
- @brief 定义单例头文件
+/**
+ 定义单例头文件
  
  @param cls 类名
  */
 #define FWSingleton( cls ) \
     @property (class, nonatomic, readonly) cls *sharedInstance;
 
-/*!
- @brief 定义单例实现
+/**
+ 定义单例实现
  
  @param cls 类名
  */
@@ -204,8 +204,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 
 #pragma mark - Macro
 
-/*!
- @brief 参数字符串连接
+/**
+ 参数字符串连接
  
  @param A 字符串A
  @param B 字符串B
@@ -215,8 +215,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_concat_( A, B ) \
     A##B
 
-/*!
- @brief 参数转C字符串
+/**
+ 参数转C字符串
  
  @param A 参数字符串
  */
@@ -225,8 +225,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_cstring_( A ) \
     #A
 
-/*!
- @brief 参数转OC字符串
+/**
+ 参数转OC字符串
  
  @param A 参数字符串
  */
@@ -235,8 +235,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_string_( A ) \
     @(#A)
 
-/*!
- @brief 截取第一个参数
+/**
+ 截取第一个参数
  
  @param ... 参数列表
  */
@@ -245,8 +245,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_first_( A, ... ) \
     A
 
-/*!
- @brief 截取第一个之后的其它参数
+/**
+ 截取第一个之后的其它参数
  
  @param ... 参数列表
  */
@@ -255,16 +255,16 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_other_( A, ... ) \
     __VA_ARGS__
 
-/*!
- @brief 计算参数个数
+/**
+ 计算参数个数
  
  @param ... 参数列表
  */
 #define fw_macro_count(...) \
     fw_macro_at( 8, __VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1 )
 
-/*!
- @brief 计算指定参数个数
+/**
+ 计算指定参数个数
  
  @param N 参数个数
  @param ... 参数列表
@@ -290,16 +290,16 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_at_8(_0, _1, _2, _3, _4, _5, _6, _7, ...) \
     fw_macro_first(__VA_ARGS__)
 
-/*!
- @brief 根据参数拼接方法名称
+/**
+ 根据参数拼接方法名称
  
  @param ... 参数列表
  */
 #define fw_macro_method( ... ) \
     fw_macro_concat(fw_macro_join_, fw_macro_count(__VA_ARGS__))(____, __VA_ARGS__)
 
-/*!
- @brief 参数按指定分隔符连接
+/**
+ 参数按指定分隔符连接
  
  @param X 分隔符
  @param ... 参数列表
@@ -324,8 +324,8 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_join_8( X, A, B, C, D, E, F, G, H ) \
     A##X##B##X##C##X##D##X##E##X##F##X##G##X##H
 
-/*!
- @brief 参数按.分隔符连接
+/**
+ 参数按.分隔符连接
  
  @param ... 参数列表
  */
@@ -349,9 +349,9 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_make_8( A, B, C, D, E, F, G, H ) \
     A.B.C.D.E.F.G.H
 
-/*!
- @brief 参数默认值设置，需传入##__VA_ARGS__
- @discussion 调用示例：fw_macro_default(default, ##__VA_ARGS__)。##__VA_ARGS__前面的##作用在于，当可变参数的个数为0时，把前面多余的","去掉，否则会编译出错
+/**
+ 参数默认值设置，需传入##__VA_ARGS__
+ @note 调用示例：fw_macro_default(default, ##__VA_ARGS__)。##__VA_ARGS__前面的##作用在于，当可变参数的个数为0时，把前面多余的","去掉，否则会编译出错
  
  @param ... 参数列表
  */
@@ -375,9 +375,9 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
 #define fw_macro_default_8( X, A, B, C, D, E, F, G ) \
     A
 
-/*!
- @brief 指定位置参数默认值设置，从1开始计数，需传入##__VA_ARGS__
- @discussion 调用示例：fw_macro_default_at(1, default, ##__VA_ARGS__)
+/**
+ 指定位置参数默认值设置，从1开始计数，需传入##__VA_ARGS__
+ @note 调用示例：fw_macro_default_at(1, default, ##__VA_ARGS__)
  
  @param N 参数位置索引，从1开始
  @param ... 参数列表

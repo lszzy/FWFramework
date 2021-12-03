@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWMediator.h
  @indexgroup FWFramework
- @brief      FWMediator
+      FWMediator
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/12/31
@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 模块默认优先级，100
 static const NSUInteger FWModulePriorityDefault = 100;
 
-/*!
- @brief 业务模块协议，各业务必须实现
+/**
+ 业务模块协议，各业务必须实现
  */
 @protocol FWModuleProtocol <UIApplicationDelegate, NSObject>
 
@@ -49,8 +49,8 @@ static const NSUInteger FWModulePriorityDefault = 100;
 
 @class FWLoader<InputType, OutputType>;
 
-/*!
- @brief iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
+/**
+ iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
  
  @see https://github.com/youzan/Bifrost
  */
@@ -84,8 +84,8 @@ static const NSUInteger FWModulePriorityDefault = 100;
 
 #pragma mark - FWModuleBundle
 
-/*!
- @brief 业务模块Bundle基类，各模块可继承
+/**
+ 业务模块Bundle基类，各模块可继承
  */
 @interface FWModuleBundle : NSObject
 

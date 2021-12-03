@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWBlock.h
  @indexgroup FWFramework
- @brief      FWBlock
+      FWBlock
  @author     wuyong
  @copyright  Copyright © 2020 wuyong.site. All rights reserved.
  @updated    2020/10/16
@@ -13,14 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - CADisplayLink+FWBlock
 
-/*!
- @brief CADisplayLink分类
- @discussion 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
+/**
+ CADisplayLink分类
+ @note 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
  */
 @interface CADisplayLink (FWBlock)
 
-/*!
- @brief 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+/**
+ 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
  
  @param target 目标
  @param selector 方法
@@ -28,17 +28,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
 
-/*!
- @brief 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+/**
+ 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
  
  @param block 代码块
  @return CADisplayLink
  */
 + (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
 
-/*!
- @brief 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
- @discussion 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
+/**
+ 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @note 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
  
  @param block 代码块
  @return CADisplayLink
@@ -49,13 +49,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSTimer+FWBlock
 
-/*!
- @brief NSTimer分类
+/**
+ NSTimer分类
  */
 @interface NSTimer (FWBlock)
 
-/*!
- @brief 创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+/**
+ 创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
  
  @param seconds 时间
  @param target 目标
@@ -66,8 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
 
-/*!
- @brief 创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+/**
+ 创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
  
  @param seconds 时间
  @param block 代码块
@@ -76,8 +76,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
-/*!
- @brief 创建倒计时定时器
+/**
+ 创建倒计时定时器
  
  @param seconds 倒计时描述
  @param block 每秒执行block，为0时自动停止
@@ -85,9 +85,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
 
-/*!
- @brief 创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
- @discussion 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]
+/**
+ 创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
+ @note 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]
  
  @param seconds 时间
  @param block 代码块
@@ -96,8 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
-/*!
- @brief 创建NSTimer，使用block，默认模式安排到当前的运行循环中
+/**
+ 创建NSTimer，使用block，默认模式安排到当前的运行循环中
  
  @param seconds 时间
  @param block 代码块
@@ -170,8 +170,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIBarButtonItem+FWBlock
 
-/*!
- @brief iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可
+/**
+ iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可
  */
 @interface UIBarButtonItem (FWBlock)
 

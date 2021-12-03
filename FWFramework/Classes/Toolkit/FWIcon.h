@@ -1,7 +1,7 @@
-/*!
+/**
  @header     FWIcon.h
  @indexgroup FWFramework
- @brief      FWIcon
+      FWIcon
  @author     wuyong
  @copyright  Copyright © 2019 wuyong.site. All rights reserved.
  @updated    2019/8/14
@@ -20,9 +20,9 @@ FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size);
 /// 指定名称和大小初始化图标图像
 FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
 
-/*!
- @brief 字体图标抽象基类，子类需继承
- @discussion Foundation icons: https://zurb.com/playground/foundation-icon-fonts-3#allicons
+/**
+ 字体图标抽象基类，子类需继承
+ @note Foundation icons: https://zurb.com/playground/foundation-icon-fonts-3#allicons
  FontAwesome: https://fontawesome.com/
  ionicons: https://ionic.io/ionicons/
  Octicons: https://primer.style/octicons/
