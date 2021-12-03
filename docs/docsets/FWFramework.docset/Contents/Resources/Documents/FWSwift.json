@@ -3083,39 +3083,18 @@
         "key.offset" : 211
       },
       {
-        "key.annotated_decl" : "<Declaration>class FWTestCase : <Type usr=\"c:objc(cs)NSObject\">NSObject<\/Type><\/Declaration>",
         "key.bodylength" : 362,
         "key.bodyoffset" : 329,
-        "key.column" : 12,
-        "key.decl_lang" : "source.lang.objc",
-        "key.doc.column" : 12,
         "key.doc.comment" : "FWTestCase扩展，注意测试方法需标记@objc，让OC可以访问",
-        "key.doc.declaration" : "class FWTestCase : NSObject",
-        "key.doc.discussion" : [
-          {
-            "Para" : " 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name"
-          }
-        ],
-        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.h",
-        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.h\" line=\"31\" column=\"12\"><Name>FWTestCase<\/Name><USR>c:objc(cs)FWTestCase<\/USR><Declaration>class FWTestCase : NSObject<\/Declaration><Abstract><Para> 单元测试用例基类，所有单元测试用例必须继承 <\/Para><\/Abstract><Discussion><Para> 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name<\/Para><\/Discussion><\/Other>",
-        "key.doc.line" : 31,
-        "key.doc.name" : "FWTestCase",
-        "key.doc.type" : "Other",
         "key.doclength" : 76,
         "key.docoffset" : 231,
-        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.h",
-        "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>FWTestCase<\/decl.name> : <ref.class usr=\"c:objc(cs)NSObject\">NSObject<\/ref.class><\/decl.class>",
+        "key.internal_diagnostic" : "Unable to resolve cursor info.",
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 385,
-        "key.line" : 31,
-        "key.modulename" : "FWFramework.FWTest",
         "key.name" : "FWTestCase",
         "key.namelength" : 10,
         "key.nameoffset" : 317,
         "key.offset" : 307,
-        "key.parsed_declaration" : "extension FWTestCase",
-        "key.parsed_scope.end" : 27,
-        "key.parsed_scope.start" : 17,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -3135,7 +3114,7 @@
             "key.doc.comment" : "断言方法\n\n- Parameters:\n  - value: 断言表达式\n  - file: 文件名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public func assertTrue(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.swift\" line=\"24\" column=\"17\"><Name>assertTrue(_:_:file:line:)<\/Name><USR>s:So10FWTestCaseC11FWFrameworkE10assertTrue__4file4lineySb_S2SSitF<\/USR><Declaration>public func assertTrue(_ value: Bool, _ expression: String = &quot;&quot;, file: String = #file, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>断言方法<\/Para><\/Abstract><Parameters><Parameter><Name>value<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>断言表达式<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/FWFramework\/FWFramework\/Classes\/Kernel\/FWTest.swift\" line=\"24\" column=\"17\"><Name>assertTrue(_:_:file:line:)<\/Name><USR>s:11FWFramework10assertTrueyXeXeF<\/USR><Declaration>public func assertTrue(_ value: Bool, _ expression: String = &quot;&quot;, file: String = #file, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>断言方法<\/Para><\/Abstract><Parameters><Parameter><Name>value<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>断言表达式<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
             "key.doc.line" : 24,
             "key.doc.name" : "assertTrue(_:_:file:line:)",
             "key.doc.parameters" : [
@@ -3179,22 +3158,14 @@
             "key.parsed_declaration" : "public func assertTrue(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
             "key.parsed_scope.end" : 26,
             "key.parsed_scope.start" : 24,
-            "key.related_decls" : [
-              {
-                "key.annotated_decl" : "<RelatedName usr=\"c:objc(cs)FWTestCase(im)assertTrue:expression:file:line:\">assertTrue(_:expression:file:line:)<\/RelatedName>"
-              }
-            ],
             "key.substructure" : [
 
             ],
-            "key.typename" : "(FWTestCase) -> (Bool, String, String, Int) -> ()",
-            "key.typeusr" : "$s__4file4lineySb_S2SSitcD",
-            "key.usr" : "s:So10FWTestCaseC11FWFrameworkE10assertTrue__4file4lineySb_S2SSitF"
+            "key.typename" : "(<<error type>>) -> (Bool, String, String, Int) -> ()",
+            "key.typeusr" : "$syXeXecD",
+            "key.usr" : "s:11FWFramework10assertTrueyXeXeF"
           }
-        ],
-        "key.typename" : "FWTestCase.Type",
-        "key.typeusr" : "$sSo10FWTestCaseCmD",
-        "key.usr" : "c:objc(cs)FWTestCase"
+        ]
       }
     ]
   }
@@ -5675,7 +5646,7 @@
             "key.offset" : 6732
           }
         ],
-        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX12.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSDateFormatter.h",
+        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS15.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSDateFormatter.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>DateFormatter<\/decl.name> : <ref.class usr=\"c:objc(cs)NSFormatter\">Formatter<\/ref.class><\/decl.class>",
         "key.inheritedtypes" : [
           {
@@ -5685,7 +5656,7 @@
         "key.is_system" : true,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 46,
-        "key.line" : 25,
+        "key.line" : 19,
         "key.modulename" : "Foundation.NSDateFormatter",
         "key.name" : "DateFormatter",
         "key.namelength" : 13,
@@ -5711,7 +5682,7 @@
             "key.offset" : 6787
           }
         ],
-        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX12.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSISO8601DateFormatter.h",
+        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS15.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSISO8601DateFormatter.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>ISO8601DateFormatter<\/decl.name> : <ref.class usr=\"c:objc(cs)NSFormatter\">Formatter<\/ref.class>, <ref.protocol usr=\"c:objc(pl)NSSecureCoding\">NSSecureCoding<\/ref.protocol><\/decl.class>",
         "key.inheritedtypes" : [
           {
@@ -18208,21 +18179,6 @@
             "key.annotated_decl" : "<RelatedName usr=\"s:8Dispatch0A13TimeoutResultO2eeoiySbAC_ACtFZ\">== (_: DispatchTimeoutResult, _: DispatchTimeoutResult) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So17CGAffineTransformV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGAffineTransform, _: CGAffineTransform) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So7CGPointV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGPoint, _: CGPoint) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGSizeV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGSize, _: CGSize) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So8CGVectorV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGVector, _: CGVector) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGRectV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGRect, _: CGRect) -&gt; Bool<\/RelatedName>"
-          },
-          {
             "key.annotated_decl" : "<RelatedName usr=\"s:5UIKit26UIListContentConfigurationV15ImagePropertiesV2eeoiySbAE_AEtFZ\">== (_: UIListContentConfiguration.ImageProperties, _: UIListContentConfiguration.ImageProperties) -&gt; Bool<\/RelatedName>"
           },
           {
@@ -18307,10 +18263,22 @@
             "key.annotated_decl" : "<RelatedName usr=\"s:5UIKit24UICellConfigurationStateV2eeoiySbAC_ACtFZ\">== (_: UICellConfigurationState, _: UICellConfigurationState) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So16CAFrameRateRangeV10QuartzCoreE2eeoiySbAB_ABtFZ\">== (_: CAFrameRateRange, _: CAFrameRateRange) -&gt; Bool<\/RelatedName>"
+            "key.annotated_decl" : "<RelatedName usr=\"s:So17CGAffineTransformV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGAffineTransform, _: CGAffineTransform) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO2eeoiySbAE_AEtFZ\">== (_: NSManagedObjectContext.ScheduledTaskType, _: NSManagedObjectContext.ScheduledTaskType) -&gt; Bool<\/RelatedName>"
+            "key.annotated_decl" : "<RelatedName usr=\"s:So7CGPointV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGPoint, _: CGPoint) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGSizeV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGSize, _: CGSize) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So8CGVectorV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGVector, _: CGVector) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGRectV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGRect, _: CGRect) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So16CAFrameRateRangeV10QuartzCoreE2eeoiySbAB_ABtFZ\">== (_: CAFrameRateRange, _: CAFrameRateRange) -&gt; Bool<\/RelatedName>"
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:12AVFoundation15AVAsyncPropertyC6StatusOAASQR_rlE2eeoiySbAEyxq__G_AGtFZ\">== (_: AVAsyncProperty&lt;Root, Value&gt;.Status, _: AVAsyncProperty&lt;Root, Value&gt;.Status) -&gt; Bool<\/RelatedName>"
@@ -18341,6 +18309,15 @@
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:So6CMTimea9CoreMediaE2eeoiySbAB_ABtFZ\">== (_: CMTime, _: CMTime) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So23AudioChannelDescriptionV04CoreA0E2eeoiySbAB_ABtFZ\">== (_: AudioChannelDescription, _: AudioChannelDescription) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:9CoreAudio07ManagedB13ChannelLayoutV0D12DescriptionsV2eeoiySbAE_AEtFZ\">== (_: ManagedAudioChannelLayout.ChannelDescriptions, _: ManagedAudioChannelLayout.ChannelDescriptions) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:9CoreAudio07ManagedB13ChannelLayoutV2eeoiySbAC_ACtFZ\">== (_: ManagedAudioChannelLayout, _: ManagedAudioChannelLayout) -&gt; Bool<\/RelatedName>"
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:So13simd_float2x2a0A0E2eeoiySbAB_ABtFZ\">== (_: simd_float2x2, _: simd_float2x2) -&gt; Bool<\/RelatedName>"
@@ -19111,7 +19088,7 @@
         "key.bodyoffset" : 34467,
         "key.column" : 12,
         "key.decl_lang" : "source.lang.objc",
-        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX12.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSValue.h",
+        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS15.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Headers\/NSValue.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>NSNumber<\/decl.name> : <ref.class usr=\"c:objc(cs)NSValue\">NSValue<\/ref.class><\/decl.class>",
         "key.is_system" : true,
         "key.kind" : "source.lang.swift.decl.extension",
@@ -19880,21 +19857,6 @@
             "key.annotated_decl" : "<RelatedName usr=\"s:8Dispatch0A13TimeoutResultO2eeoiySbAC_ACtFZ\">== (_: DispatchTimeoutResult, _: DispatchTimeoutResult) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So17CGAffineTransformV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGAffineTransform, _: CGAffineTransform) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So7CGPointV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGPoint, _: CGPoint) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGSizeV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGSize, _: CGSize) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So8CGVectorV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGVector, _: CGVector) -&gt; Bool<\/RelatedName>"
-          },
-          {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGRectV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGRect, _: CGRect) -&gt; Bool<\/RelatedName>"
-          },
-          {
             "key.annotated_decl" : "<RelatedName usr=\"s:5UIKit26UIListContentConfigurationV15ImagePropertiesV2eeoiySbAE_AEtFZ\">== (_: UIListContentConfiguration.ImageProperties, _: UIListContentConfiguration.ImageProperties) -&gt; Bool<\/RelatedName>"
           },
           {
@@ -19979,10 +19941,22 @@
             "key.annotated_decl" : "<RelatedName usr=\"s:5UIKit24UICellConfigurationStateV2eeoiySbAC_ACtFZ\">== (_: UICellConfigurationState, _: UICellConfigurationState) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So16CAFrameRateRangeV10QuartzCoreE2eeoiySbAB_ABtFZ\">== (_: CAFrameRateRange, _: CAFrameRateRange) -&gt; Bool<\/RelatedName>"
+            "key.annotated_decl" : "<RelatedName usr=\"s:So17CGAffineTransformV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGAffineTransform, _: CGAffineTransform) -&gt; Bool<\/RelatedName>"
           },
           {
-            "key.annotated_decl" : "<RelatedName usr=\"s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO2eeoiySbAE_AEtFZ\">== (_: NSManagedObjectContext.ScheduledTaskType, _: NSManagedObjectContext.ScheduledTaskType) -&gt; Bool<\/RelatedName>"
+            "key.annotated_decl" : "<RelatedName usr=\"s:So7CGPointV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGPoint, _: CGPoint) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGSizeV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGSize, _: CGSize) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So8CGVectorV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGVector, _: CGVector) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So6CGRectV12CoreGraphicsE2eeoiySbAB_ABtFZ\">== (_: CGRect, _: CGRect) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So16CAFrameRateRangeV10QuartzCoreE2eeoiySbAB_ABtFZ\">== (_: CAFrameRateRange, _: CAFrameRateRange) -&gt; Bool<\/RelatedName>"
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:12AVFoundation15AVAsyncPropertyC6StatusOAASQR_rlE2eeoiySbAEyxq__G_AGtFZ\">== (_: AVAsyncProperty&lt;Root, Value&gt;.Status, _: AVAsyncProperty&lt;Root, Value&gt;.Status) -&gt; Bool<\/RelatedName>"
@@ -20013,6 +19987,15 @@
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:So6CMTimea9CoreMediaE2eeoiySbAB_ABtFZ\">== (_: CMTime, _: CMTime) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:So23AudioChannelDescriptionV04CoreA0E2eeoiySbAB_ABtFZ\">== (_: AudioChannelDescription, _: AudioChannelDescription) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:9CoreAudio07ManagedB13ChannelLayoutV0D12DescriptionsV2eeoiySbAE_AEtFZ\">== (_: ManagedAudioChannelLayout.ChannelDescriptions, _: ManagedAudioChannelLayout.ChannelDescriptions) -&gt; Bool<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:9CoreAudio07ManagedB13ChannelLayoutV2eeoiySbAC_ACtFZ\">== (_: ManagedAudioChannelLayout, _: ManagedAudioChannelLayout) -&gt; Bool<\/RelatedName>"
           },
           {
             "key.annotated_decl" : "<RelatedName usr=\"s:So13simd_float2x2a0A0E2eeoiySbAB_ABtFZ\">== (_: simd_float2x2, _: simd_float2x2) -&gt; Bool<\/RelatedName>"
@@ -26883,7 +26866,7 @@
         "key.doc.comment" : "视图链式布局扩展",
         "key.doclength" : 29,
         "key.docoffset" : 19473,
-        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX12.0.sdk\/System\/iOSSupport\/System\/Library\/Frameworks\/UIKit.framework\/Headers\/UIView.h",
+        "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS15.0.sdk\/System\/Library\/Frameworks\/UIKit.framework\/Headers\/UIView.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.attribute.builtin><syntaxtype.attribute.name>@<ref.class usr=\"s:ScM\">MainActor<\/ref.class><\/syntaxtype.attribute.name><\/syntaxtype.attribute.builtin> <syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>UIView<\/decl.name> : <ref.class usr=\"c:objc(cs)UIResponder\">UIResponder<\/ref.class>, <ref.protocol usr=\"c:objc(pl)NSCoding\">NSCoding<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIAppearance\">UIAppearance<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIAppearanceContainer\">UIAppearanceContainer<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIDynamicItem\">UIDynamicItem<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UITraitEnvironment\">UITraitEnvironment<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UICoordinateSpace\">UICoordinateSpace<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIFocusItem\">UIFocusItem<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIFocusItemContainer\">UIFocusItemContainer<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)CALayerDelegate\">CALayerDelegate<\/ref.protocol><\/decl.class>",
         "key.is_system" : true,
         "key.kind" : "source.lang.swift.decl.extension",
