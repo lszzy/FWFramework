@@ -31,6 +31,9 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Tracking']
 	end
 
+## [Api文档](docs/index.html)
+运行docs.sh即可自动生成Api文档。
+
 ## [更新日志](CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 

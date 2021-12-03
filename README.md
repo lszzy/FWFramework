@@ -31,6 +31,9 @@ This framework supports CocoaPods, Podfile example:
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Tracking']
 	end
 
+## [Api](docs/index.html)
+Run docs.sh to automatically generate Api documents.
+
 ## [Changelog](CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
