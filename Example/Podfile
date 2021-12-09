@@ -1,17 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.0'
+platform :ios, '11.0'
 use_frameworks!
 
 target "Example" do
   project 'Example', 'Release-Testing' => :release, 'Release-Staging' => :release, 'Release-Production' => :release, 'Debug-Testing' => :debug, 'Debug-Staging' => :debug, 'Debug-Production' => :debug
 
-  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'Component/SDWebImage']
+  pod 'FWFramework', :path => '../'
   pod 'FWDebug', :configurations => ['Debug', 'Debug-Testing', 'Debug-Staging', 'Debug-Production']
-  pod 'Mediator', :path => 'Mediator/Mediator/'
-  pod 'Core', :path => 'Mediator/Core/'
-  pod 'User', :path => 'Mediator/User/'
-  pod 'Test', :path => 'Mediator/Test/'
-  
-  pod 'SDWebImageWebPCoder'
-  pod 'SDWebImageSVGKitPlugin'
 end
