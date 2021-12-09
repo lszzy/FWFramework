@@ -5,6 +5,8 @@
 [![Pod License](https://img.shields.io/cocoapods/l/FWFramework.svg?style=flat)](https://github.com/lszzy/FWFramework/blob/master/LICENSE)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/lszzy/FWFramework)
 
+# [FWApplication](https://github.com/lszzy/FWApplication)
+
 # [English](README.md)
 
 ## 帮助文档
@@ -18,7 +20,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 ### CocoaPods
 本框架支持CocoaPods，Podfile示例：
 
-	platform :ios, '10.0'
+	platform :ios, '11.0'
 	use_frameworks!
 
 	target 'Example' do
@@ -26,20 +28,17 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	  pod 'FWFramework'
 	  
 	  # 引入指定子模块，子模块列表详见podspec文件
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Component/SDWebImage']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Tracking']
 	end
-	
-子模块简单说明说下：
 
-	Framework: 框架层，核心架构，和应用无关，底层依赖
-	Application: 应用层，AOP方案，无需继承，组件可替换
-	Component: 组件层，可选引入，常用功能，方便开发
+## [Api文档](https://fwframework.wuyong.site)
+文档位于docs文件夹，浏览器打开index.html即可，也可运行docs.sh自动生成Api文档。
 
 ## [更新日志](CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
 	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '1.0.0'
-	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Component/Deprecated子模块，并在后续版本删除
+	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Deprecated子模块，并在后续版本删除
 
 ## 第三方库
 本框架使用了很多第三方库，在此感谢所有第三方库的作者，此处不一一列举，详见源码头文件相关链接。  
