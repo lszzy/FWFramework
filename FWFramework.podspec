@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   
   s.subspec 'Toolkit' do |ss|
     ss.source_files = 'FWFramework/Classes/Toolkit/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/Kernel'
+    ss.dependency 'FWFramework/Service'
   end
   
   s.subspec 'Contacts' do |ss|

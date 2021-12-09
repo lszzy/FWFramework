@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0] - 2021-10-01
+## [2.0.0] - 2021-12-09
 
 ### Changed
 * Split out FWApplication to maintain a separate warehouse
