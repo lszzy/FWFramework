@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if FWFrameworkSwift
+import FWFramework
+#endif
 
 // 调试环境开启，正式环境关闭
 #if DEBUG

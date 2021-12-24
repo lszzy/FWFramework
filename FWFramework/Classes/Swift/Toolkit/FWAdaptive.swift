@@ -7,6 +7,9 @@
 //
 
 import UIKit
+#if FWFrameworkSwift
+import FWFramework
+#endif
 
 // MARK: - UIApplication+FWAdaptive
 

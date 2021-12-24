@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if FWFrameworkSwift
+import FWFramework
+#endif
 
 /// 记录跟踪日志
 ///
