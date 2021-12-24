@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if FWFrameworkSwift
+import FWFramework
+#endif
 
 /// UserDefault属性包装器注解
 /// 使用示例：
