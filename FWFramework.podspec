@@ -20,16 +20,16 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'Kernel' do |ss|
-    ss.source_files = 'FWFramework/Classes/Kernel/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/{Objc,Swift}/Kernel/**/*.{h,m,swift}'
   end
 
   s.subspec 'Service' do |ss|
-    ss.source_files = 'FWFramework/Classes/Service/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/{Objc,Swift}/Service/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/Kernel'
   end
   
   s.subspec 'Toolkit' do |ss|
-    ss.source_files = 'FWFramework/Classes/Toolkit/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/{Objc,Swift}/Toolkit/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/Service'
   end
   
