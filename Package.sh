@@ -1,11 +1,11 @@
 #! /bin/bash
 
-cd FWFramework/Classes/Objc/include
+cd FWFramework/Classes/include
 rm -rf FWFramework
 mkdir FWFramework
 cd FWFramework
 
-ln -s ../../Kernel/*.h ./
-ln -s ../../Service/*.h ./
-ln -s ../../Toolkit/*.h ./
+ln -s ../../FWFramework/Kernel/*.h ./
+ln -s ../../FWFramework/Service/*.h ./
+ln -s ../../FWFramework/Toolkit/*.h ./
 
