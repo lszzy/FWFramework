@@ -1,0 +1,1 @@
+../../FWFramework/Toolkit/FWAdaptive.h

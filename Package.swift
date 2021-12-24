@@ -12,34 +12,34 @@ let package = Package(
             name: "FWFramework",
             targets: ["FWFramework"]),
         .library(
-            name: "FWFrameworkSwift",
-            targets: ["FWFramework", "FWFrameworkSwift"]),
+            name: "FWFrameworkCompatible",
+            targets: ["FWFramework", "FWFrameworkCompatible"]),
     ],
     dependencies: [
     ],
     targets: [
         .target(
             name: "FWFramework",
-            path: "FWFramework/Classes/Objc",
+            path: "FWFramework/Classes",
             sources: [
-                "Kernel",
-                "Service",
-                "Toolkit"
+                "FWFramework/Kernel",
+                "FWFramework/Service",
+                "FWFramework/Toolkit"
             ],
             publicHeadersPath: "include",
             cSettings: [
-                .headerSearchPath("Kernel"),
-                .headerSearchPath("Service"),
-                .headerSearchPath("Toolkit"),
+                .headerSearchPath("FWFramework/Kernel"),
+                .headerSearchPath("FWFramework/Service"),
+                .headerSearchPath("FWFramework/Toolkit"),
                 .headerSearchPath("include")
             ]),
         .target(
-            name: "FWFrameworkSwift",
+            name: "FWFrameworkCompatible",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Swift",
+            path: "FWFramework/Classes/Compatible",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWFrameworkSwift")
+                .define("FWFrameworkCompatible")
             ]),
     ]
 )
