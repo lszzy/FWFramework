@@ -11,7 +11,7 @@
 #if __IPHONE_14_0
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #endif
-#if FWFrameworkTracking
+#if FWFrameworkSPM
 @import FWFramework;
 #else
 #import "FWAuthorize.h"

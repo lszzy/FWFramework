@@ -8,7 +8,7 @@
 
 #import "FWAuthorizeMicrophone.h"
 #import <AVFoundation/AVFoundation.h>
-#if FWFrameworkMicrophone
+#if FWFrameworkSPM
 @import FWFramework;
 #else
 #import "FWAuthorize.h"

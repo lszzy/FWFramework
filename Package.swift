@@ -52,44 +52,62 @@ let package = Package(
             name: "FWFrameworkCompatible",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Compatible",
+            cSettings: [
+                .define("FWFrameworkSPM", to: "1")
+            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWFrameworkCompatible")
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkAppleMusic",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Component/AppleMusic",
             cSettings: [
-                .define("FWFrameworkAppleMusic", to: "1")
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkCalendar",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Component/Calendar",
             cSettings: [
-                .define("FWFrameworkCalendar", to: "1")
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkContacts",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Component/Contacts",
             cSettings: [
-                .define("FWFrameworkContacts", to: "1")
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkMicrophone",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Component/Microphone",
             cSettings: [
-                .define("FWFrameworkMicrophone", to: "1")
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkTracking",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Component/Tracking",
             cSettings: [
-                .define("FWFrameworkTracking", to: "1")
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("FWFrameworkSPM")
             ]),
     ]
 )

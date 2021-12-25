@@ -8,7 +8,7 @@
 
 #import "FWAuthorizeContacts.h"
 #import <Contacts/Contacts.h>
-#if FWFrameworkContacts
+#if FWFrameworkSPM
 @import FWFramework;
 #else
 #import "FWAuthorize.h"
