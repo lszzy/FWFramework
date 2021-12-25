@@ -8,6 +8,11 @@
 
 #import "FWAuthorizeContacts.h"
 #import <Contacts/Contacts.h>
+#if FWFrameworkContacts
+@import FWFramework;
+#else
+#import "FWAuthorize.h"
+#endif
 
 // iOS9+使用Contacts
 @interface FWAuthorizeContacts : NSObject <FWAuthorizeProtocol>

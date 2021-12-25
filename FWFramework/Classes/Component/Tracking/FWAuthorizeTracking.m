@@ -11,6 +11,11 @@
 #if __IPHONE_14_0
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #endif
+#if FWFrameworkTracking
+@import FWFramework;
+#else
+#import "FWAuthorize.h"
+#endif
 
 // iOS14+使用AppTrackingTransparency，其它使用AdSupport
 @interface FWAuthorizeTracking : NSObject <FWAuthorizeProtocol>

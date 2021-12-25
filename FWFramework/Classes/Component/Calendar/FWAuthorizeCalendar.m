@@ -8,6 +8,11 @@
 
 #import "FWAuthorizeCalendar.h"
 #import <EventKit/EventKit.h>
+#if FWFrameworkCalendar
+@import FWFramework;
+#else
+#import "FWAuthorize.h"
+#endif
 
 @interface FWAuthorizeEventKit : NSObject <FWAuthorizeProtocol>
 
