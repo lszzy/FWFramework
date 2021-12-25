@@ -18,12 +18,24 @@ typedef NSInteger FWAuthorizeType NS_TYPED_EXTENSIBLE_ENUM;
 static const FWAuthorizeType FWAuthorizeTypeLocationWhenInUse = 1;
 /// 后台定位，Info.plst需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription，iOS7需配置NSLocationUsageDescription
 static const FWAuthorizeType FWAuthorizeTypeLocationAlways = 2;
+/// 麦克风，需启用Microphone子模块，Info.plst需配置NSMicrophoneUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeMicrophone = 3;
 /// 相册，Info.plst需配置NSPhotoLibraryUsageDescription
-static const FWAuthorizeType FWAuthorizeTypePhotoLibrary = 3;
+static const FWAuthorizeType FWAuthorizeTypePhotoLibrary = 4;
 /// 照相机，Info.plst需配置NSCameraUsageDescription
-static const FWAuthorizeType FWAuthorizeTypeCamera = 4;
+static const FWAuthorizeType FWAuthorizeTypeCamera = 5;
+/// 联系人，需启用Contacts子模块，Info.plst需配置NSContactsUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeContacts = 6;
+/// 日历，需启用Calendar子模块，Info.plst需配置NSCalendarsUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeCalendars = 7;
+/// 提醒，需启用Calendar子模块，Info.plst需配置NSRemindersUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeReminders = 8;
+/// 音乐，需启用AppleMusic子模块，Info.plst需配置NSAppleMusicUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeAppleMusic = 9;
 /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-static const FWAuthorizeType FWAuthorizeTypeNotifications = 5;
+static const FWAuthorizeType FWAuthorizeTypeNotifications = 10;
+/// 广告跟踪，需启用Tracking子模块，Info.plst需配置NSUserTrackingUsageDescription
+static const FWAuthorizeType FWAuthorizeTypeTracking = 11;
 
 /// 权限状态枚举
 typedef NS_ENUM(NSInteger, FWAuthorizeStatus) {

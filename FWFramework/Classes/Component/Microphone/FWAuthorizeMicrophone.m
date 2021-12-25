@@ -8,6 +8,11 @@
 
 #import "FWAuthorizeMicrophone.h"
 #import <AVFoundation/AVFoundation.h>
+#if FWFrameworkMicrophone
+@import FWFramework;
+#else
+#import "FWAuthorize.h"
+#endif
 
 @interface FWAuthorizeMicrophone : NSObject <FWAuthorizeProtocol>
 

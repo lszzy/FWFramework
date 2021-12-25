@@ -8,6 +8,11 @@
 
 #import "FWAuthorizeAppleMusic.h"
 #import <MediaPlayer/MediaPlayer.h>
+#if FWFrameworkAppleMusic
+@import FWFramework;
+#else
+#import "FWAuthorize.h"
+#endif
 
 // iOS9.3+需要授权，9.3以前不需要授权
 @interface FWAuthorizeAppleMusic : NSObject <FWAuthorizeProtocol>
