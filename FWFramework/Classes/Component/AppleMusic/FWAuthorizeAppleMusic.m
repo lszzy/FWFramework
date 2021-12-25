@@ -8,7 +8,7 @@
 
 #import "FWAuthorizeAppleMusic.h"
 #import <MediaPlayer/MediaPlayer.h>
-#if FWFrameworkAppleMusic
+#if FWFrameworkSPM
 @import FWFramework;
 #else
 #import "FWAuthorize.h"

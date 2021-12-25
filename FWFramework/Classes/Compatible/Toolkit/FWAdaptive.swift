@@ -7,7 +7,7 @@
 //
 
 import UIKit
-#if FWFrameworkCompatible
+#if FWFrameworkSPM
 import FWFramework
 #endif
 

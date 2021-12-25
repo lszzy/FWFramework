@@ -8,7 +8,7 @@
 
 #import "FWAuthorizeCalendar.h"
 #import <EventKit/EventKit.h>
-#if FWFrameworkCalendar
+#if FWFrameworkSPM
 @import FWFramework;
 #else
 #import "FWAuthorize.h"
