@@ -17,7 +17,7 @@
     <a title="String Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.0.0 Docs</a> (74% documented)</p>
+        <p><a href="../index.html">FWFramework 2.1.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -118,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSString%28FWFoundation%29.html">NSString(FWFoundation)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSString%28FWLanguage%29.html">NSString(FWLanguage)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSString%28FWSafeType%29.html">NSString(FWSafeType)</a>
@@ -1284,12 +1287,151 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:SS11FWFrameworkE11fwLocalizedSSvp"></a>
+                    <a name="//apple_ref/swift/Property/fwLocalized" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SS11FWFrameworkE11fwLocalizedSSvp">fwLocalized</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快速读取本地化语言</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fwLocalized</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:SS11FWFrameworkE11fwLocalizedySSSo8NSBundleCSgF"></a>
+                    <a name="//apple_ref/swift/Method/fwLocalized(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SS11FWFrameworkE11fwLocalizedySSSo8NSBundleCSgF">fwLocalized(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快速读取本地化语言，指定Bundle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fwLocalized</span><span class="p">(</span><span class="n">_</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kt">Bundle</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bundle</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>语言所在Bundle，默认主Bundle</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>本地化字符串</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:SS11FWFrameworkE11fwLocalizedyS2SSg_So8NSBundleCSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fwLocalized(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SS11FWFrameworkE11fwLocalizedyS2SSg_So8NSBundleCSgtF">fwLocalized(_:<wbr>_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快速读取本地化语言，指定表名和Bundle</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fwLocalized</span><span class="p">(</span><span class="n">_</span> <span class="nv">table</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="n">_</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kt">Bundle</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>table</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>本地化表名，默认Localizable.strings</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bundle</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>语言所在Bundle，默认主Bundle</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>本地化字符串</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2021-12-09)</p>
+          <p>&copy; 2021 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2021-12-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

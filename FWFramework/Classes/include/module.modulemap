@@ -1,0 +1,6 @@
+
+module FWFramework {
+    umbrella header "FWFramework/FWFramework.h"
+    export *
+    module * { export * }
+}

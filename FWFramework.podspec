@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '2.0.0'
+  s.version               = '2.1.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -11,50 +11,39 @@ Pod::Spec.new do |s|
   s.swift_version         = '5.0'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
-  s.default_subspecs      = 'FWFramework'
-
+  s.default_subspecs      = ['FWFramework', 'Compatible']
+  
   s.subspec 'FWFramework' do |ss|
-    ss.dependency 'FWFramework/Kernel'
-    ss.dependency 'FWFramework/Service'
-    ss.dependency 'FWFramework/Toolkit'
-  end
-  
-  s.subspec 'Kernel' do |ss|
-    ss.source_files = 'FWFramework/Classes/Kernel/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/FWFramework/**/*.{h,m,swift}'
   end
 
-  s.subspec 'Service' do |ss|
-    ss.source_files = 'FWFramework/Classes/Service/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/Kernel'
-  end
-  
-  s.subspec 'Toolkit' do |ss|
-    ss.source_files = 'FWFramework/Classes/Toolkit/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/Service'
+  s.subspec 'Compatible' do |ss|
+    ss.source_files = 'FWFramework/Classes/Compatible/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
   
   s.subspec 'Contacts' do |ss|
-    ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CONTACTS_ENABLED=1' }
-    ss.dependency 'FWFramework/Service'
+    ss.source_files = 'FWFramework/Classes/Component/Contacts/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Microphone' do |ss|
-    ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_MICROPHONE_ENABLED=1' }
-    ss.dependency 'FWFramework/Service'
+    ss.source_files = 'FWFramework/Classes/Component/Microphone/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Calendar' do |ss|
-    ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_CALENDAR_ENABLED=1' }
-    ss.dependency 'FWFramework/Service'
+    ss.source_files = 'FWFramework/Classes/Component/Calendar/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'AppleMusic' do |ss|
-    ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_APPLEMUSIC_ENABLED=1' }
-    ss.dependency 'FWFramework/Service'
+    ss.source_files = 'FWFramework/Classes/Component/AppleMusic/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Tracking' do |ss|
-    ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'FWCOMPONENT_TRACKING_ENABLED=1' }
-    ss.dependency 'FWFramework/Service'
+    ss.source_files = 'FWFramework/Classes/Component/Tracking/**/*.{h,m,swift}'
+    ss.dependency 'FWFramework/FWFramework'
   end
 end

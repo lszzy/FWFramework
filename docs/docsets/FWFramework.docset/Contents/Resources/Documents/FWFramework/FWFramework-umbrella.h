@@ -10,6 +10,9 @@
 #endif
 #endif
 
+#import "FWAuthorizeAppleMusic.h"
+#import "FWAuthorizeCalendar.h"
+#import "FWAuthorizeContacts.h"
 #import "FWDefine.h"
 #import "FWFramework.h"
 #import "FWLoader.h"
@@ -43,6 +46,8 @@
 #import "FWTheme.h"
 #import "FWToolkit.h"
 #import "FWUIKit.h"
+#import "FWAuthorizeMicrophone.h"
+#import "FWAuthorizeTracking.h"
 
 FOUNDATION_EXPORT double FWFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char FWFrameworkVersionString[];
