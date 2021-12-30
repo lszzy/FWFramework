@@ -167,3 +167,14 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 }
 
 @end
+
+#pragma mark - NSString+FWLanguage
+
+@implementation NSString (FWLanguage)
+
+- (NSString *)fwLocalized
+{
+    return [NSBundle fwLocalizedString:self];
+}
+
+@end

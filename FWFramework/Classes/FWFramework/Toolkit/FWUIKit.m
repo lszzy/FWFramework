@@ -172,6 +172,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     });
 }
 
+- (BOOL)fwIsViewVisible
+{
+    if (self.hidden || self.alpha <= 0.01 || !self.window) return NO;
+    if (self.bounds.size.width == 0 || self.bounds.size.height == 0) return NO;
+    return YES;
+}
+
 - (UIViewController *)fwViewController
 {
     UIResponder *responder = [self nextResponder];

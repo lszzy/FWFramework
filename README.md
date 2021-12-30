@@ -15,7 +15,7 @@ iOS development framework, convenient for iOS development, compatible with OC an
 All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
 ## Installation
-It is recommended to use CocoaPods to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
+It is recommended to use CocoaPods or Swift Package Manager to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
 
 ### CocoaPods
 This framework supports CocoaPods, Podfile example:
@@ -28,8 +28,20 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Tracking']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Compatible', 'Tracking']
 	end
+
+### Swift Package Manager
+This framework supports Swift Package Manager, just add and check the required modules, Package example:
+
+	https://github.com/lszzy/FWFramework.git
+	
+	# Check and import the default submodule
+	import FWFramework
+	
+	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
+	import FWFrameworkCompatible
+	import FWFrameworkTracking
 
 ## [Api](https://fwframework.wuyong.site)
 The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.

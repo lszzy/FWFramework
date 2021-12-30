@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0] - 2021-12-31
+
+### Added
+* Refactored Pod sub-module, split OC and Swift code
+* Support Swift Package Manager
+* Added String multi-language extension method
+
 ## [2.0.0] - 2021-12-09
 
 ### Changed
