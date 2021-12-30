@@ -67,4 +67,16 @@ NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SD
 
 @end
 
+#pragma mark - NSString+FWLanguage
+
+/**
+ NSString本地化语言分类
+ */
+@interface NSString (FWLanguage)
+
+/// 快速读取本地化语言
+@property (nonatomic, copy, readonly) NSString *fwLocalized;
+
+@end
+
 NS_ASSUME_NONNULL_END

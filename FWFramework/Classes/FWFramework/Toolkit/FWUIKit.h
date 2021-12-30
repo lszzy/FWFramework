@@ -42,6 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWUIKit)
 
+/// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
+@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
+
 /// 获取响应的视图控制器
 @property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
 

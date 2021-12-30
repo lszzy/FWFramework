@@ -1,5 +1,12 @@
 # 更新日志
 
+## [2.1.0] - 2021-12-31
+
+### Added
+* 重构Pod子模块，拆分OC和Swift代码
+* 支持Swift Package Manager
+* 新增String多语言扩展方法
+
 ## [2.0.0] - 2021-12-09
 
 ### Changed
