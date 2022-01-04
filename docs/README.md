@@ -7,7 +7,7 @@
 
 # [FWApplication](https://github.com/lszzy/FWApplication)
 
-# [中文](README_CN.md)
+# [中文](https://github.com/lszzy/FWFramework/blob/master/README_CN.md)
 
 ## Tutorial
 iOS development framework, convenient for iOS development, compatible with OC and Swift.
@@ -46,7 +46,7 @@ This framework supports Swift Package Manager, just add and check the required m
 ## [Api](https://fwframework.wuyong.site)
 The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.
 
-## [Changelog](CHANGELOG.md)
+## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
 	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '2.0.0'
