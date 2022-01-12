@@ -12,23 +12,24 @@
 
 #pragma mark - FWAutoload
 
+@protocol FWInnerAutoloadProtocol <NSObject>
+@optional
+
++ (BOOL)autoload:(id)clazz;
+
+@end
+
+@interface FWLoader (FWAutoload) <FWInnerAutoloadProtocol>
+
+@end
+
+@implementation FWLoader (FWAutoload)
+
+@end
+
 BOOL FWAutoload(id clazz) {
-    Class autoloadClass = NULL;
-    if (object_isClass(clazz)) {
-        autoloadClass = (Class)clazz;
-    } else if ([clazz isKindOfClass:[NSString class]]) {
-        NSString *className = (NSString *)clazz;
-        autoloadClass = NSClassFromString(className);
-        if (autoloadClass == NULL && ![className containsString:@"."]) {
-            NSString *moduleName = NSBundle.mainBundle.infoDictionary[(__bridge NSString *)kCFBundleExecutableKey];
-            className = [NSString stringWithFormat:@"%@.%@", moduleName, className];
-            if (moduleName) autoloadClass = NSClassFromString(className);
-        }
-    }
-    
-    if (autoloadClass != NULL && [autoloadClass respondsToSelector:@selector(autoload)]) {
-        [autoloadClass autoload];
-        return YES;
+    if ([FWLoader respondsToSelector:@selector(autoload:)]) {
+        return [FWLoader autoload:clazz];
     }
     return NO;
 }
