@@ -6998,9 +6998,191 @@
           "key.doc.line" : 14,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "CADisplayLink+FWBlock",
+          "key.name" : "FWBlock",
           "key.parsed_scope.end" : 14,
           "key.parsed_scope.start" : 14
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用不带参数block",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 19,
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockVoid",
+          "key.parsed_declaration" : "typedef void (^FWBlockVoid)(void)",
+          "key.parsed_scope.end" : 19,
+          "key.parsed_scope.start" : 19,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockVoid"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用id参数block\n\n- parameter: param id参数",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 26,
+          "key.doc.parameters" : [
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "id参数"
+                }
+              ],
+              "name" : "param"
+            }
+          ],
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockParam",
+          "key.parsed_declaration" : "typedef void (^FWBlockParam)(id _Nullable)",
+          "key.parsed_scope.end" : 26,
+          "key.parsed_scope.start" : 26,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockParam"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用bool参数block\n\n- parameter: isTrue bool参数",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 33,
+          "key.doc.parameters" : [
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "bool参数"
+                }
+              ],
+              "name" : "isTrue"
+            }
+          ],
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockBool",
+          "key.parsed_declaration" : "typedef void (^FWBlockBool)(BOOL)",
+          "key.parsed_scope.end" : 33,
+          "key.parsed_scope.start" : 33,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockBool"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用NSInteger参数block\n\n- parameter: index NSInteger参数",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 40,
+          "key.doc.parameters" : [
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "NSInteger参数"
+                }
+              ],
+              "name" : "index"
+            }
+          ],
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockInt",
+          "key.parsed_declaration" : "typedef void (^FWBlockInt)(NSInteger)",
+          "key.parsed_scope.end" : 40,
+          "key.parsed_scope.start" : 40,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockInt"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用double参数block\n\n- parameter: value double参数",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 47,
+          "key.doc.parameters" : [
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "double参数"
+                }
+              ],
+              "name" : "value"
+            }
+          ],
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockDouble",
+          "key.parsed_declaration" : "typedef void (^FWBlockDouble)(double)",
+          "key.parsed_scope.end" : 47,
+          "key.parsed_scope.start" : 47,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockDouble"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 16,
+          "key.doc.comment" : "通用(BOOL,id)参数block\n\n- parameter: isTrue BOOL参数\n- parameter: param id参数",
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 55,
+          "key.doc.parameters" : [
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "BOOL参数\n"
+                }
+              ],
+              "name" : "isTrue"
+            },
+            {
+              "discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "id参数"
+                }
+              ],
+              "name" : "param"
+            }
+          ],
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
+          "key.name" : "FWBlockBoolParam",
+          "key.parsed_declaration" : "typedef void (^FWBlockBoolParam)(BOOL, id _Nullable)",
+          "key.parsed_scope.end" : 55,
+          "key.parsed_scope.start" : 55,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:FWBlock.h@T@FWBlockBoolParam"
+        },
+        {
+          "key.doc.column" : 1,
+          "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
+          "key.doc.line" : 57,
+          "key.filepath" : "docs\/FWFramework\/FWBlock.h",
+          "key.kind" : "sourcekitten.source.lang.objc.mark",
+          "key.name" : "CADisplayLink+FWBlock",
+          "key.parsed_scope.end" : 57,
+          "key.parsed_scope.start" : 57
         },
         {
           "key.always_deprecated" : false,
@@ -7010,13 +7192,13 @@
           "key.doc.comment" : "CADisplayLink分类\n- note: 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 20,
+          "key.doc.line" : 63,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "CADisplayLink(FWBlock)",
           "key.parsed_declaration" : "@interface CADisplayLink (FWBlock)",
-          "key.parsed_scope.end" : 48,
-          "key.parsed_scope.start" : 20,
+          "key.parsed_scope.end" : 91,
+          "key.parsed_scope.start" : 63,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7026,7 +7208,7 @@
               "key.doc.comment" : "创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: target 目标\n- parameter: selector 方法\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 29,
+              "key.doc.line" : 72,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7057,8 +7239,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwCommonDisplayLinkWithTarget:selector:",
               "key.parsed_declaration" : "+ (nonnull CADisplayLink *)fwCommonDisplayLinkWithTarget:(nonnull id)target\n                                                selector:(nonnull SEL)selector;",
-              "key.parsed_scope.end" : 29,
-              "key.parsed_scope.start" : 29,
+              "key.parsed_scope.end" : 72,
+              "key.parsed_scope.start" : 72,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)CADisplayLink(cm)fwCommonDisplayLinkWithTarget:selector:"
             },
@@ -7070,7 +7252,7 @@
               "key.doc.comment" : "创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: block 代码块\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 37,
+              "key.doc.line" : 80,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7092,8 +7274,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwCommonDisplayLinkWithBlock:",
               "key.parsed_declaration" : "+ (nonnull CADisplayLink *)fwCommonDisplayLinkWithBlock:\n    (nonnull void (^)(CADisplayLink *_Nonnull))block;",
-              "key.parsed_scope.end" : 37,
-              "key.parsed_scope.start" : 37,
+              "key.parsed_scope.end" : 80,
+              "key.parsed_scope.start" : 80,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)CADisplayLink(cm)fwCommonDisplayLinkWithBlock:"
             },
@@ -7105,7 +7287,7 @@
               "key.doc.comment" : "创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。\n- note: 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]\n\n- parameter: block 代码块\n- returns: CADisplayLink",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 46,
+              "key.doc.line" : 89,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7127,8 +7309,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwDisplayLinkWithBlock:",
               "key.parsed_declaration" : "+ (nonnull CADisplayLink *)fwDisplayLinkWithBlock:\n    (nonnull void (^)(CADisplayLink *_Nonnull))block;",
-              "key.parsed_scope.end" : 46,
-              "key.parsed_scope.start" : 46,
+              "key.parsed_scope.end" : 89,
+              "key.parsed_scope.start" : 89,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)CADisplayLink(cm)fwDisplayLinkWithBlock:"
             }
@@ -7139,12 +7321,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 50,
+          "key.doc.line" : 93,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSTimer+FWBlock",
-          "key.parsed_scope.end" : 50,
-          "key.parsed_scope.start" : 50
+          "key.parsed_scope.end" : 93,
+          "key.parsed_scope.start" : 93
         },
         {
           "key.always_deprecated" : false,
@@ -7154,13 +7336,13 @@
           "key.doc.comment" : "NSTimer分类",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 55,
+          "key.doc.line" : 98,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSTimer(FWBlock)",
           "key.parsed_declaration" : "@interface NSTimer (FWBlock)",
-          "key.parsed_scope.end" : 109,
-          "key.parsed_scope.start" : 55,
+          "key.parsed_scope.end" : 152,
+          "key.parsed_scope.start" : 98,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7170,7 +7352,7 @@
               "key.doc.comment" : "创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: seconds 时间\n- parameter: target 目标\n- parameter: selector 方法\n- parameter: userInfo 参数\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 67,
+              "key.doc.line" : 110,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7228,8 +7410,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwCommonTimerWithTimeInterval:target:selector:userInfo:repeats:",
               "key.parsed_declaration" : "+ (nonnull NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds\n                                            target:(nonnull id)target\n                                          selector:(nonnull SEL)selector\n                                          userInfo:(nullable id)userInfo\n                                           repeats:(BOOL)repeats;",
-              "key.parsed_scope.end" : 67,
-              "key.parsed_scope.start" : 67,
+              "key.parsed_scope.end" : 110,
+              "key.parsed_scope.start" : 110,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSTimer(cm)fwCommonTimerWithTimeInterval:target:selector:userInfo:repeats:"
             },
@@ -7241,7 +7423,7 @@
               "key.doc.comment" : "创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 77,
+              "key.doc.line" : 120,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7281,8 +7463,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwCommonTimerWithTimeInterval:block:repeats:",
               "key.parsed_declaration" : "+ (nonnull NSTimer *)\n    fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds\n                            block:(nonnull void (^)(NSTimer *_Nonnull))block\n                          repeats:(BOOL)repeats;",
-              "key.parsed_scope.end" : 77,
-              "key.parsed_scope.start" : 77,
+              "key.parsed_scope.end" : 120,
+              "key.parsed_scope.start" : 120,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSTimer(cm)fwCommonTimerWithTimeInterval:block:repeats:"
             },
@@ -7294,7 +7476,7 @@
               "key.doc.comment" : "创建倒计时定时器\n\n- parameter: seconds 倒计时描述\n- parameter: block 每秒执行block，为0时自动停止\n- returns: 定时器，可手工停止",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 86,
+              "key.doc.line" : 129,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7325,8 +7507,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwCommonTimerWithCountDown:block:",
               "key.parsed_declaration" : "+ (nonnull NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds\n                                          block:(nonnull void (^)(NSInteger))\n                                                    block;",
-              "key.parsed_scope.end" : 86,
-              "key.parsed_scope.start" : 86,
+              "key.parsed_scope.end" : 129,
+              "key.parsed_scope.start" : 129,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSTimer(cm)fwCommonTimerWithCountDown:block:"
             },
@@ -7338,7 +7520,7 @@
               "key.doc.comment" : "创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。\n- note: 示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 97,
+              "key.doc.line" : 140,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7378,8 +7560,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwTimerWithTimeInterval:block:repeats:",
               "key.parsed_declaration" : "+ (nonnull NSTimer *)\n    fwTimerWithTimeInterval:(NSTimeInterval)seconds\n                      block:(nonnull void (^)(NSTimer *_Nonnull))block\n                    repeats:(BOOL)repeats;",
-              "key.parsed_scope.end" : 97,
-              "key.parsed_scope.start" : 97,
+              "key.parsed_scope.end" : 140,
+              "key.parsed_scope.start" : 140,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSTimer(cm)fwTimerWithTimeInterval:block:repeats:"
             },
@@ -7391,7 +7573,7 @@
               "key.doc.comment" : "创建NSTimer，使用block，默认模式安排到当前的运行循环中\n\n- parameter: seconds 时间\n- parameter: block 代码块\n- parameter: repeats 是否重复\n- returns: 定时器",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 107,
+              "key.doc.line" : 150,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -7431,8 +7613,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwScheduledTimerWithTimeInterval:block:repeats:",
               "key.parsed_declaration" : "+ (nonnull NSTimer *)\n    fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds\n                               block:(nonnull void (^)(NSTimer *_Nonnull))block\n                             repeats:(BOOL)repeats;",
-              "key.parsed_scope.end" : 107,
-              "key.parsed_scope.start" : 107,
+              "key.parsed_scope.end" : 150,
+              "key.parsed_scope.start" : 150,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSTimer(cm)fwScheduledTimerWithTimeInterval:block:repeats:"
             }
@@ -7443,12 +7625,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 111,
+          "key.doc.line" : 154,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIGestureRecognizer+FWBlock",
-          "key.parsed_scope.end" : 111,
-          "key.parsed_scope.start" : 111
+          "key.parsed_scope.end" : 154,
+          "key.parsed_scope.start" : 154
         },
         {
           "key.always_deprecated" : false,
@@ -7456,13 +7638,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 113,
+          "key.doc.line" : 156,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIGestureRecognizer(FWBlock)",
           "key.parsed_declaration" : "@interface UIGestureRecognizer (FWBlock)\n\n\/\/\/ 从事件句柄初始化\n+ (instancetype)fwGestureRecognizerWithBlock:(void (^)(id sender))block;\n\n\/\/\/ 添加事件句柄，返回唯一标志\n- (NSString *)fwAddBlock:(void (^)(id sender))block;\n\n\/\/\/ 根据唯一标志移除事件句柄\n- (void)fwRemoveBlock:(nullable NSString *)identifier;\n\n\/\/\/ 移除所有事件句柄\n- (void)fwRemoveAllBlocks;\n\n@end",
-          "key.parsed_scope.end" : 127,
-          "key.parsed_scope.start" : 113,
+          "key.parsed_scope.end" : 170,
+          "key.parsed_scope.start" : 156,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7472,13 +7654,13 @@
               "key.doc.comment" : "从事件句柄初始化",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 116,
+              "key.doc.line" : 159,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwGestureRecognizerWithBlock:",
               "key.parsed_declaration" : "+ (nonnull instancetype)fwGestureRecognizerWithBlock:\n    (nonnull void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 116,
-              "key.parsed_scope.start" : 116,
+              "key.parsed_scope.end" : 159,
+              "key.parsed_scope.start" : 159,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIGestureRecognizer(cm)fwGestureRecognizerWithBlock:"
             },
@@ -7490,13 +7672,13 @@
               "key.doc.comment" : "添加事件句柄，返回唯一标志",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 119,
+              "key.doc.line" : 162,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddBlock:",
               "key.parsed_declaration" : "- (nonnull NSString *)fwAddBlock:(nonnull void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 119,
-              "key.parsed_scope.start" : 119,
+              "key.parsed_scope.end" : 162,
+              "key.parsed_scope.start" : 162,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIGestureRecognizer(im)fwAddBlock:"
             },
@@ -7508,13 +7690,13 @@
               "key.doc.comment" : "根据唯一标志移除事件句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 122,
+              "key.doc.line" : 165,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveBlock:",
               "key.parsed_declaration" : "- (void)fwRemoveBlock:(nullable NSString *)identifier;",
-              "key.parsed_scope.end" : 122,
-              "key.parsed_scope.start" : 122,
+              "key.parsed_scope.end" : 165,
+              "key.parsed_scope.start" : 165,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIGestureRecognizer(im)fwRemoveBlock:"
             },
@@ -7526,13 +7708,13 @@
               "key.doc.comment" : "移除所有事件句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 125,
+              "key.doc.line" : 168,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveAllBlocks",
               "key.parsed_declaration" : "- (void)fwRemoveAllBlocks;",
-              "key.parsed_scope.end" : 125,
-              "key.parsed_scope.start" : 125,
+              "key.parsed_scope.end" : 168,
+              "key.parsed_scope.start" : 168,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIGestureRecognizer(im)fwRemoveAllBlocks"
             }
@@ -7543,12 +7725,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 129,
+          "key.doc.line" : 172,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIView+FWBlock",
-          "key.parsed_scope.end" : 129,
-          "key.parsed_scope.start" : 129
+          "key.parsed_scope.end" : 172,
+          "key.parsed_scope.start" : 172
         },
         {
           "key.always_deprecated" : false,
@@ -7556,13 +7738,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 131,
+          "key.doc.line" : 174,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIView(FWBlock)",
           "key.parsed_declaration" : "@interface UIView (FWBlock)\n\n\/\/\/ 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件\n- (void)fwAddTapGestureWithTarget:(id)target action:(SEL)action;\n\n\/\/\/ 添加点击手势句柄，同上\n- (NSString *)fwAddTapGestureWithBlock:(void (^)(id sender))block;\n\n\/\/\/ 根据唯一标志移除点击手势句柄\n- (void)fwRemoveTapGesture:(nullable NSString *)identifier;\n\n\/\/\/ 移除所有点击手势\n- (void)fwRemoveAllTapGestures;\n\n@end",
-          "key.parsed_scope.end" : 145,
-          "key.parsed_scope.start" : 131,
+          "key.parsed_scope.end" : 188,
+          "key.parsed_scope.start" : 174,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7572,13 +7754,13 @@
               "key.doc.comment" : "添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 134,
+              "key.doc.line" : 177,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddTapGestureWithTarget:action:",
               "key.parsed_declaration" : "- (void)fwAddTapGestureWithTarget:(nonnull id)target action:(nonnull SEL)action;",
-              "key.parsed_scope.end" : 134,
-              "key.parsed_scope.start" : 134,
+              "key.parsed_scope.end" : 177,
+              "key.parsed_scope.start" : 177,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIView(im)fwAddTapGestureWithTarget:action:"
             },
@@ -7590,13 +7772,13 @@
               "key.doc.comment" : "添加点击手势句柄，同上",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 137,
+              "key.doc.line" : 180,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddTapGestureWithBlock:",
               "key.parsed_declaration" : "- (nonnull NSString *)fwAddTapGestureWithBlock:\n    (nonnull void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 137,
-              "key.parsed_scope.start" : 137,
+              "key.parsed_scope.end" : 180,
+              "key.parsed_scope.start" : 180,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIView(im)fwAddTapGestureWithBlock:"
             },
@@ -7608,13 +7790,13 @@
               "key.doc.comment" : "根据唯一标志移除点击手势句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 140,
+              "key.doc.line" : 183,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveTapGesture:",
               "key.parsed_declaration" : "- (void)fwRemoveTapGesture:(nullable NSString *)identifier;",
-              "key.parsed_scope.end" : 140,
-              "key.parsed_scope.start" : 140,
+              "key.parsed_scope.end" : 183,
+              "key.parsed_scope.start" : 183,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIView(im)fwRemoveTapGesture:"
             },
@@ -7626,13 +7808,13 @@
               "key.doc.comment" : "移除所有点击手势",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 143,
+              "key.doc.line" : 186,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveAllTapGestures",
               "key.parsed_declaration" : "- (void)fwRemoveAllTapGestures;",
-              "key.parsed_scope.end" : 143,
-              "key.parsed_scope.start" : 143,
+              "key.parsed_scope.end" : 186,
+              "key.parsed_scope.start" : 186,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIView(im)fwRemoveAllTapGestures"
             }
@@ -7643,12 +7825,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 147,
+          "key.doc.line" : 190,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIControl+FWBlock",
-          "key.parsed_scope.end" : 147,
-          "key.parsed_scope.start" : 147
+          "key.parsed_scope.end" : 190,
+          "key.parsed_scope.start" : 190
         },
         {
           "key.always_deprecated" : false,
@@ -7656,13 +7838,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 149,
+          "key.doc.line" : 192,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIControl(FWBlock)",
           "key.parsed_declaration" : "@interface UIControl (FWBlock)\n\n\/\/\/ 添加事件句柄\n- (NSString *)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents;\n\n\/\/\/ 根据唯一标志移除事件句柄\n- (void)fwRemoveBlock:(nullable NSString *)identifier forControlEvents:(UIControlEvents)controlEvents;\n\n\/\/\/ 移除所有事件句柄\n- (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents;\n\n\/\/\/ 添加点击事件\n- (void)fwAddTouchTarget:(id)target action:(SEL)action;\n\n\/\/\/ 添加点击句柄\n- (NSString *)fwAddTouchBlock:(void (^)(id sender))block;\n\n\/\/\/ 根据唯一标志移除点击句柄\n- (void)fwRemoveTouchBlock:(nullable NSString *)identifier;\n\n@end",
-          "key.parsed_scope.end" : 169,
-          "key.parsed_scope.start" : 149,
+          "key.parsed_scope.end" : 212,
+          "key.parsed_scope.start" : 192,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7672,13 +7854,13 @@
               "key.doc.comment" : "添加事件句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 152,
+              "key.doc.line" : 195,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddBlock:forControlEvents:",
               "key.parsed_declaration" : "- (nonnull NSString *)fwAddBlock:(nonnull void (^)(id _Nonnull))block\n                forControlEvents:(UIControlEvents)controlEvents;",
-              "key.parsed_scope.end" : 152,
-              "key.parsed_scope.start" : 152,
+              "key.parsed_scope.end" : 195,
+              "key.parsed_scope.start" : 195,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwAddBlock:forControlEvents:"
             },
@@ -7690,13 +7872,13 @@
               "key.doc.comment" : "根据唯一标志移除事件句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 155,
+              "key.doc.line" : 198,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveBlock:forControlEvents:",
               "key.parsed_declaration" : "- (void)fwRemoveBlock:(nullable NSString *)identifier\n     forControlEvents:(UIControlEvents)controlEvents;",
-              "key.parsed_scope.end" : 155,
-              "key.parsed_scope.start" : 155,
+              "key.parsed_scope.end" : 198,
+              "key.parsed_scope.start" : 198,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwRemoveBlock:forControlEvents:"
             },
@@ -7708,13 +7890,13 @@
               "key.doc.comment" : "移除所有事件句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 158,
+              "key.doc.line" : 201,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveAllBlocksForControlEvents:",
               "key.parsed_declaration" : "- (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents;",
-              "key.parsed_scope.end" : 158,
-              "key.parsed_scope.start" : 158,
+              "key.parsed_scope.end" : 201,
+              "key.parsed_scope.start" : 201,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwRemoveAllBlocksForControlEvents:"
             },
@@ -7726,13 +7908,13 @@
               "key.doc.comment" : "添加点击事件",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 161,
+              "key.doc.line" : 204,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddTouchTarget:action:",
               "key.parsed_declaration" : "- (void)fwAddTouchTarget:(nonnull id)target action:(nonnull SEL)action;",
-              "key.parsed_scope.end" : 161,
-              "key.parsed_scope.start" : 161,
+              "key.parsed_scope.end" : 204,
+              "key.parsed_scope.start" : 204,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwAddTouchTarget:action:"
             },
@@ -7744,13 +7926,13 @@
               "key.doc.comment" : "添加点击句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 164,
+              "key.doc.line" : 207,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwAddTouchBlock:",
               "key.parsed_declaration" : "- (nonnull NSString *)fwAddTouchBlock:(nonnull void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 164,
-              "key.parsed_scope.start" : 164,
+              "key.parsed_scope.end" : 207,
+              "key.parsed_scope.start" : 207,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwAddTouchBlock:"
             },
@@ -7762,13 +7944,13 @@
               "key.doc.comment" : "根据唯一标志移除点击句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 167,
+              "key.doc.line" : 210,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwRemoveTouchBlock:",
               "key.parsed_declaration" : "- (void)fwRemoveTouchBlock:(nullable NSString *)identifier;",
-              "key.parsed_scope.end" : 167,
-              "key.parsed_scope.start" : 167,
+              "key.parsed_scope.end" : 210,
+              "key.parsed_scope.start" : 210,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIControl(im)fwRemoveTouchBlock:"
             }
@@ -7779,12 +7961,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
-          "key.doc.line" : 171,
+          "key.doc.line" : 214,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIBarButtonItem+FWBlock",
-          "key.parsed_scope.end" : 171,
-          "key.parsed_scope.start" : 171
+          "key.parsed_scope.end" : 214,
+          "key.parsed_scope.start" : 214
         },
         {
           "key.always_deprecated" : false,
@@ -7794,13 +7976,13 @@
           "key.doc.comment" : "iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可",
           "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 176,
+          "key.doc.line" : 219,
           "key.filepath" : "docs\/FWFramework\/FWBlock.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIBarButtonItem(FWBlock)",
           "key.parsed_declaration" : "@interface UIBarButtonItem (FWBlock)",
-          "key.parsed_scope.end" : 187,
-          "key.parsed_scope.start" : 176,
+          "key.parsed_scope.end" : 230,
+          "key.parsed_scope.start" : 219,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -7810,13 +7992,13 @@
               "key.doc.comment" : "使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber等",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 179,
+              "key.doc.line" : 222,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwBarItemWithObject:target:action:",
               "key.parsed_declaration" : "+ (nonnull instancetype)fwBarItemWithObject:(nullable id)object\n                                     target:(nullable id)target\n                                     action:(nullable SEL)action;",
-              "key.parsed_scope.end" : 179,
-              "key.parsed_scope.start" : 179,
+              "key.parsed_scope.end" : 222,
+              "key.parsed_scope.start" : 222,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIBarButtonItem(cm)fwBarItemWithObject:target:action:"
             },
@@ -7828,13 +8010,13 @@
               "key.doc.comment" : "使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 182,
+              "key.doc.line" : 225,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwBarItemWithObject:block:",
               "key.parsed_declaration" : "+ (nonnull instancetype)fwBarItemWithObject:(nullable id)object\n                                      block:\n                                          (nullable void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 182,
-              "key.parsed_scope.start" : 182,
+              "key.parsed_scope.end" : 225,
+              "key.parsed_scope.start" : 225,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIBarButtonItem(cm)fwBarItemWithObject:block:"
             },
@@ -7846,248 +8028,19 @@
               "key.doc.comment" : "设置当前Item触发句柄，nil时清空句柄",
               "key.doc.file" : "docs\/FWFramework\/FWBlock.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 185,
+              "key.doc.line" : 228,
               "key.filepath" : "docs\/FWFramework\/FWBlock.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwSetBlock:",
               "key.parsed_declaration" : "- (void)fwSetBlock:(nullable void (^)(id _Nonnull))block;",
-              "key.parsed_scope.end" : 185,
-              "key.parsed_scope.start" : 185,
+              "key.parsed_scope.end" : 228,
+              "key.parsed_scope.start" : 228,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIBarButtonItem(im)fwSetBlock:"
             }
           ],
           "key.unavailable_message" : "",
           "key.usr" : "c:objc(cy)UIBarButtonItem@FWBlock"
-        }
-      ]
-    }
-  },
-  {
-    "docs\/FWFramework\/FWDefine.h" : {
-      "key.diagnostic_stage" : "",
-      "key.substructure" : [
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.line" : 27,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "Block",
-          "key.parsed_scope.end" : 27,
-          "key.parsed_scope.start" : 27
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用不带参数block",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 32,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockVoid",
-          "key.parsed_declaration" : "typedef void (^FWBlockVoid)(void)",
-          "key.parsed_scope.end" : 32,
-          "key.parsed_scope.start" : 32,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockVoid"
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用id参数block\n\n- parameter: param id参数",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 39,
-          "key.doc.parameters" : [
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "id参数"
-                }
-              ],
-              "name" : "param"
-            }
-          ],
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockParam",
-          "key.parsed_declaration" : "typedef void (^FWBlockParam)(id _Nullable)",
-          "key.parsed_scope.end" : 39,
-          "key.parsed_scope.start" : 39,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockParam"
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用bool参数block\n\n- parameter: isTrue bool参数",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 46,
-          "key.doc.parameters" : [
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "bool参数"
-                }
-              ],
-              "name" : "isTrue"
-            }
-          ],
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockBool",
-          "key.parsed_declaration" : "typedef void (^FWBlockBool)(BOOL)",
-          "key.parsed_scope.end" : 46,
-          "key.parsed_scope.start" : 46,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockBool"
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用NSInteger参数block\n\n- parameter: index NSInteger参数",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 53,
-          "key.doc.parameters" : [
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "NSInteger参数"
-                }
-              ],
-              "name" : "index"
-            }
-          ],
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockInt",
-          "key.parsed_declaration" : "typedef void (^FWBlockInt)(NSInteger)",
-          "key.parsed_scope.end" : 53,
-          "key.parsed_scope.start" : 53,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockInt"
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用double参数block\n\n- parameter: value double参数",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 60,
-          "key.doc.parameters" : [
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "double参数"
-                }
-              ],
-              "name" : "value"
-            }
-          ],
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockDouble",
-          "key.parsed_declaration" : "typedef void (^FWBlockDouble)(double)",
-          "key.parsed_scope.end" : 60,
-          "key.parsed_scope.start" : 60,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockDouble"
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 16,
-          "key.doc.comment" : "通用(BOOL,id)参数block\n\n- parameter: isTrue BOOL参数\n- parameter: param id参数",
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 68,
-          "key.doc.parameters" : [
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "BOOL参数\n"
-                }
-              ],
-              "name" : "isTrue"
-            },
-            {
-              "discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "id参数"
-                }
-              ],
-              "name" : "param"
-            }
-          ],
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
-          "key.name" : "FWBlockBoolParam",
-          "key.parsed_declaration" : "typedef void (^FWBlockBoolParam)(BOOL, id _Nullable)",
-          "key.parsed_scope.end" : 68,
-          "key.parsed_scope.start" : 68,
-          "key.unavailable_message" : "",
-          "key.usr" : "c:FWDefine.h@T@FWBlockBoolParam"
-        },
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.line" : 134,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "Singleton",
-          "key.parsed_scope.end" : 134,
-          "key.parsed_scope.start" : 134
-        },
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.line" : 158,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "Foundation",
-          "key.parsed_scope.end" : 158,
-          "key.parsed_scope.start" : 158
-        },
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.line" : 205,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "Macro",
-          "key.parsed_scope.end" : 205,
-          "key.parsed_scope.start" : 205
-        },
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWDefine.h",
-          "key.doc.line" : 406,
-          "key.filepath" : "docs\/FWFramework\/FWDefine.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "Benchmark",
-          "key.parsed_scope.end" : 406,
-          "key.parsed_scope.start" : 406
         }
       ]
     }
@@ -12080,7 +12033,7 @@
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
-              "key.doc.column" : 26,
+              "key.doc.column" : 21,
               "key.doc.comment" : "生成URL，中文自动URL编码",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
@@ -12088,7 +12041,7 @@
               "key.filepath" : "docs\/FWFramework\/FWEncode.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwURLWithString:",
-              "key.parsed_declaration" : "+ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;",
+              "key.parsed_declaration" : "+ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString;",
               "key.parsed_scope.end" : 470,
               "key.parsed_scope.start" : 470,
               "key.unavailable_message" : "",
@@ -12098,7 +12051,7 @@
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
-              "key.doc.column" : 26,
+              "key.doc.column" : 21,
               "key.doc.comment" : "生成URL，中文自动URL编码",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
@@ -12106,7 +12059,7 @@
               "key.filepath" : "docs\/FWFramework\/FWEncode.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fwURLWithString:relativeToURL:",
-              "key.parsed_declaration" : "+ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString\n                           relativeToURL:(nullable NSURL *)baseURL;",
+              "key.parsed_declaration" : "+ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString\n                      relativeToURL:(nullable NSURL *)baseURL;",
               "key.parsed_scope.end" : 473,
               "key.parsed_scope.start" : 473,
               "key.unavailable_message" : "",
@@ -13007,7 +12960,7 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 22,
-              "key.doc.comment" : "从字符串初始化日期，指定时区，自定义格式和时区",
+              "key.doc.comment" : "从字符串初始化日期，自定义格式和时区",
               "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 96,
@@ -13061,7 +13014,7 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 15,
-              "key.doc.comment" : "转化为字符串，指定时区，自定义格式和时区",
+              "key.doc.comment" : "转化为字符串，自定义格式和时区",
               "key.doc.file" : "docs\/FWFramework\/FWFoundation.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 105,
@@ -16179,7 +16132,7 @@
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWLog",
           "key.parsed_declaration" : "@interface FWLog : NSObject",
-          "key.parsed_scope.end" : 147,
+          "key.parsed_scope.end" : 150,
           "key.parsed_scope.start" : 99,
           "key.substructure" : [
             {
@@ -16205,10 +16158,28 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
+              "key.doc.comment" : "检查是否需要记录指定类型日志",
+              "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 105,
+              "key.filepath" : "docs\/FWFramework\/FWLog.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
+              "key.name" : "+check:",
+              "key.parsed_declaration" : "+ (BOOL)check:(FWLogType)type;",
+              "key.parsed_scope.end" : 105,
+              "key.parsed_scope.start" : 105,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)FWLog(cm)check:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 9,
               "key.doc.comment" : "跟踪日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 109,
+              "key.doc.line" : 112,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16224,8 +16195,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+trace:",
               "key.parsed_declaration" : "+ (void)trace:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 109,
-              "key.parsed_scope.start" : 109,
+              "key.parsed_scope.end" : 112,
+              "key.parsed_scope.start" : 112,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)trace:"
             },
@@ -16237,7 +16208,7 @@
               "key.doc.comment" : "调试日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 116,
+              "key.doc.line" : 119,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16253,8 +16224,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+debug:",
               "key.parsed_declaration" : "+ (void)debug:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 116,
-              "key.parsed_scope.start" : 116,
+              "key.parsed_scope.end" : 119,
+              "key.parsed_scope.start" : 119,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)debug:"
             },
@@ -16266,7 +16237,7 @@
               "key.doc.comment" : "信息日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 123,
+              "key.doc.line" : 126,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16282,8 +16253,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+info:",
               "key.parsed_declaration" : "+ (void)info:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 123,
-              "key.parsed_scope.start" : 123,
+              "key.parsed_scope.end" : 126,
+              "key.parsed_scope.start" : 126,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)info:"
             },
@@ -16295,7 +16266,7 @@
               "key.doc.comment" : "警告日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 130,
+              "key.doc.line" : 133,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16311,8 +16282,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+warn:",
               "key.parsed_declaration" : "+ (void)warn:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 130,
-              "key.parsed_scope.start" : 130,
+              "key.parsed_scope.end" : 133,
+              "key.parsed_scope.start" : 133,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)warn:"
             },
@@ -16324,7 +16295,7 @@
               "key.doc.comment" : "错误日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 137,
+              "key.doc.line" : 140,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16340,8 +16311,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+error:",
               "key.parsed_declaration" : "+ (void)error:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 137,
-              "key.parsed_scope.start" : 137,
+              "key.parsed_scope.end" : 140,
+              "key.parsed_scope.start" : 140,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)error:"
             },
@@ -16353,7 +16324,7 @@
               "key.doc.comment" : "记录类型日志\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 145,
+              "key.doc.line" : 148,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16378,8 +16349,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+log:withMessage:",
               "key.parsed_declaration" : "+ (void)log:(FWLogType)type withMessage:(nonnull NSString *)message;",
-              "key.parsed_scope.end" : 145,
-              "key.parsed_scope.start" : 145,
+              "key.parsed_scope.end" : 148,
+              "key.parsed_scope.start" : 148,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)log:withMessage:"
             }
@@ -16390,12 +16361,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.line" : 149,
+          "key.doc.line" : 152,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWLogPlugin",
-          "key.parsed_scope.end" : 149,
-          "key.parsed_scope.start" : 149
+          "key.parsed_scope.end" : 152,
+          "key.parsed_scope.start" : 152
         },
         {
           "key.always_deprecated" : false,
@@ -16405,13 +16376,13 @@
           "key.doc.comment" : "日志插件协议",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 154,
+          "key.doc.line" : 157,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
           "key.name" : "FWLogPlugin",
           "key.parsed_declaration" : "@protocol FWLogPlugin <NSObject>",
-          "key.parsed_scope.end" : 166,
-          "key.parsed_scope.start" : 154,
+          "key.parsed_scope.end" : 169,
+          "key.parsed_scope.start" : 157,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -16421,7 +16392,7 @@
               "key.doc.comment" : "记录日志协议方法\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 164,
+              "key.doc.line" : 167,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16446,8 +16417,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fwLog:withMessage:",
               "key.parsed_declaration" : "- (void)fwLog:(FWLogType)type withMessage:(nonnull NSString *)message;",
-              "key.parsed_scope.end" : 164,
-              "key.parsed_scope.start" : 164,
+              "key.parsed_scope.end" : 167,
+              "key.parsed_scope.start" : 167,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(pl)FWLogPlugin(im)fwLog:withMessage:"
             }
@@ -16458,12 +16429,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.line" : 168,
+          "key.doc.line" : 171,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWLogPluginImpl",
-          "key.parsed_scope.end" : 168,
-          "key.parsed_scope.start" : 168
+          "key.parsed_scope.end" : 171,
+          "key.parsed_scope.start" : 171
         },
         {
           "key.always_deprecated" : false,
@@ -16473,13 +16444,13 @@
           "key.doc.comment" : "默认NSLog日志插件",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 173,
+          "key.doc.line" : 176,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWLogPluginImpl",
           "key.parsed_declaration" : "@interface FWLogPluginImpl : NSObject <FWLogPlugin>",
-          "key.parsed_scope.end" : 178,
-          "key.parsed_scope.start" : 173,
+          "key.parsed_scope.end" : 181,
+          "key.parsed_scope.start" : 176,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -16489,13 +16460,13 @@
               "key.doc.comment" : "单例模式对象",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 176,
+              "key.doc.line" : 179,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "sharedInstance",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly) FWLogPluginImpl *_Nonnull sharedInstance;",
-              "key.parsed_scope.end" : 176,
-              "key.parsed_scope.start" : 176,
+              "key.parsed_scope.end" : 179,
+              "key.parsed_scope.start" : 179,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLogPluginImpl(cpy)sharedInstance"
             }

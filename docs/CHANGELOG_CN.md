@@ -1,5 +1,14 @@
 # 更新日志
 
+## [2.2.0] - 2022-01-12
+
+### Added
+* 新增FWEncode兼容Swift扩展方法
+* 新增FWFoundation兼容Swift扩展方法
+
+### Changed
+* 修改调试信息方法为debugDescription
+
 ## [2.1.0] - 2021-12-31
 
 ### Added

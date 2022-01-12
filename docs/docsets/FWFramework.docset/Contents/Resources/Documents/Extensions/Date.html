@@ -17,7 +17,7 @@
     <a title="Date Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.1.0 Docs</a> (74% documented)</p>
+        <p><a href="../index.html">FWFramework 2.2.0 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -556,22 +556,22 @@
                 <a href="../Type%20Definitions.html#/c:FWAuthorize.h@T@FWAuthorizeType">FWAuthorizeType</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockBool">FWBlockBool</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockBool">FWBlockBool</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockBoolParam">FWBlockBoolParam</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockBoolParam">FWBlockBoolParam</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockDouble">FWBlockDouble</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockDouble">FWBlockDouble</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockInt">FWBlockInt</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockInt">FWBlockInt</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockParam">FWBlockParam</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockParam">FWBlockParam</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Type%20Definitions.html#/c:FWDefine.h@T@FWBlockVoid">FWBlockVoid</a>
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockVoid">FWBlockVoid</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCellConfigurationBlock">FWCellConfigurationBlock</a>
@@ -990,12 +990,147 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation4DateV11FWFrameworkE13fwCurrentTimeSdvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/fwCurrentTime" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation4DateV11FWFrameworkE13fwCurrentTimeSdvpZ">fwCurrentTime</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">fwCurrentTime</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation4DateV11FWFrameworkE02fwB06string6format8timeZoneACSgSS_SSSgAA04TimeH0VSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/fwDate(string:format:timeZone:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation4DateV11FWFrameworkE02fwB06string6format8timeZoneACSgSS_SSSgAA04TimeH0VSgtFZ">fwDate(string:<wbr>format:<wbr>timeZone:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fwDate</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">format</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="s">"yyyy-MM-dd HH:mm:ss"</span><span class="p">,</span> <span class="nv">timeZone</span><span class="p">:</span> <span class="kt">TimeZone</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Date</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation4DateV11FWFrameworkE13fwStringValueSSvp"></a>
+                    <a name="//apple_ref/swift/Property/fwStringValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation4DateV11FWFrameworkE13fwStringValueSSvp">fwStringValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>转化为字符串，默认当前时区，格式：yyyy-MM-dd HH:mm:ss</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fwStringValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation4DateV11FWFrameworkE8fwString6format8timeZoneS2SSg_AA04TimeH0VSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fwString(format:timeZone:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation4DateV11FWFrameworkE8fwString6format8timeZoneS2SSg_AA04TimeH0VSgtF">fwString(format:<wbr>timeZone:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>转化为字符串，自定义格式和时区</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fwString</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">timeZone</span><span class="p">:</span> <span class="kt">TimeZone</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation4DateV11FWFrameworkE16fwFormatDuration_7hasHourSSSd_SbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/fwFormatDuration(_:hasHour:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation4DateV11FWFrameworkE16fwFormatDuration_7hasHourSSSd_SbtFZ">fwFormatDuration(_:<wbr>hasHour:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>格式化时长，格式&quot;00:00&quot;或&quot;00:00:00&quot;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fwFormatDuration</span><span class="p">(</span><span class="n">_</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">hasHour</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-04)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
