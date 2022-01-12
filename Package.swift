@@ -46,7 +46,12 @@ let package = Package(
                 .headerSearchPath("FWFramework/Kernel"),
                 .headerSearchPath("FWFramework/Service"),
                 .headerSearchPath("FWFramework/Toolkit"),
-                .headerSearchPath("include")
+                .headerSearchPath("include"),
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWFrameworkSPM")
             ]),
         .target(
             name: "FWFrameworkCompatible",
