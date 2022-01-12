@@ -2,8 +2,10 @@
 
 framework_name=FWFramework
 
+mv docs/CNAME ./ 
 rm -rf docs
 mkdir docs
+mv CNAME docs/
 mkdir "docs/$framework_name"
 
 umbrella_name="$framework_name-umbrella.h"
