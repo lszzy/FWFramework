@@ -467,10 +467,10 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 @property (nonatomic, copy, readonly, nullable) NSString *fwPathURI;
 
 /// 生成URL，中文自动URL编码
-+ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString;
++ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString;
 
 /// 生成URL，中文自动URL编码
-+ (nullable instancetype)fwURLWithString:(nullable NSString *)URLString relativeToURL:(nullable NSURL *)baseURL;
++ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString relativeToURL:(nullable NSURL *)baseURL;
 
 @end
 
