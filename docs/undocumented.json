@@ -696,104 +696,279 @@
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
       "line": 366,
-      "symbol": "Data.fwJsonEncode(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 367,
-      "symbol": "Data.fwJsonDecode",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 368,
-      "symbol": "Data.fwNSData",
+      "symbol": "Set.fwNSSet",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
       "line": 369,
-      "symbol": "Data.fwUTF8String",
+      "symbol": "Data.fwJsonEncode(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 370,
+      "symbol": "Data.fwJsonDecode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 371,
+      "symbol": "Data.fwBase64Encode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
       "line": 372,
+      "symbol": "Data.fwBase64Decode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 373,
+      "symbol": "Data.fwNSData",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 374,
+      "symbol": "Data.fwUTF8String",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 377,
       "symbol": "Date.fwNSDate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 375,
+      "line": 380,
       "symbol": "Dictionary.fwNSDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 378,
+      "line": 383,
       "symbol": "String.fwJsonEncode(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 379,
+      "line": 384,
       "symbol": "String.fwJsonDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 380,
-      "symbol": "String.fwMd5Encode",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 381,
-      "symbol": "String.fwTrimString",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 382,
-      "symbol": "String.fwNSString",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 383,
-      "symbol": "String.fwUTF8Data",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 384,
-      "symbol": "String.fwURL",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
       "line": 385,
-      "symbol": "String.fwNumber",
+      "symbol": "String.fwBase64Encode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 386,
+      "symbol": "String.fwBase64Decode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 387,
+      "symbol": "String.fwUnicodeLength",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
       "line": 388,
+      "symbol": "String.fwUnicodeSubstring(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 389,
+      "symbol": "String.fwUnicodeEncode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 390,
+      "symbol": "String.fwUnicodeDecode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 391,
+      "symbol": "String.fwUrlEncodeComponent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 392,
+      "symbol": "String.fwUrlDecodeComponent",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 393,
+      "symbol": "String.fwUrlEncode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 394,
+      "symbol": "String.fwUrlDecode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 395,
+      "symbol": "String.fwQueryEncode(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 396,
+      "symbol": "String.fwQueryDecode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 397,
+      "symbol": "String.fwMd5Encode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 398,
+      "symbol": "String.fwMd5EncodeFile",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 399,
+      "symbol": "String.fwTrimString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 400,
+      "symbol": "String.fwEscapeJson",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 401,
+      "symbol": "String.fwNSString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 402,
+      "symbol": "String.fwUTF8Data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 403,
+      "symbol": "String.fwURL",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 404,
+      "symbol": "String.fwNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 405,
+      "symbol": "String.fwSubstring(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 406,
+      "symbol": "String.fwSubstring(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 407,
+      "symbol": "String.fwSubstring(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 408,
+      "symbol": "String.fwSubstring(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 411,
+      "symbol": "URL.fwURL(string:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 412,
+      "symbol": "URL.fwURL(string:relativeTo:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 413,
+      "symbol": "URL.fwQueryDictionary",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 414,
+      "symbol": "URL.fwPathURI",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
+      "line": 415,
       "symbol": "URL.fwNSURL",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -2732,21 +2907,21 @@
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 113,
+      "line": 156,
       "symbol": "UIGestureRecognizer(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 131,
+      "line": 174,
       "symbol": "UIView(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 149,
+      "line": 192,
       "symbol": "UIControl(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

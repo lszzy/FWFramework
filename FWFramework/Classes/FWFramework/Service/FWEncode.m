@@ -659,7 +659,7 @@ NSURL * FWSafeURL(id value) {
     return nil;
 }
 
-+ (instancetype)fwURLWithString:(NSString *)URLString
++ (NSURL *)fwURLWithString:(NSString *)URLString
 {
     if (!URLString) return nil;
     
@@ -672,7 +672,7 @@ NSURL * FWSafeURL(id value) {
     return url;
 }
 
-+ (instancetype)fwURLWithString:(NSString *)URLString relativeToURL:(NSURL *)baseURL
++ (NSURL *)fwURLWithString:(NSString *)URLString relativeToURL:(NSURL *)baseURL
 {
     if (!URLString) return nil;
     

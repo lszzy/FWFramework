@@ -36,8 +36,15 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     fwStaticLogLevel = level;
 }
 
++ (BOOL)check:(FWLogType)type
+{
+    return (fwStaticLogLevel & type) ? YES : NO;
+}
+
 + (void)trace:(NSString *)format, ...
 {
+    if (![self check:FWLogTypeTrace]) return;
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -48,6 +55,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)debug:(NSString *)format, ...
 {
+    if (![self check:FWLogTypeDebug]) return;
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -58,6 +67,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)info:(NSString *)format, ...
 {
+    if (![self check:FWLogTypeInfo]) return;
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -68,6 +79,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)warn:(NSString *)format, ...
 {
+    if (![self check:FWLogTypeWarn]) return;
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -78,6 +91,8 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 + (void)error:(NSString *)format, ...
 {
+    if (![self check:FWLogTypeError]) return;
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -89,7 +104,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 + (void)log:(FWLogType)type withMessage:(NSString *)message
 {
     // 过滤不支持的级别
-    if (!(fwStaticLogLevel & type)) return;
+    if (![self check:type]) return;
     
     // 插件存在，调用插件；否则使用默认插件
     id<FWLogPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWLogPlugin)];
