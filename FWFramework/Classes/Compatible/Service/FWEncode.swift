@@ -362,6 +362,9 @@ extension Dictionary: FWSafeUnwrappable {
 extension Array {
     public var fwNSArray: NSArray { return self as NSArray }
 }
+extension Set {
+    public var fwNSSet: NSSet { return self as NSSet }
+}
 extension Data {
     public static func fwJsonEncode(_ object: Any) -> Data? { return NSData.fwJsonEncode(object) }
     public var fwJsonDecode: Any? { return fwNSData.fwJsonDecode }
