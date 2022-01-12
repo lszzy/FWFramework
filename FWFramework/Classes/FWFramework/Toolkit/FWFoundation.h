@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 从字符串初始化日期，默认当前时区，自定义格式
 + (nullable NSDate *)fwDateWithString:(NSString *)string format:(nullable NSString *)format;
 
-/// 从字符串初始化日期，指定时区，自定义格式和时区
+/// 从字符串初始化日期，自定义格式和时区
 + (nullable NSDate *)fwDateWithString:(NSString *)string format:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 /// 转化为字符串，默认当前时区，格式：yyyy-MM-dd HH:mm:ss
@@ -101,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 转化为字符串，默认当前时区，自定义格式
 - (NSString *)fwStringWithFormat:(nullable NSString *)format;
 
-/// 转化为字符串，指定时区，自定义格式和时区
+/// 转化为字符串，自定义格式和时区
 - (NSString *)fwStringWithFormat:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 /// 格式化时长，格式"00:00"或"00:00:00"
