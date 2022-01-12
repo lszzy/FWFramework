@@ -11,6 +11,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWAutoload
+
+/// 自动加载类并调用autoload方法，支持NSString|Class，兼容Swift带模块名NSObject类
+FOUNDATION_EXPORT BOOL FWAutoload(id _Nullable clazz);
+
+/// 自动加载协议，配合FWAutoload方法使用
+@protocol FWAutoloadProtocol <NSObject>
+
+@required
+
+/// 自动加载协议方法
++ (void)autoload;
+
+@end
+
+#pragma mark - FWLoader
+
 /**
  加载器，处理swift不支持load方法问题
  @note 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单
