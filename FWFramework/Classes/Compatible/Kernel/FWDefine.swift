@@ -34,6 +34,7 @@ public func FWBenchmarkEnd(_ name: String = "") -> TimeInterval {
     }
     
     /// 标记时间调试结束并打印消耗时间
+    @discardableResult
     public static func end(_ name: String) -> TimeInterval {
         let beginTime = times[name] ?? Date().timeIntervalSince1970
         let timeInterval = Date().timeIntervalSince1970 - beginTime

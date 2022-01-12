@@ -59,15 +59,14 @@
     return self;
 }
 
-- (NSString *)description
++ (NSString *)debugDescription
 {
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
     NSInteger debugCount = 0;
-    for (NSString *protocolName in self.pluginPool) {
-        FWInnerPluginTarget *plugin = [self.pluginPool objectForKey:protocolName];
+    for (NSString *protocolName in FWPluginManager.sharedInstance.pluginPool) {
+        FWInnerPluginTarget *plugin = [FWPluginManager.sharedInstance.pluginPool objectForKey:protocolName];
         [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, (plugin.instance ?: plugin.object)];
     }
-    
     return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription];
 }
 
