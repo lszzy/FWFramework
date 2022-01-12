@@ -51,7 +51,7 @@ let package = Package(
         .target(
             name: "FWFrameworkCompatible",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Compatible",
+            path: "FWFramework/Classes/Module/Compatible",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
@@ -62,7 +62,7 @@ let package = Package(
         .target(
             name: "FWFrameworkAppleMusic",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Component/AppleMusic",
+            path: "FWFramework/Classes/Module/AppleMusic",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
@@ -72,7 +72,7 @@ let package = Package(
         .target(
             name: "FWFrameworkCalendar",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Component/Calendar",
+            path: "FWFramework/Classes/Module/Calendar",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
@@ -82,7 +82,7 @@ let package = Package(
         .target(
             name: "FWFrameworkContacts",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Component/Contacts",
+            path: "FWFramework/Classes/Module/Contacts",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
@@ -92,7 +92,7 @@ let package = Package(
         .target(
             name: "FWFrameworkMicrophone",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Component/Microphone",
+            path: "FWFramework/Classes/Module/Microphone",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
@@ -102,7 +102,7 @@ let package = Package(
         .target(
             name: "FWFrameworkTracking",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Component/Tracking",
+            path: "FWFramework/Classes/Module/Tracking",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
