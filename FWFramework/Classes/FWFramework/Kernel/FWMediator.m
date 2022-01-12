@@ -9,6 +9,7 @@
 
 #import "FWMediator.h"
 #import "FWLoader.h"
+#import "FWPlugin.h"
 #import "FWLog.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
@@ -38,10 +39,10 @@
     return instance;
 }
 
-- (NSString *)description
++ (NSString *)debugDescription
 {
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
-    NSArray *sortedKeys = [self.moduleDict keysSortedByValueUsingComparator:^NSComparisonResult(Class class1, Class class2) {
+    NSArray *sortedKeys = [FWMediator.sharedInstance.moduleDict keysSortedByValueUsingComparator:^NSComparisonResult(Class class1, Class class2) {
         NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : FWModulePriorityDefault;
         NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : FWModulePriorityDefault;
         if (priority1 == priority2) return NSOrderedSame;
@@ -49,9 +50,8 @@
     }];
     NSInteger debugCount = 0;
     for (NSString *protocolName in sortedKeys) {
-        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, NSStringFromClass([self.moduleDict objectForKey:protocolName])];
+        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, NSStringFromClass([FWMediator.sharedInstance.moduleDict objectForKey:protocolName])];
     }
-    
     return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription];
 }
 
@@ -155,9 +155,9 @@
     }
     
 #ifdef DEBUG
-    FWLogDebug(@"%@", [NSClassFromString(@"FWLoader") sharedInstance]);
-    FWLogDebug(@"%@", [FWMediator sharedInstance]);
-    FWLogDebug(@"%@", [NSClassFromString(@"FWPluginManager") sharedInstance]);
+    FWLogDebug(@"%@", FWLoader.debugDescription);
+    FWLogDebug(@"%@", FWMediator.debugDescription);
+    FWLogDebug(@"%@", FWPluginManager.debugDescription);
 #endif
 }
 
