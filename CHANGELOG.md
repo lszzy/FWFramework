@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.0] - 2022-01-12
+
+### Added
+* Added FWEncode compatible Swift extension method
+* Added FWFoundation compatible Swift extension method
+
+### Changed
+* Modify the debug information method to debugDescription
+
 ## [2.1.0] - 2021-12-31
 
 ### Added
