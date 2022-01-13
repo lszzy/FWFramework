@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if FWFrameworkSPM
+import FWFramework
+#endif
 
 /// 自动加载Swift类并调用autoload方法，参数为Class或String
 @discardableResult

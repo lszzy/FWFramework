@@ -17,6 +17,15 @@
 #import "FWAuthorize.h"
 #endif
 
+@implementation UIDevice (FWAuthorizeTracking)
+
++ (NSString *)fwDeviceIDFA
+{
+    return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
+}
+
+@end
+
 // iOS14+使用AppTrackingTransparency，其它使用AdSupport
 @interface FWAuthorizeTracking : NSObject <FWAuthorizeProtocol>
 

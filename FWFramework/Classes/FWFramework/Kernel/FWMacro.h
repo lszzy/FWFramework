@@ -1,5 +1,5 @@
 /**
- @header     FWDefine.h
+ @header     FWMacro.h
  @indexgroup FWFramework
       核心宏定义
  @author     wuyong
@@ -7,22 +7,10 @@
  @updated    2018-05-11
  */
 
-#ifndef FWDefine_h
-#define FWDefine_h
+#ifndef FWMacro_h
+#define FWMacro_h
 
 #import <Foundation/Foundation.h>
-#import "FWLoader.h"
-#import "FWLog.h"
-#import "FWMediator.h"
-#import "FWMessage.h"
-#import "FWNavigation.h"
-#import "FWPlugin.h"
-#import "FWProxy.h"
-#import "FWRouter.h"
-#import "FWState.h"
-#import "FWSwizzle.h"
-#import "FWTask.h"
-#import "FWTest.h"
 
 #pragma mark - Block
 
@@ -372,4 +360,4 @@
 #define FWBenchmarkEnd( x ) \
     [FWBenchmark end:@(#x)];
 
-#endif /* FWDefine_h */
+#endif /* FWMacro_h */

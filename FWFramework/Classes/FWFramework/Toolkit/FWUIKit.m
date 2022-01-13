@@ -15,9 +15,6 @@
 #import "FWMessage.h"
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
-#if FWCOMPONENT_TRACKING_ENABLED
-#import <AdSupport/ASIdentifierManager.h>
-#endif
 
 #pragma mark - UIDevice+FWUIKit
 
@@ -63,15 +60,6 @@
 + (NSString *)fwDeviceIDFV
 {
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-}
-
-+ (NSString *)fwDeviceIDFA
-{
-#if FWCOMPONENT_TRACKING_ENABLED
-    return [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
-#else
-    return nil;
-#endif
 }
 
 @end
