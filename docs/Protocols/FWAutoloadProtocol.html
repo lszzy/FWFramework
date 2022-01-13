@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>UIDevice(FWUIKit) Category Reference</title>
+    <title>FWAutoloadProtocol Protocol Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Extension/UIDevice(FWUIKit)" class="dashAnchor"></a>
-    <a title="UIDevice(FWUIKit) Category Reference"></a>
+    <a name="//apple_ref/swift/Protocol/FWAutoloadProtocol" class="dashAnchor"></a>
+    <a title="FWAutoloadProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.2.0 Docs</a> (74% documented)</p>
+        <p><a href="../index.html">FWFramework 2.2.1 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">FWFramework Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        UIDevice(FWUIKit) Category Reference
+        FWAutoloadProtocol Protocol Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -169,9 +169,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/UIDevice%28FWAdaptive%29.html">UIDevice(FWAdaptive)</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Categories/UIDevice%28FWUIKit%29.html">UIDevice(FWUIKit)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/UIFont%28FWToolkit%29.html">UIFont(FWToolkit)</a>
@@ -530,6 +527,9 @@
                 <a href="../Protocols/FWAuthorizeProtocol.html">FWAuthorizeProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/FWAutoloadProtocol.html">FWAutoloadProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/FWJSONSubscriptType.html">FWJSONSubscriptType</a>
               </li>
               <li class="nav-group-task">
@@ -631,6 +631,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Functions.html#/s:11FWFramework2geoiySbAA6FWJSONV_ADtF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWAutoload">FWAutoload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWAutoloadySbypF">FWAutoload(_:)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Functions.html#/s:11FWFramework16FWBenchmarkBeginyySSF">FWBenchmarkBegin(_:)</a>
@@ -950,15 +956,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>UIDevice(FWUIKit)</h1>
+            <h1>FWAutoloadProtocol</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UIDevice</span> <span class="p">(</span><span class="nl">FWUIKit</span><span class="p">)</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">FWAutoloadProtocol</span></code></pre>
 
                 </div>
               </div>
-            <p>UIDevice+FWUIKit</p>
+            <p>Swift自动加载协议，配合FWAutoload方法使用</p>
 
           </section>
           <section class="section task-group-section">
@@ -967,9 +973,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIDevice(cm)fwSetDeviceTokenData:"></a>
-                    <a name="//apple_ref/swift/Method/+fwSetDeviceTokenData:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIDevice(cm)fwSetDeviceTokenData:">+fwSetDeviceTokenData:<wbr></a>
+                    <a name="/s:11FWFramework18FWAutoloadProtocolP8autoloadyyFZ"></a>
+                    <a name="//apple_ref/swift/Method/autoload()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18FWAutoloadProtocolP8autoloadyyFZ">autoload()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -977,122 +983,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置设备token原始Data，格式化并保存</p>
+                        <p>自动加载协议方法</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fwSetDeviceTokenData</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">tokenData</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIDevice(cpy)fwDeviceToken"></a>
-                    <a name="//apple_ref/swift/Property/fwDeviceToken" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIDevice(cpy)fwDeviceToken">fwDeviceToken</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取设备Token格式化后的字符串</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fwDeviceToken</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIDevice(cpy)fwDeviceModel"></a>
-                    <a name="//apple_ref/swift/Property/fwDeviceModel" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIDevice(cpy)fwDeviceModel">fwDeviceModel</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取设备模型，格式：&quot;iPhone6,1&quot;</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fwDeviceModel</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIDevice(cpy)fwDeviceIDFV"></a>
-                    <a name="//apple_ref/swift/Property/fwDeviceIDFV" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIDevice(cpy)fwDeviceIDFV">fwDeviceIDFV</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fwDeviceIDFV</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIDevice(cpy)fwDeviceIDFA"></a>
-                    <a name="//apple_ref/swift/Property/fwDeviceIDFA" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIDevice(cpy)fwDeviceIDFA">fwDeviceIDFA</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Component_Tracking组件后生效</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fwDeviceIDFA</span><span class="p">;</span></code></pre>
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">func</span> <span class="nf">autoload</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -1104,7 +1002,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-12)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

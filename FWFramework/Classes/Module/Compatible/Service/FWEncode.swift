@@ -11,226 +11,62 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - FWAnyEncoder
+// MARK: - FWSafeBridge
 
-/// https://github.com/JohnSundell/Codextended
-public protocol FWAnyEncoder {
-    func encode<T: Encodable>(_ value: T) throws -> Data
+extension Array {
+    public var fwNSArray: NSArray { return self as NSArray }
 }
-
-extension JSONEncoder: FWAnyEncoder {}
-
-#if canImport(ObjectiveC) || swift(>=5.1)
-extension PropertyListEncoder: FWAnyEncoder {}
-#endif
-
-public extension Encodable {
-    func fwEncoded(using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data {
-        return try encoder.encode(self)
-    }
+extension Set {
+    public var fwNSSet: NSSet { return self as NSSet }
 }
-
-public extension Encoder {
-    func fwEncodeSingle<T: Encodable>(_ value: T) throws {
-        var container = singleValueContainer()
-        try container.encode(value)
-    }
-
-    func fwEncode<T: Encodable>(_ value: T, for key: String) throws {
-        try fwEncode(value, for: FWAnyCodingKey(key))
-    }
-
-    func fwEncode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
-        var container = self.container(keyedBy: K.self)
-        try container.encode(value, forKey: key)
-    }
-
-    func fwEncode<F: FWAnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
-        try fwEncode(date, for: FWAnyCodingKey(key), using: formatter)
-    }
-
-    func fwEncode<K: CodingKey, F: FWAnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
-        let string = formatter.string(from: date)
-        try fwEncode(string, for: key)
-    }
+extension Data {
+    public static func fwJsonEncode(_ object: Any) -> Data? { return NSData.fwJsonEncode(object) }
+    public var fwJsonDecode: Any? { return fwNSData.fwJsonDecode }
+    public var fwBase64Encode: Data { return fwNSData.fwBase64Encode() }
+    public var fwBase64Decode: Data? { return fwNSData.fwBase64Decode() }
+    public var fwNSData: NSData { return self as NSData }
+    public var fwUTF8String: String? { return String(data: self, encoding: .utf8) }
 }
-
-// MARK: - FWAnyDecoder
-
-public protocol FWAnyDecoder {
-    func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
+extension Date {
+    public var fwNSDate: NSDate { return self as NSDate }
 }
-
-extension JSONDecoder: FWAnyDecoder {}
-
-#if canImport(ObjectiveC) || swift(>=5.1)
-extension PropertyListDecoder: FWAnyDecoder {}
-#endif
-
-public extension Data {
-    func fwDecoded<T: Decodable>(as type: T.Type = T.self,
-                               using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
-        return try decoder.decode(T.self, from: self)
-    }
+extension Dictionary {
+    public var fwNSDictionary: NSDictionary { return self as NSDictionary }
 }
-
-public extension Decoder {
-    func fwDecodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        let container = try singleValueContainer()
-        return try container.decode(type)
-    }
-
-    func fwDecode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try fwDecode(FWAnyCodingKey(key), as: type)
-    }
-
-    func fwDecode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        let container = try self.container(keyedBy: K.self)
-        return try container.decode(type, forKey: key)
-    }
-
-    func fwDecodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try fwDecodeIf(FWAnyCodingKey(key), as: type)
-    }
-
-    func fwDecodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        let container = try self.container(keyedBy: K.self)
-        return try container.decodeIfPresent(type, forKey: key)
-    }
-
-    func fwDecode<F: FWAnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
-        return try fwDecode(FWAnyCodingKey(key), using: formatter)
-    }
-
-    func fwDecode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
-        let container = try self.container(keyedBy: K.self)
-        let rawString = try container.decode(String.self, forKey: key)
-
-        guard let date = formatter.date(from: rawString) else {
-            throw DecodingError.dataCorruptedError(
-                forKey: key,
-                in: container,
-                debugDescription: "Unable to format date string"
-            )
-        }
-
-        return date
-    }
-    
-    // MARK: - FWJSON
-    
-    func fwJsonSingle() throws -> FWJSON {
-        return try fwDecodeSingle(as: FWJSON.self)
-    }
-    
-    func fwJson(_ key: String) throws -> FWJSON {
-        return try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null
-    }
-    
-    func fwJson<K: CodingKey>(_ key: K) throws -> FWJSON {
-        return try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null
-    }
-
-    func fwJsonIf(_ key: String) throws -> FWJSON? {
-        return try fwDecodeIf(key, as: FWJSON.self)
-    }
-
-    func fwJsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
-        return try fwDecodeIf(key, as: FWJSON.self)
-    }
-    
-    // MARK: - Value
-    
-    func fwValueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        if let value = fwValue(with: try fwDecodeSingle(as: FWJSON.self), as: type) {
-            return value
-        }
-        return try fwDecodeSingle(as: type)
-    }
-    
-    func fwValue<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try fwValue(FWAnyCodingKey(key), as: type)
-    }
-
-    func fwValue<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        if let value = fwValue(with: try fwDecodeIf(key, as: FWJSON.self) ?? FWJSON.null, as: type) {
-            return value
-        }
-        return try fwDecode(key, as: type)
-    }
-
-    func fwValueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try fwValueIf(FWAnyCodingKey(key), as: type)
-    }
-
-    func fwValueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        if let json = try fwDecodeIf(key, as: FWJSON.self), let value = fwValue(with: json, as: type) {
-            return value
-        }
-        return try fwDecodeIf(key, as: type)
-    }
-    
-    private func fwValue<T>(with json: FWJSON, as type: T.Type) -> T? {
-        switch type {
-        case is Bool.Type:
-            return json.boolValue as? T
-        case is String.Type:
-            return json.stringValue as? T
-        case is Double.Type:
-            return json.doubleValue as? T
-        case is Float.Type:
-            return json.floatValue as? T
-        case is Int.Type:
-            return json.intValue as? T
-        case is Int8.Type:
-            return json.int8Value as? T
-        case is Int16.Type:
-            return json.int16Value as? T
-        case is Int32.Type:
-            return json.int32Value as? T
-        case is Int64.Type:
-            return json.int64Value as? T
-        case is UInt.Type:
-            return json.uIntValue as? T
-        case is UInt8.Type:
-            return json.uInt8Value as? T
-        case is UInt16.Type:
-            return json.uInt16Value as? T
-        case is UInt32.Type:
-            return json.uInt32Value as? T
-        case is UInt64.Type:
-            return json.uInt64Value as? T
-        default:
-            return nil
-        }
-    }
+extension String {
+    public static func fwJsonEncode(_ object: Any) -> String? { return NSString.fwJsonEncode(object) }
+    public var fwJsonDecode: Any? { return fwNSString.fwJsonDecode }
+    public var fwBase64Encode: String? { return fwNSString.fwBase64Encode() }
+    public var fwBase64Decode: String? { return fwNSString.fwBase64Decode() }
+    public var fwUnicodeLength: UInt { return fwNSString.fwUnicodeLength() }
+    public func fwUnicodeSubstring(_ length: UInt) -> String { return fwNSString.fwUnicodeSubstring(length) }
+    public var fwUnicodeEncode: String { return fwNSString.fwUnicodeEncode() }
+    public var fwUnicodeDecode: String { return fwNSString.fwUnicodeDecode() }
+    public var fwUrlEncodeComponent: String? { return fwNSString.fwUrlEncodeComponent() }
+    public var fwUrlDecodeComponent: String? { return fwNSString.fwUrlDecodeComponent() }
+    public var fwUrlEncode: String? { return fwNSString.fwUrlEncode() }
+    public var fwUrlDecode: String? { return fwNSString.fwUrlDecode() }
+    public static func fwQueryEncode(_ dict: [String: Any]) -> String { return NSString.fwQueryEncode(dict) }
+    public var fwQueryDecode: [String: String] { return fwNSString.fwQueryDecode() }
+    public var fwMd5Encode: String { return fwNSString.fwMd5Encode() }
+    public var fwMd5EncodeFile: String? { return fwNSString.fwMd5EncodeFile() }
+    public var fwTrimString: String { return trimmingCharacters(in: .whitespacesAndNewlines) }
+    public var fwEscapeJson: String { return fwNSString.fwEscapeJson }
+    public var fwNSString: NSString { return self as NSString }
+    public var fwUTF8Data: Data? { return self.data(using: .utf8) }
+    public var fwURL: URL? { return fwNSString.fwURL }
+    public var fwNumber: NSNumber? { return fwNSString.fwNumber }
+    public func fwSubstring(from index: Int) -> String { return fwNSString.fwSubstring(from: index) ?? "" }
+    public func fwSubstring(to index: Int) -> String { return fwNSString.fwSubstring(to: index) ?? "" }
+    public func fwSubstring(with range: NSRange) -> String { return fwNSString.fwSubstring(with: range) ?? "" }
+    public func fwSubstring(with range: Range<Int>) -> String { return fwSubstring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound)) }
 }
-
-public protocol FWAnyDateFormatter {
-    func date(from string: String) -> Date?
-    func string(from date: Date) -> String
-}
-
-extension DateFormatter: FWAnyDateFormatter {}
-
-extension ISO8601DateFormatter: FWAnyDateFormatter {}
-
-private struct FWAnyCodingKey: CodingKey {
-    var stringValue: String
-    var intValue: Int?
-
-    init(_ string: String) {
-        stringValue = string
-    }
-
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-    }
-
-    init?(intValue: Int) {
-        self.intValue = intValue
-        self.stringValue = String(intValue)
-    }
+extension URL {
+    public static func fwURL(string: String?) -> URL? { return NSURL.fwURL(with: string) }
+    public static func fwURL(string: String?, relativeTo baseURL: URL?) -> URL? { return NSURL.fwURL(with: string, relativeTo: baseURL) }
+    public var fwQueryDictionary: [String: String] { return fwNSURL.fwQueryDictionary }
+    public var fwPathURI: String? { return fwNSURL.fwPathURI }
+    public var fwNSURL: NSURL { return self as NSURL }
 }
 
 // MARK: - FWSafeUnwrappable
@@ -355,62 +191,4 @@ extension Set: FWSafeUnwrappable {
 extension Dictionary: FWSafeUnwrappable {
     public static var fwSafeValue: Dictionary<Key, Value> { return [:] }
     public var fwIsEmpty: Bool { return self.isEmpty }
-}
-
-// MARK: - FWSafeBridge
-
-extension Array {
-    public var fwNSArray: NSArray { return self as NSArray }
-}
-extension Set {
-    public var fwNSSet: NSSet { return self as NSSet }
-}
-extension Data {
-    public static func fwJsonEncode(_ object: Any) -> Data? { return NSData.fwJsonEncode(object) }
-    public var fwJsonDecode: Any? { return fwNSData.fwJsonDecode }
-    public var fwBase64Encode: Data { return fwNSData.fwBase64Encode() }
-    public var fwBase64Decode: Data? { return fwNSData.fwBase64Decode() }
-    public var fwNSData: NSData { return self as NSData }
-    public var fwUTF8String: String? { return String(data: self, encoding: .utf8) }
-}
-extension Date {
-    public var fwNSDate: NSDate { return self as NSDate }
-}
-extension Dictionary {
-    public var fwNSDictionary: NSDictionary { return self as NSDictionary }
-}
-extension String {
-    public static func fwJsonEncode(_ object: Any) -> String? { return NSString.fwJsonEncode(object) }
-    public var fwJsonDecode: Any? { return fwNSString.fwJsonDecode }
-    public var fwBase64Encode: String? { return fwNSString.fwBase64Encode() }
-    public var fwBase64Decode: String? { return fwNSString.fwBase64Decode() }
-    public var fwUnicodeLength: UInt { return fwNSString.fwUnicodeLength() }
-    public func fwUnicodeSubstring(_ length: UInt) -> String { return fwNSString.fwUnicodeSubstring(length) }
-    public var fwUnicodeEncode: String { return fwNSString.fwUnicodeEncode() }
-    public var fwUnicodeDecode: String { return fwNSString.fwUnicodeDecode() }
-    public var fwUrlEncodeComponent: String? { return fwNSString.fwUrlEncodeComponent() }
-    public var fwUrlDecodeComponent: String? { return fwNSString.fwUrlDecodeComponent() }
-    public var fwUrlEncode: String? { return fwNSString.fwUrlEncode() }
-    public var fwUrlDecode: String? { return fwNSString.fwUrlDecode() }
-    public static func fwQueryEncode(_ dict: [String: Any]) -> String { return NSString.fwQueryEncode(dict) }
-    public var fwQueryDecode: [String: String] { return fwNSString.fwQueryDecode() }
-    public var fwMd5Encode: String { return fwNSString.fwMd5Encode() }
-    public var fwMd5EncodeFile: String? { return fwNSString.fwMd5EncodeFile() }
-    public var fwTrimString: String { return trimmingCharacters(in: .whitespacesAndNewlines) }
-    public var fwEscapeJson: String { return fwNSString.fwEscapeJson }
-    public var fwNSString: NSString { return self as NSString }
-    public var fwUTF8Data: Data? { return self.data(using: .utf8) }
-    public var fwURL: URL? { return fwNSString.fwURL }
-    public var fwNumber: NSNumber? { return fwNSString.fwNumber }
-    public func fwSubstring(from index: Int) -> String { return fwNSString.fwSubstring(from: index) ?? "" }
-    public func fwSubstring(to index: Int) -> String { return fwNSString.fwSubstring(to: index) ?? "" }
-    public func fwSubstring(with range: NSRange) -> String { return fwNSString.fwSubstring(with: range) ?? "" }
-    public func fwSubstring(with range: Range<Int>) -> String { return fwSubstring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound)) }
-}
-extension URL {
-    public static func fwURL(string: String?) -> URL? { return NSURL.fwURL(with: string) }
-    public static func fwURL(string: String?, relativeTo baseURL: URL?) -> URL? { return NSURL.fwURL(with: string, relativeTo: baseURL) }
-    public var fwQueryDictionary: [String: String] { return fwNSURL.fwQueryDictionary }
-    public var fwPathURI: String? { return fwNSURL.fwPathURI }
-    public var fwNSURL: NSURL { return self as NSURL }
 }

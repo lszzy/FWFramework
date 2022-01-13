@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.2.1] - 2022-01-13
+
+### Fixed
+* Migrate UIDevice.fwDeviceIDFA to Tracking submodule and fix the problem that the value is nil
+
 ## [2.2.0] - 2022-01-12
 
 ### Added
