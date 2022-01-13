@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '2.2.0'
+  s.version               = '2.2.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -18,32 +18,32 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Compatible' do |ss|
-    ss.source_files = 'FWFramework/Classes/Compatible/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/Compatible/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
   
   s.subspec 'Contacts' do |ss|
-    ss.source_files = 'FWFramework/Classes/Component/Contacts/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/Contacts/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Microphone' do |ss|
-    ss.source_files = 'FWFramework/Classes/Component/Microphone/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/Microphone/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Calendar' do |ss|
-    ss.source_files = 'FWFramework/Classes/Component/Calendar/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/Calendar/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'AppleMusic' do |ss|
-    ss.source_files = 'FWFramework/Classes/Component/AppleMusic/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/AppleMusic/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
 
   s.subspec 'Tracking' do |ss|
-    ss.source_files = 'FWFramework/Classes/Component/Tracking/**/*.{h,m,swift}'
+    ss.source_files = 'FWFramework/Classes/Module/Tracking/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'
   end
 end

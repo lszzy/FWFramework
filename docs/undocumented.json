@@ -1,2170 +1,2170 @@
 {
   "warnings": [
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 18,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 15,
       "symbol": "FWAnyEncoder.encode(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 28,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 25,
       "symbol": "Encodable.fwEncoded(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 34,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 31,
       "symbol": "Encoder.fwEncodeSingle(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 39,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 36,
       "symbol": "Encoder.fwEncode(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 43,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 40,
       "symbol": "Encoder.fwEncode(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 48,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 45,
       "symbol": "Encoder.fwEncode(_:for:using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 52,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 49,
       "symbol": "Encoder.fwEncode(_:for:using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 60,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 57,
       "symbol": "FWAnyDecoder",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 61,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 58,
       "symbol": "FWAnyDecoder.decode(_:from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 71,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 68,
       "symbol": "Data.fwDecoded(as:using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 78,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 75,
       "symbol": "Decoder.fwDecodeSingle(as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 83,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 80,
       "symbol": "Decoder.fwDecode(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 87,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 84,
       "symbol": "Decoder.fwDecode(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 92,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 89,
       "symbol": "Decoder.fwDecodeIf(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 96,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 93,
       "symbol": "Decoder.fwDecodeIf(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 101,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 98,
       "symbol": "Decoder.fwDecode(_:using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 105,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 102,
       "symbol": "Decoder.fwDecode(_:using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 122,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 119,
       "symbol": "Decoder.fwJsonSingle()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 126,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 123,
       "symbol": "Decoder.fwJson(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 130,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 127,
       "symbol": "Decoder.fwJson(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 134,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 131,
       "symbol": "Decoder.fwJsonIf(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 138,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 135,
       "symbol": "Decoder.fwJsonIf(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 144,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 141,
       "symbol": "Decoder.fwValueSingle(as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 151,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 148,
       "symbol": "Decoder.fwValue(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 155,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 152,
       "symbol": "Decoder.fwValue(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 162,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 159,
       "symbol": "Decoder.fwValueIf(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 166,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 163,
       "symbol": "Decoder.fwValueIf(_:as:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 209,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 206,
       "symbol": "FWAnyDateFormatter",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 210,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 207,
       "symbol": "FWAnyDateFormatter.date(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 211,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWCoder.swift",
+      "line": 208,
       "symbol": "FWAnyDateFormatter.string(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 238,
-      "symbol": "FWSafeValue(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.free",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 242,
-      "symbol": "FWIsEmpty(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.free",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 246,
-      "symbol": "FWIsNil(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.free",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 250,
-      "symbol": "FWSafeUnwrappable",
-      "symbol_kind": "source.lang.swift.decl.protocol",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 251,
-      "symbol": "FWSafeUnwrappable.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 252,
-      "symbol": "FWSafeUnwrappable.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 254,
-      "symbol": "FWSafeUnwrappable.fwAsInt",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 255,
-      "symbol": "FWSafeUnwrappable.fwAsBool",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 256,
-      "symbol": "FWSafeUnwrappable.fwAsFloat",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 257,
-      "symbol": "FWSafeUnwrappable.fwAsDouble",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 258,
-      "symbol": "FWSafeUnwrappable.fwAsString",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 259,
-      "symbol": "FWSafeUnwrappable.fwAsNumber",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 260,
-      "symbol": "FWSafeUnwrappable.fwAsArray",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 261,
-      "symbol": "FWSafeUnwrappable.fwAsDicationary",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 264,
-      "symbol": "FWSafeUnwrappable",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 265,
-      "symbol": "FWSafeUnwrappable.fwAsInt",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 266,
-      "symbol": "FWSafeUnwrappable.fwAsBool",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 267,
-      "symbol": "FWSafeUnwrappable.fwAsFloat",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 268,
-      "symbol": "FWSafeUnwrappable.fwAsDouble",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 269,
-      "symbol": "FWSafeUnwrappable.fwAsString",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 270,
-      "symbol": "FWSafeUnwrappable.fwAsNumber",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 271,
-      "symbol": "FWSafeUnwrappable.fwAsArray",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 272,
-      "symbol": "FWSafeUnwrappable.fwAsDicationary",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 276,
-      "symbol": "Optional.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 277,
-      "symbol": "Optional.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 280,
-      "symbol": "Optional.fwIsNil",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 282,
-      "symbol": "Optional.fwAsInt",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 283,
-      "symbol": "Optional.fwAsBool",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 284,
-      "symbol": "Optional.fwAsFloat",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 285,
-      "symbol": "Optional.fwAsDouble",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 286,
-      "symbol": "Optional.fwAsString",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 287,
-      "symbol": "Optional.fwAsNumber",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 288,
-      "symbol": "Optional.fwAsArray",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 289,
-      "symbol": "Optional.fwAsDicationary",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 292,
-      "symbol": "Int.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 293,
-      "symbol": "Int.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 296,
-      "symbol": "Int8.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 297,
-      "symbol": "Int8.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 300,
-      "symbol": "Int16.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 301,
-      "symbol": "Int16.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 304,
-      "symbol": "Int32.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 305,
-      "symbol": "Int32.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 308,
-      "symbol": "Int64.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 309,
-      "symbol": "Int64.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 312,
-      "symbol": "UInt.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 313,
-      "symbol": "UInt.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 316,
-      "symbol": "UInt8.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 317,
-      "symbol": "UInt8.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 320,
-      "symbol": "UInt16.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 321,
-      "symbol": "UInt16.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 324,
-      "symbol": "UInt32.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 325,
-      "symbol": "UInt32.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 328,
-      "symbol": "UInt64.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 329,
-      "symbol": "UInt64.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 332,
-      "symbol": "Float.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 333,
-      "symbol": "Float.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 336,
-      "symbol": "Double.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 337,
-      "symbol": "Double.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 340,
-      "symbol": "Bool.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 341,
-      "symbol": "Bool.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 344,
-      "symbol": "String.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 345,
-      "symbol": "String.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 348,
-      "symbol": "Array.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 349,
-      "symbol": "Array.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 352,
-      "symbol": "Set.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 353,
-      "symbol": "Set.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 356,
-      "symbol": "Dictionary.fwSafeValue",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 357,
-      "symbol": "Dictionary.fwIsEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 363,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 17,
       "symbol": "Array.fwNSArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 366,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 20,
       "symbol": "Set.fwNSSet",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 369,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 23,
       "symbol": "Data.fwJsonEncode(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 370,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 24,
       "symbol": "Data.fwJsonDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 371,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 25,
       "symbol": "Data.fwBase64Encode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 372,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 26,
       "symbol": "Data.fwBase64Decode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 373,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 27,
       "symbol": "Data.fwNSData",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 374,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 28,
       "symbol": "Data.fwUTF8String",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 377,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 31,
       "symbol": "Date.fwNSDate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 380,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 34,
       "symbol": "Dictionary.fwNSDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 383,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 37,
       "symbol": "String.fwJsonEncode(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 384,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 38,
       "symbol": "String.fwJsonDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 385,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 39,
       "symbol": "String.fwBase64Encode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 386,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 40,
       "symbol": "String.fwBase64Decode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 387,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 41,
       "symbol": "String.fwUnicodeLength",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 388,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 42,
       "symbol": "String.fwUnicodeSubstring(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 389,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 43,
       "symbol": "String.fwUnicodeEncode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 390,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 44,
       "symbol": "String.fwUnicodeDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 391,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 45,
       "symbol": "String.fwUrlEncodeComponent",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 392,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 46,
       "symbol": "String.fwUrlDecodeComponent",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 393,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 47,
       "symbol": "String.fwUrlEncode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 394,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 48,
       "symbol": "String.fwUrlDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 395,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 49,
       "symbol": "String.fwQueryEncode(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 396,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 50,
       "symbol": "String.fwQueryDecode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 397,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 51,
       "symbol": "String.fwMd5Encode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 398,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 52,
       "symbol": "String.fwMd5EncodeFile",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 399,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 53,
       "symbol": "String.fwTrimString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 400,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 54,
       "symbol": "String.fwEscapeJson",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 401,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 55,
       "symbol": "String.fwNSString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 402,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 56,
       "symbol": "String.fwUTF8Data",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 403,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 57,
       "symbol": "String.fwURL",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 404,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 58,
       "symbol": "String.fwNumber",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 405,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 59,
       "symbol": "String.fwSubstring(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 406,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 60,
       "symbol": "String.fwSubstring(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 407,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 61,
       "symbol": "String.fwSubstring(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 408,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 62,
       "symbol": "String.fwSubstring(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 411,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 65,
       "symbol": "URL.fwURL(string:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 412,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 66,
       "symbol": "URL.fwURL(string:relativeTo:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 413,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 67,
       "symbol": "URL.fwQueryDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 414,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 68,
       "symbol": "URL.fwPathURI",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWEncode.swift",
-      "line": 415,
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 69,
       "symbol": "URL.fwNSURL",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 74,
+      "symbol": "FWSafeValue(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 78,
+      "symbol": "FWIsEmpty(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 82,
+      "symbol": "FWIsNil(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 86,
+      "symbol": "FWSafeUnwrappable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 87,
+      "symbol": "FWSafeUnwrappable.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 88,
+      "symbol": "FWSafeUnwrappable.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 90,
+      "symbol": "FWSafeUnwrappable.fwAsInt",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 91,
+      "symbol": "FWSafeUnwrappable.fwAsBool",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 92,
+      "symbol": "FWSafeUnwrappable.fwAsFloat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 93,
+      "symbol": "FWSafeUnwrappable.fwAsDouble",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 94,
+      "symbol": "FWSafeUnwrappable.fwAsString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 95,
+      "symbol": "FWSafeUnwrappable.fwAsNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 96,
+      "symbol": "FWSafeUnwrappable.fwAsArray",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 97,
+      "symbol": "FWSafeUnwrappable.fwAsDicationary",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 100,
+      "symbol": "FWSafeUnwrappable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 101,
+      "symbol": "FWSafeUnwrappable.fwAsInt",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 102,
+      "symbol": "FWSafeUnwrappable.fwAsBool",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 103,
+      "symbol": "FWSafeUnwrappable.fwAsFloat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 104,
+      "symbol": "FWSafeUnwrappable.fwAsDouble",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 105,
+      "symbol": "FWSafeUnwrappable.fwAsString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 106,
+      "symbol": "FWSafeUnwrappable.fwAsNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 107,
+      "symbol": "FWSafeUnwrappable.fwAsArray",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 108,
+      "symbol": "FWSafeUnwrappable.fwAsDicationary",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 112,
+      "symbol": "Optional.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 113,
+      "symbol": "Optional.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 116,
+      "symbol": "Optional.fwIsNil",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 118,
+      "symbol": "Optional.fwAsInt",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 119,
+      "symbol": "Optional.fwAsBool",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 120,
+      "symbol": "Optional.fwAsFloat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 121,
+      "symbol": "Optional.fwAsDouble",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 122,
+      "symbol": "Optional.fwAsString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 123,
+      "symbol": "Optional.fwAsNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 124,
+      "symbol": "Optional.fwAsArray",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 125,
+      "symbol": "Optional.fwAsDicationary",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 128,
+      "symbol": "Int.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 129,
+      "symbol": "Int.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 132,
+      "symbol": "Int8.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 133,
+      "symbol": "Int8.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 136,
+      "symbol": "Int16.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 137,
+      "symbol": "Int16.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 140,
+      "symbol": "Int32.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 141,
+      "symbol": "Int32.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 144,
+      "symbol": "Int64.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 145,
+      "symbol": "Int64.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 148,
+      "symbol": "UInt.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 149,
+      "symbol": "UInt.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 152,
+      "symbol": "UInt8.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 153,
+      "symbol": "UInt8.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 156,
+      "symbol": "UInt16.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 157,
+      "symbol": "UInt16.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 160,
+      "symbol": "UInt32.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 161,
+      "symbol": "UInt32.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 164,
+      "symbol": "UInt64.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 165,
+      "symbol": "UInt64.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 168,
+      "symbol": "Float.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 169,
+      "symbol": "Float.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 172,
+      "symbol": "Double.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 173,
+      "symbol": "Double.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 176,
+      "symbol": "Bool.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 177,
+      "symbol": "Bool.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 180,
+      "symbol": "String.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 181,
+      "symbol": "String.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 184,
+      "symbol": "Array.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 185,
+      "symbol": "Array.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 188,
+      "symbol": "Set.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 189,
+      "symbol": "Set.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 192,
+      "symbol": "Dictionary.fwSafeValue",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWEncode.swift",
+      "line": 193,
+      "symbol": "Dictionary.fwIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 13,
       "symbol": "FWJSONError",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 14,
       "symbol": "FWJSONError.unsupportedType",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 15,
       "symbol": "FWJSONError.indexOutOfBounds",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 16,
       "symbol": "FWJSONError.elementTooDeep",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 17,
       "symbol": "FWJSONError.wrongType",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 18,
       "symbol": "FWJSONError.notExist",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 19,
       "symbol": "FWJSONError.invalidJSON",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 22,
       "symbol": "FWJSONError",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 57,
       "symbol": "FWJSONType.number",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 58,
       "symbol": "FWJSONType.string",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 59,
       "symbol": "FWJSONType.bool",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 60,
       "symbol": "FWJSONType.array",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 61,
       "symbol": "FWJSONType.dictionary",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 62,
       "symbol": "FWJSONType.null",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 63,
       "symbol": "FWJSONType.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 267,
       "symbol": "FWIndex",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 268,
       "symbol": "FWIndex.array(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 269,
       "symbol": "FWIndex.dictionary(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 270,
       "symbol": "FWIndex.null",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 290,
       "symbol": "FWJSONIndex",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 291,
       "symbol": "FWJSONRawIndex",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 336,
       "symbol": "FWJSONKey.index(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 337,
       "symbol": "FWJSONKey.key(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 340,
       "symbol": "FWJSONSubscriptType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 341,
       "symbol": "FWJSONSubscriptType.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 345,
       "symbol": "Int.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 351,
       "symbol": "String.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 544,
       "symbol": "FWJSON.rawData(options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 552,
       "symbol": "FWJSON.rawString(_:options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 561,
       "symbol": "FWJSON.rawString(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 667,
       "symbol": "FWJSON.array",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 672,
       "symbol": "FWJSON.arrayValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 677,
       "symbol": "FWJSON.arrayObject",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 695,
       "symbol": "FWJSON.dictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 708,
       "symbol": "FWJSON.dictionaryValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 714,
       "symbol": "FWJSON.dictionaryObject",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 732,
       "symbol": "FWJSON.bool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 745,
       "symbol": "FWJSON.boolValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 765,
       "symbol": "FWJSON.string",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 778,
       "symbol": "FWJSON.stringValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 798,
       "symbol": "FWJSON.number",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 812,
       "symbol": "FWJSON.numberValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 833,
       "symbol": "FWJSON.null",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 844,
       "symbol": "FWJSON.exists()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 857,
       "symbol": "FWJSON.url",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 884,
       "symbol": "FWJSON.double",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 897,
       "symbol": "FWJSON.doubleValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 906,
       "symbol": "FWJSON.float",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 919,
       "symbol": "FWJSON.floatValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 928,
       "symbol": "FWJSON.int",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 941,
       "symbol": "FWJSON.intValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 950,
       "symbol": "FWJSON.uInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 963,
       "symbol": "FWJSON.uIntValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 972,
       "symbol": "FWJSON.int8",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 985,
       "symbol": "FWJSON.int8Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 994,
       "symbol": "FWJSON.uInt8",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1007,
       "symbol": "FWJSON.uInt8Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1016,
       "symbol": "FWJSON.int16",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1029,
       "symbol": "FWJSON.int16Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1038,
       "symbol": "FWJSON.uInt16",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1051,
       "symbol": "FWJSON.uInt16Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1060,
       "symbol": "FWJSON.int32",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1073,
       "symbol": "FWJSON.int32Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1082,
       "symbol": "FWJSON.uInt32",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1095,
       "symbol": "FWJSON.uInt32Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1104,
       "symbol": "FWJSON.int64",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1117,
       "symbol": "FWJSON.int64Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1126,
       "symbol": "FWJSON.uInt64",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1139,
       "symbol": "FWJSON.uInt64Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1153,
       "symbol": "==(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1166,
       "symbol": "<=(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1179,
       "symbol": ">=(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1192,
       "symbol": ">(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1201,
       "symbol": "<(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1276,
       "symbol": "FWJSONWritingOptionsKeys",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1277,
       "symbol": "FWJSONWritingOptionsKeys.jsonSerialization",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1278,
       "symbol": "FWJSONWritingOptionsKeys.castNilToNSNull",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1279,
       "symbol": "FWJSONWritingOptionsKeys.maxObjextDepth",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Service/FWJson.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Service/FWJson.swift",
       "line": 1280,
       "symbol": "FWJSONWritingOptionsKeys.encoding",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 23,
       "symbol": "FWUserDefaultAnnotation.init(_:defaultValue:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 28,
       "symbol": "FWUserDefaultAnnotation.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 48,
       "symbol": "FWModuleAnnotation.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 52,
       "symbol": "FWModuleAnnotation.init(_:module:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 57,
       "symbol": "FWModuleAnnotation.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 80,
       "symbol": "FWPluginAnnotation.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 84,
       "symbol": "FWPluginAnnotation.init(_:object:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 89,
       "symbol": "FWPluginAnnotation.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 111,
       "symbol": "FWRouterAnnotation.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 115,
       "symbol": "FWRouterAnnotation.init(_:parameters:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 119,
       "symbol": "FWRouterAnnotation.init(_:router:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 124,
       "symbol": "FWRouterAnnotation.init(_:handler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAnnotation.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAnnotation.swift",
       "line": 129,
       "symbol": "FWRouterAnnotation.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 30,
       "symbol": "FWLayoutChain.remake()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 38,
       "symbol": "FWLayoutChain.compressionHorizontal(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 44,
       "symbol": "FWLayoutChain.compressionVertical(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 50,
       "symbol": "FWLayoutChain.huggingHorizontal(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 56,
       "symbol": "FWLayoutChain.huggingVertical(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 64,
       "symbol": "FWLayoutChain.collapsed(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 70,
       "symbol": "FWLayoutChain.autoCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 76,
       "symbol": "FWLayoutChain.hiddenCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 84,
       "symbol": "FWLayoutChain.center()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 90,
       "symbol": "FWLayoutChain.centerX()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 96,
       "symbol": "FWLayoutChain.centerY()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 102,
       "symbol": "FWLayoutChain.centerToView(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 109,
       "symbol": "FWLayoutChain.centerXToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 115,
       "symbol": "FWLayoutChain.centerYToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 121,
       "symbol": "FWLayoutChain.centerXToView(_:withMultiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 127,
       "symbol": "FWLayoutChain.centerYToView(_:withMultiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 135,
       "symbol": "FWLayoutChain.edges(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 141,
       "symbol": "FWLayoutChain.edges(_:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 147,
       "symbol": "FWLayoutChain.edgesHorizontal()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 153,
       "symbol": "FWLayoutChain.edgesVertical()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 159,
       "symbol": "FWLayoutChain.top(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 165,
       "symbol": "FWLayoutChain.top(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 171,
       "symbol": "FWLayoutChain.bottom(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 177,
       "symbol": "FWLayoutChain.bottom(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 183,
       "symbol": "FWLayoutChain.left(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 189,
       "symbol": "FWLayoutChain.left(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 195,
       "symbol": "FWLayoutChain.right(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 201,
       "symbol": "FWLayoutChain.right(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 207,
       "symbol": "FWLayoutChain.topToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 213,
       "symbol": "FWLayoutChain.topToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 219,
       "symbol": "FWLayoutChain.bottomToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 225,
       "symbol": "FWLayoutChain.bottomToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 231,
       "symbol": "FWLayoutChain.leftToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 237,
       "symbol": "FWLayoutChain.leftToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 243,
       "symbol": "FWLayoutChain.rightToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 249,
       "symbol": "FWLayoutChain.rightToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 255,
       "symbol": "FWLayoutChain.topToBottomOfView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 261,
       "symbol": "FWLayoutChain.topToBottomOfView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 267,
       "symbol": "FWLayoutChain.bottomToTopOfView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 273,
       "symbol": "FWLayoutChain.bottomToTopOfView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 279,
       "symbol": "FWLayoutChain.leftToRightOfView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 285,
       "symbol": "FWLayoutChain.leftToRightOfView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 291,
       "symbol": "FWLayoutChain.rightToLeftOfView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 297,
       "symbol": "FWLayoutChain.rightToLeftOfView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 305,
       "symbol": "FWLayoutChain.centerToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 311,
       "symbol": "FWLayoutChain.centerXToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 317,
       "symbol": "FWLayoutChain.centerYToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 323,
       "symbol": "FWLayoutChain.edgesToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 329,
       "symbol": "FWLayoutChain.edgesToSafeArea(_:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 335,
       "symbol": "FWLayoutChain.edgesToSafeAreaHorizontal()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 341,
       "symbol": "FWLayoutChain.edgesToSafeAreaVertical()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 347,
       "symbol": "FWLayoutChain.topToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 353,
       "symbol": "FWLayoutChain.topToSafeArea(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 359,
       "symbol": "FWLayoutChain.bottomToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 365,
       "symbol": "FWLayoutChain.bottomToSafeArea(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 371,
       "symbol": "FWLayoutChain.leftToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 377,
       "symbol": "FWLayoutChain.leftToSafeArea(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 383,
       "symbol": "FWLayoutChain.rightToSafeArea(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 389,
       "symbol": "FWLayoutChain.rightToSafeArea(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 397,
       "symbol": "FWLayoutChain.size(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 403,
       "symbol": "FWLayoutChain.width(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 409,
       "symbol": "FWLayoutChain.height(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 415,
       "symbol": "FWLayoutChain.widthToHeight(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 421,
       "symbol": "FWLayoutChain.heightToWidth(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 427,
       "symbol": "FWLayoutChain.sizeToView(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 434,
       "symbol": "FWLayoutChain.widthToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 440,
       "symbol": "FWLayoutChain.widthToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 446,
       "symbol": "FWLayoutChain.heightToView(_:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 452,
       "symbol": "FWLayoutChain.heightToView(_:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 458,
       "symbol": "FWLayoutChain.widthToView(_:withMultiplier:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 464,
       "symbol": "FWLayoutChain.heightToView(_:withMultiplier:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 472,
       "symbol": "FWLayoutChain.attribute(_:toAttribute:ofView:withOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 478,
       "symbol": "FWLayoutChain.attribute(_:toAttribute:ofView:withOffset:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 484,
       "symbol": "FWLayoutChain.attribute(_:toAttribute:ofView:withMultiplier:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 491,
       "symbol": "FWLayoutChain.constraint",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 495,
       "symbol": "FWLayoutChain.constraint(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 499,
       "symbol": "FWLayoutChain.constraintToSafeArea(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 503,
       "symbol": "FWLayoutChain.constraint(_:toAttribute:ofView:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/wuyong/Documents/github/FWFramework/FWFramework/Classes/Compatible/Toolkit/FWAutoLayout.swift",
+      "file": "/Users/wuyong/Documents/github/lszzy/FWFramework/FWFramework/Classes/Module/Compatible/Toolkit/FWAutoLayout.swift",
       "line": 507,
       "symbol": "FWLayoutChain.constraint(_:toAttribute:ofView:withMultiplier:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
@@ -3012,14 +3012,14 @@
     },
     {
       "file": "docs/FWFramework/FWFramework-umbrella.h",
-      "line": 52,
+      "line": 47,
       "symbol": "FWFrameworkVersionNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFramework-umbrella.h",
-      "line": 53,
+      "line": 48,
       "symbol": "FWFrameworkVersionString",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
@@ -3116,5 +3116,5 @@
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/wuyong/Documents/github/FWFramework"
+  "source_directory": "/Users/wuyong/Documents/github/lszzy/FWFramework"
 }

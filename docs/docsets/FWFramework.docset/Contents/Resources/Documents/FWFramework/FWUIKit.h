@@ -30,9 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
 @property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFV;
 
-/// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Component_Tracking组件后生效
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFA;
-
 @end
 
 #pragma mark - UIView+FWUIKit

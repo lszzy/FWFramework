@@ -1,5 +1,10 @@
 # 更新日志
 
+## [2.2.1] - 2022-01-13
+
+### Fixed
+* 迁移UIDevice.fwDeviceIDFA到Tracking子模块并修复值为nil问题
+
 ## [2.2.0] - 2022-01-12
 
 ### Added
