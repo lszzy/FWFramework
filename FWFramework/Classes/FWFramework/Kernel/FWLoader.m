@@ -10,6 +10,30 @@
 #import "FWLoader.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWAutoload
+
+@protocol FWInnerAutoloadProtocol <NSObject>
+@optional
+
++ (BOOL)autoload:(id)clazz;
+
+@end
+
+@interface FWLoader (FWAutoload) <FWInnerAutoloadProtocol>
+
+@end
+
+@implementation FWLoader (FWAutoload)
+
+@end
+
+BOOL FWAutoload(id clazz) {
+    if ([FWLoader respondsToSelector:@selector(autoload:)]) {
+        return [FWLoader autoload:clazz];
+    }
+    return NO;
+}
+
 #pragma mark - FWInnerLoaderTarget
 
 @interface FWInnerLoaderTarget : NSObject
