@@ -10,6 +10,7 @@
 #import "FWAdaptive.h"
 #import "FWNavigation.h"
 #import "FWToolkit.h"
+#import "FWUIKit.h"
 
 #pragma mark - UIApplication+FWAdaptive
 
