@@ -40,23 +40,33 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let isChinese = Bundle.fwCurrentLanguage?.hasPrefix("zh") ?? false
+        navigationItem.rightBarButtonItem = UIBarButtonItem.fwBarItem(with: isChinese ? "中文" : "English", block: { [weak self] sender in
+            let isChinese = Bundle.fwCurrentLanguage?.hasPrefix("zh") ?? false
+            Bundle.fwLocalizedLanguage = isChinese ? "en" : "zh-Hans"
+            (sender as? UIBarButtonItem)?.title = isChinese ? "English" : "中文"
+            self?.renderData()
+        })
         
         style = 0
+        renderData()
         view.addSubview(scrollView)
         view.backgroundColor = UIColor.fwThemeLight(.white, dark: .black)
         view.fwAddTapGesture { [weak self] sender in
             guard let strongSelf = self else { return }
             strongSelf.style = strongSelf.style >= 2 ? 0 : strongSelf.style + 1;
         }
-        
+    }
+    
+    private func renderData() {
         #if APP_PRODUCTION
-        let envTitle = "Production"
+        let envTitle = "envProduction".fwLocalized
         #elseif APP_STAGING
-        let envTitle = "Staging"
+        let envTitle = "envStaging".fwLocalized
         #elseif APP_TESTING
-        let envTitle = "Testing"
+        let envTitle = "envTesting".fwLocalized
         #else
-        let envTitle = "Development"
+        let envTitle = "envDevelopment".fwLocalized
         #endif
         title = "FWFramework - \(envTitle)"
     }
