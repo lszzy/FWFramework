@@ -18,13 +18,14 @@ public let FWIsDebug: Bool = UIApplication.fwIsDebug
 
 // MARK: - UIDevice+FWAdaptive
 
-#if targetEnvironment(simulator)
 /// 是否是模拟器
-public let FWIsSimulator: Bool = true
-#else
-/// 是否是模拟器
-public let FWIsSimulator: Bool = false
-#endif
+public var FWIsSimulator: Bool {
+    #if targetEnvironment(simulator)
+    return true
+    #else
+    return false
+    #endif
+}
 
 /// 是否是iPhone设备
 public var FWIsIphone: Bool { return UI_USER_INTERFACE_IDIOM() == .phone }
