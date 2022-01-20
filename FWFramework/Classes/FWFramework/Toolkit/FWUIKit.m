@@ -425,6 +425,197 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UILabel (FWUIKit)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // https://github.com/Tencent/QMUI_iOS
+        [self fwSwizzleInstanceMethod:@selector(setText:) with:@selector(fwInnerSetText:)];
+        [self fwSwizzleInstanceMethod:@selector(setAttributedText:) with:@selector(fwInnerSetAttributedText:)];
+        [self fwSwizzleInstanceMethod:@selector(setLineBreakMode:) with:@selector(fwInnerSetLineBreakMode:)];
+        [self fwSwizzleInstanceMethod:@selector(setTextAlignment:) with:@selector(fwInnerSetTextAlignment:)];
+    });
+}
+
+- (void)fwInnerSetText:(NSString *)text
+{
+    if (!text) {
+        [self fwInnerSetText:text];
+        return;
+    }
+    if (!self.fwTextAttributes.count && ![self fwIssetLineHeight]) {
+        [self fwInnerSetText:text];
+        return;
+    }
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text attributes:self.fwTextAttributes];
+    [self fwInnerSetAttributedText:[self fwAdjustedAttributedString:attributedString]];
+}
+
+- (void)fwInnerSetAttributedText:(NSAttributedString *)text
+{
+    if (!text || (!self.fwTextAttributes.count && ![self fwIssetLineHeight])) {
+        [self fwInnerSetAttributedText:text];
+        return;
+    }
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text.string attributes:self.fwTextAttributes];
+    attributedString = [[self fwAdjustedAttributedString:attributedString] mutableCopy];
+    [text enumerateAttributesInRange:NSMakeRange(0, text.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+        [attributedString addAttributes:attrs range:range];
+    }];
+    [self fwInnerSetAttributedText:attributedString];
+}
+
+- (void)fwInnerSetLineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+    [self fwInnerSetLineBreakMode:lineBreakMode];
+    if (!self.fwTextAttributes) return;
+    if (self.fwTextAttributes[NSParagraphStyleAttributeName]) {
+        NSMutableParagraphStyle *p = ((NSParagraphStyle *)self.fwTextAttributes[NSParagraphStyleAttributeName]).mutableCopy;
+        p.lineBreakMode = lineBreakMode;
+        NSMutableDictionary<NSAttributedStringKey, id> *attrs = self.fwTextAttributes.mutableCopy;
+        attrs[NSParagraphStyleAttributeName] = p.copy;
+        self.fwTextAttributes = attrs.copy;
+    }
+}
+
+- (void)fwInnerSetTextAlignment:(NSTextAlignment)textAlignment
+{
+    [self fwInnerSetTextAlignment:textAlignment];
+    if (!self.fwTextAttributes) return;
+    if (self.fwTextAttributes[NSParagraphStyleAttributeName]) {
+        NSMutableParagraphStyle *p = ((NSParagraphStyle *)self.fwTextAttributes[NSParagraphStyleAttributeName]).mutableCopy;
+        p.alignment = textAlignment;
+        NSMutableDictionary<NSAttributedStringKey, id> *attrs = self.fwTextAttributes.mutableCopy;
+        attrs[NSParagraphStyleAttributeName] = p.copy;
+        self.fwTextAttributes = attrs.copy;
+    }
+}
+
+- (void)setFwTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)fwTextAttributes
+{
+    NSDictionary *prevTextAttributes = self.fwTextAttributes;
+    if ([prevTextAttributes isEqualToDictionary:fwTextAttributes]) {
+        return;
+    }
+    
+    objc_setAssociatedObject(self, @selector(fwTextAttributes), fwTextAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    
+    if (!self.text.length) {
+        return;
+    }
+    NSMutableAttributedString *string = [self.attributedText mutableCopy];
+    NSRange fullRange = NSMakeRange(0, string.length);
+    
+    if (prevTextAttributes) {
+        NSMutableArray *willRemovedAttributes = [NSMutableArray array];
+        [string enumerateAttributesInRange:NSMakeRange(0, string.length) options:0 usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+            if (NSEqualRanges(range, NSMakeRange(0, string.length - 1)) && [attrs[NSKernAttributeName] isEqualToNumber:prevTextAttributes[NSKernAttributeName]]) {
+                [string removeAttribute:NSKernAttributeName range:NSMakeRange(0, string.length - 1)];
+            }
+            if (!NSEqualRanges(range, fullRange)) {
+                return;
+            }
+            [attrs enumerateKeysAndObjectsUsingBlock:^(NSAttributedStringKey _Nonnull attr, id  _Nonnull value, BOOL * _Nonnull stop) {
+                if (prevTextAttributes[attr] == value) {
+                    [willRemovedAttributes addObject:attr];
+                }
+            }];
+        }];
+        [willRemovedAttributes enumerateObjectsUsingBlock:^(id  _Nonnull attr, NSUInteger idx, BOOL * _Nonnull stop) {
+            [string removeAttribute:attr range:fullRange];
+        }];
+    }
+    
+    if (fwTextAttributes) {
+        [string addAttributes:fwTextAttributes range:fullRange];
+    }
+    [self fwInnerSetAttributedText:[self fwAdjustedAttributedString:string]];
+}
+
+- (NSDictionary<NSAttributedStringKey, id> *)fwTextAttributes
+{
+    return (NSDictionary<NSAttributedStringKey, id> *)objc_getAssociatedObject(self, @selector(fwTextAttributes));
+}
+
+- (NSAttributedString *)fwAdjustedAttributedString:(NSAttributedString *)string
+{
+    if (!string.length) {
+        return string;
+    }
+    NSMutableAttributedString *attributedString = nil;
+    if ([string isKindOfClass:[NSMutableAttributedString class]]) {
+        attributedString = (NSMutableAttributedString *)string;
+    } else {
+        attributedString = [string mutableCopy];
+    }
+    
+    if (self.fwTextAttributes[NSKernAttributeName]) {
+        [attributedString removeAttribute:NSKernAttributeName range:NSMakeRange(string.length - 1, 1)];
+    }
+    
+    __block BOOL shouldAdjustLineHeight = [self fwIssetLineHeight];
+    [attributedString enumerateAttribute:NSParagraphStyleAttributeName inRange:NSMakeRange(0, attributedString.length) options:0 usingBlock:^(NSParagraphStyle *style, NSRange range, BOOL * _Nonnull stop) {
+        if (NSEqualRanges(range, NSMakeRange(0, attributedString.length))) {
+            if (style && (style.maximumLineHeight || style.minimumLineHeight)) {
+                shouldAdjustLineHeight = NO;
+                *stop = YES;
+            }
+        }
+    }];
+    if (shouldAdjustLineHeight) {
+        NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+        paraStyle.minimumLineHeight = self.fwLineHeight;
+        paraStyle.maximumLineHeight = self.fwLineHeight;
+        paraStyle.lineBreakMode = self.lineBreakMode;
+        paraStyle.alignment = self.textAlignment;
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange(0, attributedString.length)];
+        
+        CGFloat baselineOffset = (self.fwLineHeight - self.font.lineHeight) / 4;
+        [attributedString addAttribute:NSBaselineOffsetAttributeName value:@(baselineOffset) range:NSMakeRange(0, attributedString.length)];
+    }
+    return attributedString;
+}
+
+- (void)setFwLineHeight:(CGFloat)fwLineHeight
+{
+    if (fwLineHeight < 0) {
+        objc_setAssociatedObject(self, @selector(fwLineHeight), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    } else {
+        objc_setAssociatedObject(self, @selector(fwLineHeight), @(fwLineHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    if (!self.attributedText.string) return;
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.attributedText.string attributes:self.fwTextAttributes];
+    attributedString = [[self fwAdjustedAttributedString:attributedString] mutableCopy];
+    [self setAttributedText:attributedString];
+}
+
+- (CGFloat)fwLineHeight
+{
+    if ([self fwIssetLineHeight]) {
+        return [(NSNumber *)objc_getAssociatedObject(self, @selector(fwLineHeight)) doubleValue];
+    } else if (self.attributedText.length) {
+        __block NSMutableAttributedString *string = [self.attributedText mutableCopy];
+        __block CGFloat result = 0;
+        [string enumerateAttribute:NSParagraphStyleAttributeName inRange:NSMakeRange(0, string.length) options:0 usingBlock:^(NSParagraphStyle *style, NSRange range, BOOL * _Nonnull stop) {
+            if (NSEqualRanges(range, NSMakeRange(0, string.length))) {
+                if (style && (style.maximumLineHeight || style.minimumLineHeight)) {
+                    result = style.maximumLineHeight;
+                    *stop = YES;
+                }
+            }
+        }];
+        return result == 0 ? self.font.lineHeight : result;
+    } else if (self.text.length) {
+        return self.font.lineHeight;
+    }
+    return 0;
+}
+
+- (BOOL)fwIssetLineHeight
+{
+    return !!objc_getAssociatedObject(self, @selector(fwLineHeight));
+}
+
 - (UIEdgeInsets)fwContentInset
 {
     return [objc_getAssociatedObject(self, @selector(fwContentInset)) UIEdgeInsetsValue];

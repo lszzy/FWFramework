@@ -102,6 +102,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UILabel (FWUIKit)
 
+/// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fwTextAttributes;
+
+/// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
+@property (nonatomic, assign) CGFloat fwLineHeight;
+
 /// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
 @property (nonatomic, assign) UIEdgeInsets fwContentInset;
 
