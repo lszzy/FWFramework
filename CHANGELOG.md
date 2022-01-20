@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0] - 2022-01-20
+
+### Added
+* Added FWABTest class for AB testing
+* UILabel supports quick setting of line height and attribute style
+
 ## [2.2.1] - 2022-01-13
 
 ### Fixed
