@@ -50,9 +50,9 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 @required
 /// 路由支持的解析URL，字符串或字符串数组(批量)
-+ (id)fwRouterURL;
++ (id)routerURL;
 /// 路由处理方法，访问支持的解析URL时会调用本方法
-+ (nullable id)fwRouterHandler:(FWRouterContext *)context;
++ (nullable id)routerHandler:(FWRouterContext *)context;
 
 @end
 

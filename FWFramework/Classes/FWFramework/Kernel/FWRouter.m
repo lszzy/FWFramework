@@ -140,31 +140,31 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 + (BOOL)registerClass:(Class<FWRouterProtocol>)clazz
 {
     if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return NO;
+    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
+    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
     
-    return [self registerURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz fwRouterHandler:context];
+    return [self registerURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
+        return [clazz routerHandler:context];
     }];
 }
 
 + (BOOL)presetClass:(Class<FWRouterProtocol>)clazz
 {
     if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(fwRouterHandler:)]) return NO;
+    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
+    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
     
-    return [self presetURL:[clazz fwRouterURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz fwRouterHandler:context];
+    return [self presetURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
+        return [clazz routerHandler:context];
     }];
 }
 
 + (void)unregisterClass:(Class<FWRouterProtocol>)clazz
 {
     if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    if (![clazz respondsToSelector:@selector(fwRouterURL)]) return;
+    if (![clazz respondsToSelector:@selector(routerURL)]) return;
     
-    [self unregisterURL:[clazz fwRouterURL]];
+    [self unregisterURL:[clazz routerURL]];
 }
 
 #pragma mark - URL
