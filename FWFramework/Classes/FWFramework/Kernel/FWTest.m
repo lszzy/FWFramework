@@ -96,11 +96,19 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
-                    FWLogDebug(@"%@", [FWUnitTest sharedInstance]);
+                    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);
                 });
             }
         });
     });
+}
+
++ (NSString *)debugDescription
+{
+    if ([FWUnitTest sharedInstance].testLogs) {
+        return [FWUnitTest sharedInstance].testLogs;
+    }
+    return [super debugDescription];
 }
 
 + (NSArray<Class> *)testSuite
@@ -172,12 +180,6 @@
         self.testCases = [NSMutableArray array];
     }
     return self;
-}
-
-- (NSString *)description
-{
-    if (self.testLogs) return self.testLogs;
-    return [super description];
 }
 
 - (void)runTests
