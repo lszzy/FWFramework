@@ -18,7 +18,7 @@ import FWFramework
 
 /// FWTestCase扩展，注意测试方法需标记@objc，让OC可以访问
 extension FWTestCase {
-    /// 断言方法
+    /// 同步断言方法
     ///
     /// - Parameters:
     ///   - value: 断言表达式
@@ -26,6 +26,16 @@ extension FWTestCase {
     ///   - line: 行数，默认传参
     public func assertTrue(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
         assertTrue(value, expression: expression, file: file, line: line)
+    }
+    
+    /// 异步断言方法
+    ///
+    /// - Parameters:
+    ///   - value: 断言表达式
+    ///   - file: 文件名，默认传参
+    ///   - line: 行数，默认传参
+    public func assertAsync(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
+        assertAsync(value, expression: expression, file: file, line: line)
     }
 }
 
