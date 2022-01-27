@@ -51,6 +51,16 @@
 #define FWLogError( format, ... ) \
     if ([FWLog check:FWLogTypeError]) [FWLog error:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
+/**
+ 记录分组日志
+ 
+ @param aGroup 分组名称
+ @param aType 日志类型
+ @param aFormat 日志格式，同NSLog
+ */
+#define FWLogGroup( aGroup, aType, aFormat, ... ) \
+    if ([FWLog check:aType]) [FWLog group:aGroup type:aType format:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+
 #pragma mark - FWLog
 
 /**
@@ -140,12 +150,31 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)error:(NSString *)format, ...;
 
 /**
+ 分组日志
+ 
+ @param group 分组名称
+ @param type 日志类型
+ @param format 日志格式，同NSLog
+ */
++ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...;
+
+/**
  记录类型日志
  
  @param type 日志类型
  @param message 日志消息
  */
-+ (void)log:(FWLogType)type withMessage:(NSString *)message;
++ (void)logWithType:(FWLogType)type message:(NSString *)message;
+
+/**
+ 记录类型日志，支持分组和用户信息
+ 
+ @param type 日志类型
+ @param message 日志消息
+ @param group 日志分组
+ @param userInfo 用户信息
+ */
++ (void)logWithType:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -163,8 +192,10 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param type 日志类型
  @param message 日志消息
+ @param group 日志分组
+ @param userInfo 用户信息
  */
-- (void)fwLog:(FWLogType)type withMessage:(NSString *)message;
+- (void)logWithType:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
