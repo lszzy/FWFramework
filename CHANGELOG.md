@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.1] - 2022-02-07
+
+### Added
+* FWTest supports asynchronous testing
+
+### Changed
+* Modify the FWRouterProtocol method to remove the fw prefix
+* Modify FWLog, support group and userInfo
+
 ## [2.3.0] - 2022-01-20
 
 ### Added

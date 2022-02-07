@@ -111,7 +111,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 全局日志级别，默认调试为All，正式为Off
 @property (class, nonatomic, assign) FWLogLevel level;
 
-/// 检查是否需要记录指定类型日志
+/**
+ 检查是否需要记录指定类型日志
+ 
+ @param type 日志类型
+ @return 是否需要记录
+ */
 + (BOOL)check:(FWLogType)type;
 
 /**
