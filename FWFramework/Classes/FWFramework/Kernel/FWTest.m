@@ -18,6 +18,8 @@
 @interface FWTestCase ()
 
 @property (nonatomic, strong) NSError *assertError;
+@property (nonatomic, assign) BOOL isAssertAsync;
+@property (nonatomic, strong) dispatch_semaphore_t assertSemaphore;
 
 @end
 
@@ -33,6 +35,8 @@
     // 执行清理
 }
 
+#pragma mark - Sync
+
 - (void)assertTrue:(BOOL)value expression:(NSString *)expression file:(NSString *)file line:(NSInteger)line
 {
     // 断言成功
@@ -45,6 +49,26 @@
                                @"line": @(line),
                                };
     self.assertError = [NSError errorWithDomain:@"FWTest" code:0 userInfo:userInfo];
+    self.isAssertAsync = NO;
+}
+
+#pragma mark - Async
+
+- (void)assertBegin
+{
+    self.assertSemaphore = dispatch_semaphore_create(0);
+}
+
+- (void)assertEnd
+{
+    if (self.assertSemaphore) dispatch_semaphore_wait(self.assertSemaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)assertAsync:(BOOL)value expression:(NSString *)expression file:(NSString *)file line:(NSInteger)line
+{
+    [self assertTrue:value expression:expression file:file line:line];
+    self.isAssertAsync = YES;
+    if (self.assertSemaphore) dispatch_semaphore_signal(self.assertSemaphore);
 }
 
 @end
@@ -72,11 +96,19 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWFramework.FWTestQueue", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
-                    FWLogDebug(@"%@", [FWUnitTest sharedInstance]);
+                    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);
                 });
             }
         });
     });
+}
+
++ (NSString *)debugDescription
+{
+    if ([FWUnitTest sharedInstance].testLogs) {
+        return [FWUnitTest sharedInstance].testLogs;
+    }
+    return [super debugDescription];
 }
 
 + (NSArray<Class> *)testSuite
@@ -150,12 +182,6 @@
     return self;
 }
 
-- (NSString *)description
-{
-    if (self.testLogs) return self.testLogs;
-    return [super description];
-}
-
 - (void)runTests
 {
     // 取出测试用例
@@ -183,6 +209,7 @@
         NSUInteger currentTestCount = 0;
         
         NSError *assertError = nil;
+        BOOL assertAsync = NO;
         if (selectorNames && selectorNames.count > 0) {
             // 执行初始化，同一个对象
             FWTestCase *testCase = [[classType alloc] init];
@@ -191,21 +218,17 @@
                 formatMethod = selectorName;
                 SEL selector = NSSelectorFromString(selectorName);
                 if (selector && [testCase respondsToSelector:selector]) {
-                    // 执行setUp
+                    // 依次执行setUp|test|tearDown
                     [testCase setUp];
-                    
-                    // 执行test
-                    NSMethodSignature *signature = [testCase methodSignatureForSelector:selector];
-                    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-                    [invocation setTarget:testCase];
-                    [invocation setSelector:selector];
-                    [invocation invoke];
-                    
-                    // 执行tearDown
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    [testCase performSelector:selector];
+#pragma clang diagnostic pop
                     [testCase tearDown];
                     
                     // 如果失败，当前类测试结束
                     assertError = testCase.assertError;
+                    assertAsync = testCase.isAssertAsync;
                     if (assertError) {
                         break;
                     }
@@ -215,7 +238,7 @@
         
         if (assertError) {
             NSDictionary *userInfo = assertError.userInfo;
-            formatError = [NSString stringWithFormat:@"- assertTrue(%@); (%@ - %@ #%@)", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
+            formatError = [NSString stringWithFormat:@"- assert%@(%@); (%@ - %@ #%@)", assertAsync ? @"Async" : @"True", [userInfo[@"expression"] length] > 0 ? userInfo[@"expression"] : @"false", formatMethod, userInfo[@"file"], userInfo[@"line"]];
             testCasePassed = NO;
         }
         

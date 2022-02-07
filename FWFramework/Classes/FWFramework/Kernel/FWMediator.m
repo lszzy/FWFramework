@@ -155,9 +155,9 @@
     }
     
 #ifdef DEBUG
-    FWLogDebug(@"%@", FWLoader.debugDescription);
-    FWLogDebug(@"%@", FWMediator.debugDescription);
-    FWLogDebug(@"%@", FWPluginManager.debugDescription);
+    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWLoader.debugDescription);
+    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWMediator.debugDescription);
+    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWPluginManager.debugDescription);
 #endif
 }
 
