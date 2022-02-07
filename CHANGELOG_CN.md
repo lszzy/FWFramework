@@ -1,5 +1,14 @@
 # 更新日志
 
+## [2.3.1] - 2022-02-07
+
+### Added
+* FWTest支持异步测试
+
+### Changed
+* 修改FWRouterProtocol方法，去掉fw前缀
+* 修改FWLog，支持group和userInfo
+
 ## [2.3.0] - 2022-01-20
 
 ### Added
