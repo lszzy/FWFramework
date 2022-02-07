@@ -17,7 +17,7 @@
     <a title="FWLogPlugin Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 2.3.0 Docs</a> (74% documented)</p>
+        <p><a href="../index.html">FWFramework 2.3.1 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -720,6 +720,9 @@
                 <a href="../Functions.html#/s:11FWFramework10FWLogError__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogError(_:_:file:function:line:)</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF">FWLogGroup(_:type:format:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Functions.html#/s:11FWFramework9FWLogInfo__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogInfo(_:_:file:function:line:)</a>
               </li>
               <li class="nav-group-task">
@@ -985,9 +988,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)FWLogPlugin(im)fwLog:withMessage:"></a>
-                    <a name="//apple_ref/swift/Method/-fwLog:withMessage:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)FWLogPlugin(im)fwLog:withMessage:">-fwLog:<wbr>withMessage:<wbr></a>
+                    <a name="/c:objc(pl)FWLogPlugin(im)logWithType:message:group:userInfo:"></a>
+                    <a name="//apple_ref/swift/Method/-logWithType:message:group:userInfo:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)FWLogPlugin(im)logWithType:message:group:userInfo:">-logWithType:<wbr>message:<wbr>group:<wbr>userInfo:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1002,7 +1005,10 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fwLog</span><span class="p">:(</span><span class="n"><a href="../Enums/FWLogType.html">FWLogType</a></span><span class="p">)</span><span class="nv">type</span> <span class="nf">withMessage</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">message</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">logWithType</span><span class="p">:(</span><span class="n"><a href="../Enums/FWLogType.html">FWLogType</a></span><span class="p">)</span><span class="nv">type</span>
+            <span class="nf">message</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">message</span>
+              <span class="nf">group</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">group</span>
+           <span class="nf">userInfo</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">userInfo</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1034,6 +1040,30 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>group</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>日志分组</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>用户信息</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -1045,7 +1075,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-20)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-02-07)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

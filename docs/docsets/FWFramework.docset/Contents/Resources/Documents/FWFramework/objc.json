@@ -15862,12 +15862,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.line" : 54,
+          "key.doc.line" : 64,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWLog",
-          "key.parsed_scope.end" : 54,
-          "key.parsed_scope.start" : 54
+          "key.parsed_scope.end" : 64,
+          "key.parsed_scope.start" : 64
         },
         {
           "key.always_deprecated" : false,
@@ -15877,13 +15877,13 @@
           "key.doc.comment" : "日志类型定义\n\n@const FWLogTypeError 错误类型，0...00001\n@const FWLogTypeWarn 警告类型，0...00010\n@const FWLogTypeInfo 信息类型，0...00100\n@const FWLogTypeDebug 调试类型，0...01000\n@const FWLogTypeTrace 跟踪类型，0...10000",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 65,
+          "key.doc.line" : 75,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
           "key.name" : "FWLogType",
           "key.parsed_declaration" : "typedef enum FWLogType FWLogType",
-          "key.parsed_scope.end" : 65,
-          "key.parsed_scope.start" : 65,
+          "key.parsed_scope.end" : 75,
+          "key.parsed_scope.start" : 75,
           "key.unavailable_message" : "",
           "key.usr" : "c:FWLog.h@T@FWLogType"
         },
@@ -15895,13 +15895,13 @@
           "key.doc.comment" : "日志类型定义\n\n@const FWLogTypeError 错误类型，0...00001\n@const FWLogTypeWarn 警告类型，0...00010\n@const FWLogTypeInfo 信息类型，0...00100\n@const FWLogTypeDebug 调试类型，0...01000\n@const FWLogTypeTrace 跟踪类型，0...10000",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 65,
+          "key.doc.line" : 75,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.enum",
           "key.name" : "FWLogType",
           "key.parsed_declaration" : "enum FWLogType : NSUInteger {}",
-          "key.parsed_scope.end" : 71,
-          "key.parsed_scope.start" : 65,
+          "key.parsed_scope.end" : 81,
+          "key.parsed_scope.start" : 75,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -15909,13 +15909,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 66,
+              "key.doc.line" : 76,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogTypeError",
               "key.parsed_declaration" : "FWLogTypeError = 1 << 0",
-              "key.parsed_scope.end" : 66,
-              "key.parsed_scope.start" : 66,
+              "key.parsed_scope.end" : 76,
+              "key.parsed_scope.start" : 76,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogType@FWLogTypeError"
             },
@@ -15925,13 +15925,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 67,
+              "key.doc.line" : 77,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogTypeWarn",
               "key.parsed_declaration" : "FWLogTypeWarn  = 1 << 1",
-              "key.parsed_scope.end" : 67,
-              "key.parsed_scope.start" : 67,
+              "key.parsed_scope.end" : 77,
+              "key.parsed_scope.start" : 77,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogType@FWLogTypeWarn"
             },
@@ -15941,13 +15941,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 68,
+              "key.doc.line" : 78,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogTypeInfo",
               "key.parsed_declaration" : "FWLogTypeInfo  = 1 << 2",
-              "key.parsed_scope.end" : 68,
-              "key.parsed_scope.start" : 68,
+              "key.parsed_scope.end" : 78,
+              "key.parsed_scope.start" : 78,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogType@FWLogTypeInfo"
             },
@@ -15957,13 +15957,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 69,
+              "key.doc.line" : 79,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogTypeDebug",
               "key.parsed_declaration" : "FWLogTypeDebug = 1 << 3",
-              "key.parsed_scope.end" : 69,
-              "key.parsed_scope.start" : 69,
+              "key.parsed_scope.end" : 79,
+              "key.parsed_scope.start" : 79,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogType@FWLogTypeDebug"
             },
@@ -15973,13 +15973,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 70,
+              "key.doc.line" : 80,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogTypeTrace",
               "key.parsed_declaration" : "FWLogTypeTrace = 1 << 4",
-              "key.parsed_scope.end" : 70,
-              "key.parsed_scope.start" : 70,
+              "key.parsed_scope.end" : 80,
+              "key.parsed_scope.start" : 80,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogType@FWLogTypeTrace"
             }
@@ -15995,13 +15995,13 @@
           "key.doc.comment" : "日志级别定义\n\n@const FWLogLevelOff 关闭日志，0...00000\n@const FWLogLevelError 错误以上级别，0...00001\n@const FWLogLevelWarn 警告以上级别，0...00011\n@const FWLogLevelInfo 信息以上级别，0...00111\n@const FWLogLevelDebug 调试以上级别，0...01111\n@const FWLogLevelTrace 跟踪以上级别，0...11111\n@const FWLogLevelAll 所有级别，1...11111",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 84,
+          "key.doc.line" : 94,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
           "key.name" : "FWLogLevel",
           "key.parsed_declaration" : "typedef enum FWLogLevel FWLogLevel",
-          "key.parsed_scope.end" : 84,
-          "key.parsed_scope.start" : 84,
+          "key.parsed_scope.end" : 94,
+          "key.parsed_scope.start" : 94,
           "key.unavailable_message" : "",
           "key.usr" : "c:FWLog.h@T@FWLogLevel"
         },
@@ -16013,13 +16013,13 @@
           "key.doc.comment" : "日志级别定义\n\n@const FWLogLevelOff 关闭日志，0...00000\n@const FWLogLevelError 错误以上级别，0...00001\n@const FWLogLevelWarn 警告以上级别，0...00011\n@const FWLogLevelInfo 信息以上级别，0...00111\n@const FWLogLevelDebug 调试以上级别，0...01111\n@const FWLogLevelTrace 跟踪以上级别，0...11111\n@const FWLogLevelAll 所有级别，1...11111",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 84,
+          "key.doc.line" : 94,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.enum",
           "key.name" : "FWLogLevel",
           "key.parsed_declaration" : "enum FWLogLevel : NSUInteger {}",
-          "key.parsed_scope.end" : 92,
-          "key.parsed_scope.start" : 84,
+          "key.parsed_scope.end" : 102,
+          "key.parsed_scope.start" : 94,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -16027,13 +16027,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 85,
+              "key.doc.line" : 95,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelOff",
               "key.parsed_declaration" : "FWLogLevelOff   = 0",
-              "key.parsed_scope.end" : 85,
-              "key.parsed_scope.start" : 85,
+              "key.parsed_scope.end" : 95,
+              "key.parsed_scope.start" : 95,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelOff"
             },
@@ -16043,13 +16043,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 86,
+              "key.doc.line" : 96,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelError",
               "key.parsed_declaration" : "FWLogLevelError = FWLogTypeError",
-              "key.parsed_scope.end" : 86,
-              "key.parsed_scope.start" : 86,
+              "key.parsed_scope.end" : 96,
+              "key.parsed_scope.start" : 96,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelError"
             },
@@ -16059,13 +16059,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 87,
+              "key.doc.line" : 97,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelWarn",
               "key.parsed_declaration" : "FWLogLevelWarn  = FWLogLevelError | FWLogTypeWarn",
-              "key.parsed_scope.end" : 87,
-              "key.parsed_scope.start" : 87,
+              "key.parsed_scope.end" : 97,
+              "key.parsed_scope.start" : 97,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelWarn"
             },
@@ -16075,13 +16075,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 88,
+              "key.doc.line" : 98,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelInfo",
               "key.parsed_declaration" : "FWLogLevelInfo  = FWLogLevelWarn  | FWLogTypeInfo",
-              "key.parsed_scope.end" : 88,
-              "key.parsed_scope.start" : 88,
+              "key.parsed_scope.end" : 98,
+              "key.parsed_scope.start" : 98,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelInfo"
             },
@@ -16091,13 +16091,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 89,
+              "key.doc.line" : 99,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelDebug",
               "key.parsed_declaration" : "FWLogLevelDebug = FWLogLevelInfo  | FWLogTypeDebug",
-              "key.parsed_scope.end" : 89,
-              "key.parsed_scope.start" : 89,
+              "key.parsed_scope.end" : 99,
+              "key.parsed_scope.start" : 99,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelDebug"
             },
@@ -16107,13 +16107,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 90,
+              "key.doc.line" : 100,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelTrace",
               "key.parsed_declaration" : "FWLogLevelTrace = FWLogLevelDebug | FWLogTypeTrace",
-              "key.parsed_scope.end" : 90,
-              "key.parsed_scope.start" : 90,
+              "key.parsed_scope.end" : 100,
+              "key.parsed_scope.start" : 100,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelTrace"
             },
@@ -16123,13 +16123,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-              "key.doc.line" : 91,
+              "key.doc.line" : 101,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWLogLevelAll",
               "key.parsed_declaration" : "FWLogLevelAll   = NSUIntegerMax",
-              "key.parsed_scope.end" : 91,
-              "key.parsed_scope.start" : 91,
+              "key.parsed_scope.end" : 101,
+              "key.parsed_scope.start" : 101,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWLogLevel@FWLogLevelAll"
             }
@@ -16145,13 +16145,13 @@
           "key.doc.comment" : "日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 99,
+          "key.doc.line" : 109,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWLog",
           "key.parsed_declaration" : "@interface FWLog : NSObject",
-          "key.parsed_scope.end" : 150,
-          "key.parsed_scope.start" : 99,
+          "key.parsed_scope.end" : 184,
+          "key.parsed_scope.start" : 109,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -16161,13 +16161,13 @@
               "key.doc.comment" : "全局日志级别，默认调试为All，正式为Off",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 102,
+              "key.doc.line" : 112,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "level",
               "key.parsed_declaration" : "@property (class, nonatomic, assign, unsafe_unretained, readwrite)\n    FWLogLevel level;",
-              "key.parsed_scope.end" : 102,
-              "key.parsed_scope.start" : 102,
+              "key.parsed_scope.end" : 112,
+              "key.parsed_scope.start" : 112,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cpy)level"
             },
@@ -16176,16 +16176,33 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
-              "key.doc.comment" : "检查是否需要记录指定类型日志",
+              "key.doc.comment" : "检查是否需要记录指定类型日志\n\n- parameter: type 日志类型\n- returns: 是否需要记录",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 105,
+              "key.doc.line" : 120,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志类型\n"
+                    }
+                  ],
+                  "name" : "type"
+                }
+              ],
+              "key.doc.result_discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "是否需要记录"
+                }
+              ],
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+check:",
               "key.parsed_declaration" : "+ (BOOL)check:(FWLogType)type;",
-              "key.parsed_scope.end" : 105,
-              "key.parsed_scope.start" : 105,
+              "key.parsed_scope.end" : 120,
+              "key.parsed_scope.start" : 120,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)check:"
             },
@@ -16197,7 +16214,7 @@
               "key.doc.comment" : "跟踪日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 112,
+              "key.doc.line" : 127,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16213,8 +16230,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+trace:",
               "key.parsed_declaration" : "+ (void)trace:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 112,
-              "key.parsed_scope.start" : 112,
+              "key.parsed_scope.end" : 127,
+              "key.parsed_scope.start" : 127,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)trace:"
             },
@@ -16226,7 +16243,7 @@
               "key.doc.comment" : "调试日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 119,
+              "key.doc.line" : 134,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16242,8 +16259,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+debug:",
               "key.parsed_declaration" : "+ (void)debug:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 119,
-              "key.parsed_scope.start" : 119,
+              "key.parsed_scope.end" : 134,
+              "key.parsed_scope.start" : 134,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)debug:"
             },
@@ -16255,7 +16272,7 @@
               "key.doc.comment" : "信息日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 126,
+              "key.doc.line" : 141,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16271,8 +16288,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+info:",
               "key.parsed_declaration" : "+ (void)info:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 126,
-              "key.parsed_scope.start" : 126,
+              "key.parsed_scope.end" : 141,
+              "key.parsed_scope.start" : 141,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)info:"
             },
@@ -16284,7 +16301,7 @@
               "key.doc.comment" : "警告日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 133,
+              "key.doc.line" : 148,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16300,8 +16317,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+warn:",
               "key.parsed_declaration" : "+ (void)warn:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 133,
-              "key.parsed_scope.start" : 133,
+              "key.parsed_scope.end" : 148,
+              "key.parsed_scope.start" : 148,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)warn:"
             },
@@ -16313,7 +16330,7 @@
               "key.doc.comment" : "错误日志\n\n- parameter: format 日志格式，同NSLog",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 140,
+              "key.doc.line" : 155,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16329,10 +16346,57 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+error:",
               "key.parsed_declaration" : "+ (void)error:(nonnull NSString *)format, ...;",
-              "key.parsed_scope.end" : 140,
-              "key.parsed_scope.start" : 140,
+              "key.parsed_scope.end" : 155,
+              "key.parsed_scope.start" : 155,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLog(cm)error:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 9,
+              "key.doc.comment" : "分组日志\n\n- parameter: group 分组名称\n- parameter: type 日志类型\n- parameter: format 日志格式，同NSLog",
+              "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 164,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "分组名称\n"
+                    }
+                  ],
+                  "name" : "group"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志类型\n"
+                    }
+                  ],
+                  "name" : "type"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志格式，同NSLog"
+                    }
+                  ],
+                  "name" : "format"
+                }
+              ],
+              "key.filepath" : "docs\/FWFramework\/FWLog.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
+              "key.name" : "+group:type:format:",
+              "key.parsed_declaration" : "+ (void)group:(nonnull NSString *)group\n         type:(FWLogType)type\n       format:(nonnull NSString *)format, ...;",
+              "key.parsed_scope.end" : 164,
+              "key.parsed_scope.start" : 164,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)FWLog(cm)group:type:format:"
             },
             {
               "key.always_deprecated" : false,
@@ -16342,7 +16406,7 @@
               "key.doc.comment" : "记录类型日志\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 148,
+              "key.doc.line" : 172,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16365,52 +16429,22 @@
               ],
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+log:withMessage:",
-              "key.parsed_declaration" : "+ (void)log:(FWLogType)type withMessage:(nonnull NSString *)message;",
-              "key.parsed_scope.end" : 148,
-              "key.parsed_scope.start" : 148,
+              "key.name" : "+logWithType:message:",
+              "key.parsed_declaration" : "+ (void)logWithType:(FWLogType)type message:(nonnull NSString *)message;",
+              "key.parsed_scope.end" : 172,
+              "key.parsed_scope.start" : 172,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)FWLog(cm)log:withMessage:"
-            }
-          ],
-          "key.unavailable_message" : "",
-          "key.usr" : "c:objc(cs)FWLog"
-        },
-        {
-          "key.doc.column" : 1,
-          "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.line" : 152,
-          "key.filepath" : "docs\/FWFramework\/FWLog.h",
-          "key.kind" : "sourcekitten.source.lang.objc.mark",
-          "key.name" : "FWLogPlugin",
-          "key.parsed_scope.end" : 152,
-          "key.parsed_scope.start" : 152
-        },
-        {
-          "key.always_deprecated" : false,
-          "key.always_unavailable" : false,
-          "key.deprecation_message" : "",
-          "key.doc.column" : 11,
-          "key.doc.comment" : "日志插件协议",
-          "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.full_as_xml" : "",
-          "key.doc.line" : 157,
-          "key.filepath" : "docs\/FWFramework\/FWLog.h",
-          "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
-          "key.name" : "FWLogPlugin",
-          "key.parsed_declaration" : "@protocol FWLogPlugin <NSObject>",
-          "key.parsed_scope.end" : 169,
-          "key.parsed_scope.start" : 157,
-          "key.substructure" : [
+              "key.usr" : "c:objc(cs)FWLog(cm)logWithType:message:"
+            },
             {
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
-              "key.doc.comment" : "记录日志协议方法\n\n- parameter: type 日志类型\n- parameter: message 日志消息",
+              "key.doc.comment" : "记录类型日志，支持分组和用户信息\n\n- parameter: type 日志类型\n- parameter: message 日志消息\n- parameter: group 日志分组\n- parameter: userInfo 用户信息",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 167,
+              "key.doc.line" : 182,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -16425,20 +16459,124 @@
                   "discussion" : [
                     {
                       "kind" : "",
-                      "Para" : "日志消息"
+                      "Para" : "日志消息\n"
                     }
                   ],
                   "name" : "message"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志分组\n"
+                    }
+                  ],
+                  "name" : "group"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "用户信息"
+                    }
+                  ],
+                  "name" : "userInfo"
+                }
+              ],
+              "key.filepath" : "docs\/FWFramework\/FWLog.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
+              "key.name" : "+logWithType:message:group:userInfo:",
+              "key.parsed_declaration" : "+ (void)logWithType:(FWLogType)type\n            message:(nonnull NSString *)message\n              group:(nullable NSString *)group\n           userInfo:(nullable NSDictionary *)userInfo;",
+              "key.parsed_scope.end" : 182,
+              "key.parsed_scope.start" : 182,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)FWLog(cm)logWithType:message:group:userInfo:"
+            }
+          ],
+          "key.unavailable_message" : "",
+          "key.usr" : "c:objc(cs)FWLog"
+        },
+        {
+          "key.doc.column" : 1,
+          "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.line" : 186,
+          "key.filepath" : "docs\/FWFramework\/FWLog.h",
+          "key.kind" : "sourcekitten.source.lang.objc.mark",
+          "key.name" : "FWLogPlugin",
+          "key.parsed_scope.end" : 186,
+          "key.parsed_scope.start" : 186
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 11,
+          "key.doc.comment" : "日志插件协议",
+          "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 191,
+          "key.filepath" : "docs\/FWFramework\/FWLog.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.protocol",
+          "key.name" : "FWLogPlugin",
+          "key.parsed_declaration" : "@protocol FWLogPlugin <NSObject>",
+          "key.parsed_scope.end" : 205,
+          "key.parsed_scope.start" : 191,
+          "key.substructure" : [
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 9,
+              "key.doc.comment" : "记录日志协议方法\n\n- parameter: type 日志类型\n- parameter: message 日志消息\n- parameter: group 日志分组\n- parameter: userInfo 用户信息",
+              "key.doc.file" : "docs\/FWFramework\/FWLog.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 203,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志类型\n"
+                    }
+                  ],
+                  "name" : "type"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志消息\n"
+                    }
+                  ],
+                  "name" : "message"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "日志分组\n"
+                    }
+                  ],
+                  "name" : "group"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "用户信息"
+                    }
+                  ],
+                  "name" : "userInfo"
                 }
               ],
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
-              "key.name" : "-fwLog:withMessage:",
-              "key.parsed_declaration" : "- (void)fwLog:(FWLogType)type withMessage:(nonnull NSString *)message;",
-              "key.parsed_scope.end" : 167,
-              "key.parsed_scope.start" : 167,
+              "key.name" : "-logWithType:message:group:userInfo:",
+              "key.parsed_declaration" : "- (void)logWithType:(FWLogType)type\n            message:(nonnull NSString *)message\n              group:(nullable NSString *)group\n           userInfo:(nullable NSDictionary *)userInfo;",
+              "key.parsed_scope.end" : 203,
+              "key.parsed_scope.start" : 203,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(pl)FWLogPlugin(im)fwLog:withMessage:"
+              "key.usr" : "c:objc(pl)FWLogPlugin(im)logWithType:message:group:userInfo:"
             }
           ],
           "key.unavailable_message" : "",
@@ -16447,12 +16585,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
-          "key.doc.line" : 171,
+          "key.doc.line" : 207,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWLogPluginImpl",
-          "key.parsed_scope.end" : 171,
-          "key.parsed_scope.start" : 171
+          "key.parsed_scope.end" : 207,
+          "key.parsed_scope.start" : 207
         },
         {
           "key.always_deprecated" : false,
@@ -16462,13 +16600,13 @@
           "key.doc.comment" : "默认NSLog日志插件",
           "key.doc.file" : "docs\/FWFramework\/FWLog.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 176,
+          "key.doc.line" : 212,
           "key.filepath" : "docs\/FWFramework\/FWLog.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWLogPluginImpl",
           "key.parsed_declaration" : "@interface FWLogPluginImpl : NSObject <FWLogPlugin>",
-          "key.parsed_scope.end" : 181,
-          "key.parsed_scope.start" : 176,
+          "key.parsed_scope.end" : 217,
+          "key.parsed_scope.start" : 212,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -16478,13 +16616,13 @@
               "key.doc.comment" : "单例模式对象",
               "key.doc.file" : "docs\/FWFramework\/FWLog.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 179,
+              "key.doc.line" : 215,
               "key.filepath" : "docs\/FWFramework\/FWLog.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "sharedInstance",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly) FWLogPluginImpl *_Nonnull sharedInstance;",
-              "key.parsed_scope.end" : 179,
-              "key.parsed_scope.start" : 179,
+              "key.parsed_scope.end" : 215,
+              "key.parsed_scope.start" : 215,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWLogPluginImpl(cpy)sharedInstance"
             }
@@ -20844,12 +20982,12 @@
               "key.doc.line" : 53,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fwRouterURL",
-              "key.parsed_declaration" : "+ (nonnull id)fwRouterURL;",
+              "key.name" : "+routerURL",
+              "key.parsed_declaration" : "+ (nonnull id)routerURL;",
               "key.parsed_scope.end" : 53,
               "key.parsed_scope.start" : 53,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(pl)FWRouterProtocol(cm)fwRouterURL"
+              "key.usr" : "c:objc(pl)FWRouterProtocol(cm)routerURL"
             },
             {
               "key.always_deprecated" : false,
@@ -20862,12 +21000,12 @@
               "key.doc.line" : 55,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fwRouterHandler:",
-              "key.parsed_declaration" : "+ (nullable id)fwRouterHandler:(nonnull FWRouterContext *)context;",
+              "key.name" : "+routerHandler:",
+              "key.parsed_declaration" : "+ (nullable id)routerHandler:(nonnull FWRouterContext *)context;",
               "key.parsed_scope.end" : 55,
               "key.parsed_scope.start" : 55,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(pl)FWRouterProtocol(cm)fwRouterHandler:"
+              "key.usr" : "c:objc(pl)FWRouterProtocol(cm)routerHandler:"
             }
           ],
           "key.unavailable_message" : "",
