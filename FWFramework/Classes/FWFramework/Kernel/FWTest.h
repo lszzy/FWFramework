@@ -15,12 +15,32 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- 测试断言
+ 执行同步测试断言
  
  @param ... 断言表达式
  */
 #define FWAssertTrue( ... ) \
     [self assertTrue:__VA_ARGS__ expression:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
+
+/**
+ 异步测试断言开始
+ */
+#define FWAssertBegin( ) \
+    [self assertBegin];
+
+/**
+ 执行异步测试断言并退出，一个异步周期仅支持一次异步断言
+ 
+ @param ... 断言表达式
+ */
+#define FWAssertAsync( ... ) \
+    [self assertAsync:__VA_ARGS__ expression:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
+
+/**
+ 异步测试断言结束
+ */
+#define FWAssertEnd( ) \
+    [self assertEnd];
 
 #pragma mark - FWTestCase
 
@@ -40,8 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)tearDown;
 
+#pragma mark - Sync
+
 /**
- 断言方法，请勿直接调用，请调用FWAssertTrue
+ 执行同步断言，请勿直接调用，请调用FWAssertTrue
  
  @param value 布尔表达式
  @param expression 当前表达式，一般使用宏@(#__VA_ARGS__)或@(__FUNCTION__)
@@ -49,6 +71,28 @@ NS_ASSUME_NONNULL_BEGIN
  @param line 当前行，一般使用宏__LINE__
  */
 - (void)assertTrue:(BOOL)value expression:(NSString *)expression file:(NSString *)file line:(NSInteger)line;
+
+#pragma mark - Async
+
+/**
+ 异步断言开始，请勿直接调用，请调用FWAssertBegin
+ */
+- (void)assertBegin;
+
+/**
+ 执行异步断言并退出，一个异步周期仅支持一次异步断言，请勿直接调用，请调用FWAssertAsync
+ 
+ @param value 布尔表达式
+ @param expression 当前表达式，一般使用宏@(#__VA_ARGS__)或@(__FUNCTION__)
+ @param file 当前文件，一般使用宏@(__FILE__)
+ @param line 当前行，一般使用宏__LINE__
+ */
+- (void)assertAsync:(BOOL)value expression:(NSString *)expression file:(NSString *)file line:(NSInteger)line;
+
+/**
+ 异步断言结束，请勿直接调用，请调用FWAssertEnd
+ */
+- (void)assertEnd;
 
 @end
 

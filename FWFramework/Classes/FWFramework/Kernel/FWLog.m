@@ -50,7 +50,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeTrace withMessage:message];
+    [self logWithType:FWLogTypeTrace message:message];
 }
 
 + (void)debug:(NSString *)format, ...
@@ -62,7 +62,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeDebug withMessage:message];
+    [self logWithType:FWLogTypeDebug message:message];
 }
 
 + (void)info:(NSString *)format, ...
@@ -74,7 +74,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeInfo withMessage:message];
+    [self logWithType:FWLogTypeInfo message:message];
 }
 
 + (void)warn:(NSString *)format, ...
@@ -86,7 +86,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeWarn withMessage:message];
+    [self logWithType:FWLogTypeWarn message:message];
 }
 
 + (void)error:(NSString *)format, ...
@@ -98,20 +98,37 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self log:FWLogTypeError withMessage:message];
+    [self logWithType:FWLogTypeError message:message];
 }
 
-+ (void)log:(FWLogType)type withMessage:(NSString *)message
++ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...
+{
+    if (![self check:type]) return;
+    
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
+    [self logWithType:type message:message group:group userInfo:nil];
+}
+
++ (void)logWithType:(FWLogType)type message:(NSString *)message
+{
+    [self logWithType:type message:message group:nil userInfo:nil];
+}
+
++ (void)logWithType:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
 {
     // 过滤不支持的级别
     if (![self check:type]) return;
     
     // 插件存在，调用插件；否则使用默认插件
     id<FWLogPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWLogPlugin)];
-    if (!plugin || ![plugin respondsToSelector:@selector(fwLog:withMessage:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(logWithType:message:group:userInfo:)]) {
         plugin = FWLogPluginImpl.sharedInstance;
     }
-    [plugin fwLog:type withMessage:message];
+    [plugin logWithType:type message:message group:group userInfo:userInfo];
 }
 
 @end
@@ -130,23 +147,25 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     return instance;
 }
 
-- (void)fwLog:(FWLogType)type withMessage:(NSString *)message
+- (void)logWithType:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
 {
+    NSString *groupStr = group ? [NSString stringWithFormat:@" [%@]", group] : @"";
+    NSString *infoStr = userInfo ? [NSString stringWithFormat:@" %@", userInfo] : @"";
     switch (type) {
         case FWLogTypeError:
-            NSLog(@"%@ ERROR: %@", @"❌", message);
+            NSLog(@"%@ ERROR:%@ %@%@", @"❌", groupStr, message, infoStr);
             break;
         case FWLogTypeWarn:
-            NSLog(@"%@ WARN: %@", @"⚠️", message);
+            NSLog(@"%@ WARN:%@ %@%@", @"⚠️", groupStr, message, infoStr);
             break;
         case FWLogTypeInfo:
-            NSLog(@"%@ INFO: %@", @"ℹ️", message);
+            NSLog(@"%@ INFO:%@ %@%@", @"ℹ️", groupStr, message, infoStr);
             break;
         case FWLogTypeDebug:
-            NSLog(@"%@ DEBUG: %@", @"⏱️", message);
+            NSLog(@"%@ DEBUG:%@ %@%@", @"⏱️", groupStr, message, infoStr);
             break;
         default:
-            NSLog(@"%@ TRACE: %@", @"📝", message);
+            NSLog(@"%@ TRACE:%@ %@%@", @"📝", groupStr, message, infoStr);
             break;
     }
 }

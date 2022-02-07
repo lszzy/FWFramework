@@ -3026,84 +3026,84 @@
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 66,
+      "line": 76,
       "symbol": "FWLogType.FWLogTypeError",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 67,
+      "line": 77,
       "symbol": "FWLogType.FWLogTypeWarn",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 68,
+      "line": 78,
       "symbol": "FWLogType.FWLogTypeInfo",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 69,
+      "line": 79,
       "symbol": "FWLogType.FWLogTypeDebug",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 70,
+      "line": 80,
       "symbol": "FWLogType.FWLogTypeTrace",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 85,
+      "line": 95,
       "symbol": "FWLogLevel.FWLogLevelOff",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 86,
+      "line": 96,
       "symbol": "FWLogLevel.FWLogLevelError",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 87,
+      "line": 97,
       "symbol": "FWLogLevel.FWLogLevelWarn",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 88,
+      "line": 98,
       "symbol": "FWLogLevel.FWLogLevelInfo",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 89,
+      "line": 99,
       "symbol": "FWLogLevel.FWLogLevelDebug",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 90,
+      "line": 100,
       "symbol": "FWLogLevel.FWLogLevelTrace",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWLog.h",
-      "line": 91,
+      "line": 101,
       "symbol": "FWLogLevel.FWLogLevelAll",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"

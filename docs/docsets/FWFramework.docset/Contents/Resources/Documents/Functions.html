@@ -17,7 +17,7 @@
     <a title="Functions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 2.3.0 Docs</a> (74% documented)</p>
+        <p><a href="index.html">FWFramework 2.3.1 Docs</a> (74% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -718,6 +718,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Functions.html#/s:11FWFramework10FWLogError__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogError(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF">FWLogGroup(_:type:format:_:file:function:line:)</a>
               </li>
               <li class="nav-group-task">
                 <a href="Functions.html#/s:11FWFramework9FWLogInfo__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogInfo(_:_:file:function:line:)</a>
@@ -2057,6 +2060,124 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF"></a>
+                    <a name="//apple_ref/swift/Function/FWLogGroup(_:type:format:_:file:function:line:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF">FWLogGroup(_:<wbr>type:<wbr>format:<wbr>_:<wbr>file:<wbr>function:<wbr>line:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>记录分组日志</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="kt">FWLogGroup</span><span class="p">(</span><span class="n">_</span> <span class="nv">group</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="Enums/FWLogType.html">FWLogType</a></span><span class="p">,</span> <span class="nv">format</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">arguments</span><span class="p">:</span> <span class="kt">CVarArg</span><span class="o">...</span><span class="p">,</span> <span class="nv">file</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kd">#file</span><span class="p">,</span> <span class="nv">function</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kd">#function</span><span class="p">,</span> <span class="nv">line</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="kd">#line</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>group</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>日志分组名称</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>日志类型</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>format</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>格式化字符串</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>arguments</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>可变参数列表，可不传</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>文件名，默认传参</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>function</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>方法名，默认传参</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>line</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>行数，默认传参</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework8fw_asyncyAA9FWPromiseCypSgyKcF"></a>
                     <a name="//apple_ref/swift/Function/fw_async(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework8fw_asyncyAA9FWPromiseCypSgyKcF">fw_async(_:<wbr>)</a>
@@ -2762,7 +2883,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-01-20)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-02-07)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

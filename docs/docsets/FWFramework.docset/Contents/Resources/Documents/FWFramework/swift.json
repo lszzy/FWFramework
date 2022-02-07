@@ -2831,7 +2831,7 @@
 }, {
   "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 6832,
+    "key.length" : 8423,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -2844,7 +2844,7 @@
             "key.offset" : 446
           }
         ],
-        "key.bodylength" : 249,
+        "key.bodylength" : 251,
         "key.bodyoffset" : 584,
         "key.column" : 13,
         "key.decl_lang" : "source.lang.swift",
@@ -2903,7 +2903,7 @@
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
         "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogTrace<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
         "key.kind" : "source.lang.swift.decl.function.free",
-        "key.length" : 381,
+        "key.length" : 383,
         "key.line" : 22,
         "key.name" : "FWLogTrace(_:_:file:function:line:)",
         "key.namelength" : 124,
@@ -2926,11 +2926,11 @@
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 1084
+            "key.offset" : 1086
           }
         ],
-        "key.bodylength" : 249,
-        "key.bodyoffset" : 1222,
+        "key.bodylength" : 251,
+        "key.bodyoffset" : 1224,
         "key.column" : 13,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 13,
@@ -2984,16 +2984,16 @@
         ],
         "key.doc.type" : "Function",
         "key.doclength" : 248,
-        "key.docoffset" : 836,
+        "key.docoffset" : 838,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
         "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogDebug<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
         "key.kind" : "source.lang.swift.decl.function.free",
-        "key.length" : 381,
+        "key.length" : 383,
         "key.line" : 35,
         "key.name" : "FWLogDebug(_:_:file:function:line:)",
         "key.namelength" : 124,
-        "key.nameoffset" : 1096,
-        "key.offset" : 1091,
+        "key.nameoffset" : 1098,
+        "key.offset" : 1093,
         "key.parsed_declaration" : "public func FWLogDebug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
         "key.parsed_scope.end" : 38,
         "key.parsed_scope.start" : 35,
@@ -3011,11 +3011,11 @@
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 1722
+            "key.offset" : 1726
           }
         ],
-        "key.bodylength" : 247,
-        "key.bodyoffset" : 1859,
+        "key.bodylength" : 249,
+        "key.bodyoffset" : 1863,
         "key.column" : 13,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 13,
@@ -3069,16 +3069,16 @@
         ],
         "key.doc.type" : "Function",
         "key.doclength" : 248,
-        "key.docoffset" : 1474,
+        "key.docoffset" : 1478,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
         "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogInfo<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
         "key.kind" : "source.lang.swift.decl.function.free",
-        "key.length" : 378,
+        "key.length" : 380,
         "key.line" : 48,
         "key.name" : "FWLogInfo(_:_:file:function:line:)",
         "key.namelength" : 123,
-        "key.nameoffset" : 1734,
-        "key.offset" : 1729,
+        "key.nameoffset" : 1738,
+        "key.offset" : 1733,
         "key.parsed_declaration" : "public func FWLogInfo(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
         "key.parsed_scope.end" : 51,
         "key.parsed_scope.start" : 48,
@@ -3096,11 +3096,11 @@
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 2357
+            "key.offset" : 2363
           }
         ],
-        "key.bodylength" : 247,
-        "key.bodyoffset" : 2494,
+        "key.bodylength" : 249,
+        "key.bodyoffset" : 2500,
         "key.column" : 13,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 13,
@@ -3154,16 +3154,16 @@
         ],
         "key.doc.type" : "Function",
         "key.doclength" : 248,
-        "key.docoffset" : 2109,
+        "key.docoffset" : 2115,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
         "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogWarn<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
         "key.kind" : "source.lang.swift.decl.function.free",
-        "key.length" : 378,
+        "key.length" : 380,
         "key.line" : 61,
         "key.name" : "FWLogWarn(_:_:file:function:line:)",
         "key.namelength" : 123,
-        "key.nameoffset" : 2369,
-        "key.offset" : 2364,
+        "key.nameoffset" : 2375,
+        "key.offset" : 2370,
         "key.parsed_declaration" : "public func FWLogWarn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
         "key.parsed_scope.end" : 64,
         "key.parsed_scope.start" : 61,
@@ -3181,11 +3181,11 @@
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 2992
+            "key.offset" : 3000
           }
         ],
-        "key.bodylength" : 249,
-        "key.bodyoffset" : 3130,
+        "key.bodylength" : 251,
+        "key.bodyoffset" : 3138,
         "key.column" : 13,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 13,
@@ -3239,16 +3239,16 @@
         ],
         "key.doc.type" : "Function",
         "key.doclength" : 248,
-        "key.docoffset" : 2744,
+        "key.docoffset" : 2752,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
         "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogError<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
         "key.kind" : "source.lang.swift.decl.function.free",
-        "key.length" : 381,
+        "key.length" : 383,
         "key.line" : 74,
         "key.name" : "FWLogError(_:_:file:function:line:)",
         "key.namelength" : 124,
-        "key.nameoffset" : 3004,
-        "key.offset" : 2999,
+        "key.nameoffset" : 3012,
+        "key.offset" : 3007,
         "key.parsed_declaration" : "public func FWLogError(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
         "key.parsed_scope.end" : 77,
         "key.parsed_scope.start" : 74,
@@ -3260,34 +3260,135 @@
         "key.usr" : "s:11FWFramework10FWLogError__4file8function4lineySS_s7CVarArg_pdS2SSitF"
       },
       {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWLogGroup(_ group: <Type usr=\"s:SS\">String<\/Type>, type: <Type usr=\"c:@E@FWLogType\">FWLogType<\/Type>, format: <Type usr=\"s:SS\">String<\/Type>, _ arguments: <Type usr=\"s:s7CVarArgP\">CVarArg<\/Type>..., file: <Type usr=\"s:SS\">String<\/Type> = #file, function: <Type usr=\"s:SS\">String<\/Type> = #function, line: <Type usr=\"s:Si\">Int<\/Type> = #line)<\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 3701
+          }
+        ],
+        "key.bodylength" : 276,
+        "key.bodyoffset" : 3871,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "记录分组日志\n\n- Parameters:\n  - group: 日志分组名称\n  - type: 日志类型\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
+        "key.doc.declaration" : "public func FWLogGroup(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"89\" column=\"13\"><Name>FWLogGroup(_:type:format:_:file:function:line:)<\/Name><USR>s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF<\/USR><Declaration>public func FWLogGroup(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录分组日志<\/Para><\/Abstract><Parameters><Parameter><Name>group<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>日志分组名称<\/Para><\/Discussion><\/Parameter><Parameter><Name>type<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>日志类型<\/Para><\/Discussion><\/Parameter><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+        "key.doc.line" : 89,
+        "key.doc.name" : "FWLogGroup(_:type:format:_:file:function:line:)",
+        "key.doc.parameters" : [
+          {
+            "discussion" : [
+              {
+                "Para" : "日志分组名称"
+              }
+            ],
+            "name" : "group"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "日志类型"
+              }
+            ],
+            "name" : "type"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "格式化字符串"
+              }
+            ],
+            "name" : "format"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "可变参数列表，可不传"
+              }
+            ],
+            "name" : "arguments"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "文件名，默认传参"
+              }
+            ],
+            "name" : "file"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "方法名，默认传参"
+              }
+            ],
+            "name" : "function"
+          },
+          {
+            "discussion" : [
+              {
+                "Para" : "行数，默认传参"
+              }
+            ],
+            "name" : "line"
+          }
+        ],
+        "key.doc.type" : "Function",
+        "key.doclength" : 309,
+        "key.docoffset" : 3392,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWLogGroup<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>group<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>type<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"c:@E@FWLogType\">FWLogType<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>format<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 440,
+        "key.line" : 89,
+        "key.name" : "FWLogGroup(_:type:format:_:file:function:line:)",
+        "key.namelength" : 156,
+        "key.nameoffset" : 3713,
+        "key.offset" : 3708,
+        "key.parsed_declaration" : "public func FWLogGroup(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
+        "key.parsed_scope.end" : 92,
+        "key.parsed_scope.start" : 89,
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(String, FWLogType, String, CVarArg..., String, String, Int) -> ()",
+        "key.typeusr" : "$s_4type6format_4file8function4lineySS_So9FWLogTypeVSSs7CVarArg_pdS2SSitcD",
+        "key.usr" : "s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF"
+      },
+      {
         "key.annotated_decl" : "<Declaration>class FWLog : <Type usr=\"c:objc(cs)NSObject\">NSObject<\/Type><\/Declaration>",
-        "key.bodylength" : 3415,
-        "key.bodyoffset" : 3415,
+        "key.bodylength" : 4238,
+        "key.bodyoffset" : 4183,
         "key.column" : 12,
         "key.decl_lang" : "source.lang.objc",
         "key.doc.column" : 12,
         "key.doc.comment" : "FWLog扩展",
         "key.doc.declaration" : "class FWLog : NSObject",
         "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/FWFramework\/Kernel\/FWLog.h",
-        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/FWFramework\/Kernel\/FWLog.h\" line=\"99\" column=\"12\"><Name>FWLog<\/Name><USR>c:objc(cs)FWLog<\/USR><Declaration>class FWLog : NSObject<\/Declaration><Abstract><Para> 日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件<\/Para><\/Abstract><\/Other>",
-        "key.doc.line" : 99,
+        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/FWFramework\/Kernel\/FWLog.h\" line=\"109\" column=\"12\"><Name>FWLog<\/Name><USR>c:objc(cs)FWLog<\/USR><Declaration>class FWLog : NSObject<\/Declaration><Abstract><Para> 日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件<\/Para><\/Abstract><\/Other>",
+        "key.doc.line" : 109,
         "key.doc.name" : "FWLog",
         "key.doc.type" : "Other",
         "key.doclength" : 16,
-        "key.docoffset" : 3382,
+        "key.docoffset" : 4150,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/FWFramework\/Kernel\/FWLog.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>FWLog<\/decl.name> : <ref.class usr=\"c:objc(cs)NSObject\">NSObject<\/ref.class><\/decl.class>",
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 3433,
-        "key.line" : 99,
+        "key.length" : 4256,
+        "key.line" : 109,
         "key.modulename" : "FWFramework.FWLog",
         "key.name" : "FWLog",
         "key.namelength" : 5,
-        "key.nameoffset" : 3408,
-        "key.offset" : 3398,
+        "key.nameoffset" : 4176,
+        "key.offset" : 4166,
         "key.parsed_declaration" : "extension FWLog",
-        "key.parsed_scope.end" : 145,
-        "key.parsed_scope.start" : 80,
+        "key.parsed_scope.end" : 175,
+        "key.parsed_scope.start" : 95,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -3296,19 +3397,19 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3700
+                "key.offset" : 4468
               }
             ],
-            "key.bodylength" : 255,
-            "key.bodyoffset" : 3839,
+            "key.bodylength" : 257,
+            "key.bodyoffset" : 4607,
             "key.column" : 23,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 23,
             "key.doc.comment" : "记录跟踪日志\n\n- Parameters:\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"89\" column=\"23\"><Name>trace(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5trace__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录跟踪日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
-            "key.doc.line" : 89,
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"104\" column=\"23\"><Name>trace(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5trace__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录跟踪日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 104,
             "key.doc.name" : "trace(_:_:file:function:line:)",
             "key.doc.parameters" : [
               {
@@ -3354,19 +3455,19 @@
             ],
             "key.doc.type" : "Function",
             "key.doclength" : 276,
-            "key.docoffset" : 3420,
+            "key.docoffset" : 4188,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
             "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>trace<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
             "key.kind" : "source.lang.swift.decl.function.method.class",
-            "key.length" : 388,
-            "key.line" : 89,
+            "key.length" : 390,
+            "key.line" : 104,
             "key.name" : "trace(_:_:file:function:line:)",
             "key.namelength" : 119,
-            "key.nameoffset" : 3718,
-            "key.offset" : 3707,
+            "key.nameoffset" : 4486,
+            "key.offset" : 4475,
             "key.parsed_declaration" : "public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
-            "key.parsed_scope.end" : 92,
-            "key.parsed_scope.start" : 89,
+            "key.parsed_scope.end" : 107,
+            "key.parsed_scope.start" : 104,
             "key.substructure" : [
 
             ],
@@ -3381,19 +3482,19 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4385
+                "key.offset" : 5155
               }
             ],
-            "key.bodylength" : 255,
-            "key.bodyoffset" : 4524,
+            "key.bodylength" : 257,
+            "key.bodyoffset" : 5294,
             "key.column" : 23,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 23,
             "key.doc.comment" : "记录调试日志\n\n- Parameters:\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public class func debug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"102\" column=\"23\"><Name>debug(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5debug__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func debug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录调试日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
-            "key.doc.line" : 102,
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"117\" column=\"23\"><Name>debug(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5debug__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func debug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录调试日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 117,
             "key.doc.name" : "debug(_:_:file:function:line:)",
             "key.doc.parameters" : [
               {
@@ -3439,19 +3540,19 @@
             ],
             "key.doc.type" : "Function",
             "key.doclength" : 276,
-            "key.docoffset" : 4105,
+            "key.docoffset" : 4875,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
             "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>debug<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
             "key.kind" : "source.lang.swift.decl.function.method.class",
-            "key.length" : 388,
-            "key.line" : 102,
+            "key.length" : 390,
+            "key.line" : 117,
             "key.name" : "debug(_:_:file:function:line:)",
             "key.namelength" : 119,
-            "key.nameoffset" : 4403,
-            "key.offset" : 4392,
+            "key.nameoffset" : 5173,
+            "key.offset" : 5162,
             "key.parsed_declaration" : "public class func debug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
-            "key.parsed_scope.end" : 105,
-            "key.parsed_scope.start" : 102,
+            "key.parsed_scope.end" : 120,
+            "key.parsed_scope.start" : 117,
             "key.substructure" : [
 
             ],
@@ -3466,19 +3567,19 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5070
+                "key.offset" : 5842
               }
             ],
-            "key.bodylength" : 253,
-            "key.bodyoffset" : 5208,
+            "key.bodylength" : 255,
+            "key.bodyoffset" : 5980,
             "key.column" : 23,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 23,
             "key.doc.comment" : "记录信息日志\n\n- Parameters:\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public class func info(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"115\" column=\"23\"><Name>info(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE4info__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func info(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录信息日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
-            "key.doc.line" : 115,
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"130\" column=\"23\"><Name>info(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE4info__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func info(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录信息日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 130,
             "key.doc.name" : "info(_:_:file:function:line:)",
             "key.doc.parameters" : [
               {
@@ -3524,19 +3625,19 @@
             ],
             "key.doc.type" : "Function",
             "key.doclength" : 276,
-            "key.docoffset" : 4790,
+            "key.docoffset" : 5562,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
             "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>info<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
             "key.kind" : "source.lang.swift.decl.function.method.class",
-            "key.length" : 385,
-            "key.line" : 115,
+            "key.length" : 387,
+            "key.line" : 130,
             "key.name" : "info(_:_:file:function:line:)",
             "key.namelength" : 118,
-            "key.nameoffset" : 5088,
-            "key.offset" : 5077,
+            "key.nameoffset" : 5860,
+            "key.offset" : 5849,
             "key.parsed_declaration" : "public class func info(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
-            "key.parsed_scope.end" : 118,
-            "key.parsed_scope.start" : 115,
+            "key.parsed_scope.end" : 133,
+            "key.parsed_scope.start" : 130,
             "key.substructure" : [
 
             ],
@@ -3551,19 +3652,19 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5752
+                "key.offset" : 6526
               }
             ],
-            "key.bodylength" : 253,
-            "key.bodyoffset" : 5890,
+            "key.bodylength" : 255,
+            "key.bodyoffset" : 6664,
             "key.column" : 23,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 23,
             "key.doc.comment" : "记录警告日志\n\n- Parameters:\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public class func warn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"128\" column=\"23\"><Name>warn(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE4warn__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func warn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录警告日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
-            "key.doc.line" : 128,
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"143\" column=\"23\"><Name>warn(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE4warn__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func warn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录警告日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 143,
             "key.doc.name" : "warn(_:_:file:function:line:)",
             "key.doc.parameters" : [
               {
@@ -3609,19 +3710,19 @@
             ],
             "key.doc.type" : "Function",
             "key.doclength" : 276,
-            "key.docoffset" : 5472,
+            "key.docoffset" : 6246,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
             "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>warn<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
             "key.kind" : "source.lang.swift.decl.function.method.class",
-            "key.length" : 385,
-            "key.line" : 128,
+            "key.length" : 387,
+            "key.line" : 143,
             "key.name" : "warn(_:_:file:function:line:)",
             "key.namelength" : 118,
-            "key.nameoffset" : 5770,
-            "key.offset" : 5759,
+            "key.nameoffset" : 6544,
+            "key.offset" : 6533,
             "key.parsed_declaration" : "public class func warn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
-            "key.parsed_scope.end" : 131,
-            "key.parsed_scope.start" : 128,
+            "key.parsed_scope.end" : 146,
+            "key.parsed_scope.start" : 143,
             "key.substructure" : [
 
             ],
@@ -3636,19 +3737,19 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6434
+                "key.offset" : 7210
               }
             ],
-            "key.bodylength" : 255,
-            "key.bodyoffset" : 6573,
+            "key.bodylength" : 257,
+            "key.bodyoffset" : 7349,
             "key.column" : 23,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 23,
             "key.doc.comment" : "记录错误日志\n\n- Parameters:\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public class func error(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"141\" column=\"23\"><Name>error(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5error__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func error(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录错误日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
-            "key.doc.line" : 141,
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"156\" column=\"23\"><Name>error(_:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5error__4file8function4lineySS_s7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func error(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录错误日志<\/Para><\/Abstract><Parameters><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 156,
             "key.doc.name" : "error(_:_:file:function:line:)",
             "key.doc.parameters" : [
               {
@@ -3694,25 +3795,126 @@
             ],
             "key.doc.type" : "Function",
             "key.doclength" : 276,
-            "key.docoffset" : 6154,
+            "key.docoffset" : 6930,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
             "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>error<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>format<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
             "key.kind" : "source.lang.swift.decl.function.method.class",
-            "key.length" : 388,
-            "key.line" : 141,
+            "key.length" : 390,
+            "key.line" : 156,
             "key.name" : "error(_:_:file:function:line:)",
             "key.namelength" : 119,
-            "key.nameoffset" : 6452,
-            "key.offset" : 6441,
+            "key.nameoffset" : 7228,
+            "key.offset" : 7217,
             "key.parsed_declaration" : "public class func error(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
-            "key.parsed_scope.end" : 144,
-            "key.parsed_scope.start" : 141,
+            "key.parsed_scope.end" : 159,
+            "key.parsed_scope.start" : 156,
             "key.substructure" : [
 
             ],
             "key.typename" : "(FWLog.Type) -> (String, CVarArg..., String, String, Int) -> ()",
             "key.typeusr" : "$s__4file8function4lineySS_s7CVarArg_pdS2SSitcD",
             "key.usr" : "s:So5FWLogC11FWFrameworkE5error__4file8function4lineySS_s7CVarArg_pdS2SSitFZ"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.annotated_decl" : "<Declaration>public class func group(_ group: <Type usr=\"s:SS\">String<\/Type>, type: <Type usr=\"c:@E@FWLogType\">FWLogType<\/Type>, format: <Type usr=\"s:SS\">String<\/Type>, _ arguments: <Type usr=\"s:s7CVarArgP\">CVarArg<\/Type>..., file: <Type usr=\"s:SS\">String<\/Type> = #file, function: <Type usr=\"s:SS\">String<\/Type> = #function, line: <Type usr=\"s:Si\">Int<\/Type> = #line)<\/Declaration>",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 7966
+              }
+            ],
+            "key.bodylength" : 282,
+            "key.bodyoffset" : 8137,
+            "key.column" : 23,
+            "key.decl_lang" : "source.lang.swift",
+            "key.doc.column" : 23,
+            "key.doc.comment" : "记录分组日志\n\n- Parameters:\n  - group: 日志分组名称\n  - type: 日志类型\n  - format: 格式化字符串\n  - arguments: 可变参数列表，可不传\n  - file: 文件名，默认传参\n  - function: 方法名，默认传参\n  - line: 行数，默认传参",
+            "key.doc.declaration" : "public class func group(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
+            "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift\" line=\"171\" column=\"23\"><Name>group(_:type:format:_:file:function:line:)<\/Name><USR>s:So5FWLogC11FWFrameworkE5group_4type6format_4file8function4lineySS_So0A4TypeVSSs7CVarArg_pdS2SSitFZ<\/USR><Declaration>public class func group(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>记录分组日志<\/Para><\/Abstract><Parameters><Parameter><Name>group<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>日志分组名称<\/Para><\/Discussion><\/Parameter><Parameter><Name>type<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>日志类型<\/Para><\/Discussion><\/Parameter><Parameter><Name>format<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>格式化字符串<\/Para><\/Discussion><\/Parameter><Parameter><Name>arguments<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>可变参数列表，可不传<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>function<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>方法名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 171,
+            "key.doc.name" : "group(_:type:format:_:file:function:line:)",
+            "key.doc.parameters" : [
+              {
+                "discussion" : [
+                  {
+                    "Para" : "日志分组名称"
+                  }
+                ],
+                "name" : "group"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "日志类型"
+                  }
+                ],
+                "name" : "type"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "格式化字符串"
+                  }
+                ],
+                "name" : "format"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "可变参数列表，可不传"
+                  }
+                ],
+                "name" : "arguments"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "文件名，默认传参"
+                  }
+                ],
+                "name" : "file"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "方法名，默认传参"
+                  }
+                ],
+                "name" : "function"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "行数，默认传参"
+                  }
+                ],
+                "name" : "line"
+              }
+            ],
+            "key.doc.type" : "Function",
+            "key.doclength" : 345,
+            "key.docoffset" : 7617,
+            "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWLog.swift",
+            "key.fully_annotated_decl" : "<decl.function.method.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>group<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>group<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>type<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"c:@E@FWLogType\">FWLogType<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>format<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>arguments<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.protocol usr=\"s:s7CVarArgP\">CVarArg<\/ref.protocol><\/decl.var.parameter.type>...<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>function<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#function<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.class>",
+            "key.kind" : "source.lang.swift.decl.function.method.class",
+            "key.length" : 447,
+            "key.line" : 171,
+            "key.name" : "group(_:type:format:_:file:function:line:)",
+            "key.namelength" : 151,
+            "key.nameoffset" : 7984,
+            "key.offset" : 7973,
+            "key.parsed_declaration" : "public class func group(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line)",
+            "key.parsed_scope.end" : 174,
+            "key.parsed_scope.start" : 171,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "(FWLog.Type) -> (String, FWLogType, String, CVarArg..., String, String, Int) -> ()",
+            "key.typeusr" : "$s_4type6format_4file8function4lineySS_So9FWLogTypeVSSs7CVarArg_pdS2SSitcD",
+            "key.usr" : "s:So5FWLogC11FWFrameworkE5group_4type6format_4file8function4lineySS_So0A4TypeVSSs7CVarArg_pdS2SSitFZ"
           }
         ],
         "key.typename" : "FWLog.Type",
@@ -5564,7 +5766,7 @@
 }, {
   "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 746,
+    "key.length" : 1126,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -5576,14 +5778,14 @@
         "key.offset" : 256
       },
       {
-        "key.bodylength" : 362,
+        "key.bodylength" : 742,
         "key.bodyoffset" : 374,
         "key.doc.comment" : "FWTestCase扩展，注意测试方法需标记@objc，让OC可以访问",
         "key.doclength" : 76,
         "key.docoffset" : 276,
         "key.internal_diagnostic" : "Unable to resolve cursor info.",
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 385,
+        "key.length" : 765,
         "key.name" : "FWTestCase",
         "key.namelength" : 10,
         "key.nameoffset" : 362,
@@ -5596,18 +5798,18 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 548
+                "key.offset" : 554
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 655,
+            "key.bodyoffset" : 661,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 17,
-            "key.doc.comment" : "断言方法\n\n- Parameters:\n  - value: 断言表达式\n  - file: 文件名，默认传参\n  - line: 行数，默认传参",
+            "key.doc.comment" : "同步断言方法\n\n- Parameters:\n  - value: 断言表达式\n  - file: 文件名，默认传参\n  - line: 行数，默认传参",
             "key.doc.declaration" : "public func assertTrue(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift",
-            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift\" line=\"27\" column=\"17\"><Name>assertTrue(_:_:file:line:)<\/Name><USR>s:11FWFramework10assertTrueyXeXeF<\/USR><Declaration>public func assertTrue(_ value: Bool, _ expression: String = &quot;&quot;, file: String = #file, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>断言方法<\/Para><\/Abstract><Parameters><Parameter><Name>value<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>断言表达式<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift\" line=\"27\" column=\"17\"><Name>assertTrue(_:_:file:line:)<\/Name><USR>s:11FWFramework10assertTrueyXeXeF<\/USR><Declaration>public func assertTrue(_ value: Bool, _ expression: String = &quot;&quot;, file: String = #file, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>同步断言方法<\/Para><\/Abstract><Parameters><Parameter><Name>value<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>断言表达式<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
             "key.doc.line" : 27,
             "key.doc.name" : "assertTrue(_:_:file:line:)",
             "key.doc.parameters" : [
@@ -5637,7 +5839,7 @@
               }
             ],
             "key.doc.type" : "Function",
-            "key.doclength" : 165,
+            "key.doclength" : 171,
             "key.docoffset" : 379,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift",
             "key.fully_annotated_decl" : "<decl.function.method.instance><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>assertTrue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>value<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:Sb\">Bool<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>expression<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = &quot;&quot;<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.instance>",
@@ -5646,8 +5848,8 @@
             "key.line" : 27,
             "key.name" : "assertTrue(_:_:file:line:)",
             "key.namelength" : 93,
-            "key.nameoffset" : 560,
-            "key.offset" : 555,
+            "key.nameoffset" : 566,
+            "key.offset" : 561,
             "key.parsed_declaration" : "public func assertTrue(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
             "key.parsed_scope.end" : 29,
             "key.parsed_scope.start" : 27,
@@ -5657,6 +5859,75 @@
             "key.typename" : "(<<error type>>) -> (Bool, String, String, Int) -> ()",
             "key.typeusr" : "$syXeXecD",
             "key.usr" : "s:11FWFramework10assertTrueyXeXeF"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.annotated_decl" : "<Declaration>public func assertAsync(_ value: <Type usr=\"s:Sb\">Bool<\/Type>, _ expression: <Type usr=\"s:SS\">String<\/Type> = &quot;&quot;, file: <Type usr=\"s:SS\">String<\/Type> = #file, line: <Type usr=\"s:Si\">Int<\/Type> = #line)<\/Declaration>",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 926
+              }
+            ],
+            "key.bodylength" : 80,
+            "key.bodyoffset" : 1034,
+            "key.column" : 17,
+            "key.decl_lang" : "source.lang.swift",
+            "key.doc.column" : 17,
+            "key.doc.comment" : "异步断言方法\n\n- Parameters:\n  - value: 断言表达式\n  - file: 文件名，默认传参\n  - line: 行数，默认传参",
+            "key.doc.declaration" : "public func assertAsync(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
+            "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift",
+            "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift\" line=\"37\" column=\"17\"><Name>assertAsync(_:_:file:line:)<\/Name><USR>s:11FWFramework11assertAsyncyXeXeF<\/USR><Declaration>public func assertAsync(_ value: Bool, _ expression: String = &quot;&quot;, file: String = #file, line: Int = #line)<\/Declaration><CommentParts><Abstract><Para>异步断言方法<\/Para><\/Abstract><Parameters><Parameter><Name>value<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>断言表达式<\/Para><\/Discussion><\/Parameter><Parameter><Name>file<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>文件名，默认传参<\/Para><\/Discussion><\/Parameter><Parameter><Name>line<\/Name><Direction isExplicit=\"0\">in<\/Direction><Discussion><Para>行数，默认传参<\/Para><\/Discussion><\/Parameter><\/Parameters><\/CommentParts><\/Function>",
+            "key.doc.line" : 37,
+            "key.doc.name" : "assertAsync(_:_:file:line:)",
+            "key.doc.parameters" : [
+              {
+                "discussion" : [
+                  {
+                    "Para" : "断言表达式"
+                  }
+                ],
+                "name" : "value"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "文件名，默认传参"
+                  }
+                ],
+                "name" : "file"
+              },
+              {
+                "discussion" : [
+                  {
+                    "Para" : "行数，默认传参"
+                  }
+                ],
+                "name" : "line"
+              }
+            ],
+            "key.doc.type" : "Function",
+            "key.doclength" : 171,
+            "key.docoffset" : 751,
+            "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Kernel\/FWTest.swift",
+            "key.fully_annotated_decl" : "<decl.function.method.instance><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>assertAsync<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>value<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:Sb\">Bool<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>expression<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = &quot;&quot;<\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>file<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:SS\">String<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#file<\/syntaxtype.keyword><\/decl.var.parameter>, <decl.var.parameter><decl.var.parameter.argument_label>line<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.struct usr=\"s:Si\">Int<\/ref.struct><\/decl.var.parameter.type> = <syntaxtype.keyword>#line<\/syntaxtype.keyword><\/decl.var.parameter>)<\/decl.function.method.instance>",
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 182,
+            "key.line" : 37,
+            "key.name" : "assertAsync(_:_:file:line:)",
+            "key.namelength" : 94,
+            "key.nameoffset" : 938,
+            "key.offset" : 933,
+            "key.parsed_declaration" : "public func assertAsync(_ value: Bool, _ expression: String = \"\", file: String = #file, line: Int = #line)",
+            "key.parsed_scope.end" : 39,
+            "key.parsed_scope.start" : 37,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "(<<error type>>) -> (Bool, String, String, Int) -> ()",
+            "key.typeusr" : "$syXeXecD",
+            "key.usr" : "s:11FWFramework11assertAsyncyXeXeF"
           }
         ]
       }
