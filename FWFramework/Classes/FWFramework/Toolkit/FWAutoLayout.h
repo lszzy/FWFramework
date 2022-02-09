@@ -660,6 +660,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_UNAVAILABLE("")
 @interface FWLayoutChain : NSObject
 
+@property (nonatomic, weak, nullable, readonly) UIView *view;
+
+- (instancetype)initWithView:(UIView *)view;
+
 #pragma mark - Install
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remake)(void);

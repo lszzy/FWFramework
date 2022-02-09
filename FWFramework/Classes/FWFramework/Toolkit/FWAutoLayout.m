@@ -744,13 +744,16 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 #pragma mark - FWLayoutChain
 
-@interface FWLayoutChain ()
-
-@property (nonatomic, weak) __kindof UIView *view;
-
-@end
-
 @implementation FWLayoutChain
+
+- (instancetype)initWithView:(UIView *)view
+{
+    self = [super init];
+    if (self) {
+        _view = view;
+    }
+    return self;
+}
 
 #pragma mark - Install
 
@@ -1531,8 +1534,7 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 {
     FWLayoutChain *layoutChain = objc_getAssociatedObject(self, _cmd);
     if (!layoutChain) {
-        layoutChain = [[FWLayoutChain alloc] init];
-        layoutChain.view = self;
+        layoutChain = [[FWLayoutChain alloc] initWithView:self];
         objc_setAssociatedObject(self, _cmd, layoutChain, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return layoutChain;
