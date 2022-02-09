@@ -7,6 +7,7 @@
  */
 
 #import "FWRelative.h"
+#import "FWToolkit.h"
 
 #pragma mark - UIScreen+FWRelative
 
@@ -65,42 +66,42 @@ UIFont * FWFontItalicRelative(CGFloat size) { return [UIFont fwItalicFontRelativ
 
 + (UIFont *)fwThinFontRelative:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size] weight:UIFontWeightThin];
+    return [UIFont fwThinFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwLightFontRelative:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size] weight:UIFontWeightLight];
+    return [UIFont fwLightFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwFontRelative:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size]];
+    return [UIFont fwFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwMediumFontRelative:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size] weight:UIFontWeightMedium];
+    return [UIFont fwMediumFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwSemiboldFontRelative:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size] weight:UIFontWeightSemibold];
+    return [UIFont fwSemiboldFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwBoldFontRelative:(CGFloat)size
 {
-    return [UIFont boldSystemFontOfSize:[UIScreen fwRelativeValue:size]];
+    return [UIFont fwBoldFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwItalicFontRelative:(CGFloat)size
 {
-    return [UIFont italicSystemFontOfSize:[UIScreen fwRelativeValue:size]];
+    return [UIFont fwItalicFontOfSize:[UIScreen fwRelativeValue:size]];
 }
 
 + (UIFont *)fwFontRelative:(CGFloat)size weight:(UIFontWeight)weight
 {
-    return [UIFont systemFontOfSize:[UIScreen fwRelativeValue:size] weight:weight];
+    return [UIFont fwFontOfSize:[UIScreen fwRelativeValue:size] weight:weight];
 }
 
 @end
