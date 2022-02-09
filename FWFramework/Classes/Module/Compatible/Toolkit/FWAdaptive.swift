@@ -84,8 +84,3 @@ public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight }
 public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight }
 /// 工具栏高度，与是否隐藏无关
 public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight }
-
-/// 当前屏幕宽度缩放比例
-public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth }
-/// 当前屏幕高度缩放比例
-public var FWScaleFactorHeight: CGFloat { return UIScreen.fwScaleFactorHeight }
