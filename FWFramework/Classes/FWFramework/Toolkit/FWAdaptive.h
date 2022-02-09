@@ -149,6 +149,11 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 工具栏高度，与是否隐藏无关
 #define FWToolBarHeight [UIScreen fwToolBarHeight]
 
+/// 当前屏幕宽度缩放比例
+#define FWScaleWidth [UIScreen fwScaleWidth]
+/// 当前屏幕高度缩放比例
+#define FWScaleHeight [UIScreen fwScaleHeight]
+
 /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
 CG_INLINE CGFloat FWFlatScale(CGFloat floatValue, CGFloat scale) {
     floatValue = (floatValue == CGFLOAT_MIN) ? 0 : floatValue;
@@ -198,7 +203,22 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 /// 工具栏高度，与是否隐藏无关
 @property (class, nonatomic, assign, readonly) CGFloat fwToolBarHeight;
 
+/// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
+@property (class, nonatomic, assign) CGSize fwReferenceSize;
+/// 获取当前屏幕宽度缩放比例，宽度常用
+@property (class, nonatomic, assign, readonly) CGFloat fwScaleWidth;
+/// 获取当前屏幕高度缩放比例，高度不常用
+@property (class, nonatomic, assign, readonly) CGFloat fwScaleHeight;
+
+/// 获取相对设计图宽度等比例缩放值
++ (CGFloat)fwRelativeValue:(CGFloat)value;
+
 @end
+
+/// 获取相对设计图宽度等比例缩放值
+CG_INLINE CGFloat FWRelativeValue(CGFloat value) {
+    return [UIScreen fwRelativeValue:value];
+}
 
 #pragma mark - UIViewController+FWAdaptive
 
