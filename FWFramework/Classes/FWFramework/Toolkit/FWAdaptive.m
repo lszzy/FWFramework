@@ -121,6 +121,10 @@
 
 #pragma mark - UIScreen+FWAdaptive
 
+CGFloat FWRelativeValue(CGFloat value) {
+    return [UIScreen fwRelativeValue:value];
+}
+
 static CGFloat fwStaticReferenceWidth = 375;
 static CGFloat fwStaticReferenceHeight = 812;
 
@@ -293,7 +297,7 @@ static CGFloat fwStaticReferenceHeight = 812;
     fwStaticReferenceHeight = size.height;
 }
 
-+ (CGFloat)fwScaleWidth
++ (CGFloat)fwRelativeScale
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
         return [UIScreen mainScreen].bounds.size.width / fwStaticReferenceWidth;
@@ -302,7 +306,7 @@ static CGFloat fwStaticReferenceHeight = 812;
     }
 }
 
-+ (CGFloat)fwScaleHeight
++ (CGFloat)fwRelativeHeightScale
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
         return [UIScreen mainScreen].bounds.size.height / fwStaticReferenceHeight;
@@ -313,7 +317,7 @@ static CGFloat fwStaticReferenceHeight = 812;
 
 + (CGFloat)fwRelativeValue:(CGFloat)value
 {
-    return value * [self fwScaleWidth];
+    return value * [self fwRelativeScale];
 }
 
 @end

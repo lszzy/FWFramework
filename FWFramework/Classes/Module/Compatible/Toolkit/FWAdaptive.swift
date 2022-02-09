@@ -86,6 +86,6 @@ public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight }
 public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight }
 
 /// 当前屏幕宽度缩放比例
-public var FWScaleWidth: CGFloat { return UIScreen.fwScaleWidth }
+public var FWRelativeScale: CGFloat { return UIScreen.fwRelativeScale }
 /// 当前屏幕高度缩放比例
-public var FWScaleHeight: CGFloat { return UIScreen.fwScaleHeight }
+public var FWRelativeHeightScale: CGFloat { return UIScreen.fwRelativeHeightScale }
