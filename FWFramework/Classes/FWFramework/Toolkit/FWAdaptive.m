@@ -121,9 +121,6 @@
 
 #pragma mark - UIScreen+FWAdaptive
 
-static CGFloat fwStaticScaleFactorWidth = 375;
-static CGFloat fwStaticScaleFactorHeight = 812;
-
 @implementation UIScreen (FWAdaptive)
 
 + (CGSize)fwScreenSize
@@ -280,30 +277,6 @@ static CGFloat fwStaticScaleFactorHeight = 812;
         return YES;
     }
     return NO;
-}
-
-+ (void)fwSetScaleFactorSize:(CGSize)size
-{
-    fwStaticScaleFactorWidth = size.width;
-    fwStaticScaleFactorHeight = size.height;
-}
-
-+ (CGFloat)fwScaleFactorWidth
-{
-    if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorWidth;
-    } else {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorHeight;
-    }
-}
-
-+ (CGFloat)fwScaleFactorHeight
-{
-    if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorHeight;
-    } else {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorWidth;
-    }
 }
 
 @end
