@@ -146,13 +146,20 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UIFont+FWToolkit
 
 /// 快速创建系统字体，字重可选，默认Regular
-#define FWFontSize( size, ... ) [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+#define FWFontSize( size, ... ) \
+    [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
-/// 快速创建细字体
+/// 快速创建Thin字体
+FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size);
+/// 快速创建Light字体
 FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
-/// 快速创建普通字体
+/// 快速创建Regular字体
 FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
-/// 快速创建粗体字体
+/// 快速创建Medium字体
+FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size);
+/// 快速创建Semibold字体
+FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size);
+/// 快速创建Bold字体
 FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
 /// 快速创建斜体字体
 FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
@@ -162,13 +169,19 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
  */
 @interface UIFont (FWToolkit)
 
-/// 返回系统字体的细体
+/// 返回系统Thin字体
++ (UIFont *)fwThinFontOfSize:(CGFloat)size;
+/// 返回系统Light字体
 + (UIFont *)fwLightFontOfSize:(CGFloat)size;
-/// 返回系统字体的普通体
+/// 返回系统Regular字体
 + (UIFont *)fwFontOfSize:(CGFloat)size;
-/// 返回系统字体的粗体
+/// 返回系统Medium字体
++ (UIFont *)fwMediumFontOfSize:(CGFloat)size;
+/// 返回系统Semibold字体
++ (UIFont *)fwSemiboldFontOfSize:(CGFloat)size;
+/// 返回系统Bold字体
 + (UIFont *)fwBoldFontOfSize:(CGFloat)size;
-/// 返回系统字体的斜体
+/// 返回系统斜体字体
 + (UIFont *)fwItalicFontOfSize:(CGFloat)size;
 
 /// 创建指定尺寸和weight的系统字体
