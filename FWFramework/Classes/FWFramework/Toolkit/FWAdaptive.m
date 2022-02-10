@@ -125,6 +125,22 @@ CGFloat FWRelativeValue(CGFloat value) {
     return [UIScreen fwRelativeValue:value];
 }
 
+CGSize FWRelativeSize(CGSize size) {
+    return CGSizeMake(FWRelativeValue(size.width), FWRelativeValue(size.height));
+}
+
+CGPoint FWRelativePoint(CGPoint point) {
+    return CGPointMake(FWRelativeValue(point.x), FWRelativeValue(point.y));
+}
+
+CGRect FWRelativeRect(CGRect rect) {
+    return CGRectMake(FWRelativeValue(rect.origin.x), FWRelativeValue(rect.origin.y), FWRelativeValue(rect.size.width), FWRelativeValue(rect.size.height));
+}
+
+UIEdgeInsets FWRelativeInsets(UIEdgeInsets insets) {
+    return UIEdgeInsetsMake(FWRelativeValue(insets.top), FWRelativeValue(insets.left), FWRelativeValue(insets.bottom), FWRelativeValue(insets.right));
+}
+
 static CGFloat fwStaticReferenceWidth = 375;
 static CGFloat fwStaticReferenceHeight = 812;
 
