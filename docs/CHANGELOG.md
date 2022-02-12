@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.0] - 2022-02-12
+
+### Added
+* Added proportional adaptation to FWRelative related methods
+* FWLayoutChain opens the view attribute for easy expansion
+
 ## [2.3.1] - 2022-02-07
 
 ### Added
