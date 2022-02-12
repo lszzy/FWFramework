@@ -121,8 +121,28 @@
 
 #pragma mark - UIScreen+FWAdaptive
 
-static CGFloat fwStaticScaleFactorWidth = 375;
-static CGFloat fwStaticScaleFactorHeight = 812;
+CGFloat FWRelativeValue(CGFloat value) {
+    return [UIScreen fwRelativeValue:value];
+}
+
+CGSize FWRelativeSize(CGSize size) {
+    return CGSizeMake(FWRelativeValue(size.width), FWRelativeValue(size.height));
+}
+
+CGPoint FWRelativePoint(CGPoint point) {
+    return CGPointMake(FWRelativeValue(point.x), FWRelativeValue(point.y));
+}
+
+CGRect FWRelativeRect(CGRect rect) {
+    return CGRectMake(FWRelativeValue(rect.origin.x), FWRelativeValue(rect.origin.y), FWRelativeValue(rect.size.width), FWRelativeValue(rect.size.height));
+}
+
+UIEdgeInsets FWRelativeInsets(UIEdgeInsets insets) {
+    return UIEdgeInsetsMake(FWRelativeValue(insets.top), FWRelativeValue(insets.left), FWRelativeValue(insets.bottom), FWRelativeValue(insets.right));
+}
+
+static CGFloat fwStaticReferenceWidth = 375;
+static CGFloat fwStaticReferenceHeight = 812;
 
 @implementation UIScreen (FWAdaptive)
 
@@ -282,28 +302,38 @@ static CGFloat fwStaticScaleFactorHeight = 812;
     return NO;
 }
 
-+ (void)fwSetScaleFactorSize:(CGSize)size
++ (CGSize)fwReferenceSize
 {
-    fwStaticScaleFactorWidth = size.width;
-    fwStaticScaleFactorHeight = size.height;
+    return CGSizeMake(fwStaticReferenceWidth, fwStaticReferenceHeight);
 }
 
-+ (CGFloat)fwScaleFactorWidth
++ (void)setFwReferenceSize:(CGSize)size
+{
+    fwStaticReferenceWidth = size.width;
+    fwStaticReferenceHeight = size.height;
+}
+
++ (CGFloat)fwRelativeScale
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorWidth;
+        return [UIScreen mainScreen].bounds.size.width / fwStaticReferenceWidth;
     } else {
-        return [UIScreen mainScreen].bounds.size.width / fwStaticScaleFactorHeight;
+        return [UIScreen mainScreen].bounds.size.width / fwStaticReferenceHeight;
     }
 }
 
-+ (CGFloat)fwScaleFactorHeight
++ (CGFloat)fwRelativeHeightScale
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorHeight;
+        return [UIScreen mainScreen].bounds.size.height / fwStaticReferenceHeight;
     } else {
-        return [UIScreen mainScreen].bounds.size.height / fwStaticScaleFactorWidth;
+        return [UIScreen mainScreen].bounds.size.height / fwStaticReferenceWidth;
     }
+}
+
++ (CGFloat)fwRelativeValue:(CGFloat)value
+{
+    return value * [self fwRelativeScale];
 }
 
 @end

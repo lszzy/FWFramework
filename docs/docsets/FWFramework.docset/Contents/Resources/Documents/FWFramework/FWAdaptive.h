@@ -150,9 +150,20 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWToolBarHeight [UIScreen fwToolBarHeight]
 
 /// 当前屏幕宽度缩放比例
-#define FWScaleFactorWidth [UIScreen fwScaleFactorWidth]
+#define FWRelativeScale [UIScreen fwRelativeScale]
 /// 当前屏幕高度缩放比例
-#define FWScaleFactorHeight [UIScreen fwScaleFactorHeight]
+#define FWRelativeHeightScale [UIScreen fwRelativeHeightScale]
+
+/// 获取相对设计图等比例缩放值
+FOUNDATION_EXPORT CGFloat FWRelativeValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图等比例缩放size
+FOUNDATION_EXPORT CGSize FWRelativeSize(CGSize size) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图等比例缩放point
+FOUNDATION_EXPORT CGPoint FWRelativePoint(CGPoint point) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图等比例缩放rect
+FOUNDATION_EXPORT CGRect FWRelativeRect(CGRect rect) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图等比例缩放insets
+FOUNDATION_EXPORT UIEdgeInsets FWRelativeInsets(UIEdgeInsets insets) NS_SWIFT_UNAVAILABLE("");
 
 /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
 CG_INLINE CGFloat FWFlatScale(CGFloat floatValue, CGFloat scale) {
@@ -203,12 +214,15 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 /// 工具栏高度，与是否隐藏无关
 @property (class, nonatomic, assign, readonly) CGFloat fwToolBarHeight;
 
-/// 指定缩放比例原始设计图尺寸，默认{375,812}
-+ (void)fwSetScaleFactorSize:(CGSize)size;
-/// 获取当前屏幕宽度缩放比例
-@property (class, nonatomic, assign, readonly) CGFloat fwScaleFactorWidth;
-/// 获取当前屏幕高度缩放比例
-@property (class, nonatomic, assign, readonly) CGFloat fwScaleFactorHeight;
+/// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
+@property (class, nonatomic, assign) CGSize fwReferenceSize;
+/// 获取当前屏幕宽度缩放比例，宽度常用
+@property (class, nonatomic, assign, readonly) CGFloat fwRelativeScale;
+/// 获取当前屏幕高度缩放比例，高度不常用
+@property (class, nonatomic, assign, readonly) CGFloat fwRelativeHeightScale;
+
+/// 获取相对设计图宽度等比例缩放值
++ (CGFloat)fwRelativeValue:(CGFloat)value;
 
 @end
 

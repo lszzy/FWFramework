@@ -25314,7 +25314,7 @@
 }, {
   "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 3663,
+    "key.length" : 4673,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -26430,7 +26430,7 @@
       },
       {
         "key.accessibility" : "source.lang.swift.accessibility.public",
-        "key.annotated_decl" : "<Declaration>public var FWScaleFactorWidth: <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type> { get }<\/Declaration>",
+        "key.annotated_decl" : "<Declaration>public var FWRelativeScale: <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type> { get }<\/Declaration>",
         "key.attributes" : [
           {
             "key.attribute" : "source.decl.attribute.public",
@@ -26438,75 +26438,360 @@
             "key.offset" : 3470
           }
         ],
-        "key.bodylength" : 36,
-        "key.bodyoffset" : 3510,
+        "key.bodylength" : 33,
+        "key.bodyoffset" : 3507,
         "key.column" : 12,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 12,
         "key.doc.comment" : "当前屏幕宽度缩放比例",
-        "key.doc.declaration" : "public var FWScaleFactorWidth: CGFloat { get }",
+        "key.doc.declaration" : "public var FWRelativeScale: CGFloat { get }",
         "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
-        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"89\" column=\"12\"><Name>FWScaleFactorWidth<\/Name><USR>s:11FWFramework18FWScaleFactorWidth12CoreGraphics7CGFloatVvp<\/USR><Declaration>public var FWScaleFactorWidth: CGFloat { get }<\/Declaration><CommentParts><Abstract><Para>当前屏幕宽度缩放比例<\/Para><\/Abstract><\/CommentParts><\/Other>",
+        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"89\" column=\"12\"><Name>FWRelativeScale<\/Name><USR>s:11FWFramework15FWRelativeScale12CoreGraphics7CGFloatVvp<\/USR><Declaration>public var FWRelativeScale: CGFloat { get }<\/Declaration><CommentParts><Abstract><Para>当前屏幕宽度缩放比例<\/Para><\/Abstract><\/CommentParts><\/Other>",
         "key.doc.line" : 89,
-        "key.doc.name" : "FWScaleFactorWidth",
+        "key.doc.name" : "FWRelativeScale",
         "key.doc.type" : "Other",
         "key.doclength" : 35,
         "key.docoffset" : 3435,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
-        "key.fully_annotated_decl" : "<decl.var.global><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>FWScaleFactorWidth<\/decl.name>: <decl.var.type><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.var.type> { <syntaxtype.keyword>get<\/syntaxtype.keyword> }<\/decl.var.global>",
+        "key.fully_annotated_decl" : "<decl.var.global><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>FWRelativeScale<\/decl.name>: <decl.var.type><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.var.type> { <syntaxtype.keyword>get<\/syntaxtype.keyword> }<\/decl.var.global>",
         "key.kind" : "source.lang.swift.decl.var.global",
-        "key.length" : 70,
+        "key.length" : 64,
         "key.line" : 89,
-        "key.name" : "FWScaleFactorWidth",
-        "key.namelength" : 18,
+        "key.name" : "FWRelativeScale",
+        "key.namelength" : 15,
         "key.nameoffset" : 3481,
         "key.offset" : 3477,
-        "key.parsed_declaration" : "public var FWScaleFactorWidth: CGFloat",
+        "key.parsed_declaration" : "public var FWRelativeScale: CGFloat",
         "key.parsed_scope.end" : 89,
         "key.parsed_scope.start" : 89,
         "key.typename" : "CGFloat",
         "key.typeusr" : "$s12CoreGraphics7CGFloatVD",
-        "key.usr" : "s:11FWFramework18FWScaleFactorWidth12CoreGraphics7CGFloatVvp"
+        "key.usr" : "s:11FWFramework15FWRelativeScale12CoreGraphics7CGFloatVvp"
       },
       {
         "key.accessibility" : "source.lang.swift.accessibility.public",
-        "key.annotated_decl" : "<Declaration>public var FWScaleFactorHeight: <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type> { get }<\/Declaration>",
+        "key.annotated_decl" : "<Declaration>public var FWRelativeHeightScale: <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type> { get }<\/Declaration>",
         "key.attributes" : [
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 3583
+            "key.offset" : 3577
           }
         ],
-        "key.bodylength" : 37,
-        "key.bodyoffset" : 3624,
+        "key.bodylength" : 39,
+        "key.bodyoffset" : 3620,
         "key.column" : 12,
         "key.decl_lang" : "source.lang.swift",
         "key.doc.column" : 12,
         "key.doc.comment" : "当前屏幕高度缩放比例",
-        "key.doc.declaration" : "public var FWScaleFactorHeight: CGFloat { get }",
+        "key.doc.declaration" : "public var FWRelativeHeightScale: CGFloat { get }",
         "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
-        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"91\" column=\"12\"><Name>FWScaleFactorHeight<\/Name><USR>s:11FWFramework19FWScaleFactorHeight12CoreGraphics7CGFloatVvp<\/USR><Declaration>public var FWScaleFactorHeight: CGFloat { get }<\/Declaration><CommentParts><Abstract><Para>当前屏幕高度缩放比例<\/Para><\/Abstract><\/CommentParts><\/Other>",
+        "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"91\" column=\"12\"><Name>FWRelativeHeightScale<\/Name><USR>s:11FWFramework21FWRelativeHeightScale12CoreGraphics7CGFloatVvp<\/USR><Declaration>public var FWRelativeHeightScale: CGFloat { get }<\/Declaration><CommentParts><Abstract><Para>当前屏幕高度缩放比例<\/Para><\/Abstract><\/CommentParts><\/Other>",
         "key.doc.line" : 91,
-        "key.doc.name" : "FWScaleFactorHeight",
+        "key.doc.name" : "FWRelativeHeightScale",
         "key.doc.type" : "Other",
         "key.doclength" : 35,
-        "key.docoffset" : 3548,
+        "key.docoffset" : 3542,
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
-        "key.fully_annotated_decl" : "<decl.var.global><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>FWScaleFactorHeight<\/decl.name>: <decl.var.type><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.var.type> { <syntaxtype.keyword>get<\/syntaxtype.keyword> }<\/decl.var.global>",
+        "key.fully_annotated_decl" : "<decl.var.global><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>FWRelativeHeightScale<\/decl.name>: <decl.var.type><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.var.type> { <syntaxtype.keyword>get<\/syntaxtype.keyword> }<\/decl.var.global>",
         "key.kind" : "source.lang.swift.decl.var.global",
-        "key.length" : 72,
+        "key.length" : 76,
         "key.line" : 91,
-        "key.name" : "FWScaleFactorHeight",
-        "key.namelength" : 19,
-        "key.nameoffset" : 3594,
-        "key.offset" : 3590,
-        "key.parsed_declaration" : "public var FWScaleFactorHeight: CGFloat",
+        "key.name" : "FWRelativeHeightScale",
+        "key.namelength" : 21,
+        "key.nameoffset" : 3588,
+        "key.offset" : 3584,
+        "key.parsed_declaration" : "public var FWRelativeHeightScale: CGFloat",
         "key.parsed_scope.end" : 91,
         "key.parsed_scope.start" : 91,
         "key.typename" : "CGFloat",
         "key.typeusr" : "$s12CoreGraphics7CGFloatVD",
-        "key.usr" : "s:11FWFramework19FWScaleFactorHeight12CoreGraphics7CGFloatVvp"
+        "key.usr" : "s:11FWFramework21FWRelativeHeightScale12CoreGraphics7CGFloatVvp"
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWRelativeValue(_ value: <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type>) -&gt; <Type usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/Type><\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 3706
+          }
+        ],
+        "key.bodylength" : 44,
+        "key.bodyoffset" : 3764,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "获取相对设计图等比例缩放值",
+        "key.doc.declaration" : "public func FWRelativeValue(_ value: CGFloat) -> CGFloat",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"94\" column=\"13\"><Name>FWRelativeValue(_:)<\/Name><USR>s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF<\/USR><Declaration>public func FWRelativeValue(_ value: CGFloat) -&gt; CGFloat<\/Declaration><CommentParts><Abstract><Para>获取相对设计图等比例缩放值<\/Para><\/Abstract><\/CommentParts><\/Function>",
+        "key.doc.line" : 94,
+        "key.doc.name" : "FWRelativeValue(_:)",
+        "key.doc.type" : "Function",
+        "key.doclength" : 44,
+        "key.docoffset" : 3662,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWRelativeValue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>value<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.struct usr=\"s:12CoreGraphics7CGFloatV\">CGFloat<\/ref.struct><\/decl.function.returntype><\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 96,
+        "key.line" : 94,
+        "key.name" : "FWRelativeValue(_:)",
+        "key.namelength" : 33,
+        "key.nameoffset" : 3718,
+        "key.offset" : 3713,
+        "key.parsed_declaration" : "public func FWRelativeValue(_ value: CGFloat) -> CGFloat",
+        "key.parsed_scope.end" : 96,
+        "key.parsed_scope.start" : 94,
+        "key.related_decls" : [
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGSizeVADF\">FWRelativeValue(_: CGSize) -&gt; CGSize<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo7CGPointVADF\">FWRelativeValue(_: CGPoint) -&gt; CGPoint<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGRectVADF\">FWRelativeValue(_: CGRect) -&gt; CGRect<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF\">FWRelativeValue(_: UIEdgeInsets) -&gt; UIEdgeInsets<\/RelatedName>"
+          }
+        ],
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(CGFloat) -> CGFloat",
+        "key.typeusr" : "$sy12CoreGraphics7CGFloatVACcD",
+        "key.usr" : "s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF"
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWRelativeValue(_ size: <Type usr=\"c:@S@CGSize\">CGSize<\/Type>) -&gt; <Type usr=\"c:@S@CGSize\">CGSize<\/Type><\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 3855
+          }
+        ],
+        "key.bodylength" : 93,
+        "key.bodyoffset" : 3910,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "获取相对设计图等比例缩放size",
+        "key.doc.declaration" : "public func FWRelativeValue(_ size: CGSize) -> CGSize",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"98\" column=\"13\"><Name>FWRelativeValue(_:)<\/Name><USR>s:11FWFramework15FWRelativeValueySo6CGSizeVADF<\/USR><Declaration>public func FWRelativeValue(_ size: CGSize) -&gt; CGSize<\/Declaration><CommentParts><Abstract><Para>获取相对设计图等比例缩放size<\/Para><\/Abstract><\/CommentParts><\/Function>",
+        "key.doc.line" : 98,
+        "key.doc.name" : "FWRelativeValue(_:)",
+        "key.doc.type" : "Function",
+        "key.doclength" : 45,
+        "key.docoffset" : 3810,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWRelativeValue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>size<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"c:@S@CGSize\">CGSize<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.struct usr=\"c:@S@CGSize\">CGSize<\/ref.struct><\/decl.function.returntype><\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 142,
+        "key.line" : 98,
+        "key.name" : "FWRelativeValue(_:)",
+        "key.namelength" : 31,
+        "key.nameoffset" : 3867,
+        "key.offset" : 3862,
+        "key.parsed_declaration" : "public func FWRelativeValue(_ size: CGSize) -> CGSize",
+        "key.parsed_scope.end" : 100,
+        "key.parsed_scope.start" : 98,
+        "key.related_decls" : [
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF\">FWRelativeValue(_: CGFloat) -&gt; CGFloat<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo7CGPointVADF\">FWRelativeValue(_: CGPoint) -&gt; CGPoint<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGRectVADF\">FWRelativeValue(_: CGRect) -&gt; CGRect<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF\">FWRelativeValue(_: UIEdgeInsets) -&gt; UIEdgeInsets<\/RelatedName>"
+          }
+        ],
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(CGSize) -> CGSize",
+        "key.typeusr" : "$sySo6CGSizeVABcD",
+        "key.usr" : "s:11FWFramework15FWRelativeValueySo6CGSizeVADF"
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWRelativeValue(_ point: <Type usr=\"c:@S@CGPoint\">CGPoint<\/Type>) -&gt; <Type usr=\"c:@S@CGPoint\">CGPoint<\/Type><\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 4051
+          }
+        ],
+        "key.bodylength" : 78,
+        "key.bodyoffset" : 4109,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "获取相对设计图等比例缩放point",
+        "key.doc.declaration" : "public func FWRelativeValue(_ point: CGPoint) -> CGPoint",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"102\" column=\"13\"><Name>FWRelativeValue(_:)<\/Name><USR>s:11FWFramework15FWRelativeValueySo7CGPointVADF<\/USR><Declaration>public func FWRelativeValue(_ point: CGPoint) -&gt; CGPoint<\/Declaration><CommentParts><Abstract><Para>获取相对设计图等比例缩放point<\/Para><\/Abstract><\/CommentParts><\/Function>",
+        "key.doc.line" : 102,
+        "key.doc.name" : "FWRelativeValue(_:)",
+        "key.doc.type" : "Function",
+        "key.doclength" : 46,
+        "key.docoffset" : 4005,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWRelativeValue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>point<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"c:@S@CGPoint\">CGPoint<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.struct usr=\"c:@S@CGPoint\">CGPoint<\/ref.struct><\/decl.function.returntype><\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 130,
+        "key.line" : 102,
+        "key.name" : "FWRelativeValue(_:)",
+        "key.namelength" : 33,
+        "key.nameoffset" : 4063,
+        "key.offset" : 4058,
+        "key.parsed_declaration" : "public func FWRelativeValue(_ point: CGPoint) -> CGPoint",
+        "key.parsed_scope.end" : 104,
+        "key.parsed_scope.start" : 102,
+        "key.related_decls" : [
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF\">FWRelativeValue(_: CGFloat) -&gt; CGFloat<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGSizeVADF\">FWRelativeValue(_: CGSize) -&gt; CGSize<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGRectVADF\">FWRelativeValue(_: CGRect) -&gt; CGRect<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF\">FWRelativeValue(_: UIEdgeInsets) -&gt; UIEdgeInsets<\/RelatedName>"
+          }
+        ],
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(CGPoint) -> CGPoint",
+        "key.typeusr" : "$sySo7CGPointVABcD",
+        "key.usr" : "s:11FWFramework15FWRelativeValueySo7CGPointVADF"
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWRelativeValue(_ rect: <Type usr=\"c:@S@CGRect\">CGRect<\/Type>) -&gt; <Type usr=\"c:@S@CGRect\">CGRect<\/Type><\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 4234
+          }
+        ],
+        "key.bodylength" : 91,
+        "key.bodyoffset" : 4289,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "获取相对设计图等比例缩放rect",
+        "key.doc.declaration" : "public func FWRelativeValue(_ rect: CGRect) -> CGRect",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"106\" column=\"13\"><Name>FWRelativeValue(_:)<\/Name><USR>s:11FWFramework15FWRelativeValueySo6CGRectVADF<\/USR><Declaration>public func FWRelativeValue(_ rect: CGRect) -&gt; CGRect<\/Declaration><CommentParts><Abstract><Para>获取相对设计图等比例缩放rect<\/Para><\/Abstract><\/CommentParts><\/Function>",
+        "key.doc.line" : 106,
+        "key.doc.name" : "FWRelativeValue(_:)",
+        "key.doc.type" : "Function",
+        "key.doclength" : 45,
+        "key.docoffset" : 4189,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWRelativeValue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>rect<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"c:@S@CGRect\">CGRect<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.struct usr=\"c:@S@CGRect\">CGRect<\/ref.struct><\/decl.function.returntype><\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 140,
+        "key.line" : 106,
+        "key.name" : "FWRelativeValue(_:)",
+        "key.namelength" : 31,
+        "key.nameoffset" : 4246,
+        "key.offset" : 4241,
+        "key.parsed_declaration" : "public func FWRelativeValue(_ rect: CGRect) -> CGRect",
+        "key.parsed_scope.end" : 108,
+        "key.parsed_scope.start" : 106,
+        "key.related_decls" : [
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF\">FWRelativeValue(_: CGFloat) -&gt; CGFloat<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGSizeVADF\">FWRelativeValue(_: CGSize) -&gt; CGSize<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo7CGPointVADF\">FWRelativeValue(_: CGPoint) -&gt; CGPoint<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF\">FWRelativeValue(_: UIEdgeInsets) -&gt; UIEdgeInsets<\/RelatedName>"
+          }
+        ],
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(CGRect) -> CGRect",
+        "key.typeusr" : "$sySo6CGRectVABcD",
+        "key.usr" : "s:11FWFramework15FWRelativeValueySo6CGRectVADF"
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.annotated_decl" : "<Declaration>public func FWRelativeValue(_ insets: <Type usr=\"c:@S@UIEdgeInsets\">UIEdgeInsets<\/Type>) -&gt; <Type usr=\"c:@S@UIEdgeInsets\">UIEdgeInsets<\/Type><\/Declaration>",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 4429
+          }
+        ],
+        "key.bodylength" : 173,
+        "key.bodyoffset" : 4498,
+        "key.column" : 13,
+        "key.decl_lang" : "source.lang.swift",
+        "key.doc.column" : 13,
+        "key.doc.comment" : "获取相对设计图等比例缩放insets",
+        "key.doc.declaration" : "public func FWRelativeValue(_ insets: UIEdgeInsets) -> UIEdgeInsets",
+        "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.doc.full_as_xml" : "<Function file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift\" line=\"110\" column=\"13\"><Name>FWRelativeValue(_:)<\/Name><USR>s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF<\/USR><Declaration>public func FWRelativeValue(_ insets: UIEdgeInsets) -&gt; UIEdgeInsets<\/Declaration><CommentParts><Abstract><Para>获取相对设计图等比例缩放insets<\/Para><\/Abstract><\/CommentParts><\/Function>",
+        "key.doc.line" : 110,
+        "key.doc.name" : "FWRelativeValue(_:)",
+        "key.doc.type" : "Function",
+        "key.doclength" : 47,
+        "key.docoffset" : 4382,
+        "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAdaptive.swift",
+        "key.fully_annotated_decl" : "<decl.function.free><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>FWRelativeValue<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>insets<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.struct usr=\"c:@S@UIEdgeInsets\">UIEdgeInsets<\/ref.struct><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.struct usr=\"c:@S@UIEdgeInsets\">UIEdgeInsets<\/ref.struct><\/decl.function.returntype><\/decl.function.free>",
+        "key.kind" : "source.lang.swift.decl.function.free",
+        "key.length" : 236,
+        "key.line" : 110,
+        "key.name" : "FWRelativeValue(_:)",
+        "key.namelength" : 39,
+        "key.nameoffset" : 4441,
+        "key.offset" : 4436,
+        "key.parsed_declaration" : "public func FWRelativeValue(_ insets: UIEdgeInsets) -> UIEdgeInsets",
+        "key.parsed_scope.end" : 112,
+        "key.parsed_scope.start" : 110,
+        "key.related_decls" : [
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF\">FWRelativeValue(_: CGFloat) -&gt; CGFloat<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGSizeVADF\">FWRelativeValue(_: CGSize) -&gt; CGSize<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo7CGPointVADF\">FWRelativeValue(_: CGPoint) -&gt; CGPoint<\/RelatedName>"
+          },
+          {
+            "key.annotated_decl" : "<RelatedName usr=\"s:11FWFramework15FWRelativeValueySo6CGRectVADF\">FWRelativeValue(_: CGRect) -&gt; CGRect<\/RelatedName>"
+          }
+        ],
+        "key.substructure" : [
+
+        ],
+        "key.typename" : "(UIEdgeInsets) -> UIEdgeInsets",
+        "key.typeusr" : "$sySo12UIEdgeInsetsVABcD",
+        "key.usr" : "s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF"
       }
     ]
   }
@@ -27424,7 +27709,7 @@
 }, {
   "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 20303,
+    "key.length" : 20305,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -27445,7 +27730,7 @@
             "key.offset" : 442
           }
         ],
-        "key.bodylength" : 19012,
+        "key.bodylength" : 19014,
         "key.bodyoffset" : 470,
         "key.column" : 14,
         "key.decl_lang" : "source.lang.swift",
@@ -27462,7 +27747,7 @@
         "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>FWLayoutChain<\/decl.name><\/decl.class>",
         "key.kind" : "source.lang.swift.decl.class",
-        "key.length" : 19034,
+        "key.length" : 19036,
         "key.line" : 18,
         "key.name" : "FWLayoutChain",
         "key.namelength" : 13,
@@ -27473,48 +27758,53 @@
         "key.parsed_scope.start" : 18,
         "key.substructure" : [
           {
-            "key.accessibility" : "source.lang.swift.accessibility.private",
-            "key.annotated_decl" : "<Declaration>private weak var view: <Type usr=\"c:objc(cs)UIView\">UIView<\/Type>?<\/Declaration>",
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.annotated_decl" : "<Declaration>public private(set) weak var view: <Type usr=\"c:objc(cs)UIView\">UIView<\/Type>? { get }<\/Declaration>",
             "key.attributes" : [
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 514
+                "key.offset" : 516
               },
               {
-                "key.attribute" : "source.decl.attribute.private",
-                "key.length" : 7,
-                "key.offset" : 506
+                "key.attribute" : "source.decl.attribute.setter_access.private",
+                "key.length" : 12,
+                "key.offset" : 503
+              },
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 496
               }
             ],
-            "key.column" : 22,
+            "key.column" : 34,
             "key.decl_lang" : "source.lang.swift",
-            "key.doc.column" : 22,
-            "key.doc.comment" : "weak引用内部视图",
-            "key.doc.declaration" : "private weak var view: UIView?",
+            "key.doc.column" : 34,
+            "key.doc.comment" : "布局视图",
+            "key.doc.declaration" : "public private(set) weak var view: UIView? { get }",
             "key.doc.file" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
-            "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift\" line=\"20\" column=\"22\"><Name>view<\/Name><USR>s:11FWFramework13FWLayoutChainC4view33_EF2BAB0CBB71D9D213B64E16DD6CFF51LLSo6UIViewCSgvp<\/USR><Declaration>private weak var view: UIView?<\/Declaration><CommentParts><Abstract><Para>weak引用内部视图<\/Para><\/Abstract><\/CommentParts><\/Other>",
+            "key.doc.full_as_xml" : "<Other file=\"\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift\" line=\"20\" column=\"34\"><Name>view<\/Name><USR>s:11FWFramework13FWLayoutChainC4viewSo6UIViewCSgvp<\/USR><Declaration>public private(set) weak var view: UIView? { get }<\/Declaration><CommentParts><Abstract><Para>布局视图<\/Para><\/Abstract><\/CommentParts><\/Other>",
             "key.doc.line" : 20,
             "key.doc.name" : "view",
             "key.doc.type" : "Other",
-            "key.doclength" : 27,
+            "key.doclength" : 17,
             "key.docoffset" : 475,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
-            "key.fully_annotated_decl" : "<decl.var.instance><syntaxtype.keyword>private<\/syntaxtype.keyword> <syntaxtype.keyword>weak<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>view<\/decl.name>: <decl.var.type><ref.class usr=\"c:objc(cs)UIView\">UIView<\/ref.class>?<\/decl.var.type><\/decl.var.instance>",
+            "key.fully_annotated_decl" : "<decl.var.instance><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>private<\/syntaxtype.keyword>(set) <syntaxtype.keyword>weak<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>view<\/decl.name>: <decl.var.type><ref.class usr=\"c:objc(cs)UIView\">UIView<\/ref.class>?<\/decl.var.type> { get }<\/decl.var.instance>",
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 17,
             "key.line" : 20,
             "key.name" : "view",
             "key.namelength" : 4,
-            "key.nameoffset" : 523,
-            "key.offset" : 519,
-            "key.parsed_declaration" : "private weak var view: UIView?",
+            "key.nameoffset" : 525,
+            "key.offset" : 521,
+            "key.parsed_declaration" : "public private(set) weak var view: UIView?",
             "key.parsed_scope.end" : 20,
             "key.parsed_scope.start" : 20,
             "key.setter_accessibility" : "source.lang.swift.accessibility.private",
             "key.typename" : "UIView?",
             "key.typeusr" : "$sSo6UIViewCSgD",
-            "key.usr" : "s:11FWFramework13FWLayoutChainC4view33_EF2BAB0CBB71D9D213B64E16DD6CFF51LLSo6UIViewCSgvp"
+            "key.usr" : "s:11FWFramework13FWLayoutChainC4viewSo6UIViewCSgvp"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -27523,16 +27813,16 @@
               {
                 "key.attribute" : "source.decl.attribute.required",
                 "key.length" : 8,
-                "key.offset" : 570
+                "key.offset" : 572
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 563
+                "key.offset" : 565
               }
             ],
             "key.bodylength" : 30,
-            "key.bodyoffset" : 600,
+            "key.bodyoffset" : 602,
             "key.column" : 21,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 21,
@@ -27544,7 +27834,7 @@
             "key.doc.name" : "init(view:)",
             "key.doc.type" : "Function",
             "key.doclength" : 17,
-            "key.docoffset" : 542,
+            "key.docoffset" : 544,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
             "key.fully_annotated_decl" : "<decl.function.constructor><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>required<\/syntaxtype.keyword> <syntaxtype.keyword>init<\/syntaxtype.keyword>(<decl.var.parameter><decl.var.parameter.argument_label>view<\/decl.var.parameter.argument_label>: <decl.var.parameter.type><ref.class usr=\"c:objc(cs)UIView\">UIView<\/ref.class>?<\/decl.var.parameter.type><\/decl.var.parameter>)<\/decl.function.constructor>",
             "key.kind" : "source.lang.swift.decl.function.method.instance",
@@ -27552,8 +27842,8 @@
             "key.line" : 23,
             "key.name" : "init(view:)",
             "key.namelength" : 19,
-            "key.nameoffset" : 579,
-            "key.offset" : 579,
+            "key.nameoffset" : 581,
+            "key.offset" : 581,
             "key.parsed_declaration" : "public required init(view: UIView?)",
             "key.parsed_scope.end" : 25,
             "key.parsed_scope.start" : 23,
@@ -27570,7 +27860,7 @@
             "key.name" : "MARK: - Install",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 640
+            "key.offset" : 642
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -27579,16 +27869,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 684
+                "key.offset" : 686
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 661
+                "key.offset" : 663
               }
             ],
             "key.bodylength" : 64,
-            "key.bodyoffset" : 723,
+            "key.bodyoffset" : 725,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27598,8 +27888,8 @@
             "key.line" : 30,
             "key.name" : "remake()",
             "key.namelength" : 8,
-            "key.nameoffset" : 696,
-            "key.offset" : 691,
+            "key.nameoffset" : 698,
+            "key.offset" : 693,
             "key.parsed_declaration" : "public func remake() -> FWLayoutChain",
             "key.parsed_scope.end" : 33,
             "key.parsed_scope.start" : 30,
@@ -27616,7 +27906,7 @@
             "key.name" : "MARK: - Compression",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 797
+            "key.offset" : 799
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -27625,16 +27915,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 845
+                "key.offset" : 847
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 822
+                "key.offset" : 824
               }
             ],
             "key.bodylength" : 74,
-            "key.bodyoffset" : 927,
+            "key.bodyoffset" : 929,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27644,8 +27934,8 @@
             "key.line" : 38,
             "key.name" : "compressionHorizontal(_:)",
             "key.namelength" : 51,
-            "key.nameoffset" : 857,
-            "key.offset" : 852,
+            "key.nameoffset" : 859,
+            "key.offset" : 854,
             "key.parsed_declaration" : "public func compressionHorizontal(_ priority: UILayoutPriority) -> FWLayoutChain",
             "key.parsed_scope.end" : 41,
             "key.parsed_scope.start" : 38,
@@ -27663,16 +27953,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1031
+                "key.offset" : 1033
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1008
+                "key.offset" : 1010
               }
             ],
             "key.bodylength" : 72,
-            "key.bodyoffset" : 1111,
+            "key.bodyoffset" : 1113,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27682,8 +27972,8 @@
             "key.line" : 44,
             "key.name" : "compressionVertical(_:)",
             "key.namelength" : 49,
-            "key.nameoffset" : 1043,
-            "key.offset" : 1038,
+            "key.nameoffset" : 1045,
+            "key.offset" : 1040,
             "key.parsed_declaration" : "public func compressionVertical(_ priority: UILayoutPriority) -> FWLayoutChain",
             "key.parsed_scope.end" : 47,
             "key.parsed_scope.start" : 44,
@@ -27701,16 +27991,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1217
+                "key.offset" : 1219
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1194
+                "key.offset" : 1196
               }
             ],
             "key.bodylength" : 70,
-            "key.bodyoffset" : 1295,
+            "key.bodyoffset" : 1297,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27720,8 +28010,8 @@
             "key.line" : 50,
             "key.name" : "huggingHorizontal(_:)",
             "key.namelength" : 47,
-            "key.nameoffset" : 1229,
-            "key.offset" : 1224,
+            "key.nameoffset" : 1231,
+            "key.offset" : 1226,
             "key.parsed_declaration" : "public func huggingHorizontal(_ priority: UILayoutPriority) -> FWLayoutChain",
             "key.parsed_scope.end" : 53,
             "key.parsed_scope.start" : 50,
@@ -27739,16 +28029,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1395
+                "key.offset" : 1397
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1372
+                "key.offset" : 1374
               }
             ],
             "key.bodylength" : 68,
-            "key.bodyoffset" : 1471,
+            "key.bodyoffset" : 1473,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27758,8 +28048,8 @@
             "key.line" : 56,
             "key.name" : "huggingVertical(_:)",
             "key.namelength" : 45,
-            "key.nameoffset" : 1407,
-            "key.offset" : 1402,
+            "key.nameoffset" : 1409,
+            "key.offset" : 1404,
             "key.parsed_declaration" : "public func huggingVertical(_ priority: UILayoutPriority) -> FWLayoutChain",
             "key.parsed_scope.end" : 59,
             "key.parsed_scope.start" : 56,
@@ -27776,7 +28066,7 @@
             "key.name" : "MARK: - Collapse",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 1553
+            "key.offset" : 1555
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -27785,16 +28075,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1598
+                "key.offset" : 1600
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1575
+                "key.offset" : 1577
               }
             ],
             "key.bodylength" : 63,
-            "key.bodyoffset" : 1657,
+            "key.bodyoffset" : 1659,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27804,8 +28094,8 @@
             "key.line" : 64,
             "key.name" : "collapsed(_:)",
             "key.namelength" : 28,
-            "key.nameoffset" : 1610,
-            "key.offset" : 1605,
+            "key.nameoffset" : 1612,
+            "key.offset" : 1607,
             "key.parsed_declaration" : "public func collapsed(_ collapsed: Bool) -> FWLayoutChain",
             "key.parsed_scope.end" : 67,
             "key.parsed_scope.start" : 64,
@@ -27823,16 +28113,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1750
+                "key.offset" : 1752
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1727
+                "key.offset" : 1729
               }
             ],
             "key.bodylength" : 69,
-            "key.bodyoffset" : 1815,
+            "key.bodyoffset" : 1817,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27842,8 +28132,8 @@
             "key.line" : 70,
             "key.name" : "autoCollapse(_:)",
             "key.namelength" : 34,
-            "key.nameoffset" : 1762,
-            "key.offset" : 1757,
+            "key.nameoffset" : 1764,
+            "key.offset" : 1759,
             "key.parsed_declaration" : "public func autoCollapse(_ autoCollapse: Bool) -> FWLayoutChain",
             "key.parsed_scope.end" : 73,
             "key.parsed_scope.start" : 70,
@@ -27861,16 +28151,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1918
+                "key.offset" : 1920
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 1895
+                "key.offset" : 1897
               }
             ],
             "key.bodylength" : 73,
-            "key.bodyoffset" : 1987,
+            "key.bodyoffset" : 1989,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27880,8 +28170,8 @@
             "key.line" : 76,
             "key.name" : "hiddenCollapse(_:)",
             "key.namelength" : 38,
-            "key.nameoffset" : 1930,
-            "key.offset" : 1925,
+            "key.nameoffset" : 1932,
+            "key.offset" : 1927,
             "key.parsed_declaration" : "public func hiddenCollapse(_ hiddenCollapse: Bool) -> FWLayoutChain",
             "key.parsed_scope.end" : 79,
             "key.parsed_scope.start" : 76,
@@ -27898,7 +28188,7 @@
             "key.name" : "MARK: - Axis",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 2070
+            "key.offset" : 2072
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -27907,16 +28197,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2111
+                "key.offset" : 2113
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2088
+                "key.offset" : 2090
               }
             ],
             "key.bodylength" : 66,
-            "key.bodyoffset" : 2150,
+            "key.bodyoffset" : 2152,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27926,8 +28216,8 @@
             "key.line" : 84,
             "key.name" : "center()",
             "key.namelength" : 8,
-            "key.nameoffset" : 2123,
-            "key.offset" : 2118,
+            "key.nameoffset" : 2125,
+            "key.offset" : 2120,
             "key.parsed_declaration" : "public func center() -> FWLayoutChain",
             "key.parsed_scope.end" : 87,
             "key.parsed_scope.start" : 84,
@@ -27945,16 +28235,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2246
+                "key.offset" : 2248
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2223
+                "key.offset" : 2225
               }
             ],
             "key.bodylength" : 74,
-            "key.bodyoffset" : 2286,
+            "key.bodyoffset" : 2288,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -27964,8 +28254,8 @@
             "key.line" : 90,
             "key.name" : "centerX()",
             "key.namelength" : 9,
-            "key.nameoffset" : 2258,
-            "key.offset" : 2253,
+            "key.nameoffset" : 2260,
+            "key.offset" : 2255,
             "key.parsed_declaration" : "public func centerX() -> FWLayoutChain",
             "key.parsed_scope.end" : 93,
             "key.parsed_scope.start" : 90,
@@ -27983,16 +28273,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2390
+                "key.offset" : 2392
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2367
+                "key.offset" : 2369
               }
             ],
             "key.bodylength" : 74,
-            "key.bodyoffset" : 2430,
+            "key.bodyoffset" : 2432,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28002,8 +28292,8 @@
             "key.line" : 96,
             "key.name" : "centerY()",
             "key.namelength" : 9,
-            "key.nameoffset" : 2402,
-            "key.offset" : 2397,
+            "key.nameoffset" : 2404,
+            "key.offset" : 2399,
             "key.parsed_declaration" : "public func centerY() -> FWLayoutChain",
             "key.parsed_scope.end" : 99,
             "key.parsed_scope.start" : 96,
@@ -28021,16 +28311,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2534
+                "key.offset" : 2536
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2511
+                "key.offset" : 2513
               }
             ],
             "key.bodylength" : 135,
-            "key.bodyoffset" : 2590,
+            "key.bodyoffset" : 2592,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28040,8 +28330,8 @@
             "key.line" : 102,
             "key.name" : "centerToView(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 2546,
-            "key.offset" : 2541,
+            "key.nameoffset" : 2548,
+            "key.offset" : 2543,
             "key.parsed_declaration" : "public func centerToView(_ view: Any) -> FWLayoutChain",
             "key.parsed_scope.end" : 106,
             "key.parsed_scope.start" : 102,
@@ -28059,16 +28349,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2755
+                "key.offset" : 2757
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2732
+                "key.offset" : 2734
               }
             ],
             "key.bodylength" : 100,
-            "key.bodyoffset" : 2844,
+            "key.bodyoffset" : 2846,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28078,8 +28368,8 @@
             "key.line" : 109,
             "key.name" : "centerXToView(_:withOffset:)",
             "key.namelength" : 58,
-            "key.nameoffset" : 2767,
-            "key.offset" : 2762,
+            "key.nameoffset" : 2769,
+            "key.offset" : 2764,
             "key.parsed_declaration" : "public func centerXToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 112,
             "key.parsed_scope.start" : 109,
@@ -28102,16 +28392,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2974
+                "key.offset" : 2976
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 2951
+                "key.offset" : 2953
               }
             ],
             "key.bodylength" : 100,
-            "key.bodyoffset" : 3063,
+            "key.bodyoffset" : 3065,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28121,8 +28411,8 @@
             "key.line" : 115,
             "key.name" : "centerYToView(_:withOffset:)",
             "key.namelength" : 58,
-            "key.nameoffset" : 2986,
-            "key.offset" : 2981,
+            "key.nameoffset" : 2988,
+            "key.offset" : 2983,
             "key.parsed_declaration" : "public func centerYToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 118,
             "key.parsed_scope.start" : 115,
@@ -28145,16 +28435,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3193
+                "key.offset" : 3195
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 3170
+                "key.offset" : 3172
               }
             ],
             "key.bodylength" : 108,
-            "key.bodyoffset" : 3286,
+            "key.bodyoffset" : 3288,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28164,8 +28454,8 @@
             "key.line" : 121,
             "key.name" : "centerXToView(_:withMultiplier:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 3205,
-            "key.offset" : 3200,
+            "key.nameoffset" : 3207,
+            "key.offset" : 3202,
             "key.parsed_declaration" : "public func centerXToView(_ view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain",
             "key.parsed_scope.end" : 124,
             "key.parsed_scope.start" : 121,
@@ -28188,16 +28478,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3424
+                "key.offset" : 3426
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 3401
+                "key.offset" : 3403
               }
             ],
             "key.bodylength" : 108,
-            "key.bodyoffset" : 3517,
+            "key.bodyoffset" : 3519,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28207,8 +28497,8 @@
             "key.line" : 127,
             "key.name" : "centerYToView(_:withMultiplier:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 3436,
-            "key.offset" : 3431,
+            "key.nameoffset" : 3438,
+            "key.offset" : 3433,
             "key.parsed_declaration" : "public func centerYToView(_ view: Any, withMultiplier multiplier: CGFloat) -> FWLayoutChain",
             "key.parsed_scope.end" : 130,
             "key.parsed_scope.start" : 127,
@@ -28230,7 +28520,7 @@
             "key.name" : "MARK: - Edge",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 3635
+            "key.offset" : 3637
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -28239,16 +28529,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3676
+                "key.offset" : 3678
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 3653
+                "key.offset" : 3655
               }
             ],
             "key.bodylength" : 75,
-            "key.bodyoffset" : 3756,
+            "key.bodyoffset" : 3758,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28258,8 +28548,8 @@
             "key.line" : 135,
             "key.name" : "edges(_:)",
             "key.namelength" : 49,
-            "key.nameoffset" : 3688,
-            "key.offset" : 3683,
+            "key.nameoffset" : 3690,
+            "key.offset" : 3685,
             "key.parsed_declaration" : "public func edges(_ insets: UIEdgeInsets = UIEdgeInsets.zero) -> FWLayoutChain",
             "key.parsed_scope.end" : 138,
             "key.parsed_scope.start" : 135,
@@ -28282,16 +28572,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3865
+                "key.offset" : 3867
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 3842
+                "key.offset" : 3844
               }
             ],
             "key.bodylength" : 96,
-            "key.bodyoffset" : 3995,
+            "key.bodyoffset" : 3997,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28301,8 +28591,8 @@
             "key.line" : 141,
             "key.name" : "edges(_:excludingEdge:)",
             "key.namelength" : 99,
-            "key.nameoffset" : 3877,
-            "key.offset" : 3872,
+            "key.nameoffset" : 3879,
+            "key.offset" : 3874,
             "key.parsed_declaration" : "public func edges(_ insets: UIEdgeInsets = UIEdgeInsets.zero, excludingEdge edge: NSLayoutConstraint.Attribute) -> FWLayoutChain",
             "key.parsed_scope.end" : 144,
             "key.parsed_scope.start" : 141,
@@ -28325,16 +28615,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4121
+                "key.offset" : 4123
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4098
+                "key.offset" : 4100
               }
             ],
             "key.bodylength" : 73,
-            "key.bodyoffset" : 4169,
+            "key.bodyoffset" : 4171,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28344,8 +28634,8 @@
             "key.line" : 147,
             "key.name" : "edgesHorizontal()",
             "key.namelength" : 17,
-            "key.nameoffset" : 4133,
-            "key.offset" : 4128,
+            "key.nameoffset" : 4135,
+            "key.offset" : 4130,
             "key.parsed_declaration" : "public func edgesHorizontal() -> FWLayoutChain",
             "key.parsed_scope.end" : 150,
             "key.parsed_scope.start" : 147,
@@ -28363,16 +28653,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4272
+                "key.offset" : 4274
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4249
+                "key.offset" : 4251
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 4318,
+            "key.bodyoffset" : 4320,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28382,8 +28672,8 @@
             "key.line" : 153,
             "key.name" : "edgesVertical()",
             "key.namelength" : 15,
-            "key.nameoffset" : 4284,
-            "key.offset" : 4279,
+            "key.nameoffset" : 4286,
+            "key.offset" : 4281,
             "key.parsed_declaration" : "public func edgesVertical() -> FWLayoutChain",
             "key.parsed_scope.end" : 156,
             "key.parsed_scope.start" : 153,
@@ -28401,16 +28691,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4419
+                "key.offset" : 4421
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4396
+                "key.offset" : 4398
               }
             ],
             "key.bodylength" : 86,
-            "key.bodyoffset" : 4475,
+            "key.bodyoffset" : 4477,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28420,8 +28710,8 @@
             "key.line" : 159,
             "key.name" : "top(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 4431,
-            "key.offset" : 4426,
+            "key.nameoffset" : 4433,
+            "key.offset" : 4428,
             "key.parsed_declaration" : "public func top(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 162,
             "key.parsed_scope.start" : 159,
@@ -28444,16 +28734,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4595
+                "key.offset" : 4597
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4572
+                "key.offset" : 4574
               }
             ],
             "key.bodylength" : 106,
-            "key.bodyoffset" : 4690,
+            "key.bodyoffset" : 4692,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28463,8 +28753,8 @@
             "key.line" : 165,
             "key.name" : "top(_:relation:)",
             "key.namelength" : 64,
-            "key.nameoffset" : 4607,
-            "key.offset" : 4602,
+            "key.nameoffset" : 4609,
+            "key.offset" : 4604,
             "key.parsed_declaration" : "public func top(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 168,
             "key.parsed_scope.start" : 165,
@@ -28487,16 +28777,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4826
+                "key.offset" : 4828
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4803
+                "key.offset" : 4805
               }
             ],
             "key.bodylength" : 89,
-            "key.bodyoffset" : 4885,
+            "key.bodyoffset" : 4887,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28506,8 +28796,8 @@
             "key.line" : 171,
             "key.name" : "bottom(_:)",
             "key.namelength" : 28,
-            "key.nameoffset" : 4838,
-            "key.offset" : 4833,
+            "key.nameoffset" : 4840,
+            "key.offset" : 4835,
             "key.parsed_declaration" : "public func bottom(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 174,
             "key.parsed_scope.start" : 171,
@@ -28530,16 +28820,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5008
+                "key.offset" : 5010
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 4985
+                "key.offset" : 4987
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 5106,
+            "key.bodyoffset" : 5108,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28549,8 +28839,8 @@
             "key.line" : 177,
             "key.name" : "bottom(_:relation:)",
             "key.namelength" : 67,
-            "key.nameoffset" : 5020,
-            "key.offset" : 5015,
+            "key.nameoffset" : 5022,
+            "key.offset" : 5017,
             "key.parsed_declaration" : "public func bottom(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 180,
             "key.parsed_scope.start" : 177,
@@ -28573,16 +28863,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5245
+                "key.offset" : 5247
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 5222
+                "key.offset" : 5224
               }
             ],
             "key.bodylength" : 87,
-            "key.bodyoffset" : 5302,
+            "key.bodyoffset" : 5304,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28592,8 +28882,8 @@
             "key.line" : 183,
             "key.name" : "left(_:)",
             "key.namelength" : 26,
-            "key.nameoffset" : 5257,
-            "key.offset" : 5252,
+            "key.nameoffset" : 5259,
+            "key.offset" : 5254,
             "key.parsed_declaration" : "public func left(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 186,
             "key.parsed_scope.start" : 183,
@@ -28616,16 +28906,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5423
+                "key.offset" : 5425
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 5400
+                "key.offset" : 5402
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 5519,
+            "key.bodyoffset" : 5521,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28635,8 +28925,8 @@
             "key.line" : 189,
             "key.name" : "left(_:relation:)",
             "key.namelength" : 65,
-            "key.nameoffset" : 5435,
-            "key.offset" : 5430,
+            "key.nameoffset" : 5437,
+            "key.offset" : 5432,
             "key.parsed_declaration" : "public func left(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 192,
             "key.parsed_scope.start" : 189,
@@ -28659,16 +28949,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5656
+                "key.offset" : 5658
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 5633
+                "key.offset" : 5635
               }
             ],
             "key.bodylength" : 88,
-            "key.bodyoffset" : 5714,
+            "key.bodyoffset" : 5716,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28678,8 +28968,8 @@
             "key.line" : 195,
             "key.name" : "right(_:)",
             "key.namelength" : 27,
-            "key.nameoffset" : 5668,
-            "key.offset" : 5663,
+            "key.nameoffset" : 5670,
+            "key.offset" : 5665,
             "key.parsed_declaration" : "public func right(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 198,
             "key.parsed_scope.start" : 195,
@@ -28702,16 +28992,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5836
+                "key.offset" : 5838
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 5813
+                "key.offset" : 5815
               }
             ],
             "key.bodylength" : 108,
-            "key.bodyoffset" : 5933,
+            "key.bodyoffset" : 5935,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28721,8 +29011,8 @@
             "key.line" : 201,
             "key.name" : "right(_:relation:)",
             "key.namelength" : 66,
-            "key.nameoffset" : 5848,
-            "key.offset" : 5843,
+            "key.nameoffset" : 5850,
+            "key.offset" : 5845,
             "key.parsed_declaration" : "public func right(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 204,
             "key.parsed_scope.start" : 201,
@@ -28745,16 +29035,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6071
+                "key.offset" : 6073
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 6048
+                "key.offset" : 6050
               }
             ],
             "key.bodylength" : 108,
-            "key.bodyoffset" : 6156,
+            "key.bodyoffset" : 6158,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28764,8 +29054,8 @@
             "key.line" : 207,
             "key.name" : "topToView(_:withOffset:)",
             "key.namelength" : 54,
-            "key.nameoffset" : 6083,
-            "key.offset" : 6078,
+            "key.nameoffset" : 6085,
+            "key.offset" : 6080,
             "key.parsed_declaration" : "public func topToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 210,
             "key.parsed_scope.start" : 207,
@@ -28788,16 +29078,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6298
+                "key.offset" : 6300
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 6275
+                "key.offset" : 6277
               }
             ],
             "key.bodylength" : 128,
-            "key.bodyoffset" : 6422,
+            "key.bodyoffset" : 6424,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28807,8 +29097,8 @@
             "key.line" : 213,
             "key.name" : "topToView(_:withOffset:relation:)",
             "key.namelength" : 93,
-            "key.nameoffset" : 6310,
-            "key.offset" : 6305,
+            "key.nameoffset" : 6312,
+            "key.offset" : 6307,
             "key.parsed_declaration" : "public func topToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 216,
             "key.parsed_scope.start" : 213,
@@ -28831,16 +29121,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6580
+                "key.offset" : 6582
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 6557
+                "key.offset" : 6559
               }
             ],
             "key.bodylength" : 114,
-            "key.bodyoffset" : 6668,
+            "key.bodyoffset" : 6670,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28850,8 +29140,8 @@
             "key.line" : 219,
             "key.name" : "bottomToView(_:withOffset:)",
             "key.namelength" : 57,
-            "key.nameoffset" : 6592,
-            "key.offset" : 6587,
+            "key.nameoffset" : 6594,
+            "key.offset" : 6589,
             "key.parsed_declaration" : "public func bottomToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 222,
             "key.parsed_scope.start" : 219,
@@ -28874,16 +29164,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6816
+                "key.offset" : 6818
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 6793
+                "key.offset" : 6795
               }
             ],
             "key.bodylength" : 134,
-            "key.bodyoffset" : 6943,
+            "key.bodyoffset" : 6945,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28893,8 +29183,8 @@
             "key.line" : 225,
             "key.name" : "bottomToView(_:withOffset:relation:)",
             "key.namelength" : 96,
-            "key.nameoffset" : 6828,
-            "key.offset" : 6823,
+            "key.nameoffset" : 6830,
+            "key.offset" : 6825,
             "key.parsed_declaration" : "public func bottomToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 228,
             "key.parsed_scope.start" : 225,
@@ -28917,16 +29207,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7107
+                "key.offset" : 7109
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 7084
+                "key.offset" : 7086
               }
             ],
             "key.bodylength" : 110,
-            "key.bodyoffset" : 7193,
+            "key.bodyoffset" : 7195,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28936,8 +29226,8 @@
             "key.line" : 231,
             "key.name" : "leftToView(_:withOffset:)",
             "key.namelength" : 55,
-            "key.nameoffset" : 7119,
-            "key.offset" : 7114,
+            "key.nameoffset" : 7121,
+            "key.offset" : 7116,
             "key.parsed_declaration" : "public func leftToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 234,
             "key.parsed_scope.start" : 231,
@@ -28960,16 +29250,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7337
+                "key.offset" : 7339
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 7314
+                "key.offset" : 7316
               }
             ],
             "key.bodylength" : 130,
-            "key.bodyoffset" : 7462,
+            "key.bodyoffset" : 7464,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -28979,8 +29269,8 @@
             "key.line" : 237,
             "key.name" : "leftToView(_:withOffset:relation:)",
             "key.namelength" : 94,
-            "key.nameoffset" : 7349,
-            "key.offset" : 7344,
+            "key.nameoffset" : 7351,
+            "key.offset" : 7346,
             "key.parsed_declaration" : "public func leftToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 240,
             "key.parsed_scope.start" : 237,
@@ -29003,16 +29293,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7622
+                "key.offset" : 7624
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 7599
+                "key.offset" : 7601
               }
             ],
             "key.bodylength" : 112,
-            "key.bodyoffset" : 7709,
+            "key.bodyoffset" : 7711,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29022,8 +29312,8 @@
             "key.line" : 243,
             "key.name" : "rightToView(_:withOffset:)",
             "key.namelength" : 56,
-            "key.nameoffset" : 7634,
-            "key.offset" : 7629,
+            "key.nameoffset" : 7636,
+            "key.offset" : 7631,
             "key.parsed_declaration" : "public func rightToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 246,
             "key.parsed_scope.start" : 243,
@@ -29046,16 +29336,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7855
+                "key.offset" : 7857
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 7832
+                "key.offset" : 7834
               }
             ],
             "key.bodylength" : 132,
-            "key.bodyoffset" : 7981,
+            "key.bodyoffset" : 7983,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29065,8 +29355,8 @@
             "key.line" : 249,
             "key.name" : "rightToView(_:withOffset:relation:)",
             "key.namelength" : 95,
-            "key.nameoffset" : 7867,
-            "key.offset" : 7862,
+            "key.nameoffset" : 7869,
+            "key.offset" : 7864,
             "key.parsed_declaration" : "public func rightToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 252,
             "key.parsed_scope.start" : 249,
@@ -29089,16 +29379,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8143
+                "key.offset" : 8145
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8120
+                "key.offset" : 8122
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 8236,
+            "key.bodyoffset" : 8238,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29108,8 +29398,8 @@
             "key.line" : 255,
             "key.name" : "topToBottomOfView(_:withOffset:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 8155,
-            "key.offset" : 8150,
+            "key.nameoffset" : 8157,
+            "key.offset" : 8152,
             "key.parsed_declaration" : "public func topToBottomOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 258,
             "key.parsed_scope.start" : 255,
@@ -29132,16 +29422,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8381
+                "key.offset" : 8383
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8358
+                "key.offset" : 8360
               }
             ],
             "key.bodylength" : 131,
-            "key.bodyoffset" : 8513,
+            "key.bodyoffset" : 8515,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29151,8 +29441,8 @@
             "key.line" : 261,
             "key.name" : "topToBottomOfView(_:withOffset:relation:)",
             "key.namelength" : 101,
-            "key.nameoffset" : 8393,
-            "key.offset" : 8388,
+            "key.nameoffset" : 8395,
+            "key.offset" : 8390,
             "key.parsed_declaration" : "public func topToBottomOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 264,
             "key.parsed_scope.start" : 261,
@@ -29175,16 +29465,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8678
+                "key.offset" : 8680
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8655
+                "key.offset" : 8657
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 8771,
+            "key.bodyoffset" : 8773,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29194,8 +29484,8 @@
             "key.line" : 267,
             "key.name" : "bottomToTopOfView(_:withOffset:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 8690,
-            "key.offset" : 8685,
+            "key.nameoffset" : 8692,
+            "key.offset" : 8687,
             "key.parsed_declaration" : "public func bottomToTopOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 270,
             "key.parsed_scope.start" : 267,
@@ -29218,16 +29508,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8912
+                "key.offset" : 8914
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8889
+                "key.offset" : 8891
               }
             ],
             "key.bodylength" : 131,
-            "key.bodyoffset" : 9044,
+            "key.bodyoffset" : 9046,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29237,8 +29527,8 @@
             "key.line" : 273,
             "key.name" : "bottomToTopOfView(_:withOffset:relation:)",
             "key.namelength" : 101,
-            "key.nameoffset" : 8924,
-            "key.offset" : 8919,
+            "key.nameoffset" : 8926,
+            "key.offset" : 8921,
             "key.parsed_declaration" : "public func bottomToTopOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 276,
             "key.parsed_scope.start" : 273,
@@ -29261,16 +29551,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9205
+                "key.offset" : 9207
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 9182
+                "key.offset" : 9184
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 9298,
+            "key.bodyoffset" : 9300,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29280,8 +29570,8 @@
             "key.line" : 279,
             "key.name" : "leftToRightOfView(_:withOffset:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 9217,
-            "key.offset" : 9212,
+            "key.nameoffset" : 9219,
+            "key.offset" : 9214,
             "key.parsed_declaration" : "public func leftToRightOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 282,
             "key.parsed_scope.start" : 279,
@@ -29304,16 +29594,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9443
+                "key.offset" : 9445
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 9420
+                "key.offset" : 9422
               }
             ],
             "key.bodylength" : 131,
-            "key.bodyoffset" : 9575,
+            "key.bodyoffset" : 9577,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29323,8 +29613,8 @@
             "key.line" : 285,
             "key.name" : "leftToRightOfView(_:withOffset:relation:)",
             "key.namelength" : 101,
-            "key.nameoffset" : 9455,
-            "key.offset" : 9450,
+            "key.nameoffset" : 9457,
+            "key.offset" : 9452,
             "key.parsed_declaration" : "public func leftToRightOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 288,
             "key.parsed_scope.start" : 285,
@@ -29347,16 +29637,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9740
+                "key.offset" : 9742
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 9717
+                "key.offset" : 9719
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 9833,
+            "key.bodyoffset" : 9835,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29366,8 +29656,8 @@
             "key.line" : 291,
             "key.name" : "rightToLeftOfView(_:withOffset:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 9752,
-            "key.offset" : 9747,
+            "key.nameoffset" : 9754,
+            "key.offset" : 9749,
             "key.parsed_declaration" : "public func rightToLeftOfView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 294,
             "key.parsed_scope.start" : 291,
@@ -29390,16 +29680,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9974
+                "key.offset" : 9976
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 9951
+                "key.offset" : 9953
               }
             ],
             "key.bodylength" : 131,
-            "key.bodyoffset" : 10106,
+            "key.bodyoffset" : 10108,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29409,8 +29699,8 @@
             "key.line" : 297,
             "key.name" : "rightToLeftOfView(_:withOffset:relation:)",
             "key.namelength" : 101,
-            "key.nameoffset" : 9986,
-            "key.offset" : 9981,
+            "key.nameoffset" : 9988,
+            "key.offset" : 9983,
             "key.parsed_declaration" : "public func rightToLeftOfView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 300,
             "key.parsed_scope.start" : 297,
@@ -29432,7 +29722,7 @@
             "key.name" : "MARK: - SafeArea",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 10247
+            "key.offset" : 10249
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -29441,16 +29731,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10292
+                "key.offset" : 10294
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 10269
+                "key.offset" : 10271
               }
             ],
             "key.bodylength" : 92,
-            "key.bodyoffset" : 10373,
+            "key.bodyoffset" : 10375,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29460,8 +29750,8 @@
             "key.line" : 305,
             "key.name" : "centerToSafeArea(_:)",
             "key.namelength" : 50,
-            "key.nameoffset" : 10304,
-            "key.offset" : 10299,
+            "key.nameoffset" : 10306,
+            "key.offset" : 10301,
             "key.parsed_declaration" : "public func centerToSafeArea(_ offset: CGPoint = CGPoint.zero) -> FWLayoutChain",
             "key.parsed_scope.end" : 308,
             "key.parsed_scope.start" : 305,
@@ -29479,16 +29769,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10495
+                "key.offset" : 10497
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 10472
+                "key.offset" : 10474
               }
             ],
             "key.bodylength" : 102,
-            "key.bodyoffset" : 10566,
+            "key.bodyoffset" : 10568,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29498,8 +29788,8 @@
             "key.line" : 311,
             "key.name" : "centerXToSafeArea(_:)",
             "key.namelength" : 40,
-            "key.nameoffset" : 10507,
-            "key.offset" : 10502,
+            "key.nameoffset" : 10509,
+            "key.offset" : 10504,
             "key.parsed_declaration" : "public func centerXToSafeArea(_ offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 314,
             "key.parsed_scope.start" : 311,
@@ -29517,16 +29807,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10698
+                "key.offset" : 10700
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 10675
+                "key.offset" : 10677
               }
             ],
             "key.bodylength" : 102,
-            "key.bodyoffset" : 10769,
+            "key.bodyoffset" : 10771,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29536,8 +29826,8 @@
             "key.line" : 317,
             "key.name" : "centerYToSafeArea(_:)",
             "key.namelength" : 40,
-            "key.nameoffset" : 10710,
-            "key.offset" : 10705,
+            "key.nameoffset" : 10712,
+            "key.offset" : 10707,
             "key.parsed_declaration" : "public func centerYToSafeArea(_ offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 320,
             "key.parsed_scope.start" : 317,
@@ -29555,16 +29845,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10901
+                "key.offset" : 10903
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 10878
+                "key.offset" : 10880
               }
             ],
             "key.bodylength" : 83,
-            "key.bodyoffset" : 10991,
+            "key.bodyoffset" : 10993,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29574,8 +29864,8 @@
             "key.line" : 323,
             "key.name" : "edgesToSafeArea(_:)",
             "key.namelength" : 59,
-            "key.nameoffset" : 10913,
-            "key.offset" : 10908,
+            "key.nameoffset" : 10915,
+            "key.offset" : 10910,
             "key.parsed_declaration" : "public func edgesToSafeArea(_ insets: UIEdgeInsets = UIEdgeInsets.zero) -> FWLayoutChain",
             "key.parsed_scope.end" : 326,
             "key.parsed_scope.start" : 323,
@@ -29598,16 +29888,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11108
+                "key.offset" : 11110
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 11085
+                "key.offset" : 11087
               }
             ],
             "key.bodylength" : 104,
-            "key.bodyoffset" : 11248,
+            "key.bodyoffset" : 11250,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29617,8 +29907,8 @@
             "key.line" : 329,
             "key.name" : "edgesToSafeArea(_:excludingEdge:)",
             "key.namelength" : 109,
-            "key.nameoffset" : 11120,
-            "key.offset" : 11115,
+            "key.nameoffset" : 11122,
+            "key.offset" : 11117,
             "key.parsed_declaration" : "public func edgesToSafeArea(_ insets: UIEdgeInsets = UIEdgeInsets.zero, excludingEdge edge: NSLayoutConstraint.Attribute) -> FWLayoutChain",
             "key.parsed_scope.end" : 332,
             "key.parsed_scope.start" : 329,
@@ -29641,16 +29931,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11382
+                "key.offset" : 11384
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 11359
+                "key.offset" : 11361
               }
             ],
             "key.bodylength" : 81,
-            "key.bodyoffset" : 11440,
+            "key.bodyoffset" : 11442,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29660,8 +29950,8 @@
             "key.line" : 335,
             "key.name" : "edgesToSafeAreaHorizontal()",
             "key.namelength" : 27,
-            "key.nameoffset" : 11394,
-            "key.offset" : 11389,
+            "key.nameoffset" : 11396,
+            "key.offset" : 11391,
             "key.parsed_declaration" : "public func edgesToSafeAreaHorizontal() -> FWLayoutChain",
             "key.parsed_scope.end" : 338,
             "key.parsed_scope.start" : 335,
@@ -29679,16 +29969,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11551
+                "key.offset" : 11553
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 11528
+                "key.offset" : 11530
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 11607,
+            "key.bodyoffset" : 11609,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29698,8 +29988,8 @@
             "key.line" : 341,
             "key.name" : "edgesToSafeAreaVertical()",
             "key.namelength" : 25,
-            "key.nameoffset" : 11563,
-            "key.offset" : 11558,
+            "key.nameoffset" : 11565,
+            "key.offset" : 11560,
             "key.parsed_declaration" : "public func edgesToSafeAreaVertical() -> FWLayoutChain",
             "key.parsed_scope.end" : 344,
             "key.parsed_scope.start" : 341,
@@ -29717,16 +30007,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11716
+                "key.offset" : 11718
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 11693
+                "key.offset" : 11695
               }
             ],
             "key.bodylength" : 94,
-            "key.bodyoffset" : 11782,
+            "key.bodyoffset" : 11784,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29736,8 +30026,8 @@
             "key.line" : 347,
             "key.name" : "topToSafeArea(_:)",
             "key.namelength" : 35,
-            "key.nameoffset" : 11728,
-            "key.offset" : 11723,
+            "key.nameoffset" : 11730,
+            "key.offset" : 11725,
             "key.parsed_declaration" : "public func topToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 350,
             "key.parsed_scope.start" : 347,
@@ -29760,16 +30050,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11910
+                "key.offset" : 11912
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 11887
+                "key.offset" : 11889
               }
             ],
             "key.bodylength" : 114,
-            "key.bodyoffset" : 12015,
+            "key.bodyoffset" : 12017,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29779,8 +30069,8 @@
             "key.line" : 353,
             "key.name" : "topToSafeArea(_:relation:)",
             "key.namelength" : 74,
-            "key.nameoffset" : 11922,
-            "key.offset" : 11917,
+            "key.nameoffset" : 11924,
+            "key.offset" : 11919,
             "key.parsed_declaration" : "public func topToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 356,
             "key.parsed_scope.start" : 353,
@@ -29803,16 +30093,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12163
+                "key.offset" : 12165
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 12140
+                "key.offset" : 12142
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 12232,
+            "key.bodyoffset" : 12234,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29822,8 +30112,8 @@
             "key.line" : 359,
             "key.name" : "bottomToSafeArea(_:)",
             "key.namelength" : 38,
-            "key.nameoffset" : 12175,
-            "key.offset" : 12170,
+            "key.nameoffset" : 12177,
+            "key.offset" : 12172,
             "key.parsed_declaration" : "public func bottomToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 362,
             "key.parsed_scope.start" : 359,
@@ -29846,16 +30136,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12359
+                "key.offset" : 12361
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 12336
+                "key.offset" : 12338
               }
             ],
             "key.bodylength" : 117,
-            "key.bodyoffset" : 12467,
+            "key.bodyoffset" : 12469,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29865,8 +30155,8 @@
             "key.line" : 365,
             "key.name" : "bottomToSafeArea(_:relation:)",
             "key.namelength" : 77,
-            "key.nameoffset" : 12371,
-            "key.offset" : 12366,
+            "key.nameoffset" : 12373,
+            "key.offset" : 12368,
             "key.parsed_declaration" : "public func bottomToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 368,
             "key.parsed_scope.start" : 365,
@@ -29889,16 +30179,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12614
+                "key.offset" : 12616
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 12591
+                "key.offset" : 12593
               }
             ],
             "key.bodylength" : 95,
-            "key.bodyoffset" : 12681,
+            "key.bodyoffset" : 12683,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29908,8 +30198,8 @@
             "key.line" : 371,
             "key.name" : "leftToSafeArea(_:)",
             "key.namelength" : 36,
-            "key.nameoffset" : 12626,
-            "key.offset" : 12621,
+            "key.nameoffset" : 12628,
+            "key.offset" : 12623,
             "key.parsed_declaration" : "public func leftToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 374,
             "key.parsed_scope.start" : 371,
@@ -29932,16 +30222,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12810
+                "key.offset" : 12812
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 12787
+                "key.offset" : 12789
               }
             ],
             "key.bodylength" : 115,
-            "key.bodyoffset" : 12916,
+            "key.bodyoffset" : 12918,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29951,8 +30241,8 @@
             "key.line" : 377,
             "key.name" : "leftToSafeArea(_:relation:)",
             "key.namelength" : 75,
-            "key.nameoffset" : 12822,
-            "key.offset" : 12817,
+            "key.nameoffset" : 12824,
+            "key.offset" : 12819,
             "key.parsed_declaration" : "public func leftToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 380,
             "key.parsed_scope.start" : 377,
@@ -29975,16 +30265,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13065
+                "key.offset" : 13067
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 13042
+                "key.offset" : 13044
               }
             ],
             "key.bodylength" : 96,
-            "key.bodyoffset" : 13133,
+            "key.bodyoffset" : 13135,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -29994,8 +30284,8 @@
             "key.line" : 383,
             "key.name" : "rightToSafeArea(_:)",
             "key.namelength" : 37,
-            "key.nameoffset" : 13077,
-            "key.offset" : 13072,
+            "key.nameoffset" : 13079,
+            "key.offset" : 13074,
             "key.parsed_declaration" : "public func rightToSafeArea(_ inset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 386,
             "key.parsed_scope.start" : 383,
@@ -30018,16 +30308,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13259
+                "key.offset" : 13261
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 13236
+                "key.offset" : 13238
               }
             ],
             "key.bodylength" : 116,
-            "key.bodyoffset" : 13366,
+            "key.bodyoffset" : 13368,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30037,8 +30327,8 @@
             "key.line" : 389,
             "key.name" : "rightToSafeArea(_:relation:)",
             "key.namelength" : 76,
-            "key.nameoffset" : 13271,
-            "key.offset" : 13266,
+            "key.nameoffset" : 13273,
+            "key.offset" : 13268,
             "key.parsed_declaration" : "public func rightToSafeArea(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 392,
             "key.parsed_scope.start" : 389,
@@ -30060,7 +30350,7 @@
             "key.name" : "MARK: - Dimension",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 13492
+            "key.offset" : 13494
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -30069,16 +30359,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13538
+                "key.offset" : 13540
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 13515
+                "key.offset" : 13517
               }
             ],
             "key.bodylength" : 65,
-            "key.bodyoffset" : 13589,
+            "key.bodyoffset" : 13591,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30088,8 +30378,8 @@
             "key.line" : 397,
             "key.name" : "size(_:)",
             "key.namelength" : 20,
-            "key.nameoffset" : 13550,
-            "key.offset" : 13545,
+            "key.nameoffset" : 13552,
+            "key.offset" : 13547,
             "key.parsed_declaration" : "public func size(_ size: CGSize) -> FWLayoutChain",
             "key.parsed_scope.end" : 400,
             "key.parsed_scope.start" : 397,
@@ -30107,16 +30397,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13684
+                "key.offset" : 13686
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 13661
+                "key.offset" : 13663
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 13813,
+            "key.bodyoffset" : 13815,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30126,8 +30416,8 @@
             "key.line" : 403,
             "key.name" : "width(_:relation:)",
             "key.namelength" : 98,
-            "key.nameoffset" : 13696,
-            "key.offset" : 13691,
+            "key.nameoffset" : 13698,
+            "key.offset" : 13693,
             "key.parsed_declaration" : "public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 406,
             "key.parsed_scope.start" : 403,
@@ -30145,16 +30435,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13940
+                "key.offset" : 13942
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 13917
+                "key.offset" : 13919
               }
             ],
             "key.bodylength" : 99,
-            "key.bodyoffset" : 14071,
+            "key.bodyoffset" : 14073,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30164,8 +30454,8 @@
             "key.line" : 409,
             "key.name" : "height(_:relation:)",
             "key.namelength" : 100,
-            "key.nameoffset" : 13952,
-            "key.offset" : 13947,
+            "key.nameoffset" : 13954,
+            "key.offset" : 13949,
             "key.parsed_declaration" : "public func height(_ height: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 412,
             "key.parsed_scope.start" : 409,
@@ -30183,16 +30473,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14204
+                "key.offset" : 14206
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 14181
+                "key.offset" : 14183
               }
             ],
             "key.bodylength" : 134,
-            "key.bodyoffset" : 14346,
+            "key.bodyoffset" : 14348,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30202,8 +30492,8 @@
             "key.line" : 415,
             "key.name" : "widthToHeight(_:relation:)",
             "key.namelength" : 111,
-            "key.nameoffset" : 14216,
-            "key.offset" : 14211,
+            "key.nameoffset" : 14218,
+            "key.offset" : 14213,
             "key.parsed_declaration" : "public func widthToHeight(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 418,
             "key.parsed_scope.start" : 415,
@@ -30221,16 +30511,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14514
+                "key.offset" : 14516
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 14491
+                "key.offset" : 14493
               }
             ],
             "key.bodylength" : 134,
-            "key.bodyoffset" : 14656,
+            "key.bodyoffset" : 14658,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30240,8 +30530,8 @@
             "key.line" : 421,
             "key.name" : "heightToWidth(_:relation:)",
             "key.namelength" : 111,
-            "key.nameoffset" : 14526,
-            "key.offset" : 14521,
+            "key.nameoffset" : 14528,
+            "key.offset" : 14523,
             "key.parsed_declaration" : "public func heightToWidth(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 424,
             "key.parsed_scope.start" : 421,
@@ -30259,16 +30549,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14820
+                "key.offset" : 14822
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 14797
+                "key.offset" : 14799
               }
             ],
             "key.bodylength" : 185,
-            "key.bodyoffset" : 14874,
+            "key.bodyoffset" : 14876,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30278,8 +30568,8 @@
             "key.line" : 427,
             "key.name" : "sizeToView(_:)",
             "key.namelength" : 23,
-            "key.nameoffset" : 14832,
-            "key.offset" : 14827,
+            "key.nameoffset" : 14834,
+            "key.offset" : 14829,
             "key.parsed_declaration" : "public func sizeToView(_ view: Any) -> FWLayoutChain",
             "key.parsed_scope.end" : 431,
             "key.parsed_scope.start" : 427,
@@ -30297,16 +30587,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15089
+                "key.offset" : 15091
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 15066
+                "key.offset" : 15068
               }
             ],
             "key.bodylength" : 124,
-            "key.bodyoffset" : 15176,
+            "key.bodyoffset" : 15178,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30316,8 +30606,8 @@
             "key.line" : 434,
             "key.name" : "widthToView(_:withOffset:)",
             "key.namelength" : 56,
-            "key.nameoffset" : 15101,
-            "key.offset" : 15096,
+            "key.nameoffset" : 15103,
+            "key.offset" : 15098,
             "key.parsed_declaration" : "public func widthToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 437,
             "key.parsed_scope.start" : 434,
@@ -30343,16 +30633,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15334
+                "key.offset" : 15336
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 15311
+                "key.offset" : 15313
               }
             ],
             "key.bodylength" : 144,
-            "key.bodyoffset" : 15460,
+            "key.bodyoffset" : 15462,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30362,8 +30652,8 @@
             "key.line" : 440,
             "key.name" : "widthToView(_:withOffset:relation:)",
             "key.namelength" : 95,
-            "key.nameoffset" : 15346,
-            "key.offset" : 15341,
+            "key.nameoffset" : 15348,
+            "key.offset" : 15343,
             "key.parsed_declaration" : "public func widthToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 443,
             "key.parsed_scope.start" : 440,
@@ -30389,16 +30679,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15638
+                "key.offset" : 15640
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 15615
+                "key.offset" : 15617
               }
             ],
             "key.bodylength" : 126,
-            "key.bodyoffset" : 15726,
+            "key.bodyoffset" : 15728,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30408,8 +30698,8 @@
             "key.line" : 446,
             "key.name" : "heightToView(_:withOffset:)",
             "key.namelength" : 57,
-            "key.nameoffset" : 15650,
-            "key.offset" : 15645,
+            "key.nameoffset" : 15652,
+            "key.offset" : 15647,
             "key.parsed_declaration" : "public func heightToView(_ view: Any, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 449,
             "key.parsed_scope.start" : 446,
@@ -30435,16 +30725,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15882
+                "key.offset" : 15884
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 15859
+                "key.offset" : 15861
               }
             ],
             "key.bodylength" : 146,
-            "key.bodyoffset" : 16009,
+            "key.bodyoffset" : 16011,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30454,8 +30744,8 @@
             "key.line" : 452,
             "key.name" : "heightToView(_:withOffset:relation:)",
             "key.namelength" : 96,
-            "key.nameoffset" : 15894,
-            "key.offset" : 15889,
+            "key.nameoffset" : 15896,
+            "key.offset" : 15891,
             "key.parsed_declaration" : "public func heightToView(_ view: Any, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 455,
             "key.parsed_scope.start" : 452,
@@ -30481,16 +30771,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16185
+                "key.offset" : 16187
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 16162
+                "key.offset" : 16164
               }
             ],
             "key.bodylength" : 152,
-            "key.bodyoffset" : 16351,
+            "key.bodyoffset" : 16353,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30500,8 +30790,8 @@
             "key.line" : 458,
             "key.name" : "widthToView(_:withMultiplier:relation:)",
             "key.namelength" : 135,
-            "key.nameoffset" : 16197,
-            "key.offset" : 16192,
+            "key.nameoffset" : 16199,
+            "key.offset" : 16194,
             "key.parsed_declaration" : "public func widthToView(_ view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 461,
             "key.parsed_scope.start" : 458,
@@ -30527,16 +30817,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16533
+                "key.offset" : 16535
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 16510
+                "key.offset" : 16512
               }
             ],
             "key.bodylength" : 154,
-            "key.bodyoffset" : 16700,
+            "key.bodyoffset" : 16702,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30546,8 +30836,8 @@
             "key.line" : 464,
             "key.name" : "heightToView(_:withMultiplier:relation:)",
             "key.namelength" : 136,
-            "key.nameoffset" : 16545,
-            "key.offset" : 16540,
+            "key.nameoffset" : 16547,
+            "key.offset" : 16542,
             "key.parsed_declaration" : "public func heightToView(_ view: Any, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 467,
             "key.parsed_scope.start" : 464,
@@ -30572,7 +30862,7 @@
             "key.name" : "MARK: - Attribute",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 16864
+            "key.offset" : 16866
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -30581,16 +30871,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16910
+                "key.offset" : 16912
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 16887
+                "key.offset" : 16889
               }
             ],
             "key.bodylength" : 127,
-            "key.bodyoffset" : 17087,
+            "key.bodyoffset" : 17089,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30600,8 +30890,8 @@
             "key.line" : 472,
             "key.name" : "attribute(_:toAttribute:ofView:withOffset:)",
             "key.namelength" : 146,
-            "key.nameoffset" : 16922,
-            "key.offset" : 16917,
+            "key.nameoffset" : 16924,
+            "key.offset" : 16919,
             "key.parsed_declaration" : "public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withOffset offset: CGFloat = 0) -> FWLayoutChain",
             "key.parsed_scope.end" : 475,
             "key.parsed_scope.start" : 472,
@@ -30627,16 +30917,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17248
+                "key.offset" : 17250
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 17225
+                "key.offset" : 17227
               }
             ],
             "key.bodylength" : 147,
-            "key.bodyoffset" : 17464,
+            "key.bodyoffset" : 17466,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30646,8 +30936,8 @@
             "key.line" : 478,
             "key.name" : "attribute(_:toAttribute:ofView:withOffset:relation:)",
             "key.namelength" : 185,
-            "key.nameoffset" : 17260,
-            "key.offset" : 17255,
+            "key.nameoffset" : 17262,
+            "key.offset" : 17257,
             "key.parsed_declaration" : "public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withOffset offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> FWLayoutChain",
             "key.parsed_scope.end" : 481,
             "key.parsed_scope.start" : 478,
@@ -30673,16 +30963,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17641
+                "key.offset" : 17643
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 17618
+                "key.offset" : 17620
               }
             ],
             "key.bodylength" : 155,
-            "key.bodyoffset" : 17897,
+            "key.bodyoffset" : 17899,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30692,8 +30982,8 @@
             "key.line" : 484,
             "key.name" : "attribute(_:toAttribute:ofView:withMultiplier:relation:)",
             "key.namelength" : 225,
-            "key.nameoffset" : 17653,
-            "key.offset" : 17648,
+            "key.nameoffset" : 17655,
+            "key.offset" : 17650,
             "key.parsed_declaration" : "public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> FWLayoutChain",
             "key.parsed_scope.end" : 487,
             "key.parsed_scope.start" : 484,
@@ -30718,7 +31008,7 @@
             "key.name" : "MARK: - Constraint",
             "key.namelength" : 0,
             "key.nameoffset" : 0,
-            "key.offset" : 18066
+            "key.offset" : 18068
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -30727,11 +31017,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18094
+                "key.offset" : 18096
               }
             ],
             "key.bodylength" : 48,
-            "key.bodyoffset" : 18138,
+            "key.bodyoffset" : 18140,
             "key.column" : 16,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30741,8 +31031,8 @@
             "key.line" : 491,
             "key.name" : "constraint",
             "key.namelength" : 10,
-            "key.nameoffset" : 18105,
-            "key.offset" : 18101,
+            "key.nameoffset" : 18107,
+            "key.offset" : 18103,
             "key.parsed_declaration" : "public var constraint: NSLayoutConstraint?",
             "key.parsed_scope.end" : 493,
             "key.parsed_scope.start" : 491,
@@ -30768,11 +31058,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18197
+                "key.offset" : 18199
               }
             ],
             "key.bodylength" : 88,
-            "key.bodyoffset" : 18362,
+            "key.bodyoffset" : 18364,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30782,8 +31072,8 @@
             "key.line" : 495,
             "key.name" : "constraint(_:relation:)",
             "key.namelength" : 128,
-            "key.nameoffset" : 18209,
-            "key.offset" : 18204,
+            "key.nameoffset" : 18211,
+            "key.offset" : 18206,
             "key.parsed_declaration" : "public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint?",
             "key.parsed_scope.end" : 497,
             "key.parsed_scope.start" : 495,
@@ -30812,11 +31102,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18461
+                "key.offset" : 18463
               }
             ],
             "key.bodylength" : 96,
-            "key.bodyoffset" : 18636,
+            "key.bodyoffset" : 18638,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30826,8 +31116,8 @@
             "key.line" : 499,
             "key.name" : "constraintToSafeArea(_:relation:)",
             "key.namelength" : 138,
-            "key.nameoffset" : 18473,
-            "key.offset" : 18468,
+            "key.nameoffset" : 18475,
+            "key.offset" : 18470,
             "key.parsed_declaration" : "public func constraintToSafeArea(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint?",
             "key.parsed_scope.end" : 501,
             "key.parsed_scope.start" : 499,
@@ -30845,11 +31135,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18739
+                "key.offset" : 18741
               }
             ],
             "key.bodylength" : 106,
-            "key.bodyoffset" : 18966,
+            "key.bodyoffset" : 18968,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30859,8 +31149,8 @@
             "key.line" : 503,
             "key.name" : "constraint(_:toAttribute:ofView:relation:)",
             "key.namelength" : 190,
-            "key.nameoffset" : 18751,
-            "key.offset" : 18746,
+            "key.nameoffset" : 18753,
+            "key.offset" : 18748,
             "key.parsed_declaration" : "public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint?",
             "key.parsed_scope.end" : 505,
             "key.parsed_scope.start" : 503,
@@ -30889,11 +31179,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19083
+                "key.offset" : 19085
               }
             ],
             "key.bodylength" : 134,
-            "key.bodyoffset" : 19346,
+            "key.bodyoffset" : 19348,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
@@ -30903,8 +31193,8 @@
             "key.line" : 507,
             "key.name" : "constraint(_:toAttribute:ofView:withMultiplier:relation:)",
             "key.namelength" : 226,
-            "key.nameoffset" : 19095,
-            "key.offset" : 19090,
+            "key.nameoffset" : 19097,
+            "key.offset" : 19092,
             "key.parsed_declaration" : "public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, withMultiplier multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint?",
             "key.parsed_scope.end" : 509,
             "key.parsed_scope.start" : 507,
@@ -30937,17 +31227,17 @@
         "key.name" : "MARK: - UIView+FWLayoutChain",
         "key.namelength" : 0,
         "key.nameoffset" : 0,
-        "key.offset" : 19488
+        "key.offset" : 19490
       },
       {
         "key.annotated_decl" : "<Declaration>@<Type usr=\"s:ScM\">MainActor<\/Type> class UIView : <Type usr=\"c:objc(cs)UIResponder\">UIResponder<\/Type>, <Type usr=\"c:objc(pl)NSCoding\">NSCoding<\/Type>, <Type usr=\"c:objc(pl)UIAppearance\">UIAppearance<\/Type>, <Type usr=\"c:objc(pl)UIAppearanceContainer\">UIAppearanceContainer<\/Type>, <Type usr=\"c:objc(pl)UIDynamicItem\">UIDynamicItem<\/Type>, <Type usr=\"c:objc(pl)UITraitEnvironment\">UITraitEnvironment<\/Type>, <Type usr=\"c:objc(pl)UICoordinateSpace\">UICoordinateSpace<\/Type>, <Type usr=\"c:objc(pl)UIFocusItem\">UIFocusItem<\/Type>, <Type usr=\"c:objc(pl)UIFocusItemContainer\">UIFocusItemContainer<\/Type>, <Type usr=\"c:objc(pl)CALayerDelegate\">CALayerDelegate<\/Type><\/Declaration>",
         "key.bodylength" : 736,
-        "key.bodyoffset" : 19565,
+        "key.bodyoffset" : 19567,
         "key.column" : 12,
         "key.decl_lang" : "source.lang.objc",
         "key.doc.comment" : "视图链式布局扩展",
         "key.doclength" : 29,
-        "key.docoffset" : 19518,
+        "key.docoffset" : 19520,
         "key.filepath" : "\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS15.2.sdk\/System\/Library\/Frameworks\/UIKit.framework\/Headers\/UIView.h",
         "key.fully_annotated_decl" : "<decl.class><syntaxtype.attribute.builtin><syntaxtype.attribute.name>@<ref.class usr=\"s:ScM\">MainActor<\/ref.class><\/syntaxtype.attribute.name><\/syntaxtype.attribute.builtin> <syntaxtype.keyword>class<\/syntaxtype.keyword> <decl.name>UIView<\/decl.name> : <ref.class usr=\"c:objc(cs)UIResponder\">UIResponder<\/ref.class>, <ref.protocol usr=\"c:objc(pl)NSCoding\">NSCoding<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIAppearance\">UIAppearance<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIAppearanceContainer\">UIAppearanceContainer<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIDynamicItem\">UIDynamicItem<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UITraitEnvironment\">UITraitEnvironment<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UICoordinateSpace\">UICoordinateSpace<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIFocusItem\">UIFocusItem<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)UIFocusItemContainer\">UIFocusItemContainer<\/ref.protocol>, <ref.protocol usr=\"c:objc(pl)CALayerDelegate\">CALayerDelegate<\/ref.protocol><\/decl.class>",
         "key.is_system" : true,
@@ -30957,8 +31247,8 @@
         "key.modulename" : "UIKit.UIView",
         "key.name" : "UIView",
         "key.namelength" : 6,
-        "key.nameoffset" : 19557,
-        "key.offset" : 19547,
+        "key.nameoffset" : 19559,
+        "key.offset" : 19549,
         "key.parsed_declaration" : "extension UIView",
         "key.parsed_scope.end" : 535,
         "key.parsed_scope.start" : 515,
@@ -30970,11 +31260,11 @@
               {
                 "key.attribute" : "source.decl.attribute.private",
                 "key.length" : 7,
-                "key.offset" : 19594
+                "key.offset" : 19596
               }
             ],
             "key.bodylength" : 58,
-            "key.bodyoffset" : 19638,
+            "key.bodyoffset" : 19640,
             "key.column" : 20,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 20,
@@ -30986,7 +31276,7 @@
             "key.doc.name" : "FWLayoutChainAssociatedKeys",
             "key.doc.type" : "Class",
             "key.doclength" : 20,
-            "key.docoffset" : 19570,
+            "key.docoffset" : 19572,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
             "key.fully_annotated_decl" : "<decl.struct><syntaxtype.keyword>private<\/syntaxtype.keyword> <syntaxtype.keyword>struct<\/syntaxtype.keyword> <decl.name>FWLayoutChainAssociatedKeys<\/decl.name><\/decl.struct>",
             "key.kind" : "source.lang.swift.decl.struct",
@@ -30994,8 +31284,8 @@
             "key.line" : 517,
             "key.name" : "FWLayoutChainAssociatedKeys",
             "key.namelength" : 27,
-            "key.nameoffset" : 19609,
-            "key.offset" : 19602,
+            "key.nameoffset" : 19611,
+            "key.offset" : 19604,
             "key.parsed_declaration" : "private struct FWLayoutChainAssociatedKeys",
             "key.parsed_scope.end" : 519,
             "key.parsed_scope.start" : 517,
@@ -31012,8 +31302,8 @@
                 "key.line" : 518,
                 "key.name" : "layoutChainKey",
                 "key.namelength" : 14,
-                "key.nameoffset" : 19658,
-                "key.offset" : 19647,
+                "key.nameoffset" : 19660,
+                "key.offset" : 19649,
                 "key.parsed_declaration" : "static var layoutChainKey = \"layoutChainKey\"",
                 "key.parsed_scope.end" : 518,
                 "key.parsed_scope.start" : 518,
@@ -31034,11 +31324,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19730
+                "key.offset" : 19732
               }
             ],
             "key.bodylength" : 383,
-            "key.bodyoffset" : 19771,
+            "key.bodyoffset" : 19773,
             "key.column" : 16,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 16,
@@ -31050,7 +31340,7 @@
             "key.doc.name" : "fwLayoutChain",
             "key.doc.type" : "Other",
             "key.doclength" : 23,
-            "key.docoffset" : 19703,
+            "key.docoffset" : 19705,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
             "key.fully_annotated_decl" : "<decl.var.instance><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>var<\/syntaxtype.keyword> <decl.name>fwLayoutChain<\/decl.name>: <decl.var.type><ref.class usr=\"s:11FWFramework13FWLayoutChainC\">FWLayoutChain<\/ref.class><\/decl.var.type> { <syntaxtype.keyword>get<\/syntaxtype.keyword> }<\/decl.var.instance>",
             "key.kind" : "source.lang.swift.decl.var.instance",
@@ -31058,8 +31348,8 @@
             "key.line" : 522,
             "key.name" : "fwLayoutChain",
             "key.namelength" : 13,
-            "key.nameoffset" : 19741,
-            "key.offset" : 19737,
+            "key.nameoffset" : 19743,
+            "key.offset" : 19739,
             "key.parsed_declaration" : "public var fwLayoutChain: FWLayoutChain",
             "key.parsed_scope.end" : 529,
             "key.parsed_scope.start" : 522,
@@ -31078,8 +31368,8 @@
             "key.line" : 523,
             "key.name" : "layoutChain",
             "key.namelength" : 11,
-            "key.nameoffset" : 19784,
-            "key.offset" : 19780,
+            "key.nameoffset" : 19786,
+            "key.offset" : 19782,
             "key.parsed_declaration" : "var layoutChain = objc_getAssociatedObject(self, &FWLayoutChainAssociatedKeys.layoutChainKey)",
             "key.parsed_scope.end" : 523,
             "key.parsed_scope.start" : 523,
@@ -31094,11 +31384,11 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20192
+                "key.offset" : 20194
               }
             ],
             "key.bodylength" : 36,
-            "key.bodyoffset" : 20263,
+            "key.bodyoffset" : 20265,
             "key.column" : 17,
             "key.decl_lang" : "source.lang.swift",
             "key.doc.column" : 17,
@@ -31110,7 +31400,7 @@
             "key.doc.name" : "fwLayoutMaker(_:)",
             "key.doc.type" : "Function",
             "key.doclength" : 23,
-            "key.docoffset" : 20165,
+            "key.docoffset" : 20167,
             "key.filepath" : "\/Users\/wuyong\/Documents\/github\/lszzy\/FWFramework\/FWFramework\/Classes\/Module\/Compatible\/Toolkit\/FWAutoLayout.swift",
             "key.fully_annotated_decl" : "<decl.function.method.instance><syntaxtype.keyword>public<\/syntaxtype.keyword> <syntaxtype.keyword>func<\/syntaxtype.keyword> <decl.name>fwLayoutMaker<\/decl.name>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>closure<\/decl.var.parameter.name>: <decl.var.parameter.type>(<decl.var.parameter><decl.var.parameter.argument_label>_<\/decl.var.parameter.argument_label> <decl.var.parameter.name>make<\/decl.var.parameter.name>: <decl.var.parameter.type><ref.class usr=\"s:11FWFramework13FWLayoutChainC\">FWLayoutChain<\/ref.class><\/decl.var.parameter.type><\/decl.var.parameter>) -&gt; <decl.function.returntype><ref.typealias usr=\"s:s4Voida\">Void<\/ref.typealias><\/decl.function.returntype><\/decl.var.parameter.type><\/decl.var.parameter>)<\/decl.function.method.instance>",
             "key.kind" : "source.lang.swift.decl.function.method.instance",
@@ -31118,8 +31408,8 @@
             "key.line" : 532,
             "key.name" : "fwLayoutMaker(_:)",
             "key.namelength" : 57,
-            "key.nameoffset" : 20204,
-            "key.offset" : 20199,
+            "key.nameoffset" : 20206,
+            "key.offset" : 20201,
             "key.parsed_declaration" : "public func fwLayoutMaker(_ closure: (_ make: FWLayoutChain) -> Void)",
             "key.parsed_scope.end" : 534,
             "key.parsed_scope.start" : 532,
