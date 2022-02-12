@@ -16,8 +16,8 @@ import FWFramework
 /// 视图链式布局类。如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
 public class FWLayoutChain {
-    /// weak引用内部视图
-    private weak var view: UIView?
+    /// 布局视图
+    public private(set) weak var view: UIView?
 
     /// 构造方法
     public required init(view: UIView?) {

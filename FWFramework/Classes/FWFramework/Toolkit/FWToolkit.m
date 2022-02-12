@@ -458,12 +458,20 @@ static BOOL fwStaticColorARGB = NO;
 
 #pragma mark - UIFont+FWToolkit
 
+UIFont * FWFontThin(CGFloat size) { return [UIFont fwThinFontOfSize:size]; }
 UIFont * FWFontLight(CGFloat size) { return [UIFont fwLightFontOfSize:size]; }
 UIFont * FWFontRegular(CGFloat size) { return [UIFont fwFontOfSize:size]; }
+UIFont * FWFontMedium(CGFloat size) { return [UIFont fwMediumFontOfSize:size]; }
+UIFont * FWFontSemibold(CGFloat size) { return [UIFont fwSemiboldFontOfSize:size]; }
 UIFont * FWFontBold(CGFloat size) { return [UIFont fwBoldFontOfSize:size]; }
 UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @implementation UIFont (FWToolkit)
+
++ (UIFont *)fwThinFontOfSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size weight:UIFontWeightThin];
+}
 
 + (UIFont *)fwLightFontOfSize:(CGFloat)size
 {
@@ -473,6 +481,16 @@ UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 + (UIFont *)fwFontOfSize:(CGFloat)size
 {
     return [UIFont systemFontOfSize:size];
+}
+
++ (UIFont *)fwMediumFontOfSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size weight:UIFontWeightMedium];
+}
+
++ (UIFont *)fwSemiboldFontOfSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
 }
 
 + (UIFont *)fwBoldFontOfSize:(CGFloat)size

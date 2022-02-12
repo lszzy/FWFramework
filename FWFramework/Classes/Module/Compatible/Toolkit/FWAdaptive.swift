@@ -86,6 +86,27 @@ public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight }
 public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight }
 
 /// 当前屏幕宽度缩放比例
-public var FWScaleFactorWidth: CGFloat { return UIScreen.fwScaleFactorWidth }
+public var FWRelativeScale: CGFloat { return UIScreen.fwRelativeScale }
 /// 当前屏幕高度缩放比例
-public var FWScaleFactorHeight: CGFloat { return UIScreen.fwScaleFactorHeight }
+public var FWRelativeHeightScale: CGFloat { return UIScreen.fwRelativeHeightScale }
+
+/// 获取相对设计图等比例缩放值
+public func FWRelativeValue(_ value: CGFloat) -> CGFloat {
+    return UIScreen.fwRelativeValue(value)
+}
+/// 获取相对设计图等比例缩放size
+public func FWRelativeValue(_ size: CGSize) -> CGSize {
+    return CGSize(width: FWRelativeValue(size.width), height: FWRelativeValue(size.height))
+}
+/// 获取相对设计图等比例缩放point
+public func FWRelativeValue(_ point: CGPoint) -> CGPoint {
+    return CGPoint(x: FWRelativeValue(point.x), y: FWRelativeValue(point.y))
+}
+/// 获取相对设计图等比例缩放rect
+public func FWRelativeValue(_ rect: CGRect) -> CGRect {
+    return CGRect(origin: FWRelativeValue(rect.origin), size: FWRelativeValue(rect.size))
+}
+/// 获取相对设计图等比例缩放insets
+public func FWRelativeValue(_ insets: UIEdgeInsets) -> UIEdgeInsets {
+    return UIEdgeInsets(top: FWRelativeValue(insets.top), left: FWRelativeValue(insets.left), bottom: FWRelativeValue(insets.bottom), right: FWRelativeValue(insets.right))
+}
