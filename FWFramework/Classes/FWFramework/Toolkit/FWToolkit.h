@@ -161,13 +161,14 @@ FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size);
 FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size);
 /// 快速创建Bold字体
 FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
-/// 快速创建斜体字体
-FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
 /**
  UIFont+FWToolkit
  */
 @interface UIFont (FWToolkit)
+
+/// 全局自定义字体句柄，优先调用
+@property (class, nonatomic, copy, nullable) UIFont * (^fwFontBlock)(CGFloat size, UIFontWeight weight);
 
 /// 返回系统Thin字体
 + (UIFont *)fwThinFontOfSize:(CGFloat)size;
@@ -181,8 +182,6 @@ FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 + (UIFont *)fwSemiboldFontOfSize:(CGFloat)size;
 /// 返回系统Bold字体
 + (UIFont *)fwBoldFontOfSize:(CGFloat)size;
-/// 返回系统斜体字体
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size;
 
 /// 创建指定尺寸和weight的系统字体
 + (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
