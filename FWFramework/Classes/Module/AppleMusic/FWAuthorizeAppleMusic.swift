@@ -40,7 +40,7 @@ private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
 }
 
 @objc extension FWAutoloader {
-    private func loadFWAuthorizeAppleMusic() {
+    private func loadAuthorizeAppleMusic() {
         FWAuthorizeManager.registerAuthorize(.appleMusic) {
             return FWAuthorizeAppleMusic()
         }

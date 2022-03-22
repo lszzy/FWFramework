@@ -38,7 +38,7 @@ private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
 }
 
 @objc extension FWAutoloader {
-    private func loadFWAuthorizeMicrophone() {
+    private func loadAuthorizeMicrophone() {
         FWAuthorizeManager.registerAuthorize(.microphone) {
             return FWAuthorizeMicrophone()
         }
