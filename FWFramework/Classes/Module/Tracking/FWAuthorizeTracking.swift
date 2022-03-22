@@ -62,7 +62,7 @@ private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
 }
 
 @objc extension FWAutoloader {
-    private func loadFWAuthorizeTracking() {
+    private func loadAuthorizeTracking() {
         FWAuthorizeManager.registerAuthorize(.tracking) {
             return FWAuthorizeTracking()
         }
