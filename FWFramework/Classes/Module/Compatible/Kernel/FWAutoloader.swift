@@ -45,3 +45,48 @@ public protocol FWAutoloadProtocol {
         return false
     }
 }
+
+/// Swift自动加载扩展，配合FWAutoload方法使用
+@objc extension FWAutoloader: FWAutoloadProtocol {
+    /// 内部自动加载列表
+    private static var autoloadMethods: [String] = []
+    
+    /// 自动加载load开头objc扩展方法
+    ///
+    /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单。
+    /// 使用方法：新增FWAutoloader扩展objc方法，以load开头即会自动调用，建议load+类名+扩展名
+    public static func autoload() {
+        // 获取FWAutoload自动加载方法列表
+        autoloadMethods = []
+        var methodCount: UInt32 = 0
+        if let methods = class_copyMethodList(FWAutoloader.self, &methodCount) {
+            for i in 0 ..< methodCount {
+                let methodName = NSStringFromSelector(method_getName(methods[Int(i)]))
+                if methodName.hasPrefix("load") && !methodName.contains(":") {
+                    autoloadMethods.append(methodName)
+                }
+            }
+            free(methods)
+        }
+        autoloadMethods.sort()
+        
+        // 调用FWAutoloader所有自动加载方法
+        if autoloadMethods.count > 0 {
+            let autoloader = FWAutoloader()
+            for methodName in autoloadMethods {
+                autoloader.perform(NSSelectorFromString(methodName))
+            }
+        }
+    }
+    
+    /// 插件调试描述
+    public override class func debugDescription() -> String {
+        var debugDescription = ""
+        var debugCount = 0
+        for methodName in autoloadMethods {
+            debugCount += 1
+            debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), methodName))
+        }
+        return String(format: "\n========== AUTOLOADER ==========\n%@========== AUTOLOADER ==========", debugDescription)
+    }
+}

@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// 框架对象包装器兼容协议
-@protocol FWCompatible <NSObject>
+/// 框架对象包装器关联协议
+@protocol FWWrapperProtocol <NSObject>
 
 /// 对象包装器属性
 @property (nonatomic, strong, readonly) FWWrapper *fw;
@@ -50,8 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// 框架类包装器兼容协议
-@protocol FWClassCompatible <NSObject>
+/// 框架类包装器关联协议
+@protocol FWClassWrapperProtocol <NSObject>
 
 /// 类包装器属性
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
