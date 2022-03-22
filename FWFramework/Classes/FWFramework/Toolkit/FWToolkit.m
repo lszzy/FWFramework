@@ -464,47 +464,54 @@ UIFont * FWFontRegular(CGFloat size) { return [UIFont fwFontOfSize:size]; }
 UIFont * FWFontMedium(CGFloat size) { return [UIFont fwMediumFontOfSize:size]; }
 UIFont * FWFontSemibold(CGFloat size) { return [UIFont fwSemiboldFontOfSize:size]; }
 UIFont * FWFontBold(CGFloat size) { return [UIFont fwBoldFontOfSize:size]; }
-UIFont * FWFontItalic(CGFloat size) { return [UIFont fwItalicFontOfSize:size]; }
 
 @implementation UIFont (FWToolkit)
 
 + (UIFont *)fwThinFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightThin];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightThin];
 }
 
 + (UIFont *)fwLightFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightLight];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightLight];
 }
 
 + (UIFont *)fwFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:size];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightRegular];
 }
 
 + (UIFont *)fwMediumFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightMedium];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightMedium];
 }
 
 + (UIFont *)fwSemiboldFontOfSize:(CGFloat)size
 {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightSemibold];
 }
 
 + (UIFont *)fwBoldFontOfSize:(CGFloat)size
 {
-    return [UIFont boldSystemFontOfSize:size];
+    return [UIFont fwFontOfSize:size weight:UIFontWeightBold];
 }
 
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size
++ (UIFont * (^)(CGFloat, UIFontWeight))fwFontBlock
 {
-    return [UIFont italicSystemFontOfSize:size];
+    return objc_getAssociatedObject([UIFont class], @selector(fwFontBlock));
+}
+
++ (void)setFwFontBlock:(UIFont * (^)(CGFloat, UIFontWeight))fwFontBlock
+{
+    objc_setAssociatedObject([UIFont class], @selector(fwFontBlock), fwFontBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 + (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight
 {
+    UIFont * (^fontBlock)(CGFloat, UIFontWeight) = UIFont.fwFontBlock;
+    if (fontBlock) return fontBlock(size, weight);
+    
     return [UIFont systemFontOfSize:size weight:weight];
 }
 

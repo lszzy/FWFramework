@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 原始对象，weak引用
 @property (nullable, nonatomic, weak, readonly) ObjectType base;
 
+/// 禁用属性，防止嵌套
+@property (nonatomic, strong, readonly) FWWrapper *fw NS_UNAVAILABLE;
+
 /// 快速创建包装器对象
 + (instancetype)wrapperWithBase:(ObjectType)base;
 
@@ -38,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 原始类
 @property (nonatomic, unsafe_unretained, readonly) Class base;
+
+/// 禁用属性，防止嵌套
+@property (nonatomic, strong, readonly) FWWrapper *fw NS_UNAVAILABLE;
 
 /// 快速创建类包装器对象
 + (instancetype)wrapperWithBase:(Class)base;
