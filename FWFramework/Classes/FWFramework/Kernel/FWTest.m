@@ -8,7 +8,7 @@
  */
 
 #import "FWTest.h"
-#import "FWLog.h"
+#import "FWLogger.h"
 #import <objc/runtime.h>
 
 #ifdef DEBUG

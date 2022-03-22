@@ -1,5 +1,5 @@
 /**
- @header     FWLog.h
+ @header     FWLogger.h
  @indexgroup FWFramework
       日志记录
  @author     wuyong
@@ -17,7 +17,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogTrace( format, ... ) \
-    if ([FWLog check:FWLogTypeTrace]) [FWLog trace:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:FWLogTypeTrace]) [FWLogger trace:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /**
  记录调试日志
@@ -25,7 +25,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogDebug( format, ... ) \
-    if ([FWLog check:FWLogTypeDebug]) [FWLog debug:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:FWLogTypeDebug]) [FWLogger debug:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /**
  记录信息日志
@@ -33,7 +33,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogInfo( format, ... ) \
-    if ([FWLog check:FWLogTypeInfo]) [FWLog info:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:FWLogTypeInfo]) [FWLogger info:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /**
  记录警告日志
@@ -41,7 +41,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogWarn( format, ... ) \
-    if ([FWLog check:FWLogTypeWarn]) [FWLog warn:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:FWLogTypeWarn]) [FWLogger warn:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /**
  记录错误日志
@@ -49,7 +49,7 @@
  @param format 日志格式，同NSLog
  */
 #define FWLogError( format, ... ) \
-    if ([FWLog check:FWLogTypeError]) [FWLog error:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:FWLogTypeError]) [FWLogger error:(@"(%@ %@ #%d %s) " format), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
 /**
  记录分组日志
@@ -59,9 +59,9 @@
  @param aFormat 日志格式，同NSLog
  */
 #define FWLogGroup( aGroup, aType, aFormat, ... ) \
-    if ([FWLog check:aType]) [FWLog group:aGroup type:aType format:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
+    if ([FWLogger check:aType]) [FWLogger group:aGroup type:aType format:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
-#pragma mark - FWLog
+#pragma mark - FWLogger
 
 /**
  日志类型定义
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件
  */
-@interface FWLog : NSObject
+@interface FWLogger : NSObject
 
 /// 全局日志级别，默认调试为All，正式为Off
 @property (class, nonatomic, assign) FWLogLevel level;

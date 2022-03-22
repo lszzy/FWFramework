@@ -1,5 +1,5 @@
 //
-//  FWLoader.swift
+//  FWAutoloader.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/1/12.
@@ -14,7 +14,7 @@ import FWFramework
 /// 自动加载Swift类并调用autoload方法，参数为Class或String
 @discardableResult
 public func FWAutoload(_ clazz: Any) -> Bool {
-    return FWLoader<NSObject, NSObject>.autoload(clazz)
+    return FWAutoloader.autoload(clazz)
 }
 
 /// Swift自动加载协议，配合FWAutoload方法使用
@@ -24,7 +24,7 @@ public protocol FWAutoloadProtocol {
 }
 
 /// 兼容OC调用自动加载Swift类
-@objc extension FWLoader {
+@objc extension FWAutoloader {
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
     @discardableResult
     public static func autoload(_ clazz: Any) -> Bool {
