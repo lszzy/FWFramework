@@ -19,6 +19,7 @@
 #import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
+#import "FWWrapper.h"
 
 #import "FWAuthorize.h"
 #import "FWEncode.h"
