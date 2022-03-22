@@ -46,7 +46,7 @@ private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
+@objc extension FWAutoloader {
     private func loadFWAuthorizeCalendar() {
         FWAuthorizeManager.registerAuthorize(.calendars) {
             return FWAuthorizeCalendar(type: .event)

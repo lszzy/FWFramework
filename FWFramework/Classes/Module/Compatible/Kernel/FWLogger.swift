@@ -1,5 +1,5 @@
 //
-//  FWLog.swift
+//  FWLogger.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/28.
@@ -20,8 +20,8 @@ import FWFramework
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogTrace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(.trace) { return }
-    FWLog.log(with: .trace, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    if !FWLogger.check(.trace) { return }
+    FWLogger.log(with: .trace, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录调试日志
@@ -33,8 +33,8 @@ public func FWLogTrace(_ format: String, _ arguments: CVarArg..., file: String =
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogDebug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(.debug) { return }
-    FWLog.log(with: .debug, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    if !FWLogger.check(.debug) { return }
+    FWLogger.log(with: .debug, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录信息日志
@@ -46,8 +46,8 @@ public func FWLogDebug(_ format: String, _ arguments: CVarArg..., file: String =
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogInfo(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(.info) { return }
-    FWLog.log(with: .info, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    if !FWLogger.check(.info) { return }
+    FWLogger.log(with: .info, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录警告日志
@@ -59,8 +59,8 @@ public func FWLogInfo(_ format: String, _ arguments: CVarArg..., file: String = 
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogWarn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(.warn) { return }
-    FWLog.log(with: .warn, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    if !FWLogger.check(.warn) { return }
+    FWLogger.log(with: .warn, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录错误日志
@@ -72,8 +72,8 @@ public func FWLogWarn(_ format: String, _ arguments: CVarArg..., file: String = 
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogError(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(.error) { return }
-    FWLog.log(with: .error, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+    if !FWLogger.check(.error) { return }
+    FWLogger.log(with: .error, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
 }
 
 /// 记录分组日志
@@ -87,12 +87,12 @@ public func FWLogError(_ format: String, _ arguments: CVarArg..., file: String =
 ///   - function: 方法名，默认传参
 ///   - line: 行数，默认传参
 public func FWLogGroup(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-    if !FWLog.check(type) { return }
-    FWLog.log(with: type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
+    if !FWLogger.check(type) { return }
+    FWLogger.log(with: type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
 }
 
-/// FWLog扩展
-extension FWLog {
+/// FWLogger扩展
+extension FWLogger {
     /// 记录跟踪日志
     ///
     /// - Parameters:
@@ -102,7 +102,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func trace(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(.trace) { return }
+        if !check(.trace) { return }
         log(with: .trace, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
@@ -115,7 +115,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func debug(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(.debug) { return }
+        if !check(.debug) { return }
         log(with: .debug, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
@@ -128,7 +128,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func info(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(.info) { return }
+        if !check(.info) { return }
         log(with: .info, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
@@ -141,7 +141,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func warn(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(.warn) { return }
+        if !check(.warn) { return }
         log(with: .warn, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
@@ -154,7 +154,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func error(_ format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(.error) { return }
+        if !check(.error) { return }
         log(with: .error, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
@@ -169,7 +169,7 @@ extension FWLog {
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func group(_ group: String, type: FWLogType, format: String, _ arguments: CVarArg..., file: String = #file, function: String = #function, line: Int = #line) {
-        if !FWLog.check(type) { return }
+        if !check(type) { return }
         log(with: type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
     }
 }

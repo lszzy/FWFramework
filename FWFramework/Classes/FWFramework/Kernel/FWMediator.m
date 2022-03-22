@@ -10,7 +10,8 @@
 #import "FWMediator.h"
 #import "FWLoader.h"
 #import "FWPlugin.h"
-#import "FWLog.h"
+#import "FWLogger.h"
+#import "FWAutoloader.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 
@@ -155,7 +156,7 @@
     }
     
 #ifdef DEBUG
-    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWLoader.debugDescription);
+    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWAutoloader.debugDescription);
     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWMediator.debugDescription);
     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWPluginManager.debugDescription);
 #endif

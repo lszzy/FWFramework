@@ -39,7 +39,7 @@ private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
+@objc extension FWAutoloader {
     private func loadFWAuthorizeContacts() {
         FWAuthorizeManager.registerAuthorize(.contacts) {
             return FWAuthorizeContacts()

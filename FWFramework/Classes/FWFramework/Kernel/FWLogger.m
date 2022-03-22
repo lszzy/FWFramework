@@ -1,5 +1,5 @@
 /**
- @header     FWLog.m
+ @header     FWLogger.m
  @indexgroup FWFramework
       日志记录
  @author     wuyong
@@ -7,7 +7,7 @@
  @updated    2018-05-11
  */
 
-#import "FWLog.h"
+#import "FWLogger.h"
 #import "FWPlugin.h"
 
 #ifdef DEBUG
@@ -22,7 +22,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
 
 #endif
 
-@implementation FWLog
+@implementation FWLogger
 
 #pragma mark - Public
 
