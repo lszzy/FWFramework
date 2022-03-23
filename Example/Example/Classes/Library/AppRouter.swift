@@ -38,9 +38,6 @@ extension AppRouter {
 @objc private extension FWAutoloader {
     
     func loadAppRouter() {
-        FWRouter.presetURL(AppRouter.routeHome, withHandler: AppRouter.routeHomeHandler(_:))
-        FWRouter.presetURL(AppRouter.routeTest, withHandler: AppRouter.routeTestHandler(_:))
-        
         FWRouter.registerClass(AppRouter.self)
     }
     

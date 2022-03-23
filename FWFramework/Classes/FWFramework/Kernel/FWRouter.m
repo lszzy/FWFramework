@@ -9,7 +9,9 @@
 
 #import "FWRouter.h"
 #import "FWLoader.h"
+#import "FWSwizzle.h"
 #import "FWNavigation.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWRouterContext
 
@@ -137,19 +139,69 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Class
 
-+ (BOOL)registerClass:(Class)clazz
++ (BOOL)registerClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
-    return NO;
+    return [self registerClass:clazz isPreset:NO withMapper:mapper];
 }
 
-+ (BOOL)presetClass:(Class)clazz
++ (BOOL)presetClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
-    return NO;
+    return [self registerClass:clazz isPreset:YES withMapper:mapper];
 }
 
-+ (void)unregisterClass:(Class)clazz
++ (BOOL)registerClass:(id)clazz isPreset:(BOOL)isPreset withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    __block BOOL result = YES;
+    NSDictionary<NSString *,NSString *> *routes = [self routeClass:clazz withMapper:mapper];
+    [routes enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        id pattern = [clazz performSelector:NSSelectorFromString(key)];
+        result = [self registerURL:pattern withHandler:^id _Nullable(FWRouterContext * _Nonnull context) {
+            return [clazz performSelector:NSSelectorFromString(obj) withObject:context];
+        } isPreset:isPreset] && result;
+    }];
+    return result;
+#pragma clang diagnostic pop
+}
+
++ (void)unregisterClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    NSDictionary<NSString *,NSString *> *routes = [self routeClass:clazz withMapper:mapper];
+    [routes enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        id pattern = [clazz performSelector:NSSelectorFromString(key)];
+        [self unregisterURL:pattern];
+    }];
+#pragma clang diagnostic pop
+}
+
++ (NSDictionary<NSString *,NSString *> *)routeClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
+{
+    Class metaClass;
+    if (object_isClass(clazz)) {
+        metaClass = objc_getMetaClass(NSStringFromClass(clazz).UTF8String);
+    } else {
+        metaClass = object_getClass(clazz);
+    }
+    if (!metaClass) return @{};
     
+    NSArray<NSString *> *methods = [NSObject fwClassMethods:metaClass superclass:NO];
+    if (mapper) {
+        return mapper(methods);
+    }
+    
+    NSMutableDictionary *routes = [NSMutableDictionary dictionary];
+    for (NSString *method in methods) {
+        if ([method hasPrefix:@"route"] && ![method containsString:@":"]) {
+            NSString *handler = [method stringByAppendingString:@"Handler:"];
+            if ([methods containsObject:handler]) {
+                routes[method] = handler;
+            }
+        }
+    }
+    return routes;
 }
 
 #pragma mark - URL
@@ -473,7 +525,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     
     id object = [self.routeLoader load:url];
     if (object) {
-        [FWRouter registerClass:object];
+        [FWRouter registerClass:object withMapper:nil];
         parameters = [self extractParametersFromURL:url];
     }
     return parameters;
