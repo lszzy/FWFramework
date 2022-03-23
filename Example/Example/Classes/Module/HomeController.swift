@@ -99,7 +99,7 @@ private extension HomeController {
     }
     
     func testViewClicked() {
-        FWRouter.openURL(AppRouter.routeTest)
+        FWRouter.openURL(AppRouter.testUrl)
     }
     
 }

@@ -194,8 +194,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     
     NSMutableDictionary *routes = [NSMutableDictionary dictionary];
     for (NSString *method in methods) {
-        if ([method hasPrefix:@"route"] && ![method containsString:@":"]) {
-            NSString *handler = [method stringByAppendingString:@"Handler:"];
+        if ([method hasSuffix:@"Url"] && ![method containsString:@":"]) {
+            NSString *handler = [method stringByReplacingOccurrencesOfString:@"Url" withString:@"Handler:"];
             if ([methods containsObject:handler]) {
                 routes[method] = handler;
             }
