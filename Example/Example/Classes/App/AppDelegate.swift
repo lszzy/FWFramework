@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 private extension AppDelegate {
     
     func rootController() -> UIViewController {
-        let viewController = FWRouter.object(forURL: AppRouter.routeHome) as! UIViewController
+        let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
         
         let navController = UINavigationController(rootViewController: viewController)
         navController.navigationBar.fwIsTranslucent = false

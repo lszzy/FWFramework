@@ -12,21 +12,21 @@ import FWFramework
 @objcMembers class AppRouter: NSObject {
     
     // MARK: - Accessor
-    static let routeHome = "app://home"
+    static let homeUrl = "app://home"
     
-    static let routeTest = "app://test"
+    static let testUrl = "app://test"
 
 }
 
 // MARK: - Public
 extension AppRouter {
     
-    class func routeHomeHandler(_ context: FWRouterContext) -> Any? {
+    class func homeHandler(_ context: FWRouterContext) -> Any? {
         let viewController = HomeController()
         return viewController
     }
     
-    class func routeTestHandler(_ context: FWRouterContext) -> Any? {
+    class func testHandler(_ context: FWRouterContext) -> Any? {
         let viewController = TestController()
         FWRouter.push(viewController, animated: true)
         return nil
