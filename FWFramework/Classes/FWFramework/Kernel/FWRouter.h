@@ -43,19 +43,6 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 
 @end
 
-#pragma mark - FWRouterProtocol
-
-/** URL路由协议 */
-@protocol FWRouterProtocol <NSObject>
-
-@required
-/// 路由支持的解析URL，字符串或字符串数组(批量)
-+ (id)routerURL;
-/// 路由处理方法，访问支持的解析URL时会调用本方法
-+ (nullable id)routerHandler:(FWRouterContext *)context;
-
-@end
-
 #pragma mark - FWRouter
 
 /**
@@ -71,25 +58,25 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 #pragma mark - Class
 
 /**
-*  注册路由类，需要实现FWRouterProtocol协议
+*  注册路由类，批量注册路由规则
 *
-*  @param clazz    路由类，需实现FWRouterProtocol协议
+*  @param clazz    路由类
 */
-+ (BOOL)registerClass:(Class<FWRouterProtocol>)clazz;
++ (BOOL)registerClass:(Class)clazz;
 
 /**
-*  预置路由类，需要实现FWRouterProtocol协议，仅当路由未被注册时生效
+*  预置路由类，批量注册路由规则，仅当路由未被注册时生效
 *
-*  @param clazz    路由类，需实现FWRouterProtocol协议
+*  @param clazz    路由类
 */
-+ (BOOL)presetClass:(Class<FWRouterProtocol>)clazz;
++ (BOOL)presetClass:(Class)clazz;
 
 /**
  *  取消注册某个路由类
  *
- *  @param clazz    路由类，需实现FWRouterProtocol协议
+ *  @param clazz    路由类
  */
-+ (void)unregisterClass:(Class<FWRouterProtocol>)clazz;
++ (void)unregisterClass:(Class)clazz;
 
 #pragma mark - URL
 

@@ -137,34 +137,19 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Class
 
-+ (BOOL)registerClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)registerClass:(Class)clazz
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
-    
-    return [self registerURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz routerHandler:context];
-    }];
+    return NO;
 }
 
-+ (BOOL)presetClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)presetClass:(Class)clazz
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
-    
-    return [self presetURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz routerHandler:context];
-    }];
+    return NO;
 }
 
-+ (void)unregisterClass:(Class<FWRouterProtocol>)clazz
++ (void)unregisterClass:(Class)clazz
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return;
     
-    [self unregisterURL:[clazz routerURL]];
 }
 
 #pragma mark - URL
