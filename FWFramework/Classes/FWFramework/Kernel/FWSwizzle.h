@@ -167,6 +167,35 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (BOOL)fwIsSwizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier;
 
+#pragma mark - Class
+
+/**
+ 获取类方法列表，支持meta类(objc_getMetaClass)
+ 
+ @param clazz 指定类
+ @param superclass 是否包含父类，包含则递归到NSObject
+ @return 方法列表
+ */
++ (NSArray<NSString *> *)fwClassMethods:(Class)clazz superclass:(BOOL)superclass;
+
+/**
+ 获取类属性列表，支持meta类(objc_getMetaClass)
+ 
+ @param clazz 指定类
+ @param superclass 是否包含父类，包含则递归到NSObject
+ @return 属性列表
+ */
++ (NSArray<NSString *> *)fwClassProperties:(Class)clazz superclass:(BOOL)superclass;
+
+/**
+ 获取类Ivar列表，支持meta类(objc_getMetaClass)
+ 
+ @param clazz 指定类
+ @param superclass 是否包含父类，包含则递归到NSObject
+ @return Ivar列表
+ */
++ (NSArray<NSString *> *)fwClassIvars:(Class)clazz superclass:(BOOL)superclass;
+
 #pragma mark - Runtime
 
 /**
