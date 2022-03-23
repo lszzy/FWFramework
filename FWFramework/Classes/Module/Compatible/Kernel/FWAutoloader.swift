@@ -57,18 +57,12 @@ public protocol FWAutoloadProtocol {
     /// 使用方法：新增FWAutoloader扩展objc方法，以load开头即会自动调用，建议load+类名+扩展名
     public static func autoload() {
         // 获取FWAutoload自动加载方法列表
-        autoloadMethods = []
-        var methodCount: UInt32 = 0
-        if let methods = class_copyMethodList(FWAutoloader.self, &methodCount) {
-            for i in 0 ..< methodCount {
-                let methodName = NSStringFromSelector(method_getName(methods[Int(i)]))
-                if methodName.hasPrefix("load") && !methodName.contains(":") {
-                    autoloadMethods.append(methodName)
-                }
-            }
-            free(methods)
-        }
-        autoloadMethods.sort()
+        autoloadMethods = NSObject
+            .fwClassMethods(FWAutoloader.self, superclass: false)
+            .filter({ methodName in
+                return methodName.hasPrefix("load") && !methodName.contains(":")
+            })
+            .sorted()
         
         // 调用FWAutoloader所有自动加载方法
         if autoloadMethods.count > 0 {

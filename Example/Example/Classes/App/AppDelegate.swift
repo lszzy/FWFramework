@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 private extension AppDelegate {
     
     func rootController() -> UIViewController {
+        FWRouter.registerClass(AppRouter.self)
         let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
         
         let navController = UINavigationController(rootViewController: viewController)

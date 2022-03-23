@@ -9,6 +9,7 @@
 
 #import "FWTest.h"
 #import "FWLogger.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 #ifdef DEBUG
@@ -140,19 +141,11 @@
 + (NSArray *)testMethods:(Class)clazz
 {
     NSMutableArray *methodNames = [NSMutableArray array];
-    while (clazz != NULL) {
-        unsigned int methodCount = 0;
-        Method *methods = class_copyMethodList(clazz, &methodCount);
-        for (unsigned int i = 0; i < methodCount; ++i) {
-            NSString *selectorName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i])) ?: ""];
-            if ([selectorName hasPrefix:@"test"] && ![methodNames containsObject:selectorName]) {
-                [methodNames addObject:selectorName];
-            }
+    NSArray *selectorNames = [NSObject fwClassMethods:clazz superclass:YES];
+    for (NSString *selectorName in selectorNames) {
+        if ([selectorName hasPrefix:@"test"] && ![selectorName containsString:@":"]) {
+            [methodNames addObject:selectorName];
         }
-        free(methods);
-        
-        clazz = class_getSuperclass(clazz);
-        if (nil == clazz || clazz == [NSObject class]) break;
     }
     return methodNames;
 }
