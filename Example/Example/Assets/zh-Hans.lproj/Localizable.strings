@@ -6,7 +6,10 @@
   Copyright © 2018年 wuyong.site. All rights reserved.
 */
 
-"envProduction" = "正式";
-"envStaging" = "预发布";
-"envTesting" = "测试";
-"envDevelopment" = "开发";
+"home.btnStyle" = "样式";
+"home.envProduction" = "正式";
+"home.envStaging" = "预发布";
+"home.envTesting" = "测试";
+"home.envDevelopment" = "开发";
+
+"test.title" = "测试";

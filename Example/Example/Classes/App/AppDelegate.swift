@@ -21,8 +21,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
-        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        window?.rootViewController = rootController()
         window?.makeKeyAndVisible()
         return true
     }
+}
+
+// MARK: - Private
+private extension AppDelegate {
+    
+    func rootController() -> UIViewController {
+        let viewController = FWRouter.object(forURL: AppRouter.routeHome) as! UIViewController
+        
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.navigationBar.fwIsTranslucent = false
+        navController.navigationBar.fwShadowColor = nil
+        navController.navigationBar.fwForegroundColor = UIColor.fwThemeLight(.black, dark: .white)
+        navController.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA), dark: .fwColor(withHex: 0x121212))
+        navController.navigationBar.fwBackImage = UIImage(named: "navBack")
+        return navController
+    }
+    
 }
