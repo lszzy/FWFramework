@@ -144,11 +144,7 @@
         unsigned int methodCount = 0;
         Method *methods = class_copyMethodList(clazz, &methodCount);
         for (unsigned int i = 0; i < methodCount; ++i) {
-            const char *cstrName = sel_getName(method_getName(methods[i]));
-            if (NULL == cstrName) continue;
-            NSString *selectorName = [NSString stringWithUTF8String:cstrName];
-            if (NULL == selectorName) continue;
-            
+            NSString *selectorName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i])) ?: ""];
             if ([selectorName hasPrefix:@"test"] && ![methodNames containsObject:selectorName]) {
                 [methodNames addObject:selectorName];
             }

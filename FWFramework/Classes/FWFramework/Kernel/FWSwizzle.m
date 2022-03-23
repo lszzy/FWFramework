@@ -162,6 +162,68 @@
     return [objc_getAssociatedObject(self, NSSelectorFromString(swizzleIdentifier)) boolValue];
 }
 
+#pragma mark - Class
+
++ (NSArray<NSString *> *)fwClassMethods:(Class)clazz superclass:(BOOL)superclass
+{
+    NSMutableArray *resultNames = [NSMutableArray array];
+    while (clazz != NULL) {
+        unsigned int resultCount = 0;
+        Method *methods = class_copyMethodList(clazz, &resultCount);
+        for (unsigned int i = 0; i < resultCount; i++) {
+            NSString *resultName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i])) ?: ""];
+            if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
+                [resultNames addObject:resultName];
+            }
+        }
+        free(methods);
+        
+        clazz = superclass ? class_getSuperclass(clazz) : NULL;
+        if (clazz == NULL || clazz == [NSObject class]) break;
+    }
+    return resultNames;
+}
+
++ (NSArray<NSString *> *)fwClassProperties:(Class)clazz superclass:(BOOL)superclass
+{
+    NSMutableArray *resultNames = [NSMutableArray array];
+    while (clazz != NULL) {
+        unsigned int resultCount = 0;
+        objc_property_t *properties = class_copyPropertyList(clazz, &resultCount);
+        for (unsigned int i = 0; i < resultCount; i++) {
+            NSString *resultName = [NSString stringWithUTF8String:property_getName(properties[i]) ?: ""];
+            if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
+                [resultNames addObject:resultName];
+            }
+        }
+        free(properties);
+        
+        clazz = superclass ? class_getSuperclass(clazz) : NULL;
+        if (clazz == NULL || clazz == [NSObject class]) break;
+    }
+    return resultNames;
+}
+
++ (NSArray<NSString *> *)fwClassIvars:(Class)clazz superclass:(BOOL)superclass
+{
+    NSMutableArray *resultNames = [NSMutableArray array];
+    while (clazz != NULL) {
+        unsigned int resultCount = 0;
+        Ivar *ivars = class_copyIvarList(clazz, &resultCount);
+        for (unsigned int i = 0; i < resultCount; i++) {
+            NSString *resultName = [NSString stringWithUTF8String:ivar_getName(ivars[i]) ?: ""];
+            if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
+                [resultNames addObject:resultName];
+            }
+        }
+        free(ivars);
+        
+        clazz = superclass ? class_getSuperclass(clazz) : NULL;
+        if (clazz == NULL || clazz == [NSObject class]) break;
+    }
+    return resultNames;
+}
+
 #pragma mark - Runtime
 
 - (id)fwPerformSelector:(SEL)aSelector
