@@ -33,12 +33,3 @@ extension AppRouter {
     }
     
 }
-
-// MARK: - FWAutoloader
-@objc private extension FWAutoloader {
-    
-    func loadAppRouter() {
-        FWRouter.registerClass(AppRouter.self)
-    }
-    
-}
