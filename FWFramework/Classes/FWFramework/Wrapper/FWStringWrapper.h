@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// NSString实现对象包装器关联协议
-@interface NSString (FWStringWrapper) <FWWrapperProtocol>
+/// NSString实现包装器对象协议
+@interface NSString (FWStringWrapper) <FWWrapperObject>
 
-/// 对象包装器属性
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWStringWrapper *fw;
 
 @end
