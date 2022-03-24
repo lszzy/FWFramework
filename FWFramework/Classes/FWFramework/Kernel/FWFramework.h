@@ -20,11 +20,16 @@
 #import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
-#import "FWWrapper.h"
 
 #import "FWEncode.h"
 #import "FWLanguage.h"
 #import "FWLocation.h"
+
+#import "FWWrapper.h"
+#import "FWObjectWrapper.h"
+#import "FWStringWrapper.h"
+#import "FWViewWrapper.h"
+#import "FWViewControllerWrapper.h"
 
 #import "FWAdaptive.h"
 #import "FWAppearance.h"
