@@ -8,8 +8,22 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+/// 框架视图对象包装器
+@interface FWViewWrapper : FWWrapper<UIView *>
+
+@end
+
+/// 视图实现包装器对象协议
+@interface UIView (FWViewWrapper) <FWWrapperObject>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWViewWrapper *fw;
+
+@end
 
 /**
  UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
