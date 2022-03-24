@@ -16,10 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// NSObject实现对象包装器关联协议
-@interface NSObject (FWObjectWrapper) <FWWrapperProtocol>
+/// NSObject实现包装器对象协议
+@interface NSObject (FWObjectWrapper) <FWWrapperObject>
 
-/// 对象包装器属性
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
@@ -27,14 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWObjectClassWrapper
 
 /// 框架NSObject类包装器
-@interface FWObjectClassWrapper : FWClassWrapper
+@interface FWObjectClassWrapper : FWWrapper<Class>
 
 @end
 
-/// NSObject实现类包装器关联协议
-@interface NSObject (FWObjectClassWrapper) <FWClassWrapperProtocol>
+/// NSObject实现包装器类协议
+@interface NSObject (FWObjectClassWrapper) <FWWrapperClass>
 
-/// 类包装器属性
+/// 类包装器
 @property (class, nonatomic, strong, readonly) FWObjectClassWrapper *fw;
 
 @end

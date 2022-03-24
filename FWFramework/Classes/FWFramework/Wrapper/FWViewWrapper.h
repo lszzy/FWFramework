@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// 视图实现对象包装器关联协议
-@interface UIView (FWViewWrapper) <FWWrapperProtocol>
+/// 视图实现包装器对象协议
+@interface UIView (FWViewWrapper) <FWWrapperObject>
 
-/// 对象包装器属性
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWViewWrapper *fw;
 
 @end

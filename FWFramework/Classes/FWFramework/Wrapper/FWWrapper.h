@@ -12,49 +12,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWWrapper
 
-/// 框架对象包装器
+/// 框架包装器
 @interface FWWrapper<__covariant ObjectType> : NSObject
 
-/// 原始对象，weak引用
-@property (nullable, nonatomic, weak, readonly) ObjectType base;
+/// 原始对象，内部访问
+@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
 
 /// 禁用属性，防止嵌套
 @property (nonatomic, strong, readonly) FWWrapper *fw NS_UNAVAILABLE;
 
-/// 快速创建包装器对象
+/// 快速创建包装器
 + (instancetype)wrapperWithBase:(ObjectType)base;
 
 @end
 
-/// 框架对象包装器关联协议
-@protocol FWWrapperProtocol <NSObject>
+#pragma mark - FWWrapperObject
 
-/// 对象包装器属性
+/// 框架包装器对象协议
+@protocol FWWrapperObject <NSObject>
+
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWWrapper *fw;
 
 @end
 
-#pragma mark - FWClassWrapper
+#pragma mark - FWWrapperClass
 
-/// 框架类包装器
-@interface FWClassWrapper : NSObject
+/// 框架包装器类协议
+@protocol FWWrapperClass <NSObject>
 
-/// 原始类
-@property (nonatomic, unsafe_unretained, readonly) Class base;
-
-/// 禁用属性，防止嵌套
-@property (nonatomic, strong, readonly) FWWrapper *fw NS_UNAVAILABLE;
-
-/// 快速创建类包装器对象
-+ (instancetype)wrapperWithBase:(Class)base;
-
-@end
-
-/// 框架类包装器关联协议
-@protocol FWClassWrapperProtocol <NSObject>
-
-/// 类包装器属性
-@property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWWrapper<Class> *fw;
 
 @end
 
