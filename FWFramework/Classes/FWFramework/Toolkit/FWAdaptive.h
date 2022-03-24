@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -223,6 +224,19 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 
 /// 获取相对设计图宽度等比例缩放值
 + (CGFloat)fwRelativeValue:(CGFloat)value;
+
+@end
+
+/// 框架视图控制器对象包装器
+@interface FWViewControllerWrapper : FWWrapper<UIViewController *>
+
+@end
+
+/// 视图控制器实现包装器对象协议
+@interface UIViewController (FWViewControllerWrapper) <FWWrapperObject>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWViewControllerWrapper *fw;
 
 @end
 

@@ -11,6 +11,18 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
+@implementation FWViewWrapper
+
+@end
+
+@implementation UIView (FWViewWrapper)
+
+- (FWViewWrapper *)fw {
+    return [FWViewWrapper wrapperWithBase:self];
+}
+
+@end
+
 static BOOL fwStaticAutoLayoutRTL = NO;
 
 @interface NSLayoutConstraint (FWAutoLayout)

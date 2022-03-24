@@ -12,6 +12,34 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
+#pragma mark - FWObjectWrapper
+
+@implementation FWObjectWrapper
+
+@end
+
+@implementation NSObject (FWObjectWrapper)
+
+- (FWObjectWrapper *)fw {
+    return [FWObjectWrapper wrapperWithBase:self];
+}
+
+@end
+
+#pragma mark - FWObjectClassWrapper
+
+@implementation FWObjectClassWrapper
+
+@end
+
+@implementation NSObject (FWObjectClassWrapper)
+
++ (FWObjectClassWrapper *)fw {
+    return [FWObjectClassWrapper wrapperWithBase:self];
+}
+
+@end
+
 @implementation NSObject (FWSwizzle)
 
 #pragma mark - Simple

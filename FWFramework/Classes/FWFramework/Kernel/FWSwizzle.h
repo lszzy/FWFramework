@@ -7,7 +7,7 @@
  @updated    2020/6/5
  */
 
-#import <Foundation/Foundation.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,6 +54,36 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWSwizzleArgsWrap_( args... ) args
 #define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
 #define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
+
+#pragma mark - FWObjectWrapper
+
+/// 框架NSObject对象包装器
+@interface FWObjectWrapper : FWWrapper<NSObject *>
+
+@end
+
+/// NSObject实现包装器对象协议
+@interface NSObject (FWObjectWrapper) <FWWrapperObject>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
+
+@end
+
+#pragma mark - FWObjectClassWrapper
+
+/// 框架NSObject类包装器
+@interface FWObjectClassWrapper : FWWrapper<Class>
+
+@end
+
+/// NSObject实现包装器类协议
+@interface NSObject (FWObjectClassWrapper) <FWWrapperClass>
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWObjectClassWrapper *fw;
+
+@end
 
 #pragma mark - NSObject+FWSwizzle
 

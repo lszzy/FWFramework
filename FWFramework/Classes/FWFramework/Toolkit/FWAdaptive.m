@@ -338,6 +338,18 @@ static CGFloat fwStaticReferenceHeight = 812;
 
 @end
 
+@implementation FWViewControllerWrapper
+
+@end
+
+@implementation UIViewController (FWViewControllerWrapper)
+
+- (FWViewControllerWrapper *)fw {
+    return [FWViewControllerWrapper wrapperWithBase:self];
+}
+
+@end
+
 #pragma mark - UIViewController+FWAdaptive
 
 @implementation UIViewController (FWAdaptive)
