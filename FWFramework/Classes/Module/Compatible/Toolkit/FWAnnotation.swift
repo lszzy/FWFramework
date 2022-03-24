@@ -107,7 +107,7 @@ public struct FWPluginAnnotation<T> {
 
 /// 路由属性包装器注解
 /// 使用示例：
-/// @FWRouterAnnotation(AppRouter.routePlugin(_:))
+/// @FWRouterAnnotation(AppRouter.pluginRouter(_:))
 /// static var pluginUrl: String = "app://plugin/:id"
 @propertyWrapper
 public struct FWRouterAnnotation {

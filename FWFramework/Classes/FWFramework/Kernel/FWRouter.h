@@ -61,7 +61,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 *  注册路由类或对象，批量注册路由规则
 *
 *  @param clazz    路由类或对象，不遍历父类
-*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxHandler:
+*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
 */
 + (BOOL)registerClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 
@@ -69,7 +69,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
 *  预置路由类或对象，批量注册路由规则，仅当路由未被注册时生效
 *
 *  @param clazz    路由类或对象，不遍历父类
-*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxHandler:
+*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
 */
 + (BOOL)presetClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 
@@ -77,7 +77,7 @@ typedef void (^FWRouterCompletion)(id _Nullable result);
  *  取消注册某个路由类或对象
  *
  *  @param clazz    路由类或对象，不遍历父类
- *  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxHandler:
+ *  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
  */
 + (void)unregisterClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 

@@ -21,12 +21,12 @@ import FWFramework
 // MARK: - Public
 extension AppRouter {
     
-    class func homeHandler(_ context: FWRouterContext) -> Any? {
+    class func homeRouter(_ context: FWRouterContext) -> Any? {
         let viewController = HomeController()
         return viewController
     }
     
-    class func testHandler(_ context: FWRouterContext) -> Any? {
+    class func testRouter(_ context: FWRouterContext) -> Any? {
         let viewController = TestController()
         FWRouter.push(viewController, animated: true)
         return nil

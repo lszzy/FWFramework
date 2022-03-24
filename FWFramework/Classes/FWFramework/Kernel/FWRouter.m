@@ -195,7 +195,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSMutableDictionary *routes = [NSMutableDictionary dictionary];
     for (NSString *method in methods) {
         if ([method hasSuffix:@"Url"] && ![method containsString:@":"]) {
-            NSString *handler = [method stringByReplacingOccurrencesOfString:@"Url" withString:@"Handler:"];
+            NSString *handler = [method stringByReplacingOccurrencesOfString:@"Url" withString:@"Router:"];
             if ([methods containsObject:handler]) {
                 routes[method] = handler;
             }
@@ -234,6 +234,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 + (BOOL)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler isPreset:(BOOL)isPreset
 {
+    if (![pattern isKindOfClass:[NSString class]]) return NO;
     if (!handler || pattern.length < 1) return NO;
     
     NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
@@ -250,7 +251,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         for (id subPattern in pattern) {
             [self unregisterURL:subPattern];
         }
-    } else {
+    } else if ([pattern isKindOfClass:[NSString class]]) {
         NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[[self sharedInstance] pathComponentsFromURL:pattern]];
         // 只删除该 pattern 的最后一级
         if (pathComponents.count >= 1) {
@@ -618,7 +619,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 + (NSString *)rewriteURL:(id)URL
 {
     NSString *rewriteURL = [URL isKindOfClass:[NSURL class]] ? [URL absoluteString] : URL;
-    if (!rewriteURL) return nil;
+    if (!rewriteURL || ![rewriteURL isKindOfClass:[NSString class]]) return nil;
     
     if ([self sharedInstance].rewriteFilter) {
         rewriteURL = [self sharedInstance].rewriteFilter(rewriteURL);
