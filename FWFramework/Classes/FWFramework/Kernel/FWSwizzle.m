@@ -12,9 +12,9 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#pragma mark - FWObjectWrapper
+#pragma mark - FWObjectWrapper+FWSwizzle
 
-@implementation FWObjectWrapper
+@implementation FWObjectWrapper (FWSwizzle)
 
 - (BOOL)swizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
@@ -30,19 +30,156 @@
     return [objc_getAssociatedObject(self.base, NSSelectorFromString(swizzleIdentifier)) boolValue];
 }
 
-@end
+#pragma mark - Runtime
 
-@implementation NSObject (FWObjectWrapper)
+- (id)invokeMethod:(SEL)aSelector
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([self.base respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([self.base class], aSelector));
+        if (type && *type == 'v') {
+            free(type);
+            [self.base performSelector:aSelector];
+        } else {
+            free(type);
+            return [self.base performSelector:aSelector];
+        }
+    }
+#pragma clang diagnostic pop
+    return nil;
+}
 
-- (FWObjectWrapper *)fw {
-    return [FWObjectWrapper wrapperWithBase:self];
+- (id)invokeMethod:(SEL)aSelector withObject:(id)object
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([self.base respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([self.base class], aSelector));
+        if (type && *type == 'v') {
+            free(type);
+            [self.base performSelector:aSelector withObject:object];
+        } else {
+            free(type);
+            return [self.base performSelector:aSelector withObject:object];
+        }
+    }
+#pragma clang diagnostic pop
+    return nil;
+}
+
+- (id)invokeSuperMethod:(SEL)aSelector
+{
+    struct objc_super mySuper;
+    mySuper.receiver = self.base;
+    mySuper.super_class = class_getSuperclass(object_getClass(self.base));
+    
+    id (*objc_superAllocTyped)(struct objc_super *, SEL) = (void *)&objc_msgSendSuper;
+    return (*objc_superAllocTyped)(&mySuper, aSelector);
+}
+
+- (id)invokeSuperMethod:(SEL)aSelector withObject:(id)object
+{
+    struct objc_super mySuper;
+    mySuper.receiver = self.base;
+    mySuper.super_class = class_getSuperclass(object_getClass(self.base));
+    
+    id (*objc_superAllocTyped)(struct objc_super *, SEL, ...) = (void *)&objc_msgSendSuper;
+    return (*objc_superAllocTyped)(&mySuper, aSelector, object);
+}
+
+- (id)invokeGetter:(NSString *)name
+{
+    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
+    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
+    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    selector = NSSelectorFromString(name);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    #pragma clang diagnostic pop
+    return nil;
+}
+
+- (id)invokeSetter:(NSString *)name withObject:(id)object
+{
+    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
+    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
+    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector withObject:object];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
+    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector withObject:object];
+    #pragma clang diagnostic pop
+    return nil;
+}
+
+#pragma mark - Property
+
+@dynamic tempObject;
+
+- (id)tempObject
+{
+    return objc_getAssociatedObject(self.base, @selector(tempObject));
+}
+
+- (void)setTempObject:(id)tempObject
+{
+    if (tempObject != self.tempObject) {
+        objc_setAssociatedObject(self.base, @selector(tempObject), tempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+- (id)propertyForName:(NSString *)name
+{
+    id object = objc_getAssociatedObject(self.base, NSSelectorFromString(name));
+    if ([object isKindOfClass:[FWWeakObject class]]) {
+        object = [(FWWeakObject *)object object];
+    }
+    return object;
+}
+
+- (void)setProperty:(id)object forName:(NSString *)name
+{
+    if (object != [self propertyForName:name]) {
+        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+- (void)setPropertyAssign:(id)object forName:(NSString *)name
+{
+    if (object != [self propertyForName:name]) {
+        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
+    }
+}
+
+- (void)setPropertyCopy:(id)object forName:(NSString *)name
+{
+    if (object != [self propertyForName:name]) {
+        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+}
+
+- (void)setPropertyWeak:(id)object forName:(NSString *)name
+{
+    if (object != [self propertyForName:name]) {
+        objc_setAssociatedObject(self.base, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
 }
 
 @end
 
-#pragma mark - FWObjectClassWrapper
+#pragma mark - FWClassWrapper+FWSwizzle
 
-@implementation FWObjectClassWrapper
+@implementation FWClassWrapper (FWSwizzle)
 
 #pragma mark - Simple
 
@@ -252,170 +389,9 @@
 
 @end
 
-@implementation NSObject (FWObjectClassWrapper)
-
-+ (FWObjectClassWrapper *)fw {
-    return [FWObjectClassWrapper wrapperWithBase:self];
-}
-
-@end
+#pragma mark - NSObject+FWSwizzle
 
 @implementation NSObject (FWSwizzle)
-
-#pragma mark - Runtime
-
-- (id)fwPerformSelector:(SEL)aSelector
-{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
-        if (type && *type == 'v') {
-            free(type);
-            [self performSelector:aSelector];
-        } else {
-            free(type);
-            return [self performSelector:aSelector];
-        }
-    }
-#pragma clang diagnostic pop
-    return nil;
-}
-
-- (id)fwPerformSelector:(SEL)aSelector withObject:(id)object
-{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
-        if (type && *type == 'v') {
-            free(type);
-            [self performSelector:aSelector withObject:object];
-        } else {
-            free(type);
-            return [self performSelector:aSelector withObject:object];
-        }
-    }
-#pragma clang diagnostic pop
-    return nil;
-}
-
-- (id)fwPerformSuperSelector:(SEL)aSelector
-{
-    struct objc_super mySuper;
-    mySuper.receiver = self;
-    mySuper.super_class = class_getSuperclass(object_getClass(self));
-    
-    id (*objc_superAllocTyped)(struct objc_super *, SEL) = (void *)&objc_msgSendSuper;
-    return (*objc_superAllocTyped)(&mySuper, aSelector);
-}
-
-- (id)fwPerformSuperSelector:(SEL)aSelector withObject:(id)object
-{
-    struct objc_super mySuper;
-    mySuper.receiver = self;
-    mySuper.super_class = class_getSuperclass(object_getClass(self));
-    
-    id (*objc_superAllocTyped)(struct objc_super *, SEL, ...) = (void *)&objc_msgSendSuper;
-    return (*objc_superAllocTyped)(&mySuper, aSelector, object);
-}
-
-- (id)fwPerformGetter:(NSString *)name
-{
-    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
-    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
-    
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
-    selector = NSSelectorFromString(name);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector];
-    #pragma clang diagnostic pop
-    return nil;
-}
-
-- (id)fwPerformSetter:(NSString *)name withObject:(id)object
-{
-    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
-    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
-    
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector withObject:object];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self fwPerformSelector:selector withObject:object];
-    #pragma clang diagnostic pop
-    return nil;
-}
-
-#pragma mark - Property
-
-@dynamic fwTempObject;
-
-- (id)fwTempObject
-{
-    return objc_getAssociatedObject(self, @selector(fwTempObject));
-}
-
-- (void)setFwTempObject:(id)fwTempObject
-{
-    if (fwTempObject != self.fwTempObject) {
-        [self willChangeValueForKey:@"fwTempObject"];
-        objc_setAssociatedObject(self, @selector(fwTempObject), fwTempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwTempObject"];
-    }
-}
-
-- (id)fwPropertyForName:(NSString *)name
-{
-    id object = objc_getAssociatedObject(self, NSSelectorFromString(name));
-    if ([object isKindOfClass:[FWWeakObject class]]) {
-        object = [(FWWeakObject *)object object];
-    }
-    return object;
-}
-
-- (void)fwSetProperty:(id)object forName:(NSString *)name
-{
-    if (object != [self fwPropertyForName:name]) {
-        [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:name];
-    }
-}
-
-- (void)fwSetPropertyAssign:(id)object forName:(NSString *)name
-{
-    if (object != [self fwPropertyForName:name]) {
-        [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
-        [self didChangeValueForKey:name];
-    }
-}
-
-- (void)fwSetPropertyCopy:(id)object forName:(NSString *)name
-{
-    if (object != [self fwPropertyForName:name]) {
-        [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        [self didChangeValueForKey:name];
-    }
-}
-
-- (void)fwSetPropertyWeak:(id)object forName:(NSString *)name
-{
-    if (object != [self fwPropertyForName:name]) {
-        [self willChangeValueForKey:name];
-        objc_setAssociatedObject(self, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:name];
-    }
-}
 
 #pragma mark - Bind
 

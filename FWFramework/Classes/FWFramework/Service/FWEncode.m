@@ -18,7 +18,7 @@
 @implementation NSString (FWStringWrapper)
 
 - (FWStringWrapper *)fw {
-    return [FWStringWrapper wrapperWithBase:self];
+    return [FWStringWrapper wrapper:self];
 }
 
 @end
