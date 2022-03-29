@@ -18,7 +18,7 @@
 @implementation UIView (FWViewWrapper)
 
 - (FWViewWrapper *)fw {
-    return [FWViewWrapper wrapperWithBase:self];
+    return [FWViewWrapper wrapper:self];
 }
 
 @end

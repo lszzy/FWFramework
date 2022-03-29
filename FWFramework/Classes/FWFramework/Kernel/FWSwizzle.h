@@ -55,10 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
 #define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
 
-#pragma mark - FWObjectWrapper
+#pragma mark - FWObjectWrapper+FWSwizzle
 
-/// 框架NSObject对象包装器
-@interface FWObjectWrapper : FWWrapper<NSObject *>
+@interface FWObjectWrapper (FWSwizzle)
 
 /**
  使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合fwIsSwizzleMethod使用
@@ -80,22 +79,121 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (BOOL)isSwizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier;
 
+#pragma mark - Runtime
+
+/**
+ 安全调用方法，如果不能响应，则忽略之
+ 
+ @param aSelector 要执行的方法
+ @return id 方法执行后返回的值。如果无返回值，则为nil
+ */
+- (nullable id)invokeMethod:(SEL)aSelector;
+
+/**
+ 安全调用方法，如果不能响应，则忽略之
+ 
+ @param aSelector 要执行的方法
+ @param object 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+ @return id 方法执行后返回的值。如果无返回值，则为nil
+ */
+- (nullable id)invokeMethod:(SEL)aSelector withObject:(nullable id)object;
+
+/**
+ 对super发送消息
+ 
+ @param aSelector 要执行的方法，需返回id类型
+ @return id 方法执行后返回的值
+ */
+- (nullable id)invokeSuperMethod:(SEL)aSelector;
+
+/**
+ 对super发送消息，可传递参数
+ 
+ @param aSelector 要执行的方法，需返回id类型
+ @param object 传递的方法参数
+ @return id 方法执行后返回的值
+ */
+- (nullable id)invokeSuperMethod:(SEL)aSelector withObject:(nullable id)object;
+
+/**
+ 安全调用内部属性获取方法，如果属性不存在，则忽略之
+ @note 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
+ 
+ @param name 内部属性名称
+ @return 属性值
+ */
+- (nullable id)invokeGetter:(NSString *)name;
+
+/**
+ 安全调用内部属性设置方法，如果属性不存在，则忽略之
+ @note 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
+ 
+ @param name 内部属性名称
+ @param object 传递的方法参数
+ @return 方法执行后返回的值
+ */
+- (nullable id)invokeSetter:(NSString *)name withObject:(nullable id)object;
+
+#pragma mark - Property
+
+/**
+ 临时对象，强引用，支持KVO
+ @note 备注：key的几种形式的声明和使用，下同
+    1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
+    2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
+    3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
+    4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
+ */
+@property (nullable, nonatomic, strong) id tempObject;
+
+/**
+ 读取关联属性
+ 
+ @param name 属性名称
+ @return 属性值
+ */
+- (nullable id)propertyForName:(NSString *)name;
+
+/**
+ 设置强关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)setProperty:(nullable id)object forName:(NSString *)name;
+
+/**
+ 设置赋值关联属性，支持KVO，注意可能会产生野指针
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)setPropertyAssign:(nullable id)object forName:(NSString *)name;
+
+/**
+ 设置拷贝关联属性，支持KVO
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)setPropertyCopy:(nullable id)object forName:(NSString *)name;
+
+/**
+ 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
+ 
+ @param object 属性值
+ @param name   属性名称
+ */
+- (void)setPropertyWeak:(nullable id)object forName:(NSString *)name;
+
 @end
 
-/// NSObject实现包装器对象协议
-@interface NSObject (FWObjectWrapper) <FWWrapperObject>
-
-/// 对象包装器
-@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
-
-@end
-
-#pragma mark - FWObjectClassWrapper
+#pragma mark - FWClassWrapper+FWSwizzle
 
 /// 框架NSObject类包装器
 ///
 /// 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
-@interface FWObjectClassWrapper : FWWrapper<Class>
+@interface FWClassWrapper (FWSwizzle)
 
 #pragma mark - Simple
 
@@ -212,124 +310,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// NSObject实现包装器类协议
-@interface NSObject (FWObjectClassWrapper) <FWWrapperClass>
-
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWObjectClassWrapper *fw;
-
-@end
-
 #pragma mark - NSObject+FWSwizzle
 
 @interface NSObject (FWSwizzle)
-
-#pragma mark - Runtime
-
-/**
- 安全调用方法，如果不能响应，则忽略之
- 
- @param aSelector 要执行的方法
- @return id 方法执行后返回的值。如果无返回值，则为nil
- */
-- (nullable id)fwPerformSelector:(SEL)aSelector;
-
-/**
- 安全调用方法，如果不能响应，则忽略之
- 
- @param aSelector 要执行的方法
- @param object 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
- @return id 方法执行后返回的值。如果无返回值，则为nil
- */
-- (nullable id)fwPerformSelector:(SEL)aSelector withObject:(nullable id)object;
-
-/**
- 对super发送消息
- 
- @param aSelector 要执行的方法，需返回id类型
- @return id 方法执行后返回的值
- */
-- (nullable id)fwPerformSuperSelector:(SEL)aSelector;
-
-/**
- 对super发送消息，可传递参数
- 
- @param aSelector 要执行的方法，需返回id类型
- @param object 传递的方法参数
- @return id 方法执行后返回的值
- */
-- (nullable id)fwPerformSuperSelector:(SEL)aSelector withObject:(nullable id)object;
-
-/**
- 安全调用内部属性获取方法，如果属性不存在，则忽略之
- @note 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
- 
- @param name 内部属性名称
- @return 属性值
- */
-- (nullable id)fwPerformGetter:(NSString *)name;
-
-/**
- 安全调用内部属性设置方法，如果属性不存在，则忽略之
- @note 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
- 
- @param name 内部属性名称
- @param object 传递的方法参数
- @return 方法执行后返回的值
- */
-- (nullable id)fwPerformSetter:(NSString *)name withObject:(nullable id)object;
-
-#pragma mark - Property
-
-/**
- 临时对象，强引用，支持KVO
- @note 备注：key的几种形式的声明和使用，下同
-    1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
-    2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
-    3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
-    4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
- */
-@property (nullable, nonatomic, strong) id fwTempObject;
-
-/**
- 读取关联属性
- 
- @param name 属性名称
- @return 属性值
- */
-- (nullable id)fwPropertyForName:(NSString *)name;
-
-/**
- 设置强关联属性，支持KVO
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetProperty:(nullable id)object forName:(NSString *)name;
-
-/**
- 设置赋值关联属性，支持KVO，注意可能会产生野指针
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyAssign:(nullable id)object forName:(NSString *)name;
-
-/**
- 设置拷贝关联属性，支持KVO
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyCopy:(nullable id)object forName:(NSString *)name;
-
-/**
- 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
- 
- @param object 属性值
- @param name   属性名称
- */
-- (void)fwSetPropertyWeak:(nullable id)object forName:(NSString *)name;
 
 #pragma mark - Bind
 
