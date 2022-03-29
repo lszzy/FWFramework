@@ -175,6 +175,116 @@
     }
 }
 
+#pragma mark - Bind
+
+- (NSMutableDictionary *)allBoundObjects
+{
+    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
+    if (!dict) {
+        dict = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return dict;
+}
+
+- (void)bindObject:(id)object forKey:(NSString *)key
+{
+    if (!key.length) return;
+    
+    if (object) {
+        [[self allBoundObjects] setObject:object forKey:key];
+    } else {
+        [[self allBoundObjects] removeObjectForKey:key];
+    }
+}
+
+- (void)bindObjectWeak:(id)object forKey:(NSString *)key
+{
+    if (!key.length) return;
+    
+    if (object) {
+        [[self allBoundObjects] setObject:[[FWWeakObject alloc] initWithObject:object] forKey:key];
+    } else {
+        [[self allBoundObjects] removeObjectForKey:key];
+    }
+}
+
+- (id)boundObjectForKey:(NSString *)key
+{
+    if (!key.length) return nil;
+    
+    id object = [[self allBoundObjects] objectForKey:key];
+    if ([object isKindOfClass:[FWWeakObject class]]) {
+        object = [(FWWeakObject *)object object];
+    }
+    return object;
+}
+
+- (void)bindDouble:(double)doubleValue forKey:(NSString *)key
+{
+    [self bindObject:@(doubleValue) forKey:key];
+}
+
+- (double)boundDoubleForKey:(NSString *)key
+{
+    id object = [self boundObjectForKey:key];
+    if ([object isKindOfClass:[NSNumber class]]) {
+        return [(NSNumber *)object doubleValue];
+    } else {
+        return 0.0;
+    }
+}
+
+- (void)bindBool:(BOOL)boolValue forKey:(NSString *)key
+{
+    [self bindObject:@(boolValue) forKey:key];
+}
+
+- (BOOL)boundBoolForKey:(NSString *)key
+{
+    id object = [self boundObjectForKey:key];
+    if ([object isKindOfClass:[NSNumber class]]) {
+        return [(NSNumber *)object boolValue];
+    } else {
+        return NO;
+    }
+}
+
+- (void)bindInt:(NSInteger)integerValue forKey:(NSString *)key
+{
+    [self bindObject:@(integerValue) forKey:key];
+}
+
+- (NSInteger)boundIntForKey:(NSString *)key
+{
+    id object = [self boundObjectForKey:key];
+    if ([object isKindOfClass:[NSNumber class]]) {
+        return [(NSNumber *)object integerValue];
+    } else {
+        return 0;
+    }
+}
+
+- (void)removeBindingForKey:(NSString *)key
+{
+    [self bindObject:nil forKey:key];
+}
+
+- (void)removeAllBindings
+{
+    [[self allBoundObjects] removeAllObjects];
+}
+
+- (NSArray<NSString *> *)allBindingKeys
+{
+    return [[self allBoundObjects] allKeys];
+}
+
+- (BOOL)hasBindingKey:(NSString *)key
+{
+    return [[self allBindingKeys] containsObject:key];
+}
+
 @end
 
 #pragma mark - FWClassWrapper+FWSwizzle
@@ -385,122 +495,6 @@
         if (clazz == NULL || clazz == [NSObject class]) break;
     }
     return resultNames;
-}
-
-@end
-
-#pragma mark - NSObject+FWSwizzle
-
-@implementation NSObject (FWSwizzle)
-
-#pragma mark - Bind
-
-- (NSMutableDictionary *)fwAllBoundObjects
-{
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
-    if (!dict) {
-        dict = [NSMutableDictionary dictionary];
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return dict;
-}
-
-- (void)fwBindObject:(id)object forKey:(NSString *)key
-{
-    if (!key.length) return;
-    
-    if (object) {
-        [[self fwAllBoundObjects] setObject:object forKey:key];
-    } else {
-        [[self fwAllBoundObjects] removeObjectForKey:key];
-    }
-}
-
-- (void)fwBindObjectWeak:(id)object forKey:(NSString *)key
-{
-    if (!key.length) return;
-    
-    if (object) {
-        [[self fwAllBoundObjects] setObject:[[FWWeakObject alloc] initWithObject:object] forKey:key];
-    } else {
-        [[self fwAllBoundObjects] removeObjectForKey:key];
-    }
-}
-
-- (id)fwBoundObjectForKey:(NSString *)key
-{
-    if (!key.length) return nil;
-    
-    id object = [[self fwAllBoundObjects] objectForKey:key];
-    if ([object isKindOfClass:[FWWeakObject class]]) {
-        object = [(FWWeakObject *)object object];
-    }
-    return object;
-}
-
-- (void)fwBindDouble:(double)doubleValue forKey:(NSString *)key
-{
-    [self fwBindObject:@(doubleValue) forKey:key];
-}
-
-- (double)fwBoundDoubleForKey:(NSString *)key
-{
-    id object = [self fwBoundObjectForKey:key];
-    if ([object isKindOfClass:[NSNumber class]]) {
-        return [(NSNumber *)object doubleValue];
-    } else {
-        return 0.0;
-    }
-}
-
-- (void)fwBindBool:(BOOL)boolValue forKey:(NSString *)key
-{
-    [self fwBindObject:@(boolValue) forKey:key];
-}
-
-- (BOOL)fwBoundBoolForKey:(NSString *)key
-{
-    id object = [self fwBoundObjectForKey:key];
-    if ([object isKindOfClass:[NSNumber class]]) {
-        return [(NSNumber *)object boolValue];
-    } else {
-        return NO;
-    }
-}
-
-- (void)fwBindInt:(NSInteger)integerValue forKey:(NSString *)key
-{
-    [self fwBindObject:@(integerValue) forKey:key];
-}
-
-- (NSInteger)fwBoundIntForKey:(NSString *)key
-{
-    id object = [self fwBoundObjectForKey:key];
-    if ([object isKindOfClass:[NSNumber class]]) {
-        return [(NSNumber *)object integerValue];
-    } else {
-        return 0;
-    }
-}
-
-- (void)fwRemoveBindingForKey:(NSString *)key
-{
-    [self fwBindObject:nil forKey:key];
-}
-
-- (void)fwRemoveAllBindings
-{
-    [[self fwAllBoundObjects] removeAllObjects];
-}
-
-- (NSArray<NSString *> *)fwAllBindingKeys
-{
-    return [[self fwAllBoundObjects] allKeys];
-}
-
-- (BOOL)fwHasBindingKey:(NSString *)key
-{
-    return [[self fwAllBindingKeys] containsObject:key];
 }
 
 @end

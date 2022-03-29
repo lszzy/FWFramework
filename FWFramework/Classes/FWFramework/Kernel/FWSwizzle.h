@@ -186,6 +186,101 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setPropertyWeak:(nullable id)object forName:(NSString *)name;
 
+#pragma mark - Bind
+
+/**
+ 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+ 
+ @param object 对象，会被 strong 强引用
+ @param key 键名
+ */
+- (void)bindObject:(nullable id)object forKey:(NSString *)key;
+
+/**
+ 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+ 
+ @param object 对象，不会被 strong 强引用
+ @param key 键名
+ */
+- (void)bindObjectWeak:(nullable id)object forKey:(NSString *)key;
+
+/**
+ 取出之前使用 bind 方法绑定的对象
+ 
+ @param key 键名
+ */
+- (nullable id)boundObjectForKey:(NSString *)key;
+
+/**
+ 给对象绑定上一个 double 值以供后续取出使用
+ 
+ @param doubleValue double值
+ @param key 键名
+ */
+- (void)bindDouble:(double)doubleValue forKey:(NSString *)key;
+
+/**
+ 取出之前用 bindDouble:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (double)boundDoubleForKey:(NSString *)key;
+
+/**
+ 给对象绑定上一个 BOOL 值以供后续取出使用
+ 
+ @param boolValue 布尔值
+ @param key 键名
+ */
+- (void)bindBool:(BOOL)boolValue forKey:(NSString *)key;
+
+/**
+ 取出之前用 bindBool:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (BOOL)boundBoolForKey:(NSString *)key;
+
+/**
+ 给对象绑定上一个 NSInteger 值以供后续取出使用
+ 
+ @param integerValue 整数值
+ 
+ @param key 键名
+ */
+- (void)bindInt:(NSInteger)integerValue forKey:(NSString *)key;
+
+/**
+ 取出之前用 bindInt:forKey: 绑定的值
+ 
+ @param key 键名
+ */
+- (NSInteger)boundIntForKey:(NSString *)key;
+
+/**
+ 移除之前使用 bind 方法绑定的对象
+ 
+ @param key 键名
+ */
+- (void)removeBindingForKey:(NSString *)key;
+
+/**
+ 移除之前使用 bind 方法绑定的所有对象
+ */
+- (void)removeAllBindings;
+
+/**
+ 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
+ */
+- (NSArray<NSString *> *)allBindingKeys;
+
+/**
+ 返回是否设置了某个 key
+ 
+ @param key 键名
+ */
+- (BOOL)hasBindingKey:(NSString *)key;
+
 @end
 
 #pragma mark - FWClassWrapper+FWSwizzle
@@ -307,107 +402,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return Ivar列表
  */
 - (NSArray<NSString *> *)classIvars:(Class)clazz superclass:(BOOL)superclass;
-
-@end
-
-#pragma mark - NSObject+FWSwizzle
-
-@interface NSObject (FWSwizzle)
-
-#pragma mark - Bind
-
-/**
- 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
- 
- @param object 对象，会被 strong 强引用
- @param key 键名
- */
-- (void)fwBindObject:(nullable id)object forKey:(NSString *)key;
-
-/**
- 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
- 
- @param object 对象，不会被 strong 强引用
- @param key 键名
- */
-- (void)fwBindObjectWeak:(nullable id)object forKey:(NSString *)key;
-
-/**
- 取出之前使用 bind 方法绑定的对象
- 
- @param key 键名
- */
-- (nullable id)fwBoundObjectForKey:(NSString *)key;
-
-/**
- 给对象绑定上一个 double 值以供后续取出使用
- 
- @param doubleValue double值
- @param key 键名
- */
-- (void)fwBindDouble:(double)doubleValue forKey:(NSString *)key;
-
-/**
- 取出之前用 bindDouble:forKey: 绑定的值
- 
- @param key 键名
- */
-- (double)fwBoundDoubleForKey:(NSString *)key;
-
-/**
- 给对象绑定上一个 BOOL 值以供后续取出使用
- 
- @param boolValue 布尔值
- @param key 键名
- */
-- (void)fwBindBool:(BOOL)boolValue forKey:(NSString *)key;
-
-/**
- 取出之前用 bindBool:forKey: 绑定的值
- 
- @param key 键名
- */
-- (BOOL)fwBoundBoolForKey:(NSString *)key;
-
-/**
- 给对象绑定上一个 NSInteger 值以供后续取出使用
- 
- @param integerValue 整数值
- 
- @param key 键名
- */
-- (void)fwBindInt:(NSInteger)integerValue forKey:(NSString *)key;
-
-/**
- 取出之前用 bindInt:forKey: 绑定的值
- 
- @param key 键名
- */
-- (NSInteger)fwBoundIntForKey:(NSString *)key;
-
-/**
- 移除之前使用 bind 方法绑定的对象
- 
- @param key 键名
- */
-- (void)fwRemoveBindingForKey:(NSString *)key;
-
-/**
- 移除之前使用 bind 方法绑定的所有对象
- */
-- (void)fwRemoveAllBindings;
-
-/**
- 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
- */
-- (NSArray<NSString *> *)fwAllBindingKeys;
-
-/**
- 返回是否设置了某个 key
- 
- @param key 键名
- */
-- (BOOL)fwHasBindingKey:(NSString *)key;
 
 @end
 
