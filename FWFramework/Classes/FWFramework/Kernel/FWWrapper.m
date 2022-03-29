@@ -9,23 +9,64 @@
 #import "FWWrapper.h"
 #import <objc/runtime.h>
 
-@implementation FWWrapper
+#pragma mark - FWObjectWrapper
 
-+ (instancetype)wrapperWithBase:(id)base {
+@implementation FWObjectWrapper
+
++ (instancetype)wrapper:(id)base {
     id wrapper = objc_getAssociatedObject(base, @selector(fw));
     if (!wrapper) {
-        wrapper = [[self alloc] initWithBase:base];
-        objc_setAssociatedObject(self, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        wrapper = [[self alloc] init:base];
+        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return wrapper;
 }
 
-- (instancetype)initWithBase:(id)base {
+- (instancetype)init:(id)base {
     self = [super init];
     if (self) {
         _base = base;
     }
     return self;
+}
+
+@end
+
+@implementation NSObject (FWObjectWrapper)
+
+- (FWObjectWrapper<NSObject *> *)fw {
+    return [FWObjectWrapper<NSObject *> wrapper:self];
+}
+
+@end
+
+#pragma mark - FWClassWrapper
+
+@implementation FWClassWrapper
+
++ (instancetype)wrapper:(Class)base {
+    id wrapper = objc_getAssociatedObject(base, @selector(fw));
+    if (!wrapper) {
+        wrapper = [[self alloc] init:base];
+        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return wrapper;
+}
+
+- (instancetype)init:(Class)base {
+    self = [super init];
+    if (self) {
+        _base = base;
+    }
+    return self;
+}
+
+@end
+
+@implementation NSObject (FWClassWrapper)
+
++ (FWClassWrapper *)fw {
+    return [FWClassWrapper wrapper:self];
 }
 
 @end

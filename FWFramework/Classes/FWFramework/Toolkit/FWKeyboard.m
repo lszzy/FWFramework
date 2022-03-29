@@ -641,7 +641,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         dispatch_once(&onceToken, ^{
             UITextField *textField = [[UITextField alloc] init];
             textField.placeholder = @" ";
-            UILabel *placeholderLabel = [textField fwPerformGetter:@"_placeholderLabel"];
+            UILabel *placeholderLabel = [textField.fw invokeGetter:@"_placeholderLabel"];
             defaultPlaceholderColor = placeholderLabel.textColor;
         });
         
