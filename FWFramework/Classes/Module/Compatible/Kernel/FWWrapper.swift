@@ -11,12 +11,37 @@ import Foundation
 import FWFramework
 #endif
 
-/// String实现包装器对象协议
-extension String {
+// MARK: - FWWrapper
+/// Swift包装器
+public struct FWWrapper<T> {
+    /// 原始对象
+    public let base: T
     
-    /// 对象包装器
-    public var fw: FWStringWrapper {
-        return FWStringWrapper(base: self as NSString)
+    /// 初始化方法
+    public init(_ base: T) {
+        self.base = base
     }
-    
+}
+
+// MARK: - FWAnyWrapper
+/// 对象包装器协议
+public protocol FWAnyWrapper { }
+
+extension FWAnyWrapper {
+    /// 对象包装器属性
+    public var fw: FWWrapper<Self> {
+        get { return FWWrapper(self) }
+        set { }
+    }
+}
+
+// MARK: - FWTypeWrapper
+/// 类包装器协议
+public protocol FWTypeWrapper { }
+
+extension FWTypeWrapper {
+    /// 类包装器属性
+    public static var fw: FWWrapper<Self.Type> {
+        return FWWrapper(self)
+    }
 }
