@@ -227,19 +227,6 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 
 @end
 
-/// 框架视图控制器对象包装器
-@interface FWViewControllerWrapper : FWObjectWrapper<UIViewController *>
-
-@end
-
-/// 视图控制器实现包装器对象协议
-@interface UIViewController (FWViewControllerWrapper) <FWObjectWrapper>
-
-/// 对象包装器
-@property (nonatomic, strong, readonly) FWViewControllerWrapper *fw;
-
-@end
-
 #pragma mark - UIViewController+FWAdaptive
 
 /**

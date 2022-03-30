@@ -11,19 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 框架NSString对象包装器
-@interface FWStringWrapper : FWObjectWrapper<NSString *>
-
-@end
-
-/// NSString实现包装器对象协议
-@interface NSString (FWStringWrapper) <FWObjectWrapper>
-
-/// 对象包装器
-@property (nonatomic, strong, readonly) FWStringWrapper *fw;
-
-@end
-
 #pragma mark - NSString+FWEncode
 
 /**

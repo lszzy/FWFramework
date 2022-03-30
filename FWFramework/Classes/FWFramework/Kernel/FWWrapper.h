@@ -74,4 +74,49 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWStringWrapper
+
+/// 框架NSString对象包装器
+@interface FWStringWrapper : FWObjectWrapper<NSString *>
+
+@end
+
+/// NSString实现包装器对象协议
+@interface NSString (FWStringWrapper) <FWObjectWrapper>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWStringWrapper *fw;
+
+@end
+
+#pragma mark - FWViewWrapper
+
+/// 框架视图对象包装器
+@interface FWViewWrapper : FWObjectWrapper<UIView *>
+
+@end
+
+/// 视图实现包装器对象协议
+@interface UIView (FWViewWrapper) <FWObjectWrapper>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWViewWrapper *fw;
+
+@end
+
+#pragma mark - FWViewControllerWrapper
+
+/// 框架视图控制器对象包装器
+@interface FWViewControllerWrapper : FWObjectWrapper<UIViewController *>
+
+@end
+
+/// 视图控制器实现包装器对象协议
+@interface UIViewController (FWViewControllerWrapper) <FWObjectWrapper>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWViewControllerWrapper *fw;
+
+@end
+
 NS_ASSUME_NONNULL_END
