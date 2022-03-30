@@ -30,8 +30,7 @@ public protocol FWAnyWrapper { }
 extension FWAnyWrapper {
     /// 对象包装器属性
     public var fw: FWWrapper<Self> {
-        get { return FWWrapper(self) }
-        set { }
+        return FWWrapper(self)
     }
 }
 
@@ -45,3 +44,11 @@ extension FWTypeWrapper {
         return FWWrapper(self)
     }
 }
+
+// MARK: - FWAnyWrapper
+
+extension String: FWAnyWrapper { }
+
+// MARK: - FWTypeWrapper
+
+extension String: FWTypeWrapper { }

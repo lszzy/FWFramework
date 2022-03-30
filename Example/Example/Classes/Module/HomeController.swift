@@ -62,9 +62,9 @@ private extension HomeController {
     private func setupNavbar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem.fwBarItem(with: "home.btnStyle".fwLocalized, target: self, action: #selector(leftItemClicked(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem.fwBarItem(with: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
         
-        let isChinese = Bundle.fwCurrentLanguage?.hasPrefix("zh") ?? false
+        let isChinese = Bundle.fw.currentLanguage?.hasPrefix("zh") ?? false
         navigationItem.rightBarButtonItem = UIBarButtonItem.fwBarItem(with: isChinese ? "中文" : "English", target: self, action: #selector(rightItemClicked(_:)))
     }
    
@@ -87,10 +87,10 @@ private extension HomeController {
     }
     
     func rightItemClicked(_ sender: Any) {
-        let isChinese = Bundle.fwCurrentLanguage?.hasPrefix("zh") ?? false
-        Bundle.fwLocalizedLanguage = isChinese ? "en" : "zh-Hans"
+        let isChinese = Bundle.fw.currentLanguage?.hasPrefix("zh") ?? false
+        Bundle.fw.localizedLanguage = isChinese ? "en" : "zh-Hans"
         
-        navigationItem.leftBarButtonItem?.title = "home.btnStyle".fwLocalized
+        navigationItem.leftBarButtonItem?.title = "home.btnStyle".fw.localized
         if let buttonItem = sender as? UIBarButtonItem {
             buttonItem.title = isChinese ? "English" : "中文"
         }
@@ -109,13 +109,13 @@ private extension HomeController {
     
     func renderData() {
         #if APP_PRODUCTION
-        let envTitle = "home.envProduction".fwLocalized
+        let envTitle = "home.envProduction".fw.localized
         #elseif APP_STAGING
-        let envTitle = "home.envStaging".fwLocalized
+        let envTitle = "home.envStaging".fw.localized
         #elseif APP_TESTING
-        let envTitle = "home.envTesting".fwLocalized
+        let envTitle = "home.envTesting".fw.localized
         #else
-        let envTitle = "home.envDevelopment".fwLocalized
+        let envTitle = "home.envDevelopment".fw.localized
         #endif
         title = "FWFramework - \(envTitle)"
     }
