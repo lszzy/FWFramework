@@ -167,7 +167,7 @@
 {
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     activityController.excludedActivityTypes = excludedTypes;
-    [[UIWindow fwMainWindow] fwPresentViewController:activityController animated:YES completion:nil];
+    [UIWindow.fw presentViewController:activityController animated:YES completion:nil];
 }
 
 + (void)fwOpenSafariController:(id)url
@@ -185,7 +185,7 @@
         objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
         safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
     }
-    [UIWindow.fwMainWindow fwPresentViewController:safariController animated:YES completion:nil];
+    [UIWindow.fw presentViewController:safariController animated:YES completion:nil];
 }
 
 + (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
@@ -199,7 +199,7 @@
         objc_setAssociatedObject(controller, @selector(messageComposeViewController:didFinishWithResult:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.messageComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [UIWindow.fwMainWindow fwPresentViewController:controller animated:YES completion:nil];
+    [UIWindow.fw presentViewController:controller animated:YES completion:nil];
 }
 
 + (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
@@ -213,7 +213,7 @@
         objc_setAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.mailComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [UIWindow.fwMainWindow fwPresentViewController:controller animated:YES completion:nil];
+    [UIWindow.fw presentViewController:controller animated:YES completion:nil];
 }
 
 + (void)fwOpenStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
@@ -227,7 +227,7 @@
         }
         
         objc_setAssociatedObject(viewController, @selector(productViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        [UIWindow.fwMainWindow fwPresentViewController:viewController animated:YES completion:nil];
+        [UIWindow.fw presentViewController:viewController animated:YES completion:nil];
     }];
 }
 

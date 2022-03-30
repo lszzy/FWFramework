@@ -34,8 +34,8 @@
 
 @implementation NSObject (FWObjectWrapper)
 
-- (FWObjectWrapper<NSObject *> *)fw {
-    return [FWObjectWrapper<NSObject *> wrapper:self];
+- (FWObjectWrapper *)fw {
+    return [FWObjectWrapper wrapper:self];
 }
 
 @end
@@ -77,10 +77,62 @@
 
 @end
 
+@implementation FWStringClassWrapper
+
+@end
+
 @implementation NSString (FWStringWrapper)
 
 - (FWStringWrapper *)fw {
     return [FWStringWrapper wrapper:self];
+}
+
++ (FWStringClassWrapper *)fw {
+    return [FWStringClassWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWDataWrapper
+
+@implementation FWDataWrapper
+
+@end
+
+@implementation FWDataClassWrapper
+
+@end
+
+@implementation NSData (FWDataWrapper)
+
+- (FWDataWrapper *)fw {
+    return [FWDataWrapper wrapper:self];
+}
+
++ (FWDataClassWrapper *)fw {
+    return [FWDataClassWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWURLWrapper
+
+@implementation FWURLWrapper
+
+@end
+
+@implementation FWURLClassWrapper
+
+@end
+
+@implementation NSURL (FWURLWrapper)
+
+- (FWURLWrapper *)fw {
+    return [FWURLWrapper wrapper:self];
+}
+
++ (FWURLClassWrapper *)fw {
+    return [FWURLClassWrapper wrapper:self];
 }
 
 @end
@@ -99,6 +151,28 @@
 
 @end
 
+#pragma mark - FWWindowWrapper
+
+@implementation FWWindowWrapper
+
+@end
+
+@implementation FWWindowClassWrapper
+
+@end
+
+@implementation UIWindow (FWWindowWrapper)
+
+- (FWWindowWrapper *)fw {
+    return [FWWindowWrapper wrapper:self];
+}
+
++ (FWWindowClassWrapper *)fw {
+    return [FWWindowClassWrapper wrapper:self];
+}
+
+@end
+
 #pragma mark - FWViewControllerWrapper
 
 @implementation FWViewControllerWrapper
@@ -109,6 +183,20 @@
 
 - (FWViewControllerWrapper *)fw {
     return [FWViewControllerWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWNavigationControllerWrapper
+
+@implementation FWNavigationControllerWrapper
+
+@end
+
+@implementation UINavigationController (FWNavigationControllerWrapper)
+
+- (FWNavigationControllerWrapper *)fw {
+    return [FWNavigationControllerWrapper wrapper:self];
 }
 
 @end

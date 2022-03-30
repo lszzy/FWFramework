@@ -797,22 +797,22 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[UIWindow fwMainWindow] fwPushViewController:viewController animated:animated];
+    [UIWindow.fw pushViewController:viewController animated:animated];
 }
 
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
+    [UIWindow.fw presentViewController:viewController animated:animated completion:completion];
 }
 
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[UIWindow fwMainWindow] fwOpenViewController:viewController animated:animated];
+    [UIWindow.fw openViewController:viewController animated:animated];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated
 {
-    return [[UIWindow fwMainWindow] fwCloseViewControllerAnimated:animated];
+    return [UIWindow.fw closeViewControllerAnimated:animated];
 }
 
 @end

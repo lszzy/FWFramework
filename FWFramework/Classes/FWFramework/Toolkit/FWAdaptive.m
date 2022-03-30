@@ -210,7 +210,7 @@ static CGFloat fwStaticReferenceHeight = 812;
 
 + (UIEdgeInsets)fwSafeAreaInsets
 {
-    return UIWindow.fwMainWindow.safeAreaInsets;
+    return UIWindow.fw.mainWindow.safeAreaInsets;
 }
 
 + (CGFloat)fwStatusBarHeight
