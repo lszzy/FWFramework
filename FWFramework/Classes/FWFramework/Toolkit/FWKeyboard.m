@@ -658,16 +658,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         [self fwSetNeedsUpdatePlaceholder];
         [self insertSubview:label atIndex:0];
         
-        [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwSetNeedsUpdateText)];
+        [self.fw observeNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwSetNeedsUpdateText)];
 
-        [self fwObserveProperty:@"attributedText" target:self action:@selector(fwSetNeedsUpdateText)];
-        [self fwObserveProperty:@"text" target:self action:@selector(fwSetNeedsUpdateText)];
-        [self fwObserveProperty:@"bounds" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"frame" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"textAlignment" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
-        [self fwObserveProperty:@"textContainerInset" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self.fw observeProperty:@"attributedText" target:self action:@selector(fwSetNeedsUpdateText)];
+        [self.fw observeProperty:@"text" target:self action:@selector(fwSetNeedsUpdateText)];
+        [self.fw observeProperty:@"bounds" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self.fw observeProperty:@"frame" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self.fw observeProperty:@"textAlignment" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
+        [self.fw observeProperty:@"textContainerInset" target:self action:@selector(fwSetNeedsUpdatePlaceholder)];
         
-        [self fwObserveProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
+        [self.fw observeProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
             if (change[NSKeyValueChangeNewKey] != nil) textView.fwPlaceholderLabel.font = textView.font;
             [textView fwSetNeedsUpdatePlaceholder];
         }];
