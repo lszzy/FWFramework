@@ -6,7 +6,7 @@
  @updated    2018-05-11
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,10 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架包装器
 @interface FWObjectWrapper<__covariant ObjectType> : NSObject
 
-/// 原始对象，内部访问
+/// 原始对象
 @property (nonatomic, unsafe_unretained, readonly) ObjectType base;
 
-/// 禁用属性，防止嵌套
+/// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
 
 /// 快速创建包装器
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
 
 /// 对象包装器
-@property (nonatomic, strong, readonly) FWObjectWrapper<NSObject *> *fw;
+@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
 
@@ -47,10 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架类包装器
 @interface FWClassWrapper : NSObject
 
-/// 原始类，内部访问
+/// 原始类
 @property (nonatomic, unsafe_unretained, readonly) Class base;
 
-/// 禁用属性，防止嵌套
+/// 禁用属性
 @property (nonatomic, strong, readonly) FWClassWrapper *fw NS_UNAVAILABLE;
 
 /// 快速创建包装器
@@ -81,41 +81,132 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// NSString实现包装器对象协议
-@interface NSString (FWStringWrapper) <FWObjectWrapper>
+/// 框架NSString类包装器
+@interface FWStringClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSString (FWStringWrapper)
 
 /// 对象包装器
 @property (nonatomic, strong, readonly) FWStringWrapper *fw;
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWStringClassWrapper *fw;
+
+@end
+
+#pragma mark - FWDataWrapper
+
+/// 框架NSData对象包装器
+@interface FWDataWrapper : FWObjectWrapper<NSData *>
+
+@end
+
+/// 框架NSData类包装器
+@interface FWDataClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSData (FWDataWrapper)
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWDataWrapper *fw;
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWDataClassWrapper *fw;
+
+@end
+
+#pragma mark - FWURLWrapper
+
+/// 框架NSURL对象包装器
+@interface FWURLWrapper : FWObjectWrapper<NSURL *>
+
+@end
+
+/// 框架NSURL类包装器
+@interface FWURLClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSURL (FWURLWrapper)
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWURLWrapper *fw;
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWURLClassWrapper *fw;
 
 @end
 
 #pragma mark - FWViewWrapper
 
 /// 框架视图对象包装器
-@interface FWViewWrapper : FWObjectWrapper<UIView *>
+@interface FWViewWrapper<__covariant ObjectType: UIView *> : FWObjectWrapper<ObjectType>
+
+/// 原始对象
+@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
 
 @end
 
-/// 视图实现包装器对象协议
-@interface UIView (FWViewWrapper) <FWObjectWrapper>
+@interface UIView (FWViewWrapper)
 
 /// 对象包装器
 @property (nonatomic, strong, readonly) FWViewWrapper *fw;
 
 @end
 
-#pragma mark - FWViewControllerWrapper
+#pragma mark - FWWindowWrapper
 
-/// 框架视图控制器对象包装器
-@interface FWViewControllerWrapper : FWObjectWrapper<UIViewController *>
+/// 框架窗口对象包装器
+@interface FWWindowWrapper : FWViewWrapper<UIWindow *>
 
 @end
 
-/// 视图控制器实现包装器对象协议
-@interface UIViewController (FWViewControllerWrapper) <FWObjectWrapper>
+/// 框架窗口类包装器
+@interface FWWindowClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIWindow (FWWindowWrapper)
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWWindowWrapper *fw;
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWWindowClassWrapper *fw;
+
+@end
+
+#pragma mark - FWViewControllerWrapper
+
+/// 框架视图控制器对象包装器
+@interface FWViewControllerWrapper<__covariant ObjectType: UIViewController *> : FWObjectWrapper<ObjectType>
+
+/// 原始对象
+@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
+
+@end
+
+@interface UIViewController (FWViewControllerWrapper)
 
 /// 对象包装器
 @property (nonatomic, strong, readonly) FWViewControllerWrapper *fw;
+
+@end
+
+#pragma mark - FWNavigationControllerWrapper
+
+/// 框架导航控制器对象包装器
+@interface FWNavigationControllerWrapper : FWViewControllerWrapper<UINavigationController *>
+
+@end
+
+@interface UINavigationController (FWNavigationControllerWrapper)
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWNavigationControllerWrapper *fw;
 
 @end
 
