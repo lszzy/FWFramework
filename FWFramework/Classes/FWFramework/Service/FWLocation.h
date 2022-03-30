@@ -20,11 +20,11 @@ FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString
 #pragma mark - FWLocationManager
 
 /// 定位更新通知
-extern NSString *const FWLocationUpdatedNotification;
+UIKIT_EXTERN NSNotificationName const FWLocationUpdatedNotification;
 /// 定位失败通知
-extern NSString *const FWLocationFailedNotification;
+UIKIT_EXTERN NSNotificationName const FWLocationFailedNotification;
 /// 方向改变通知
-extern NSString *const FWHeadingUpdatedNotification;
+UIKIT_EXTERN NSNotificationName const FWHeadingUpdatedNotification;
 
 /**
  位置服务

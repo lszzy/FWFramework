@@ -19,9 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 消息名称
  */
 #define FWMessage( name ) \
-    @property (nonatomic, readonly) NSString * name; \
-    - (NSString *)name; \
-    + (NSString *)name;
+    @property (nonatomic, readonly) NSNotificationName name; \
+    - (NSNotificationName)name; \
+    + (NSNotificationName)name;
 
 /**
  定义类点对点消息实现
@@ -30,8 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 #define FWDefMessage( name ) \
     @dynamic name; \
-    - (NSString *)name { return [[self class] name]; } \
-    + (NSString *)name { return [NSString stringWithFormat:@"%@.%@.%s", @"message", NSStringFromClass([self class]), #name]; }
+    - (NSNotificationName)name { return [[self class] name]; } \
+    + (NSNotificationName)name { return [NSString stringWithFormat:@"%@.%@.%s", @"message", NSStringFromClass([self class]), #name]; }
 
 /**
  定义类广播通知
@@ -39,9 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 通知名称
  */
 #define FWNotification( name ) \
-    @property (nonatomic, readonly) NSString * name; \
-    - (NSString *)name; \
-    + (NSString *)name;
+    @property (nonatomic, readonly) NSNotificationName name; \
+    - (NSNotificationName)name; \
+    + (NSNotificationName)name;
 
 /**
  定义类广播通知实现
@@ -50,8 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 #define FWDefNotification( name ) \
     @dynamic name; \
-    - (NSString *)name { return [[self class] name]; } \
-    + (NSString *)name { return [NSString stringWithFormat:@"%@.%@.%s", @"notification", NSStringFromClass([self class]), #name]; }
+    - (NSNotificationName)name { return [[self class] name]; } \
+    + (NSNotificationName)name { return [NSString stringWithFormat:@"%@.%@.%s", @"notification", NSStringFromClass([self class]), #name]; }
 
 #pragma mark - FWObjectWrapper+FWMessage
 
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 消息句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSString *)name block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  消息句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSString *)name target:(id)target action:(SEL)action;
+- (nullable NSString *)observeMessage:(NSNotificationName)name target:(id)target action:(SEL)action;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (nullable NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /**
  手工移除某个点对点消息指定监听
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 消息目标
  @param action 目标动作
  */
-- (void)unobserveMessage:(NSString *)name target:(nullable id)target action:(nullable SEL)action;
+- (void)unobserveMessage:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action;
 
 /**
  手工移除某个指定对象点对点消息指定监听
@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 消息目标
  @param action 目标动作
  */
-- (void)unobserveMessage:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+- (void)unobserveMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
 /**
  手工移除某个指定对象点对点消息指定监听
@@ -124,14 +124,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       消息名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveMessage:(NSString *)name identifier:(nullable NSString *)identifier;
+- (void)unobserveMessage:(NSNotificationName)name identifier:(nullable NSString *)identifier;
 
 /**
  手工移除某个点对点消息所有监听
  
  @param name 消息名称
  */
-- (void)unobserveMessage:(NSString *)name;
+- (void)unobserveMessage:(NSNotificationName)name;
 
 /**
  手工移除某个指定对象点对点消息所有监听
@@ -139,7 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   消息名称
  @param object 消息对象，值为nil时表示所有
  */
-- (void)unobserveMessage:(NSString *)name object:(nullable id)object;
+- (void)unobserveMessage:(NSNotificationName)name object:(nullable id)object;
 
 /**
  手工移除所有点对点消息监听
@@ -154,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 消息名称
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver;
 
 /**
  发送点对点消息，附带对象
@@ -163,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 消息对象
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name object:(nullable id)object toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver;
 
 /**
  发送点对点消息，附带对象和用户信息
@@ -173,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
 
 @end
 
@@ -189,7 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 消息名称
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver;
 
 /**
  发送类点对点消息，附带对象
@@ -198,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 消息对象
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name object:(nullable id)object toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver;
 
 /**
  发送类点对点消息，附带对象和用户信息
@@ -208,7 +208,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
+- (void)sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
 
 @end
 
@@ -225,7 +225,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 通知句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSString *)name block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -235,7 +235,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  通知句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSString *)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (nullable NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -245,7 +245,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSString *)name target:(id)target action:(SEL)action;
+- (nullable NSString *)observeNotification:(NSNotificationName)name target:(id)target action:(SEL)action;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -256,7 +256,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSString *)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (nullable NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object target:(id)target action:(SEL)action;
 
 /**
  手工移除某个广播通知指定监听
@@ -265,7 +265,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 通知目标
  @param action 目标动作
  */
-- (void)unobserveNotification:(NSString *)name target:(nullable id)target action:(nullable SEL)action;
+- (void)unobserveNotification:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action;
 
 /**
  手工移除某个指定对象广播通知指定监听
@@ -275,7 +275,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 通知目标
  @param action 目标动作
  */
-- (void)unobserveNotification:(NSString *)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+- (void)unobserveNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
 /**
  手工移除某个指定对象广播通知指定监听
@@ -283,14 +283,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       通知名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveNotification:(NSString *)name identifier:(nullable NSString *)identifier;
+- (void)unobserveNotification:(NSNotificationName)name identifier:(nullable NSString *)identifier;
 
 /**
  手工移除某个广播通知所有监听
  
  @param name 通知名称
  */
-- (void)unobserveNotification:(NSString *)name;
+- (void)unobserveNotification:(NSNotificationName)name;
 
 /**
  手工移除某个指定对象广播通知所有监听
@@ -298,7 +298,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象，值为nil时表示所有
  */
-- (void)unobserveNotification:(NSString *)name object:(nullable id)object;
+- (void)unobserveNotification:(NSNotificationName)name object:(nullable id)object;
 
 /**
  手工移除所有广播通知监听
@@ -312,7 +312,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name 通知名称
  */
-- (void)postNotification:(NSString *)name;
+- (void)postNotification:(NSNotificationName)name;
 
 /**
  发送广播通知，附带对象
@@ -320,7 +320,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象
  */
-- (void)postNotification:(NSString *)name object:(nullable id)object;
+- (void)postNotification:(NSNotificationName)name object:(nullable id)object;
 
 /**
  发送广播通知，附带对象和用户信息
@@ -329,7 +329,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object   通知对象
  @param userInfo 用户信息
  */
-- (void)postNotification:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (void)postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -344,7 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name 通知名称
  */
-- (void)postNotification:(NSString *)name;
+- (void)postNotification:(NSNotificationName)name;
 
 /**
  发送广播通知，附带对象
@@ -352,7 +352,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象
  */
-- (void)postNotification:(NSString *)name object:(nullable id)object;
+- (void)postNotification:(NSNotificationName)name object:(nullable id)object;
 
 /**
  发送广播通知，附带对象和用户信息
@@ -361,7 +361,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object   通知对象
  @param userInfo 用户信息
  */
-- (void)postNotification:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
+- (void)postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
