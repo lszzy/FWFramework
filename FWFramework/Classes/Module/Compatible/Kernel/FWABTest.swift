@@ -42,36 +42,51 @@ class FWABVersionWeight {
 /// 随机数仓库协议
 @objc public protocol FWABRandomRepository {
     /// 获取指定key随机数
-    func fwGetRandomNumber(key: String) -> Int
+    func getRandomNumber(key: String) -> Int
     /// 设置指定key随机数
-    func fwSetRandomNumber(_ randomNumber: Int, key: String)
+    func setRandomNumber(_ randomNumber: Int, key: String)
     /// 删除指定key随机数
-    func fwRemoveRandomNumber(key: String)
+    func removeRandomNumber(key: String)
 }
 
-/// UserDefaults默认实现随机数仓库协议
-@objc extension UserDefaults: FWABRandomRepository {
+/// 默认随机数仓库，存储于UserDefaults
+@objcMembers public class FWABDefaultRepository: NSObject, FWABRandomRepository {
+    /// 单例模式
+    public static let sharedInstance = FWABDefaultRepository()
+    
+    private var userDefaults: UserDefaults
+    
+    /// 初始化，使用默认UserDefaults
+    public override init() {
+        userDefaults = .standard
+    }
+    
+    /// 初始化，指定UserDefaults
+    public init(userDefaults: UserDefaults) {
+        self.userDefaults = userDefaults
+    }
+    
     /// 获取指定key随机数
-    public func fwGetRandomNumber(key: String) -> Int {
-        var randomNumber = integer(forKey: key)
+    public func getRandomNumber(key: String) -> Int {
+        var randomNumber = userDefaults.integer(forKey: key)
         if randomNumber == 0 {
             randomNumber = Int(arc4random_uniform(100))
-            set(randomNumber, forKey: key)
-            synchronize()
+            userDefaults.set(randomNumber, forKey: key)
+            userDefaults.synchronize()
         }
         return randomNumber
     }
     
     /// 设置指定key随机数
-    public func fwSetRandomNumber(_ randomNumber: Int, key: String) {
-        set(randomNumber, forKey: key)
-        synchronize()
+    public func setRandomNumber(_ randomNumber: Int, key: String) {
+        userDefaults.set(randomNumber, forKey: key)
+        userDefaults.synchronize()
     }
     
     /// 删除指定key随机数
-    public func fwRemoveRandomNumber(key: String) {
-        removeObject(forKey: key)
-        synchronize()
+    public func removeRandomNumber(key: String) {
+        userDefaults.removeObject(forKey: key)
+        userDefaults.synchronize()
     }
 }
 
@@ -95,7 +110,7 @@ class FWABVersionWeight {
     
     /// 初始化方法，使用默认UserDefaults随机数仓库
     public convenience init(name: String, defaultVersion: FWABVersion) {
-        self.init(name: name, defaultVersion: defaultVersion, randomRepository: UserDefaults.standard)
+        self.init(name: name, defaultVersion: defaultVersion, randomRepository: FWABDefaultRepository.sharedInstance)
     }
     
     /// 添加版本并指定权重
@@ -106,12 +121,12 @@ class FWABVersionWeight {
     
     /// 设置随机数
     public func setRandomNumber(_ randomNumber: Int) {
-        randomRepository.fwSetRandomNumber(randomNumber, key: "FWAB-\(name)")
+        randomRepository.setRandomNumber(randomNumber, key: "FWAB-\(name)")
     }
     
     /// 移除随机数
     public func removeRandomNumber() {
-        randomRepository.fwRemoveRandomNumber(key: "FWAB-\(name)")
+        randomRepository.removeRandomNumber(key: "FWAB-\(name)")
     }
     
     /// 运行测试
@@ -127,7 +142,7 @@ class FWABVersionWeight {
             weightIndex = versionWeight.weight
         }
         
-        let randomNumber = randomRepository.fwGetRandomNumber(key: "FWAB-\(name)")
+        let randomNumber = randomRepository.getRandomNumber(key: "FWAB-\(name)")
         let versions = versionWeights.filter { $0.contains(number: randomNumber) }.map { $0.version }
         let version = versions.first ?? defaultVersion
         version.behavior(version)
