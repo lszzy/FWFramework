@@ -19,9 +19,9 @@ CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string) {
 
 #pragma mark - FWLocationManager
 
-NSString *const FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
-NSString *const FWLocationFailedNotification = @"FWLocationFailedNotification";
-NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
+NSNotificationName const FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
+NSNotificationName const FWLocationFailedNotification = @"FWLocationFailedNotification";
+NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 @interface FWLocationManager () <CLLocationManagerDelegate>
 

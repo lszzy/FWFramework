@@ -10,7 +10,7 @@
 #import "FWLanguage.h"
 #import <objc/runtime.h>
 
-NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification";
+NSNotificationName const FWLanguageChangedNotification = @"FWLanguageChangedNotification";
 
 #pragma mark - FWInnerBundle
 

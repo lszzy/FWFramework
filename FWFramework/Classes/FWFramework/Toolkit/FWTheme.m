@@ -15,7 +15,7 @@
 
 #pragma mark - FWThemeManager
 
-NSString *const FWThemeChangedNotification = @"FWThemeChangedNotification";
+NSNotificationName const FWThemeChangedNotification = @"FWThemeChangedNotification";
 
 static NSMutableDictionary<NSString *, UIColor *> *fwStaticThemeColors = nil;
 static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;

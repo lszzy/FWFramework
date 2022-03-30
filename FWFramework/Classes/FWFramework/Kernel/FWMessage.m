@@ -73,12 +73,12 @@
 
 #pragma mark - Observer
 
-- (NSString *)observeMessage:(NSString *)name block:(void (^)(NSNotification *))block
+- (NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *))block
 {
     return [self observeMessage:name object:nil block:block];
 }
 
-- (NSString *)observeMessage:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)observeMessage:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
     if (!name || !block) return nil;
     
@@ -97,12 +97,12 @@
     return messageTarget.identifier;
 }
 
-- (NSString *)observeMessage:(NSString *)name target:(id)target action:(SEL)action
+- (NSString *)observeMessage:(NSNotificationName)name target:(id)target action:(SEL)action
 {
     return [self observeMessage:name object:nil target:target action:action];
 }
 
-- (NSString *)observeMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)observeMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name || !target || !action) return nil;
     
@@ -122,12 +122,12 @@
     return messageTarget.identifier;
 }
 
-- (void)unobserveMessage:(NSString *)name target:(id)target action:(SEL)action
+- (void)unobserveMessage:(NSNotificationName)name target:(id)target action:(SEL)action
 {
     [self unobserveMessage:name object:nil target:target action:action];
 }
 
-- (void)unobserveMessage:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (void)unobserveMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name) return;
     
@@ -155,7 +155,7 @@
     }
 }
 
-- (void)unobserveMessage:(NSString *)name identifier:(NSString *)identifier
+- (void)unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier
 {
     if (!name || !identifier) return;
     
@@ -170,12 +170,12 @@
     }];
 }
 
-- (void)unobserveMessage:(NSString *)name
+- (void)unobserveMessage:(NSNotificationName)name
 {
     [self unobserveMessage:name object:nil];
 }
 
-- (void)unobserveMessage:(NSString *)name object:(id)object
+- (void)unobserveMessage:(NSNotificationName)name object:(id)object
 {
     [self unobserveMessage:name object:object target:nil action:NULL];
 }
@@ -200,17 +200,17 @@
 
 #pragma mark - Subject
 
-- (void)sendMessage:(NSString *)name toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver
 {
     [NSObject.fw sendMessage:name toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSString *)name object:(id)object toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
 {
     [NSObject.fw sendMessage:name object:object toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
 {
     [NSObject.fw sendMessage:name object:object userInfo:userInfo toReceiver:receiver];
 }
@@ -223,17 +223,17 @@
 
 #pragma mark - Subject
 
-- (void)sendMessage:(NSString *)name toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver
 {
     [self sendMessage:name object:nil toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSString *)name object:(id)object toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
 {
     [self sendMessage:name object:object userInfo:nil toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
+- (void)sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
 {
     if (!name || !receiver) return;
     
@@ -260,12 +260,12 @@
 
 #pragma mark - Observer
 
-- (NSString *)observeNotification:(NSString *)name block:(void (^)(NSNotification *notification))block
+- (NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block
 {
     return [self observeNotification:name object:nil block:block];
 }
 
-- (NSString *)observeNotification:(NSString *)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)observeNotification:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
     if (!name || !block) return nil;
     
@@ -285,12 +285,12 @@
     return notificationTarget.identifier;
 }
 
-- (NSString *)observeNotification:(NSString *)name target:(id)target action:(SEL)action
+- (NSString *)observeNotification:(NSNotificationName)name target:(id)target action:(SEL)action
 {
     return [self observeNotification:name object:nil target:target action:action];
 }
 
-- (NSString *)observeNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)observeNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name || !target || !action) return nil;
     
@@ -311,12 +311,12 @@
     return notificationTarget.identifier;
 }
 
-- (void)unobserveNotification:(NSString *)name target:(id)target action:(SEL)action
+- (void)unobserveNotification:(NSNotificationName)name target:(id)target action:(SEL)action
 {
     [self unobserveNotification:name object:nil target:target action:action];
 }
 
-- (void)unobserveNotification:(NSString *)name object:(id)object target:(id)target action:(SEL)action
+- (void)unobserveNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name) return;
     
@@ -349,7 +349,7 @@
     }
 }
 
-- (void)unobserveNotification:(NSString *)name identifier:(NSString *)identifier
+- (void)unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier
 {
     if (!name || !identifier) return;
     
@@ -365,12 +365,12 @@
     }];
 }
 
-- (void)unobserveNotification:(NSString *)name
+- (void)unobserveNotification:(NSNotificationName)name
 {
     [self unobserveNotification:name object:nil];
 }
 
-- (void)unobserveNotification:(NSString *)name object:(id)object
+- (void)unobserveNotification:(NSNotificationName)name object:(id)object
 {
     [self unobserveNotification:name object:object target:nil action:NULL];
 }
@@ -400,17 +400,17 @@
 
 #pragma mark - Subject
 
-- (void)postNotification:(NSString *)name
+- (void)postNotification:(NSNotificationName)name
 {
     [NSObject.fw postNotification:name];
 }
 
-- (void)postNotification:(NSString *)name object:(id)object
+- (void)postNotification:(NSNotificationName)name object:(id)object
 {
     [NSObject.fw postNotification:name object:object];
 }
 
-- (void)postNotification:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
+- (void)postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
 {
     [NSObject.fw postNotification:name object:object userInfo:userInfo];
 }
@@ -423,17 +423,17 @@
 
 #pragma mark - Subject
 
-- (void)postNotification:(NSString *)name
+- (void)postNotification:(NSNotificationName)name
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
 }
 
-- (void)postNotification:(NSString *)name object:(id)object
+- (void)postNotification:(NSNotificationName)name object:(id)object
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:object];
 }
 
-- (void)postNotification:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo
+- (void)postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:object userInfo:userInfo];
 }
