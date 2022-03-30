@@ -12,19 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 框架视图对象包装器
-@interface FWViewWrapper : FWObjectWrapper<UIView *>
-
-@end
-
-/// 视图实现包装器对象协议
-@interface UIView (FWViewWrapper) <FWObjectWrapper>
-
-/// 对象包装器
-@property (nonatomic, strong, readonly) FWViewWrapper *fw;
-
-@end
-
 /**
  UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
  @note 如果约束条件完全相同，会自动更新约束而不是重新添加。

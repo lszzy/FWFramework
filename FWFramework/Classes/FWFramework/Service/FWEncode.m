@@ -11,18 +11,6 @@
 #import "FWSwizzle.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation FWStringWrapper
-
-@end
-
-@implementation NSString (FWStringWrapper)
-
-- (FWStringWrapper *)fw {
-    return [FWStringWrapper wrapper:self];
-}
-
-@end
-
 @implementation NSString (FWEncode)
 
 #pragma mark - Json

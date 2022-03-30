@@ -70,3 +70,45 @@
 }
 
 @end
+
+#pragma mark - FWStringWrapper
+
+@implementation FWStringWrapper
+
+@end
+
+@implementation NSString (FWStringWrapper)
+
+- (FWStringWrapper *)fw {
+    return [FWStringWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWViewWrapper
+
+@implementation FWViewWrapper
+
+@end
+
+@implementation UIView (FWViewWrapper)
+
+- (FWViewWrapper *)fw {
+    return [FWViewWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWViewControllerWrapper
+
+@implementation FWViewControllerWrapper
+
+@end
+
+@implementation UIViewController (FWViewControllerWrapper)
+
+- (FWViewControllerWrapper *)fw {
+    return [FWViewControllerWrapper wrapper:self];
+}
+
+@end
