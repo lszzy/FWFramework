@@ -1189,7 +1189,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 {
     id object = objc_getAssociatedObject(self, _cmd);
     if (!object) {
-        [self fwObserveNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwInnerLengthAction)];
+        [self.fw observeNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwInnerLengthAction)];
         objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
