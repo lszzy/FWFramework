@@ -29,7 +29,7 @@ class TestController: UITableViewController {
 private extension TestController {
     
     private func setupNavbar() {
-        navigationItem.title = "test.title".fwLocalized
+        navigationItem.title = "test.title".fw.localized
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
     }
    

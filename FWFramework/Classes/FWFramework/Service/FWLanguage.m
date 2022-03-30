@@ -32,9 +32,45 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 
 @end
 
-#pragma mark - NSBundle+FWLanguage
+#pragma mark - FWBundleWrapper+FWLanguage
 
-@implementation NSBundle (FWLanguage)
+@implementation FWBundleWrapper (FWLanguage)
+
+- (NSBundle *)localizedBundle
+{
+    if ([self.base isKindOfClass:[FWInnerBundle class]]) return self.base;
+    @synchronized (self.base) {
+        if (![self.base isKindOfClass:[FWInnerBundle class]]) {
+            object_setClass(self.base, [FWInnerBundle class]);
+            
+            NSString *language = [NSBundle.fw localizedLanguage];
+            if (language) {
+                [self languageChanged:[NSNotification notificationWithName:FWLanguageChangedNotification object:language]];
+            }
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languageChanged:) name:FWLanguageChangedNotification object:nil];
+        }
+    }
+    return self.base;
+}
+
+- (void)languageChanged:(NSNotification *)notification
+{
+    NSString *language = [notification.object isKindOfClass:[NSString class]] ? notification.object : nil;
+    NSBundle *bundle = [self localizedBundleWithLanguage:language];
+    objc_setAssociatedObject(self.base, @selector(localizedStringForKey:value:table:), bundle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSBundle *)localizedBundleWithLanguage:(NSString *)language
+{
+    return language ? [NSBundle bundleWithPath:[self.base pathForResource:language ofType:@"lproj"]] : nil;
+}
+
+@end
+
+#pragma mark - FWBundleClassWrapper+FWLanguage
+
+@implementation FWBundleClassWrapper (FWLanguage)
 
 #pragma mark - Main
 
@@ -42,19 +78,19 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *language = [self fwLocalizedLanguage];
+        NSString *language = [NSBundle.fw localizedLanguage];
         if (language) {
-            [self fwLocalizedChanged:language];
+            [NSBundle.fw localizedChanged:language];
         }
     });
 }
 
-+ (NSString *)fwCurrentLanguage
+- (NSString *)currentLanguage
 {
-    return [self fwLocalizedLanguage] ?: [self fwSystemLanguage];
+    return [self localizedLanguage] ?: [self systemLanguage];
 }
 
-+ (NSString *)fwSystemLanguage
+- (NSString *)systemLanguage
 {
     // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN
     // return [NSLocale preferredLanguages].firstObject;
@@ -62,12 +98,12 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
     return [[NSBundle mainBundle] preferredLocalizations].firstObject;
 }
 
-+ (NSString *)fwLocalizedLanguage
+- (NSString *)localizedLanguage
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWLocalizedLanguage"];
 }
 
-+ (void)setFwLocalizedLanguage:(NSString *)language
+- (void)setLocalizedLanguage:(NSString *)language
 {
     if (language) {
         [[NSUserDefaults standardUserDefaults] setObject:language forKey:@"FWLocalizedLanguage"];
@@ -78,12 +114,12 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    [self fwLocalizedChanged:language];
+    [self localizedChanged:language];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:FWLanguageChangedNotification object:language];
 }
 
-+ (void)fwLocalizedChanged:(NSString *)language
+- (void)localizedChanged:(NSString *)language
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -94,25 +130,25 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
     objc_setAssociatedObject(NSBundle.mainBundle, @selector(localizedStringForKey:value:table:), bundle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (NSString *)fwLocalizedString:(NSString *)key
+- (NSString *)localizedString:(NSString *)key
 {
-    return [self fwLocalizedString:key table:nil];
+    return [self localizedString:key table:nil];
 }
 
-+ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table
+- (NSString *)localizedString:(NSString *)key table:(NSString *)table
 {
     return [[NSBundle mainBundle] localizedStringForKey:key value:nil table:table];
 }
 
 #pragma mark - Bundle
 
-+ (instancetype)fwBundleWithName:(NSString *)name
+- (NSBundle *)bundleWithName:(NSString *)name
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:([name hasSuffix:@".bundle"] ? nil : @"bundle")];
     return path ? [NSBundle bundleWithPath:path] : nil;
 }
 
-+ (instancetype)fwBundleWithClass:(Class)clazz name:(NSString *)name
+- (NSBundle *)bundleWithClass:(Class)clazz name:(NSString *)name
 {
     NSBundle *bundle = [NSBundle bundleForClass:clazz];
     if (name.length > 0) {
@@ -122,45 +158,15 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
     return bundle;
 }
 
-- (NSBundle *)fwLocalizedBundle
+- (NSString *)localizedString:(NSString *)key bundle:(NSBundle *)bundle
 {
-    if ([self isKindOfClass:[FWInnerBundle class]]) return self;
-    @synchronized (self) {
-        if (![self isKindOfClass:[FWInnerBundle class]]) {
-            object_setClass(self, [FWInnerBundle class]);
-            
-            NSString *language = [NSBundle fwLocalizedLanguage];
-            if (language) {
-                [self fwLanguageChanged:[NSNotification notificationWithName:FWLanguageChangedNotification object:language]];
-            }
-            
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fwLanguageChanged:) name:FWLanguageChangedNotification object:nil];
-        }
-    }
-    return self;
+    return [self localizedString:key table:nil bundle:bundle];
 }
 
-- (void)fwLanguageChanged:(NSNotification *)notification
-{
-    NSString *language = [notification.object isKindOfClass:[NSString class]] ? notification.object : nil;
-    NSBundle *bundle = [self fwLocalizedBundleWithLanguage:language];
-    objc_setAssociatedObject(self, @selector(localizedStringForKey:value:table:), bundle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSBundle *)fwLocalizedBundleWithLanguage:(NSString *)language
-{
-    return language ? [NSBundle bundleWithPath:[self pathForResource:language ofType:@"lproj"]] : nil;
-}
-
-+ (NSString *)fwLocalizedString:(NSString *)key bundle:(NSBundle *)bundle
-{
-    return [self fwLocalizedString:key table:nil bundle:bundle];
-}
-
-+ (NSString *)fwLocalizedString:(NSString *)key table:(NSString *)table bundle:(NSBundle *)bundle
+- (NSString *)localizedString:(NSString *)key table:(NSString *)table bundle:(NSBundle *)bundle
 {
     if (bundle) {
-        return [[bundle fwLocalizedBundle] localizedStringForKey:key value:nil table:table];
+        return [[bundle.fw localizedBundle] localizedStringForKey:key value:nil table:table];
     } else {
         return [[NSBundle mainBundle] localizedStringForKey:key value:nil table:table];
     }
@@ -168,13 +174,13 @@ NSString *const FWLanguageChangedNotification = @"FWLanguageChangedNotification"
 
 @end
 
-#pragma mark - NSString+FWLanguage
+#pragma mark - FWStringWrapper+FWLanguage
 
-@implementation NSString (FWLanguage)
+@implementation FWStringWrapper (FWLanguage)
 
-- (NSString *)fwLocalized
+- (NSString *)localized
 {
-    return [NSBundle fwLocalizedString:self];
+    return [NSBundle.fw localizedString:self.base];
 }
 
 @end

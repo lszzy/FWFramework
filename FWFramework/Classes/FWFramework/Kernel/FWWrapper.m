@@ -137,9 +137,33 @@
 
 @end
 
+#pragma mark - FWBundleWrapper
+
+@implementation FWBundleWrapper
+
+@end
+
+@implementation FWBundleClassWrapper
+
+@end
+
+@implementation NSBundle (FWBundleWrapper)
+
+- (FWBundleWrapper *)fw {
+    return [FWBundleWrapper wrapper:self];
+}
+
++ (FWBundleClassWrapper *)fw {
+    return [FWBundleClassWrapper wrapper:self];
+}
+
+@end
+
 #pragma mark - FWViewWrapper
 
 @implementation FWViewWrapper
+
+@dynamic base;
 
 @end
 
@@ -176,6 +200,8 @@
 #pragma mark - FWViewControllerWrapper
 
 @implementation FWViewControllerWrapper
+
+@dynamic base;
 
 @end
 

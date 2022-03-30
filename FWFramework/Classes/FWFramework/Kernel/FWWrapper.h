@@ -140,6 +140,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWBundleWrapper
+
+/// 框架NSBundle对象包装器
+@interface FWBundleWrapper : FWObjectWrapper<NSBundle *>
+
+@end
+
+/// 框架NSBundle类包装器
+@interface FWBundleClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSBundle (FWBundleWrapper)
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWBundleWrapper *fw;
+
+/// 类包装器
+@property (class, nonatomic, strong, readonly) FWBundleClassWrapper *fw;
+
+@end
+
 #pragma mark - FWViewWrapper
 
 /// 框架视图对象包装器
