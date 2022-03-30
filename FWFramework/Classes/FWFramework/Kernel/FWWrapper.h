@@ -74,161 +74,141 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWStringWrapper
+#pragma mark - FWObjectWrapper
 
-/// 框架NSString对象包装器
 @interface FWStringWrapper : FWObjectWrapper<NSString *>
-
-@end
-
-/// 框架NSString类包装器
-@interface FWStringClassWrapper : FWClassWrapper
 
 @end
 
 @interface NSString (FWStringWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWStringWrapper *fw;
 
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWStringClassWrapper *fw;
-
 @end
 
-#pragma mark - FWDataWrapper
-
-/// 框架NSData对象包装器
 @interface FWDataWrapper : FWObjectWrapper<NSData *>
-
-@end
-
-/// 框架NSData类包装器
-@interface FWDataClassWrapper : FWClassWrapper
 
 @end
 
 @interface NSData (FWDataWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWDataWrapper *fw;
 
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWDataClassWrapper *fw;
-
 @end
 
-#pragma mark - FWURLWrapper
-
-/// 框架NSURL对象包装器
 @interface FWURLWrapper : FWObjectWrapper<NSURL *>
-
-@end
-
-/// 框架NSURL类包装器
-@interface FWURLClassWrapper : FWClassWrapper
 
 @end
 
 @interface NSURL (FWURLWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWURLWrapper *fw;
 
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWURLClassWrapper *fw;
-
 @end
 
-#pragma mark - FWBundleWrapper
-
-/// 框架NSBundle对象包装器
 @interface FWBundleWrapper : FWObjectWrapper<NSBundle *>
-
-@end
-
-/// 框架NSBundle类包装器
-@interface FWBundleClassWrapper : FWClassWrapper
 
 @end
 
 @interface NSBundle (FWBundleWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWBundleWrapper *fw;
-
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWBundleClassWrapper *fw;
 
 @end
 
-#pragma mark - FWViewWrapper
-
-/// 框架视图对象包装器
 @interface FWViewWrapper<__covariant ObjectType: UIView *> : FWObjectWrapper<ObjectType>
 
-/// 原始对象
 @property (nonatomic, unsafe_unretained, readonly) ObjectType base;
 
 @end
 
 @interface UIView (FWViewWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWViewWrapper *fw;
 
 @end
 
-#pragma mark - FWWindowWrapper
-
-/// 框架窗口对象包装器
 @interface FWWindowWrapper : FWViewWrapper<UIWindow *>
-
-@end
-
-/// 框架窗口类包装器
-@interface FWWindowClassWrapper : FWClassWrapper
 
 @end
 
 @interface UIWindow (FWWindowWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWWindowWrapper *fw;
-
-/// 类包装器
-@property (class, nonatomic, strong, readonly) FWWindowClassWrapper *fw;
 
 @end
 
-#pragma mark - FWViewControllerWrapper
-
-/// 框架视图控制器对象包装器
 @interface FWViewControllerWrapper<__covariant ObjectType: UIViewController *> : FWObjectWrapper<ObjectType>
 
-/// 原始对象
 @property (nonatomic, unsafe_unretained, readonly) ObjectType base;
 
 @end
 
 @interface UIViewController (FWViewControllerWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWViewControllerWrapper *fw;
 
 @end
 
-#pragma mark - FWNavigationControllerWrapper
-
-/// 框架导航控制器对象包装器
 @interface FWNavigationControllerWrapper : FWViewControllerWrapper<UINavigationController *>
 
 @end
 
 @interface UINavigationController (FWNavigationControllerWrapper)
 
-/// 对象包装器
 @property (nonatomic, strong, readonly) FWNavigationControllerWrapper *fw;
+
+@end
+
+#pragma mark - FWClassWrapper
+
+@interface FWStringClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSString (FWStringClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWStringClassWrapper *fw;
+
+@end
+
+@interface FWDataClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSData (FWDataClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWDataClassWrapper *fw;
+
+@end
+
+@interface FWURLClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSURL (FWURLClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWURLClassWrapper *fw;
+
+@end
+
+@interface FWBundleClassWrapper : FWClassWrapper
+
+@end
+
+@interface NSBundle (FWBundleClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWBundleClassWrapper *fw;
+
+@end
+
+@interface FWWindowClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIWindow (FWWindowClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWWindowClassWrapper *fw;
 
 @end
 

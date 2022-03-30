@@ -71,13 +71,9 @@
 
 @end
 
-#pragma mark - FWStringWrapper
+#pragma mark - FWObjectWrapper
 
 @implementation FWStringWrapper
-
-@end
-
-@implementation FWStringClassWrapper
 
 @end
 
@@ -87,19 +83,9 @@
     return [FWStringWrapper wrapper:self];
 }
 
-+ (FWStringClassWrapper *)fw {
-    return [FWStringClassWrapper wrapper:self];
-}
-
 @end
-
-#pragma mark - FWDataWrapper
 
 @implementation FWDataWrapper
-
-@end
-
-@implementation FWDataClassWrapper
 
 @end
 
@@ -109,19 +95,9 @@
     return [FWDataWrapper wrapper:self];
 }
 
-+ (FWDataClassWrapper *)fw {
-    return [FWDataClassWrapper wrapper:self];
-}
-
 @end
-
-#pragma mark - FWURLWrapper
 
 @implementation FWURLWrapper
-
-@end
-
-@implementation FWURLClassWrapper
 
 @end
 
@@ -131,19 +107,9 @@
     return [FWURLWrapper wrapper:self];
 }
 
-+ (FWURLClassWrapper *)fw {
-    return [FWURLClassWrapper wrapper:self];
-}
-
 @end
-
-#pragma mark - FWBundleWrapper
 
 @implementation FWBundleWrapper
-
-@end
-
-@implementation FWBundleClassWrapper
 
 @end
 
@@ -153,13 +119,7 @@
     return [FWBundleWrapper wrapper:self];
 }
 
-+ (FWBundleClassWrapper *)fw {
-    return [FWBundleClassWrapper wrapper:self];
-}
-
 @end
-
-#pragma mark - FWViewWrapper
 
 @implementation FWViewWrapper
 
@@ -175,13 +135,7 @@
 
 @end
 
-#pragma mark - FWWindowWrapper
-
 @implementation FWWindowWrapper
-
-@end
-
-@implementation FWWindowClassWrapper
 
 @end
 
@@ -191,13 +145,7 @@
     return [FWWindowWrapper wrapper:self];
 }
 
-+ (FWWindowClassWrapper *)fw {
-    return [FWWindowClassWrapper wrapper:self];
-}
-
 @end
-
-#pragma mark - FWViewControllerWrapper
 
 @implementation FWViewControllerWrapper
 
@@ -213,8 +161,6 @@
 
 @end
 
-#pragma mark - FWNavigationControllerWrapper
-
 @implementation FWNavigationControllerWrapper
 
 @end
@@ -223,6 +169,68 @@
 
 - (FWNavigationControllerWrapper *)fw {
     return [FWNavigationControllerWrapper wrapper:self];
+}
+
+@end
+
+#pragma mark - FWClassWrapper
+
+@implementation FWStringClassWrapper
+
+@end
+
+@implementation NSString (FWStringClassWrapper)
+
++ (FWStringClassWrapper *)fw {
+    return [FWStringClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWDataClassWrapper
+
+@end
+
+@implementation NSData (FWDataClassWrapper)
+
++ (FWDataClassWrapper *)fw {
+    return [FWDataClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWURLClassWrapper
+
+@end
+
+@implementation NSURL (FWURLClassWrapper)
+
++ (FWURLClassWrapper *)fw {
+    return [FWURLClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWBundleClassWrapper
+
+@end
+
+@implementation NSBundle (FWBundleClassWrapper)
+
++ (FWBundleClassWrapper *)fw {
+    return [FWBundleClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWWindowClassWrapper
+
+@end
+
+@implementation UIWindow (FWWindowClassWrapper)
+
++ (FWWindowClassWrapper *)fw {
+    return [FWWindowClassWrapper wrapper:self];
 }
 
 @end
