@@ -33,34 +33,39 @@ extension Date {
 extension Dictionary {
     public var fwNSDictionary: NSDictionary { return self as NSDictionary }
 }
-extension String {
-    public static func fwJsonEncode(_ object: Any) -> String? { return NSString.fwJsonEncode(object) }
-    public var fwJsonDecode: Any? { return fwNSString.fwJsonDecode }
-    public var fwBase64Encode: String? { return fwNSString.fwBase64Encode() }
-    public var fwBase64Decode: String? { return fwNSString.fwBase64Decode() }
-    public var fwUnicodeLength: UInt { return fwNSString.fwUnicodeLength() }
-    public func fwUnicodeSubstring(_ length: UInt) -> String { return fwNSString.fwUnicodeSubstring(length) }
-    public var fwUnicodeEncode: String { return fwNSString.fwUnicodeEncode() }
-    public var fwUnicodeDecode: String { return fwNSString.fwUnicodeDecode() }
-    public var fwUrlEncodeComponent: String? { return fwNSString.fwUrlEncodeComponent() }
-    public var fwUrlDecodeComponent: String? { return fwNSString.fwUrlDecodeComponent() }
-    public var fwUrlEncode: String? { return fwNSString.fwUrlEncode() }
-    public var fwUrlDecode: String? { return fwNSString.fwUrlDecode() }
-    public static func fwQueryEncode(_ dict: [String: Any]) -> String { return NSString.fwQueryEncode(dict) }
-    public var fwQueryDecode: [String: String] { return fwNSString.fwQueryDecode() }
-    public var fwMd5Encode: String { return fwNSString.fwMd5Encode() }
-    public var fwMd5EncodeFile: String? { return fwNSString.fwMd5EncodeFile() }
-    public var fwTrimString: String { return trimmingCharacters(in: .whitespacesAndNewlines) }
-    public var fwEscapeJson: String { return fwNSString.fwEscapeJson }
-    public var fwNSString: NSString { return self as NSString }
-    public var fwUTF8Data: Data? { return self.data(using: .utf8) }
-    public var fwURL: URL? { return fwNSString.fwURL }
-    public var fwNumber: NSNumber? { return fwNSString.fwNumber }
-    public func fwSubstring(from index: Int) -> String { return fwNSString.fwSubstring(from: index) ?? "" }
-    public func fwSubstring(to index: Int) -> String { return fwNSString.fwSubstring(to: index) ?? "" }
-    public func fwSubstring(with range: NSRange) -> String { return fwNSString.fwSubstring(with: range) ?? "" }
-    public func fwSubstring(with range: Range<Int>) -> String { return fwSubstring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound)) }
+
+extension FWWrapper where T == String {
+    public var jsonDecode: Any? { return nsstring.fw.jsonDecode }
+    public var base64Encode: String? { return nsstring.fw.base64Encode() }
+    public var base64Decode: String? { return nsstring.fw.base64Decode() }
+    public var unicodeLength: UInt { return nsstring.fw.unicodeLength() }
+    public func unicodeSubstring(_ length: UInt) -> String { return nsstring.fw.unicodeSubstring(length) }
+    public var unicodeEncode: String { return nsstring.fw.unicodeEncode() }
+    public var unicodeDecode: String { return nsstring.fw.unicodeDecode() }
+    public var urlEncodeComponent: String? { return nsstring.fw.urlEncodeComponent() }
+    public var urlDecodeComponent: String? { return nsstring.fw.urlDecodeComponent() }
+    public var urlEncode: String? { return nsstring.fw.urlEncode() }
+    public var urlDecode: String? { return nsstring.fw.urlDecode() }
+    public var queryDecode: [String: String] { return nsstring.fw.queryDecode() }
+    public var md5Encode: String { return nsstring.fw.md5Encode() }
+    public var md5EncodeFile: String? { return nsstring.fw.md5EncodeFile() }
+    public var trimString: String { return base.trimmingCharacters(in: .whitespacesAndNewlines) }
+    public var escapeJson: String { return nsstring.fwEscapeJson }
+    public var nsstring: NSString { return self.base as NSString }
+    public var utf8Data: Data? { return self.base.data(using: .utf8) }
+    public var url: URL? { return nsstring.fwURL }
+    public var number: NSNumber? { return nsstring.fwNumber }
+    public func substring(from index: Int) -> String { return nsstring.fwSubstring(from: index) ?? "" }
+    public func substring(to index: Int) -> String { return nsstring.fwSubstring(to: index) ?? "" }
+    public func substring(with range: NSRange) -> String { return nsstring.fwSubstring(with: range) ?? "" }
+    public func substring(with range: Range<Int>) -> String { return substring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound)) }
 }
+
+extension FWWrapper where T == String.Type {
+    public func jsonEncode(_ object: Any) -> String? { return NSString.fw.jsonEncode(object) }
+    public func queryEncode(_ dict: [String: Any]) -> String { return NSString.fw.queryEncode(dict) }
+}
+
 extension URL {
     public static func fwURL(string: String?) -> URL? { return NSURL.fwURL(with: string) }
     public static func fwURL(string: String?, relativeTo baseURL: URL?) -> URL? { return NSURL.fwURL(with: string, relativeTo: baseURL) }

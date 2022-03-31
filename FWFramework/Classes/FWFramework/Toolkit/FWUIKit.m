@@ -1013,13 +1013,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.fwMaxUnicodeLength > 0) {
         if (self.markedTextRange) {
             if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                    self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+                if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
+                    self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
                 }
             }
         } else {
-            if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+            if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
+                self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
             }
         }
     }
@@ -1141,13 +1141,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.fwMaxUnicodeLength > 0) {
         if (self.markedTextRange) {
             if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                    self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+                if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
+                    self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
                 }
             }
         } else {
-            if ([self.text fwUnicodeLength] > self.fwMaxUnicodeLength) {
-                self.text = [self.text fwUnicodeSubstring:self.fwMaxUnicodeLength];
+            if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
+                self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
             }
         }
     }

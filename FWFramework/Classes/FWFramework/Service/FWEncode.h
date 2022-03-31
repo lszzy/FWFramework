@@ -11,29 +11,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - NSString+FWEncode
+#pragma mark - FWStringWrapper+FWEncode
 
-/**
- *  字符串编码扩展
- */
-@interface NSString (FWEncode)
+@interface FWStringWrapper (FWEncode)
 
 #pragma mark - Json
-
-/**
- Foundation对象编码为json字符串
- 
- @param object 编码对象
- @return json字符串
- */
-+ (nullable NSString *)fwJsonEncode:(id)object;
 
 /**
  *  json字符串解码为Foundation对象
  *
  *  @return Foundation对象
  */
-- (nullable id)fwJsonDecode;
+- (nullable id)jsonDecode;
 
 #pragma mark - Base64
 
@@ -42,42 +31,42 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return base64字符串
  */
-- (nullable NSString *)fwBase64Encode;
+- (nullable NSString *)base64Encode;
 
 /**
  *  base64解码
  *
  *  @return 原字符串
  */
-- (nullable NSString *)fwBase64Decode;
+- (nullable NSString *)base64Decode;
 
 #pragma mark - Unicode
 
 /**
  *  计算长度，中文为1，英文为0.5
  */
-- (NSUInteger)fwUnicodeLength;
+- (NSUInteger)unicodeLength;
 
 /**
  *  截取字符串，中文为1，英文为0.5
  *
  *  @param length 截取长度
  */
-- (NSString *)fwUnicodeSubstring:(NSUInteger)length;
+- (NSString *)unicodeSubstring:(NSUInteger)length;
 
 /**
  *  Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
  *
  *  @return Unicode字符串
  */
-- (NSString *)fwUnicodeEncode;
+- (NSString *)unicodeEncode;
 
 /**
  *  Unicode中文解码，将Unicode字符串(如\u7E8C)转换成中文
  *
  *  @return 中文字符串
  */
-- (NSString *)fwUnicodeDecode;
+- (NSString *)unicodeDecode;
 
 #pragma mark - Url
 
@@ -88,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return url编码字符串
  */
-- (nullable NSString *)fwUrlEncodeComponent;
+- (nullable NSString *)urlEncodeComponent;
 
 /**
  *  url参数解码，适用于query参数解码
@@ -97,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 原字符串
  */
-- (nullable NSString *)fwUrlDecodeComponent;
+- (nullable NSString *)urlDecodeComponent;
 
 /**
  *  url编码，适用于整个url编码
@@ -106,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return url编码地址
  */
-- (nullable NSString *)fwUrlEncode;
+- (nullable NSString *)urlEncode;
 
 /**
  *  url解码，适用于整个url解码
@@ -115,19 +104,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 原url地址
  */
-- (nullable NSString *)fwUrlDecode;
+- (nullable NSString *)urlDecode;
 
 #pragma mark - Query
 
 /**
- * 字典编码为URL参数字符串
- */
-+ (NSString *)fwQueryEncode:(NSDictionary<NSString *, id> *)dictionary;
-
-/**
  * URL参数字符串解码为字典，支持完整URL
  */
-- (NSDictionary<NSString *, NSString *> *)fwQueryDecode;
+- (NSDictionary<NSString *, NSString *> *)queryDecode;
 
 #pragma mark - Md5
 
@@ -136,14 +120,37 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return md5字符串
  */
-- (NSString *)fwMd5Encode;
+- (NSString *)md5Encode;
 
 /**
  *  文件md5编码
  *
  *  @return md5字符串
  */
-- (nullable NSString *)fwMd5EncodeFile;
+- (nullable NSString *)md5EncodeFile;
+
+@end
+
+#pragma mark - FWStringClassWrapper+FWEncode
+
+@interface FWStringClassWrapper (FWEncode)
+
+#pragma mark - Json
+
+/**
+ Foundation对象编码为json字符串
+ 
+ @param object 编码对象
+ @return json字符串
+ */
+- (nullable NSString *)jsonEncode:(id)object;
+
+#pragma mark - Query
+
+/**
+ * 字典编码为URL参数字符串
+ */
+- (NSString *)queryEncode:(NSDictionary<NSString *, id> *)dictionary;
 
 @end
 
