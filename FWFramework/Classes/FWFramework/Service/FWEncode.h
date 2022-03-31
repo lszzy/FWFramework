@@ -129,6 +129,70 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSString *)md5EncodeFile;
 
+#pragma mark - Safe
+
+/**
+ 去掉空白字符
+ 
+ @return trim字符串
+ */
+@property (nonatomic, copy, readonly) NSString *trimString;
+
+/**
+ 过滤JSON解码特殊字符
+ @note 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
+ 规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
+ 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
+ 
+ @return JSON过滤字符串
+ */
+@property (nonatomic, copy, readonly) NSString *escapeJson;
+
+/**
+ 转换为UTF8编码数据
+ 
+ @return UTF8编码数据
+ */
+@property (nonatomic, strong, readonly, nullable) NSData *utf8Data;
+
+/**
+ 转换为NSURL
+ 
+ @return NSURL
+ */
+@property (nonatomic, copy, readonly, nullable) NSURL *url;
+
+/**
+ 转换为NSNumber
+ 
+ @return NSNumber
+ */
+@property (nonatomic, readonly, nullable) NSNumber *number;
+
+/**
+ 从指定位置截取子串
+ 
+ @param from 起始位置
+ @return 子串
+ */
+- (nullable NSString *)substringFromIndex:(NSInteger)from;
+
+/**
+ 截取子串到指定位置
+ 
+ @param to 结束位置
+ @return 子串
+ */
+- (nullable NSString *)substringToIndex:(NSInteger)to;
+
+/**
+ 截取指定范围的子串
+ 
+ @param range 指定范围
+ @return 子串
+ */
+- (nullable NSString *)substringWithRange:(NSRange)range;
+
 @end
 
 #pragma mark - FWStringClassWrapper+FWEncode
@@ -183,6 +247,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)base64Decode;
 
+#pragma mark - Safe
+
+/**
+ 转换为UTF8编码字符串
+ 
+ @return UTF8编码字符串
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *utf8String;
+
 @end
 
 #pragma mark - FWDataClassWrapper+FWEncode
@@ -227,229 +300,114 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  */
 FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 
-#pragma mark - NSObject+FWSafeType
+#pragma mark - FWObjectWrapper+FWSafeType
 
-/**
- NSObject类型安全分类
- */
-@interface NSObject (FWSafeType)
+@interface FWObjectWrapper (FWSafeType)
 
 /**
  是否是非Null(nil, NSNull)
  
  @return 如果为非Null返回YES，为Null返回NO
  */
-@property (nonatomic, assign, readonly) BOOL fwIsNotNull;
+@property (nonatomic, assign, readonly) BOOL isNotNull;
 
 /**
  是否是非空对象(nil, NSNull, count为0, length为0)
  
  @return 如果是非空对象返回YES，为空对象返回NO
  */
-@property (nonatomic, assign, readonly) BOOL fwIsNotEmpty;
+@property (nonatomic, assign, readonly) BOOL isNotEmpty;
 
 /**
  检测并转换为NSInteger
  
  @return NSInteger
  */
-@property (nonatomic, assign, readonly) NSInteger fwAsInteger;
+@property (nonatomic, assign, readonly) NSInteger asInteger;
 
 /**
  检测并转换为Float
  
  @return Float
  */
-@property (nonatomic, assign, readonly) float fwAsFloat;
+@property (nonatomic, assign, readonly) float asFloat;
 
 /**
  检测并转换为Double
  
  @return Double
  */
-@property (nonatomic, assign, readonly) double fwAsDouble;
+@property (nonatomic, assign, readonly) double asDouble;
 
 /**
  检测并转换为Bool
  
  @return Bool
  */
-@property (nonatomic, assign, readonly) BOOL fwAsBool;
+@property (nonatomic, assign, readonly) BOOL asBool;
 
 /**
  检测并转换为NSNumber
  
  @return NSNumber
  */
-@property (nonatomic, readonly, nullable) NSNumber *fwAsNSNumber;
+@property (nonatomic, readonly, nullable) NSNumber *asNumber;
 
 /**
  检测并转换为NSString
  
  @return NSString
  */
-@property (nonatomic, copy, readonly, nullable) NSString *fwAsNSString;
+@property (nonatomic, copy, readonly, nullable) NSString *asString;
 
 /**
  检测并转换为NSDate
  
  @return NSDate
  */
-@property (nonatomic, readonly, nullable) NSDate *fwAsNSDate;
+@property (nonatomic, readonly, nullable) NSDate *asDate;
 
 /**
  检测并转换为NSData
  
  @return NSData
  */
-@property (nonatomic, readonly, nullable) NSData *fwAsNSData;
+@property (nonatomic, readonly, nullable) NSData *asData;
 
 /**
  检测并转换为NSArray
  
  @return NSArray
  */
-@property (nonatomic, readonly, nullable) NSArray *fwAsNSArray;
+@property (nonatomic, readonly, nullable) NSArray *asArray;
 
 /**
  检测并转换为NSMutableArray
  
  @return NSMutableArray
  */
-@property (nonatomic, readonly, nullable) NSMutableArray *fwAsNSMutableArray;
+@property (nonatomic, readonly, nullable) NSMutableArray *asMutableArray;
 
 /**
  检测并转换为NSDictionary
  
  @return NSDictionary
  */
-@property (nonatomic, readonly, nullable) NSDictionary *fwAsNSDictionary;
+@property (nonatomic, readonly, nullable) NSDictionary *asDictionary;
 
 /**
  检测并转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-@property (nonatomic, readonly, nullable) NSMutableDictionary *fwAsNSMutableDictionary;
+@property (nonatomic, readonly, nullable) NSMutableDictionary *asMutableDictionary;
 
 /**
  检测并转换为指定Class对象
  
  @return 指定Class对象
  */
-- (nullable id)fwAsClass:(Class)clazz;
-
-@end
-
-#pragma mark - NSNumber+FWSafeType
-
-/**
- NSNumber类型安全分类
- */
-@interface NSNumber (FWSafeType)
-
-/**
- 比较NSNumber是否相等，如果参数为nil，判定为不相等
- 
- @param number 比较的number
- @return 是否相等
- */
-- (BOOL)fwIsEqualToNumber:(nullable NSNumber *)number;
-
-/**
-比较NSNumber大小，如果参数为nil，判定为NSOrderedDescending
-
-@param number 比较的number
-@return 比较结果
-*/
-- (NSComparisonResult)fwCompare:(nullable NSNumber *)number;
-
-@end
-
-#pragma mark - NSString+FWSafeType
-
-/**
- NSString类型安全分类
- */
-@interface NSString (FWSafeType)
-
-/**
- 去掉空白字符
- 
- @return trim字符串
- */
-@property (nonatomic, copy, readonly) NSString *fwTrimString;
-
-/**
- 过滤JSON解码特殊字符
- @note 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
- 规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
- 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
- 
- @return JSON过滤字符串
- */
-@property (nonatomic, copy, readonly) NSString *fwEscapeJson;
-
-/**
- 转换为UTF8编码数据
- 
- @return UTF8编码数据
- */
-@property (nonatomic, strong, readonly, nullable) NSData *fwUTF8Data;
-
-/**
- 转换为NSURL
- 
- @return NSURL
- */
-@property (nonatomic, copy, readonly, nullable) NSURL *fwURL;
-
-/**
- 转换为NSNumber
- 
- @return NSNumber
- */
-@property (nonatomic, readonly, nullable) NSNumber *fwNumber;
-
-/**
- 从指定位置截取子串
- 
- @param from 起始位置
- @return 子串
- */
-- (nullable NSString *)fwSubstringFromIndex:(NSInteger)from;
-
-/**
- 截取子串到指定位置
- 
- @param to 结束位置
- @return 子串
- */
-- (nullable NSString *)fwSubstringToIndex:(NSInteger)to;
-
-/**
- 截取指定范围的子串
- 
- @param range 指定范围
- @return 子串
- */
-- (nullable NSString *)fwSubstringWithRange:(NSRange)range;
-
-@end
-
-#pragma mark - NSData+FWSafeType
-
-/**
- NSData类型安全分类
- */
-@interface NSData (FWSafeType)
-
-/**
- 转换为UTF8编码字符串
- 
- @return UTF8编码字符串
- */
-@property (nonatomic, copy, readonly, nullable) NSString *fwUTF8String;
+- (nullable id)asClass:(Class)clazz;
 
 @end
 

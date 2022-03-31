@@ -55,14 +55,14 @@ extension FWWrapper where T == String {
     public var md5Encode: String { return nsstring.fw.md5Encode() }
     public var md5EncodeFile: String? { return nsstring.fw.md5EncodeFile() }
     public var trimString: String { return base.trimmingCharacters(in: .whitespacesAndNewlines) }
-    public var escapeJson: String { return nsstring.fwEscapeJson }
+    public var escapeJson: String { return nsstring.fw.escapeJson }
     public var nsstring: NSString { return self.base as NSString }
     public var utf8Data: Data? { return self.base.data(using: .utf8) }
-    public var url: URL? { return nsstring.fwURL }
-    public var number: NSNumber? { return nsstring.fwNumber }
-    public func substring(from index: Int) -> String { return nsstring.fwSubstring(from: index) ?? "" }
-    public func substring(to index: Int) -> String { return nsstring.fwSubstring(to: index) ?? "" }
-    public func substring(with range: NSRange) -> String { return nsstring.fwSubstring(with: range) ?? "" }
+    public var url: URL? { return nsstring.fw.url }
+    public var number: NSNumber? { return nsstring.fw.number }
+    public func substring(from index: Int) -> String { return nsstring.fw.substring(from: index) ?? "" }
+    public func substring(to index: Int) -> String { return nsstring.fw.substring(to: index) ?? "" }
+    public func substring(with range: NSRange) -> String { return nsstring.fw.substring(with: range) ?? "" }
     public func substring(with range: Range<Int>) -> String { return substring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound)) }
 }
 
