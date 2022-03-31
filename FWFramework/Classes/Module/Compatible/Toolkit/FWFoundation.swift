@@ -13,7 +13,7 @@ extension Data {
     /// 使用NSKeyedArchiver压缩对象
     public static func fwArchiveObject(_ object: Any) -> Data? { return NSData.fwArchiveObject(object) }
     /// 使用NSKeyedUnarchiver解压数据
-    public func fwUnarchiveObject() -> Any? { return fwNSData.fwUnarchiveObject() }
+    public func fwUnarchiveObject() -> Any? { return fw.nsdata.fwUnarchiveObject() }
     /// 保存对象归档
     public static func fwArchiveObject(_ object: Any, file: String) { NSData.fwArchiveObject(object, toFile: file) }
     /// 读取对象归档

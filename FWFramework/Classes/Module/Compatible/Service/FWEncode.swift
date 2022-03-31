@@ -19,14 +19,19 @@ extension Array {
 extension Set {
     public var fwNSSet: NSSet { return self as NSSet }
 }
-extension Data {
-    public static func fwJsonEncode(_ object: Any) -> Data? { return NSData.fwJsonEncode(object) }
-    public var fwJsonDecode: Any? { return fwNSData.fwJsonDecode }
-    public var fwBase64Encode: Data { return fwNSData.fwBase64Encode() }
-    public var fwBase64Decode: Data? { return fwNSData.fwBase64Decode() }
-    public var fwNSData: NSData { return self as NSData }
-    public var fwUTF8String: String? { return String(data: self, encoding: .utf8) }
+
+extension FWWrapper where T == Data {
+    public var jsonDecode: Any? { return nsdata.fw.jsonDecode }
+    public var base64Encode: Data { return nsdata.fw.base64Encode() }
+    public var base64Decode: Data? { return nsdata.fw.base64Decode() }
+    public var nsdata: NSData { return self.base as NSData }
+    public var utf8String: String? { return String(data: self.base, encoding: .utf8) }
 }
+
+extension FWWrapper where T == Data.Type {
+    public func jsonEncode(_ object: Any) -> Data? { return NSData.fw.jsonEncode(object) }
+}
+
 extension Date {
     public var fwNSDate: NSDate { return self as NSDate }
 }

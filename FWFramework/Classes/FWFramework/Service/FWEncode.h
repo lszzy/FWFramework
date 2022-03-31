@@ -154,12 +154,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSData+FWEncode
+#pragma mark - FWDataWrapper+FWEncode
+
+@interface FWDataWrapper (FWEncode)
+
+#pragma mark - Json
 
 /**
- *  NSData编码扩展
+ json数据解码为Foundation对象
+
+ @return Foundation对象
  */
-@interface NSData (FWEncode)
+- (nullable id)jsonDecode;
+
+#pragma mark - Base64
+
+/**
+ *  base64编码
+ *
+ *  @return base64数据
+ */
+- (NSData *)base64Encode;
+
+/**
+ *  base64解码
+ *
+ *  @return 原数据
+ */
+- (nullable NSData *)base64Decode;
+
+@end
+
+#pragma mark - FWDataClassWrapper+FWEncode
+
+@interface FWDataClassWrapper (FWEncode)
 
 #pragma mark - Json
 
@@ -169,30 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 编码对象
  @return json数据
  */
-+ (nullable NSData *)fwJsonEncode:(id)object;
-
-/**
- json数据解码为Foundation对象
-
- @return Foundation对象
- */
-- (nullable id)fwJsonDecode;
-
-#pragma mark - Base64
-
-/**
- *  base64编码
- *
- *  @return base64数据
- */
-- (NSData *)fwBase64Encode;
-
-/**
- *  base64解码
- *
- *  @return 原数据
- */
-- (nullable NSData *)fwBase64Decode;
+- (nullable NSData *)jsonEncode:(id)object;
 
 @end
 
