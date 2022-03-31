@@ -49,6 +49,10 @@ extension FWTypeWrapper {
 
 extension String: FWAnyWrapper { }
 
+extension Data: FWAnyWrapper { }
+
 // MARK: - FWTypeWrapper
 
 extension String: FWTypeWrapper { }
+
+extension Data: FWTypeWrapper { }

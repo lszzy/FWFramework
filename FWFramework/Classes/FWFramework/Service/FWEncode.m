@@ -22,7 +22,7 @@
     NSData *data = [self.base dataUsingEncoding:NSUTF8StringEncoding];
     if (!data) return nil;
     
-    return [data fwJsonDecode];
+    return [data.fw jsonDecode];
 }
 
 #pragma mark - Base64
@@ -219,7 +219,7 @@
 
 - (NSString *)jsonEncode:(id)object
 {
-    NSData *data = [NSData fwJsonEncode:object];
+    NSData *data = [NSData.fw jsonEncode:object];
     if (!data) return nil;
     
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -243,28 +243,21 @@
 
 @end
 
-#pragma mark - NSData+FWEncode
+#pragma mark - FWDataWrapper+FWEncode
 
-@implementation NSData (FWEncode)
+@implementation FWDataWrapper (FWEncode)
 
 #pragma mark - Json
 
-+ (NSData *)fwJsonEncode:(id)object
-{
-    if (!object) return nil;
-    
-    return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
-}
-
-- (id)fwJsonDecode
+- (id)jsonDecode
 {
     NSError *error = nil;
-    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&error];
+    id obj = [NSJSONSerialization JSONObjectWithData:self.base options:NSJSONReadingAllowFragments error:&error];
     if (!error || error.code != 3840) return obj;
     
-    NSString *string = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+    NSString *string = [[NSString alloc] initWithData:self.base encoding:NSUTF8StringEncoding];
     NSData *data = [[string fwEscapeJson] dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data || data.length == self.length) return nil;
+    if (!data || data.length == self.base.length) return nil;
     
     obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
     return obj;
@@ -272,14 +265,29 @@
 
 #pragma mark - Base64
 
-- (NSData *)fwBase64Encode
+- (NSData *)base64Encode
 {
-    return [self base64EncodedDataWithOptions:0];
+    return [self.base base64EncodedDataWithOptions:0];
 }
 
-- (NSData *)fwBase64Decode
+- (NSData *)base64Decode
 {
-    return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [[NSData alloc] initWithBase64EncodedData:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
+}
+
+@end
+
+#pragma mark - FWDataClassWrapper+FWEncode
+
+@implementation FWDataClassWrapper (FWEncode)
+
+#pragma mark - Json
+
+- (NSData *)jsonEncode:(id)object
+{
+    if (!object) return nil;
+    
+    return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
 }
 
 @end
