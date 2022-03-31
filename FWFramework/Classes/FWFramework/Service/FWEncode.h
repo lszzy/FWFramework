@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSString *)md5EncodeFile;
 
-#pragma mark - Safe
+#pragma mark - FWSafeType
 
 /**
  去掉空白字符
@@ -247,7 +247,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)base64Decode;
 
-#pragma mark - Safe
+#pragma mark - FWSafeType
 
 /**
  转换为UTF8编码字符串
@@ -411,6 +411,30 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 
 @end
 
+#pragma mark - FWURLWrapper+FWSafeType
+
+@interface FWURLWrapper (FWSafeType)
+
+/// 获取当前query的参数字典，不含空值
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *queryDictionary;
+
+/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
+@property (nonatomic, copy, readonly, nullable) NSString *pathURI;
+
+@end
+
+#pragma mark - FWURLClassWrapper+FWSafeType
+
+@interface FWURLClassWrapper (FWSafeType)
+
+/// 生成URL，中文自动URL编码
+- (nullable NSURL *)urlWithString:(nullable NSString *)string;
+
+/// 生成URL，中文自动URL编码
+- (nullable NSURL *)urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL;
+
+@end
+
 #pragma mark - NSNull+FWSafeType
 
 /**
@@ -420,27 +444,6 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
  @see https://github.com/nicklockwood/NullSafe
 */
 @interface NSNull (FWSafeType)
-
-@end
-
-#pragma mark - NSURL+FWSafeType
-
-/**
- NSURL类型安全分类
- */
-@interface NSURL (FWSafeType)
-
-/// 获取当前query的参数字典，不含空值
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fwQueryDictionary;
-
-/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
-@property (nonatomic, copy, readonly, nullable) NSString *fwPathURI;
-
-/// 生成URL，中文自动URL编码
-+ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString;
-
-/// 生成URL，中文自动URL编码
-+ (nullable NSURL *)fwURLWithString:(nullable NSString *)URLString relativeToURL:(nullable NSURL *)baseURL;
 
 @end
 
