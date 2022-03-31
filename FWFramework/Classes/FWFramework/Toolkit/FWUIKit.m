@@ -1073,7 +1073,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.fwAutoCompleteBlock) {
         self.fwAutoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
         NSString *inputText = self.text;
-        if (inputText.fwTrimString.length < 1) {
+        if (inputText.fw.trimString.length < 1) {
             self.fwAutoCompleteBlock(@"");
         } else {
             NSTimeInterval currentTimestamp = self.fwAutoCompleteTimestamp;
@@ -1201,7 +1201,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.fwAutoCompleteBlock) {
         self.fwAutoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
         NSString *inputText = self.text;
-        if (inputText.fwTrimString.length < 1) {
+        if (inputText.fw.trimString.length < 1) {
             self.fwAutoCompleteBlock(@"");
         } else {
             NSTimeInterval currentTimestamp = self.fwAutoCompleteTimestamp;
