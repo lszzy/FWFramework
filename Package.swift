@@ -15,6 +15,9 @@ let package = Package(
             name: "FWFrameworkCompatible",
             targets: ["FWFramework", "FWFrameworkCompatible"]),
         .library(
+            name: "FWFrameworkException",
+            targets: ["FWFramework", "FWFrameworkException"]),
+        .library(
             name: "FWFrameworkAppleMusic",
             targets: ["FWFramework", "FWFrameworkAppleMusic"]),
         .library(
@@ -47,6 +50,17 @@ let package = Package(
                 .headerSearchPath("FWFramework/Service"),
                 .headerSearchPath("FWFramework/Toolkit"),
                 .headerSearchPath("include"),
+                .define("FWFrameworkSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWFrameworkSPM")
+            ]),
+        .target(
+            name: "FWFrameworkException",
+            dependencies: ["FWFramework"],
+            path: "FWFramework/Classes/Module/Exception",
+            cSettings: [
                 .define("FWFrameworkSPM", to: "1")
             ],
             swiftSettings: [
