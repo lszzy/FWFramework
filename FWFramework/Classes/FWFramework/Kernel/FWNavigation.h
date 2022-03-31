@@ -48,6 +48,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取当前主场景
 @property (nonatomic, readonly, nullable) UIWindowScene *mainScene API_AVAILABLE(ios(13.0));
 
+/// 获取最顶部的视图控制器
+@property (nonatomic, readonly, nullable) UIViewController *topViewController;
+
+/// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
+@property (nonatomic, readonly, nullable) UINavigationController *topNavigationController;
+
+/// 获取最顶部的显示控制器
+@property (nonatomic, readonly, nullable) UIViewController *topPresentedController;
+
 /// 使用最顶部的导航栏控制器打开控制器
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
