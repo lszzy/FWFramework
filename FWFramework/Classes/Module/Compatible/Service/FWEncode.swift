@@ -71,12 +71,15 @@ extension FWWrapper where T == String.Type {
     public func queryEncode(_ dict: [String: Any]) -> String { return NSString.fw.queryEncode(dict) }
 }
 
-extension URL {
-    public static func fwURL(string: String?) -> URL? { return NSURL.fwURL(with: string) }
-    public static func fwURL(string: String?, relativeTo baseURL: URL?) -> URL? { return NSURL.fwURL(with: string, relativeTo: baseURL) }
-    public var fwQueryDictionary: [String: String] { return fwNSURL.fwQueryDictionary }
-    public var fwPathURI: String? { return fwNSURL.fwPathURI }
-    public var fwNSURL: NSURL { return self as NSURL }
+extension FWWrapper where T == URL {
+    public var queryDictionary: [String: String] { return nsurl.fw.queryDictionary }
+    public var pathURI: String? { return nsurl.fw.pathURI }
+    public var nsurl: NSURL { return self.base as NSURL }
+}
+
+extension FWWrapper where T == URL.Type {
+    public func url(string: String?) -> URL? { return NSURL.fw.url(with: string) }
+    public func url(string: String?, relativeTo baseURL: URL?) -> URL? { return NSURL.fw.url(with: string, relativeTo: baseURL) }
 }
 
 // MARK: - FWSafeUnwrappable

@@ -150,7 +150,7 @@
 - (NSDictionary<NSString *,NSString *> *)queryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSURL *url = [NSURL fwURLWithString:self.base];
+    NSURL *url = [NSURL.fw urlWithString:self.base];
     NSString *queryString = url.scheme.length > 0 ? url.query : self.base;
     NSArray *parameters = [queryString componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
@@ -209,7 +209,7 @@
     return result;
 }
 
-#pragma mark - Safe
+#pragma mark - FWSafeType
 
 - (NSString *)trimString
 {
@@ -223,7 +223,7 @@
 
 - (NSURL *)url
 {
-    return [NSURL fwURLWithString:self.base];
+    return [NSURL.fw urlWithString:self.base];
 }
 
 - (NSNumber *)number
@@ -404,7 +404,7 @@
     return [[NSData alloc] initWithBase64EncodedData:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
-#pragma mark - Safe
+#pragma mark - FWSafeType
 
 - (NSString *)utf8String
 {
@@ -447,7 +447,7 @@ NSURL * FWSafeURL(id value) {
     if (!value) return [NSURL new];
     if ([value isKindOfClass:[NSURL class]]) return value;
     if ([value isKindOfClass:[NSURLRequest class]]) return [value URL] ?: [NSURL new];
-    return [NSURL fwURLWithString:FWSafeString(value)] ?: [NSURL new];
+    return [NSURL.fw urlWithString:FWSafeString(value)] ?: [NSURL new];
 }
 
 #pragma mark - FWObjectWrapper+FWSafeType
@@ -595,6 +595,69 @@ NSURL * FWSafeURL(id value) {
 
 @end
 
+#pragma mark - FWURLWrapper+FWSafeType
+
+@implementation FWURLWrapper (FWSafeType)
+
+- (NSDictionary<NSString *,NSString *> *)queryDictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    NSString *urlString = self.base.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    if (!urlComponents) {
+        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    }
+    // queryItems.value会自动进行URL参数解码
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
+        dict[obj.name] = obj.value;
+    }];
+    return [dict copy];
+}
+
+- (NSString *)pathURI
+{
+    NSString *URLString = self.base.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
+    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
+        return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
+    }
+    return nil;
+}
+
+@end
+
+#pragma mark - FWURLClassWrapper+FWSafeType
+
+@implementation FWURLClassWrapper (FWSafeType)
+
+- (NSURL *)urlWithString:(NSString *)string
+{
+    if (!string) return nil;
+    
+    NSURL *url = [NSURL URLWithString:string];
+    // 如果生成失败，自动URL编码再试
+    if (!url && string.length > 0) {
+        // url = [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)string, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, kCFStringEncodingUTF8))];
+        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    return url;
+}
+
+- (NSURL *)urlWithString:(NSString *)string relativeTo:(NSURL *)baseURL
+{
+    if (!string) return nil;
+    
+    NSURL *url = [NSURL URLWithString:string relativeToURL:baseURL];
+    // 如果生成失败，自动URL编码再试
+    if (!url && string.length > 0) {
+        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:baseURL];
+    }
+    return url;
+}
+
+@end
+
 #pragma mark - NSNull+FWSafeType
 
 @implementation NSNull (FWSafeType)
@@ -617,63 +680,6 @@ NSURL * FWSafeURL(id value) {
         }));
     });
 #endif
-}
-
-@end
-
-#pragma mark - NSURL+FWSafeType
-
-@implementation NSURL (FWSafeType)
-
-- (NSDictionary<NSString *,NSString *> *)fwQueryDictionary
-{
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    NSString *urlString = self.absoluteString ?: @"";
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    if (!urlComponents) {
-        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    }
-    // queryItems.value会自动进行URL参数解码
-    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
-        dict[obj.name] = obj.value;
-    }];
-    return [dict copy];
-}
-
-- (NSString *)fwPathURI
-{
-    NSString *URLString = self.absoluteString ?: @"";
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
-    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
-        return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
-    }
-    return nil;
-}
-
-+ (NSURL *)fwURLWithString:(NSString *)URLString
-{
-    if (!URLString) return nil;
-    
-    NSURL *url = [self URLWithString:URLString];
-    // 如果生成失败，自动URL编码再试
-    if (!url && URLString.length > 0) {
-        // url = [self URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)URLString, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, kCFStringEncodingUTF8))];
-        url = [self URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    return url;
-}
-
-+ (NSURL *)fwURLWithString:(NSString *)URLString relativeToURL:(NSURL *)baseURL
-{
-    if (!URLString) return nil;
-    
-    NSURL *url = [self URLWithString:URLString relativeToURL:baseURL];
-    // 如果生成失败，自动URL编码再试
-    if (!url && URLString.length > 0) {
-        url = [self URLWithString:[URLString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:baseURL];
-    }
-    return url;
 }
 
 @end

@@ -48,11 +48,11 @@ extension FWTypeWrapper {
 // MARK: - FWAnyWrapper
 
 extension String: FWAnyWrapper { }
-
 extension Data: FWAnyWrapper { }
+extension URL: FWAnyWrapper { }
 
 // MARK: - FWTypeWrapper
 
 extension String: FWTypeWrapper { }
-
 extension Data: FWTypeWrapper { }
+extension URL: FWTypeWrapper { }
