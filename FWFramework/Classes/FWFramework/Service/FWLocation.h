@@ -11,12 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 坐标转"纬度,经度"字符串
-FOUNDATION_EXPORT NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate);
-
-/// "纬度,经度"字符串转坐标
-FOUNDATION_EXPORT CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string);
-
 #pragma mark - FWLocationManager
 
 /// 定位更新通知
@@ -66,6 +60,12 @@ UIKIT_EXTERN NSNotificationName const FWHeadingUpdatedNotification;
 
 /// 定位改变block方式回调，可通过error判断是否定位成功
 @property (nullable, nonatomic, copy) void (^locationChanged)(FWLocationManager *manager);
+
+/// 坐标转"纬度,经度"字符串
++ (NSString *)locationString:(CLLocationCoordinate2D)coordinate;
+
+/// "纬度,经度"字符串转坐标
++ (CLLocationCoordinate2D)locationCoordinate:(NSString *)string;
 
 /// 开始更新位置
 - (void)startUpdateLocation;
