@@ -114,6 +114,21 @@
     return nil;
 }
 
+- (UIViewController *)topViewController
+{
+    return [self.mainWindow.fw topViewController];
+}
+
+- (UINavigationController *)topNavigationController
+{
+    return [self.mainWindow.fw topNavigationController];
+}
+
+- (UIViewController *)topPresentedController
+{
+    return [self.mainWindow.fw topPresentedController];
+}
+
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     [self.mainWindow.fw pushViewController:viewController animated:animated];
