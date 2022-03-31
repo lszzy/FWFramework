@@ -11,21 +11,15 @@
 #import "FWSwizzle.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation NSString (FWEncode)
+#pragma mark - FWStringWrapper+FWEncode
+
+@implementation FWStringWrapper (FWEncode)
 
 #pragma mark - Json
 
-+ (NSString *)fwJsonEncode:(id)object
+- (id)jsonDecode
 {
-    NSData *data = [NSData fwJsonEncode:object];
-    if (!data) return nil;
-    
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-}
-
-- (id)fwJsonDecode
-{
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [self.base dataUsingEncoding:NSUTF8StringEncoding];
     if (!data) return nil;
     
     return [data fwJsonDecode];
@@ -33,18 +27,18 @@
 
 #pragma mark - Base64
 
-- (NSString *)fwBase64Encode
+- (NSString *)base64Encode
 {
-    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [self.base dataUsingEncoding:NSUTF8StringEncoding];
     if (!data) return nil;
     
     data = [data base64EncodedDataWithOptions:0];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)fwBase64Decode
+- (NSString *)base64Decode
 {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
     if (!data) return nil;
     
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -52,12 +46,12 @@
 
 #pragma mark - Unicode
 
-- (NSUInteger)fwUnicodeLength
+- (NSUInteger)unicodeLength
 {
     NSUInteger strLength = 0;
 
-    for (int i = 0; i < self.length; i++) {
-        if ([self characterAtIndex:i] > 0xff) {
+    for (int i = 0; i < self.base.length; i++) {
+        if ([self.base characterAtIndex:i] > 0xff) {
             strLength += 2;
         } else {
             strLength ++;
@@ -67,59 +61,59 @@
     return ceil(strLength / 2.0);
 }
 
-- (NSString *)fwUnicodeSubstring:(NSUInteger)length
+- (NSString *)unicodeSubstring:(NSUInteger)length
 {
     length = length * 2;
     
     int i = 0;
     int len = 0;
-    while (i < self.length) {
-        if ([self characterAtIndex:i] > 0xff) {
+    while (i < self.base.length) {
+        if ([self.base characterAtIndex:i] > 0xff) {
             len += 2;
         } else {
             len++;
         }
         
         i++;
-        if (i >= self.length) {
-            return self;
+        if (i >= self.base.length) {
+            return self.base;
         }
         
         if (len == length) {
-            return [self substringToIndex:i];
+            return [self.base substringToIndex:i];
         } else if (len > length) {
             if (i - 1 <= 0) {
                 return @"";
             }
             
-            return [self substringToIndex:i - 1];
+            return [self.base substringToIndex:i - 1];
         }
     }
     
-    return self;
+    return self.base;
 }
 
-- (NSString *)fwUnicodeEncode
+- (NSString *)unicodeEncode
 {
-    NSUInteger length = [self length];
+    NSUInteger length = [self.base length];
     NSMutableString *retStr = [NSMutableString stringWithCapacity:0];
     for (int i = 0; i < length; i++) {
-        unichar character = [self characterAtIndex:i];
+        unichar character = [self.base characterAtIndex:i];
         // 判断是否为英文或数字
         if ((character <= '9' && character >= '0') ||
             (character >= 'a' && character <= 'z') ||
             (character >= 'A' && character <= 'Z')) {
-            [retStr appendFormat:@"%@", [self substringWithRange:NSMakeRange(i, 1)]];
+            [retStr appendFormat:@"%@", [self.base substringWithRange:NSMakeRange(i, 1)]];
         } else {
-            [retStr appendFormat:@"\\u%.4x", [self characterAtIndex:i]];
+            [retStr appendFormat:@"\\u%.4x", [self.base characterAtIndex:i]];
         }
     }
     return [NSString stringWithString:retStr];
 }
 
-- (NSString *)fwUnicodeDecode
+- (NSString *)unicodeDecode
 {
-    NSString *tempStr = [self stringByReplacingOccurrencesOfString:@"\\u" withString:@"\\U"];
+    NSString *tempStr = [self.base stringByReplacingOccurrencesOfString:@"\\u" withString:@"\\U"];
     tempStr = [tempStr stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     tempStr = [[@"\"" stringByAppendingString:tempStr] stringByAppendingString:@"\""];
     NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -131,47 +125,33 @@
 
 #pragma mark - Url
 
-- (NSString *)fwUrlEncodeComponent
+- (NSString *)urlEncodeComponent
 {
-    return [self stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
+    return [self.base stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
 }
 
-- (NSString *)fwUrlDecodeComponent
+- (NSString *)urlDecodeComponent
 {
-    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
+    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self.base, CFSTR("")));
 }
 
-- (NSString *)fwUrlEncode
+- (NSString *)urlEncode
 {
-    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    return [self.base stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
 
-- (NSString *)fwUrlDecode
+- (NSString *)urlDecode
 {
-    return [self stringByRemovingPercentEncoding];
+    return [self.base stringByRemovingPercentEncoding];
 }
 
 #pragma mark - Query
 
-+ (NSString *)fwQueryEncode:(NSDictionary<NSString *,id> *)dictionary
-{
-    NSMutableString *string = [NSMutableString string];
-    for (NSString *key in [dictionary allKeys]) {
-        if ([string length]) {
-            [string appendString:@"&"];
-        }
-        NSString *value = [[dictionary objectForKey:key] description];
-        value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
-        [string appendFormat:@"%@=%@", key, value];
-    }
-    return [NSString stringWithString:string];
-}
-
-- (NSDictionary<NSString *,NSString *> *)fwQueryDecode
+- (NSDictionary<NSString *,NSString *> *)queryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSURL *url = [NSURL fwURLWithString:self];
-    NSString *queryString = url.scheme.length > 0 ? url.query : self;
+    NSURL *url = [NSURL fwURLWithString:self.base];
+    NSString *queryString = url.scheme.length > 0 ? url.query : self.base;
     NSArray *parameters = [queryString componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
         NSArray<NSString *> *contents = [parameter componentsSeparatedByString:@"="];
@@ -186,9 +166,9 @@
 
 #pragma mark - Md5
 
-- (NSString *)fwMd5Encode
+- (NSString *)md5Encode
 {
-    const char *cStr = [self UTF8String];
+    const char *cStr = [self.base UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
     
@@ -199,9 +179,9 @@
     return [NSString stringWithString:output];
 }
 
-- (NSString *)fwMd5EncodeFile
+- (NSString *)md5EncodeFile
 {
-    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self];
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self.base];
     if (!handle) return nil;
     
     CC_MD5_CTX md5;
@@ -227,6 +207,38 @@
                         digest[12], digest[13],
                         digest[14], digest[15]];
     return result;
+}
+
+@end
+
+#pragma mark - FWStringClassWrapper+FWEncode
+
+@implementation FWStringClassWrapper (FWEncode)
+
+#pragma mark - Json
+
+- (NSString *)jsonEncode:(id)object
+{
+    NSData *data = [NSData fwJsonEncode:object];
+    if (!data) return nil;
+    
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - Query
+
+- (NSString *)queryEncode:(NSDictionary<NSString *,id> *)dictionary
+{
+    NSMutableString *string = [NSMutableString string];
+    for (NSString *key in [dictionary allKeys]) {
+        if ([string length]) {
+            [string appendString:@"&"];
+        }
+        NSString *value = [[dictionary objectForKey:key] description];
+        value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
+        [string appendFormat:@"%@=%@", key, value];
+    }
+    return [NSString stringWithString:string];
 }
 
 @end

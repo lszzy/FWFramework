@@ -35,9 +35,9 @@ extension Date {
 
 extension String {
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
-    public func fwSize(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize { return fwNSString.fwSize(with: font, draw: drawSize, attributes: attributes) }
+    public func fwSize(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize { return fw.nsstring.fwSize(with: font, draw: drawSize, attributes: attributes) }
     /// 格式化文件大小为".0K/.1M/.1G"
     public static func fwSizeString(_ fileSize: UInt) -> String { return NSString.fwSizeString(fileSize) }
     /// 是否匹配正则表达式，示例：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
-    public func fwMatchesRegex(_ regex: String) -> Bool { return fwNSString.fwMatchesRegex(regex) }
+    public func fwMatchesRegex(_ regex: String) -> Bool { return fw.nsstring.fwMatchesRegex(regex) }
 }
