@@ -29,11 +29,14 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     NSString *regularPattern = @"[-\\+]\\[.+\\]";
     NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
     
-    for (NSUInteger index = 2; index < callStackSymbols.count; index++) {
+    for (NSUInteger index = 0; index < callStackSymbols.count; index++) {
         NSString *callStackSymbol = callStackSymbols[index];
         [regularExpression enumerateMatchesInString:callStackSymbol options:NSMatchingReportProgress range:NSMakeRange(0, callStackSymbol.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             if (result) {
-                callStackPlace = [callStackSymbol substringWithRange:result.range];
+                NSString *resultPlace = [callStackSymbol substringWithRange:result.range];
+                if (![resultPlace containsString:@"FWException"]) {
+                    callStackPlace = resultPlace;
+                }
                 *stop = YES;
             }
         }];
@@ -41,15 +44,15 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     }
     
 #ifdef DEBUG
-    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\nexceptionName: %@\nexceptionReason: %@\nexceptionPlace: %@\nexceptionRemark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackPlace ?: @"-", remark ?: @"-"];
+    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\n place: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackPlace ?: @"-", remark ?: @"-"];
     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", errorMessage);
 #endif
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-    userInfo[@"exceptionName"] = exception.name;
-    userInfo[@"exceptionReason"] = exception.reason;
-    userInfo[@"exceptionPlace"] = callStackPlace;
-    userInfo[@"exceptionRemark"] = remark;
+    userInfo[@"name"] = exception.name;
+    userInfo[@"reason"] = exception.reason;
+    userInfo[@"place"] = callStackPlace;
+    userInfo[@"remark"] = remark;
     userInfo[@"callStackSymbols"] = callStackSymbols;
     
     dispatch_async(dispatch_get_main_queue(), ^{
