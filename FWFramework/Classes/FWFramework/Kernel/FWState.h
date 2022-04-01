@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWStateMachine
 
 /// 状态改变通知
-UIKIT_EXTERN NSNotificationName const FWStateChangedNotification;
+extern NSNotificationName const FWStateChangedNotification;
 
 /**
  有限状态机

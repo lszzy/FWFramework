@@ -9,6 +9,7 @@
 import AVFoundation
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 麦克风授权

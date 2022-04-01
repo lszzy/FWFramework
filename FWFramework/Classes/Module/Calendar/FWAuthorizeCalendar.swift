@@ -9,6 +9,7 @@
 import EventKit
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 日历授权

@@ -23,6 +23,7 @@
 #import "FWWrapper.h"
 
 #import "FWEncode.h"
+#import "FWException.h"
 #import "FWLanguage.h"
 #import "FWLocation.h"
 

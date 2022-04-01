@@ -9,6 +9,7 @@
 import Contacts
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 通讯录授权

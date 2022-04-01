@@ -13,7 +13,7 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 
 @implementation FWException
 
-+ (void)load {
++ (void)startCaptureExceptions {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
@@ -25,37 +25,30 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 + (void)captureException:(NSException *)exception remark:(NSString *)remark {
     NSArray *callStackSymbols = [NSThread callStackSymbols];
 
-    __block NSString *callStackMethod = nil;
+    __block NSString *callStackPlace = nil;
     NSString *regularPattern = @"[-\\+]\\[.+\\]";
     NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
     
-    for (int index = 2; index < callStackSymbols.count; index++) {
-        NSString *callStackSymbol = callStackSymbols[index];
+    if (callStackSymbols.count > 2) {
+        NSString *callStackSymbol = callStackSymbols[2];
         [regularExpression enumerateMatchesInString:callStackSymbol options:NSMatchingReportProgress range:NSMakeRange(0, callStackSymbol.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             if (result) {
-                NSString *callStackMessage = [callStackSymbol substringWithRange:result.range];
-                NSString *className = [callStackMessage componentsSeparatedByString:@" "].firstObject;
-                className = [className componentsSeparatedByString:@"["].lastObject;
-                NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(className)];
-                if (![className hasSuffix:@")"] && bundle == [NSBundle mainBundle]) {
-                    callStackMethod = callStackMessage;
-                }
+                callStackPlace = [callStackSymbol substringWithRange:result.range];
                 *stop = YES;
             }
         }];
-        if (callStackMethod.length) break;
     }
     
 #ifdef DEBUG
-    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
+    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\nexceptionName: %@\nexceptionReason: %@\nexceptionPlace: %@\nexceptionRemark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackPlace ?: @"-", remark ?: @"-"];
     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", errorMessage);
 #endif
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-    userInfo[@"name"] = exception.name;
-    userInfo[@"reason"] = exception.reason;
-    userInfo[@"method"] = callStackMethod;
-    userInfo[@"remark"] = remark;
+    userInfo[@"exceptionName"] = exception.name;
+    userInfo[@"exceptionReason"] = exception.reason;
+    userInfo[@"exceptionPlace"] = callStackPlace;
+    userInfo[@"exceptionRemark"] = remark;
     userInfo[@"callStackSymbols"] = callStackSymbols;
     
     dispatch_async(dispatch_get_main_queue(), ^{

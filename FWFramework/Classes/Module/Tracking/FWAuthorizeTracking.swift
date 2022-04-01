@@ -11,6 +11,7 @@ import AdSupport
 import AppTrackingTransparency
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 @objc extension UIDevice {
