@@ -26,21 +26,19 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     NSArray *callStackSymbols = [NSThread callStackSymbols];
 
     __block NSString *callStackMethod = nil;
-    NSString *regularPattern = @"[-\\+]\\[.+\\]";
-    NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
-    
-    for (NSUInteger index = 0; index < callStackSymbols.count; index++) {
+    for (NSUInteger index = 1; index < callStackSymbols.count; index++) {
         NSString *callStackSymbol = callStackSymbols[index];
+        if ([callStackSymbol containsString:@"FWException"]) continue;
+        
+        NSString *regularPattern = @"[-\\+]\\[.+\\]";
+        NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
         [regularExpression enumerateMatchesInString:callStackSymbol options:NSMatchingReportProgress range:NSMakeRange(0, callStackSymbol.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             if (result) {
-                NSString *resultMethod = [callStackSymbol substringWithRange:result.range];
-                if (![resultMethod containsString:@"FWException"]) {
-                    callStackMethod = resultMethod;
-                }
+                callStackMethod = [callStackSymbol substringWithRange:result.range];
                 *stop = YES;
             }
         }];
-        if (callStackMethod.length) break;
+        break;
     }
     
 #ifdef DEBUG
