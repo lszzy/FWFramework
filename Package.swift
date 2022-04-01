@@ -13,25 +13,22 @@ let package = Package(
             targets: ["FWFramework"]),
         .library(
             name: "FWFrameworkCompatible",
-            targets: ["FWFramework", "FWFrameworkCompatible"]),
-        .library(
-            name: "FWFrameworkException",
-            targets: ["FWFramework", "FWFrameworkException"]),
+            targets: ["FWFrameworkCompatible"]),
         .library(
             name: "FWFrameworkAppleMusic",
-            targets: ["FWFramework", "FWFrameworkAppleMusic"]),
+            targets: ["FWFrameworkAppleMusic"]),
         .library(
             name: "FWFrameworkCalendar",
-            targets: ["FWFramework", "FWFrameworkCalendar"]),
+            targets: ["FWFrameworkCalendar"]),
         .library(
             name: "FWFrameworkContacts",
-            targets: ["FWFramework", "FWFrameworkContacts"]),
+            targets: ["FWFrameworkContacts"]),
         .library(
             name: "FWFrameworkMicrophone",
-            targets: ["FWFramework", "FWFrameworkMicrophone"]),
+            targets: ["FWFrameworkMicrophone"]),
         .library(
             name: "FWFrameworkTracking",
-            targets: ["FWFramework", "FWFrameworkTracking"]),
+            targets: ["FWFrameworkTracking"]),
     ],
     dependencies: [
     ],
@@ -57,17 +54,6 @@ let package = Package(
                 .define("FWFrameworkSPM")
             ]),
         .target(
-            name: "FWFrameworkException",
-            dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Module/Exception",
-            cSettings: [
-                .define("FWFrameworkSPM", to: "1")
-            ],
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWFrameworkSPM")
-            ]),
-        .target(
             name: "FWFrameworkCompatible",
             dependencies: ["FWFramework"],
             path: "FWFramework/Classes/Module/Compatible",
@@ -80,7 +66,7 @@ let package = Package(
             ]),
         .target(
             name: "FWFrameworkAppleMusic",
-            dependencies: ["FWFramework"],
+            dependencies: ["FWFrameworkCompatible"],
             path: "FWFramework/Classes/Module/AppleMusic",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
@@ -90,7 +76,7 @@ let package = Package(
             ]),
         .target(
             name: "FWFrameworkCalendar",
-            dependencies: ["FWFramework"],
+            dependencies: ["FWFrameworkCompatible"],
             path: "FWFramework/Classes/Module/Calendar",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
@@ -100,7 +86,7 @@ let package = Package(
             ]),
         .target(
             name: "FWFrameworkContacts",
-            dependencies: ["FWFramework"],
+            dependencies: ["FWFrameworkCompatible"],
             path: "FWFramework/Classes/Module/Contacts",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
@@ -110,7 +96,7 @@ let package = Package(
             ]),
         .target(
             name: "FWFrameworkMicrophone",
-            dependencies: ["FWFramework"],
+            dependencies: ["FWFrameworkCompatible"],
             path: "FWFramework/Classes/Module/Microphone",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")
@@ -120,7 +106,7 @@ let package = Package(
             ]),
         .target(
             name: "FWFrameworkTracking",
-            dependencies: ["FWFramework"],
+            dependencies: ["FWFrameworkCompatible"],
             path: "FWFramework/Classes/Module/Tracking",
             cSettings: [
                 .define("FWFrameworkSPM", to: "1")

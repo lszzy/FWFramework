@@ -22,11 +22,6 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/FWFramework'
   end
   
-  s.subspec 'Exception' do |ss|
-    ss.source_files = 'FWFramework/Classes/Module/Exception/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
-  end
-  
   s.subspec 'Contacts' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/Contacts/**/*.{h,m,swift}'
     ss.dependency 'FWFramework/FWFramework'

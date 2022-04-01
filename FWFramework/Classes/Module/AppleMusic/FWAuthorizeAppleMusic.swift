@@ -9,6 +9,7 @@
 import MediaPlayer
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// AppleMusic授权
