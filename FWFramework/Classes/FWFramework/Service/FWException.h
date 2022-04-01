@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 异常捕获通知，object为NSException对象，userInfo为附加信息
+/// 异常捕获通知，object为NSException对象，userInfo为附加信息(name|reason|method|remark|symbols)
 extern NSNotificationName const FWExceptionCapturedNotification;
 
 /// 框架异常捕获类
