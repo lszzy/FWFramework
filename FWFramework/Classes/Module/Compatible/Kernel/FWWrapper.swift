@@ -25,7 +25,7 @@ public struct FWWrapper<T> {
 
 // MARK: - FWAnyWrapper
 /// 对象包装器协议
-public protocol FWAnyWrapper { }
+public protocol FWAnyWrapper {}
 
 extension FWAnyWrapper {
     /// 对象包装器属性
@@ -36,7 +36,7 @@ extension FWAnyWrapper {
 
 // MARK: - FWTypeWrapper
 /// 类包装器协议
-public protocol FWTypeWrapper { }
+public protocol FWTypeWrapper {}
 
 extension FWTypeWrapper {
     /// 类包装器属性
@@ -47,12 +47,12 @@ extension FWTypeWrapper {
 
 // MARK: - FWAnyWrapper
 
-extension String: FWAnyWrapper { }
-extension Data: FWAnyWrapper { }
-extension URL: FWAnyWrapper { }
+extension String: FWAnyWrapper {}
+extension Data: FWAnyWrapper {}
+extension URL: FWAnyWrapper {}
 
 // MARK: - FWTypeWrapper
 
-extension String: FWTypeWrapper { }
-extension Data: FWTypeWrapper { }
-extension URL: FWTypeWrapper { }
+extension String: FWTypeWrapper {}
+extension Data: FWTypeWrapper {}
+extension URL: FWTypeWrapper {}
