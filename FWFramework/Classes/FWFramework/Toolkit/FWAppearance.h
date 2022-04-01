@@ -7,7 +7,7 @@
  @updated    2020/9/8
  */
 
-#import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,10 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSObject (FWAppearance)
+@interface FWObjectWrapper (FWAppearance)
 
 /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
-- (void)fwApplyAppearance;
+- (void)applyAppearance;
 
 @end
 
