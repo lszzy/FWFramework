@@ -58,6 +58,7 @@ import UIKit
     }
     
     /// 检查应用版本号并进行比较，检查成功时回调。interval为频率(天)，0立即检查，1一天一次，7一周一次
+    @discardableResult
     public func checkVersion(_ interval: Int, completion: (() -> Void)?) -> Bool {
         if interval > 0 {
             if let checkDate = checkDate {
@@ -93,6 +94,7 @@ import UIKit
     public var dataVersion: String?
     
     /// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
+    @discardableResult
     public func checkDataVersion(_ version: String, migrator: @escaping () -> Void) -> Bool {
         // 需要执行时才放到队列中
         if checkDataVersion(version) {
@@ -103,6 +105,7 @@ import UIKit
     }
     
     /// 比较数据版本号并依次进行数据迁移，迁移完成时回调(不执行迁移不回调)
+    @discardableResult
     public func migrateData(_ completion: (() -> Void)?) -> Bool {
         // 版本号从低到高排序
         let versions = dataMigrators.keys.sorted { str1, str2 in

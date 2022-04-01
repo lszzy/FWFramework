@@ -60,12 +60,14 @@ import Security
     }
     
     /// 保存String数据
+    @discardableResult
     public func setPassword(_ password: String, forService service: String?, account: String?) -> Bool {
         guard let passwordData = password.data(using: .utf8) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }
     
     /// 保存Data数据
+    @discardableResult
     public func setPasswordData(_ passwordData: Data, forService service: String?, account: String?) -> Bool {
         let searchQuery = query(forService: service, account: account)
         var status = SecItemCopyMatching(searchQuery as CFDictionary, nil)
@@ -84,12 +86,14 @@ import Security
     }
     
     /// 保存Object数据
+    @discardableResult
     public func setPasswordObject(_ passwordObject: Any, forService service: String?, account: String?) -> Bool {
         let passwordData = NSKeyedArchiver.archivedData(withRootObject: passwordObject)
         return setPasswordData(passwordData, forService: service, account: account)
     }
     
     /// 删除数据
+    @discardableResult
     public func deletePassword(forService service: String?, account: String?) -> Bool {
         let query = query(forService: service, account: account)
         let status = SecItemDelete(query as CFDictionary)
