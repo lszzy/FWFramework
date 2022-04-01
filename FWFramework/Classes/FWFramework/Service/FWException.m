@@ -29,14 +29,15 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     NSString *regularPattern = @"[-\\+]\\[.+\\]";
     NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
     
-    if (callStackSymbols.count > 2) {
-        NSString *callStackSymbol = callStackSymbols[2];
+    for (NSUInteger index = 2; index < callStackSymbols.count; index++) {
+        NSString *callStackSymbol = callStackSymbols[index];
         [regularExpression enumerateMatchesInString:callStackSymbol options:NSMatchingReportProgress range:NSMakeRange(0, callStackSymbol.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             if (result) {
                 callStackPlace = [callStackSymbol substringWithRange:result.range];
                 *stop = YES;
             }
         }];
+        if (callStackPlace.length) break;
     }
     
 #ifdef DEBUG
