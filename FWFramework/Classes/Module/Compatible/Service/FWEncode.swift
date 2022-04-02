@@ -232,125 +232,114 @@ extension FWWrapper where T == URL.Type {
 
 /// 获取安全值
 public func FWSafeValue<T: FWSafeUnwrappable>(_ value: T?) -> T {
-    return value.fwSafeValue
+    return value.safeValue
 }
 
 /// 判断是否为空
 public func FWIsEmpty<T: FWSafeUnwrappable>(_ value: T?) -> Bool {
-    return value.fwIsEmpty
+    return value.isEmpty
 }
 
 /// 判断是否为nil
 public func FWIsNil(_ value: Any?) -> Bool {
-    return value.fwIsNil
+    return value.isNil
 }
 
 public protocol FWSafeUnwrappable {
-    static var fwSafeValue: Self { get }
-    var fwIsEmpty: Bool { get }
-    
-    var fwAsInt: Int { get }
-    var fwAsBool: Bool { get }
-    var fwAsFloat: Float { get }
-    var fwAsDouble: Double { get }
-    var fwAsString: String { get }
-    var fwAsNumber: NSNumber { get }
-    var fwAsArray: [Any] { get }
-    var fwAsDicationary: [AnyHashable: Any] { get }
+    static var safeValue: Self { get }
+    var isEmpty: Bool { get }
 }
 
 extension FWSafeUnwrappable {
-    public var fwAsInt: Int { return fwAsNumber.intValue }
-    public var fwAsBool: Bool { return fwAsNumber.boolValue }
-    public var fwAsFloat: Float { return fwAsNumber.floatValue }
-    public var fwAsDouble: Double { return fwAsNumber.doubleValue }
-    public var fwAsString: String { return FWSafeString(self) }
-    public var fwAsNumber: NSNumber { return FWSafeNumber(self) }
-    public var fwAsArray: [Any] { return (self as? [Any]) ?? .fwSafeValue }
-    public var fwAsDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .fwSafeValue }
+    public var asInt: Int { return asNumber.intValue }
+    public var asBool: Bool { return asNumber.boolValue }
+    public var asFloat: Float { return asNumber.floatValue }
+    public var asDouble: Double { return asNumber.doubleValue }
+    public var asString: String { return FWSafeString(self) }
+    public var asNumber: NSNumber { return FWSafeNumber(self) }
+    public var asArray: [Any] { return (self as? [Any]) ?? .safeValue }
+    public var asDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .safeValue }
 }
 
 extension Optional where Wrapped: FWSafeUnwrappable {
-    public var fwSafeValue: Wrapped { if let value = self { return value } else { return .fwSafeValue } }
-    public var fwIsEmpty: Bool { if let value = self { return value.fwIsEmpty } else { return true } }
+    public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
+    public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
 }
+
 extension Optional {
-    public var fwIsNil: Bool { return self == nil }
+    public var isNil: Bool { return self == nil }
     
-    public var fwAsInt: Int { return fwAsNumber.intValue }
-    public var fwAsBool: Bool { return fwAsNumber.boolValue }
-    public var fwAsFloat: Float { return fwAsNumber.floatValue }
-    public var fwAsDouble: Double { return fwAsNumber.doubleValue }
-    public var fwAsString: String { return FWSafeString(self) }
-    public var fwAsNumber: NSNumber { return FWSafeNumber(self) }
-    public var fwAsArray: [Any] { return (self as? [Any]) ?? .fwSafeValue }
-    public var fwAsDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .fwSafeValue }
+    public var asInt: Int { return asNumber.intValue }
+    public var asBool: Bool { return asNumber.boolValue }
+    public var asFloat: Float { return asNumber.floatValue }
+    public var asDouble: Double { return asNumber.doubleValue }
+    public var asString: String { return FWSafeString(self) }
+    public var asNumber: NSNumber { return FWSafeNumber(self) }
+    public var asArray: [Any] { return (self as? [Any]) ?? .safeValue }
+    public var asDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .safeValue }
 }
+
 extension Int: FWSafeUnwrappable {
-    public static var fwSafeValue: Int = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Int = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Int8: FWSafeUnwrappable {
-    public static var fwSafeValue: Int8 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Int8 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Int16: FWSafeUnwrappable {
-    public static var fwSafeValue: Int16 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Int16 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Int32: FWSafeUnwrappable {
-    public static var fwSafeValue: Int32 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Int32 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Int64: FWSafeUnwrappable {
-    public static var fwSafeValue: Int64 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Int64 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension UInt: FWSafeUnwrappable {
-    public static var fwSafeValue: UInt = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: UInt = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension UInt8: FWSafeUnwrappable {
-    public static var fwSafeValue: UInt8 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: UInt8 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension UInt16: FWSafeUnwrappable {
-    public static var fwSafeValue: UInt16 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: UInt16 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension UInt32: FWSafeUnwrappable {
-    public static var fwSafeValue: UInt32 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: UInt32 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension UInt64: FWSafeUnwrappable {
-    public static var fwSafeValue: UInt64 = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: UInt64 = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Float: FWSafeUnwrappable {
-    public static var fwSafeValue: Float = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Float = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Double: FWSafeUnwrappable {
-    public static var fwSafeValue: Double = .zero
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Double = .zero
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension Bool: FWSafeUnwrappable {
-    public static var fwSafeValue: Bool = false
-    public var fwIsEmpty: Bool { return self == .fwSafeValue }
+    public static var safeValue: Bool = false
+    public var isEmpty: Bool { return self == .safeValue }
 }
 extension String: FWSafeUnwrappable {
-    public static var fwSafeValue: String = ""
-    public var fwIsEmpty: Bool { return self.isEmpty }
+    public static var safeValue: String = ""
 }
 extension Array: FWSafeUnwrappable {
-    public static var fwSafeValue: Array<Element> { return [] }
-    public var fwIsEmpty: Bool { return self.isEmpty }
+    public static var safeValue: Array<Element> { return [] }
 }
 extension Set: FWSafeUnwrappable {
-    public static var fwSafeValue: Set<Element> { return [] }
-    public var fwIsEmpty: Bool { return self.isEmpty }
+    public static var safeValue: Set<Element> { return [] }
 }
 extension Dictionary: FWSafeUnwrappable {
-    public static var fwSafeValue: Dictionary<Key, Value> { return [:] }
-    public var fwIsEmpty: Bool { return self.isEmpty }
+    public static var safeValue: Dictionary<Key, Value> { return [:] }
 }
