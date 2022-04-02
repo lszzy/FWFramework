@@ -14,7 +14,7 @@ import FWFramework
 // MARK: - UIApplication+FWAdaptive
 
 /// 是否是调试模式
-public let FWIsDebug: Bool = UIApplication.fwIsDebug
+public let FWIsDebug: Bool = UIApplication.fw.isDebug
 
 // MARK: - UIDevice+FWAdaptive
 
@@ -32,7 +32,7 @@ public var FWIsIphone: Bool { return UI_USER_INTERFACE_IDIOM() == .phone }
 /// 是否是iPad设备
 public var FWIsIpad: Bool { return UI_USER_INTERFACE_IDIOM() == .pad }
 /// 是否是Mac设备
-public var FWIsMac: Bool { return UIDevice.fwIsMac }
+public var FWIsMac: Bool { return UIDevice.fw.isMac }
 
 /// 界面是否横屏
 public var FWIsLandscape: Bool { return UIApplication.shared.statusBarOrientation.isLandscape }
@@ -40,11 +40,11 @@ public var FWIsLandscape: Bool { return UIApplication.shared.statusBarOrientatio
 public var FWIsDeviceLandscape: Bool { return UIDevice.current.orientation.isLandscape }
 
 /// iOS系统版本
-public var FWIosVersion: Double { return UIDevice.fwIosVersion }
+public var FWIosVersion: Double { return UIDevice.fw.iosVersion }
 /// 是否是指定iOS主版本
-public func FWIsIos(_ version: Int) -> Bool { return UIDevice.fwIsIos(version) }
+public func FWIsIos(_ version: Int) -> Bool { return UIDevice.fw.isIos(version) }
 /// 是否是大于等于指定iOS主版本
-public func FWIsIosLater(_ version: Int) -> Bool { return UIDevice.fwIsIosLater(version) }
+public func FWIsIosLater(_ version: Int) -> Bool { return UIDevice.fw.isIosLater(version) }
 
 /// 设备尺寸，跟横竖屏无关
 public var FWDeviceSize: CGSize { return CGSize(width: FWDeviceWidth, height: FWDeviceHeight) }
@@ -66,33 +66,37 @@ public var FWScreenHeight: CGFloat { return UIScreen.main.bounds.size.height }
 /// 屏幕像素比例
 public var FWScreenScale: CGFloat { return UIScreen.main.scale }
 /// 判断屏幕英寸
-public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fwIsScreenInch(inch) }
+public func FWIsScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.fw.isScreenInch(inch) }
 /// 是否是全面屏屏幕
-public var FWIsNotchedScreen: Bool { return UIScreen.fwIsNotchedScreen }
+public var FWIsNotchedScreen: Bool { return UIScreen.fw.isNotchedScreen }
 /// 屏幕一像素的大小
-public var FWPixelOne: CGFloat { return UIScreen.fwPixelOne }
+public var FWPixelOne: CGFloat { return UIScreen.fw.pixelOne }
 /// 屏幕安全区域距离
-public var FWSafeAreaInsets: UIEdgeInsets { return UIScreen.fwSafeAreaInsets }
+public var FWSafeAreaInsets: UIEdgeInsets { return UIScreen.fw.safeAreaInsets }
 
 /// 状态栏高度，与是否隐藏无关
-public var FWStatusBarHeight: CGFloat { return UIScreen.fwStatusBarHeight }
+public var FWStatusBarHeight: CGFloat { return UIScreen.fw.statusBarHeight }
 /// 导航栏高度，与是否隐藏无关
-public var FWNavigationBarHeight: CGFloat { return UIScreen.fwNavigationBarHeight }
+public var FWNavigationBarHeight: CGFloat { return UIScreen.fw.navigationBarHeight }
 /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-public var FWTopBarHeight: CGFloat { return UIScreen.fwTopBarHeight }
+public var FWTopBarHeight: CGFloat { return UIScreen.fw.topBarHeight }
 /// 标签栏高度，与是否隐藏无关
-public var FWTabBarHeight: CGFloat { return UIScreen.fwTabBarHeight }
+public var FWTabBarHeight: CGFloat { return UIScreen.fw.tabBarHeight }
 /// 工具栏高度，与是否隐藏无关
-public var FWToolBarHeight: CGFloat { return UIScreen.fwToolBarHeight }
+public var FWToolBarHeight: CGFloat { return UIScreen.fw.toolBarHeight }
 
 /// 当前屏幕宽度缩放比例
-public var FWRelativeScale: CGFloat { return UIScreen.fwRelativeScale }
+public var FWRelativeScale: CGFloat { return UIScreen.fw.relativeScale }
 /// 当前屏幕高度缩放比例
-public var FWRelativeHeightScale: CGFloat { return UIScreen.fwRelativeHeightScale }
+public var FWRelativeHeightScale: CGFloat { return UIScreen.fw.relativeHeightScale }
 
-/// 获取相对设计图等比例缩放值
+/// 获取相对设计图宽度等比例缩放值
 public func FWRelativeValue(_ value: CGFloat) -> CGFloat {
-    return UIScreen.fwRelativeValue(value)
+    return UIScreen.fw.relativeValue(value)
+}
+/// 获取相对设计图高度等比例缩放值
+public func FWRelativeHeight(_ value: CGFloat) -> CGFloat {
+    return UIScreen.fw.relativeHeight(value)
 }
 /// 获取相对设计图等比例缩放size
 public func FWRelativeValue(_ size: CGSize) -> CGSize {

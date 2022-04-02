@@ -1216,18 +1216,18 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
-#pragma mark - UIViewController+FWUIKit
+#pragma mark - FWViewControllerWrapper+FWUIKit
 
-@implementation UIViewController (FWUIKit)
+@implementation FWViewControllerWrapper (FWUIKit)
 
-- (BOOL)fwIsRoot
+- (BOOL)isRoot
 {
-    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
+    return !self.base.navigationController || self.base.navigationController.viewControllers.firstObject == self.base;
 }
 
-- (BOOL)fwIsChild
+- (BOOL)isChild
 {
-    UIViewController *parentController = self.parentViewController;
+    UIViewController *parentController = self.base.parentViewController;
     if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
         ![parentController isKindOfClass:[UITabBarController class]]) {
         return YES;
@@ -1235,20 +1235,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return NO;
 }
 
-- (BOOL)fwIsPresented
+- (BOOL)isPresented
 {
-    UIViewController *viewController = self;
-    if (self.navigationController) {
-        if (self.navigationController.viewControllers.firstObject != self) return NO;
-        viewController = self.navigationController;
+    UIViewController *viewController = self.base;
+    if (self.base.navigationController) {
+        if (self.base.navigationController.viewControllers.firstObject != self.base) return NO;
+        viewController = self.base.navigationController;
     }
     return viewController.presentingViewController.presentedViewController == viewController;
 }
 
-- (BOOL)fwIsPageSheet
+- (BOOL)isPageSheet
 {
     if (@available(iOS 13.0, *)) {
-        UIViewController *controller = self.navigationController ?: self;
+        UIViewController *controller = self.base.navigationController ?: self.base;
         if (!controller.presentingViewController) return NO;
         UIModalPresentationStyle style = controller.modalPresentationStyle;
         if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
@@ -1256,19 +1256,19 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return NO;
 }
 
-- (BOOL)fwIsViewVisible
+- (BOOL)isViewVisible
 {
-    return self.isViewLoaded && self.view.window;
+    return self.base.isViewLoaded && self.base.view.window;
 }
 
-- (BOOL)fwIsLoaded
+- (BOOL)isLoaded
 {
-    return [objc_getAssociatedObject(self, @selector(fwIsLoaded)) boolValue];
+    return [objc_getAssociatedObject(self.base, @selector(isLoaded)) boolValue];
 }
 
-- (void)setFwIsLoaded:(BOOL)fwIsLoaded
+- (void)setIsLoaded:(BOOL)isLoaded
 {
-    objc_setAssociatedObject(self, @selector(fwIsLoaded), @(fwIsLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(isLoaded), @(isLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

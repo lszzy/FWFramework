@@ -11,82 +11,82 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import <MessageUI/MessageUI.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIApplication+FWToolkit
+#pragma mark - FWApplicationClassWrapper+FWToolkit
 
 /**
- UIApplication+FWToolkit
- @note 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+ 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
  */
-@interface UIApplication (FWToolkit)
+@interface FWApplicationClassWrapper (FWToolkit)
 
 /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-+ (BOOL)fwCanOpenURL:(id)url;
+- (BOOL)canOpenURL:(id)url;
 
 /// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(id)url;
+- (void)openURL:(id)url;
 
 /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-+ (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-+ (BOOL)fwIsSystemURL:(id)url;
+- (BOOL)isSystemURL:(id)url;
 
 /// 判断URL是否HTTP链接，支持NSString|NSURL
-+ (BOOL)fwIsHttpURL:(id)url;
+- (BOOL)isHttpURL:(id)url;
 
 /// 判断URL是否是AppStore链接，支持NSString|NSURL
-+ (BOOL)fwIsAppStoreURL:(id)url;
+- (BOOL)isAppStoreURL:(id)url;
 
 /// 打开AppStore下载页
-+ (void)fwOpenAppStore:(NSString *)appId;
+- (void)openAppStore:(NSString *)appId;
 
 /// 打开AppStore评价页
-+ (void)fwOpenAppStoreReview:(NSString *)appId;
+- (void)openAppStoreReview:(NSString *)appId;
 
 /// 打开应用内评价，有次数限制
-+ (void)fwOpenAppReview;
+- (void)openAppReview;
 
 /// 打开系统应用设置页
-+ (void)fwOpenAppSettings;
+- (void)openAppSettings;
 
 /// 打开系统邮件App
-+ (void)fwOpenMailApp:(NSString *)email;
+- (void)openMailApp:(NSString *)email;
 
 /// 打开系统短信App
-+ (void)fwOpenMessageApp:(NSString *)phone;
+- (void)openMessageApp:(NSString *)phone;
 
 /// 打开系统电话App
-+ (void)fwOpenPhoneApp:(NSString *)phone;
+- (void)openPhoneApp:(NSString *)phone;
 
 /// 打开系统分享
-+ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
+- (void)openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
 
 /// 打开内部浏览器，支持NSString|NSURL
-+ (void)fwOpenSafariController:(id)url;
+- (void)openSafariController:(id)url;
 
 /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-+ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
+- (void)openSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
 
 /// 打开短信控制器，完成时回调
-+ (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开邮件控制器，完成时回调
-+ (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开Store控制器，完成时回调
-+ (void)fwOpenStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-+ (nullable AVPlayerViewController *)fwOpenVideoPlayer:(id)url;
+- (nullable AVPlayerViewController *)openVideoPlayer:(id)url;
 
 /// 打开音频播放器，支持NSURL|NSString
-+ (nullable AVAudioPlayer *)fwOpenAudioPlayer:(id)url;
+- (nullable AVAudioPlayer *)openAudioPlayer:(id)url;
 
 @end
 

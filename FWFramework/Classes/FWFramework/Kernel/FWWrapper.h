@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
 
-/// 快速创建包装器
+/// 快速创建包装器，自动缓存
 + (instancetype)wrapper:(ObjectType)base;
 
 @end
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架包装器协议
 @protocol FWObjectWrapper <NSObject>
 
-/// 对象包装器
+/// 对象包装器，有缓存
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// NSObject实现包装器协议
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
 
-/// 对象包装器
+/// 对象包装器，有缓存
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWClassWrapper *fw NS_UNAVAILABLE;
 
-/// 快速创建包装器
+/// 快速创建包装器，无缓存
 + (instancetype)wrapper:(Class)base;
 
 @end
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架类包装器协议
 @protocol FWClassWrapper <NSObject>
 
-/// 类包装器
+/// 类包装器，无缓存
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
 
 @end
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// NSObject实现类包装器协议
 @interface NSObject (FWClassWrapper) <FWClassWrapper>
 
-/// 类包装器
+/// 类包装器，无缓存
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
 
 @end
@@ -199,6 +199,36 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSBundle (FWBundleClassWrapper)
 
 @property (class, nonatomic, strong, readonly) FWBundleClassWrapper *fw;
+
+@end
+
+@interface FWApplicationClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIApplication (FWApplicationClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWApplicationClassWrapper *fw;
+
+@end
+
+@interface FWDeviceClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIDevice (FWDeviceClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWDeviceClassWrapper *fw;
+
+@end
+
+@interface FWScreenClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIScreen (FWScreenClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWScreenClassWrapper *fw;
 
 @end
 

@@ -45,12 +45,7 @@
 @implementation FWClassWrapper
 
 + (instancetype)wrapper:(Class)base {
-    id wrapper = objc_getAssociatedObject(base, @selector(fw));
-    if (!wrapper) {
-        wrapper = [[self alloc] init:base];
-        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return wrapper;
+    return [[self alloc] init:base];
 }
 
 - (instancetype)init:(Class)base {
@@ -219,6 +214,42 @@
 
 + (FWBundleClassWrapper *)fw {
     return [FWBundleClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWApplicationClassWrapper
+
+@end
+
+@implementation UIApplication (FWApplicationClassWrapper)
+
++ (FWApplicationClassWrapper *)fw {
+    return [FWApplicationClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWDeviceClassWrapper
+
+@end
+
+@implementation UIDevice (FWDeviceClassWrapper)
+
++ (FWDeviceClassWrapper *)fw {
+    return [FWDeviceClassWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWScreenClassWrapper
+
+@end
+
+@implementation UIScreen (FWScreenClassWrapper)
+
++ (FWScreenClassWrapper *)fw {
+    return [FWScreenClassWrapper wrapper:self];
 }
 
 @end

@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -287,30 +288,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIViewController+FWUIKit
+#pragma mark - FWViewControllerWrapper+FWUIKit
 
-/**
- UIViewController+FWUIKit
- */
-@interface UIViewController (FWUIKit)
+@interface FWViewControllerWrapper (FWUIKit)
 
 /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsRoot;
+@property (nonatomic, assign, readonly) BOOL isRoot;
 
 /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsChild;
+@property (nonatomic, assign, readonly) BOOL isChild;
 
 /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-@property (nonatomic, assign, readonly) BOOL fwIsPresented;
+@property (nonatomic, assign, readonly) BOOL isPresented;
 
 /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-@property (nonatomic, assign, readonly) BOOL fwIsPageSheet;
+@property (nonatomic, assign, readonly) BOOL isPageSheet;
 
 /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
+@property (nonatomic, assign, readonly) BOOL isViewVisible;
 
 /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-@property (nonatomic, assign) BOOL fwIsLoaded;
+@property (nonatomic, assign) BOOL isLoaded;
 
 @end
 

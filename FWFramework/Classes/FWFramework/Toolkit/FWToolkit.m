@@ -66,38 +66,38 @@
 
 @end
 
-@implementation UIApplication (FWToolkit)
+@implementation FWApplicationClassWrapper (FWToolkit)
 
-+ (BOOL)fwCanOpenURL:(id)url
+- (BOOL)canOpenURL:(id)url
 {
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     return [[UIApplication sharedApplication] canOpenURL:nsurl];
 }
 
-+ (void)fwOpenURL:(id)url
+- (void)openURL:(id)url
 {
-    [self fwOpenURL:url completionHandler:nil];
+    [self openURL:url completionHandler:nil];
 }
 
-+ (void)fwOpenURL:(id)url completionHandler:(void (^)(BOOL success))completion
+- (void)openURL:(id)url completionHandler:(void (^)(BOOL success))completion
 {
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
 }
 
-+ (void)fwOpenUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
+- (void)openUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
 {
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
 }
 
-+ (BOOL)fwIsSystemURL:(id)url
+- (BOOL)isSystemURL:(id)url
 {
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     if (nsurl.scheme.lowercaseString && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme.lowercaseString]) {
         return YES;
     }
-    if ([self fwIsAppStoreURL:nsurl]) {
+    if ([self isAppStoreURL:nsurl]) {
         return YES;
     }
     if (nsurl.absoluteString && [nsurl.absoluteString isEqualToString:UIApplicationOpenSettingsURLString]) {
@@ -106,16 +106,16 @@
     return NO;
 }
 
-+ (BOOL)fwIsHttpURL:(id)url
+- (BOOL)isHttpURL:(id)url
 {
     NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;
     return [urlString.lowercaseString hasPrefix:@"http://"] || [urlString.lowercaseString hasPrefix:@"https://"];
 }
 
-+ (BOOL)fwIsAppStoreURL:(id)url
+- (BOOL)isAppStoreURL:(id)url
 {
     // itms-apps等
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
     // https://apps.apple.com/等
@@ -126,60 +126,60 @@
     return NO;
 }
 
-+ (void)fwOpenAppStore:(NSString *)appId
+- (void)openAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开
-    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
+    [self openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
 }
 
-+ (void)fwOpenAppStoreReview:(NSString *)appId
+- (void)openAppStoreReview:(NSString *)appId
 {
-    [self fwOpenURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
+    [self openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
 }
 
-+ (void)fwOpenAppReview
+- (void)openAppReview
 {
     [SKStoreReviewController requestReview];
 }
 
-+ (void)fwOpenAppSettings
+- (void)openAppSettings
 {
-    [self fwOpenURL:UIApplicationOpenSettingsURLString];
+    [self openURL:UIApplicationOpenSettingsURLString];
 }
 
-+ (void)fwOpenMailApp:(NSString *)email
+- (void)openMailApp:(NSString *)email
 {
-    [self fwOpenURL:[NSString stringWithFormat:@"mailto://%@", email]];
+    [self openURL:[NSString stringWithFormat:@"mailto://%@", email]];
 }
 
-+ (void)fwOpenMessageApp:(NSString *)phone
+- (void)openMessageApp:(NSString *)phone
 {
-    [self fwOpenURL:[NSString stringWithFormat:@"sms://%@", phone]];
+    [self openURL:[NSString stringWithFormat:@"sms://%@", phone]];
 }
 
-+ (void)fwOpenPhoneApp:(NSString *)phone
+- (void)openPhoneApp:(NSString *)phone
 {
     // tel:为直接拨打电话
-    [self fwOpenURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
+    [self openURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
 }
 
-+ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
+- (void)openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
 {
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     activityController.excludedActivityTypes = excludedTypes;
     [UIWindow.fw presentViewController:activityController animated:YES completion:nil];
 }
 
-+ (void)fwOpenSafariController:(id)url
+- (void)openSafariController:(id)url
 {
-    [self fwOpenSafariController:url completionHandler:nil];
+    [self openSafariController:url completionHandler:nil];
 }
 
-+ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion
+- (void)openSafariController:(id)url completionHandler:(nullable void (^)(void))completion
 {
-    if (![self fwIsHttpURL:url]) return;
+    if (![self isHttpURL:url]) return;
     
-    NSURL *nsurl = [self fwNSURLWithURL:url];
+    NSURL *nsurl = [self urlWithString:url];
     SFSafariViewController *safariController = [[SFSafariViewController alloc] initWithURL:nsurl];
     if (completion) {
         objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -188,7 +188,7 @@
     [UIWindow.fw presentViewController:safariController animated:YES completion:nil];
 }
 
-+ (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
+- (void)openMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
 {
     if (!controller || ![MFMessageComposeViewController canSendText]) {
         if (completion) completion(NO);
@@ -202,7 +202,7 @@
     [UIWindow.fw presentViewController:controller animated:YES completion:nil];
 }
 
-+ (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
+- (void)openMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
 {
     if (!controller || ![MFMailComposeViewController canSendMail]) {
         if (completion) completion(NO);
@@ -216,7 +216,7 @@
     [UIWindow.fw presentViewController:controller animated:YES completion:nil];
 }
 
-+ (void)fwOpenStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
+- (void)openStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
 {
     SKStoreProductViewController *viewController = [[SKStoreProductViewController alloc] init];
     viewController.delegate = [FWSafariViewControllerDelegate sharedInstance];
@@ -231,7 +231,7 @@
     }];
 }
 
-+ (AVPlayerViewController *)fwOpenVideoPlayer:(id)url
+- (AVPlayerViewController *)openVideoPlayer:(id)url
 {
     AVPlayer *player = nil;
     if ([url isKindOfClass:[AVPlayerItem class]]) {
@@ -239,7 +239,7 @@
     } else if ([url isKindOfClass:[NSURL class]]) {
         player = [AVPlayer playerWithURL:(NSURL *)url];
     } else if ([url isKindOfClass:[NSString class]]) {
-        NSURL *videoURL = [self fwNSURLWithURL:url];
+        NSURL *videoURL = [self urlWithString:url];
         if (videoURL) player = [AVPlayer playerWithURL:videoURL];
     }
     if (!player) return nil;
@@ -249,7 +249,7 @@
     return viewController;
 }
 
-+ (AVAudioPlayer *)fwOpenAudioPlayer:(id)url
+- (AVAudioPlayer *)openAudioPlayer:(id)url
 {
     // 设置播放模式示例
     // [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
@@ -273,7 +273,7 @@
     return audioPlayer;
 }
 
-+ (NSURL *)fwNSURLWithURL:(id)url
+- (NSURL *)urlWithString:(id)url
 {
     if (![url isKindOfClass:[NSString class]]) return url;
     
