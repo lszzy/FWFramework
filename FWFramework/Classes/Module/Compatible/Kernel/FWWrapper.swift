@@ -28,7 +28,7 @@ public struct FWWrapper<T> {
 public protocol FWAnyWrapper {}
 
 extension FWAnyWrapper {
-    /// 对象包装器属性
+    /// 对象包装器属性，无缓存
     public var fw: FWWrapper<Self> {
         return FWWrapper(self)
     }
@@ -39,7 +39,7 @@ extension FWAnyWrapper {
 public protocol FWTypeWrapper {}
 
 extension FWTypeWrapper {
-    /// 类包装器属性
+    /// 类包装器属性，无缓存
     public static var fw: FWWrapper<Self.Type> {
         return FWWrapper(self)
     }
