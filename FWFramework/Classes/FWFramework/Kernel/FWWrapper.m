@@ -254,6 +254,18 @@
 
 @end
 
+@implementation FWViewClassWrapper
+
+@end
+
+@implementation UIView (FWViewClassWrapper)
+
++ (FWViewClassWrapper *)fw {
+    return [FWViewClassWrapper wrapper:self];
+}
+
+@end
+
 @implementation FWWindowClassWrapper
 
 @end

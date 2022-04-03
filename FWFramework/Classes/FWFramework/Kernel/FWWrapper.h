@@ -232,7 +232,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWWindowClassWrapper : FWClassWrapper
+@interface FWViewClassWrapper : FWClassWrapper
+
+@end
+
+@interface UIView (FWViewClassWrapper)
+
+@property (class, nonatomic, strong, readonly) FWViewClassWrapper *fw;
+
+@end
+
+@interface FWWindowClassWrapper : FWViewClassWrapper
 
 @end
 
