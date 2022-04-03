@@ -130,6 +130,42 @@
 
 @end
 
+@implementation FWNavigationBarWrapper
+
+@end
+
+@implementation UINavigationBar (FWNavigationBarWrapper)
+
+- (FWNavigationBarWrapper *)fw {
+    return [FWNavigationBarWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWTabBarWrapper
+
+@end
+
+@implementation UITabBar (FWTabBarWrapper)
+
+- (FWTabBarWrapper *)fw {
+    return [FWTabBarWrapper wrapper:self];
+}
+
+@end
+
+@implementation FWToolbarWrapper
+
+@end
+
+@implementation UIToolbar (FWToolbarWrapper)
+
+- (FWToolbarWrapper *)fw {
+    return [FWToolbarWrapper wrapper:self];
+}
+
+@end
+
 @implementation FWWindowWrapper
 
 @end

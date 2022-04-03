@@ -128,6 +128,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FWNavigationBarWrapper : FWViewWrapper<UINavigationBar *>
+
+@end
+
+@interface UINavigationBar (FWNavigationBarWrapper)
+
+@property (nonatomic, strong, readonly) FWNavigationBarWrapper *fw;
+
+@end
+
+@interface FWTabBarWrapper : FWViewWrapper<UITabBar *>
+
+@end
+
+@interface UITabBar (FWTabBarWrapper)
+
+@property (nonatomic, strong, readonly) FWTabBarWrapper *fw;
+
+@end
+
+@interface FWToolbarWrapper : FWViewWrapper<UIToolbar *>
+
+@end
+
+@interface UIToolbar (FWToolbarWrapper)
+
+@property (nonatomic, strong, readonly) FWToolbarWrapper *fw;
+
+@end
+
 @interface FWWindowWrapper : FWViewWrapper<UIWindow *>
 
 @end

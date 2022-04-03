@@ -221,10 +221,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UISlider (FWUIKit)
 
 /// 中间圆球的大小，默认zero
-@property (nonatomic, assign) CGSize fwThumbSize UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) CGSize fwThumbSize;
 
 /// 中间圆球的颜色，默认nil
-@property (nonatomic, strong, nullable) UIColor *fwThumbColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong, nullable) UIColor *fwThumbColor;
 
 @end
 
@@ -257,7 +257,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwTextLengthChanged;
 
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
 @property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
@@ -281,7 +281,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fwTextLengthChanged;
 
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
 @property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
