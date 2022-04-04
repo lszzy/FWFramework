@@ -17,7 +17,7 @@ import FWFramework
 extension FWWrapper where T == Data {
     /// json数据解码为Foundation对象
     public var jsonDecode: Any? {
-        return (self.base as NSData).fw.jsonDecode
+        return (self.base as NSData).fw.jsonDecode()
     }
     /// base64编码
     public var base64Encode: Data {

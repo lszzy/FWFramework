@@ -18,12 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
-@property (nonatomic, unsafe_unretained, readonly) id base;
+@property (nonatomic, strong, readonly) id base;
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
 
-/// 快速创建包装器，自动缓存
+/// 快速创建包装器
 + (instancetype)wrapper:(id)base;
 
 @end
@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架包装器协议
 @protocol FWObjectWrapper <NSObject>
 
-/// 对象包装器，有缓存
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// NSObject实现包装器协议
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
 
-/// 对象包装器，有缓存
+/// 对象包装器
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
@@ -50,12 +50,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWClassWrapper : NSObject
 
 /// 原始类
-@property (nonatomic, unsafe_unretained, readonly) Class base;
+@property (nonatomic, strong, readonly) Class base;
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWClassWrapper *fw NS_UNAVAILABLE;
 
-/// 快速创建包装器，无缓存
+/// 快速创建包装器
 + (instancetype)wrapper:(Class)base;
 
 @end
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 框架类包装器协议
 @protocol FWClassWrapper <NSObject>
 
-/// 类包装器，无缓存
+/// 类包装器
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
 
 @end
@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// NSObject实现类包装器协议
 @interface NSObject (FWClassWrapper) <FWClassWrapper>
 
-/// 类包装器，无缓存
+/// 类包装器
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
 
 @end
@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWStringWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) NSString *base;
+@property (nonatomic, strong, readonly) NSString *base;
 
 @end
 
@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWDataWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) NSData *base;
+@property (nonatomic, strong, readonly) NSData *base;
 
 @end
 
@@ -104,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWURLWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) NSURL *base;
+@property (nonatomic, strong, readonly) NSURL *base;
 
 @end
 
@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWBundleWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) NSBundle *base;
+@property (nonatomic, strong, readonly) NSBundle *base;
 
 @end
 
@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWViewWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UIView *base;
+@property (nonatomic, strong, readonly) UIView *base;
 
 @end
 
@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWNavigationBarWrapper : FWViewWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UINavigationBar *base;
+@property (nonatomic, strong, readonly) UINavigationBar *base;
 
 @end
 
@@ -152,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWTabBarWrapper : FWViewWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UITabBar *base;
+@property (nonatomic, strong, readonly) UITabBar *base;
 
 @end
 
@@ -164,7 +164,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWToolbarWrapper : FWViewWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UIToolbar *base;
+@property (nonatomic, strong, readonly) UIToolbar *base;
 
 @end
 
@@ -176,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWWindowWrapper : FWViewWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UIWindow *base;
+@property (nonatomic, strong, readonly) UIWindow *base;
 
 @end
 
@@ -188,7 +188,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWViewControllerWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UIViewController *base;
+@property (nonatomic, strong, readonly) UIViewController *base;
 
 @end
 
@@ -200,7 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FWNavigationControllerWrapper : FWViewControllerWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) UINavigationController *base;
+@property (nonatomic, strong, readonly) UINavigationController *base;
 
 @end
 
