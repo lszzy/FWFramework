@@ -14,12 +14,7 @@
 @implementation FWObjectWrapper
 
 + (instancetype)wrapper:(id)base {
-    id wrapper = objc_getAssociatedObject(base, @selector(fw));
-    if (!wrapper) {
-        wrapper = [[self alloc] init:base];
-        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return wrapper;
+    return [[self alloc] init:base];
 }
 
 - (instancetype)init:(id)base {
