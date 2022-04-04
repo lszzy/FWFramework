@@ -45,6 +45,20 @@ extension FWTypeWrapper {
     }
 }
 
+// MARK: - FWWrapper
+
+extension Encoder {
+    public var fw: FWWrapper<Encoder> {
+        return FWWrapper(self)
+    }
+}
+
+extension Decoder {
+    public var fw: FWWrapper<Decoder> {
+        return FWWrapper(self)
+    }
+}
+
 // MARK: - FWAnyWrapper
 
 extension String: FWAnyWrapper {}
