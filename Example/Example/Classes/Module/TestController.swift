@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FWFramework
 
 class TestController: UITableViewController {
     
@@ -85,13 +86,13 @@ private extension TestController {
         var body: String?
 
         init(from decoder: Decoder) throws {
-            title = try decoder.decode("title")
-            body = try decoder.decode("body")
+            title = try decoder.fw.decode("title")
+            body = try decoder.fw.decode("body")
         }
         
         func encode(to encoder: Encoder) throws {
-            try encoder.encode(title, for: "title")
-            try encoder.encode(body, for: "body")
+            try encoder.fw.encode(title, for: "title")
+            try encoder.fw.encode(body, for: "body")
         }
     }
     
@@ -99,12 +100,12 @@ private extension TestController {
         let json = ["title": "TITLE", "body": "BODY"]
         guard let data = Data.fw.jsonEncode(json) else { return }
         
-        guard let article = try? data.decoded() as Article else { return }
+        guard let article = try? data.fw.decoded() as Article else { return }
         print("decode: title => \(article.title), body => \(article.body ?? "")")
-        guard let articleData = try? article.encoded() else { return }
+        guard let articleData = try? Data.fw.encoded(article) else { return }
         print("encode: \(articleData.fw.jsonDecode ?? "")")
         do {
-            let articleDecode: Article = try articleData.decoded()
+            let articleDecode: Article = try articleData.fw.decoded()
             print("decode: title => \(articleDecode.title), body => \(articleDecode.body ?? "")")
         } catch {}
     }

@@ -21,32 +21,32 @@ extension JSONEncoder: FWAnyEncoder {}
 extension PropertyListEncoder: FWAnyEncoder {}
 #endif
 
-public extension Encodable {
-    func encoded(using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data {
-        return try encoder.encode(self)
+extension FWWrapper where T == Data.Type {
+    public func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+        return try encoder.encode(value)
     }
 }
 
-public extension Encoder {
-    func encodeSingle<T: Encodable>(_ value: T) throws {
-        var container = singleValueContainer()
+extension FWWrapper where T == Encoder {
+    public func encodeSingle<T: Encodable>(_ value: T) throws {
+        var container = base.singleValueContainer()
         try container.encode(value)
     }
 
-    func encode<T: Encodable>(_ value: T, for key: String) throws {
+    public func encode<T: Encodable>(_ value: T, for key: String) throws {
         try encode(value, for: FWAnyCodingKey(key))
     }
 
-    func encode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
-        var container = self.container(keyedBy: K.self)
+    public func encode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
+        var container = base.container(keyedBy: K.self)
         try container.encode(value, forKey: key)
     }
 
-    func encode<F: FWAnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
+    public func encode<F: FWAnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
         try encode(date, for: FWAnyCodingKey(key), using: formatter)
     }
 
-    func encode<K: CodingKey, F: FWAnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
+    public func encode<K: CodingKey, F: FWAnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
         let string = formatter.string(from: date)
         try encode(string, for: key)
     }
@@ -64,43 +64,43 @@ extension JSONDecoder: FWAnyDecoder {}
 extension PropertyListDecoder: FWAnyDecoder {}
 #endif
 
-public extension Data {
-    func decoded<T: Decodable>(as type: T.Type = T.self,
-                               using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
-        return try decoder.decode(T.self, from: self)
+extension FWWrapper where T == Data {
+    public func decoded<T: Decodable>(as type: T.Type = T.self,
+                                      using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
+        return try decoder.decode(T.self, from: self.base)
     }
 }
 
-public extension Decoder {
-    func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        let container = try singleValueContainer()
+extension FWWrapper where T == Decoder {
+    public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
+        let container = try base.singleValueContainer()
         return try container.decode(type)
     }
 
-    func decode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+    public func decode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
         return try decode(FWAnyCodingKey(key), as: type)
     }
 
-    func decode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        let container = try self.container(keyedBy: K.self)
+    public func decode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+        let container = try base.container(keyedBy: K.self)
         return try container.decode(type, forKey: key)
     }
 
-    func decodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+    public func decodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
         return try decodeIf(FWAnyCodingKey(key), as: type)
     }
 
-    func decodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        let container = try self.container(keyedBy: K.self)
+    public func decodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        let container = try base.container(keyedBy: K.self)
         return try container.decodeIfPresent(type, forKey: key)
     }
 
-    func decode<F: FWAnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
+    public func decode<F: FWAnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
         return try decode(FWAnyCodingKey(key), using: formatter)
     }
 
-    func decode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
-        let container = try self.container(keyedBy: K.self)
+    public func decode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
+        let container = try base.container(keyedBy: K.self)
         let rawString = try container.decode(String.self, forKey: key)
 
         guard let date = formatter.date(from: rawString) else {
@@ -116,51 +116,51 @@ public extension Decoder {
     
     // MARK: - FWJSON
     
-    func jsonSingle() throws -> FWJSON {
+    public func jsonSingle() throws -> FWJSON {
         return try decodeSingle(as: FWJSON.self)
     }
     
-    func json(_ key: String) throws -> FWJSON {
+    public func json(_ key: String) throws -> FWJSON {
         return try decodeIf(key, as: FWJSON.self) ?? FWJSON.null
     }
     
-    func json<K: CodingKey>(_ key: K) throws -> FWJSON {
+    public func json<K: CodingKey>(_ key: K) throws -> FWJSON {
         return try decodeIf(key, as: FWJSON.self) ?? FWJSON.null
     }
 
-    func jsonIf(_ key: String) throws -> FWJSON? {
+    public func jsonIf(_ key: String) throws -> FWJSON? {
         return try decodeIf(key, as: FWJSON.self)
     }
 
-    func jsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
+    public func jsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
         return try decodeIf(key, as: FWJSON.self)
     }
     
     // MARK: - Value
     
-    func valueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
+    public func valueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
         if let value = value(with: try decodeSingle(as: FWJSON.self), as: type) {
             return value
         }
         return try decodeSingle(as: type)
     }
     
-    func value<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+    public func value<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
         return try value(FWAnyCodingKey(key), as: type)
     }
 
-    func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+    public func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
         if let value = value(with: try decodeIf(key, as: FWJSON.self) ?? FWJSON.null, as: type) {
             return value
         }
         return try decode(key, as: type)
     }
 
-    func valueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+    public func valueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
         return try valueIf(FWAnyCodingKey(key), as: type)
     }
 
-    func valueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+    public func valueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
         if let json = try decodeIf(key, as: FWJSON.self), let value = value(with: json, as: type) {
             return value
         }
