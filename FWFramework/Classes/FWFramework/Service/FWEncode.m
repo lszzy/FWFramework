@@ -209,7 +209,7 @@
     return result;
 }
 
-#pragma mark - FWSafeType
+#pragma mark - Helper
 
 - (NSString *)trimString
 {
@@ -295,49 +295,6 @@
     return string;
 }
 
-- (NSString *)substringFromIndex:(NSInteger)from
-{
-    if (from < 0) {
-        return nil;
-    }
-    
-    if (from > self.base.length) {
-        return nil;
-    }
-    
-    return [self.base substringFromIndex:from];
-}
-
-- (NSString *)substringToIndex:(NSInteger)to
-{
-    if (to < 0) {
-        return nil;
-    }
-    
-    if (to > self.base.length) {
-        return nil;
-    }
-    
-    return [self.base substringToIndex:to];
-}
-
-- (NSString *)substringWithRange:(NSRange)range
-{
-    if (range.location > self.base.length) {
-        return nil;
-    }
-    
-    if (range.length > self.base.length) {
-        return nil;
-    }
-    
-    if (range.location + range.length > self.base.length) {
-        return nil;
-    }
-    
-    return [self.base substringWithRange:range];
-}
-
 @end
 
 #pragma mark - FWStringClassWrapper+FWEncode
@@ -404,7 +361,7 @@
     return [[NSData alloc] initWithBase64EncodedData:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
-#pragma mark - FWSafeType
+#pragma mark - Helper
 
 - (NSString *)utf8String
 {
@@ -493,18 +450,18 @@ NSURL * FWSafeURL(id value) {
     if ([self.base isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)self.base;
     } else if ([self.base isKindOfClass:[NSString class]]) {
-        return [((NSString *)self.base).fw number];
+        return [((NSString *)self.base).fw number] ?: @(0);
     } else if ([self.base isKindOfClass:[NSDate class]]) {
         return [NSNumber numberWithDouble:[(NSDate *)self.base timeIntervalSince1970]];
     } else {
-        return nil;
+        return @(0);
     }
 }
 
 - (NSString *)asString
 {
     if ([self.base isKindOfClass:[NSNull class]]) {
-        return nil;
+        return @"";
     } else if ([self.base isKindOfClass:[NSString class]]) {
         return (NSString *)self.base;
     } else if ([self.base isKindOfClass:[NSDate class]]) {
@@ -512,7 +469,7 @@ NSURL * FWSafeURL(id value) {
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         return [formatter stringFromDate:(NSDate *)self.base];
     } else if ([self.base isKindOfClass:[NSData class]]) {
-        return [[NSString alloc] initWithData:(NSData *)self.base encoding:NSUTF8StringEncoding];
+        return [[NSString alloc] initWithData:(NSData *)self.base encoding:NSUTF8StringEncoding] ?: @"";
     } else {
         return [NSString stringWithFormat:@"%@", self.base];
     }
@@ -525,22 +482,22 @@ NSURL * FWSafeURL(id value) {
     } else if ([self.base isKindOfClass:[NSString class]]) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        return [formatter dateFromString:(NSString *)self.base];
+        return [formatter dateFromString:(NSString *)self.base] ?: [NSDate date];
     } else if ([self.base isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[(NSNumber *)self.base doubleValue]];
     } else {
-        return nil;
+        return [NSDate date];
     }
 }
 
 - (NSData *)asData
 {
     if ([self.base isKindOfClass:[NSString class]]) {
-        return [(NSString *)self.base dataUsingEncoding:NSUTF8StringEncoding];
+        return [(NSString *)self.base dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData new];
     } else if ([self.base isKindOfClass:[NSData class]]) {
         return (NSData *)self.base;
     } else {
-        return nil;
+        return [NSData new];
     }
 }
 
@@ -549,7 +506,7 @@ NSURL * FWSafeURL(id value) {
     if ([self.base isKindOfClass:[NSArray class]]) {
         return (NSArray *)self.base;
     } else {
-        return nil;
+        return @[];
     }
 }
 
@@ -560,7 +517,7 @@ NSURL * FWSafeURL(id value) {
     } else if ([self.base isKindOfClass:[NSArray class]]) {
         return [NSMutableArray arrayWithArray:(NSArray *)self.base];
     } else {
-        return nil;
+        return [NSMutableArray array];
     }
 }
 
@@ -569,7 +526,7 @@ NSURL * FWSafeURL(id value) {
     if ([self.base isKindOfClass:[NSDictionary class]]) {
         return (NSDictionary *)self.base;
     } else {
-        return nil;
+        return @{};
     }
 }
 
@@ -580,16 +537,7 @@ NSURL * FWSafeURL(id value) {
     } else if ([self.base isKindOfClass:[NSDictionary class]]) {
         return [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)self.base];
     } else {
-        return nil;
-    }
-}
-
-- (id)asClass:(Class)clazz
-{
-    if ([self.base isKindOfClass:clazz]) {
-        return self.base;
-    } else {
-        return nil;
+        return [NSMutableDictionary dictionary];
     }
 }
 

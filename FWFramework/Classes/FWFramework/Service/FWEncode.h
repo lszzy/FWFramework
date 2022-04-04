@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSString *)md5EncodeFile;
 
-#pragma mark - FWSafeType
+#pragma mark - Helper
 
 /**
  去掉空白字符
@@ -168,30 +168,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return NSNumber
  */
 @property (nonatomic, readonly, nullable) NSNumber *number;
-
-/**
- 从指定位置截取子串
- 
- @param from 起始位置
- @return 子串
- */
-- (nullable NSString *)substringFromIndex:(NSInteger)from;
-
-/**
- 截取子串到指定位置
- 
- @param to 结束位置
- @return 子串
- */
-- (nullable NSString *)substringToIndex:(NSInteger)to;
-
-/**
- 截取指定范围的子串
- 
- @param range 指定范围
- @return 子串
- */
-- (nullable NSString *)substringWithRange:(NSRange)range;
 
 @end
 
@@ -247,7 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)base64Decode;
 
-#pragma mark - FWSafeType
+#pragma mark - Helper
 
 /**
  转换为UTF8编码字符串
@@ -319,95 +295,88 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
 @property (nonatomic, assign, readonly) BOOL isNotEmpty;
 
 /**
- 检测并转换为NSInteger
+ 检测并安全转换为NSInteger
  
  @return NSInteger
  */
 @property (nonatomic, assign, readonly) NSInteger asInteger;
 
 /**
- 检测并转换为Float
+ 检测并安全转换为Float
  
  @return Float
  */
 @property (nonatomic, assign, readonly) float asFloat;
 
 /**
- 检测并转换为Double
+ 检测并安全转换为Double
  
  @return Double
  */
 @property (nonatomic, assign, readonly) double asDouble;
 
 /**
- 检测并转换为Bool
+ 检测并安全转换为Bool
  
  @return Bool
  */
 @property (nonatomic, assign, readonly) BOOL asBool;
 
 /**
- 检测并转换为NSNumber
+ 检测并安全转换为NSNumber
  
  @return NSNumber
  */
-@property (nonatomic, readonly, nullable) NSNumber *asNumber;
+@property (nonatomic, strong, readonly) NSNumber *asNumber;
 
 /**
- 检测并转换为NSString
+ 检测并安全转换为NSString
  
  @return NSString
  */
-@property (nonatomic, copy, readonly, nullable) NSString *asString;
+@property (nonatomic, copy, readonly) NSString *asString;
 
 /**
- 检测并转换为NSDate
+ 检测并安全转换为NSDate
  
  @return NSDate
  */
-@property (nonatomic, readonly, nullable) NSDate *asDate;
+@property (nonatomic, strong, readonly) NSDate *asDate;
 
 /**
- 检测并转换为NSData
+ 检测并安全转换为NSData
  
  @return NSData
  */
-@property (nonatomic, readonly, nullable) NSData *asData;
+@property (nonatomic, strong, readonly) NSData *asData;
 
 /**
- 检测并转换为NSArray
+ 检测并安全转换为NSArray
  
  @return NSArray
  */
-@property (nonatomic, readonly, nullable) NSArray *asArray;
+@property (nonatomic, strong, readonly) NSArray *asArray;
 
 /**
- 检测并转换为NSMutableArray
+ 检测并安全转换为NSMutableArray
  
  @return NSMutableArray
  */
-@property (nonatomic, readonly, nullable) NSMutableArray *asMutableArray;
+@property (nonatomic, strong, readonly) NSMutableArray *asMutableArray;
 
 /**
- 检测并转换为NSDictionary
+ 检测并安全转换为NSDictionary
  
  @return NSDictionary
  */
-@property (nonatomic, readonly, nullable) NSDictionary *asDictionary;
+@property (nonatomic, strong, readonly) NSDictionary *asDictionary;
 
 /**
- 检测并转换为NSMutableDictionary
+ 检测并安全转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-@property (nonatomic, readonly, nullable) NSMutableDictionary *asMutableDictionary;
-
-/**
- 检测并转换为指定Class对象
- 
- @return 指定Class对象
- */
-- (nullable id)asClass:(Class)clazz;
+@property (nonatomic, strong, readonly) NSMutableDictionary *asMutableDictionary;
 
 @end
 
