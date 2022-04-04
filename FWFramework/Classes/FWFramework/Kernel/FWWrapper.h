@@ -13,16 +13,18 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWObjectWrapper
 
 /// 框架包装器
-@interface FWObjectWrapper<__covariant ObjectType> : NSObject
+///
+/// 备注：因Swift无法扩展OC泛型，未使用OC泛型实现，子类需覆盖base属性声明
+@interface FWObjectWrapper : NSObject
 
 /// 原始对象
-@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
+@property (nonatomic, unsafe_unretained, readonly) id base;
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
 
 /// 快速创建包装器，自动缓存
-+ (instancetype)wrapper:(ObjectType)base;
++ (instancetype)wrapper:(id)base;
 
 @end
 
@@ -76,7 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWObjectWrapper
 
-@interface FWStringWrapper : FWObjectWrapper<NSString *>
+@interface FWStringWrapper : FWObjectWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) NSString *base;
 
 @end
 
@@ -86,7 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWDataWrapper : FWObjectWrapper<NSData *>
+@interface FWDataWrapper : FWObjectWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) NSData *base;
 
 @end
 
@@ -96,7 +102,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWURLWrapper : FWObjectWrapper<NSURL *>
+@interface FWURLWrapper : FWObjectWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) NSURL *base;
 
 @end
 
@@ -106,7 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWBundleWrapper : FWObjectWrapper<NSBundle *>
+@interface FWBundleWrapper : FWObjectWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) NSBundle *base;
 
 @end
 
@@ -116,9 +126,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWViewWrapper<__covariant ObjectType: UIView *> : FWObjectWrapper<ObjectType>
+@interface FWViewWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
+@property (nonatomic, unsafe_unretained, readonly) UIView *base;
 
 @end
 
@@ -128,7 +138,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWNavigationBarWrapper : FWViewWrapper<UINavigationBar *>
+@interface FWNavigationBarWrapper : FWViewWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) UINavigationBar *base;
 
 @end
 
@@ -138,7 +150,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWTabBarWrapper : FWViewWrapper<UITabBar *>
+@interface FWTabBarWrapper : FWViewWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) UITabBar *base;
 
 @end
 
@@ -148,7 +162,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWToolbarWrapper : FWViewWrapper<UIToolbar *>
+@interface FWToolbarWrapper : FWViewWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) UIToolbar *base;
 
 @end
 
@@ -158,7 +174,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWWindowWrapper : FWViewWrapper<UIWindow *>
+@interface FWWindowWrapper : FWViewWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) UIWindow *base;
 
 @end
 
@@ -168,9 +186,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWViewControllerWrapper<__covariant ObjectType: UIViewController *> : FWObjectWrapper<ObjectType>
+@interface FWViewControllerWrapper : FWObjectWrapper
 
-@property (nonatomic, unsafe_unretained, readonly) ObjectType base;
+@property (nonatomic, unsafe_unretained, readonly) UIViewController *base;
 
 @end
 
@@ -180,7 +198,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FWNavigationControllerWrapper : FWViewControllerWrapper<UINavigationController *>
+@interface FWNavigationControllerWrapper : FWViewControllerWrapper
+
+@property (nonatomic, unsafe_unretained, readonly) UINavigationController *base;
 
 @end
 

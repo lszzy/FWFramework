@@ -70,6 +70,8 @@
 
 @implementation FWStringWrapper
 
+@dynamic base;
+
 @end
 
 @implementation NSString (FWStringWrapper)
@@ -81,6 +83,8 @@
 @end
 
 @implementation FWDataWrapper
+
+@dynamic base;
 
 @end
 
@@ -94,6 +98,8 @@
 
 @implementation FWURLWrapper
 
+@dynamic base;
+
 @end
 
 @implementation NSURL (FWURLWrapper)
@@ -105,6 +111,8 @@
 @end
 
 @implementation FWBundleWrapper
+
+@dynamic base;
 
 @end
 
@@ -132,6 +140,8 @@
 
 @implementation FWNavigationBarWrapper
 
+@dynamic base;
+
 @end
 
 @implementation UINavigationBar (FWNavigationBarWrapper)
@@ -143,6 +153,8 @@
 @end
 
 @implementation FWTabBarWrapper
+
+@dynamic base;
 
 @end
 
@@ -156,6 +168,8 @@
 
 @implementation FWToolbarWrapper
 
+@dynamic base;
+
 @end
 
 @implementation UIToolbar (FWToolbarWrapper)
@@ -167,6 +181,8 @@
 @end
 
 @implementation FWWindowWrapper
+
+@dynamic base;
 
 @end
 
@@ -193,6 +209,8 @@
 @end
 
 @implementation FWNavigationControllerWrapper
+
+@dynamic base;
 
 @end
 

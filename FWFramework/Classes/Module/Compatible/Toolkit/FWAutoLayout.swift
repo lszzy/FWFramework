@@ -512,7 +512,7 @@ public class FWLayoutChain {
 // MARK: - FWViewWrapper+FWLayoutChain
 
 /// 视图链式布局扩展
-extension FWViewWrapper where ObjectType == UIView {
+extension FWViewWrapper {
     /// 关联对象Key
     private struct FWLayoutChainAssociatedKeys {
         static var layoutChainKey = "layoutChainKey"
