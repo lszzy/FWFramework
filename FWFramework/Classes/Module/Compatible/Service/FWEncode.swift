@@ -364,6 +364,7 @@ extension FWWrapper where Base: FWSafeType {
     public var safeDicationary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
 }
 
+/// 可选Optional类暂不开放FWWrapper包装，防止Optional类fw属性和Wrapped类fw属性重复声明冲突
 extension Optional {
     public var safeInt: Int { return safeNumber.intValue }
     public var safeBool: Bool { return safeNumber.boolValue }

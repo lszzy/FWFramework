@@ -27,6 +27,11 @@ extension FWWrapper where Base == Data {
     }
 }
 
+/// Encoder|Decoder协议暂不开放FWWrapper包装，防止协议fw属性和类fw属性重复声明冲突
+///
+/// 协议使用FWWrapper示例：
+/// extension Encoder { public var fw: FWWrapper<Encoder> { return FWWrapper(self) } }
+/// extension FWWrapper where Base == Encoder { }
 extension Encoder {
     public func encodeSingle<T: Encodable>(_ value: T) throws {
         var container = singleValueContainer()
