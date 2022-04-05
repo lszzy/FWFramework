@@ -52,28 +52,19 @@
 
 @end
 
-#pragma mark - FWObjectWrapperCompatible
+#pragma mark - FWWrapperCompatible
 
-FWDefObjectWrapper(NSString, FWStringWrapper);
-FWDefObjectWrapper(NSData, FWDataWrapper);
-FWDefObjectWrapper(NSURL, FWURLWrapper);
-FWDefObjectWrapper(NSBundle, FWBundleWrapper);
-FWDefObjectWrapper(UIView, FWViewWrapper);
-FWDefObjectWrapper(UINavigationBar, FWNavigationBarWrapper);
-FWDefObjectWrapper(UITabBar, FWTabBarWrapper);
-FWDefObjectWrapper(UIToolbar, FWToolbarWrapper);
-FWDefObjectWrapper(UIWindow, FWWindowWrapper);
-FWDefObjectWrapper(UIViewController, FWViewControllerWrapper);
-FWDefObjectWrapper(UINavigationController, FWNavigationControllerWrapper);
-
-#pragma mark - FWClassWrapperCompatible
-
-FWDefClassWrapper(NSString, FWStringClassWrapper);
-FWDefClassWrapper(NSData, FWDataClassWrapper);
-FWDefClassWrapper(NSURL, FWURLClassWrapper);
-FWDefClassWrapper(NSBundle, FWBundleClassWrapper);
-FWDefClassWrapper(UIApplication, FWApplicationClassWrapper);
-FWDefClassWrapper(UIDevice, FWDeviceClassWrapper);
-FWDefClassWrapper(UIScreen, FWScreenClassWrapper);
-FWDefClassWrapper(UIView, FWViewClassWrapper);
-FWDefClassWrapper(UIWindow, FWWindowClassWrapper);
+FWDefWrapper(NSString, FWStringWrapper, FWStringClassWrapper);
+FWDefWrapper(NSData, FWDataWrapper, FWDataClassWrapper);
+FWDefWrapper(NSURL, FWURLWrapper, FWURLClassWrapper);
+FWDefWrapper(NSBundle, FWBundleWrapper, FWBundleClassWrapper);
+FWDefWrapper(UIApplication, FWApplicationWrapper, FWApplicationClassWrapper);
+FWDefWrapper(UIDevice, FWDeviceWrapper, FWDeviceClassWrapper);
+FWDefWrapper(UIScreen, FWScreenWrapper, FWScreenClassWrapper);
+FWDefWrapper(UIView, FWViewWrapper, FWViewClassWrapper);
+FWDefWrapper(UINavigationBar, FWNavigationBarWrapper, FWNavigationBarClassWrapper);
+FWDefWrapper(UITabBar, FWTabBarWrapper, FWTabBarClassWrapper);
+FWDefWrapper(UIToolbar, FWToolbarWrapper, FWToolbarClassWrapper);
+FWDefWrapper(UIWindow, FWWindowWrapper, FWWindowClassWrapper);
+FWDefWrapper(UIViewController, FWViewControllerWrapper, FWViewControllerClassWrapper);
+FWDefWrapper(UINavigationController, FWNavigationControllerWrapper, FWNavigationControllerClassWrapper);

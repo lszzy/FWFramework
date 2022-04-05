@@ -14,7 +14,11 @@ import FWFramework
 
 // MARK: - FWEncode
 
-extension FWWrapper where T == Data {
+extension FWWrapper where Base == Data {
+    /// Foundation对象编码为json数据
+    public static func jsonEncode(_ object: Any) -> Data? {
+        return try? JSONSerialization.data(withJSONObject: object)
+    }
     /// json数据解码为Foundation对象
     public var jsonDecode: Any? {
         do {
@@ -42,14 +46,12 @@ extension FWWrapper where T == Data {
     }
 }
 
-extension FWWrapper where T == Data.Type {
-    /// Foundation对象编码为json数据
-    public func jsonEncode(_ object: Any) -> Data? {
-        return try? JSONSerialization.data(withJSONObject: object)
+extension FWWrapper where Base == String {
+    /// Foundation对象编码为json字符串
+    public static func jsonEncode(_ object: Any) -> String? {
+        guard let data = Data.fw.jsonEncode(object) else { return nil }
+        return String(data: data, encoding: .utf8)
     }
-}
-
-extension FWWrapper where T == String {
     /// json字符串解码为Foundation对象
     public var jsonDecode: Any? {
         guard let data = base.data(using: .utf8) else { return nil }
@@ -149,6 +151,16 @@ extension FWWrapper where T == String {
     ///      http://test.com?id=我是中文
     public var urlDecode: String? {
         return base.removingPercentEncoding
+    }
+    /// 字典编码为URL参数字符串
+    public static func queryEncode(_ dict: [String: Any]) -> String {
+        var result = ""
+        for (key, value) in dict {
+            if result.count > 0 { result.append("&") }
+            let string = FWSafeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
+            result.append("\(key)=\(string)")
+        }
+        return result
     }
     /// URL参数字符串解码为字典，支持完整URL
     public var queryDecode: [String: String] {
@@ -265,25 +277,23 @@ extension FWWrapper where T == String {
     }
 }
 
-extension FWWrapper where T == String.Type {
-    /// Foundation对象编码为json字符串
-    public func jsonEncode(_ object: Any) -> String? {
-        guard let data = Data.fw.jsonEncode(object) else { return nil }
-        return String(data: data, encoding: .utf8)
+extension FWWrapper where Base == URL {
+    /// 生成URL，中文自动URL编码
+    public static func url(string: String?) -> URL? {
+        guard let string = string else { return nil }
+        if let url = URL(string: string) { return url }
+        // 如果生成失败，自动URL编码再试
+        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: encodeString)
     }
-    /// 字典编码为URL参数字符串
-    public func queryEncode(_ dict: [String: Any]) -> String {
-        var result = ""
-        for (key, value) in dict {
-            if result.count > 0 { result.append("&") }
-            let string = FWSafeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
-            result.append("\(key)=\(string)")
-        }
-        return result
+    /// 生成URL，中文自动URL编码，支持基准URL
+    public static func url(string: String?, relativeTo baseURL: URL?) -> URL? {
+        guard let string = string else { return nil }
+        if let url = URL(string: string, relativeTo: baseURL) { return url }
+        // 如果生成失败，自动URL编码再试
+        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: encodeString, relativeTo: baseURL)
     }
-}
-
-extension FWWrapper where T == URL {
     /// 获取当前query的参数字典，不含空值
     public var queryDictionary: [String: String] {
         var components = URLComponents(string: base.absoluteString)
@@ -304,25 +314,6 @@ extension FWWrapper where T == URL {
         guard let components = URLComponents(string: string),
               let range = components.rangeOfPath else { return nil }
         return String(string[range])
-    }
-}
-
-extension FWWrapper where T == URL.Type {
-    /// 生成URL，中文自动URL编码
-    public func url(string: String?) -> URL? {
-        guard let string = string else { return nil }
-        if let url = URL(string: string) { return url }
-        // 如果生成失败，自动URL编码再试
-        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: encodeString)
-    }
-    /// 生成URL，中文自动URL编码，支持基准URL
-    public func url(string: String?, relativeTo baseURL: URL?) -> URL? {
-        guard let string = string else { return nil }
-        if let url = URL(string: string, relativeTo: baseURL) { return url }
-        // 如果生成失败，自动URL编码再试
-        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: encodeString, relativeTo: baseURL)
     }
 }
 
@@ -352,7 +343,7 @@ public func FWSafeURL(_ value: Any?) -> URL {
     return NSURL() as URL
 }
 
-extension FWWrapper where T : FWAnyWrapper {
+extension FWWrapper where Base : FWWrapperCompatible {
     public var asInt: Int { return asNumber.intValue }
     public var asBool: Bool { return asNumber.boolValue }
     public var asFloat: Float { return asNumber.floatValue }

@@ -21,13 +21,13 @@ extension JSONEncoder: FWAnyEncoder {}
 extension PropertyListEncoder: FWAnyEncoder {}
 #endif
 
-extension FWWrapper where T == Data.Type {
-    public func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+extension FWWrapper where Base == Data {
+    public static func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
     }
 }
 
-extension FWWrapper where T == Encoder {
+extension FWWrapper where Base == Encoder {
     public func encodeSingle<T: Encodable>(_ value: T) throws {
         var container = base.singleValueContainer()
         try container.encode(value)
@@ -64,14 +64,14 @@ extension JSONDecoder: FWAnyDecoder {}
 extension PropertyListDecoder: FWAnyDecoder {}
 #endif
 
-extension FWWrapper where T == Data {
+extension FWWrapper where Base == Data {
     public func decoded<T: Decodable>(as type: T.Type = T.self,
                                       using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
         return try decoder.decode(T.self, from: self.base)
     }
 }
 
-extension FWWrapper where T == Decoder {
+extension FWWrapper where Base == Decoder {
     public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
         let container = try base.singleValueContainer()
         return try container.decode(type)
