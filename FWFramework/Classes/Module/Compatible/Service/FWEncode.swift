@@ -343,19 +343,6 @@ public func FWSafeURL(_ value: Any?) -> URL {
     return NSURL() as URL
 }
 
-extension FWWrapper where Base : FWWrapperCompatible {
-    public var asInt: Int { return asNumber.intValue }
-    public var asBool: Bool { return asNumber.boolValue }
-    public var asFloat: Float { return asNumber.floatValue }
-    public var asDouble: Double { return asNumber.doubleValue }
-    public var asString: String { return FWSafeString(base) }
-    public var asNumber: NSNumber { return FWSafeNumber(base) }
-    public var asArray: [Any] { return (base as? [Any]) ?? [] }
-    public var asDicationary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
-}
-
-// MARK: - FWWrapper+FWSafeType
-
 /// 获取安全值
 public func FWSafeValue<T: FWSafeType>(_ value: T?) -> T {
     return value.safeValue
@@ -366,14 +353,36 @@ public func FWIsEmpty<T: FWSafeType>(_ value: T?) -> Bool {
     return value.isEmpty
 }
 
-public protocol FWSafeType {
-    static var safeValue: Self { get }
-    var isEmpty: Bool { get }
+extension FWWrapper where Base: FWSafeType {
+    public var safeInt: Int { return safeNumber.intValue }
+    public var safeBool: Bool { return safeNumber.boolValue }
+    public var safeFloat: Float { return safeNumber.floatValue }
+    public var safeDouble: Double { return safeNumber.doubleValue }
+    public var safeString: String { return FWSafeString(base) }
+    public var safeNumber: NSNumber { return FWSafeNumber(base) }
+    public var safeArray: [Any] { return (base as? [Any]) ?? [] }
+    public var safeDicationary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
+}
+
+extension Optional {
+    public var safeInt: Int { return safeNumber.intValue }
+    public var safeBool: Bool { return safeNumber.boolValue }
+    public var safeFloat: Float { return safeNumber.floatValue }
+    public var safeDouble: Double { return safeNumber.doubleValue }
+    public var safeString: String { return FWSafeString(self) }
+    public var safeNumber: NSNumber { return FWSafeNumber(self) }
+    public var safeArray: [Any] { return (self as? [Any]) ?? [] }
+    public var safeDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
 }
 
 extension Optional where Wrapped: FWSafeType {
     public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
     public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
+}
+
+public protocol FWSafeType {
+    static var safeValue: Self { get }
+    var isEmpty: Bool { get }
 }
 
 extension Int: FWSafeType {

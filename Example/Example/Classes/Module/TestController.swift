@@ -87,13 +87,13 @@ private extension TestController {
         var body: String?
 
         init(from decoder: Decoder) throws {
-            title = try decoder.fw.decode("title")
-            body = try decoder.fw.decode("body")
+            title = try decoder.decode("title")
+            body = try decoder.decode("body")
         }
         
         func encode(to encoder: Encoder) throws {
-            try encoder.fw.encode(title, for: "title")
-            try encoder.fw.encode(body, for: "body")
+            try encoder.encode(title, for: "title")
+            try encoder.encode(body, for: "body")
         }
     }
     

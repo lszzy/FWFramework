@@ -27,9 +27,9 @@ extension FWWrapper where Base == Data {
     }
 }
 
-extension FWWrapper where Base == Encoder {
+extension Encoder {
     public func encodeSingle<T: Encodable>(_ value: T) throws {
-        var container = base.singleValueContainer()
+        var container = singleValueContainer()
         try container.encode(value)
     }
 
@@ -38,7 +38,7 @@ extension FWWrapper where Base == Encoder {
     }
 
     public func encode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
-        var container = base.container(keyedBy: K.self)
+        var container = container(keyedBy: K.self)
         try container.encode(value, forKey: key)
     }
 
@@ -71,9 +71,9 @@ extension FWWrapper where Base == Data {
     }
 }
 
-extension FWWrapper where Base == Decoder {
+extension Decoder {
     public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        let container = try base.singleValueContainer()
+        let container = try singleValueContainer()
         return try container.decode(type)
     }
 
@@ -82,7 +82,7 @@ extension FWWrapper where Base == Decoder {
     }
 
     public func decode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        let container = try base.container(keyedBy: K.self)
+        let container = try container(keyedBy: K.self)
         return try container.decode(type, forKey: key)
     }
 
@@ -91,7 +91,7 @@ extension FWWrapper where Base == Decoder {
     }
 
     public func decodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        let container = try base.container(keyedBy: K.self)
+        let container = try container(keyedBy: K.self)
         return try container.decodeIfPresent(type, forKey: key)
     }
 
@@ -100,7 +100,7 @@ extension FWWrapper where Base == Decoder {
     }
 
     public func decode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
-        let container = try base.container(keyedBy: K.self)
+        let container = try container(keyedBy: K.self)
         let rawString = try container.decode(String.self, forKey: key)
 
         guard let date = formatter.date(from: rawString) else {

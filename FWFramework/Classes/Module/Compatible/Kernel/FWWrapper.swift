@@ -47,20 +47,6 @@ extension FWWrapperCompatible {
     }
 }
 
-// MARK: - Protocol+FWWrapper
-
-extension Encoder {
-    public var fw: FWWrapper<Encoder> {
-        return FWWrapper(self)
-    }
-}
-
-extension Decoder {
-    public var fw: FWWrapper<Decoder> {
-        return FWWrapper(self)
-    }
-}
-
 // MARK: - FWWrapperCompatible
 
 extension String: FWWrapperCompatible {}
@@ -82,4 +68,3 @@ extension Bool: FWWrapperCompatible {}
 extension Array: FWWrapperCompatible {}
 extension Set: FWWrapperCompatible {}
 extension Dictionary: FWWrapperCompatible {}
-extension Optional: FWWrapperCompatible {}
