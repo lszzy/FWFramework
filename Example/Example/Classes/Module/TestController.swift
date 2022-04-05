@@ -24,6 +24,7 @@ class TestController: UITableViewController {
         setupConstraints()
         
         testCoder()
+        testJson()
     }
     
 }
@@ -108,6 +109,28 @@ private extension TestController {
             let articleDecode: Article = try articleData.fw.decoded()
             print("decode: title => \(articleDecode.title), body => \(articleDecode.body ?? "")")
         } catch {}
+    }
+    
+    func testJson() {
+        var model = FWJSON(["id": 1, "info": ["name": "NAME"], "list": ["val1", "val2"]])
+        
+        var id = model["id"].intValue
+        var name = model["info"]["name"].stringValue
+        var list = model["list"][0].stringValue
+        print("json: id => \(id), name => \(name), list => \(list)")
+        
+        id = model.id.intValue
+        name = model.info.name.stringValue
+        list = model.list.0.stringValue
+        print("json: id => \(id), name => \(name), list => \(list)")
+        
+        model.id = 2
+        model.name = FWJSON("NAME2")
+        model.list.0 = "VAL1"
+        id = model.id.intValue
+        name = model.info.name.stringValue
+        list = model.list.0.stringValue
+        print("json: id => \(id), name => \(name), list => \(list)")
     }
     
 }

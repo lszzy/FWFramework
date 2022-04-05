@@ -70,6 +70,7 @@ public enum FWJSONType: Int {
  
  - see: [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
  */
+@dynamicMemberLookup
 public struct FWJSON {
 
     /**
@@ -471,6 +472,24 @@ extension FWJSON {
             self[path] = newValue
         }
     }
+}
+
+// MARK: - Dynamic
+
+extension FWJSON {
+    
+    /// If `type` is `.dictionary`, return json whose object is `dictionary[key]` , otherwise return null json with error.
+    public subscript(dynamicMember key: String) -> FWJSON {
+        get {
+            let sub: FWJSONSubscriptType = Int(key) ?? key
+            return self[sub]
+        }
+        set {
+            let sub: FWJSONSubscriptType = Int(key) ?? key
+            self[sub] = newValue
+        }
+    }
+    
 }
 
 // MARK: - LiteralConvertible
