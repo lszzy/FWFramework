@@ -51,6 +51,7 @@ extension FWWrapperCompatible {
 
 extension String: FWWrapperCompatible {}
 extension Data: FWWrapperCompatible {}
+extension Date: FWWrapperCompatible {}
 extension URL: FWWrapperCompatible {}
 extension Int: FWWrapperCompatible {}
 extension Int8: FWWrapperCompatible {}
