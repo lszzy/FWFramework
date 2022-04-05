@@ -13,39 +13,41 @@ import FWFramework
 
 // MARK: - FWWrapper
 /// Swift包装器
-public struct FWWrapper<T> {
+public struct FWWrapper<Base> {
     /// 原始对象
-    public let base: T
+    public let base: Base
     
     /// 初始化方法
-    public init(_ base: T) {
+    public init(_ base: Base) {
         self.base = base
     }
 }
 
-// MARK: - FWAnyWrapper
-/// 对象包装器协议
-public protocol FWAnyWrapper {}
+/// Swift包装器兼容协议
+public protocol FWWrapperCompatible {
+    /// 关联类型
+    associatedtype WrapperBase
+    
+    /// 类包装器属性
+    static var fw: FWWrapper<WrapperBase>.Type { get }
+    
+    /// 对象包装器属性
+    var fw: FWWrapper<WrapperBase> { get }
+}
 
-extension FWAnyWrapper {
-    /// 对象包装器属性，无缓存
+extension FWWrapperCompatible {
+    /// 类包装器属性
+    public static var fw: FWWrapper<Self>.Type {
+        return FWWrapper<Self>.self
+    }
+    
+    /// 对象包装器属性
     public var fw: FWWrapper<Self> {
         return FWWrapper(self)
     }
 }
 
-// MARK: - FWTypeWrapper
-/// 类包装器协议
-public protocol FWTypeWrapper {}
-
-extension FWTypeWrapper {
-    /// 类包装器属性，无缓存
-    public static var fw: FWWrapper<Self.Type> {
-        return FWWrapper(self)
-    }
-}
-
-// MARK: - FWWrapper
+// MARK: - Protocol+FWWrapper
 
 extension Encoder {
     public var fw: FWWrapper<Encoder> {
@@ -59,14 +61,25 @@ extension Decoder {
     }
 }
 
-// MARK: - FWAnyWrapper
+// MARK: - FWWrapperCompatible
 
-extension String: FWAnyWrapper {}
-extension Data: FWAnyWrapper {}
-extension URL: FWAnyWrapper {}
-
-// MARK: - FWTypeWrapper
-
-extension String: FWTypeWrapper {}
-extension Data: FWTypeWrapper {}
-extension URL: FWTypeWrapper {}
+extension String: FWWrapperCompatible {}
+extension Data: FWWrapperCompatible {}
+extension URL: FWWrapperCompatible {}
+extension Int: FWWrapperCompatible {}
+extension Int8: FWWrapperCompatible {}
+extension Int16: FWWrapperCompatible {}
+extension Int32: FWWrapperCompatible {}
+extension Int64: FWWrapperCompatible {}
+extension UInt: FWWrapperCompatible {}
+extension UInt8: FWWrapperCompatible {}
+extension UInt16: FWWrapperCompatible {}
+extension UInt32: FWWrapperCompatible {}
+extension UInt64: FWWrapperCompatible {}
+extension Float: FWWrapperCompatible {}
+extension Double: FWWrapperCompatible {}
+extension Bool: FWWrapperCompatible {}
+extension Array: FWWrapperCompatible {}
+extension Set: FWWrapperCompatible {}
+extension Dictionary: FWWrapperCompatible {}
+extension Optional: FWWrapperCompatible {}

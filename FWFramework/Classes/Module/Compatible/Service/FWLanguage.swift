@@ -18,7 +18,7 @@ public func FWLocalizedString(_ key: String, _ table: String? = nil) -> String {
     return Bundle.fw.localizedString(key, table: table)
 }
 
-extension FWWrapper where T == String {
+extension FWWrapper where Base == String {
     /// 快速读取本地化语言
     public var localized: String {
         return Bundle.fw.localizedString(self.base)

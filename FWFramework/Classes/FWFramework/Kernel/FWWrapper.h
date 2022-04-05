@@ -13,40 +13,34 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Macro
 
 /// 快速声明包装器宏
-#define FWObjectWrapperCompatible(baseClass, wrapperClass, parentWrapper) \
-    @interface wrapperClass : parentWrapper \
+#define FWWrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
-    @interface baseClass (wrapperClass) \
-    @property (nonatomic, strong, readonly) wrapperClass *fw; \
+    @interface baseClass (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @end \
+    @interface classWrapper : classParent \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
 /// 快速实现包装器宏
-#define FWDefObjectWrapper(baseClass, wrapperClass) \
-    @implementation wrapperClass \
+#define FWDefWrapper(baseClass, objectWrapper, classWrapper) \
+    @implementation objectWrapper \
     @dynamic base; \
     @end \
-    @implementation baseClass (wrapperClass) \
-    - (wrapperClass *)fw { \
-        return [[wrapperClass alloc] init:self]; \
+    @implementation baseClass (objectWrapper) \
+    - (objectWrapper *)fw { \
+        return [[objectWrapper alloc] init:self]; \
     } \
-    @end
-
-/// 快速声明类包装器宏
-#define FWClassWrapperCompatible(baseClass, wrapperClass, parentWrapper) \
-    @interface wrapperClass : parentWrapper \
     @end \
-    @interface baseClass (wrapperClass) \
-    @property (class, nonatomic, strong, readonly) wrapperClass *fw; \
-    @end
-
-/// 快速实现类包装器宏
-#define FWDefClassWrapper(baseClass, wrapperClass) \
-    @implementation wrapperClass \
+    @implementation classWrapper \
     @end \
-    @implementation baseClass (wrapperClass) \
-    + (wrapperClass *)fw { \
-        return [[wrapperClass alloc] init:self]; \
+    @implementation baseClass (classWrapper) \
+    + (classWrapper *)fw { \
+        return [[classWrapper alloc] init:self]; \
     } \
     @end
 
@@ -116,30 +110,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWObjectWrapperCompatible
+#pragma mark - FWWrapperCompatible
 
-FWObjectWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper);
-FWObjectWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper);
-FWObjectWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper);
-FWObjectWrapperCompatible(UIWindow, FWWindowWrapper, FWViewWrapper);
-FWObjectWrapperCompatible(UIViewController, FWViewControllerWrapper, FWObjectWrapper);
-FWObjectWrapperCompatible(UINavigationController, FWNavigationControllerWrapper, FWViewControllerWrapper);
-
-#pragma mark - FWClassWrapperCompatible
-
-FWClassWrapperCompatible(NSString, FWStringClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(NSData, FWDataClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(NSURL, FWURLClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(NSBundle, FWBundleClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(UIApplication, FWApplicationClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(UIDevice, FWDeviceClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(UIScreen, FWScreenClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(UIView, FWViewClassWrapper, FWClassWrapper);
-FWClassWrapperCompatible(UIWindow, FWWindowClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper, FWStringClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIDevice, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIScreen, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIWindow, FWWindowWrapper, FWViewWrapper, FWWindowClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIViewController, FWViewControllerWrapper, FWObjectWrapper, FWViewControllerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UINavigationController, FWNavigationControllerWrapper, FWViewControllerWrapper, FWNavigationControllerClassWrapper, FWViewControllerClassWrapper);
 
 NS_ASSUME_NONNULL_END
