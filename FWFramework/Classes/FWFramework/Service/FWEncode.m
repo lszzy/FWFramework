@@ -425,27 +425,27 @@ NSURL * FWSafeURL(id value) {
              ([self.base respondsToSelector:@selector(count)] && [(NSArray *)self.base count] == 0));
 }
 
-- (NSInteger)safeInteger
+- (NSInteger)asInteger
 {
-    return [[self safeNumber] integerValue];
+    return [[self asNumber] integerValue];
 }
 
-- (float)safeFloat
+- (float)asFloat
 {
-    return [[self safeNumber] floatValue];
+    return [[self asNumber] floatValue];
 }
 
-- (double)safeDouble
+- (double)asDouble
 {
-    return [[self safeNumber] doubleValue];
+    return [[self asNumber] doubleValue];
 }
 
-- (BOOL)safeBool
+- (BOOL)asBool
 {
-    return [[self safeNumber] boolValue];
+    return [[self asNumber] boolValue];
 }
 
-- (NSNumber *)safeNumber
+- (NSNumber *)asNumber
 {
     if ([self.base isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)self.base;
@@ -458,7 +458,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSString *)safeString
+- (NSString *)asString
 {
     if ([self.base isKindOfClass:[NSNull class]]) {
         return @"";
@@ -475,7 +475,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSDate *)safeDate
+- (NSDate *)asDate
 {
     if ([self.base isKindOfClass:[NSDate class]]) {
         return (NSDate *)self.base;
@@ -490,7 +490,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSData *)safeData
+- (NSData *)asData
 {
     if ([self.base isKindOfClass:[NSString class]]) {
         return [(NSString *)self.base dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData new];
@@ -501,7 +501,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSArray *)safeArray
+- (NSArray *)asArray
 {
     if ([self.base isKindOfClass:[NSArray class]]) {
         return (NSArray *)self.base;
@@ -510,7 +510,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSMutableArray *)safeMutableArray
+- (NSMutableArray *)asMutableArray
 {
     if ([self.base isKindOfClass:[NSMutableArray class]]) {
         return (NSMutableArray *)self.base;
@@ -521,7 +521,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSDictionary *)safeDictionary
+- (NSDictionary *)asDictionary
 {
     if ([self.base isKindOfClass:[NSDictionary class]]) {
         return (NSDictionary *)self.base;
@@ -530,7 +530,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSMutableDictionary *)safeMutableDictionary
+- (NSMutableDictionary *)asMutableDictionary
 {
     if ([self.base isKindOfClass:[NSMutableDictionary class]]) {
         return (NSMutableDictionary *)self.base;
