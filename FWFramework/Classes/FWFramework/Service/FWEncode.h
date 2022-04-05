@@ -299,84 +299,84 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  
  @return NSInteger
  */
-@property (nonatomic, assign, readonly) NSInteger asInteger;
+@property (nonatomic, assign, readonly) NSInteger safeInteger;
 
 /**
  检测并安全转换为Float
  
  @return Float
  */
-@property (nonatomic, assign, readonly) float asFloat;
+@property (nonatomic, assign, readonly) float safeFloat;
 
 /**
  检测并安全转换为Double
  
  @return Double
  */
-@property (nonatomic, assign, readonly) double asDouble;
+@property (nonatomic, assign, readonly) double safeDouble;
 
 /**
  检测并安全转换为Bool
  
  @return Bool
  */
-@property (nonatomic, assign, readonly) BOOL asBool;
+@property (nonatomic, assign, readonly) BOOL safeBool;
 
 /**
  检测并安全转换为NSNumber
  
  @return NSNumber
  */
-@property (nonatomic, strong, readonly) NSNumber *asNumber;
+@property (nonatomic, strong, readonly) NSNumber *safeNumber;
 
 /**
  检测并安全转换为NSString
  
  @return NSString
  */
-@property (nonatomic, copy, readonly) NSString *asString;
+@property (nonatomic, copy, readonly) NSString *safeString;
 
 /**
  检测并安全转换为NSDate
  
  @return NSDate
  */
-@property (nonatomic, strong, readonly) NSDate *asDate;
+@property (nonatomic, strong, readonly) NSDate *safeDate;
 
 /**
  检测并安全转换为NSData
  
  @return NSData
  */
-@property (nonatomic, strong, readonly) NSData *asData;
+@property (nonatomic, strong, readonly) NSData *safeData;
 
 /**
  检测并安全转换为NSArray
  
  @return NSArray
  */
-@property (nonatomic, strong, readonly) NSArray *asArray;
+@property (nonatomic, strong, readonly) NSArray *safeArray;
 
 /**
  检测并安全转换为NSMutableArray
  
  @return NSMutableArray
  */
-@property (nonatomic, strong, readonly) NSMutableArray *asMutableArray;
+@property (nonatomic, strong, readonly) NSMutableArray *safeMutableArray;
 
 /**
  检测并安全转换为NSDictionary
  
  @return NSDictionary
  */
-@property (nonatomic, strong, readonly) NSDictionary *asDictionary;
+@property (nonatomic, strong, readonly) NSDictionary *safeDictionary;
 
 /**
  检测并安全转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-@property (nonatomic, strong, readonly) NSMutableDictionary *asMutableDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary *safeMutableDictionary;
 
 @end
 
