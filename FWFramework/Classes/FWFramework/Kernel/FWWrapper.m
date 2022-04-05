@@ -7,15 +7,10 @@
  */
 
 #import "FWWrapper.h"
-#import <objc/runtime.h>
 
 #pragma mark - FWObjectWrapper
 
 @implementation FWObjectWrapper
-
-+ (instancetype)wrapper:(id)base {
-    return [[self alloc] init:base];
-}
 
 - (instancetype)init:(id)base {
     self = [super init];
@@ -30,7 +25,7 @@
 @implementation NSObject (FWObjectWrapper)
 
 - (FWObjectWrapper *)fw {
-    return [FWObjectWrapper wrapper:self];
+    return [[FWObjectWrapper alloc] init:self];
 }
 
 @end
@@ -38,10 +33,6 @@
 #pragma mark - FWClassWrapper
 
 @implementation FWClassWrapper
-
-+ (instancetype)wrapper:(Class)base {
-    return [[self alloc] init:base];
-}
 
 - (instancetype)init:(Class)base {
     self = [super init];
@@ -56,273 +47,33 @@
 @implementation NSObject (FWClassWrapper)
 
 + (FWClassWrapper *)fw {
-    return [FWClassWrapper wrapper:self];
+    return [[FWClassWrapper alloc] init:self];
 }
 
 @end
 
-#pragma mark - FWObjectWrapper
-
-@implementation FWStringWrapper
-
-@dynamic base;
-
-@end
-
-@implementation NSString (FWStringWrapper)
-
-- (FWStringWrapper *)fw {
-    return [FWStringWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWDataWrapper
-
-@dynamic base;
-
-@end
-
-@implementation NSData (FWDataWrapper)
-
-- (FWDataWrapper *)fw {
-    return [FWDataWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWURLWrapper
-
-@dynamic base;
-
-@end
-
-@implementation NSURL (FWURLWrapper)
-
-- (FWURLWrapper *)fw {
-    return [FWURLWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWBundleWrapper
-
-@dynamic base;
-
-@end
-
-@implementation NSBundle (FWBundleWrapper)
-
-- (FWBundleWrapper *)fw {
-    return [FWBundleWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWViewWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UIView (FWViewWrapper)
-
-- (FWViewWrapper *)fw {
-    return [FWViewWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWNavigationBarWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UINavigationBar (FWNavigationBarWrapper)
-
-- (FWNavigationBarWrapper *)fw {
-    return [FWNavigationBarWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWTabBarWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UITabBar (FWTabBarWrapper)
-
-- (FWTabBarWrapper *)fw {
-    return [FWTabBarWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWToolbarWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UIToolbar (FWToolbarWrapper)
-
-- (FWToolbarWrapper *)fw {
-    return [FWToolbarWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWWindowWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UIWindow (FWWindowWrapper)
-
-- (FWWindowWrapper *)fw {
-    return [FWWindowWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWViewControllerWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UIViewController (FWViewControllerWrapper)
-
-- (FWViewControllerWrapper *)fw {
-    return [FWViewControllerWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWNavigationControllerWrapper
-
-@dynamic base;
-
-@end
-
-@implementation UINavigationController (FWNavigationControllerWrapper)
-
-- (FWNavigationControllerWrapper *)fw {
-    return [FWNavigationControllerWrapper wrapper:self];
-}
-
-@end
-
-#pragma mark - FWClassWrapper
-
-@implementation FWStringClassWrapper
-
-@end
-
-@implementation NSString (FWStringClassWrapper)
-
-+ (FWStringClassWrapper *)fw {
-    return [FWStringClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWDataClassWrapper
-
-@end
-
-@implementation NSData (FWDataClassWrapper)
-
-+ (FWDataClassWrapper *)fw {
-    return [FWDataClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWURLClassWrapper
-
-@end
-
-@implementation NSURL (FWURLClassWrapper)
-
-+ (FWURLClassWrapper *)fw {
-    return [FWURLClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWBundleClassWrapper
-
-@end
-
-@implementation NSBundle (FWBundleClassWrapper)
-
-+ (FWBundleClassWrapper *)fw {
-    return [FWBundleClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWApplicationClassWrapper
-
-@end
-
-@implementation UIApplication (FWApplicationClassWrapper)
-
-+ (FWApplicationClassWrapper *)fw {
-    return [FWApplicationClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWDeviceClassWrapper
-
-@end
-
-@implementation UIDevice (FWDeviceClassWrapper)
-
-+ (FWDeviceClassWrapper *)fw {
-    return [FWDeviceClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWScreenClassWrapper
-
-@end
-
-@implementation UIScreen (FWScreenClassWrapper)
-
-+ (FWScreenClassWrapper *)fw {
-    return [FWScreenClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWViewClassWrapper
-
-@end
-
-@implementation UIView (FWViewClassWrapper)
-
-+ (FWViewClassWrapper *)fw {
-    return [FWViewClassWrapper wrapper:self];
-}
-
-@end
-
-@implementation FWWindowClassWrapper
-
-@end
-
-@implementation UIWindow (FWWindowClassWrapper)
-
-+ (FWWindowClassWrapper *)fw {
-    return [FWWindowClassWrapper wrapper:self];
-}
-
-@end
+#pragma mark - FWObjectWrapperCompatible
+
+FWDefObjectWrapper(NSString, FWStringWrapper);
+FWDefObjectWrapper(NSData, FWDataWrapper);
+FWDefObjectWrapper(NSURL, FWURLWrapper);
+FWDefObjectWrapper(NSBundle, FWBundleWrapper);
+FWDefObjectWrapper(UIView, FWViewWrapper);
+FWDefObjectWrapper(UINavigationBar, FWNavigationBarWrapper);
+FWDefObjectWrapper(UITabBar, FWTabBarWrapper);
+FWDefObjectWrapper(UIToolbar, FWToolbarWrapper);
+FWDefObjectWrapper(UIWindow, FWWindowWrapper);
+FWDefObjectWrapper(UIViewController, FWViewControllerWrapper);
+FWDefObjectWrapper(UINavigationController, FWNavigationControllerWrapper);
+
+#pragma mark - FWClassWrapperCompatible
+
+FWDefClassWrapper(NSString, FWStringClassWrapper);
+FWDefClassWrapper(NSData, FWDataClassWrapper);
+FWDefClassWrapper(NSURL, FWURLClassWrapper);
+FWDefClassWrapper(NSBundle, FWBundleClassWrapper);
+FWDefClassWrapper(UIApplication, FWApplicationClassWrapper);
+FWDefClassWrapper(UIDevice, FWDeviceClassWrapper);
+FWDefClassWrapper(UIScreen, FWScreenClassWrapper);
+FWDefClassWrapper(UIView, FWViewClassWrapper);
+FWDefClassWrapper(UIWindow, FWWindowClassWrapper);

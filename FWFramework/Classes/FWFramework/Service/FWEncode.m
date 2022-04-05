@@ -397,13 +397,13 @@ NSNumber * FWSafeNumber(id value) {
 NSString * FWSafeString(id value) {
     if (!value || [value isKindOfClass:[NSNull class]]) return @"";
     if ([value isKindOfClass:[NSString class]]) return value;
+    if ([value isKindOfClass:[NSData class]]) return [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding] ?: @"";
     return [NSString stringWithFormat:@"%@", value];
 }
 
 NSURL * FWSafeURL(id value) {
     if (!value) return [NSURL new];
     if ([value isKindOfClass:[NSURL class]]) return value;
-    if ([value isKindOfClass:[NSURLRequest class]]) return [value URL] ?: [NSURL new];
     return [NSURL.fw urlWithString:FWSafeString(value)] ?: [NSURL new];
 }
 

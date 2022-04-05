@@ -12,12 +12,21 @@ import CommonCrypto
 import FWFramework
 #endif
 
-// MARK: - FWSafeBridge
+// MARK: - FWEncode
 
 extension FWWrapper where T == Data {
     /// json数据解码为Foundation对象
     public var jsonDecode: Any? {
-        return (self.base as NSData).fw.jsonDecode()
+        do {
+            return try JSONSerialization.jsonObject(with: self.base, options: .allowFragments)
+        } catch {
+            guard (error as NSError).code == 3840 else { return nil }
+            
+            let string = String(data: self.base, encoding: .utf8)
+            guard let data = string?.fw.escapeJson.data(using: .utf8) else { return nil }
+            if data.count == self.base.count { return nil }
+            return try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        }
     }
     /// base64编码
     public var base64Encode: Data {
@@ -58,19 +67,60 @@ extension FWWrapper where T == String {
     }
     /// 计算长度，中文为1，英文为0.5，表情为2
     public var unicodeLength: UInt {
-        return (self.base as NSString).fw.unicodeLength()
+        var length: UInt = 0
+        let str = self.base as NSString
+        for i in 0 ..< str.length {
+            length += str.character(at: i) > 0xff ? 2 : 1
+        }
+        return UInt(ceil(Double(length) / 2.0))
     }
     /// 截取字符串，中文为1，英文为0.5，表情为2
     public func unicodeSubstring(_ length: UInt) -> String {
-        return (self.base as NSString).fw.unicodeSubstring(length)
+        let length = length * 2
+        let str = self.base as NSString
+        
+        var i: Int = 0
+        var len: Int = 0
+        while i < str.length {
+            len += str.character(at: i) > 0xff ? 2 : 1
+            i += 1
+            if i >= str.length { return self.base }
+            
+            if len == length {
+                return str.substring(to: i)
+            } else if len > length {
+                if i - 1 <= 0 { return "" }
+                return str.substring(to: i - 1)
+            }
+        }
+        return self.base
     }
     /// Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
     public var unicodeEncode: String {
-        return (self.base as NSString).fw.unicodeEncode()
+        var result = ""
+        let str = self.base as NSString
+        for i in 0 ..< str.length {
+            let character = str.character(at: i)
+            // 判断是否为英文或数字
+            if (character >= 48 && character <= 57) ||
+                (character >= 97 && character <= 122) ||
+                (character >= 65 && character <= 90) {
+                result.append(str.substring(with: NSMakeRange(i, 1)))
+            } else {
+                result.append(String(format: "\\u%.4x", character))
+            }
+        }
+        return result
     }
     /// Unicode中文解码，将Unicode字符串(如\u7E8C)转换成中文
     public var unicodeDecode: String {
-        return (self.base as NSString).fw.unicodeDecode()
+        var str = base.replacingOccurrences(of: "\\u", with: "\\U")
+        str = str.replacingOccurrences(of: "\"", with: "\\\"")
+        str = "\"".appending(str).appending("\"")
+        guard let data = str.data(using: .utf8) else { return "" }
+        
+        guard let result = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainersAndLeaves, format: nil) as? String else { return "" }
+        return result.replacingOccurrences(of: "\\r\\n", with: "\n")
     }
     /// url参数编码，适用于query参数编码
     ///
@@ -102,7 +152,18 @@ extension FWWrapper where T == String {
     }
     /// URL参数字符串解码为字典，支持完整URL
     public var queryDecode: [String: String] {
-        return (self.base as NSString).fw.queryDecode()
+        var result: [String: String] = [:]
+        var queryString = self.base
+        if let url = URL.fw.url(string: self.base), let scheme = url.scheme, scheme.count > 0 {
+            queryString = url.query ?? ""
+        }
+        let parameters = queryString.components(separatedBy: "&")
+        for parameter in parameters {
+            let contents = parameter.components(separatedBy: "=")
+            guard contents.count == 2 else { continue }
+            result[contents[0]] = contents[1].removingPercentEncoding
+        }
+        return result
     }
     /// md5编码
     public var md5Encode: String {
@@ -141,7 +202,19 @@ extension FWWrapper where T == String {
     /// 规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
     /// 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
     public var escapeJson: String {
-        return (self.base as NSString).fw.escapeJson
+        guard let regex = try? NSRegularExpression(pattern: "(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?", options: .caseInsensitive) else { return self.base }
+        let matches = regex.matches(in: self.base, options: [], range: NSMakeRange(0, self.base.count))
+        if matches.count < 1 { return self.base }
+        
+        // 倒序循环，避免replace越界
+        var string = self.base as NSString
+        for i in (0 ..< matches.count).reversed() {
+            let range = matches[i].range
+            let substr = string.substring(with: range).uppercased() as NSString
+            if range.length == 12 && substr.character(at: 3) <= 66 && substr.character(at: 9) > 66 { continue }
+            string = string.replacingCharacters(in: range, with: "") as NSString
+        }
+        return string as String
     }
     /// 转换为UTF8数据
     public var utf8Data: Data? {
@@ -153,23 +226,42 @@ extension FWWrapper where T == String {
     }
     /// 转换为NSNumber
     public var number: NSNumber? {
-        return (self.base as NSString).fw.number
+        let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]
+        let nilNumbers = ["nil", "null", "(null)", "<null>"]
+        let lowerStr = base.lowercased()
+        if let value = boolNumbers[lowerStr] { return NSNumber(value: value) }
+        if nilNumbers.contains(lowerStr) { return nil }
+        
+        guard let cstring = base.cString(using: .utf8) else { return nil }
+        if base.rangeOfCharacter(from: CharacterSet(charactersIn: ".")) != nil {
+            let cnumber = atof(cstring)
+            if cnumber.isNaN || cnumber.isInfinite { return nil }
+            return NSNumber(value: cnumber)
+        } else {
+            return NSNumber(value: atoll(cstring))
+        }
     }
+    
     /// 从指定位置截取子串
     public func substring(from index: Int) -> String {
-        return (self.base as NSString).fw.substring(from: index) ?? ""
+        return substring(with: min(index, base.count) ..< base.count)
     }
     /// 截取子串到指定位置
     public func substring(to index: Int) -> String {
-        return (self.base as NSString).fw.substring(to: index) ?? ""
+        return substring(with: 0 ..< max(0, index))
     }
     /// 截取指定范围的子串
     public func substring(with range: NSRange) -> String {
-        return (self.base as NSString).fw.substring(with: range) ?? ""
+        guard let range = Range<Int>(range) else { return "" }
+        return substring(with: range)
     }
     /// 截取指定范围的子串
     public func substring(with range: Range<Int>) -> String {
-        return substring(with: NSMakeRange(range.lowerBound, range.upperBound - range.lowerBound))
+        guard range.lowerBound >= 0, range.upperBound >= range.lowerBound else { return "" }
+        let range = Range(uncheckedBounds: (lower: max(0, min(range.lowerBound, base.count)), upper: max(0, min(range.upperBound, base.count))))
+        let start = base.index(base.startIndex, offsetBy: range.lowerBound)
+        let end = base.index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self.base[start ..< end])
     }
 }
 
@@ -181,7 +273,13 @@ extension FWWrapper where T == String.Type {
     }
     /// 字典编码为URL参数字符串
     public func queryEncode(_ dict: [String: Any]) -> String {
-        return NSString.fw.queryEncode(dict)
+        var result = ""
+        for (key, value) in dict {
+            if result.count > 0 { result.append("&") }
+            let string = FWSafeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
+            result.append("\(key)=\(string)")
+        }
+        return result
     }
 }
 
@@ -228,118 +326,133 @@ extension FWWrapper where T == URL.Type {
     }
 }
 
-// MARK: - FWSafeUnwrappable
+// MARK: - FWSafeType
+
+/// 安全字符串，不为nil
+public func FWSafeString(_ value: Any?) -> String {
+    guard let value = value, !(value is NSNull) else { return "" }
+    if let string = value as? String { return string }
+    if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
+    if let object = value as? NSObjectProtocol { return object.description }
+    return String(describing: value)
+}
+
+/// 安全数字，不为nil
+public func FWSafeNumber(_ value: Any?) -> NSNumber {
+    guard let value = value else { return NSNumber(value: 0) }
+    if let number = value as? NSNumber { return number }
+    return FWSafeString(value).fw.number ?? NSNumber(value: 0)
+}
+
+/// 安全URL，不为nil
+public func FWSafeURL(_ value: Any?) -> URL {
+    guard let value = value else { return NSURL() as URL }
+    if let url = value as? URL { return url }
+    if let url = URL.fw.url(string: FWSafeString(value)) { return url }
+    return NSURL() as URL
+}
+
+extension FWWrapper where T : FWAnyWrapper {
+    public var asInt: Int { return asNumber.intValue }
+    public var asBool: Bool { return asNumber.boolValue }
+    public var asFloat: Float { return asNumber.floatValue }
+    public var asDouble: Double { return asNumber.doubleValue }
+    public var asString: String { return FWSafeString(base) }
+    public var asNumber: NSNumber { return FWSafeNumber(base) }
+    public var asArray: [Any] { return (base as? [Any]) ?? [] }
+    public var asDicationary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
+}
+
+// MARK: - FWWrapper+FWSafeType
 
 /// 获取安全值
-public func FWSafeValue<T: FWSafeUnwrappable>(_ value: T?) -> T {
+public func FWSafeValue<T: FWSafeType>(_ value: T?) -> T {
     return value.safeValue
 }
 
 /// 判断是否为空
-public func FWIsEmpty<T: FWSafeUnwrappable>(_ value: T?) -> Bool {
+public func FWIsEmpty<T: FWSafeType>(_ value: T?) -> Bool {
     return value.isEmpty
 }
 
-/// 判断是否为nil
-public func FWIsNil(_ value: Any?) -> Bool {
-    return value.isNil
-}
-
-public protocol FWSafeUnwrappable {
+public protocol FWSafeType {
     static var safeValue: Self { get }
     var isEmpty: Bool { get }
 }
 
-extension FWSafeUnwrappable {
-    public var asInt: Int { return asNumber.intValue }
-    public var asBool: Bool { return asNumber.boolValue }
-    public var asFloat: Float { return asNumber.floatValue }
-    public var asDouble: Double { return asNumber.doubleValue }
-    public var asString: String { return FWSafeString(self) }
-    public var asNumber: NSNumber { return FWSafeNumber(self) }
-    public var asArray: [Any] { return (self as? [Any]) ?? .safeValue }
-    public var asDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .safeValue }
-}
-
-extension Optional where Wrapped: FWSafeUnwrappable {
+extension Optional where Wrapped: FWSafeType {
     public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
     public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
 }
 
-extension Optional {
-    public var isNil: Bool { return self == nil }
-    
-    public var asInt: Int { return asNumber.intValue }
-    public var asBool: Bool { return asNumber.boolValue }
-    public var asFloat: Float { return asNumber.floatValue }
-    public var asDouble: Double { return asNumber.doubleValue }
-    public var asString: String { return FWSafeString(self) }
-    public var asNumber: NSNumber { return FWSafeNumber(self) }
-    public var asArray: [Any] { return (self as? [Any]) ?? .safeValue }
-    public var asDicationary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? .safeValue }
-}
-
-extension Int: FWSafeUnwrappable {
+extension Int: FWSafeType {
     public static var safeValue: Int = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int8: FWSafeUnwrappable {
+extension Int8: FWSafeType {
     public static var safeValue: Int8 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int16: FWSafeUnwrappable {
+extension Int16: FWSafeType {
     public static var safeValue: Int16 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int32: FWSafeUnwrappable {
+extension Int32: FWSafeType {
     public static var safeValue: Int32 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int64: FWSafeUnwrappable {
+extension Int64: FWSafeType {
     public static var safeValue: Int64 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt: FWSafeUnwrappable {
+extension UInt: FWSafeType {
     public static var safeValue: UInt = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt8: FWSafeUnwrappable {
+extension UInt8: FWSafeType {
     public static var safeValue: UInt8 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt16: FWSafeUnwrappable {
+extension UInt16: FWSafeType {
     public static var safeValue: UInt16 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt32: FWSafeUnwrappable {
+extension UInt32: FWSafeType {
     public static var safeValue: UInt32 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt64: FWSafeUnwrappable {
+extension UInt64: FWSafeType {
     public static var safeValue: UInt64 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Float: FWSafeUnwrappable {
+extension Float: FWSafeType {
     public static var safeValue: Float = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Double: FWSafeUnwrappable {
+extension Double: FWSafeType {
     public static var safeValue: Double = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Bool: FWSafeUnwrappable {
+extension Bool: FWSafeType {
     public static var safeValue: Bool = false
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension String: FWSafeUnwrappable {
+extension URL: FWSafeType {
+    public static var safeValue: URL = NSURL() as URL
+    public var isEmpty: Bool { return absoluteString.isEmpty }
+}
+extension Data: FWSafeType {
+    public static var safeValue: Data = Data()
+}
+extension String: FWSafeType {
     public static var safeValue: String = ""
 }
-extension Array: FWSafeUnwrappable {
+extension Array: FWSafeType {
     public static var safeValue: Array<Element> { return [] }
 }
-extension Set: FWSafeUnwrappable {
+extension Set: FWSafeType {
     public static var safeValue: Set<Element> { return [] }
 }
-extension Dictionary: FWSafeUnwrappable {
+extension Dictionary: FWSafeType {
     public static var safeValue: Dictionary<Key, Value> { return [:] }
 }

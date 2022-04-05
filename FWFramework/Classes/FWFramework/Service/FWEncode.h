@@ -258,7 +258,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param value 参数
  @return 数字
  */
-FOUNDATION_EXPORT NSNumber * FWSafeNumber(id _Nullable value);
+FOUNDATION_EXPORT NSNumber * FWSafeNumber(id _Nullable value) NS_SWIFT_UNAVAILABLE("");
 
 /**
  安全字符串，不为nil
@@ -266,7 +266,7 @@ FOUNDATION_EXPORT NSNumber * FWSafeNumber(id _Nullable value);
  @param value 参数
  @return 字符串
  */
-FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
+FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value) NS_SWIFT_UNAVAILABLE("");
 
 /**
  安全URL，不为nil
@@ -274,7 +274,7 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value);
  @param value 参数
  @return URL
  */
-FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value);
+FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("");
 
 #pragma mark - FWObjectWrapper+FWSafeType
 
