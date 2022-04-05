@@ -250,7 +250,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWSafeType
+#pragma mark - FWURLWrapper+FWEncode
+
+@interface FWURLWrapper (FWEncode)
+
+/// 获取当前query的参数字典，不含空值
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *queryDictionary;
+
+/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
+@property (nonatomic, copy, readonly, nullable) NSString *pathURI;
+
+@end
+
+#pragma mark - FWURLClassWrapper+FWEncode
+
+@interface FWURLClassWrapper (FWEncode)
+
+/// 生成URL，中文自动URL编码
+- (nullable NSURL *)urlWithString:(nullable NSString *)string;
+
+/// 生成URL，中文自动URL编码
+- (nullable NSURL *)urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL;
+
+@end
+
+#pragma mark - FWSafeValue
 
 /**
  安全数字，不为nil
@@ -299,108 +323,84 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  
  @return NSInteger
  */
-@property (nonatomic, assign, readonly) NSInteger asInteger;
+@property (nonatomic, assign, readonly) NSInteger safeInteger;
 
 /**
  检测并安全转换为Float
  
  @return Float
  */
-@property (nonatomic, assign, readonly) float asFloat;
+@property (nonatomic, assign, readonly) float safeFloat;
 
 /**
  检测并安全转换为Double
  
  @return Double
  */
-@property (nonatomic, assign, readonly) double asDouble;
+@property (nonatomic, assign, readonly) double safeDouble;
 
 /**
  检测并安全转换为Bool
  
  @return Bool
  */
-@property (nonatomic, assign, readonly) BOOL asBool;
+@property (nonatomic, assign, readonly) BOOL safeBool;
 
 /**
  检测并安全转换为NSNumber
  
  @return NSNumber
  */
-@property (nonatomic, strong, readonly) NSNumber *asNumber;
+@property (nonatomic, strong, readonly) NSNumber *safeNumber;
 
 /**
  检测并安全转换为NSString
  
  @return NSString
  */
-@property (nonatomic, copy, readonly) NSString *asString;
+@property (nonatomic, copy, readonly) NSString *safeString;
 
 /**
  检测并安全转换为NSDate
  
  @return NSDate
  */
-@property (nonatomic, strong, readonly) NSDate *asDate;
+@property (nonatomic, strong, readonly) NSDate *safeDate;
 
 /**
  检测并安全转换为NSData
  
  @return NSData
  */
-@property (nonatomic, strong, readonly) NSData *asData;
+@property (nonatomic, strong, readonly) NSData *safeData;
 
 /**
  检测并安全转换为NSArray
  
  @return NSArray
  */
-@property (nonatomic, strong, readonly) NSArray *asArray;
+@property (nonatomic, strong, readonly) NSArray *safeArray;
 
 /**
  检测并安全转换为NSMutableArray
  
  @return NSMutableArray
  */
-@property (nonatomic, strong, readonly) NSMutableArray *asMutableArray;
+@property (nonatomic, strong, readonly) NSMutableArray *safeMutableArray;
 
 /**
  检测并安全转换为NSDictionary
  
  @return NSDictionary
  */
-@property (nonatomic, strong, readonly) NSDictionary *asDictionary;
+@property (nonatomic, strong, readonly) NSDictionary *safeDictionary;
 
 /**
  检测并安全转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-@property (nonatomic, strong, readonly) NSMutableDictionary *asMutableDictionary;
-
-@end
-
-#pragma mark - FWURLWrapper+FWSafeType
-
-@interface FWURLWrapper (FWSafeType)
-
-/// 获取当前query的参数字典，不含空值
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *queryDictionary;
-
-/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
-@property (nonatomic, copy, readonly, nullable) NSString *pathURI;
-
-@end
-
-#pragma mark - FWURLClassWrapper+FWSafeType
-
-@interface FWURLClassWrapper (FWSafeType)
-
-/// 生成URL，中文自动URL编码
-- (nullable NSURL *)urlWithString:(nullable NSString *)string;
-
-/// 生成URL，中文自动URL编码
-- (nullable NSURL *)urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL;
+@property (nonatomic, strong, readonly) NSMutableDictionary *safeMutableDictionary;
 
 @end
 

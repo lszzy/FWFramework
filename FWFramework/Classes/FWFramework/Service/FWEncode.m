@@ -385,7 +385,70 @@
 
 @end
 
-#pragma mark - FWSafeType
+#pragma mark - FWURLWrapper+FWEncode
+
+@implementation FWURLWrapper (FWEncode)
+
+- (NSDictionary<NSString *,NSString *> *)queryDictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    NSString *urlString = self.base.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    if (!urlComponents) {
+        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    }
+    // queryItems.value会自动进行URL参数解码
+    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
+        dict[obj.name] = obj.value;
+    }];
+    return [dict copy];
+}
+
+- (NSString *)pathURI
+{
+    NSString *URLString = self.base.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
+    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
+        return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
+    }
+    return nil;
+}
+
+@end
+
+#pragma mark - FWURLClassWrapper+FWEncode
+
+@implementation FWURLClassWrapper (FWEncode)
+
+- (NSURL *)urlWithString:(NSString *)string
+{
+    if (!string) return nil;
+    
+    NSURL *url = [NSURL URLWithString:string];
+    // 如果生成失败，自动URL编码再试
+    if (!url && string.length > 0) {
+        // url = [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)string, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, kCFStringEncodingUTF8))];
+        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    }
+    return url;
+}
+
+- (NSURL *)urlWithString:(NSString *)string relativeTo:(NSURL *)baseURL
+{
+    if (!string) return nil;
+    
+    NSURL *url = [NSURL URLWithString:string relativeToURL:baseURL];
+    // 如果生成失败，自动URL编码再试
+    if (!url && string.length > 0) {
+        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:baseURL];
+    }
+    return url;
+}
+
+@end
+
+#pragma mark - FWSafeValue
 
 NSNumber * FWSafeNumber(id value) {
     if (!value) return @(0);
@@ -425,27 +488,27 @@ NSURL * FWSafeURL(id value) {
              ([self.base respondsToSelector:@selector(count)] && [(NSArray *)self.base count] == 0));
 }
 
-- (NSInteger)asInteger
+- (NSInteger)safeInteger
 {
-    return [[self asNumber] integerValue];
+    return [[self safeNumber] integerValue];
 }
 
-- (float)asFloat
+- (float)safeFloat
 {
-    return [[self asNumber] floatValue];
+    return [[self safeNumber] floatValue];
 }
 
-- (double)asDouble
+- (double)safeDouble
 {
-    return [[self asNumber] doubleValue];
+    return [[self safeNumber] doubleValue];
 }
 
-- (BOOL)asBool
+- (BOOL)safeBool
 {
-    return [[self asNumber] boolValue];
+    return [[self safeNumber] boolValue];
 }
 
-- (NSNumber *)asNumber
+- (NSNumber *)safeNumber
 {
     if ([self.base isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)self.base;
@@ -458,7 +521,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSString *)asString
+- (NSString *)safeString
 {
     if ([self.base isKindOfClass:[NSNull class]]) {
         return @"";
@@ -475,7 +538,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSDate *)asDate
+- (NSDate *)safeDate
 {
     if ([self.base isKindOfClass:[NSDate class]]) {
         return (NSDate *)self.base;
@@ -490,7 +553,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSData *)asData
+- (NSData *)safeData
 {
     if ([self.base isKindOfClass:[NSString class]]) {
         return [(NSString *)self.base dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData new];
@@ -501,7 +564,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSArray *)asArray
+- (NSArray *)safeArray
 {
     if ([self.base isKindOfClass:[NSArray class]]) {
         return (NSArray *)self.base;
@@ -510,7 +573,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSMutableArray *)asMutableArray
+- (NSMutableArray *)safeMutableArray
 {
     if ([self.base isKindOfClass:[NSMutableArray class]]) {
         return (NSMutableArray *)self.base;
@@ -521,7 +584,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSDictionary *)asDictionary
+- (NSDictionary *)safeDictionary
 {
     if ([self.base isKindOfClass:[NSDictionary class]]) {
         return (NSDictionary *)self.base;
@@ -530,7 +593,7 @@ NSURL * FWSafeURL(id value) {
     }
 }
 
-- (NSMutableDictionary *)asMutableDictionary
+- (NSMutableDictionary *)safeMutableDictionary
 {
     if ([self.base isKindOfClass:[NSMutableDictionary class]]) {
         return (NSMutableDictionary *)self.base;
@@ -539,69 +602,6 @@ NSURL * FWSafeURL(id value) {
     } else {
         return [NSMutableDictionary dictionary];
     }
-}
-
-@end
-
-#pragma mark - FWURLWrapper+FWSafeType
-
-@implementation FWURLWrapper (FWSafeType)
-
-- (NSDictionary<NSString *,NSString *> *)queryDictionary
-{
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    NSString *urlString = self.base.absoluteString ?: @"";
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    if (!urlComponents) {
-        urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    }
-    // queryItems.value会自动进行URL参数解码
-    [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *obj, NSUInteger idx, BOOL *stop) {
-        dict[obj.name] = obj.value;
-    }];
-    return [dict copy];
-}
-
-- (NSString *)pathURI
-{
-    NSString *URLString = self.base.absoluteString ?: @"";
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
-    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
-        return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
-    }
-    return nil;
-}
-
-@end
-
-#pragma mark - FWURLClassWrapper+FWSafeType
-
-@implementation FWURLClassWrapper (FWSafeType)
-
-- (NSURL *)urlWithString:(NSString *)string
-{
-    if (!string) return nil;
-    
-    NSURL *url = [NSURL URLWithString:string];
-    // 如果生成失败，自动URL编码再试
-    if (!url && string.length > 0) {
-        // url = [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)string, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, kCFStringEncodingUTF8))];
-        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    }
-    return url;
-}
-
-- (NSURL *)urlWithString:(NSString *)string relativeTo:(NSURL *)baseURL
-{
-    if (!string) return nil;
-    
-    NSURL *url = [NSURL URLWithString:string relativeToURL:baseURL];
-    // 如果生成失败，自动URL编码再试
-    if (!url && string.length > 0) {
-        url = [NSURL URLWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] relativeToURL:baseURL];
-    }
-    return url;
 }
 
 @end
