@@ -116,10 +116,14 @@ FWWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper, FWStringClassWra
 FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(CADisplayLink, FWDisplayLinkWrapper, FWObjectWrapper, FWDisplayLinkClassWrapper, FWClassWrapper);
+
 FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIDevice, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIScreen, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIControl, FWControlWrapper, FWViewWrapper, FWControlClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);

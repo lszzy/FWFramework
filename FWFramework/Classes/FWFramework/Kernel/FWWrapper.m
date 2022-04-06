@@ -58,10 +58,14 @@ FWDefWrapper(NSString, FWStringWrapper, FWStringClassWrapper);
 FWDefWrapper(NSData, FWDataWrapper, FWDataClassWrapper);
 FWDefWrapper(NSURL, FWURLWrapper, FWURLClassWrapper);
 FWDefWrapper(NSBundle, FWBundleWrapper, FWBundleClassWrapper);
+FWDefWrapper(NSTimer, FWTimerWrapper, FWTimerClassWrapper);
+FWDefWrapper(CADisplayLink, FWDisplayLinkWrapper, FWDisplayLinkClassWrapper);
+
 FWDefWrapper(UIApplication, FWApplicationWrapper, FWApplicationClassWrapper);
 FWDefWrapper(UIDevice, FWDeviceWrapper, FWDeviceClassWrapper);
 FWDefWrapper(UIScreen, FWScreenWrapper, FWScreenClassWrapper);
 FWDefWrapper(UIView, FWViewWrapper, FWViewClassWrapper);
+FWDefWrapper(UIControl, FWControlWrapper, FWControlClassWrapper);
 FWDefWrapper(UINavigationBar, FWNavigationBarWrapper, FWNavigationBarClassWrapper);
 FWDefWrapper(UITabBar, FWTabBarWrapper, FWTabBarClassWrapper);
 FWDefWrapper(UIToolbar, FWToolbarWrapper, FWToolbarClassWrapper);

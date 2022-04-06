@@ -12,6 +12,7 @@ import FWFramework
 #endif
 
 // MARK: - FWWrapper
+
 /// Swift包装器
 public struct FWWrapper<Base> {
     /// 原始对象
@@ -49,10 +50,6 @@ extension FWWrapperCompatible {
 
 // MARK: - FWWrapperCompatible
 
-extension String: FWWrapperCompatible {}
-extension Data: FWWrapperCompatible {}
-extension Date: FWWrapperCompatible {}
-extension URL: FWWrapperCompatible {}
 extension Int: FWWrapperCompatible {}
 extension Int8: FWWrapperCompatible {}
 extension Int16: FWWrapperCompatible {}
@@ -66,6 +63,10 @@ extension UInt64: FWWrapperCompatible {}
 extension Float: FWWrapperCompatible {}
 extension Double: FWWrapperCompatible {}
 extension Bool: FWWrapperCompatible {}
+extension String: FWWrapperCompatible {}
+extension Data: FWWrapperCompatible {}
+extension Date: FWWrapperCompatible {}
+extension URL: FWWrapperCompatible {}
 extension Array: FWWrapperCompatible {}
 extension Set: FWWrapperCompatible {}
 extension Dictionary: FWWrapperCompatible {}
