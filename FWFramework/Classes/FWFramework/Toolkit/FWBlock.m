@@ -10,34 +10,34 @@
 #import "FWBlock.h"
 #import <objc/runtime.h>
 
-#pragma mark - CADisplayLink+FWBlock
+#pragma mark - FWDisplayLinkClassWrapper+FWBlock
 
-@implementation CADisplayLink (FWBlock)
+@implementation FWDisplayLinkClassWrapper (FWBlock)
 
-+ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector
+- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector
 {
     CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     return displayLink;
 }
 
-+ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
 {
-    CADisplayLink *displayLink = [self fwDisplayLinkWithBlock:block];
+    CADisplayLink *displayLink = [self displayLinkWithBlock:block];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     return displayLink;
 }
 
-+ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
+- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *))block
 {
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(fwInnerDisplayLinkBlock:)];
-    objc_setAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:[self class] selector:@selector(displayLinkAction:)];
+    objc_setAssociatedObject(displayLink, @selector(displayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     return displayLink;
 }
 
-+ (void)fwInnerDisplayLinkBlock:(CADisplayLink *)displayLink
++ (void)displayLinkAction:(CADisplayLink *)displayLink
 {
-    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:));
+    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(displayLinkWithBlock:));
     if (block) {
         block(displayLink);
     }
@@ -45,28 +45,28 @@
 
 @end
 
-#pragma mark - NSTimer+FWBlock
+#pragma mark - FWTimerClassWrapper+FWBlock
 
-@implementation NSTimer (FWBlock)
+@implementation FWTimerClassWrapper (FWBlock)
 
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats
 {
     NSTimer *timer = [NSTimer timerWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     return timer;
 }
 
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    NSTimer *timer = [NSTimer fwTimerWithTimeInterval:seconds block:block repeats:repeats];
+    NSTimer *timer = [self timerWithTimeInterval:seconds block:block repeats:repeats];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     return timer;
 }
 
-+ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
+- (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
 {
     __block NSInteger countdown = seconds;
-    NSTimer *timer = [self fwCommonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+    NSTimer *timer = [self commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
         if (countdown <= 0) {
             block(0);
             [timer invalidate];
@@ -82,17 +82,17 @@
     return timer;
 }
 
-+ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    return [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+    return [NSTimer scheduledTimerWithTimeInterval:seconds target:[self class] selector:@selector(timerAction:) userInfo:[block copy] repeats:repeats];
 }
 
-+ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    return [NSTimer timerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+    return [NSTimer timerWithTimeInterval:seconds target:[self class] selector:@selector(timerAction:) userInfo:[block copy] repeats:repeats];
 }
 
-+ (void)fwInnerTimerBlock:(NSTimer *)timer
++ (void)timerAction:(NSTimer *)timer
 {
     if ([timer userInfo]) {
         void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];

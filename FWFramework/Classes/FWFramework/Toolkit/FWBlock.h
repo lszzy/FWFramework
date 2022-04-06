@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,35 +17,35 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  通用不带参数block
  */
-typedef void (^FWBlockVoid)(void);
+typedef void (^FWBlockVoid)(void) NS_SWIFT_UNAVAILABLE("");
 
 /**
  通用id参数block
  
  @param param id参数
  */
-typedef void (^FWBlockParam)(id _Nullable param);
+typedef void (^FWBlockParam)(id _Nullable param) NS_SWIFT_UNAVAILABLE("");
 
 /**
  通用bool参数block
  
  @param isTrue bool参数
  */
-typedef void (^FWBlockBool)(BOOL isTrue);
+typedef void (^FWBlockBool)(BOOL isTrue) NS_SWIFT_UNAVAILABLE("");
 
 /**
  通用NSInteger参数block
  
  @param index NSInteger参数
  */
-typedef void (^FWBlockInt)(NSInteger index);
+typedef void (^FWBlockInt)(NSInteger index) NS_SWIFT_UNAVAILABLE("");
 
 /**
  通用double参数block
  
  @param value double参数
  */
-typedef void (^FWBlockDouble)(double value);
+typedef void (^FWBlockDouble)(double value) NS_SWIFT_UNAVAILABLE("");
 
 /**
  通用(BOOL,id)参数block
@@ -52,15 +53,14 @@ typedef void (^FWBlockDouble)(double value);
  @param isTrue BOOL参数
  @param param id参数
  */
-typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
+typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVAILABLE("");
 
-#pragma mark - CADisplayLink+FWBlock
+#pragma mark - FWDisplayLinkClassWrapper+FWBlock
 
 /**
- CADisplayLink分类
- @note 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
+ 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
  */
-@interface CADisplayLink (FWBlock)
+@interface FWDisplayLinkClassWrapper (FWBlock)
 
 /**
  创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -69,7 +69,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param selector 方法
  @return CADisplayLink
  */
-+ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
+- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
 
 /**
  创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -77,7 +77,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param block 代码块
  @return CADisplayLink
  */
-+ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
 
 /**
  创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -86,16 +86,13 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param block 代码块
  @return CADisplayLink
  */
-+ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
+- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
 
 @end
 
-#pragma mark - NSTimer+FWBlock
+#pragma mark - FWTimerClassWrapper+FWBlock
 
-/**
- NSTimer分类
- */
-@interface NSTimer (FWBlock)
+@interface FWTimerClassWrapper (FWBlock)
 
 /**
  创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -107,7 +104,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param repeats 是否重复
  @return 定时器
  */
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
 
 /**
  创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -117,7 +114,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param repeats 是否重复
  @return 定时器
  */
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 /**
  创建倒计时定时器
@@ -126,7 +123,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param block 每秒执行block，为0时自动停止
  @return 定时器，可手工停止
  */
-+ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+- (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
 
 /**
  创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -137,7 +134,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param repeats 是否重复
  @return 定时器
  */
-+ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+- (NSTimer *)timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 /**
  创建NSTimer，使用block，默认模式安排到当前的运行循环中
@@ -147,7 +144,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param);
  @param repeats 是否重复
  @return 定时器
  */
-+ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+- (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 @end
 
