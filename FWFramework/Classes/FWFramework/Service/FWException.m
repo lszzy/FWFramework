@@ -12,7 +12,29 @@
 
 NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
 
+static NSArray<Class> *fwStaticCaptureClasses = nil;
+
 @implementation FWException
+
++ (NSArray<Class> *)captureClasses {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!fwStaticCaptureClasses) {
+            fwStaticCaptureClasses = @[
+                [NSNull class],
+                [NSNumber class],
+                [NSString class],
+                [NSArray class],
+                [NSDictionary class],
+            ];
+        }
+    });
+    return fwStaticCaptureClasses;
+}
+
++ (void)setCaptureClasses:(NSArray<Class> *)captureClasses {
+    if (captureClasses) fwStaticCaptureClasses = captureClasses;
+}
 
 + (void)startCaptureExceptions {
     static dispatch_once_t onceToken;
@@ -66,15 +88,26 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
         NSMethodSignature *methodSignature = FWSwizzleOriginal(selector);
         if (!methodSignature) {
-            if ([self isCaptureUnrecognizedSelectorObject:selfObject]) {
-                methodSignature = [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+            for (Class captureClass in [self captureClasses]) {
+                if ([selfObject isKindOfClass:captureClass]) {
+                    methodSignature = [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+                    break;
+                }
             }
         }
         return methodSignature;
     }));
     
     FWSwizzleClass(NSObject, @selector(forwardInvocation:), FWSwizzleReturn(void), FWSwizzleArgs(NSInvocation *invocation), FWSwizzleCode({
-        if ([self isCaptureUnrecognizedSelectorObject:selfObject]) {
+        BOOL isCaptured = NO;
+        for (Class captureClass in [self captureClasses]) {
+            if ([selfObject isKindOfClass:captureClass]) {
+                isCaptured = YES;
+                break;
+            }
+        }
+        
+        if (isCaptured) {
             @try {
                 FWSwizzleOriginal(invocation);
             } @catch (NSException *exception) {
@@ -84,16 +117,6 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
             FWSwizzleOriginal(invocation);
         }
     }));
-}
-
-+ (BOOL)isCaptureUnrecognizedSelectorObject:(id)selfObject {
-    NSArray<Class> *captureClasses = @[[NSNull class], [NSNumber class], [NSString class], [NSArray class], [NSDictionary class]];
-    for (Class captureClass in captureClasses) {
-        if ([selfObject isKindOfClass:captureClass]) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 @end
