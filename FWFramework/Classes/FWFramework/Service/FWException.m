@@ -7,6 +7,7 @@
  */
 
 #import "FWException.h"
+#import "FWSwizzle.h"
 #import "FWLogger.h"
 
 NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
@@ -16,7 +17,7 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 + (void)startCaptureExceptions {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
+        [self captureUnrecognizedSelectorException];
     });
 }
 
@@ -24,7 +25,6 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 
 + (void)captureException:(NSException *)exception remark:(NSString *)remark {
     NSArray *callStackSymbols = [NSThread callStackSymbols];
-
     __block NSString *callStackMethod = nil;
     for (NSUInteger index = 1; index < callStackSymbols.count; index++) {
         NSString *callStackSymbol = callStackSymbols[index];
@@ -41,6 +41,8 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
         break;
     }
     
+    if (!remark) remark = @"FWException captured this exception to avoid crash";
+    
 #ifdef DEBUG
     NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", errorMessage);
@@ -56,6 +58,42 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:FWExceptionCapturedNotification object:exception userInfo:userInfo.copy];
     });
+}
+
+#pragma mark - Selector
+
++ (void)captureUnrecognizedSelectorException {
+    FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
+        NSMethodSignature *methodSignature = FWSwizzleOriginal(selector);
+        if (!methodSignature) {
+            if ([self isCaptureUnrecognizedSelectorObject:selfObject]) {
+                methodSignature = [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+            }
+        }
+        return methodSignature;
+    }));
+    
+    FWSwizzleClass(NSObject, @selector(forwardInvocation:), FWSwizzleReturn(void), FWSwizzleArgs(NSInvocation *invocation), FWSwizzleCode({
+        if ([self isCaptureUnrecognizedSelectorObject:selfObject]) {
+            @try {
+                FWSwizzleOriginal(invocation);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:nil];
+            } @finally { }
+        } else {
+            FWSwizzleOriginal(invocation);
+        }
+    }));
+}
+
++ (BOOL)isCaptureUnrecognizedSelectorObject:(id)selfObject {
+    NSArray<Class> *captureClasses = @[[NSNull class], [NSNumber class], [NSString class], [NSArray class], [NSDictionary class]];
+    for (Class captureClass in captureClasses) {
+        if ([selfObject isKindOfClass:captureClass]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end
