@@ -19,6 +19,9 @@ extern NSNotificationName const FWExceptionCapturedNotification;
 /// @see https://github.com/chenfanfang/AvoidCrash
 @interface FWException : NSObject
 
+/// 自定义需要捕获未定义方法异常的类，默认[NSNull, NSNumber, NSString, NSArray, NSDictionary]
+@property (class, nonatomic, copy) NSArray<Class> *captureClasses;
+
 /// 开启框架自带异常捕获功能，默认关闭
 + (void)startCaptureExceptions;
 
