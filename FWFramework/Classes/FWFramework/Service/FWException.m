@@ -12,6 +12,9 @@
 
 NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
 
+#define FWExceptionRemark(clazz, selector) \
+    [NSString stringWithFormat:@"-[%@ %@]", NSStringFromClass(clazz), NSStringFromSelector(selector)]
+
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 
 @implementation FWException
@@ -40,30 +43,31 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self captureUnrecognizedSelectorException];
+        [self captureStringSelectorException];
     });
 }
 
 #pragma mark - Capture
 
 + (void)captureException:(NSException *)exception remark:(NSString *)remark {
-    NSArray *callStackSymbols = [NSThread callStackSymbols];
     __block NSString *callStackMethod = nil;
-    for (NSUInteger index = 1; index < callStackSymbols.count; index++) {
-        NSString *callStackSymbol = callStackSymbols[index];
-        if ([callStackSymbol containsString:@"FWException"]) continue;
+    NSArray *callStackSymbols = [NSThread callStackSymbols];
+    NSArray *skipStackSymbols = @[@"FWException", @"Foundation", @"UIKit"];
+    [callStackSymbols enumerateObjectsUsingBlock:^(NSString *str, NSUInteger idx, BOOL *stop) {
+        for (NSString *skipStackSymbol in skipStackSymbols) {
+            if ([str containsString:skipStackSymbol]) return;
+        }
         
         NSString *regularPattern = @"[-\\+]\\[.+\\]";
         NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regularPattern options:NSRegularExpressionCaseInsensitive error:nil];
-        [regularExpression enumerateMatchesInString:callStackSymbol options:NSMatchingReportProgress range:NSMakeRange(0, callStackSymbol.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+        [regularExpression enumerateMatchesInString:str options:NSMatchingReportProgress range:NSMakeRange(0, str.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             if (result) {
-                callStackMethod = [callStackSymbol substringWithRange:result.range];
+                callStackMethod = [str substringWithRange:result.range];
                 *stop = YES;
             }
         }];
-        break;
-    }
-    
-    if (!remark) remark = @"FWException captured this exception to avoid crash";
+        *stop = YES;
+    }];
     
 #ifdef DEBUG
     NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
@@ -111,12 +115,74 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 FWSwizzleOriginal(invocation);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:nil];
+                [self captureException:exception remark:FWExceptionRemark(selfObject.class, invocation.selector)];
             } @finally { }
         } else {
             FWSwizzleOriginal(invocation);
         }
     }));
+}
+
+#pragma mark - NSString
+
++ (void)captureStringSelectorException {
+    NSArray<NSString *> *stringClasses = @[@"__NSCFConstantString", @"NSTaggedPointerString"];
+    for (NSString *stringClass in stringClasses) {
+        FWSwizzleMethod(NSClassFromString(stringClass), @selector(characterAtIndex:), nil, NSString *, FWSwizzleReturn(unichar), FWSwizzleArgs(NSUInteger index), FWSwizzleCode({
+            unichar result;
+            @try {
+                result = FWSwizzleOriginal(index);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(characterAtIndex:))];
+            } @finally {
+                return result;
+            }
+        }));
+        
+        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringFromIndex:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSUInteger from), FWSwizzleCode({
+            NSString *result;
+            @try {
+                result = FWSwizzleOriginal(from);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
+            } @finally {
+                return result;
+            }
+        }));
+        
+        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringToIndex:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSUInteger to), FWSwizzleCode({
+            NSString *result;
+            @try {
+                result = FWSwizzleOriginal(to);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
+            } @finally {
+                return result;
+            }
+        }));
+        
+        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringWithRange:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSRange range), FWSwizzleCode({
+            NSString *result;
+            @try {
+                result = FWSwizzleOriginal(range);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
+            } @finally {
+                return result;
+            }
+        }));
+        
+        FWSwizzleMethod(NSClassFromString(stringClass), @selector(rangeOfString:options:range:locale:), nil, NSString *, FWSwizzleReturn(NSRange), FWSwizzleArgs(NSString *searchString, NSStringCompareOptions options, NSRange range, NSLocale *locale), FWSwizzleCode({
+            NSRange result;
+            @try {
+                result = FWSwizzleOriginal(searchString, options, range, locale);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(rangeOfString:options:range:locale:))];
+            } @finally {
+                return result;
+            }
+        }));
+    }
 }
 
 @end
