@@ -16,15 +16,15 @@
 
 @implementation FWObjectWrapper (FWSwizzle)
 
-- (BOOL)swizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+- (BOOL)swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self.base)), NSStringFromSelector(originalSelector), identifier];
     objc_setAssociatedObject(self.base, NSSelectorFromString(swizzleIdentifier), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    return [NSObject.fw swizzleClass:object_getClass(self.base) selector:originalSelector identifier:identifier withBlock:block];
+    return [NSObject.fw swizzleInstanceMethod:object_getClass(self.base) selector:originalSelector identifier:identifier withBlock:block];
 }
 
-- (BOOL)isSwizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier
+- (BOOL)isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier
 {
     NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self.base)), NSStringFromSelector(originalSelector), identifier];
     return [objc_getAssociatedObject(self.base, NSSelectorFromString(swizzleIdentifier)) boolValue];
@@ -291,19 +291,19 @@
 
 @implementation FWClassWrapper (FWSwizzle)
 
-#pragma mark - Simple
+#pragma mark - Exchange
 
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
 {
-    return [self swizzleInstanceMethod:originalSelector with:swizzleSelector clazz:self.base];
+    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:self.base];
 }
 
-- (BOOL)swizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector
+- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
 {
-    return [self swizzleInstanceMethod:originalSelector with:swizzleSelector clazz:object_getClass((id)self.base)];
+    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:object_getClass((id)self.base)];
 }
 
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector clazz:(Class)clazz
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector forClass:(Class)clazz
 {
     Method originalMethod = class_getInstanceMethod(clazz, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(clazz, swizzleSelector);
@@ -322,17 +322,17 @@
     return YES;
 }
 
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
 {
-    return [self swizzleInstanceMethod:originalSelector with:swizzleSelector block:swizzleBlock clazz:self.base];
+    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:self.base];
 }
 
-- (BOOL)swizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock
+- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
 {
-    return [self swizzleInstanceMethod:originalSelector with:swizzleSelector block:swizzleBlock clazz:object_getClass((id)self.base)];
+    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:object_getClass((id)self.base)];
 }
 
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock clazz:(Class)clazz
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock forClass:(Class)clazz
 {
     Method originalMethod = class_getInstanceMethod(clazz, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(clazz, swizzleSelector);
@@ -344,12 +344,12 @@
     return YES;
 }
 
-- (SEL)swizzleSelectorForSelector:(SEL)selector
+- (SEL)exchangeSwizzleSelector:(SEL)selector
 {
     return NSSelectorFromString([NSString stringWithFormat:@"fw_swizzle_%x_%@", arc4random(), NSStringFromSelector(selector)]);
 }
 
-#pragma mark - Complex
+#pragma mark - Swizzle
 
 - (BOOL)swizzleMethod:(id)target selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
@@ -357,16 +357,16 @@
     
     if (object_isClass(target)) {
         if (identifier && identifier.length > 0) {
-            return [self swizzleClass:target selector:originalSelector identifier:identifier withBlock:block];
+            return [self swizzleInstanceMethod:target selector:originalSelector identifier:identifier withBlock:block];
         } else {
-            return [self swizzleClass:target selector:originalSelector withBlock:block];
+            return [self swizzleInstanceMethod:target selector:originalSelector withBlock:block];
         }
     } else {
-        return [((NSObject *)target).fw swizzleMethod:originalSelector identifier:identifier withBlock:block];
+        return [((NSObject *)target).fw swizzleInstanceMethod:originalSelector identifier:identifier withBlock:block];
     }
 }
 
-- (BOOL)swizzleClass:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     if (!originalClass) return NO;
     
@@ -415,7 +415,12 @@
     return YES;
 }
 
-- (BOOL)swizzleClass:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    return [self swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector withBlock:block];
+}
+
+- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     if (!originalClass) return NO;
     
@@ -426,13 +431,18 @@
     });
     
     @synchronized (swizzleIdentifiers) {
-        NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@-%@-%@", NSStringFromClass(originalClass), NSStringFromSelector(originalSelector), identifier];
+        NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? @"+" : @"-", NSStringFromSelector(originalSelector), identifier];
         if (![swizzleIdentifiers containsObject:swizzleIdentifier]) {
             [swizzleIdentifiers addObject:swizzleIdentifier];
-            return [self swizzleClass:originalClass selector:originalSelector withBlock:block];
+            return [self swizzleInstanceMethod:originalClass selector:originalSelector withBlock:block];
         }
         return NO;
     }
+}
+
+- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+{
+    return [self swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector identifier:identifier withBlock:block];
 }
 
 #pragma mark - Class

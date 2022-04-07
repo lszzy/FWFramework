@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (BOOL)swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
 /**
  判断对象是否使用swizzle替换过指定identifier实例方法。结合fwSwizzleMethod使用
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param identifier 唯一标识
  @return 是否替换
 */
-- (BOOL)isSwizzleMethod:(SEL)originalSelector identifier:(NSString *)identifier;
+- (BOOL)isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier;
 
 #pragma mark - Runtime
 
@@ -290,60 +290,60 @@ NS_ASSUME_NONNULL_BEGIN
 /// 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
 @interface FWClassWrapper (FWSwizzle)
 
-#pragma mark - Simple
+#pragma mark - Exchange
 
 /**
- 使用swizzle替换类实例方法。复杂情况可能会冲突
+ 交换类实例方法。复杂情况可能会冲突
  
  @param originalSelector 原始方法
- @param swizzleSelector  替换方法
+ @param swizzleSelector  交换方法
  @return 是否成功
  */
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector;
 
 /**
- 使用swizzle替换类静态方法。复杂情况可能会冲突
+ 交换类静态方法。复杂情况可能会冲突
  
  @param originalSelector 原始方法
- @param swizzleSelector  替换方法
+ @param swizzleSelector  交换方法
  @return 是否成功
  */
-- (BOOL)swizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector;
+- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector;
 
 /**
- 使用swizzle替换类实例方法为block实现。复杂情况可能会冲突
+ 交换类实例方法为block实现。复杂情况可能会冲突
  @note swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
  
  @param originalSelector 原始方法
- @param swizzleSelector  替换方法
+ @param swizzleSelector  交换方法
  @param swizzleBlock 实现block
  @return 是否成功
  */
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock;
+- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
 
 /**
- 使用swizzle替换类静态方法为block实现。复杂情况可能会冲突
- @note swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+ 交换类静态方法为block实现。复杂情况可能会冲突
+ @note swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }
  
  @param originalSelector 原始方法
- @param swizzleSelector  替换方法
+ @param swizzleSelector  交换方法
  @param swizzleBlock 实现block
  @return 是否成功
  */
-- (BOOL)swizzleClassMethod:(SEL)originalSelector with:(SEL)swizzleSelector block:(id)swizzleBlock;
+- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
 
 /**
- 生成原始方法对应的随机替换方法
+ 生成原始方法对应的随机交换方法
  
  @param selector 原始方法
- @return 替换方法
+ @return 交换方法
  */
-- (SEL)swizzleSelectorForSelector:(SEL)selector;
+- (SEL)exchangeSwizzleSelector:(SEL)selector;
 
-#pragma mark - Complex
+#pragma mark - Swizzle
 
 /**
- 通用swizzle替换实例方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+ 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
  
  @param target 目标类或对象
  @param originalSelector 原始方法
@@ -361,7 +361,17 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleClass:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
+/**
+ 使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用
+ 
+ @param originalClass 原始类
+ @param originalSelector 原始方法
+ @param block 实现句柄
+ @return 是否成功
+ */
+- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
 /**
  使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -372,7 +382,18 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleClass:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
+/**
+ 使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
+ 
+ @param originalClass 原始类
+ @param originalSelector 原始方法
+ @param identifier 唯一标识
+ @param block 实现句柄
+ @return 是否成功
+ */
+- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
 #pragma mark - Class
 

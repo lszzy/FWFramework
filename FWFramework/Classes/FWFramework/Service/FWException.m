@@ -9,6 +9,7 @@
 #import "FWException.h"
 #import "FWSwizzle.h"
 #import "FWLogger.h"
+#import <objc/message.h>
 
 NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
 
@@ -18,6 +19,8 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 
 @implementation FWException
+
+#pragma mark - Capture
 
 + (NSArray<Class> *)captureClasses {
     static dispatch_once_t onceToken;
@@ -42,12 +45,12 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 + (void)startCaptureExceptions {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self captureUnrecognizedSelectorException];
-        [self captureStringSelectorException];
+        [self captureObjectException];
+        [self captureKvcException];
+        [self captureStringException];
+        [self captureArrayException];
     });
 }
-
-#pragma mark - Capture
 
 + (void)captureException:(NSException *)exception remark:(NSString *)remark {
     __block NSString *callStackMethod = nil;
@@ -86,9 +89,9 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     });
 }
 
-#pragma mark - Selector
+#pragma mark - NSObject
 
-+ (void)captureUnrecognizedSelectorException {
++ (void)captureObjectException {
     FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
         NSMethodSignature *methodSignature = FWSwizzleOriginal(selector);
         if (!methodSignature) {
@@ -123,9 +126,43 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     }));
 }
 
++ (void)captureKvcException {
+    FWSwizzleClass(NSObject, @selector(setValue:forKey:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *key), FWSwizzleCode({
+        @try {
+            FWSwizzleOriginal(value, key);
+        } @catch (NSException *exception) {
+            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
+        } @finally { }
+    }));
+    
+    FWSwizzleClass(NSObject, @selector(setValue:forKeyPath:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *keyPath), FWSwizzleCode({
+        @try {
+            FWSwizzleOriginal(value, keyPath);
+        } @catch (NSException *exception) {
+            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
+        } @finally { }
+    }));
+    
+    FWSwizzleClass(NSObject, @selector(setValue:forUndefinedKey:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *key), FWSwizzleCode({
+        @try {
+            FWSwizzleOriginal(value, key);
+        } @catch (NSException *exception) {
+            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
+        } @finally { }
+    }));
+    
+    FWSwizzleClass(NSObject, @selector(setValuesForKeysWithDictionary:), FWSwizzleReturn(void), FWSwizzleArgs(NSDictionary<NSString *, id> *keyValues), FWSwizzleCode({
+        @try {
+            FWSwizzleOriginal(keyValues);
+        } @catch (NSException *exception) {
+            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
+        } @finally { }
+    }));
+}
+
 #pragma mark - NSString
 
-+ (void)captureStringSelectorException {
++ (void)captureStringException {
     NSArray<NSString *> *stringClasses = @[@"__NSCFConstantString", @"NSTaggedPointerString"];
     for (NSString *stringClass in stringClasses) {
         FWSwizzleMethod(NSClassFromString(stringClass), @selector(characterAtIndex:), nil, NSString *, FWSwizzleReturn(unichar), FWSwizzleArgs(NSUInteger index), FWSwizzleCode({
@@ -183,6 +220,12 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             }
         }));
     }
+}
+
+#pragma mark - NSArray
+
++ (void)captureArrayException {
+    
 }
 
 @end
