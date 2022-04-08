@@ -794,10 +794,10 @@ NS_SWIFT_UNAVAILABLE("")
 @interface FWViewWrapper (FWLayoutChain)
 
 /// 链式布局对象
-@property (nonatomic, strong, readonly) FWLayoutChain *layoutChain NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, readonly) FWLayoutChain *layoutChain NS_SWIFT_UNAVAILABLE("");
 
 /// 链式布局句柄
-- (void)layoutMaker:(void (NS_NOESCAPE ^)(FWLayoutChain *make))block NS_REFINED_FOR_SWIFT;
+- (void)layoutMaker:(void (NS_NOESCAPE ^)(FWLayoutChain *make))block NS_SWIFT_UNAVAILABLE("");
 
 @end
 

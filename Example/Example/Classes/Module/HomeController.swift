@@ -9,7 +9,7 @@
 import UIKit
 import FWFramework
 
-class HomeController: UIViewController {
+class HomeController: UITableViewController {
     
     // MARK: - Accessor
     private var style: Int = 0 {
@@ -17,19 +17,6 @@ class HomeController: UIViewController {
             renderStyle()
         }
     }
-    
-    // MARK: - Subviews
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView(frame: view.bounds)
-        scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height * 2)
-        
-        for i in 0 ..< 10 {
-            let subview = UIView(frame: CGRect(x: 0, y: view.bounds.height / 5 * CGFloat(i), width: view.bounds.width, height: view.bounds.height / 5))
-            subview.backgroundColor = UIColor(red: CGFloat(arc4random() % 255) / 255.0, green: CGFloat(arc4random() % 255) / 255.0, blue: CGFloat(arc4random() % 255) / 255.0, alpha: 1)
-            scrollView.addSubview(subview)
-        }
-        return scrollView
-    }()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -62,21 +49,46 @@ private extension HomeController {
     private func setupNavbar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem.fwBarItem(with: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(with: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
         
         let isChinese = Bundle.fw.currentLanguage?.hasPrefix("zh") ?? false
-        navigationItem.rightBarButtonItem = UIBarButtonItem.fwBarItem(with: isChinese ? "中文" : "English", target: self, action: #selector(rightItemClicked(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.fw.item(with: isChinese ? "中文" : "English", target: self, action: #selector(rightItemClicked(_:)))
     }
    
     private func setupSubviews() {
-        view.addSubview(scrollView)
-        view.backgroundColor = UIColor.fwThemeLight(.white, dark: .black)
-        view.fwAddTapGesture(withTarget: self, action: #selector(testViewClicked))
+        
     }
     
     private func setupConstraints() {
         
     }
+}
+
+// MARK: - UITableView
+extension HomeController {
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell.fwCell(with: tableView)
+        cell.contentView.backgroundColor = UIColor(red: CGFloat(arc4random() % 255) / 255.0, green: CGFloat(arc4random() % 255) / 255.0, blue: CGFloat(arc4random() % 255) / 255.0, alpha: 1)
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return view.bounds.height / 5
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableCellSelected(indexPath)
+    }
+    
 }
 
 // MARK: - Action
@@ -98,7 +110,7 @@ private extension HomeController {
         renderData()
     }
     
-    func testViewClicked() {
+    func tableCellSelected(_ indexPath: IndexPath) {
         FWRouter.openURL(AppRouter.testUrl)
     }
     

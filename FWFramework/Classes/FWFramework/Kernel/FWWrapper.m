@@ -66,6 +66,8 @@ FWDefWrapper(UIDevice, FWDeviceWrapper, FWDeviceClassWrapper);
 FWDefWrapper(UIScreen, FWScreenWrapper, FWScreenClassWrapper);
 FWDefWrapper(UIView, FWViewWrapper, FWViewClassWrapper);
 FWDefWrapper(UIControl, FWControlWrapper, FWControlClassWrapper);
+FWDefWrapper(UIGestureRecognizer, FWGestureRecognizerWrapper, FWGestureRecognizerClassWrapper);
+FWDefWrapper(UIBarButtonItem, FWBarButtonItemWrapper, FWBarButtonItemClassWrapper);
 FWDefWrapper(UINavigationBar, FWNavigationBarWrapper, FWNavigationBarClassWrapper);
 FWDefWrapper(UITabBar, FWTabBarWrapper, FWTabBarClassWrapper);
 FWDefWrapper(UIToolbar, FWToolbarWrapper, FWToolbarClassWrapper);

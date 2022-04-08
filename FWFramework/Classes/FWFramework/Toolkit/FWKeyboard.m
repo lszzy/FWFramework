@@ -130,7 +130,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     if (!self.viewController) return;
     
     if (!fwStaticKeyboardGesture) {
-        fwStaticKeyboardGesture = [UITapGestureRecognizer fwGestureRecognizerWithBlock:^(UITapGestureRecognizer *sender) {
+        fwStaticKeyboardGesture = [UITapGestureRecognizer.fw gestureRecognizerWithBlock:^(UITapGestureRecognizer *sender) {
             if (sender.state == UIGestureRecognizerStateEnded) {
                 [sender.view endEditing:YES];
             }
@@ -262,7 +262,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     UIBarButtonItem *rightItem = nil;
     if (block != nil) {
-        rightItem = [UIBarButtonItem fwBarItemWithObject:title block:block];
+        rightItem = [UIBarButtonItem.fw itemWithObject:title block:block];
         rightItem.style = UIBarButtonItemStyleDone;
     } else {
         rightItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self.textInput action:@selector(resignFirstResponder)];

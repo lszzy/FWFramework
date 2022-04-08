@@ -124,6 +124,8 @@ FWWrapperCompatible(UIDevice, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWra
 FWWrapperCompatible(UIScreen, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIControl, FWControlWrapper, FWViewWrapper, FWControlClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIGestureRecognizer, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIBarButtonItem, FWBarButtonItemWrapper, FWObjectWrapper, FWBarButtonItemClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);
