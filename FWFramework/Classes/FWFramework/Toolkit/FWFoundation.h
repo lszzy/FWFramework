@@ -10,27 +10,25 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - NSArray+FWFoundation
+#pragma mark - FWArrayWrapper+FWFoundation
 
-/**
- NSArray+FWFoundation
- */
-@interface NSArray<__covariant ObjectType> (FWFoundation)
+@interface FWArrayWrapper<__covariant ObjectType> (FWFoundation)
 
 /// 过滤数组元素，返回YES的obj重新组装成一个数组
-- (instancetype)fwFilterWithBlock:(BOOL (^)(ObjectType obj))block;
+- (NSArray<ObjectType> *)filterWithBlock:(BOOL (^)(ObjectType obj))block;
 
 /// 映射数组元素，返回的obj重新组装成一个数组
-- (NSArray *)fwMapWithBlock:(id _Nullable (^)(ObjectType obj))block;
+- (NSArray *)mapWithBlock:(id _Nullable (^)(ObjectType obj))block;
 
 /// 匹配数组第一个元素，返回满足条件的第一个obj
-- (nullable ObjectType)fwMatchWithBlock:(BOOL (^)(ObjectType obj))block;
+- (nullable ObjectType)matchWithBlock:(BOOL (^)(ObjectType obj))block;
 
 /// 从数组中随机取出对象，如@[@"a", @"b", @"c"]随机取出@"b"
-@property (nullable, nonatomic, readonly) ObjectType fwRandomObject;
+@property (nullable, nonatomic, readonly) ObjectType randomObject;
 
 @end
 
