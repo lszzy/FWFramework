@@ -64,16 +64,16 @@ FWDefWrapper(NSAttributedString, FWAttributedStringWrapper, FWAttributedStringCl
 FWDefWrapper(NSNumber, FWNumberWrapper, FWNumberClassWrapper);
 FWDefWrapper(NSData, FWDataWrapper, FWDataClassWrapper);
 FWDefWrapper(NSDate, FWDateWrapper, FWDateClassWrapper);
-FWDefWrapper(NSArray, FWArrayWrapper, FWArrayClassWrapper);
-FWDefWrapper(NSMutableArray, FWMutableArrayWrapper, FWMutableArrayClassWrapper);
-FWDefWrapper(NSDictionary, FWDictionaryWrapper, FWDictionaryClassWrapper);
-FWDefWrapper(NSMutableDictionary, FWMutableDictionaryWrapper, FWMutableDictionaryClassWrapper);
 FWDefWrapper(NSURL, FWURLWrapper, FWURLClassWrapper);
 FWDefWrapper(NSURLRequest, FWURLRequestWrapper, FWURLRequestClassWrapper);
 FWDefWrapper(NSBundle, FWBundleWrapper, FWBundleClassWrapper);
 FWDefWrapper(NSTimer, FWTimerWrapper, FWTimerClassWrapper);
 FWDefWrapper(NSUserDefaults, FWUserDefaultsWrapper, FWUserDefaultsClassWrapper);
 FWDefWrapper(NSFileManager, FWFileManagerWrapper, FWFileManagerClassWrapper);
+FWDefWrapper(NSArray, FWArrayWrapper, FWArrayClassWrapper);
+FWDefWrapper(NSMutableArray, FWMutableArrayWrapper, FWMutableArrayClassWrapper);
+FWDefWrapper(NSDictionary, FWDictionaryWrapper, FWDictionaryClassWrapper);
+FWDefWrapper(NSMutableDictionary, FWMutableDictionaryWrapper, FWMutableDictionaryClassWrapper);
 
 FWDefWrapper(UIApplication, FWApplicationWrapper, FWApplicationClassWrapper);
 FWDefWrapper(UIBezierPath, FWBezierPathWrapper, FWBezierPathClassWrapper);

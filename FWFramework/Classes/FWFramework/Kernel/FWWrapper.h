@@ -26,6 +26,34 @@ NS_ASSUME_NONNULL_BEGIN
     @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
+/// 快速声明单泛型包装器宏
+#define FWGenericWrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface objectWrapper<__covariant ObjectType> : objectParent \
+    @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
+    @end \
+    @interface baseClass<ObjectType> (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
+    @end \
+    @interface classWrapper : classParent \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
+/// 快速声明双泛型包装器宏
+#define FWGeneric2WrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
+    @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
+    @end \
+    @interface baseClass<KeyType, ValueType> (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
+    @end \
+    @interface classWrapper : classParent \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
 /// 快速实现包装器宏
 #define FWDefWrapper(baseClass, objectWrapper, classWrapper) \
     @implementation objectWrapper \
@@ -122,16 +150,16 @@ FWWrapperCompatible(NSAttributedString, FWAttributedStringWrapper, FWObjectWrapp
 FWWrapperCompatible(NSNumber, FWNumberWrapper, FWObjectWrapper, FWNumberClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSDate, FWDateWrapper, FWObjectWrapper, FWDateClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
-FWWrapperCompatible(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSMutableDictionary, FWMutableDictionaryWrapper, FWObjectWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSURLRequest, FWURLRequestWrapper, FWObjectWrapper, FWURLRequestClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSUserDefaults, FWUserDefaultsWrapper, FWObjectWrapper, FWUserDefaultsClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSFileManager, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper);
+FWGenericWrapperCompatible(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
+FWGenericWrapperCompatible(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
+FWGeneric2WrapperCompatible(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
+FWGeneric2WrapperCompatible(NSMutableDictionary, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
 
 FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIBezierPath, FWBezierPathWrapper, FWObjectWrapper, FWBezierPathClassWrapper, FWClassWrapper);
