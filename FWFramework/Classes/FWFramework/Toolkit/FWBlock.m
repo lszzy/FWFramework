@@ -10,41 +10,6 @@
 #import "FWBlock.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWDisplayLinkClassWrapper+FWBlock
-
-@implementation FWDisplayLinkClassWrapper (FWBlock)
-
-- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector
-{
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    return displayLink;
-}
-
-- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
-{
-    CADisplayLink *displayLink = [self displayLinkWithBlock:block];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    return displayLink;
-}
-
-- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *))block
-{
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:[self class] selector:@selector(displayLinkAction:)];
-    objc_setAssociatedObject(displayLink, @selector(displayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    return displayLink;
-}
-
-+ (void)displayLinkAction:(CADisplayLink *)displayLink
-{
-    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(displayLinkWithBlock:));
-    if (block) {
-        block(displayLink);
-    }
-}
-
-@end
-
 #pragma mark - FWTimerClassWrapper+FWBlock
 
 @implementation FWTimerClassWrapper (FWBlock)

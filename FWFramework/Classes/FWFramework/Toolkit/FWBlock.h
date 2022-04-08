@@ -55,41 +55,6 @@ typedef void (^FWBlockDouble)(double value) NS_SWIFT_UNAVAILABLE("");
  */
 typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVAILABLE("");
 
-#pragma mark - FWDisplayLinkClassWrapper+FWBlock
-
-/**
- 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
- */
-@interface FWDisplayLinkClassWrapper (FWBlock)
-
-/**
- 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
- 
- @param target 目标
- @param selector 方法
- @return CADisplayLink
- */
-- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
-
-/**
- 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
- 
- @param block 代码块
- @return CADisplayLink
- */
-- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
-
-/**
- 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
- @note 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
- 
- @param block 代码块
- @return CADisplayLink
- */
-- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
-
-@end
-
 #pragma mark - FWTimerClassWrapper+FWBlock
 
 @interface FWTimerClassWrapper (FWBlock)
