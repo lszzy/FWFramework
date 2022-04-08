@@ -65,24 +65,13 @@
 
 @end
 
-#pragma mark - NSAttributedString+FWFoundation
+#pragma mark - FWAttributedStringWrapper+FWFoundation
 
-@implementation NSAttributedString (FWFoundation)
+@implementation FWAttributedStringWrapper (FWFoundation)
 
-+ (instancetype)fwAttributedStringWithHtmlString:(NSString *)htmlString
+- (NSString *)htmlString
 {
-    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
-    if (!htmlData || htmlData.length < 1) return nil;
-    
-    return [[self alloc] initWithData:htmlData options:@{
-        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
-    } documentAttributes:nil error:nil];
-}
-
-- (NSString *)fwHtmlString
-{
-    NSData *htmlData = [self dataFromRange:NSMakeRange(0, self.length) documentAttributes:@{
+    NSData *htmlData = [self.base dataFromRange:NSMakeRange(0, self.base.length) documentAttributes:@{
         NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
     } error:nil];
     if (!htmlData || htmlData.length < 1) return nil;
@@ -90,26 +79,58 @@
     return [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
 }
 
-- (CGSize)fwSize
+- (CGSize)textSize
 {
-    return [self fwSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    return [self textSizeWithDrawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
 }
 
-- (CGSize)fwSizeWithDrawSize:(CGSize)drawSize
+- (CGSize)textSizeWithDrawSize:(CGSize)drawSize
 {
-    CGSize size = [self boundingRectWithSize:drawSize
-                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                     context:nil].size;
+    CGSize size = [self.base boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                          context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 @end
 
-#pragma mark - NSData+FWFoundation
+#pragma mark - FWAttributedStringClassWrapper+FWFoundation
 
-@implementation NSData (FWFoundation)
+@implementation FWAttributedStringClassWrapper (FWFoundation)
 
-+ (NSData *)fwArchiveObject:(id)object
+- (NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString
+{
+    NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!htmlData || htmlData.length < 1) return nil;
+    
+    return [[self.base alloc] initWithData:htmlData options:@{
+        NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
+    } documentAttributes:nil error:nil];
+}
+
+@end
+
+#pragma mark - FWDataWrapper+FWFoundation
+
+@implementation FWDataWrapper (FWFoundation)
+
+- (id)unarchiveObject
+{
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithData:self.base];
+    } @catch (NSException *exception) { }
+    return object;
+}
+
+@end
+
+#pragma mark - FWDataClassWrapper+FWFoundation
+
+@implementation FWDataClassWrapper (FWFoundation)
+
+- (NSData *)archiveObject:(id)object
 {
     NSData *data = nil;
     @try {
@@ -118,23 +139,14 @@
     return data;
 }
 
-- (id)fwUnarchiveObject
-{
-    id object = nil;
-    @try {
-        object = [NSKeyedUnarchiver unarchiveObjectWithData:self];
-    } @catch (NSException *exception) { }
-    return object;
-}
-
-+ (void)fwArchiveObject:(id)object toFile:(NSString *)path
+- (void)archiveObject:(id)object toFile:(NSString *)path
 {
     @try {
         [NSKeyedArchiver archiveRootObject:object toFile:path];
     } @catch (NSException *exception) { }
 }
 
-+ (id)fwUnarchiveObjectWithFile:(NSString *)path
+- (id)unarchiveObjectWithFile:(NSString *)path
 {
     id object = nil;
     @try {
@@ -145,16 +157,41 @@
 
 @end
 
-#pragma mark - NSDate+FWFoundation
+#pragma mark - FWDateWrapper+FWFoundation
+
+@implementation FWDateWrapper (FWFoundation)
+
+- (NSString *)stringValue
+{
+    return [self stringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
+}
+
+- (NSString *)stringWithFormat:(NSString *)format
+{
+    return [self stringWithFormat:format timeZone:nil];
+}
+
+- (NSString *)stringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = format;
+    if (timeZone) formatter.timeZone = timeZone;
+    NSString *string = [formatter stringFromDate:self.base];
+    return string;
+}
+
+@end
+
+#pragma mark - FWDateClassWrapper+FWFoundation
 
 // 当前基准时间值
 static NSTimeInterval fwStaticCurrentBaseTime = 0;
 // 本地基准时间值
 static NSTimeInterval fwStaticLocalBaseTime = 0;
 
-@implementation NSDate (FWFoundation)
+@implementation FWDateClassWrapper (FWFoundation)
 
-+ (NSTimeInterval)fwCurrentTime
+- (NSTimeInterval)currentTime
 {
     // 没有同步过返回本地时间
     if (fwStaticCurrentBaseTime == 0) {
@@ -170,16 +207,16 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         }
     // 同步过计算当前服务器时间
     } else {
-        NSTimeInterval offsetTime = [self fwCurrentSystemUptime] - fwStaticLocalBaseTime;
+        NSTimeInterval offsetTime = [self currentSystemUptime] - fwStaticLocalBaseTime;
         return fwStaticCurrentBaseTime + offsetTime;
     }
 }
 
-+ (void)setFwCurrentTime:(NSTimeInterval)currentTime
+- (void)setCurrentTime:(NSTimeInterval)currentTime
 {
     fwStaticCurrentBaseTime = currentTime;
     // 取运行时间，调整系统时间不会影响
-    fwStaticLocalBaseTime = [self fwCurrentSystemUptime];
+    fwStaticLocalBaseTime = [self currentSystemUptime];
     
     // 保存当前服务器时间到本地
     [[NSUserDefaults standardUserDefaults] setObject:@(currentTime) forKey:@"FWCurrentTime"];
@@ -187,7 +224,7 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-+ (NSTimeInterval)fwCurrentSystemUptime
+- (NSTimeInterval)currentSystemUptime
 {
     struct timeval bootTime;
     int mib[2] = {CTL_KERN, KERN_BOOTTIME};
@@ -206,49 +243,26 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return uptime;
 }
 
-+ (NSDate *)fwDateWithString:(NSString *)string
+- (NSDate *)dateWithString:(NSString *)string
 {
-    return [self fwDateWithString:string format:@"yyyy-MM-dd HH:mm:ss"];
+    return [self dateWithString:string format:@"yyyy-MM-dd HH:mm:ss"];
 }
 
-+ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format
+- (NSDate *)dateWithString:(NSString *)string format:(NSString *)format
 {
-    return [self fwDateWithString:string format:format timeZone:nil];
+    return [self dateWithString:string format:format timeZone:nil];
 }
 
-+ (NSDate *)fwDateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone
+- (NSDate *)dateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = format;
-    if (timeZone) {
-        formatter.timeZone = timeZone;
-    }
+    if (timeZone) formatter.timeZone = timeZone;
     NSDate *date = [formatter dateFromString:string];
     return date;
 }
 
-- (NSString *)fwStringValue
-{
-    return [self fwStringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
-}
-
-- (NSString *)fwStringWithFormat:(NSString *)format
-{
-    return [self fwStringWithFormat:format timeZone:nil];
-}
-
-- (NSString *)fwStringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = format;
-    if (timeZone) {
-        formatter.timeZone = timeZone;
-    }
-    NSString *string = [formatter stringFromDate:self];
-    return string;
-}
-
-+ (NSString *)fwFormatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour
+- (NSString *)formatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour
 {
     long long seconds = (long long)duration;
     if (hasHour) {
@@ -266,16 +280,16 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @end
 
-#pragma mark - NSDictionary+FWFoundation
+#pragma mark - FWDictionaryWrapper+FWFoundation
 
-@implementation NSDictionary (FWFoundation)
+@implementation FWDictionaryWrapper (FWFoundation)
 
-- (instancetype)fwFilterWithBlock:(BOOL (^)(id, id))block
+- (NSDictionary *)filterWithBlock:(BOOL (^)(id, id))block
 {
     NSParameterAssert(block != nil);
 
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self.base enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if (block(key, obj)) {
             result[key] = obj;
         }
@@ -283,12 +297,12 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return result;
 }
 
-- (NSDictionary *)fwMapWithBlock:(id (^)(id, id))block
+- (NSDictionary *)mapWithBlock:(id (^)(id, id))block
 {
     NSParameterAssert(block != nil);
     
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self.base enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         id value = block(key, obj);
         if (value) {
             result[key] = value;
@@ -297,12 +311,12 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return result;
 }
 
-- (id)fwMatchWithBlock:(BOOL (^)(id, id))block
+- (id)matchWithBlock:(BOOL (^)(id, id))block
 {
     NSParameterAssert(block != nil);
     
     __block id result = nil;
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [self.base enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if (block(key, obj)) {
             result = obj;
             *stop = YES;
@@ -313,29 +327,29 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @end
 
-#pragma mark - NSObject+FWFoundation
+#pragma mark - FWObjectWrapper+FWFoundation
 
-@implementation NSObject (FWFoundation)
+@implementation FWObjectWrapper (FWFoundation)
 
-- (void)fwLock
+- (void)lock
 {
-    dispatch_semaphore_wait([self fwLockSemaphore], DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait([self lockSemaphore], DISPATCH_TIME_FOREVER);
 }
 
-- (void)fwUnlock
+- (void)unlock
 {
-    dispatch_semaphore_signal([self fwLockSemaphore]);
+    dispatch_semaphore_signal([self lockSemaphore]);
 }
 
-- (dispatch_semaphore_t)fwLockSemaphore
+- (dispatch_semaphore_t)lockSemaphore
 {
-    dispatch_semaphore_t semaphore = objc_getAssociatedObject(self, _cmd);
+    dispatch_semaphore_t semaphore = objc_getAssociatedObject(self.base, _cmd);
     if (!semaphore) {
-        @synchronized (self) {
-            semaphore = objc_getAssociatedObject(self, _cmd);
+        @synchronized (self.base) {
+            semaphore = objc_getAssociatedObject(self.base, _cmd);
             if (!semaphore) {
                 semaphore = dispatch_semaphore_create(1);
-                objc_setAssociatedObject(self, _cmd, semaphore, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                objc_setAssociatedObject(self.base, _cmd, semaphore, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             }
         }
     }
@@ -344,35 +358,47 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 
 @end
 
-#pragma mark - NSString+FWFoundation
+#pragma mark - FWStringWrapper+FWFoundation
 
-@implementation NSString (FWFoundation)
+@implementation FWStringWrapper (FWFoundation)
 
-- (CGSize)fwSizeWithFont:(UIFont *)font
+- (CGSize)sizeWithFont:(UIFont *)font
 {
-    return [self fwSizeWithFont:font drawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    return [self sizeWithFont:font drawSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
 }
 
-- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize
+- (CGSize)sizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize
 {
-    return [self fwSizeWithFont:font drawSize:drawSize attributes:nil];
+    return [self sizeWithFont:font drawSize:drawSize attributes:nil];
 }
 
-- (CGSize)fwSizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize attributes:(NSDictionary<NSAttributedStringKey,id> *)attributes
+- (CGSize)sizeWithFont:(UIFont *)font drawSize:(CGSize)drawSize attributes:(NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
     attr[NSFontAttributeName] = font;
     if (attributes != nil) {
         [attr addEntriesFromDictionary:attributes];
     }
-    CGSize size = [self boundingRectWithSize:drawSize
-                                     options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                  attributes:attr
-                                     context:nil].size;
+    CGSize size = [self.base boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attr
+                                          context:nil].size;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
-+ (NSString *)fwSizeString:(NSUInteger)aFileSize
+- (BOOL)matchesRegex:(NSString *)regex
+{
+    NSPredicate *regexPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    return [regexPredicate evaluateWithObject:self.base] == YES;
+}
+
+@end
+
+#pragma mark - FWStringClassWrapper+FWFoundation
+
+@implementation FWStringClassWrapper (FWFoundation)
+
+- (NSString *)sizeString:(NSUInteger)aFileSize
 {
     NSString *sizeStr;
     if (aFileSize <= 0) {
@@ -394,65 +420,65 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     return sizeStr;
 }
 
-- (BOOL)fwMatchesRegex:(NSString *)regex
+@end
+
+#pragma mark - FWTimerWrapper+FWFoundation
+
+@implementation FWTimerWrapper (FWFoundation)
+
+- (void)pauseTimer
 {
-    NSPredicate *regexPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
-    return [regexPredicate evaluateWithObject:self] == YES;
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate distantFuture]];
+}
+
+- (void)resumeTimer
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate date]];
+}
+
+- (void)resumeTimerAfterDelay:(NSTimeInterval)delay
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
 }
 
 @end
 
-#pragma mark - NSTimer+FWFoundation
+#pragma mark - FWUserDefaultsWrapper+FWFoundation
 
-@implementation NSTimer (FWFoundation)
+@implementation FWUserDefaultsWrapper (FWFoundation)
 
-- (void)fwPauseTimer
+- (id)objectForKey:(NSString *)key
 {
-    if (![self isValid]) return;
-    [self setFireDate:[NSDate distantFuture]];
+    return [self.base objectForKey:key];
 }
 
-- (void)fwResumeTimer
-{
-    if (![self isValid]) return;
-    [self setFireDate:[NSDate date]];
-}
-
-- (void)fwResumeTimerAfterDelay:(NSTimeInterval)delay
-{
-    if (![self isValid]) return;
-    [self setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
-}
-
-@end
-
-#pragma mark - NSUserDefaults+FWFoundation
-
-@implementation NSUserDefaults (FWFoundation)
-
-+ (id)fwObjectForKey:(NSString *)key
-{
-    return [NSUserDefaults.standardUserDefaults fwObjectForKey:key];
-}
-
-+ (void)fwSetObject:(id)object forKey:(NSString *)key
-{
-    [NSUserDefaults.standardUserDefaults fwSetObject:object forKey:key];
-}
-
-- (id)fwObjectForKey:(NSString *)key
-{
-    return [self objectForKey:key];
-}
-
-- (void)fwSetObject:(id)object forKey:(NSString *)key
+- (void)setObject:(id)object forKey:(NSString *)key
 {
     if (object == nil) {
-        [self removeObjectForKey:key];
+        [self.base removeObjectForKey:key];
     } else {
-        [self setObject:object forKey:key];
+        [self.base setObject:object forKey:key];
     }
-    [self synchronize];
+    [self.base synchronize];
+}
+
+@end
+
+#pragma mark - FWUserDefaultsClassWrapper+FWFoundation
+
+@implementation FWUserDefaultsClassWrapper (FWFoundation)
+
+- (id)objectForKey:(NSString *)key
+{
+    return [NSUserDefaults.standardUserDefaults.fw objectForKey:key];
+}
+
+- (void)setObject:(id)object forKey:(NSString *)key
+{
+    [NSUserDefaults.standardUserDefaults.fw setObject:object forKey:key];
 }
 
 @end
