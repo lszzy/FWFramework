@@ -112,25 +112,61 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWWrapperCompatible
 
-FWWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper, FWStringClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(CALayer, FWLayerWrapper, FWObjectWrapper, FWLayerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(CAGradientLayer, FWGradientLayerWrapper, FWLayerWrapper, FWGradientLayerClassWrapper, FWLayerClassWrapper);
+FWWrapperCompatible(CAAnimation, FWAnimationWrapper, FWObjectWrapper, FWAnimationClassWrapper, FWClassWrapper);
 FWWrapperCompatible(CADisplayLink, FWDisplayLinkWrapper, FWObjectWrapper, FWDisplayLinkClassWrapper, FWClassWrapper);
 
+FWWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper, FWStringClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSAttributedString, FWAttributedStringWrapper, FWObjectWrapper, FWAttributedStringClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSNumber, FWNumberWrapper, FWObjectWrapper, FWNumberClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSDate, FWDateWrapper, FWObjectWrapper, FWDateClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
+FWWrapperCompatible(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSMutableDictionary, FWMutableDictionaryWrapper, FWObjectWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSURLRequest, FWURLRequestWrapper, FWObjectWrapper, FWURLRequestClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSUserDefaults, FWUserDefaultsWrapper, FWObjectWrapper, FWUserDefaultsClassWrapper, FWClassWrapper);
+FWWrapperCompatible(NSFileManager, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper);
+
 FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIBezierPath, FWBezierPathWrapper, FWObjectWrapper, FWBezierPathClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIDevice, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIScreen, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIImage, FWImageWrapper, FWObjectWrapper, FWImageClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIImageAsset, FWImageAssetWrapper, FWObjectWrapper, FWImageAssetClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIFont, FWFontWrapper, FWObjectWrapper, FWFontClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIColor, FWColorWrapper, FWObjectWrapper, FWColorClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UILabel, FWLabelWrapper, FWViewWrapper, FWLabelClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIImageView, FWImageViewWrapper, FWViewWrapper, FWImageViewClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIScrollView, FWScrollViewWrapper, FWViewWrapper, FWScrollViewClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UITableView, FWTableViewWrapper, FWScrollViewWrapper, FWTableViewClassWrapper, FWScrollViewClassWrapper);
+FWWrapperCompatible(UITableViewHeaderFooterView, FWTableViewHeaderFooterViewWrapper, FWViewWrapper, FWTableViewHeaderFooterViewClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UITableViewCell, FWTableViewCellWrapper, FWViewWrapper, FWTableViewCellClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UICollectionView, FWCollectionViewWrapper, FWScrollViewWrapper, FWCollectionViewClassWrapper, FWScrollViewClassWrapper);
+FWWrapperCompatible(UICollectionReusableView, FWCollectionReusableViewWrapper, FWViewWrapper, FWCollectionReusableViewClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UICollectionViewCell, FWCollectionViewCellWrapper, FWCollectionReusableViewWrapper, FWCollectionViewCellClassWrapper, FWCollectionReusableViewClassWrapper);
 FWWrapperCompatible(UIControl, FWControlWrapper, FWViewWrapper, FWControlClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UIButton, FWButtonWrapper, FWControlWrapper, FWButtonClassWrapper, FWControlClassWrapper);
+FWWrapperCompatible(UISwitch, FWSwitchWrapper, FWControlWrapper, FWSwitchClassWrapper, FWControlClassWrapper);
+FWWrapperCompatible(UIPageControl, FWPageControlWrapper, FWControlWrapper, FWPageControlClassWrapper, FWControlClassWrapper);
+FWWrapperCompatible(UISlider, FWSliderWrapper, FWControlWrapper, FWSliderClassWrapper, FWControlClassWrapper);
+FWWrapperCompatible(UITextField, FWTextFieldWrapper, FWControlWrapper, FWTextFieldClassWrapper, FWControlClassWrapper);
+FWWrapperCompatible(UITextView, FWTextViewWrapper, FWScrollViewWrapper, FWTextViewClassWrapper, FWScrollViewClassWrapper);
 FWWrapperCompatible(UIGestureRecognizer, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIBarButtonItem, FWBarButtonItemWrapper, FWObjectWrapper, FWBarButtonItemClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);
+FWWrapperCompatible(UISearchBar, FWSearchBarWrapper, FWViewWrapper, FWSearchBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIWindow, FWWindowWrapper, FWViewWrapper, FWWindowClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIViewController, FWViewControllerWrapper, FWObjectWrapper, FWViewControllerClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UINavigationController, FWNavigationControllerWrapper, FWViewControllerWrapper, FWNavigationControllerClassWrapper, FWViewControllerClassWrapper);
+FWWrapperCompatible(UITabBarController, FWTabBarControllerWrapper, FWViewControllerWrapper, FWTabBarControllerClassWrapper, FWViewControllerClassWrapper);
 
 NS_ASSUME_NONNULL_END

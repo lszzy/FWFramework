@@ -36,6 +36,7 @@
 #import "FWFoundation.h"
 #import "FWIcon.h"
 #import "FWKeyboard.h"
+#import "FWQuartzCore.h"
 #import "FWTheme.h"
 #import "FWToolkit.h"
 #import "FWUIKit.h"

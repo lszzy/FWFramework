@@ -221,33 +221,4 @@ extern NSNotificationName const FWThemeChangedNotification;
 
 @end
 
-/**
- iOS13主题订阅CALayer分类
-*/
-@interface CALayer (FWTheme)
-
-/// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
-
-/// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBorderColor;
-
-/// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
-
-/// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIImage *fwThemeContents;
-
-@end
-
-/**
- iOS13主题订阅CALayer分类
-*/
-@interface CAGradientLayer (FWTheme)
-
-/// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, copy) NSArray<UIColor *> *fwThemeColors;
-
-@end
-
 NS_ASSUME_NONNULL_END

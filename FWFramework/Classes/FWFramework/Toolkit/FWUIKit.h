@@ -81,21 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - CAAnimation+FWUIKit
-
-/**
- CAAnimation+FWUIKit
- */
-@interface CAAnimation (FWUIKit)
-
-/// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
-@property (nonatomic, copy, nullable) void (^fwStartBlock)(CAAnimation *animation);
-
-/// 设置动画停止回调
-@property (nonatomic, copy, nullable) void (^fwStopBlock)(CAAnimation *animation, BOOL finished);
-
-@end
-
 #pragma mark - UILabel+FWUIKit
 
 /**
