@@ -158,6 +158,8 @@ FWWrapperCompatible(NSUserDefaults, FWUserDefaultsWrapper, FWObjectWrapper, FWUs
 FWWrapperCompatible(NSFileManager, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper);
 FWGenericWrapperCompatible(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
 FWGenericWrapperCompatible(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
+FWGenericWrapperCompatible(NSSet, FWSetWrapper, FWObjectWrapper, FWSetClassWrapper, FWClassWrapper);
+FWGenericWrapperCompatible(NSMutableSet, FWMutableSetWrapper, FWSetWrapper, FWMutableSetClassWrapper, FWSetClassWrapper);
 FWGeneric2WrapperCompatible(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
 FWGeneric2WrapperCompatible(NSMutableDictionary, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
 

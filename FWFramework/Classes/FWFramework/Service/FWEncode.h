@@ -404,4 +404,162 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
 
 @end
 
+#pragma mark - FWStringWrapper+FWSafeType
+
+@interface FWStringWrapper (FWSafeType)
+
+/**
+ 从指定位置截取子串
+ 
+ @param from 起始位置
+ @return 子串
+ */
+- (nullable NSString *)substringFromIndex:(NSInteger)from;
+
+/**
+ 截取子串到指定位置
+ 
+ @param to 结束位置
+ @return 子串
+ */
+- (nullable NSString *)substringToIndex:(NSInteger)to;
+
+/**
+ 截取指定范围的子串
+ 
+ @param range 指定范围
+ @return 子串
+ */
+- (nullable NSString *)substringWithRange:(NSRange)range;
+
+@end
+
+#pragma mark - FWArrayWrapper+FWSafeType
+
+@interface FWArrayWrapper<__covariant ObjectType> (FWSafeType)
+
+/**
+ 安全获取对象
+ 
+ @param index 索引
+ @return 对象
+ */
+- (nullable ObjectType)objectAtIndex:(NSInteger)index;
+
+/**
+ 安全获取子数组
+ 
+ @param range 范围
+ @return 对象数组
+ */
+- (nullable NSArray<ObjectType> *)subarrayWithRange:(NSRange)range;
+
+@end
+
+#pragma mark - FWMutableArrayWrapper+FWSafeType
+
+@interface FWMutableArrayWrapper<ObjectType> (FWSafeType)
+
+/**
+ 安全添加对象
+ 
+ @param object 对象
+ */
+- (void)addObject:(nullable ObjectType)object;
+
+/**
+ 安全移除指定索引对象
+ 
+ @param index 索引
+ */
+- (void)removeObjectAtIndex:(NSInteger)index;
+
+/**
+ 安全插入对象到指定位置
+ 
+ @param object 对象
+ @param index 索引
+ */
+- (void)insertObject:(nullable ObjectType)object atIndex:(NSInteger)index;
+
+/**
+ 安全替换对象到指定位置
+ 
+ @param index 索引
+ @param object 对象
+ */
+- (void)replaceObjectAtIndex:(NSInteger)index withObject:(nullable ObjectType)object;
+
+/**
+ 安全移除子数组
+ 
+ @param range 范围
+ */
+- (void)removeObjectsInRange:(NSRange)range;
+
+/**
+ 安全插入数组到指定位置
+ 
+ @param objects 要插入的数组
+ @param index 索引
+ */
+- (void)insertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index;
+
+@end
+
+#pragma mark - FWMutableSetWrapper+FWSafeType
+
+@interface FWMutableSetWrapper<__covariant ObjectType> (FWSafeType)
+
+/**
+ 安全添加对象
+ 
+ @param object 对象
+ */
+- (void)addObject:(nullable ObjectType)object;
+
+/**
+ 安全移除对象
+ 
+ @param object 对象
+ */
+- (void)removeObject:(nullable ObjectType)object;
+
+@end
+
+#pragma mark - FWDictionaryWrapper+FWSafeType
+
+@interface FWDictionaryWrapper<__covariant KeyType, __covariant ObjectType> (FWSafeType)
+
+/**
+ 安全读取对象（过滤NSNull）
+ 
+ @param key 键名
+ @return 键值
+ */
+- (nullable ObjectType)objectForKey:(nullable KeyType)key;
+
+@end
+
+#pragma mark - FWMutableDictionaryWrapper+FWSafeType
+
+@interface FWMutableDictionaryWrapper<KeyType, ObjectType> (FWSafeType)
+
+/**
+ 安全移除指定键名
+ 
+ @param key 键名
+ */
+- (void)removeObjectForKey:(nullable KeyType)key;
+
+/**
+ 安全设置对象（过滤NSNull）
+
+ @param object 键值
+ @param key 键名
+ */
+- (void)setObject:(nullable ObjectType)object forKey:(nullable KeyType <NSCopying>)key;
+
+@end
+
 NS_ASSUME_NONNULL_END

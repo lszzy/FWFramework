@@ -72,6 +72,8 @@ FWDefWrapper(NSUserDefaults, FWUserDefaultsWrapper, FWUserDefaultsClassWrapper);
 FWDefWrapper(NSFileManager, FWFileManagerWrapper, FWFileManagerClassWrapper);
 FWDefWrapper(NSArray, FWArrayWrapper, FWArrayClassWrapper);
 FWDefWrapper(NSMutableArray, FWMutableArrayWrapper, FWMutableArrayClassWrapper);
+FWDefWrapper(NSSet, FWSetWrapper, FWSetClassWrapper);
+FWDefWrapper(NSMutableSet, FWMutableSetWrapper, FWMutableSetClassWrapper);
 FWDefWrapper(NSDictionary, FWDictionaryWrapper, FWDictionaryClassWrapper);
 FWDefWrapper(NSMutableDictionary, FWMutableDictionaryWrapper, FWMutableDictionaryClassWrapper);
 

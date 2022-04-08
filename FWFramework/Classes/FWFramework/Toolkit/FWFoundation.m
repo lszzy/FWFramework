@@ -11,16 +11,16 @@
 #import <sys/sysctl.h>
 #import <objc/runtime.h>
 
-#pragma mark - NSArray+FWFoundation
+#pragma mark - FWArrayWrapper+FWFoundation
 
-@implementation NSArray (FWFoundation)
+@implementation FWArrayWrapper (FWFoundation)
 
-- (instancetype)fwFilterWithBlock:(BOOL (^)(id))block
+- (NSArray *)filterWithBlock:(BOOL (^)(id))block
 {
     NSParameterAssert(block != nil);
     
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.base enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if (block(obj)) {
             [result addObject:obj];
         }
@@ -28,12 +28,12 @@
     return result;
 }
 
-- (NSArray *)fwMapWithBlock:(id (^)(id))block
+- (NSArray *)mapWithBlock:(id (^)(id))block
 {
     NSParameterAssert(block != nil);
     
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.base enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         id value = block(obj);
         if (value) {
             [result addObject:value];
@@ -42,12 +42,12 @@
     return result;
 }
 
-- (id)fwMatchWithBlock:(BOOL (^)(id))block
+- (id)matchWithBlock:(BOOL (^)(id))block
 {
     NSParameterAssert(block != nil);
     
     __block id result = nil;
-    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.base enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if (block(obj)) {
             result = obj;
             *stop = YES;
@@ -56,11 +56,11 @@
     return result;
 }
 
-- (id)fwRandomObject
+- (id)randomObject
 {
-    if (self.count < 1) return nil;
+    if (self.base.count < 1) return nil;
     
-    return self[arc4random_uniform((u_int32_t)self.count)];
+    return self.base[arc4random_uniform((u_int32_t)self.base.count)];
 }
 
 @end

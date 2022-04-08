@@ -605,3 +605,157 @@ NSURL * FWSafeURL(id value) {
 }
 
 @end
+
+#pragma mark - FWStringWrapper+FWSafeType
+
+@implementation FWStringWrapper (FWSafeType)
+
+- (NSString *)substringFromIndex:(NSInteger)from
+{
+    if (from < 0) return nil;
+    if (from > self.base.length) return nil;
+    return [self.base substringFromIndex:from];
+}
+
+- (NSString *)substringToIndex:(NSInteger)to
+{
+    if (to < 0) return nil;
+    if (to > self.base.length) return nil;
+    return [self.base substringToIndex:to];
+}
+
+- (NSString *)substringWithRange:(NSRange)range
+{
+    if (range.location > self.base.length) return nil;
+    if (range.length > self.base.length) return nil;
+    if (range.location + range.length > self.base.length) return nil;
+    return [self.base substringWithRange:range];
+}
+
+@end
+
+#pragma mark - FWArrayWrapper+FWSafeType
+
+@implementation FWArrayWrapper (FWSafeType)
+
+- (id)objectAtIndex:(NSInteger)index
+{
+    if (index < 0) return nil;
+    if (index >= self.base.count) return nil;
+    return [self.base objectAtIndex:index];
+}
+
+- (NSArray *)subarrayWithRange:(NSRange)range
+{
+    if (range.location > self.base.count) return nil;
+    if (range.length > self.base.count) return nil;
+    if (range.location + range.length > self.base.count) return nil;
+    return [self.base subarrayWithRange:range];
+}
+
+@end
+
+#pragma mark - FWMutableArrayWrapper+FWSafeType
+
+@implementation FWMutableArrayWrapper (FWSafeType)
+
+- (void)addObject:(id)object
+{
+    if (object == nil) return;
+    [self.base addObject:object];
+}
+
+- (void)removeObjectAtIndex:(NSInteger)index
+{
+    if (index < 0) return;
+    if (index >= self.base.count) return;
+    [self.base removeObjectAtIndex:index];
+}
+
+- (void)insertObject:(id)object atIndex:(NSInteger)index
+{
+    if (object == nil) return;
+    if (index < 0) return;
+    if (index > self.base.count) return;
+    [self.base insertObject:object atIndex:index];
+}
+
+- (void)replaceObjectAtIndex:(NSInteger)index withObject:(id)object
+{
+    if (object == nil) return;
+    if (index < 0) return;
+    if (index >= self.base.count) return;
+    [self.base replaceObjectAtIndex:index withObject:object];
+}
+
+- (void)removeObjectsInRange:(NSRange)range
+{
+    if (range.location > self.base.count) return;
+    if (range.length > self.base.count) return;
+    if (range.location + range.length > self.base.count) return;
+    [self.base removeObjectsInRange:range];
+}
+
+- (void)insertObjects:(NSArray *)objects atIndex:(NSInteger)index
+{
+    if (objects.count == 0) return;
+    if (index < 0) return;
+    if (index > self.base.count) return;
+    
+    for (NSInteger i = objects.count - 1; i >= 0; i--) {
+        [self.base insertObject:objects[i] atIndex:index];
+    }
+}
+
+@end
+
+#pragma mark - FWMutableSetWrapper+FWSafeType
+
+@implementation FWMutableSetWrapper (FWSafeType)
+
+- (void)addObject:(id)object
+{
+    if (object == nil) return;
+    [self.base addObject:object];
+}
+
+- (void)removeObject:(id)object
+{
+    if (object == nil) return;
+    [self.base removeObject:object];
+}
+
+@end
+
+#pragma mark - FWDictionaryWrapper+FWSafeType
+
+@implementation FWDictionaryWrapper (FWSafeType)
+
+- (id)objectForKey:(id)key
+{
+    if (!key) return nil;
+    id object = [self.base objectForKey:key];
+    if (object == nil || object == [NSNull null]) return nil;
+    return object;
+}
+
+@end
+
+#pragma mark - FWMutableDictionaryWrapper+FWSafeType
+
+@implementation FWMutableDictionaryWrapper (FWSafeType)
+
+- (void)removeObjectForKey:(id)key
+{
+    if (!key) return;
+    [self.base removeObjectForKey:key];
+}
+
+- (void)setObject:(id)object forKey:(id<NSCopying>)key
+{
+    if (!key) return;
+    if (object == nil || object == [NSNull null]) return;
+    [self.base setObject:object forKey:key];
+}
+
+@end
