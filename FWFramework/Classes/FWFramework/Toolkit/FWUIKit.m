@@ -861,7 +861,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     CGSize thumbSize = self.fwThumbSize;
     if (thumbSize.width <= 0 || thumbSize.height <= 0) return;
     UIColor *thumbColor = self.fwThumbColor ?: (self.tintColor ?: [UIColor whiteColor]);
-    UIImage *thumbImage = [UIImage fwImageWithSize:thumbSize block:^(CGContextRef  _Nonnull context) {
+    UIImage *thumbImage = [UIImage.fw imageWithSize:thumbSize block:^(CGContextRef  _Nonnull context) {
         UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         CGContextSetFillColorWithColor(context, thumbColor.CGColor);
         [path fill];

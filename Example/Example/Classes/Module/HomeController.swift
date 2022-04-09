@@ -136,10 +136,10 @@ private extension HomeController {
         switch style {
         case 0:
             navigationController?.navigationBar.fwIsTranslucent = false
-            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA), dark: .fwColor(withHex: 0x121212))
+            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
         case 1:
             navigationController?.navigationBar.fwIsTranslucent = true
-            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fwColor(withHex: 0xFAFAFA, alpha: 0.5), dark: .fwColor(withHex: 0x121212, alpha: 0.5))
+            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fw.color(withHex: 0xFAFAFA, alpha: 0.5), dark: .fw.color(withHex: 0x121212, alpha: 0.5))
         default:
             navigationController?.navigationBar.fwIsTranslucent = false
             navigationController?.navigationBar.fwBackgroundTransparent = true
