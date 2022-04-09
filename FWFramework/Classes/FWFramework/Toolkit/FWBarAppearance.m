@@ -123,7 +123,7 @@
             self.fwAppearance.backgroundColor = color;
             self.fwAppearance.backgroundImage = nil;
         } else {
-            UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
+            UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
             self.fwAppearance.backgroundColor = nil;
             self.fwAppearance.backgroundImage = image;
         }
@@ -134,7 +134,7 @@
             [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         } else {
             self.barTintColor = nil;
-            UIImage *image = [UIImage fwImageWithColor:color] ?: [UIImage new];
+            UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
             [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         }
     }
@@ -195,7 +195,7 @@
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
     } else {
-        self.shadowImage = [UIImage fwImageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
@@ -228,7 +228,7 @@
 
 - (void)setFwBackImage:(UIImage *)backImage
 {
-    UIImage *image = [backImage fwImageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
+    UIImage *image = [backImage.fw imageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
     if (@available(iOS 15.0, *)) {
         [self.fwAppearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fwUpdateAppearance];
@@ -248,7 +248,7 @@
                 self.fwAppearance.backgroundColor = self.fwBackgroundColor.fwColor;
                 self.fwAppearance.backgroundImage = nil;
             } else {
-                UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
+                UIImage *image = [UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
                 self.fwAppearance.backgroundColor = nil;
                 self.fwAppearance.backgroundImage = image;
             }
@@ -258,7 +258,7 @@
                 self.barTintColor = self.fwBackgroundColor.fwColor;
                 [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
             } else {
-                UIImage *image = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
+                UIImage *image = [UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor] ?: [UIImage new];
                 self.barTintColor = nil;
                 [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
             }
@@ -283,7 +283,7 @@
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
         } else {
-            self.shadowImage = [UIImage fwImageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new];
+            self.shadowImage = [UIImage.fw imageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new];
         }
     }
     
@@ -374,7 +374,7 @@
             self.fwAppearance.backgroundImage = nil;
         } else {
             self.fwAppearance.backgroundColor = nil;
-            self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
+            self.fwAppearance.backgroundImage = [UIImage.fw imageWithColor:color];
         }
         [self fwUpdateAppearance];
     } else {
@@ -383,7 +383,7 @@
             self.backgroundImage = nil;
         } else {
             self.barTintColor = nil;
-            self.backgroundImage = [UIImage fwImageWithColor:color];
+            self.backgroundImage = [UIImage.fw imageWithColor:color];
         }
     }
 }
@@ -442,7 +442,7 @@
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
     } else {
-        self.shadowImage = [UIImage fwImageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
@@ -475,7 +475,7 @@
                 self.fwAppearance.backgroundImage = nil;
             } else {
                 self.fwAppearance.backgroundColor = nil;
-                self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+                self.fwAppearance.backgroundImage = [UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor];
             }
             [self fwUpdateAppearance];
         } else {
@@ -484,7 +484,7 @@
                 self.backgroundImage = nil;
             } else {
                 self.barTintColor = nil;
-                self.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+                self.backgroundImage = [UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor];
             }
         }
     }
@@ -506,7 +506,7 @@
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
         } else {
-            self.shadowImage = [UIImage fwImageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new];
+            self.shadowImage = [UIImage.fw imageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new];
         }
     }
     
@@ -614,7 +614,7 @@
             self.fwAppearance.backgroundImage = nil;
         } else {
             self.fwAppearance.backgroundColor = nil;
-            self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:color];
+            self.fwAppearance.backgroundImage = [UIImage.fw imageWithColor:color];
         }
         [self fwUpdateAppearance];
     } else {
@@ -623,7 +623,7 @@
             [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         } else {
             self.barTintColor = nil;
-            [self setBackgroundImage:[UIImage fwImageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            [self setBackgroundImage:[UIImage.fw imageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         }
     }
 }
@@ -682,7 +682,7 @@
         self.fwAppearance.shadowImage = nil;
         [self fwUpdateAppearance];
     } else {
-        [self setShadowImage:[UIImage fwImageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+        [self setShadowImage:[UIImage.fw imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
 
@@ -715,7 +715,7 @@
                 self.fwAppearance.backgroundImage = nil;
             } else {
                 self.fwAppearance.backgroundColor = nil;
-                self.fwAppearance.backgroundImage = [UIImage fwImageWithColor:self.fwBackgroundColor.fwColor];
+                self.fwAppearance.backgroundImage = [UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor];
             }
             [self fwUpdateAppearance];
         } else {
@@ -724,7 +724,7 @@
                 [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             } else {
                 self.barTintColor = nil;
-                [self setBackgroundImage:[UIImage fwImageWithColor:self.fwBackgroundColor.fwColor] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+                [self setBackgroundImage:[UIImage.fw imageWithColor:self.fwBackgroundColor.fwColor] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             }
         }
     }
@@ -746,7 +746,7 @@
             self.fwAppearance.shadowImage = nil;
             [self fwUpdateAppearance];
         } else {
-            [self setShadowImage:[UIImage fwImageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+            [self setShadowImage:[UIImage.fw imageWithColor:self.fwShadowColor.fwColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
     
