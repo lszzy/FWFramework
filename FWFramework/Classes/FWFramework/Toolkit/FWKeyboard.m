@@ -117,7 +117,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (UIViewController *)viewController
 {
     if (!_viewController) {
-        _viewController = [self.textInput fwViewController];
+        _viewController = [self.textInput.fw viewController];
     }
     return _viewController;
 }
