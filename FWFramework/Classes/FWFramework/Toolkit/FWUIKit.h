@@ -12,105 +12,100 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIDevice+FWUIKit
+#pragma mark - FWDeviceClassWrapper+FWUIKit
 
-/**
- UIDevice+FWUIKit
- */
-@interface UIDevice (FWUIKit)
+@interface FWDeviceClassWrapper (FWUIKit)
 
 /// 设置设备token原始Data，格式化并保存
-+ (void)fwSetDeviceTokenData:(nullable NSData *)tokenData;
+- (void)setDeviceTokenData:(nullable NSData *)tokenData;
 
 /// 获取设备Token格式化后的字符串
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceToken;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceToken;
 
 /// 获取设备模型，格式："iPhone6,1"
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceModel;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceModel;
 
 /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-@property (class, nonatomic, copy, readonly, nullable) NSString *fwDeviceIDFV;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceIDFV;
 
 @end
 
-#pragma mark - UIView+FWUIKit
+#pragma mark - FWViewWrapper+FWUIKit
 
-/**
- UIView+FWUIKit
- */
-@interface UIView (FWUIKit)
+@interface FWViewWrapper (FWUIKit)
 
 /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
-@property (nonatomic, assign, readonly) BOOL fwIsViewVisible;
+@property (nonatomic, assign, readonly) BOOL isViewVisible;
 
 /// 获取响应的视图控制器
-@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fwViewController;
+@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *viewController;
 
 /// 设置额外热区(点击区域)
-@property (nonatomic, assign) UIEdgeInsets fwTouchInsets;
+@property (nonatomic, assign) UIEdgeInsets touchInsets;
 
 /// 设置阴影颜色、偏移和半径
-- (void)fwSetShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
+- (void)setShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 
 /// 绘制四边边框
-- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width;
+- (void)setBorderColor:(nullable UIColor *)color width:(CGFloat)width;
 
 /// 绘制四边边框和四角圆角
-- (void)fwSetBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
+- (void)setBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
 
 /// 绘制四角圆角
-- (void)fwSetCornerRadius:(CGFloat)radius;
+- (void)setCornerRadius:(CGFloat)radius;
 
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+- (void)setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
 
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)fwSetBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
 /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius;
+- (void)setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius;
 
 /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)fwSetCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width;
+- (void)setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width;
 
 /// 绘制单边或多边边框视图。使用AutoLayout
-- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+- (void)setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
 
 /// 绘制单边或多边边框。使用AutoLayout
-- (void)fwSetBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
 @end
 
-#pragma mark - UILabel+FWUIKit
+#pragma mark - FWLabelWrapper+FWUIKit
 
-/**
- UILabel+FWUIKit
- */
-@interface UILabel (FWUIKit)
+@interface FWLabelWrapper (FWUIKit)
 
 /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fwTextAttributes;
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *textAttributes;
 
 /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
-@property (nonatomic, assign) CGFloat fwLineHeight;
+@property (nonatomic, assign) CGFloat lineHeight;
 
 /// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
-@property (nonatomic, assign) UIEdgeInsets fwContentInset;
+@property (nonatomic, assign) UIEdgeInsets contentInset;
 
 /// 纵向分布方式，默认居中
-@property (nonatomic, assign) UIControlContentVerticalAlignment fwVerticalAlignment;
-
-/// 快速创建标签
-+ (instancetype)fwLabelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
-
-/// 快速创建标签并指定文本
-+ (instancetype)fwLabelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
+@property (nonatomic, assign) UIControlContentVerticalAlignment verticalAlignment;
 
 /// 快速设置标签
-- (void)fwSetFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+- (void)setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
 
 /// 快速设置标签并指定文本
-- (void)fwSetFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
+- (void)setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
+
+@end
+
+@interface FWLabelClassWrapper (FWUIKit)
+
+/// 快速创建标签
+- (UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
+/// 快速创建标签并指定文本
+- (UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
 
 @end
 

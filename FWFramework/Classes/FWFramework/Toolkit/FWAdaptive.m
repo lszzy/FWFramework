@@ -229,7 +229,7 @@ static CGFloat fwStaticReferenceHeight = 812;
     
     if ([UIDevice.fw isLandscape]) { return 0; }
     if (![self isNotchedScreen]) { return 20; }
-    if ([[UIDevice fwDeviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
+    if ([[UIDevice.fw deviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
     if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice.fw deviceSize])) { return 47; }
     if ([self isScreenInch:FWScreenInch67]) { return 47; }
     return 44;
