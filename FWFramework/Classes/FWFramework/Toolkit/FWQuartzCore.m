@@ -45,7 +45,7 @@
 
 @end
 
-#pragma mark - CAAnimation+FWQuartzCore
+#pragma mark - FWAnimationWrapper+FWQuartzCore
 
 @interface FWInnerAnimationTarget : NSObject <CAAnimationDelegate>
 
@@ -69,42 +69,42 @@
 
 @end
 
-@implementation CAAnimation (FWQuartzCore)
+@implementation FWAnimationWrapper (FWQuartzCore)
 
-- (FWInnerAnimationTarget *)fwInnerAnimationTarget:(BOOL)lazyload
+- (FWInnerAnimationTarget *)innerAnimationTarget:(BOOL)lazyload
 {
-    FWInnerAnimationTarget *target = objc_getAssociatedObject(self, _cmd);
+    FWInnerAnimationTarget *target = objc_getAssociatedObject(self.base, _cmd);
     if (!target && lazyload) {
         target = [[FWInnerAnimationTarget alloc] init];
-        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
-- (void (^)(CAAnimation * _Nonnull))fwStartBlock
+- (void (^)(CAAnimation * _Nonnull))startBlock
 {
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    FWInnerAnimationTarget *target = [self innerAnimationTarget:NO];
     return target.startBlock;
 }
 
-- (void)setFwStartBlock:(void (^)(CAAnimation * _Nonnull))startBlock
+- (void)setStartBlock:(void (^)(CAAnimation * _Nonnull))startBlock
 {
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
+    FWInnerAnimationTarget *target = [self innerAnimationTarget:YES];
     target.startBlock = startBlock;
-    self.delegate = target;
+    self.base.delegate = target;
 }
 
-- (void (^)(CAAnimation * _Nonnull, BOOL))fwStopBlock
+- (void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
 {
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:NO];
+    FWInnerAnimationTarget *target = [self innerAnimationTarget:NO];
     return target.stopBlock;
 }
 
-- (void)setFwStopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
+- (void)setStopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
 {
-    FWInnerAnimationTarget *target = [self fwInnerAnimationTarget:YES];
+    FWInnerAnimationTarget *target = [self innerAnimationTarget:YES];
     target.stopBlock = stopBlock;
-    self.delegate = target;
+    self.base.delegate = target;
 }
 
 @end
