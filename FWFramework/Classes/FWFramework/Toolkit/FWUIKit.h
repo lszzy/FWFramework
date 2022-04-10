@@ -109,162 +109,145 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIButton+FWUIKit
+#pragma mark - FWButtonWrapper+FWUIKit
 
-/**
- UIButton+FWUIKit
- */
-@interface UIButton (FWUIKit)
+@interface FWButtonWrapper (FWUIKit)
 
 /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fwDisabledAlpha;
+@property (nonatomic, assign) CGFloat disabledAlpha;
 
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fwHighlightedAlpha;
-
-/// 快速创建文本按钮
-+ (instancetype)fwButtonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+@property (nonatomic, assign) CGFloat highlightedAlpha;
 
 /// 快速设置文本按钮
-- (void)fwSetTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+- (void)setTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
 
 /// 快速设置文本
-- (void)fwSetTitle:(nullable NSString *)title;
-
-/// 快速创建图片按钮
-+ (instancetype)fwButtonWithImage:(nullable UIImage *)image;
+- (void)setTitle:(nullable NSString *)title;
 
 /// 快速设置图片
-- (void)fwSetImage:(nullable UIImage *)image;
+- (void)setImage:(nullable UIImage *)image;
 
 /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
-- (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
+- (void)setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
 
 @end
 
-#pragma mark - UIScrollView+FWUIKit
+@interface FWButtonClassWrapper (FWUIKit)
 
-/**
- UIScrollView+FWUIKit
- */
-@interface UIScrollView (FWUIKit)
+/// 快速创建文本按钮
+- (UIButton *)buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+
+/// 快速创建图片按钮
+- (UIButton *)buttonWithImage:(nullable UIImage *)image;
+
+@end
+
+#pragma mark - FWScrollViewWrapper+FWUIKit
+
+@interface FWScrollViewWrapper (FWUIKit)
 
 /// 判断当前scrollView内容是否足够滚动
-@property (nonatomic, assign, readonly) BOOL fwCanScroll;
+@property (nonatomic, assign, readonly) BOOL canScroll;
 
 /// 判断当前的scrollView内容是否足够水平滚动
-@property (nonatomic, assign, readonly) BOOL fwCanScrollHorizontal;
+@property (nonatomic, assign, readonly) BOOL canScrollHorizontal;
 
 /// 判断当前的scrollView内容是否足够纵向滚动
-@property (nonatomic, assign, readonly) BOOL fwCanScrollVertical;
+@property (nonatomic, assign, readonly) BOOL canScrollVertical;
 
 /// 当前scrollView滚动到指定边
-- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
+- (void)scrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
 
 /// 是否已滚动到指定边
-- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge;
+- (BOOL)isScrollToEdge:(UIRectEdge)edge;
 
 /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge;
+- (CGPoint)contentOffsetOfEdge:(UIRectEdge)edge;
 
 /// 总页数，自动识别翻页方向
-@property (nonatomic, assign, readonly) NSInteger fwTotalPage;
+@property (nonatomic, assign, readonly) NSInteger totalPage;
 
 /// 当前页数，不支持动画，自动识别翻页方向
-@property (nonatomic, assign) NSInteger fwCurrentPage;
+@property (nonatomic, assign) NSInteger currentPage;
 
 /// 设置当前页数，支持动画，自动识别翻页方向
-- (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated;
+- (void)setCurrentPage:(NSInteger)page animated:(BOOL)animated;
 
 /// 是否是最后一页，自动识别翻页方向
-@property (nonatomic, assign, readonly) BOOL fwIsLastPage;
+@property (nonatomic, assign, readonly) BOOL isLastPage;
 
 @end
 
-#pragma mark - UIPageControl+FWUIKit
+#pragma mark - FWPageControlWrapper+FWUIKit
 
-/**
- UIPageControl+FWUIKit
- */
-@interface UIPageControl (FWUIKit)
+@interface FWPageControlWrapper (FWUIKit)
 
 /// 自定义圆点大小，默认{10, 10}
-@property (nonatomic, assign) CGSize fwPreferredSize;
+@property (nonatomic, assign) CGSize preferredSize;
 
 @end
 
-#pragma mark - UISlider+FWUIKit
+#pragma mark - FWSliderWrapper+FWUIKit
 
-/**
- UISlider+FWUIKit
- */
-@interface UISlider (FWUIKit)
+@interface FWSliderWrapper (FWUIKit)
 
 /// 中间圆球的大小，默认zero
-@property (nonatomic, assign) CGSize fwThumbSize;
+@property (nonatomic, assign) CGSize thumbSize;
 
 /// 中间圆球的颜色，默认nil
-@property (nonatomic, strong, nullable) UIColor *fwThumbColor;
+@property (nonatomic, strong, nullable) UIColor *thumbColor;
 
 @end
 
-#pragma mark - UISwitch+FWUIKit
+#pragma mark - FWSwitchWrapper+FWUIKit
 
-/**
- UISwitch+FWUIKit
- */
-@interface UISwitch (FWUIKit)
+@interface FWSwitchWrapper (FWUIKit)
 
 /// 自定义尺寸大小，默认{51,31}
-@property (nonatomic, assign) CGSize fwPreferredSize;
+@property (nonatomic, assign) CGSize preferredSize;
 
 @end
 
-#pragma mark - UITextField+FWUIKit
+#pragma mark - FWTextFieldWrapper+FWUIKit
 
-/**
- UITextField+FWUIKit
- */
-@interface UITextField (FWUIKit)
+@interface FWTextFieldWrapper (FWUIKit)
 
 /// 最大字数限制，0为无限制，二选一
-@property (nonatomic, assign) NSInteger fwMaxLength;
+@property (nonatomic, assign) NSInteger maxLength;
 
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-@property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
+@property (nonatomic, assign) NSInteger maxUnicodeLength;
 
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-- (void)fwTextLengthChanged;
+- (void)textLengthChanged;
 
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval;
+@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-@property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
+@property (nullable, nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
 
 @end
 
-#pragma mark - UITextView+FWUIKit
+#pragma mark - FWTextViewWrapper+FWUIKit
 
-/**
- UITextView+FWUIKit
- */
-@interface UITextView (FWUIKit)
+@interface FWTextViewWrapper (FWUIKit)
 
 /// 最大字数限制，0为无限制，二选一
-@property (nonatomic, assign) NSInteger fwMaxLength;
+@property (nonatomic, assign) NSInteger maxLength;
 
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-@property (nonatomic, assign) NSInteger fwMaxUnicodeLength;
+@property (nonatomic, assign) NSInteger maxUnicodeLength;
 
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-- (void)fwTextLengthChanged;
+- (void)textLengthChanged;
 
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval fwAutoCompleteInterval;
+@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-@property (nullable, nonatomic, copy) void (^fwAutoCompleteBlock)(NSString *text);
+@property (nullable, nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
 
 @end
 

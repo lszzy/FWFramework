@@ -145,16 +145,16 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         FWSwizzleClass(UIButton, @selector(setEnabled:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL enabled), FWSwizzleCode({
             FWSwizzleOriginal(enabled);
             
-            if (selfObject.fwDisabledAlpha > 0) {
-                selfObject.alpha = enabled ? 1 : selfObject.fwDisabledAlpha;
+            if (selfObject.fw.disabledAlpha > 0) {
+                selfObject.alpha = enabled ? 1 : selfObject.fw.disabledAlpha;
             }
         }));
         
         FWSwizzleClass(UIButton, @selector(setHighlighted:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL highlighted), FWSwizzleCode({
             FWSwizzleOriginal(highlighted);
             
-            if (selfObject.enabled && selfObject.fwHighlightedAlpha > 0) {
-                selfObject.alpha = highlighted ? selfObject.fwHighlightedAlpha : 1;
+            if (selfObject.enabled && selfObject.fw.highlightedAlpha > 0) {
+                selfObject.alpha = highlighted ? selfObject.fw.highlightedAlpha : 1;
             }
         }));
     });
@@ -620,89 +620,75 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
-#pragma mark - UIButton+FWUIKit
+#pragma mark - FWButtonWrapper+FWUIKit
 
-@implementation UIButton (FWUIKit)
+@implementation FWButtonWrapper (FWUIKit)
 
-- (CGFloat)fwDisabledAlpha
+- (CGFloat)disabledAlpha
 {
-    return [objc_getAssociatedObject(self, @selector(fwDisabledAlpha)) doubleValue];
+    return [objc_getAssociatedObject(self.base, @selector(disabledAlpha)) doubleValue];
 }
 
-- (void)setFwDisabledAlpha:(CGFloat)alpha
+- (void)setDisabledAlpha:(CGFloat)alpha
 {
-    objc_setAssociatedObject(self, @selector(fwDisabledAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(disabledAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (alpha > 0) {
-        self.alpha = self.isEnabled ? 1 : alpha;
+        self.base.alpha = self.base.isEnabled ? 1 : alpha;
     }
 }
 
-- (CGFloat)fwHighlightedAlpha
+- (CGFloat)highlightedAlpha
 {
-    return [objc_getAssociatedObject(self, @selector(fwHighlightedAlpha)) doubleValue];
+    return [objc_getAssociatedObject(self.base, @selector(highlightedAlpha)) doubleValue];
 }
 
-- (void)setFwHighlightedAlpha:(CGFloat)alpha
+- (void)setHighlightedAlpha:(CGFloat)alpha
 {
-    objc_setAssociatedObject(self, @selector(fwHighlightedAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(highlightedAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (self.enabled && alpha > 0) {
-        self.alpha = self.isHighlighted ? alpha : 1;
+    if (self.base.enabled && alpha > 0) {
+        self.base.alpha = self.base.isHighlighted ? alpha : 1;
     }
 }
 
-+ (instancetype)fwButtonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+- (void)setTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
 {
-    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
-    [button fwSetTitle:title font:font titleColor:titleColor];
-    return button;
+    if (title) [self.base setTitle:title forState:UIControlStateNormal];
+    if (font) self.base.titleLabel.font = font;
+    if (titleColor) [self.base setTitleColor:titleColor forState:UIControlStateNormal];
 }
 
-- (void)fwSetTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+- (void)setTitle:(NSString *)title
 {
-    if (title) [self setTitle:title forState:UIControlStateNormal];
-    if (font) self.titleLabel.font = font;
-    if (titleColor) [self setTitleColor:titleColor forState:UIControlStateNormal];
+    [self.base setTitle:title forState:UIControlStateNormal];
 }
 
-- (void)fwSetTitle:(NSString *)title
+- (void)setImage:(UIImage *)image
 {
-    [self setTitle:title forState:UIControlStateNormal];
+    [self.base setImage:image forState:UIControlStateNormal];
 }
 
-+ (instancetype)fwButtonWithImage:(UIImage *)image
+- (void)setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
 {
-    UIButton *button = [self buttonWithType:UIButtonTypeCustom];
-    [button setImage:image forState:UIControlStateNormal];
-    return button;
-}
-
-- (void)fwSetImage:(UIImage *)image
-{
-    [self setImage:image forState:UIControlStateNormal];
-}
-
-- (void)fwSetImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing
-{
-    CGSize imageSize = self.imageView.image.size;
-    CGSize labelSize = self.titleLabel.intrinsicContentSize;
+    CGSize imageSize = self.base.imageView.image.size;
+    CGSize labelSize = self.base.titleLabel.intrinsicContentSize;
     switch (edge) {
         case UIRectEdgeLeft:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, spacing);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, spacing, 0, 0);
+            self.base.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, spacing);
+            self.base.titleEdgeInsets = UIEdgeInsetsMake(0, spacing, 0, 0);
             break;
         case UIRectEdgeRight:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, labelSize.width + spacing, 0, -labelSize.width);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width - spacing, 0, imageSize.width);
+            self.base.imageEdgeInsets = UIEdgeInsetsMake(0, labelSize.width + spacing, 0, -labelSize.width);
+            self.base.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width - spacing, 0, imageSize.width);
             break;
         case UIRectEdgeTop:
-            self.imageEdgeInsets = UIEdgeInsetsMake(-labelSize.height - spacing, 0, 0, -labelSize.width);
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -imageSize.height - spacing, 0);
+            self.base.imageEdgeInsets = UIEdgeInsetsMake(-labelSize.height - spacing, 0, 0, -labelSize.width);
+            self.base.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -imageSize.height - spacing, 0);
             break;
         case UIRectEdgeBottom:
-            self.imageEdgeInsets = UIEdgeInsetsMake(0, 0, -labelSize.height - spacing, -labelSize.width);
-            self.titleEdgeInsets = UIEdgeInsetsMake(-imageSize.height - spacing, -imageSize.width, 0, 0);
+            self.base.imageEdgeInsets = UIEdgeInsetsMake(0, 0, -labelSize.height - spacing, -labelSize.width);
+            self.base.titleEdgeInsets = UIEdgeInsetsMake(-imageSize.height - spacing, -imageSize.width, 0, 0);
             break;
         default:
             break;
@@ -711,65 +697,83 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
-#pragma mark - UIScrollView+FWUIKit
+@implementation FWButtonClassWrapper (FWUIKit)
 
-@implementation UIScrollView (FWUIKit)
-
-- (BOOL)fwCanScroll
+- (UIButton *)buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
 {
-    return [self fwCanScrollVertical] || [self fwCanScrollHorizontal];
+    UIButton *button = [self.base buttonWithType:UIButtonTypeCustom];
+    [button.fw setTitle:title font:font titleColor:titleColor];
+    return button;
 }
 
-- (BOOL)fwCanScrollHorizontal
+- (UIButton *)buttonWithImage:(UIImage *)image
 {
-    if (self.bounds.size.width <= 0) return NO;
-    return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds);
+    UIButton *button = [self.base buttonWithType:UIButtonTypeCustom];
+    [button setImage:image forState:UIControlStateNormal];
+    return button;
 }
 
-- (BOOL)fwCanScrollVertical
+@end
+
+#pragma mark - FWScrollViewWrapper+FWUIKit
+
+@implementation FWScrollViewWrapper (FWUIKit)
+
+- (BOOL)canScroll
 {
-    if (self.bounds.size.height <= 0) return NO;
-    return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds);
+    return [self canScrollVertical] || [self canScrollHorizontal];
 }
 
-- (void)fwScrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
+- (BOOL)canScrollHorizontal
 {
-    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
-    [self setContentOffset:contentOffset animated:animated];
+    if (self.base.bounds.size.width <= 0) return NO;
+    return self.base.contentSize.width + self.base.adjustedContentInset.left + self.base.adjustedContentInset.right > CGRectGetWidth(self.base.bounds);
 }
 
-- (BOOL)fwIsScrollToEdge:(UIRectEdge)edge
+- (BOOL)canScrollVertical
 {
-    CGPoint contentOffset = [self fwContentOffsetOfEdge:edge];
+    if (self.base.bounds.size.height <= 0) return NO;
+    return self.base.contentSize.height + self.base.adjustedContentInset.top + self.base.adjustedContentInset.bottom > CGRectGetHeight(self.base.bounds);
+}
+
+- (void)scrollToEdge:(UIRectEdge)edge animated:(BOOL)animated
+{
+    CGPoint contentOffset = [self contentOffsetOfEdge:edge];
+    [self.base setContentOffset:contentOffset animated:animated];
+}
+
+- (BOOL)isScrollToEdge:(UIRectEdge)edge
+{
+    CGPoint contentOffset = [self contentOffsetOfEdge:edge];
     switch (edge) {
         case UIRectEdgeTop:
-            return self.contentOffset.y <= contentOffset.y;
+            return self.base.contentOffset.y <= contentOffset.y;
         case UIRectEdgeLeft:
-            return self.contentOffset.x <= contentOffset.x;
+            return self.base.contentOffset.x <= contentOffset.x;
         case UIRectEdgeBottom:
-            return self.contentOffset.y >= contentOffset.y;
+            return self.base.contentOffset.y >= contentOffset.y;
         case UIRectEdgeRight:
-            return self.contentOffset.x >= contentOffset.x;
+            return self.base.contentOffset.x >= contentOffset.x;
         default:
             return NO;
     }
 }
 
-- (CGPoint)fwContentOffsetOfEdge:(UIRectEdge)edge
+- (CGPoint)contentOffsetOfEdge:(UIRectEdge)edge
 {
-    CGPoint contentOffset = self.contentOffset;
+    CGPoint contentOffset = self.base.contentOffset;
     switch (edge) {
         case UIRectEdgeTop:
-            contentOffset.y = -self.adjustedContentInset.top;
+            contentOffset.y = -self.base.adjustedContentInset.top;
             break;
         case UIRectEdgeLeft:
-            contentOffset.x = -self.adjustedContentInset.left;
+            contentOffset.x = -self.base.adjustedContentInset.left;
             break;
         case UIRectEdgeBottom:
-            contentOffset.y = self.contentSize.height - self.bounds.size.height + self.adjustedContentInset.bottom;
+            contentOffset.y = self.base.contentSize.height - self.base.bounds.size.height + self.base.adjustedContentInset.bottom;
             break;
         case UIRectEdgeRight:
-            contentOffset.x = self.contentSize.width - self.bounds.size.width + self.adjustedContentInset.right;
+            contentOffset.x = self.base.contentSize.width - self.base.bounds.size.width + self.base.adjustedContentInset.right;
             break;
         default:
             break;
@@ -777,265 +781,275 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return contentOffset;
 }
 
-- (NSInteger)fwTotalPage
+- (NSInteger)totalPage
 {
-    if ([self fwCanScrollVertical]) {
-        return (NSInteger)ceil((self.contentSize.height / self.frame.size.height));
+    if ([self canScrollVertical]) {
+        return (NSInteger)ceil((self.base.contentSize.height / self.base.frame.size.height));
     } else {
-        return (NSInteger)ceil((self.contentSize.width / self.frame.size.width));
+        return (NSInteger)ceil((self.base.contentSize.width / self.base.frame.size.width));
     }
 }
 
-- (NSInteger)fwCurrentPage
+- (NSInteger)currentPage
 {
-    if ([self fwCanScrollVertical]) {
-        CGFloat pageHeight = self.frame.size.height;
-        return (NSInteger)floor((self.contentOffset.y - pageHeight / 2) / pageHeight) + 1;
+    if ([self canScrollVertical]) {
+        CGFloat pageHeight = self.base.frame.size.height;
+        return (NSInteger)floor((self.base.contentOffset.y - pageHeight / 2) / pageHeight) + 1;
     } else {
-        CGFloat pageWidth = self.frame.size.width;
-        return (NSInteger)floor((self.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        CGFloat pageWidth = self.base.frame.size.width;
+        return (NSInteger)floor((self.base.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     }
 }
 
-- (void)setFwCurrentPage:(NSInteger)page
+- (void)setCurrentPage:(NSInteger)page
 {
-    if ([self fwCanScrollVertical]) {
-        CGFloat offset = (self.frame.size.height * page);
-        self.contentOffset = CGPointMake(0.f, offset);
+    if ([self canScrollVertical]) {
+        CGFloat offset = (self.base.frame.size.height * page);
+        self.base.contentOffset = CGPointMake(0.f, offset);
     } else {
-        CGFloat offset = (self.frame.size.width * page);
-        self.contentOffset = CGPointMake(offset, 0.f);
+        CGFloat offset = (self.base.frame.size.width * page);
+        self.base.contentOffset = CGPointMake(offset, 0.f);
     }
 }
 
-- (void)fwSetCurrentPage:(NSInteger)page animated:(BOOL)animated
+- (void)setCurrentPage:(NSInteger)page animated:(BOOL)animated
 {
-    if ([self fwCanScrollVertical]) {
-        CGFloat offset = (self.frame.size.height * page);
-        [self setContentOffset:CGPointMake(0.f, offset) animated:animated];
+    if ([self canScrollVertical]) {
+        CGFloat offset = (self.base.frame.size.height * page);
+        [self.base setContentOffset:CGPointMake(0.f, offset) animated:animated];
     } else {
-        CGFloat offset = (self.frame.size.width * page);
-        [self setContentOffset:CGPointMake(offset, 0.f) animated:animated];
+        CGFloat offset = (self.base.frame.size.width * page);
+        [self.base setContentOffset:CGPointMake(offset, 0.f) animated:animated];
     }
 }
 
-- (BOOL)fwIsLastPage
+- (BOOL)isLastPage
 {
-    return (self.fwCurrentPage == (self.fwTotalPage - 1));
+    return (self.currentPage == (self.totalPage - 1));
 }
 
 @end
 
-#pragma mark - UIPageControl+FWUIKit
+#pragma mark - FWPageControlWrapper+FWUIKit
 
-@implementation UIPageControl (FWUIKit)
+@implementation FWPageControlWrapper (FWUIKit)
 
-- (CGSize)fwPreferredSize
+- (CGSize)preferredSize
 {
-    CGSize size = self.bounds.size;
+    CGSize size = self.base.bounds.size;
     if (size.height <= 0) {
-        size = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+        size = [self.base sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
         if (size.height <= 0) size = CGSizeMake(10, 10);
     }
     return size;
 }
 
-- (void)setFwPreferredSize:(CGSize)size
+- (void)setPreferredSize:(CGSize)size
 {
-    CGFloat height = [self fwPreferredSize].height;
+    CGFloat height = [self preferredSize].height;
     CGFloat scale = size.height / height;
-    self.transform = CGAffineTransformMakeScale(scale, scale);
+    self.base.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
 @end
 
-#pragma mark - UISlider+FWUIKit
+#pragma mark - FWSliderWrapper+FWUIKit
 
-@implementation UISlider (FWUIKit)
+@implementation FWSliderWrapper (FWUIKit)
 
-- (CGSize)fwThumbSize
+- (CGSize)thumbSize
 {
-    NSValue *value = objc_getAssociatedObject(self, @selector(fwThumbSize));
+    NSValue *value = objc_getAssociatedObject(self.base, @selector(thumbSize));
     return value ? [value CGSizeValue] : CGSizeZero;
 }
 
-- (void)setFwThumbSize:(CGSize)fwThumbSize
+- (void)setThumbSize:(CGSize)thumbSize
 {
-    objc_setAssociatedObject(self, @selector(fwThumbSize), [NSValue valueWithCGSize:fwThumbSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwUpdateThumbImage];
+    objc_setAssociatedObject(self.base, @selector(thumbSize), [NSValue valueWithCGSize:thumbSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateThumbImage];
 }
 
-- (UIColor *)fwThumbColor
+- (UIColor *)thumbColor
 {
-    return objc_getAssociatedObject(self, @selector(fwThumbColor));
+    return objc_getAssociatedObject(self.base, @selector(thumbColor));
 }
 
-- (void)setFwThumbColor:(UIColor *)fwThumbColor
+- (void)setThumbColor:(UIColor *)thumbColor
 {
-    objc_setAssociatedObject(self, @selector(fwThumbColor), fwThumbColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwUpdateThumbImage];
+    objc_setAssociatedObject(self.base, @selector(thumbColor), thumbColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateThumbImage];
 }
 
-- (void)fwUpdateThumbImage
+- (void)updateThumbImage
 {
-    CGSize thumbSize = self.fwThumbSize;
+    CGSize thumbSize = self.thumbSize;
     if (thumbSize.width <= 0 || thumbSize.height <= 0) return;
-    UIColor *thumbColor = self.fwThumbColor ?: (self.tintColor ?: [UIColor whiteColor]);
+    UIColor *thumbColor = self.thumbColor ?: (self.base.tintColor ?: [UIColor whiteColor]);
     UIImage *thumbImage = [UIImage.fw imageWithSize:thumbSize block:^(CGContextRef  _Nonnull context) {
         UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         CGContextSetFillColorWithColor(context, thumbColor.CGColor);
         [path fill];
     }];
     
-    [self setThumbImage:thumbImage forState:UIControlStateNormal];
-    [self setThumbImage:thumbImage forState:UIControlStateHighlighted];
+    [self.base setThumbImage:thumbImage forState:UIControlStateNormal];
+    [self.base setThumbImage:thumbImage forState:UIControlStateHighlighted];
 }
 
 @end
 
-#pragma mark - UISwitch+FWUIKit
+#pragma mark - FWSwitchWrapper+FWUIKit
 
-@implementation UISwitch (FWUIKit)
+@implementation FWSwitchWrapper (FWUIKit)
 
-- (CGSize)fwPreferredSize
+- (CGSize)preferredSize
 {
-    CGSize size = self.bounds.size;
+    CGSize size = self.base.bounds.size;
     if (size.height <= 0) {
-        size = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+        size = [self.base sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
         if (size.height <= 0) size = CGSizeMake(51, 31);
     }
     return size;
 }
 
-- (void)setFwPreferredSize:(CGSize)size
+- (void)setPreferredSize:(CGSize)size
 {
-    CGFloat height = [self fwPreferredSize].height;
+    CGFloat height = [self preferredSize].height;
     CGFloat scale = size.height / height;
-    self.transform = CGAffineTransformMakeScale(scale, scale);
+    self.base.transform = CGAffineTransformMakeScale(scale, scale);
 }
 
 @end
 
-#pragma mark - UITextField+FWUIKit
+#pragma mark - FWTextFieldWrapper+FWUIKit
 
-@implementation UITextField (FWUIKit)
+@interface UITextField (FWUIKit)
 
-- (NSInteger)fwMaxLength
+- (void)innerLengthAction;
+
+@end
+
+@implementation FWTextFieldWrapper (FWUIKit)
+
+- (NSInteger)maxLength
 {
-    return [objc_getAssociatedObject(self, @selector(fwMaxLength)) integerValue];
+    return [objc_getAssociatedObject(self.base, @selector(maxLength)) integerValue];
 }
 
-- (void)setFwMaxLength:(NSInteger)fwMaxLength
+- (void)setMaxLength:(NSInteger)maxLength
 {
-    objc_setAssociatedObject(self, @selector(fwMaxLength), @(fwMaxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(maxLength), @(maxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (NSInteger)fwMaxUnicodeLength
+- (NSInteger)maxUnicodeLength
 {
-    return [objc_getAssociatedObject(self, @selector(fwMaxUnicodeLength)) integerValue];
+    return [objc_getAssociatedObject(self.base, @selector(maxUnicodeLength)) integerValue];
 }
 
-- (void)setFwMaxUnicodeLength:(NSInteger)fwMaxUnicodeLength
+- (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
-    objc_setAssociatedObject(self, @selector(fwMaxUnicodeLength), @(fwMaxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(maxUnicodeLength), @(maxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (void)fwTextLengthChanged
+- (void)textLengthChanged
 {
-    if (self.fwMaxLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if (self.text.length > self.fwMaxLength) {
-                    // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                    NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                    self.text = [self.text substringToIndex:maxRange.location];
+    if (self.maxLength > 0) {
+        if (self.base.markedTextRange) {
+            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
+                if (self.base.text.length > self.maxLength) {
+                    // 获取maxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                    NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                    self.base.text = [self.base.text substringToIndex:maxRange.location];
                     // 此方法会导致末尾出现半个Emoji
-                    // self.text = [self.text substringToIndex:self.fwMaxLength];
+                    // self.base.text = [self.base.text substringToIndex:self.maxLength];
                 }
             }
         } else {
-            if (self.text.length > self.fwMaxLength) {
+            if (self.base.text.length > self.maxLength) {
                 // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                self.text = [self.text substringToIndex:maxRange.location];
+                NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                self.base.text = [self.base.text substringToIndex:maxRange.location];
                 // 此方法会导致末尾出现半个Emoji
-                // self.text = [self.text substringToIndex:self.fwMaxLength];
+                // self.base.text = [self.base.text substringToIndex:self.maxLength];
             }
         }
     }
     
-    if (self.fwMaxUnicodeLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
-                    self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
+    if (self.maxUnicodeLength > 0) {
+        if (self.base.markedTextRange) {
+            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
+                if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
+                    self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
-                self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
+            if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
+                self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
             }
         }
     }
 }
 
-- (NSTimeInterval)fwAutoCompleteInterval
+- (NSTimeInterval)autoCompleteInterval
 {
-    NSTimeInterval interval = [objc_getAssociatedObject(self, @selector(fwAutoCompleteInterval)) doubleValue];
+    NSTimeInterval interval = [objc_getAssociatedObject(self.base, @selector(autoCompleteInterval)) doubleValue];
     return interval > 0 ? interval : 1.0;
 }
 
-- (void)setFwAutoCompleteInterval:(NSTimeInterval)fwAutoCompleteInterval
+- (void)setAutoCompleteInterval:(NSTimeInterval)autoCompleteInterval
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteInterval), @(fwAutoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(autoCompleteInterval), @(autoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void (^)(NSString *))fwAutoCompleteBlock
+- (void (^)(NSString *))autoCompleteBlock
 {
-    return objc_getAssociatedObject(self, @selector(fwAutoCompleteBlock));
+    return objc_getAssociatedObject(self.base, @selector(autoCompleteBlock));
 }
 
-- (void)setFwAutoCompleteBlock:(void (^)(NSString *))fwAutoCompleteBlock
+- (void)setAutoCompleteBlock:(void (^)(NSString *))autoCompleteBlock
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteBlock), fwAutoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(autoCompleteBlock), autoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (NSTimeInterval)fwAutoCompleteTimestamp
+- (NSTimeInterval)autoCompleteTimestamp
 {
-    return [objc_getAssociatedObject(self, @selector(fwAutoCompleteTimestamp)) doubleValue];
+    return [objc_getAssociatedObject(self.base, @selector(autoCompleteTimestamp)) doubleValue];
 }
 
-- (void)setFwAutoCompleteTimestamp:(NSTimeInterval)fwAutoCompleteTimestamp
+- (void)setAutoCompleteTimestamp:(NSTimeInterval)autoCompleteTimestamp
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteTimestamp), @(fwAutoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(autoCompleteTimestamp), @(autoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwInnerLengthEvent
+- (void)innerLengthEvent
 {
-    id object = objc_getAssociatedObject(self, _cmd);
+    id object = objc_getAssociatedObject(self.base, _cmd);
     if (!object) {
-        [self addTarget:self action:@selector(fwInnerLengthAction) forControlEvents:UIControlEventEditingChanged];
-        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self.base addTarget:self.base action:@selector(innerLengthAction) forControlEvents:UIControlEventEditingChanged];
+        objc_setAssociatedObject(self.base, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
-- (void)fwInnerLengthAction
+@end
+
+@implementation UITextField (FWUIKit)
+
+- (void)innerLengthAction
 {
-    [self fwTextLengthChanged];
+    [self.fw textLengthChanged];
     
-    if (self.fwAutoCompleteBlock) {
-        self.fwAutoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
+    if (self.fw.autoCompleteBlock) {
+        self.fw.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
         NSString *inputText = self.text;
         if (inputText.fw.trimString.length < 1) {
-            self.fwAutoCompleteBlock(@"");
+            self.fw.autoCompleteBlock(@"");
         } else {
-            NSTimeInterval currentTimestamp = self.fwAutoCompleteTimestamp;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fwAutoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (currentTimestamp == self.fwAutoCompleteTimestamp) {
-                    self.fwAutoCompleteBlock(inputText);
+            NSTimeInterval currentTimestamp = self.fw.autoCompleteTimestamp;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fw.autoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (currentTimestamp == self.fw.autoCompleteTimestamp) {
+                    self.fw.autoCompleteBlock(inputText);
                 }
             });
         }
@@ -1044,126 +1058,136 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
-#pragma mark - UITextView+FWUIKit
+#pragma mark - FWTextViewWrapper+FWUIKit
 
-@implementation UITextView (FWUIKit)
+@interface UITextView (FWUIKit)
 
-- (NSInteger)fwMaxLength
+- (void)innerLengthAction;
+
+@end
+
+@implementation FWTextViewWrapper (FWUIKit)
+
+- (NSInteger)maxLength
 {
-    return [objc_getAssociatedObject(self, @selector(fwMaxLength)) integerValue];
+    return [objc_getAssociatedObject(self.base, @selector(maxLength)) integerValue];
 }
 
-- (void)setFwMaxLength:(NSInteger)fwMaxLength
+- (void)setMaxLength:(NSInteger)maxLength
 {
-    objc_setAssociatedObject(self, @selector(fwMaxLength), @(fwMaxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(maxLength), @(maxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (NSInteger)fwMaxUnicodeLength
+- (NSInteger)maxUnicodeLength
 {
-    return [objc_getAssociatedObject(self, @selector(fwMaxUnicodeLength)) integerValue];
+    return [objc_getAssociatedObject(self.base, @selector(maxUnicodeLength)) integerValue];
 }
 
-- (void)setFwMaxUnicodeLength:(NSInteger)fwMaxUnicodeLength
+- (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
-    objc_setAssociatedObject(self, @selector(fwMaxUnicodeLength), @(fwMaxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(maxUnicodeLength), @(maxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (void)fwTextLengthChanged
+- (void)textLengthChanged
 {
-    if (self.fwMaxLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if (self.text.length > self.fwMaxLength) {
+    if (self.maxLength > 0) {
+        if (self.base.markedTextRange) {
+            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
+                if (self.base.text.length > self.maxLength) {
                     // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                    NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                    self.text = [self.text substringToIndex:maxRange.location];
+                    NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                    self.base.text = [self.base.text substringToIndex:maxRange.location];
                     // 此方法会导致末尾出现半个Emoji
-                    // self.text = [self.text substringToIndex:self.fwMaxLength];
+                    // self.base.text = [self.base.text substringToIndex:self.maxLength];
                 }
             }
         } else {
-            if (self.text.length > self.fwMaxLength) {
+            if (self.base.text.length > self.maxLength) {
                 // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                NSRange maxRange = [self.text rangeOfComposedCharacterSequenceAtIndex:self.fwMaxLength];
-                self.text = [self.text substringToIndex:maxRange.location];
+                NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                self.base.text = [self.base.text substringToIndex:maxRange.location];
                 // 此方法会导致末尾出现半个Emoji
-                // self.text = [self.text substringToIndex:self.fwMaxLength];
+                // self.base.text = [self.base.text substringToIndex:self.maxLength];
             }
         }
     }
     
-    if (self.fwMaxUnicodeLength > 0) {
-        if (self.markedTextRange) {
-            if (![self positionFromPosition:self.markedTextRange.start offset:0]) {
-                if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
-                    self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
+    if (self.maxUnicodeLength > 0) {
+        if (self.base.markedTextRange) {
+            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
+                if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
+                    self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([self.text.fw unicodeLength] > self.fwMaxUnicodeLength) {
-                self.text = [self.text.fw unicodeSubstring:self.fwMaxUnicodeLength];
+            if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
+                self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
             }
         }
     }
 }
 
-- (NSTimeInterval)fwAutoCompleteInterval
+- (NSTimeInterval)autoCompleteInterval
 {
-    NSTimeInterval interval = [objc_getAssociatedObject(self, @selector(fwAutoCompleteInterval)) doubleValue];
+    NSTimeInterval interval = [objc_getAssociatedObject(self.base, @selector(autoCompleteInterval)) doubleValue];
     return interval > 0 ? interval : 1.0;
 }
 
-- (void)setFwAutoCompleteInterval:(NSTimeInterval)fwAutoCompleteInterval
+- (void)setAutoCompleteInterval:(NSTimeInterval)autoCompleteInterval
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteInterval), @(fwAutoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(autoCompleteInterval), @(autoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void (^)(NSString *))fwAutoCompleteBlock
+- (void (^)(NSString *))autoCompleteBlock
 {
-    return objc_getAssociatedObject(self, @selector(fwAutoCompleteBlock));
+    return objc_getAssociatedObject(self.base, @selector(autoCompleteBlock));
 }
 
-- (void)setFwAutoCompleteBlock:(void (^)(NSString *))fwAutoCompleteBlock
+- (void)setAutoCompleteBlock:(void (^)(NSString *))autoCompleteBlock
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteBlock), fwAutoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fwInnerLengthEvent];
+    objc_setAssociatedObject(self.base, @selector(autoCompleteBlock), autoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self innerLengthEvent];
 }
 
-- (NSTimeInterval)fwAutoCompleteTimestamp
+- (NSTimeInterval)autoCompleteTimestamp
 {
-    return [objc_getAssociatedObject(self, @selector(fwAutoCompleteTimestamp)) doubleValue];
+    return [objc_getAssociatedObject(self.base, @selector(autoCompleteTimestamp)) doubleValue];
 }
 
-- (void)setFwAutoCompleteTimestamp:(NSTimeInterval)fwAutoCompleteTimestamp
+- (void)setAutoCompleteTimestamp:(NSTimeInterval)autoCompleteTimestamp
 {
-    objc_setAssociatedObject(self, @selector(fwAutoCompleteTimestamp), @(fwAutoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(autoCompleteTimestamp), @(autoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwInnerLengthEvent
+- (void)innerLengthEvent
 {
-    id object = objc_getAssociatedObject(self, _cmd);
+    id object = objc_getAssociatedObject(self.base, _cmd);
     if (!object) {
-        [self.fw observeNotification:UITextViewTextDidChangeNotification object:self target:self action:@selector(fwInnerLengthAction)];
-        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:self.base action:@selector(innerLengthAction)];
+        objc_setAssociatedObject(self.base, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
-- (void)fwInnerLengthAction
+@end
+
+@implementation UITextView (FWUIKit)
+
+- (void)innerLengthAction
 {
-    [self fwTextLengthChanged];
+    [self.fw textLengthChanged];
     
-    if (self.fwAutoCompleteBlock) {
-        self.fwAutoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
+    if (self.fw.autoCompleteBlock) {
+        self.fw.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
         NSString *inputText = self.text;
         if (inputText.fw.trimString.length < 1) {
-            self.fwAutoCompleteBlock(@"");
+            self.fw.autoCompleteBlock(@"");
         } else {
-            NSTimeInterval currentTimestamp = self.fwAutoCompleteTimestamp;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fwAutoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (currentTimestamp == self.fwAutoCompleteTimestamp) {
-                    self.fwAutoCompleteBlock(inputText);
+            NSTimeInterval currentTimestamp = self.fw.autoCompleteTimestamp;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fw.autoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (currentTimestamp == self.fw.autoCompleteTimestamp) {
+                    self.fw.autoCompleteBlock(inputText);
                 }
             });
         }
