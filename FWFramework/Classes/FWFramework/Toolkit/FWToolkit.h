@@ -148,7 +148,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速创建系统字体，字重可选，默认Regular
 #define FWFontSize( size, ... ) \
-    [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+    [UIFont.fw fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建Thin字体
 FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size);
