@@ -35,11 +35,11 @@ private extension AppDelegate {
         let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
         
         let navController = UINavigationController(rootViewController: viewController)
-        navController.navigationBar.fwIsTranslucent = false
-        navController.navigationBar.fwShadowColor = nil
-        navController.navigationBar.fwForegroundColor = UIColor.fwThemeLight(.black, dark: .white)
-        navController.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
-        navController.navigationBar.fwBackImage = UIImage(named: "navBack")
+        navController.navigationBar.fw.isTranslucent = false
+        navController.navigationBar.fw.shadowColor = nil
+        navController.navigationBar.fw.foregroundColor = UIColor.fw.themeLight(.black, dark: .white)
+        navController.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
+        navController.navigationBar.fw.backImage = UIImage(named: "navBack")
         return navController
     }
     

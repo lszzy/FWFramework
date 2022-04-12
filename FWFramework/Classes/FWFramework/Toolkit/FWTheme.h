@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,149 +76,157 @@ extern NSNotificationName const FWThemeChangedNotification;
 
 @end
 
-#pragma mark - UIColor+FWTheme
+#pragma mark - FWColorWrapper+FWTheme
 
-/**
- UIColor主题分类
- */
-@interface UIColor (FWTheme)
-
-/// 动态创建主题色，分别指定浅色和深色
-+ (UIColor *)fwThemeLight:(UIColor *)light dark:(UIColor *)dark;
-
-/// 动态创建主题色，指定提供句柄
-+ (UIColor *)fwThemeColor:(UIColor * (^)(FWThemeStyle style))provider;
-
-/// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
-+ (UIColor *)fwThemeNamed:(NSString *)name;
-
-/// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
-+ (UIColor *)fwThemeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
-
-/// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-+ (void)fwSetThemeColor:(nullable UIColor *)color forName:(NSString *)name;
-
-/// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-+ (void)fwSetThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
+@interface FWColorWrapper (FWTheme)
 
 /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
-@property (nonatomic, readonly) UIColor *fwColor;
+@property (nonatomic, readonly) UIColor *color;
 
 /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
-- (UIColor *)fwColorForStyle:(FWThemeStyle)style;
+- (UIColor *)colorForStyle:(FWThemeStyle)style;
 
 /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
-@property (nonatomic, assign, readonly) BOOL fwIsThemeColor;
+@property (nonatomic, assign, readonly) BOOL isThemeColor;
 
 @end
 
-#pragma mark - UIImage+FWTheme
+@interface FWColorClassWrapper (FWTheme)
+
+/// 动态创建主题色，分别指定浅色和深色
+- (UIColor *)themeLight:(UIColor *)light dark:(UIColor *)dark;
+
+/// 动态创建主题色，指定提供句柄
+- (UIColor *)themeColor:(UIColor * (^)(FWThemeStyle style))provider;
+
+/// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
+- (UIColor *)themeNamed:(NSString *)name;
+
+/// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
+- (UIColor *)themeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
+
+/// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
+- (void)setThemeColor:(nullable UIColor *)color forName:(NSString *)name;
+
+/// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
+- (void)setThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors;
+
+@end
+
+#pragma mark - FWImageWrapper+FWTheme
 
 /**
  UIImage主题分类
  @note 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
  为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
  */
-@interface UIImage (FWTheme)
-
-/// 创建主题模拟动态图像，分别指定浅色和深色，不支持动态切换，需重新赋值才会变化
-+ (UIImage *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
-
-/// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
-+ (UIImage *)fwThemeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
-
-/// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
-+ (UIImage *)fwThemeNamed:(NSString *)name;
-
-/// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
-+ (UIImage *)fwThemeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
-
-/// 手工单个注册主题图像，未配置主题图像时可使用本方式
-+ (void)fwSetThemeImage:(nullable UIImage *)image forName:(NSString *)name;
-
-/// 手工批量注册主题图像，未配置主题图像时可使用本方式
-+ (void)fwSetThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
+@interface FWImageWrapper (FWTheme)
 
 /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
-@property (nullable, nonatomic, readonly) UIImage *fwImage;
+@property (nullable, nonatomic, readonly) UIImage *image;
 
 /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
-- (nullable UIImage *)fwImageForStyle:(FWThemeStyle)style;
+- (nullable UIImage *)imageForStyle:(FWThemeStyle)style;
 
 /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
-@property (nonatomic, assign, readonly) BOOL fwIsThemeImage;
+@property (nonatomic, assign, readonly) BOOL isThemeImage;
+
+#pragma mark - Color
+
+/// 快速生成当前图片对应的默认主题图片
+@property (nonatomic, strong, readonly) UIImage *themeImage;
+
+/// 指定主题颜色，快速生成当前图片对应的主题图片
+- (UIImage *)themeImageWithColor:(UIColor *)themeColor;
+
+@end
+
+@interface FWImageClassWrapper (FWTheme)
+
+/// 创建主题模拟动态图像，分别指定浅色和深色，不支持动态切换，需重新赋值才会变化
+- (UIImage *)themeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
+
+/// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
+- (UIImage *)themeImage:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
+
+/// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
+- (UIImage *)themeNamed:(NSString *)name;
+
+/// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
+- (UIImage *)themeNamed:(NSString *)name bundle:(nullable NSBundle *)bundle;
+
+/// 手工单个注册主题图像，未配置主题图像时可使用本方式
+- (void)setThemeImage:(nullable UIImage *)image forName:(NSString *)name;
+
+/// 手工批量注册主题图像，未配置主题图像时可使用本方式
+- (void)setThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages;
 
 #pragma mark - Color
 
 /// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
-@property (class, nonatomic, strong) UIColor *fwThemeImageColor;
-
-/// 快速生成当前图片对应的默认主题图片
-@property (nonatomic, strong, readonly) UIImage *fwThemeImage;
-
-/// 指定主题颜色，快速生成当前图片对应的主题图片
-- (UIImage *)fwThemeImageWithColor:(UIColor *)themeColor;
+@property (nonatomic, strong) UIColor *themeImageColor;
 
 @end
 
-#pragma mark - UIImageAsset+FWTheme
+#pragma mark - FWImageAssetWrapper+FWTheme
 
-/**
- UIImageAsset主题分类
- */
-@interface UIImageAsset (FWTheme)
-
-/// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
-+ (UIImageAsset *)fwThemeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
-
-/// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
-+ (UIImageAsset *)fwThemeAsset:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
+@interface FWImageAssetWrapper (FWTheme)
 
 /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
-@property (nullable, nonatomic, readonly) UIImage *fwImage;
+@property (nullable, nonatomic, readonly) UIImage *image;
 
 /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
-- (nullable UIImage *)fwImageForStyle:(FWThemeStyle)style;
+- (nullable UIImage *)imageForStyle:(FWThemeStyle)style;
 
 /// 是否是主题图片资源，仅支持判断使用fwTheme创建的图片资源
-@property (nonatomic, assign, readonly) BOOL fwIsThemeAsset;
+@property (nonatomic, assign, readonly) BOOL isThemeAsset;
 
 @end
 
-#pragma mark - NSObject+FWTheme
+@interface FWImageAssetClassWrapper (FWTheme)
+
+/// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
+- (UIImageAsset *)themeLight:(nullable UIImage *)light dark:(nullable UIImage *)dark;
+
+/// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
+- (UIImageAsset *)themeAsset:(UIImage * _Nullable (^)(FWThemeStyle style))provider;
+
+@end
+
+#pragma mark - FWObjectWrapper+FWTheme
 
 /**
  iOS13主题订阅NSObject分类，可参考UIImageView.fwThemeImage方式进行扩展
  */
-@interface NSObject (FWTheme)
+@interface FWObjectWrapper (FWTheme)
 
 /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
-@property (nullable, nonatomic, weak) id<UITraitEnvironment> fwThemeContext;
+@property (nullable, nonatomic, weak) id<UITraitEnvironment> themeContext;
 
 /// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
-- (nullable NSString *)fwAddThemeListener:(void (^)(FWThemeStyle style))listener;
+- (nullable NSString *)addThemeListener:(void (^)(FWThemeStyle style))listener;
 
 /// iOS13根据订阅唯一标志移除主题通知回调
-- (void)fwRemoveThemeListener:(nullable NSString *)identifier;
+- (void)removeThemeListener:(nullable NSString *)identifier;
 
 /// iOS13移除所有主题通知回调，一般用于cell重用
-- (void)fwRemoveAllThemeListeners;
+- (void)removeAllThemeListeners;
 
 /// iOS13主题改变回调钩子，如果父类有重写，记得调用super，需订阅后才生效
-- (void)fwThemeChanged:(FWThemeStyle)style;
+- (void)themeChanged:(FWThemeStyle)style;
 
 @end
 
 /**
  iOS13主题订阅UIImageView分类
 */
-@interface UIImageView (FWTheme)
+@interface FWImageViewWrapper (FWTheme)
 
 /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
-@property (nullable, nonatomic, strong) UIImage *fwThemeImage;
+@property (nullable, nonatomic, strong) UIImage *themeImage;
 
 /// 设置主题图片资源，自动跟随系统改变，清空时需置为nil，二选一
-@property (nullable, nonatomic, strong) UIImageAsset *fwThemeAsset;
+@property (nullable, nonatomic, strong) UIImageAsset *themeAsset;
 
 @end
 

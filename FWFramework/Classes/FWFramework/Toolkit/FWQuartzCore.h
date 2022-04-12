@@ -58,30 +58,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - CALayer+FWQuartzCore
+#pragma mark - FWLayerWrapper+FWQuartzCore
 
-@interface CALayer (FWQuartzCore)
+@interface FWLayerWrapper (FWQuartzCore)
 
 /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBackgroundColor;
+@property (nullable, nonatomic, strong) UIColor *themeBackgroundColor;
 
 /// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeBorderColor;
+@property (nullable, nonatomic, strong) UIColor *themeBorderColor;
 
 /// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIColor *fwThemeShadowColor;
+@property (nullable, nonatomic, strong) UIColor *themeShadowColor;
 
 /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, strong) UIImage *fwThemeContents;
+@property (nullable, nonatomic, strong) UIImage *themeContents;
 
 @end
 
-#pragma mark - CAGradientLayer+FWQuartzCore
+#pragma mark - FWGradientLayerWrapper+FWQuartzCore
 
-@interface CAGradientLayer (FWQuartzCore)
+@interface FWGradientLayerWrapper (FWQuartzCore)
 
 /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
-@property (nullable, nonatomic, copy) NSArray<UIColor *> *fwThemeColors;
+@property (nullable, nonatomic, copy) NSArray<UIColor *> *themeColors;
 
 @end
 

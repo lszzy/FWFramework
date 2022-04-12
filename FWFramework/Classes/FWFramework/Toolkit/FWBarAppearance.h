@@ -8,124 +8,125 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UINavigationBar+FWBarAppearance
+#pragma mark - FWNavigationBarWrapper+FWBarAppearance
 
 /**
  导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
-@interface UINavigationBar (FWBarAppearance)
+@interface FWNavigationBarWrapper (FWBarAppearance)
 
 /// 导航栏iOS13+样式对象，用于自定义样式，默认透明
-@property (nonatomic, strong, readonly) UINavigationBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+@property (nonatomic, strong, readonly) UINavigationBarAppearance *appearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新导航栏样式
-- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+- (void)updateAppearance API_AVAILABLE(ios(13.0));
 
 /// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-@property (nonatomic, assign) BOOL fwIsTranslucent;
+@property (nonatomic, assign) BOOL isTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
-@property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
+@property (nonatomic, strong, nullable) UIColor *foregroundColor;
 
 /// 单独设置标题颜色，nil时显示前景颜色
-@property (nonatomic, strong, nullable) UIColor *fwTitleColor;
+@property (nonatomic, strong, nullable) UIColor *titleColor;
 
 /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *backgroundColor;
 
 /// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+@property (nonatomic, strong, nullable) UIImage *backgroundImage;
 
 /// 设置背景是否全透明，默认NO，后设置生效
-@property (nonatomic, assign) BOOL fwBackgroundTransparent;
+@property (nonatomic, assign) BOOL backgroundTransparent;
 
 /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwShadowColor;
+@property (nonatomic, strong, nullable) UIColor *shadowColor;
 
 /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwShadowImage;
+@property (nonatomic, strong, nullable) UIImage *shadowImage;
 
 /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
-@property (nonatomic, strong, nullable) UIImage *fwBackImage;
+@property (nonatomic, strong, nullable) UIImage *backImage;
 
 @end
 
-#pragma mark - UITabBar+FWBarAppearance
+#pragma mark - FWTabBarWrapper+FWBarAppearance
 
 /**
  标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
-@interface UITabBar (FWBarAppearance)
+@interface FWTabBarWrapper (FWBarAppearance)
 
 /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
-@property (nonatomic, strong, readonly) UITabBarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+@property (nonatomic, strong, readonly) UITabBarAppearance *appearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新标签栏样式
-- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+- (void)updateAppearance API_AVAILABLE(ios(13.0));
 
 /// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-@property (nonatomic, assign) BOOL fwIsTranslucent;
+@property (nonatomic, assign) BOOL isTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
-@property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
+@property (nonatomic, strong, nullable) UIColor *foregroundColor;
 
 /// 设置背景颜色，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *backgroundColor;
 
 /// 设置背景图片，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+@property (nonatomic, strong, nullable) UIImage *backgroundImage;
 
 /// 设置背景是否全透明，默认NO，后设置生效
-@property (nonatomic, assign) BOOL fwBackgroundTransparent;
+@property (nonatomic, assign) BOOL backgroundTransparent;
 
 /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwShadowColor;
+@property (nonatomic, strong, nullable) UIColor *shadowColor;
 
 /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwShadowImage;
+@property (nonatomic, strong, nullable) UIImage *shadowImage;
 
 @end
 
-#pragma mark - UIToolbar+FWBarAppearance
+#pragma mark - FWToolbarWrapper+FWBarAppearance
 
 /**
  工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  @note 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
  */
-@interface UIToolbar (FWBarAppearance)
+@interface FWToolbarWrapper (FWBarAppearance)
 
 /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
-@property (nonatomic, strong, readonly) UIToolbarAppearance *fwAppearance API_AVAILABLE(ios(13.0));
+@property (nonatomic, strong, readonly) UIToolbarAppearance *appearance API_AVAILABLE(ios(13.0));
 
 /// 手工更新工具栏样式
-- (void)fwUpdateAppearance API_AVAILABLE(ios(13.0));
+- (void)updateAppearance API_AVAILABLE(ios(13.0));
 
 /// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-@property (nonatomic, assign) BOOL fwIsTranslucent;
+@property (nonatomic, assign) BOOL isTranslucent;
 
 /// 设置前景颜色，包含文字和按钮等
-@property (nonatomic, strong, nullable) UIColor *fwForegroundColor;
+@property (nonatomic, strong, nullable) UIColor *foregroundColor;
 
 /// 设置背景颜色，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *backgroundColor;
 
 /// 设置背景图片，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwBackgroundImage;
+@property (nonatomic, strong, nullable) UIImage *backgroundImage;
 
 /// 设置背景是否全透明，默认NO，后设置生效
-@property (nonatomic, assign) BOOL fwBackgroundTransparent;
+@property (nonatomic, assign) BOOL backgroundTransparent;
 
 /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-@property (nonatomic, strong, nullable) UIColor *fwShadowColor;
+@property (nonatomic, strong, nullable) UIColor *shadowColor;
 
 /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-@property (nonatomic, strong, nullable) UIImage *fwShadowImage;
+@property (nonatomic, strong, nullable) UIImage *shadowImage;
 
 /// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
-@property (nonatomic, assign) UIBarPosition fwBarPosition;
+@property (nonatomic, assign) UIBarPosition barPosition;
 
 @end
 
