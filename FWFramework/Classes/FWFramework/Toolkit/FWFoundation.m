@@ -115,11 +115,11 @@
 
 @implementation FWDataWrapper (FWFoundation)
 
-- (id)unarchiveObject
+- (id)unarchiveObject:(Class)clazz
 {
     id object = nil;
     @try {
-        object = [NSKeyedUnarchiver unarchiveObjectWithData:self.base];
+        object = [NSKeyedUnarchiver unarchivedObjectOfClass:clazz fromData:self.base error:NULL];
     } @catch (NSException *exception) { }
     return object;
 }
@@ -134,25 +134,23 @@
 {
     NSData *data = nil;
     @try {
-        data = [NSKeyedArchiver archivedDataWithRootObject:object];
+        data = [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:YES error:NULL];
     } @catch (NSException *exception) { }
     return data;
 }
 
-- (void)archiveObject:(id)object toFile:(NSString *)path
+- (BOOL)archiveObject:(id)object toFile:(NSString *)path
 {
-    @try {
-        [NSKeyedArchiver archiveRootObject:object toFile:path];
-    } @catch (NSException *exception) { }
+    NSData *data = [self archiveObject:object];
+    if (!data) return NO;
+    return [data writeToFile:path atomically:YES];
 }
 
-- (id)unarchiveObjectWithFile:(NSString *)path
+- (id)unarchiveObject:(Class)clazz withFile:(NSString *)path
 {
-    id object = nil;
-    @try {
-        object = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    } @catch (NSException *exception) { }
-    return object;
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    if (!data) return nil;
+    return [data.fw unarchiveObject:clazz];
 }
 
 @end

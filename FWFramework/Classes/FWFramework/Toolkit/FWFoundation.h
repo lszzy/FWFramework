@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWDataWrapper (FWFoundation)
 
 /// 使用NSKeyedUnarchiver解压数据
-- (nullable id)unarchiveObject;
+- (nullable id)unarchiveObject:(Class)clazz;
 
 @end
 
@@ -73,10 +73,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSData *)archiveObject:(id)object;
 
 /// 保存对象归档
-- (void)archiveObject:(id)object toFile:(NSString *)path;
+- (BOOL)archiveObject:(id)object toFile:(NSString *)path;
 
 /// 读取对象归档
-- (nullable id)unarchiveObjectWithFile:(NSString *)path;
+- (nullable id)unarchiveObject:(Class)clazz withFile:(NSString *)path;
 
 @end
 
@@ -88,10 +88,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *stringValue;
 
 /// 转化为字符串，默认当前时区，自定义格式
-- (NSString *)stringWithFormat:(nullable NSString *)format;
+- (NSString *)stringWithFormat:(NSString *)format;
 
 /// 转化为字符串，自定义格式和时区
-- (NSString *)stringWithFormat:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
+- (NSString *)stringWithFormat:(NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 @end
 
@@ -106,10 +106,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSDate *)dateWithString:(NSString *)string;
 
 /// 从字符串初始化日期，默认当前时区，自定义格式
-- (nullable NSDate *)dateWithString:(NSString *)string format:(nullable NSString *)format;
+- (nullable NSDate *)dateWithString:(NSString *)string format:(NSString *)format;
 
 /// 从字符串初始化日期，自定义格式和时区
-- (nullable NSDate *)dateWithString:(NSString *)string format:(nullable NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
+- (nullable NSDate *)dateWithString:(NSString *)string format:(NSString *)format timeZone:(nullable NSTimeZone *)timeZone;
 
 /// 格式化时长，格式"00:00"或"00:00:00"
 - (NSString *)formatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour;
