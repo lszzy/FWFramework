@@ -135,14 +135,14 @@ private extension HomeController {
     func renderStyle() {
         switch style {
         case 0:
-            navigationController?.navigationBar.fwIsTranslucent = false
-            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
+            navigationController?.navigationBar.fw.isTranslucent = false
+            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
         case 1:
-            navigationController?.navigationBar.fwIsTranslucent = true
-            navigationController?.navigationBar.fwBackgroundColor = UIColor.fwThemeLight(.fw.color(withHex: 0xFAFAFA, alpha: 0.5), dark: .fw.color(withHex: 0x121212, alpha: 0.5))
+            navigationController?.navigationBar.fw.isTranslucent = true
+            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA, alpha: 0.5), dark: .fw.color(withHex: 0x121212, alpha: 0.5))
         default:
-            navigationController?.navigationBar.fwIsTranslucent = false
-            navigationController?.navigationBar.fwBackgroundTransparent = true
+            navigationController?.navigationBar.fw.isTranslucent = false
+            navigationController?.navigationBar.fw.backgroundTransparent = true
         }
     }
     
