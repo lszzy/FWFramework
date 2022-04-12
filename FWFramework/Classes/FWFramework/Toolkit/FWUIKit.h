@@ -102,10 +102,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWLabelClassWrapper (FWUIKit)
 
 /// 快速创建标签
-- (UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+- (__kindof UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
 
 /// 快速创建标签并指定文本
-- (UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
+- (__kindof UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
 
 @end
 
@@ -136,10 +136,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWButtonClassWrapper (FWUIKit)
 
 /// 快速创建文本按钮
-- (UIButton *)buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+- (__kindof UIButton *)buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
 
 /// 快速创建图片按钮
-- (UIButton *)buttonWithImage:(nullable UIImage *)image;
+- (__kindof UIButton *)buttonWithImage:(nullable UIImage *)image;
 
 @end
 
