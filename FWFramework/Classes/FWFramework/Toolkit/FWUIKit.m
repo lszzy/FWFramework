@@ -536,12 +536,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation FWLabelClassWrapper (FWUIKit)
 
-- (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor
+- (__kindof UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor
 {
     return [self labelWithFont:font textColor:textColor text:nil];
 }
 
-- (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
+- (__kindof UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
 {
     UILabel *label = [[self.base alloc] init];
     [label.fw setFont:font textColor:textColor text:text];
@@ -699,14 +699,14 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation FWButtonClassWrapper (FWUIKit)
 
-- (UIButton *)buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+- (__kindof UIButton *)buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
 {
     UIButton *button = [self.base buttonWithType:UIButtonTypeCustom];
     [button.fw setTitle:title font:font titleColor:titleColor];
     return button;
 }
 
-- (UIButton *)buttonWithImage:(UIImage *)image
+- (__kindof UIButton *)buttonWithImage:(UIImage *)image
 {
     UIButton *button = [self.base buttonWithType:UIButtonTypeCustom];
     [button setImage:image forState:UIControlStateNormal];
@@ -922,9 +922,98 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 #pragma mark - FWTextFieldWrapper+FWUIKit
 
-@interface UITextField (FWUIKit)
+@interface FWInnerInputTarget : NSObject
 
-- (void)innerLengthAction;
+@property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
+@property (nonatomic, weak, readonly) UITextField *textField;
+@property (nonatomic, assign) NSInteger maxLength;
+@property (nonatomic, assign) NSInteger maxUnicodeLength;
+@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
+@property (nonatomic, assign) NSTimeInterval autoCompleteTimestamp;
+@property (nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
+
+@end
+
+@implementation FWInnerInputTarget
+
+- (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput
+{
+    self = [super init];
+    if (self) {
+        _textInput = textInput;
+        _autoCompleteInterval = 1.0;
+    }
+    return self;
+}
+
+- (UITextField *)textField
+{
+    return (UITextField *)self.textInput;
+}
+
+- (void)setAutoCompleteInterval:(NSTimeInterval)interval
+{
+    _autoCompleteInterval = interval > 0 ? interval : 1.0;
+}
+
+- (void)textLengthChanged
+{
+    if (self.maxLength > 0) {
+        if (self.textInput.markedTextRange) {
+            if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
+                if (self.textField.text.length > self.maxLength) {
+                    // 获取maxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                    NSRange maxRange = [self.textField.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                    self.textField.text = [self.textField.text substringToIndex:maxRange.location];
+                    // 此方法会导致末尾出现半个Emoji
+                    // self.textField.text = [self.textField.text substringToIndex:self.maxLength];
+                }
+            }
+        } else {
+            if (self.textField.text.length > self.maxLength) {
+                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                NSRange maxRange = [self.textField.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                self.textField.text = [self.textField.text substringToIndex:maxRange.location];
+                // 此方法会导致末尾出现半个Emoji
+                // self.textField.text = [self.textField.text substringToIndex:self.maxLength];
+            }
+        }
+    }
+    
+    if (self.maxUnicodeLength > 0) {
+        if (self.textInput.markedTextRange) {
+            if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
+                if ([self.textField.text.fw unicodeLength] > self.maxUnicodeLength) {
+                    self.textField.text = [self.textField.text.fw unicodeSubstring:self.maxUnicodeLength];
+                }
+            }
+        } else {
+            if ([self.textField.text.fw unicodeLength] > self.maxUnicodeLength) {
+                self.textField.text = [self.textField.text.fw unicodeSubstring:self.maxUnicodeLength];
+            }
+        }
+    }
+}
+
+- (void)textChangedAction
+{
+    [self textLengthChanged];
+    
+    if (self.autoCompleteBlock) {
+        self.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
+        NSString *inputText = self.textField.text;
+        if (inputText.fw.trimString.length < 1) {
+            self.autoCompleteBlock(@"");
+        } else {
+            NSTimeInterval currentTimestamp = self.autoCompleteTimestamp;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.autoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (currentTimestamp == self.autoCompleteTimestamp) {
+                    self.autoCompleteBlock(inputText);
+                }
+            });
+        }
+    }
+}
 
 @end
 
@@ -932,266 +1021,120 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (NSInteger)maxLength
 {
-    return [objc_getAssociatedObject(self.base, @selector(maxLength)) integerValue];
+    return [self innerInputTarget:NO].maxLength;
 }
 
 - (void)setMaxLength:(NSInteger)maxLength
 {
-    objc_setAssociatedObject(self.base, @selector(maxLength), @(maxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].maxLength = maxLength;
 }
 
 - (NSInteger)maxUnicodeLength
 {
-    return [objc_getAssociatedObject(self.base, @selector(maxUnicodeLength)) integerValue];
+    return [self innerInputTarget:NO].maxUnicodeLength;
 }
 
 - (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
-    objc_setAssociatedObject(self.base, @selector(maxUnicodeLength), @(maxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].maxUnicodeLength = maxUnicodeLength;
 }
 
 - (void)textLengthChanged
 {
-    if (self.maxLength > 0) {
-        if (self.base.markedTextRange) {
-            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
-                if (self.base.text.length > self.maxLength) {
-                    // 获取maxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                    NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
-                    self.base.text = [self.base.text substringToIndex:maxRange.location];
-                    // 此方法会导致末尾出现半个Emoji
-                    // self.base.text = [self.base.text substringToIndex:self.maxLength];
-                }
-            }
-        } else {
-            if (self.base.text.length > self.maxLength) {
-                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
-                self.base.text = [self.base.text substringToIndex:maxRange.location];
-                // 此方法会导致末尾出现半个Emoji
-                // self.base.text = [self.base.text substringToIndex:self.maxLength];
-            }
-        }
-    }
-    
-    if (self.maxUnicodeLength > 0) {
-        if (self.base.markedTextRange) {
-            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
-                if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
-                    self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
-                }
-            }
-        } else {
-            if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
-                self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
-            }
-        }
-    }
+    [[self innerInputTarget:NO] textLengthChanged];
 }
 
 - (NSTimeInterval)autoCompleteInterval
 {
-    NSTimeInterval interval = [objc_getAssociatedObject(self.base, @selector(autoCompleteInterval)) doubleValue];
-    return interval > 0 ? interval : 1.0;
+    return [self innerInputTarget:NO].autoCompleteInterval;
 }
 
 - (void)setAutoCompleteInterval:(NSTimeInterval)autoCompleteInterval
 {
-    objc_setAssociatedObject(self.base, @selector(autoCompleteInterval), @(autoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerInputTarget:YES].autoCompleteInterval = autoCompleteInterval;
 }
 
 - (void (^)(NSString *))autoCompleteBlock
 {
-    return objc_getAssociatedObject(self.base, @selector(autoCompleteBlock));
+    return [self innerInputTarget:NO].autoCompleteBlock;
 }
 
 - (void)setAutoCompleteBlock:(void (^)(NSString *))autoCompleteBlock
 {
-    objc_setAssociatedObject(self.base, @selector(autoCompleteBlock), autoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].autoCompleteBlock = autoCompleteBlock;
 }
 
-- (NSTimeInterval)autoCompleteTimestamp
+- (FWInnerInputTarget *)innerInputTarget:(BOOL)lazyload
 {
-    return [objc_getAssociatedObject(self.base, @selector(autoCompleteTimestamp)) doubleValue];
-}
-
-- (void)setAutoCompleteTimestamp:(NSTimeInterval)autoCompleteTimestamp
-{
-    objc_setAssociatedObject(self.base, @selector(autoCompleteTimestamp), @(autoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)innerLengthEvent
-{
-    id object = objc_getAssociatedObject(self.base, _cmd);
-    if (!object) {
-        [self.base addTarget:self.base action:@selector(innerLengthAction) forControlEvents:UIControlEventEditingChanged];
-        objc_setAssociatedObject(self.base, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    FWInnerInputTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    if (!target && lazyload) {
+        target = [[FWInnerInputTarget alloc] initWithTextInput:self.base];
+        [self.base addTarget:target action:@selector(textChangedAction) forControlEvents:UIControlEventEditingChanged];
+        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-}
-
-@end
-
-@implementation UITextField (FWUIKit)
-
-- (void)innerLengthAction
-{
-    [self.fw textLengthChanged];
-    
-    if (self.fw.autoCompleteBlock) {
-        self.fw.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
-        NSString *inputText = self.text;
-        if (inputText.fw.trimString.length < 1) {
-            self.fw.autoCompleteBlock(@"");
-        } else {
-            NSTimeInterval currentTimestamp = self.fw.autoCompleteTimestamp;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fw.autoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (currentTimestamp == self.fw.autoCompleteTimestamp) {
-                    self.fw.autoCompleteBlock(inputText);
-                }
-            });
-        }
-    }
+    return target;
 }
 
 @end
 
 #pragma mark - FWTextViewWrapper+FWUIKit
 
-@interface UITextView (FWUIKit)
-
-- (void)innerLengthAction;
-
-@end
-
 @implementation FWTextViewWrapper (FWUIKit)
 
 - (NSInteger)maxLength
 {
-    return [objc_getAssociatedObject(self.base, @selector(maxLength)) integerValue];
+    return [self innerInputTarget:NO].maxLength;
 }
 
 - (void)setMaxLength:(NSInteger)maxLength
 {
-    objc_setAssociatedObject(self.base, @selector(maxLength), @(maxLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].maxLength = maxLength;
 }
 
 - (NSInteger)maxUnicodeLength
 {
-    return [objc_getAssociatedObject(self.base, @selector(maxUnicodeLength)) integerValue];
+    return [self innerInputTarget:NO].maxUnicodeLength;
 }
 
 - (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
-    objc_setAssociatedObject(self.base, @selector(maxUnicodeLength), @(maxUnicodeLength), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].maxUnicodeLength = maxUnicodeLength;
 }
 
 - (void)textLengthChanged
 {
-    if (self.maxLength > 0) {
-        if (self.base.markedTextRange) {
-            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
-                if (self.base.text.length > self.maxLength) {
-                    // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                    NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
-                    self.base.text = [self.base.text substringToIndex:maxRange.location];
-                    // 此方法会导致末尾出现半个Emoji
-                    // self.base.text = [self.base.text substringToIndex:self.maxLength];
-                }
-            }
-        } else {
-            if (self.base.text.length > self.maxLength) {
-                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
-                NSRange maxRange = [self.base.text rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
-                self.base.text = [self.base.text substringToIndex:maxRange.location];
-                // 此方法会导致末尾出现半个Emoji
-                // self.base.text = [self.base.text substringToIndex:self.maxLength];
-            }
-        }
-    }
-    
-    if (self.maxUnicodeLength > 0) {
-        if (self.base.markedTextRange) {
-            if (![self.base positionFromPosition:self.base.markedTextRange.start offset:0]) {
-                if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
-                    self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
-                }
-            }
-        } else {
-            if ([self.base.text.fw unicodeLength] > self.maxUnicodeLength) {
-                self.base.text = [self.base.text.fw unicodeSubstring:self.maxUnicodeLength];
-            }
-        }
-    }
+    [[self innerInputTarget:NO] textLengthChanged];
 }
 
 - (NSTimeInterval)autoCompleteInterval
 {
-    NSTimeInterval interval = [objc_getAssociatedObject(self.base, @selector(autoCompleteInterval)) doubleValue];
-    return interval > 0 ? interval : 1.0;
+    return [self innerInputTarget:NO].autoCompleteInterval;
 }
 
 - (void)setAutoCompleteInterval:(NSTimeInterval)autoCompleteInterval
 {
-    objc_setAssociatedObject(self.base, @selector(autoCompleteInterval), @(autoCompleteInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self innerInputTarget:YES].autoCompleteInterval = autoCompleteInterval;
 }
 
 - (void (^)(NSString *))autoCompleteBlock
 {
-    return objc_getAssociatedObject(self.base, @selector(autoCompleteBlock));
+    return [self innerInputTarget:NO].autoCompleteBlock;
 }
 
 - (void)setAutoCompleteBlock:(void (^)(NSString *))autoCompleteBlock
 {
-    objc_setAssociatedObject(self.base, @selector(autoCompleteBlock), autoCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self innerLengthEvent];
+    [self innerInputTarget:YES].autoCompleteBlock = autoCompleteBlock;
 }
 
-- (NSTimeInterval)autoCompleteTimestamp
+- (FWInnerInputTarget *)innerInputTarget:(BOOL)lazyload
 {
-    return [objc_getAssociatedObject(self.base, @selector(autoCompleteTimestamp)) doubleValue];
-}
-
-- (void)setAutoCompleteTimestamp:(NSTimeInterval)autoCompleteTimestamp
-{
-    objc_setAssociatedObject(self.base, @selector(autoCompleteTimestamp), @(autoCompleteTimestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)innerLengthEvent
-{
-    id object = objc_getAssociatedObject(self.base, _cmd);
-    if (!object) {
-        [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:self.base action:@selector(innerLengthAction)];
-        objc_setAssociatedObject(self.base, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    FWInnerInputTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    if (!target && lazyload) {
+        target = [[FWInnerInputTarget alloc] initWithTextInput:self.base];
+        [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:target action:@selector(textChangedAction)];
+        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-}
-
-@end
-
-@implementation UITextView (FWUIKit)
-
-- (void)innerLengthAction
-{
-    [self.fw textLengthChanged];
-    
-    if (self.fw.autoCompleteBlock) {
-        self.fw.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
-        NSString *inputText = self.text;
-        if (inputText.fw.trimString.length < 1) {
-            self.fw.autoCompleteBlock(@"");
-        } else {
-            NSTimeInterval currentTimestamp = self.fw.autoCompleteTimestamp;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.fw.autoCompleteInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (currentTimestamp == self.fw.autoCompleteTimestamp) {
-                    self.fw.autoCompleteBlock(inputText);
-                }
-            });
-        }
-    }
+    return target;
 }
 
 @end
