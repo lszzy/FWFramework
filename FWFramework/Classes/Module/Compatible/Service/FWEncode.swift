@@ -19,6 +19,7 @@ extension FWWrapper where Base == Data {
     public static func jsonEncode(_ object: Any) -> Data? {
         return try? JSONSerialization.data(withJSONObject: object)
     }
+    
     /// json数据解码为Foundation对象
     public var jsonDecode: Any? {
         do {
@@ -32,14 +33,17 @@ extension FWWrapper where Base == Data {
             return try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
         }
     }
+    
     /// base64编码
     public var base64Encode: Data {
         return base.base64EncodedData()
     }
+    
     /// base64解码
     public var base64Decode: Data? {
         return Data(base64Encoded: self.base, options: .ignoreUnknownCharacters)
     }
+    
     /// 转换为UTF8字符串
     public var utf8String: String? {
         return String(data: self.base, encoding: .utf8)
@@ -52,21 +56,25 @@ extension FWWrapper where Base == String {
         guard let data = Data.fw.jsonEncode(object) else { return nil }
         return String(data: data, encoding: .utf8)
     }
+    
     /// json字符串解码为Foundation对象
     public var jsonDecode: Any? {
         guard let data = base.data(using: .utf8) else { return nil }
         return data.fw.jsonDecode
     }
+    
     /// base64编码
     public var base64Encode: String? {
         guard let data = base.data(using: .utf8) else { return nil }
         return String(data: data.base64EncodedData(), encoding: .utf8)
     }
+    
     /// base64解码
     public var base64Decode: String? {
         guard let data = Data(base64Encoded: base, options: .ignoreUnknownCharacters) else { return nil }
         return String(data: data, encoding: .utf8)
     }
+    
     /// 计算长度，中文为1，英文为0.5，表情为2
     public var unicodeLength: UInt {
         var length: UInt = 0
@@ -76,6 +84,7 @@ extension FWWrapper where Base == String {
         }
         return UInt(ceil(Double(length) / 2.0))
     }
+    
     /// 截取字符串，中文为1，英文为0.5，表情为2
     public func unicodeSubstring(_ length: UInt) -> String {
         let length = length * 2
@@ -97,6 +106,7 @@ extension FWWrapper where Base == String {
         }
         return self.base
     }
+    
     /// Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
     public var unicodeEncode: String {
         var result = ""
@@ -114,6 +124,7 @@ extension FWWrapper where Base == String {
         }
         return result
     }
+    
     /// Unicode中文解码，将Unicode字符串(如\u7E8C)转换成中文
     public var unicodeDecode: String {
         var str = base.replacingOccurrences(of: "\\u", with: "\\U")
@@ -124,6 +135,7 @@ extension FWWrapper where Base == String {
         guard let result = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainersAndLeaves, format: nil) as? String else { return "" }
         return result.replacingOccurrences(of: "\\r\\n", with: "\n")
     }
+    
     /// url参数编码，适用于query参数编码
     ///
     /// 示例：http://test.com?id=我是中文 =>
@@ -131,6 +143,7 @@ extension FWWrapper where Base == String {
     public var urlEncodeComponent: String? {
         return base.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted)
     }
+    
     /// url参数解码，适用于query参数解码
     ///
     /// 示例：http%3A%2F%2Ftest.com%3Fid%3D%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87 =>
@@ -138,6 +151,7 @@ extension FWWrapper where Base == String {
     public var urlDecodeComponent: String? {
         return CFURLCreateStringByReplacingPercentEscapes(nil, self.base as CFString, "" as CFString) as String?
     }
+    
     /// url编码，适用于整个url编码
     ///
     /// 示例：http://test.com?id=我是中文 =>
@@ -145,6 +159,7 @@ extension FWWrapper where Base == String {
     public var urlEncode: String? {
         return base.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     }
+    
     /// url解码，适用于整个url解码
     ///
     /// 示例：http://test.com?id=%E6%88%91%E6%98%AF%E4%B8%AD%E6%96%87 =>
@@ -152,6 +167,7 @@ extension FWWrapper where Base == String {
     public var urlDecode: String? {
         return base.removingPercentEncoding
     }
+    
     /// 字典编码为URL参数字符串
     public static func queryEncode(_ dict: [String: Any]) -> String {
         var result = ""
@@ -162,6 +178,7 @@ extension FWWrapper where Base == String {
         }
         return result
     }
+    
     /// URL参数字符串解码为字典，支持完整URL
     public var queryDecode: [String: String] {
         var result: [String: String] = [:]
@@ -177,6 +194,7 @@ extension FWWrapper where Base == String {
         }
         return result
     }
+    
     /// md5编码
     public var md5Encode: String {
         let utf8 = base.cString(using: .utf8)
@@ -185,6 +203,7 @@ extension FWWrapper where Base == String {
         CC_MD5(utf8, length, &digest)
         return digest.reduce("") { $0 + String(format: "%02x", $1) }
     }
+    
     /// 文件md5编码
     public var md5EncodeFile: String? {
         guard let file = FileHandle(forReadingAtPath: self.base) else { return nil }
@@ -204,10 +223,12 @@ extension FWWrapper where Base == String {
         }
         return digest.map { String(format: "%02hhx", $0) }.joined()
     }
+    
     /// 去掉首尾空白字符
     public var trimString: String {
         return base.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+    
     /// 过滤JSON解码特殊字符
     ///
     /// 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
@@ -228,14 +249,17 @@ extension FWWrapper where Base == String {
         }
         return string as String
     }
+    
     /// 转换为UTF8数据
     public var utf8Data: Data? {
         return self.base.data(using: .utf8)
     }
+    
     /// 转换为URL
     public var url: URL? {
         return URL.fw.url(string: self.base)
     }
+    
     /// 转换为NSNumber
     public var number: NSNumber? {
         let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]
@@ -258,15 +282,18 @@ extension FWWrapper where Base == String {
     public func substring(from index: Int) -> String {
         return substring(with: min(index, base.count) ..< base.count)
     }
+    
     /// 截取子串到指定位置
     public func substring(to index: Int) -> String {
         return substring(with: 0 ..< max(0, index))
     }
+    
     /// 截取指定范围的子串
     public func substring(with range: NSRange) -> String {
         guard let range = Range<Int>(range) else { return "" }
         return substring(with: range)
     }
+    
     /// 截取指定范围的子串
     public func substring(with range: Range<Int>) -> String {
         guard range.lowerBound >= 0, range.upperBound >= range.lowerBound else { return "" }
@@ -286,6 +313,7 @@ extension FWWrapper where Base == URL {
         guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
         return URL(string: encodeString)
     }
+    
     /// 生成URL，中文自动URL编码，支持基准URL
     public static func url(string: String?, relativeTo baseURL: URL?) -> URL? {
         guard let string = string else { return nil }
@@ -294,6 +322,7 @@ extension FWWrapper where Base == URL {
         guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
         return URL(string: encodeString, relativeTo: baseURL)
     }
+    
     /// 获取当前query的参数字典，不含空值
     public var queryDictionary: [String: String] {
         var components = URLComponents(string: base.absoluteString)
@@ -308,6 +337,7 @@ extension FWWrapper where Base == URL {
         }
         return result
     }
+    
     /// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
     public var pathURI: String? {
         let string = base.absoluteString

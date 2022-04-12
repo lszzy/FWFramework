@@ -238,65 +238,6 @@
     fw_macro_first(__VA_ARGS__)
 
 /**
- 根据参数拼接方法名称
- 
- @param ... 参数列表
- */
-#define fw_macro_method( ... ) \
-    fw_macro_concat(fw_macro_join_, fw_macro_count(__VA_ARGS__))(____, __VA_ARGS__)
-
-/**
- 参数按指定分隔符连接
- 
- @param X 分隔符
- @param ... 参数列表
- */
-#define fw_macro_join( X, ... ) \
-    fw_macro_concat(fw_macro_join_, fw_macro_count(__VA_ARGS__))(X, __VA_ARGS__)
-#define fw_macro_join_0( ... )
-#define fw_macro_join_1( X, A ) \
-    A
-#define fw_macro_join_2( X, A, B ) \
-    A##X##B
-#define fw_macro_join_3( X, A, B, C ) \
-    A##X##B##X##C
-#define fw_macro_join_4( X, A, B, C, D ) \
-    A##X##B##X##C##X##D
-#define fw_macro_join_5( X, A, B, C, D, E ) \
-    A##X##B##X##C##X##D##X##E
-#define fw_macro_join_6( X, A, B, C, D, E, F ) \
-    A##X##B##X##C##X##D##X##E##X##F
-#define fw_macro_join_7( X, A, B, C, D, E, F, G ) \
-    A##X##B##X##C##X##D##X##E##X##F##X##G
-#define fw_macro_join_8( X, A, B, C, D, E, F, G, H ) \
-    A##X##B##X##C##X##D##X##E##X##F##X##G##X##H
-
-/**
- 参数按.分隔符连接
- 
- @param ... 参数列表
- */
-#define fw_macro_make( ... ) \
-    fw_macro_concat(fw_macro_make_, fw_macro_count(__VA_ARGS__))(__VA_ARGS__)
-#define fw_macro_make_0( ... )
-#define fw_macro_make_1( A ) \
-    A
-#define fw_macro_make_2( A, B ) \
-    A.B
-#define fw_macro_make_3( A, B, C ) \
-    A.B.C
-#define fw_macro_make_4( A, B, C, D ) \
-    A.B.C.D
-#define fw_macro_make_5( A, B, C, D, E ) \
-    A.B.C.D.E
-#define fw_macro_make_6( A, B, C, D, E, F ) \
-    A.B.C.D.E.F
-#define fw_macro_make_7( A, B, C, D, E, F, G ) \
-    A.B.C.D.E.F.G
-#define fw_macro_make_8( A, B, C, D, E, F, G, H ) \
-    A.B.C.D.E.F.G.H
-
-/**
  参数默认值设置，需传入##__VA_ARGS__
  @note 调用示例：fw_macro_default(default, ##__VA_ARGS__)。##__VA_ARGS__前面的##作用在于，当可变参数的个数为0时，把前面多余的","去掉，否则会编译出错
  
