@@ -7,10 +7,20 @@
  */
 
 #import "FWWrapper.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWObjectWrapper
 
 @implementation FWObjectWrapper
+
++ (instancetype)wrapper:(id)base {
+    id wrapper = objc_getAssociatedObject(base, @selector(fw));
+    if (!wrapper) {
+        wrapper = [[self alloc] init:base];
+        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return wrapper;
+}
 
 - (instancetype)init:(id)base {
     self = [super init];
@@ -25,7 +35,7 @@
 @implementation NSObject (FWObjectWrapper)
 
 - (FWObjectWrapper *)fw {
-    return [[FWObjectWrapper alloc] init:self];
+    return [FWObjectWrapper wrapper:self];
 }
 
 @end
@@ -33,6 +43,10 @@
 #pragma mark - FWClassWrapper
 
 @implementation FWClassWrapper
+
++ (instancetype)wrapper:(Class)base {
+    return [[self alloc] init:base];
+}
 
 - (instancetype)init:(Class)base {
     self = [super init];
@@ -47,7 +61,7 @@
 @implementation NSObject (FWClassWrapper)
 
 + (FWClassWrapper *)fw {
-    return [[FWClassWrapper alloc] init:self];
+    return [FWClassWrapper wrapper:self];
 }
 
 @end
