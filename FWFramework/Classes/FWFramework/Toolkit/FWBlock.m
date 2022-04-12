@@ -282,6 +282,27 @@
 
 #pragma mark - FWBarButtonItemWrapper+FWBlock
 
+@interface FWInnerItemTarget : NSObject
+
+@property (nonatomic, weak) UIBarButtonItem *item;
+
+@end
+
+@implementation FWInnerItemTarget
+
+- (void)invokeTargetAction:(id)sender
+{
+    if (self.item.target && self.item.action && [self.item.target respondsToSelector:self.item.action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
+        [self.item.target performSelector:self.item.action withObject:self.item withObject:sender];
+#pragma clang diagnostic pop
+    }
+}
+
+@end
+
 @implementation FWBarButtonItemWrapper (FWBlock)
 
 - (void)setBlock:(void (^)(id))block
@@ -300,29 +321,30 @@
     objc_setAssociatedObject(self.base, @selector(setBlock:), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-@end
-
-#pragma mark - FWBarButtonItemClassWrapper+FWBlock
-
-@interface UIBarButtonItem (FWBlock)
-
-@end
-
-@implementation UIBarButtonItem (FWBlock)
-
-- (void)innerTargetAction:(id)sender
+- (void)addItemEvent:(UIView *)customView
 {
-    if (self.target && self.action &&
-        [self.target respondsToSelector:self.action]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
-        [self.target performSelector:self.action withObject:self withObject:sender];
-#pragma clang diagnostic pop
+    // 进行self转发，模拟实际action回调参数
+    if ([customView isKindOfClass:[UIControl class]]) {
+        [((UIControl *)customView).fw addTouchTarget:self.innerItemTarget action:@selector(invokeTargetAction:)];
+    } else {
+        [customView.fw addTapGestureWithTarget:self.innerItemTarget action:@selector(invokeTargetAction:)];
     }
 }
 
+- (FWInnerItemTarget *)innerItemTarget
+{
+    FWInnerItemTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    if (!target) {
+        target = [[FWInnerItemTarget alloc] init];
+        target.item = self.base;
+        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
+}
+
 @end
+
+#pragma mark - FWBarButtonItemClassWrapper+FWBlock
 
 @implementation FWBarButtonItemClassWrapper (FWBlock)
 
@@ -343,12 +365,7 @@
         barItem = [[self.base alloc] initWithCustomView:object];
         barItem.target = target;
         barItem.action = action;
-        // 进行self转发，模拟实际action回调参数
-        if ([object isKindOfClass:[UIControl class]]) {
-            [((UIControl *)object).fw addTouchTarget:barItem action:@selector(innerTargetAction:)];
-        } else {
-            [((UIView *)object).fw addTapGestureWithTarget:barItem action:@selector(innerTargetAction:)];
-        }
+        [barItem.fw addItemEvent:object];
     // Other
     } else {
         barItem = [[self.base alloc] init];
