@@ -436,6 +436,15 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 #pragma mark - FWObjectWrapper+FWTheme
 
+@implementation NSObject (FWTheme)
+
+- (void)themeChanged:(FWThemeStyle)style
+{
+    // 子类重写
+}
+
+@end
+
 @implementation FWObjectWrapper (FWTheme)
 
 + (void)load
@@ -468,6 +477,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             FWThemeStyle oldStyle = [FWThemeManager.sharedInstance styleForTraitCollection:traitCollection];
             if (style == oldStyle) return;
             
+            [selfObject themeChanged:style];
             [selfObject.fw themeChanged:style];
             [selfObject.fw notifyThemeListeners:style];
             
@@ -524,18 +534,18 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             objc_setAssociatedObject(self.base, @selector(themeContext), [[FWWeakObject alloc] initWithObject:themeContext], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             
             if (oldContext != nil) {
-                [((NSObject *)oldContext).fw removeThemeListener:[self themeContextIdentifier]];
-                [self setThemeContextIdentifier:nil];
+                [((NSObject *)oldContext).fw removeThemeListener:self.themeContextIdentifier];
+                self.themeContextIdentifier = nil;
             }
             
             if (themeContext != nil) {
-                __weak __typeof__(self) self_weak_ = self;
+                __weak NSObject *weakBase = self.base;
                 NSString *identifier = [((NSObject *)themeContext).fw addThemeListener:^(FWThemeStyle style) {
-                    __typeof__(self) self = self_weak_;
-                    [self themeChanged:style];
-                    [self notifyThemeListeners:style];
+                    [weakBase themeChanged:style];
+                    [weakBase.fw themeChanged:style];
+                    [weakBase.fw notifyThemeListeners:style];
                 }];
-                [self setThemeContextIdentifier:identifier];
+                self.themeContextIdentifier = identifier;
             }
         }
     }
@@ -567,11 +577,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
         NSMutableDictionary *listeners = [self innerThemeListeners:NO];
         [listeners removeAllObjects];
     }
-}
-
-- (void)themeChanged:(FWThemeStyle)style
-{
-    // 子类重写
 }
 
 @end
