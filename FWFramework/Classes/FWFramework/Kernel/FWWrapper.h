@@ -26,8 +26,26 @@ NS_ASSUME_NONNULL_BEGIN
     @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
+/// 快速声明可用版本包装器宏
+#define FWWrapperCompatibleAvailable(version, baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+    API_AVAILABLE(ios(version)) \
+    @interface objectWrapper : objectParent \
+    @property (nonatomic, unsafe_unretained, readonly) baseClass *base; \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface baseClass (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface classWrapper : classParent \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
 /// 快速声明单泛型包装器宏
-#define FWGenericWrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleGeneric(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, unsafe_unretained, readonly) baseClass<ObjectType> *base; \
     @end \
@@ -41,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明双泛型包装器宏
-#define FWGeneric2WrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleGeneric2(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, unsafe_unretained, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
@@ -156,12 +174,12 @@ FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWra
 FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSUserDefaults, FWUserDefaultsWrapper, FWObjectWrapper, FWUserDefaultsClassWrapper, FWClassWrapper);
 FWWrapperCompatible(NSFileManager, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper);
-FWGenericWrapperCompatible(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
-FWGenericWrapperCompatible(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
-FWGenericWrapperCompatible(NSSet, FWSetWrapper, FWObjectWrapper, FWSetClassWrapper, FWClassWrapper);
-FWGenericWrapperCompatible(NSMutableSet, FWMutableSetWrapper, FWSetWrapper, FWMutableSetClassWrapper, FWSetClassWrapper);
-FWGeneric2WrapperCompatible(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
-FWGeneric2WrapperCompatible(NSMutableDictionary, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
+FWWrapperCompatibleGeneric(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
+FWWrapperCompatibleGeneric(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
+FWWrapperCompatibleGeneric(NSSet, FWSetWrapper, FWObjectWrapper, FWSetClassWrapper, FWClassWrapper);
+FWWrapperCompatibleGeneric(NSMutableSet, FWMutableSetWrapper, FWSetWrapper, FWMutableSetClassWrapper, FWSetClassWrapper);
+FWWrapperCompatibleGeneric2(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
+FWWrapperCompatibleGeneric2(NSMutableDictionary, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
 
 FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
 FWWrapperCompatible(UIBezierPath, FWBezierPathWrapper, FWObjectWrapper, FWBezierPathClassWrapper, FWClassWrapper);
