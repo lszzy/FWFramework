@@ -438,7 +438,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 @implementation NSObject (FWTheme)
 
-- (void)themeChanged:(FWThemeStyle)style
+- (void)renderTheme:(FWThemeStyle)style
 {
     // 子类重写
 }
@@ -477,10 +477,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             FWThemeStyle oldStyle = [FWThemeManager.sharedInstance styleForTraitCollection:traitCollection];
             if (style == oldStyle) return;
             
-            [selfObject themeChanged:style];
-            [selfObject.fw themeChanged:style];
-            [selfObject.fw notifyThemeListeners:style];
-            
+            [selfObject.fw notifyThemeChanged:style];
             if (selfObject == [UIScreen mainScreen]) {
                 NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
                 [userInfo setObject:@(oldStyle) forKey:NSKeyValueChangeOldKey];
@@ -488,25 +485,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
                 [[NSNotificationCenter defaultCenter] postNotificationName:FWThemeChangedNotification object:selfObject userInfo:userInfo.copy];
             }
         };
-    }];
-}
-
-- (NSMutableDictionary *)innerThemeListeners:(BOOL)lazyload NS_AVAILABLE_IOS(13_0)
-{
-    NSMutableDictionary *listeners = objc_getAssociatedObject(self.base, _cmd);
-    if (!listeners && lazyload) {
-        listeners = [NSMutableDictionary new];
-        objc_setAssociatedObject(self.base, _cmd, listeners, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return listeners;
-}
-
-- (void)notifyThemeListeners:(FWThemeStyle)style NS_AVAILABLE_IOS(13_0)
-{
-    NSMutableDictionary *listeners = [self innerThemeListeners:NO];
-    [listeners enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        void (^listener)(FWThemeStyle) = obj;
-        listener(style);
     }];
 }
 
@@ -541,9 +519,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             if (themeContext != nil) {
                 __weak NSObject *weakBase = self.base;
                 NSString *identifier = [((NSObject *)themeContext).fw addThemeListener:^(FWThemeStyle style) {
-                    [weakBase themeChanged:style];
-                    [weakBase.fw themeChanged:style];
-                    [weakBase.fw notifyThemeListeners:style];
+                    [weakBase.fw notifyThemeChanged:style];
                 }];
                 self.themeContextIdentifier = identifier;
             }
@@ -577,6 +553,37 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
         NSMutableDictionary *listeners = [self innerThemeListeners:NO];
         [listeners removeAllObjects];
     }
+}
+
+- (NSMutableDictionary *)innerThemeListeners:(BOOL)lazyload NS_AVAILABLE_IOS(13_0)
+{
+    NSMutableDictionary *listeners = objc_getAssociatedObject(self.base, _cmd);
+    if (!listeners && lazyload) {
+        listeners = [NSMutableDictionary new];
+        objc_setAssociatedObject(self.base, _cmd, listeners, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return listeners;
+}
+
+- (void)notifyThemeChanged:(FWThemeStyle)style NS_AVAILABLE_IOS(13_0)
+{
+    // 1. 调用themeChanged钩子
+    [self themeChanged:style];
+    
+    // 2. 调用themeListeners句柄
+    NSMutableDictionary *listeners = [self innerThemeListeners:NO];
+    [listeners enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        void (^listener)(FWThemeStyle) = obj;
+        listener(style);
+    }];
+    
+    // 3. 调用renderTheme渲染钩子
+    [self.base renderTheme:style];
+}
+
+- (void)themeChanged:(FWThemeStyle)style
+{
+    // 子类重写
 }
 
 @end
