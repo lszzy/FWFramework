@@ -207,7 +207,8 @@ FWWrapperCompatible(UISlider, FWSliderWrapper, FWControlWrapper, FWSliderClassWr
 FWWrapperCompatible(UITextField, FWTextFieldWrapper, FWControlWrapper, FWTextFieldClassWrapper, FWControlClassWrapper);
 FWWrapperCompatible(UITextView, FWTextViewWrapper, FWScrollViewWrapper, FWTextViewClassWrapper, FWScrollViewClassWrapper);
 FWWrapperCompatible(UIGestureRecognizer, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIBarButtonItem, FWBarButtonItemWrapper, FWObjectWrapper, FWBarButtonItemClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIBarItem, FWBarItemWrapper, FWObjectWrapper, FWBarItemClassWrapper, FWClassWrapper);
+FWWrapperCompatible(UIBarButtonItem, FWBarButtonItemWrapper, FWBarItemWrapper, FWBarButtonItemClassWrapper, FWBarItemClassWrapper);
 FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
 FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);

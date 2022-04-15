@@ -117,6 +117,7 @@ FWDefWrapper(UISlider, FWSliderWrapper, FWSliderClassWrapper);
 FWDefWrapper(UITextField, FWTextFieldWrapper, FWTextFieldClassWrapper);
 FWDefWrapper(UITextView, FWTextViewWrapper, FWTextViewClassWrapper);
 FWDefWrapper(UIGestureRecognizer, FWGestureRecognizerWrapper, FWGestureRecognizerClassWrapper);
+FWDefWrapper(UIBarItem, FWBarItemWrapper, FWBarItemClassWrapper);
 FWDefWrapper(UIBarButtonItem, FWBarButtonItemWrapper, FWBarButtonItemClassWrapper);
 FWDefWrapper(UINavigationBar, FWNavigationBarWrapper, FWNavigationBarClassWrapper);
 FWDefWrapper(UITabBar, FWTabBarWrapper, FWTabBarClassWrapper);
