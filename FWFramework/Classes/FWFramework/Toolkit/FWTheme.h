@@ -200,8 +200,8 @@ extern NSNotificationName const FWThemeChangedNotification;
  */
 @interface NSObject (FWTheme)
 
-/// iOS13主题改变回调钩子，如果父类有重写，记得调用super，需订阅后才生效
-- (void)themeChanged:(FWThemeStyle)style;
+/// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
+- (void)renderTheme:(FWThemeStyle)style;
 
 @end
 
@@ -218,6 +218,9 @@ extern NSNotificationName const FWThemeChangedNotification;
 
 /// iOS13移除所有主题通知回调，一般用于cell重用
 - (void)removeAllThemeListeners;
+
+/// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
+- (void)themeChanged:(FWThemeStyle)style;
 
 @end
 
