@@ -515,17 +515,19 @@ public class FWLayoutChain {
 extension FWViewWrapper {
     /// 关联对象Key
     private struct FWLayoutChainAssociatedKeys {
-        static var layoutChainKey = "layoutChainKey"
+        static var layoutChain = "layoutChain"
     }
 
     /// 链式布局对象
     public var layoutChain: FWLayoutChain {
-        if let layoutChain = objc_getAssociatedObject(self.base, &FWLayoutChainAssociatedKeys.layoutChainKey) as? FWLayoutChain {
+        if let base = self.base, let layoutChain = objc_getAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain) as? FWLayoutChain {
             return layoutChain
         }
         
         let layoutChain = FWLayoutChain(view: self.base)
-        objc_setAssociatedObject(self.base, &FWLayoutChainAssociatedKeys.layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        if let base = self.base {
+            objc_setAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
         return layoutChain
     }
     
