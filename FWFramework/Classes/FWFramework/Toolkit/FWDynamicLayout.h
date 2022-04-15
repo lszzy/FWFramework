@@ -12,32 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWViewWrapper+FWDynamicLayout
-
-/// 视图数据订阅观察者监听协议，视图数据改变时自动通知
-@protocol FWViewDataObserver <NSObject>
-
-@optional
-
-/// 通用视图数据改变渲染钩子，fw.viewData改变时自动调用
-- (void)renderData;
-
-@end
-
-@interface UIView (FWDynamicLayout) <FWViewDataObserver>
-
-@end
-
-@interface FWViewWrapper (FWDynamicLayout)
-
-/// 通用视图绑定数据，改变时自动触发viewDataChanged和base.renderData
-@property (nullable, nonatomic, strong) id viewData;
-
-/// 通用视图数据改变句柄钩子，viewData改变时自动调用
-@property (nullable, nonatomic, copy) void (^viewDataChanged)(__kindof UIView *view);
-
-@end
-
 #pragma mark - FWTableViewCellWrapper+FWDynamicLayout
 
 typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
@@ -86,9 +60,9 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
                                           style:(UITableViewCellStyle)style
                                 reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图数据自动计算cell高度，不使用缓存，子类可重写
-- (CGFloat)heightWithViewData:(nullable id)viewData
-                     tableView:(UITableView *)tableView;
+/// 根据配置自动计算cell高度，不使用缓存，子类可重写
+- (CGFloat)heightWithTableView:(UITableView *)tableView
+                 configuration:(FWCellConfigurationBlock)configuration;
 
 @end
 
@@ -133,10 +107,10 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
 - (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图数据自动计算cell高度，不使用缓存，子类可重写
-- (CGFloat)heightWithViewData:(nullable id)viewData
+/// 根据配置自动计算cell高度，不使用缓存，子类可重写
+- (CGFloat)heightWithTableView:(UITableView *)tableView
                           type:(FWHeaderFooterViewType)type
-                     tableView:(UITableView *)tableView;
+                 configuration:(FWHeaderFooterViewConfigurationBlock)configuration;
 
 @end
 
@@ -251,19 +225,19 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
                                indexPath:(NSIndexPath *)indexPath
                          reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图数据自动计算view大小，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                   configuration:(FWCollectionCellConfigurationBlock)configuration;
 
-/// 根据视图数据自动计算view大小，固定宽度，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-                      width:(CGFloat)width
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，固定宽度，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                           width:(CGFloat)width
+                   configuration:(FWCollectionCellConfigurationBlock)configuration;
 
-/// 根据视图数据自动计算view大小，固定高度，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-                     height:(CGFloat)height
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，固定高度，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                          height:(CGFloat)height
+                   configuration:(FWCollectionCellConfigurationBlock)configuration;
 
 @end
 
@@ -313,22 +287,22 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                                        indexPath:(NSIndexPath *)indexPath
                                  reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图数据自动计算view大小，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-                       kind:(NSString *)kind
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration;
 
-/// 根据视图数据自动计算view大小，固定宽度，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-                      width:(CGFloat)width
-                       kind:(NSString *)kind
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，固定宽度，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                           width:(CGFloat)width
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration;
 
-/// 根据视图数据自动计算view大小，固定高度，子类可重写
-- (CGSize)sizeWithViewData:(nullable id)viewData
-                     height:(CGFloat)height
-                       kind:(NSString *)kind
-             collectionView:(UICollectionView *)collectionView;
+/// 根据配置自动计算view大小，固定高度，子类可重写
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                          height:(CGFloat)height
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration;
 
 @end
 
