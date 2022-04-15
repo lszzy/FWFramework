@@ -438,11 +438,6 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 @implementation NSObject (FWTheme)
 
-- (void)renderTheme:(FWThemeStyle)style
-{
-    // 子类重写
-}
-
 @end
 
 @implementation FWObjectWrapper (FWTheme)
@@ -578,7 +573,9 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
     }];
     
     // 3. 调用renderTheme渲染钩子
-    [self.base renderTheme:style];
+    if ([self.base respondsToSelector:@selector(renderTheme:)]) {
+        [self.base renderTheme:style];
+    }
 }
 
 - (void)themeChanged:(FWThemeStyle)style

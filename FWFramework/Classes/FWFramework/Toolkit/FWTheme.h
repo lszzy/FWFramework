@@ -195,13 +195,17 @@ extern NSNotificationName const FWThemeChangedNotification;
 
 #pragma mark - FWObjectWrapper+FWTheme
 
-/**
- iOS13主题订阅NSObject分类，可参考UIImageView.fw.themeImage方式进行扩展
- */
-@interface NSObject (FWTheme)
+/// iOS13主题订阅观察者监听协议，主题改变时自动通知
+@protocol FWThemeObserver <NSObject>
+
+@optional
 
 /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
 - (void)renderTheme:(FWThemeStyle)style;
+
+@end
+
+@interface NSObject (FWTheme) <FWThemeObserver>
 
 @end
 
