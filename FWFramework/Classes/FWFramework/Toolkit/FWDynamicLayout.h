@@ -56,6 +56,22 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 
 @end
 
+@interface UITableViewCell (FWDynamicLayout)
+
+/// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
++ (instancetype)cellWithTableView:(UITableView *)tableView;
+
+/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型
++ (instancetype)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style;
+
+/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型，指定reuseIdentifier
++ (instancetype)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style
+                                reuseIdentifier:(NSString *)reuseIdentifier;
+
+@end
+
 @interface FWTableViewCellClassWrapper (FWDynamicLayout)
 
 /// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
@@ -96,6 +112,16 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
+
+@end
+
+@interface UITableViewHeaderFooterView (FWDynamicLayout)
+
+/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
++ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView;
+
+/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end
 
@@ -201,6 +227,19 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 @end
 
+@interface UICollectionViewCell (FWDynamicLayout)
+
+/// 免注册创建UICollectionViewCell，内部自动处理缓冲池
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath;
+
+/// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath
+                         reuseIdentifier:(NSString *)reuseIdentifier;
+
+@end
+
 @interface FWCollectionViewCellClassWrapper (FWDynamicLayout)
 
 /// 免注册创建UICollectionViewCell，内部自动处理缓冲池
@@ -243,6 +282,21 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 
 /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
+
+@end
+
+@interface UICollectionReusableView (FWDynamicLayout)
+
+/// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池
++ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath;
+
+/// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
++ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath
+                                 reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end
 
