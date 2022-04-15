@@ -618,6 +618,16 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
++ (instancetype)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor
+{
+    return [[self fw] labelWithFont:font textColor:textColor];
+}
+
++ (instancetype)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor text:(NSString *)text
+{
+    return [[self fw] labelWithFont:font textColor:textColor text:text];
+}
+
 @end
 
 #pragma mark - FWButtonWrapper+FWUIKit
@@ -693,6 +703,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         default:
             break;
     }
+}
+
+@end
+
+@implementation UIButton (FWUIKit)
+
++ (instancetype)buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
+{
+    return [[self fw] buttonWithTitle:title font:font titleColor:titleColor];
+}
+
++ (instancetype)buttonWithImage:(UIImage *)image
+{
+    return [[self fw] buttonWithImage:image];
 }
 
 @end

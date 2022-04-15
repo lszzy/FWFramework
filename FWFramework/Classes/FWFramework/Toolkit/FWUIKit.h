@@ -99,6 +99,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface UILabel (FWUIKit)
+
+/// 快速创建标签
++ (instancetype)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+
+/// 快速创建标签并指定文本
++ (instancetype)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
+
+@end
+
 @interface FWLabelClassWrapper (FWUIKit)
 
 /// 快速创建标签
@@ -130,6 +140,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
 - (void)setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
+
+@end
+
+@interface UIButton (FWUIKit)
+
+/// 快速创建文本按钮
++ (instancetype)buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+
+/// 快速创建图片按钮
++ (instancetype)buttonWithImage:(nullable UIImage *)image;
 
 @end
 
