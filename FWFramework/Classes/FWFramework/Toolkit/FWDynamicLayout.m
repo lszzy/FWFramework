@@ -11,6 +11,42 @@
 #import "FWAutoLayout.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWViewWrapper+FWDynamicLayout
+
+@implementation UIView (FWDynamicLayout)
+
+@end
+
+@implementation FWViewWrapper (FWDynamicLayout)
+
+- (id)viewData {
+    return objc_getAssociatedObject(self.base, @selector(viewData));
+}
+
+- (void)setViewData:(id)viewData {
+    if (viewData != self.viewData) {
+        objc_setAssociatedObject(self.base, @selector(viewData), viewData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        if (self.viewDataChanged) {
+            self.viewDataChanged(self.base);
+        }
+        
+        if ([self.base respondsToSelector:@selector(renderData)]) {
+            [self.base renderData];
+        }
+    }
+}
+
+- (void (^)(__kindof UIView *))viewDataChanged {
+    return objc_getAssociatedObject(self.base, @selector(viewDataChanged));
+}
+
+- (void)setViewDataChanged:(void (^)(__kindof UIView *))viewDataChanged {
+    objc_setAssociatedObject(self.base, @selector(viewDataChanged), viewDataChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+@end
+
 #pragma mark - FWDynamicLayoutHeightCache
 
 @interface FWDynamicLayoutHeightCache : NSObject
@@ -140,16 +176,6 @@
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (id)viewModel {
-    return objc_getAssociatedObject(self.base, @selector(viewModel));
-}
-
-- (void)setViewModel:(id)viewModel {
-    if (viewModel != self.viewModel) {
-        objc_setAssociatedObject(self.base, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
 @end
 
 @implementation FWTableViewCellClassWrapper (FWDynamicLayout)
@@ -172,10 +198,10 @@
     return [[self.base alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
 }
 
-- (CGFloat)heightWithViewModel:(id)viewModel
+- (CGFloat)heightWithViewData:(id)viewData
                      tableView:(UITableView *)tableView {
     return [tableView.fw heightWithCellClass:self.base configuration:^(__kindof UITableViewCell * _Nonnull cell) {
-        cell.fw.viewModel = viewModel;
+        cell.fw.viewData = viewData;
     }];
 }
 
@@ -217,16 +243,6 @@
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (id)viewModel {
-    return objc_getAssociatedObject(self.base, @selector(viewModel));
-}
-
-- (void)setViewModel:(id)viewModel {
-    if (viewModel != self.viewModel) {
-        objc_setAssociatedObject(self.base, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
 @end
 
 @implementation FWTableViewHeaderFooterViewClassWrapper (FWDynamicLayout)
@@ -246,11 +262,11 @@
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
 }
 
-- (CGFloat)heightWithViewModel:(id)viewModel
+- (CGFloat)heightWithViewData:(id)viewData
                           type:(FWHeaderFooterViewType)type
                      tableView:(UITableView *)tableView {
     return [tableView.fw heightWithHeaderFooterViewClass:self.base type:type configuration:^(__kindof UITableViewHeaderFooterView * _Nonnull headerFooterView) {
-        headerFooterView.fw.viewModel = viewModel;
+        headerFooterView.fw.viewData = viewData;
     }];
 }
 
@@ -631,16 +647,6 @@
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (id)viewModel {
-    return objc_getAssociatedObject(self.base, @selector(viewModel));
-}
-
-- (void)setViewModel:(id)viewModel {
-    if (viewModel != self.viewModel) {
-        objc_setAssociatedObject(self.base, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
 @end
 
 @implementation FWCollectionViewCellClassWrapper (FWDynamicLayout)
@@ -663,26 +669,26 @@
     return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel
+- (CGSize)sizeWithViewData:(id)viewData
              collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithCellClass:self.base configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fw.viewModel = viewModel;
+        cell.fw.viewData = viewData;
     }];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel
+- (CGSize)sizeWithViewData:(id)viewData
                       width:(CGFloat)width
              collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithCellClass:self.base width:width configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fw.viewModel = viewModel;
+        cell.fw.viewData = viewData;
     }];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel
+- (CGSize)sizeWithViewData:(id)viewData
                      height:(CGFloat)height
              collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithCellClass:self.base height:height configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fw.viewModel = viewModel;
+        cell.fw.viewData = viewData;
     }];
 }
 
@@ -724,16 +730,6 @@
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (id)viewModel {
-    return objc_getAssociatedObject(self.base, @selector(viewModel));
-}
-
-- (void)setViewModel:(id)viewModel {
-    if (viewModel != self.viewModel) {
-        objc_setAssociatedObject(self.base, @selector(viewModel), viewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
 @end
 
 @implementation FWCollectionReusableViewClassWrapper (FWDynamicLayout)
@@ -758,21 +754,21 @@
     return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
+- (CGSize)sizeWithViewData:(id)viewData kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithReusableViewClass:self.base kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fw.viewModel = viewModel;
+        reusableView.fw.viewData = viewData;
     }];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel width:(CGFloat)width kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
+- (CGSize)sizeWithViewData:(id)viewData width:(CGFloat)width kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithReusableViewClass:self.base width:width kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fw.viewModel = viewModel;
+        reusableView.fw.viewData = viewData;
     }];
 }
 
-- (CGSize)sizeWithViewModel:(id)viewModel height:(CGFloat)height kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
+- (CGSize)sizeWithViewData:(id)viewData height:(CGFloat)height kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
     return [collectionView.fw sizeWithReusableViewClass:self.base height:height kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fw.viewModel = viewModel;
+        reusableView.fw.viewData = viewData;
     }];
 }
 

@@ -12,6 +12,32 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - FWViewWrapper+FWDynamicLayout
+
+/// 视图数据订阅观察者监听协议，视图数据改变时自动通知
+@protocol FWViewDataObserver <NSObject>
+
+@optional
+
+/// 通用视图数据改变渲染钩子，fw.viewData改变时自动调用
+- (void)renderData;
+
+@end
+
+@interface UIView (FWDynamicLayout) <FWViewDataObserver>
+
+@end
+
+@interface FWViewWrapper (FWDynamicLayout)
+
+/// 通用视图绑定数据，改变时自动触发viewDataChanged和base.renderData
+@property (nullable, nonatomic, strong) id viewData;
+
+/// 通用视图数据改变句柄钩子，viewData改变时自动调用
+@property (nullable, nonatomic, copy) void (^viewDataChanged)(__kindof UIView *view);
+
+@end
+
 #pragma mark - FWTableViewCellWrapper+FWDynamicLayout
 
 typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
@@ -27,9 +53,6 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 
 /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
-
-/// 通用绑定视图模型方法，未指定configuration时默认调用
-@property (nullable, nonatomic, strong) id viewModel;
 
 @end
 
@@ -47,8 +70,8 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
                                           style:(UITableViewCellStyle)style
                                 reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
-- (CGFloat)heightWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算cell高度，不使用缓存，子类可重写
+- (CGFloat)heightWithViewData:(nullable id)viewData
                      tableView:(UITableView *)tableView;
 
 @end
@@ -74,9 +97,6 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
 
-/// 通用绑定视图模型方法，未指定configuration时默认调用
-@property (nullable, nonatomic, strong) id viewModel;
-
 @end
 
 @interface FWTableViewHeaderFooterViewClassWrapper (FWDynamicLayout)
@@ -87,8 +107,8 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
 - (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图模型自动计算cell高度，不使用缓存，子类可重写
-- (CGFloat)heightWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算cell高度，不使用缓存，子类可重写
+- (CGFloat)heightWithViewData:(nullable id)viewData
                           type:(FWHeaderFooterViewType)type
                      tableView:(UITableView *)tableView;
 
@@ -179,9 +199,6 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
 
-/// 通用绑定视图模型方法，未指定configuration时默认调用
-@property (nullable, nonatomic, strong) id viewModel;
-
 @end
 
 @interface FWCollectionViewCellClassWrapper (FWDynamicLayout)
@@ -195,17 +212,17 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
                                indexPath:(NSIndexPath *)indexPath
                          reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图模型自动计算view大小，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
              collectionView:(UICollectionView *)collectionView;
 
-/// 根据视图模型自动计算view大小，固定宽度，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，固定宽度，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
                       width:(CGFloat)width
              collectionView:(UICollectionView *)collectionView;
 
-/// 根据视图模型自动计算view大小，固定高度，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，固定高度，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
                      height:(CGFloat)height
              collectionView:(UICollectionView *)collectionView;
 
@@ -227,9 +244,6 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
 
-/// 通用绑定视图模型方法，未指定configuration时默认调用
-@property (nullable, nonatomic, strong) id viewModel;
-
 @end
 
 @interface FWCollectionReusableViewClassWrapper (FWDynamicLayout)
@@ -245,19 +259,19 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                                        indexPath:(NSIndexPath *)indexPath
                                  reuseIdentifier:(NSString *)reuseIdentifier;
 
-/// 根据视图模型自动计算view大小，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
                        kind:(NSString *)kind
              collectionView:(UICollectionView *)collectionView;
 
-/// 根据视图模型自动计算view大小，固定宽度，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，固定宽度，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
                       width:(CGFloat)width
                        kind:(NSString *)kind
              collectionView:(UICollectionView *)collectionView;
 
-/// 根据视图模型自动计算view大小，固定高度，子类可重写
-- (CGSize)sizeWithViewModel:(nullable id)viewModel
+/// 根据视图数据自动计算view大小，固定高度，子类可重写
+- (CGSize)sizeWithViewData:(nullable id)viewData
                      height:(CGFloat)height
                        kind:(NSString *)kind
              collectionView:(UICollectionView *)collectionView;
