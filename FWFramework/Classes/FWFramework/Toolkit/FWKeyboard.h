@@ -14,6 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTextFieldWrapper+FWKeyboard
 
+@interface UITextField (FWKeyboard)
+
+/// 是否启用键盘管理(自动滚动)，默认NO
+@property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
+
+@end
+
 /// 文本输入框键盘管理分类
 @interface FWTextFieldWrapper (FWKeyboard)
 

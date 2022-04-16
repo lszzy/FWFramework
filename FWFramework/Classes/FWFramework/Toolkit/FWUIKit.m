@@ -1093,7 +1093,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     FWInnerInputTarget *target = objc_getAssociatedObject(self.base, _cmd);
     if (!target && lazyload) {
         target = [[FWInnerInputTarget alloc] initWithTextInput:self.base];
-        [self.base addTarget:target action:@selector(textChangedAction) forControlEvents:UIControlEventEditingChanged];
+        if ([self.base isKindOfClass:[UITextField class]]) {
+            [self.base addTarget:target action:@selector(textChangedAction) forControlEvents:UIControlEventEditingChanged];
+        }
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
@@ -1155,7 +1157,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     FWInnerInputTarget *target = objc_getAssociatedObject(self.base, _cmd);
     if (!target && lazyload) {
         target = [[FWInnerInputTarget alloc] initWithTextInput:self.base];
-        [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:target action:@selector(textChangedAction)];
+        if ([self.base isKindOfClass:[UITextView class]]) {
+            [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:target action:@selector(textChangedAction)];
+        }
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
