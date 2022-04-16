@@ -7,6 +7,7 @@
  */
 
 #import "FWWrapper.h"
+#import "FWAppearance.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWObjectWrapper
@@ -19,10 +20,17 @@
 
 + (instancetype)wrapper:(id)base {
     id wrapper = objc_getAssociatedObject(base, @selector(fw));
-    if (!wrapper) {
-        wrapper = [[self alloc] init:base];
-        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (wrapper) return wrapper;
+    
+    Class wrapperClass = [self class];
+    // 兼容_UIAppearance对象，自动查找对应包装器类
+    if ([base isKindOfClass:NSClassFromString(@"_UIAppearance")]) {
+        Class appearanceClass = [FWAppearance classForAppearance:base];
+        wrapperClass = [[[appearanceClass fw] class] objectWrapper];
     }
+    
+    wrapper = [[wrapperClass alloc] init:base];
+    objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return wrapper;
 }
 
