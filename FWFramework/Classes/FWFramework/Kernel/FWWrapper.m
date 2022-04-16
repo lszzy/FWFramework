@@ -14,10 +14,6 @@
 
 @implementation FWObjectWrapper
 
-+ (Class)classWrapper {
-    return [FWClassWrapper class];
-}
-
 + (instancetype)wrapper:(id)base {
     id wrapper = objc_getAssociatedObject(base, @selector(fw));
     if (wrapper) return wrapper;
@@ -26,7 +22,7 @@
     // 兼容_UIAppearance对象，自动查找对应包装器类
     if ([base isKindOfClass:NSClassFromString(@"_UIAppearance")]) {
         Class appearanceClass = [FWAppearance classForAppearance:base];
-        wrapperClass = [[[appearanceClass fw] class] objectWrapper];
+        wrapperClass = [[appearanceClass fw] wrapperClass];
     }
     
     wrapper = [[wrapperClass alloc] init:base];
@@ -40,6 +36,10 @@
         _base = base;
     }
     return self;
+}
+
+- (Class)wrapperClass {
+    return [FWClassWrapper class];
 }
 
 @end
@@ -56,10 +56,6 @@
 
 @implementation FWClassWrapper
 
-+ (Class)objectWrapper {
-    return [FWObjectWrapper class];
-}
-
 + (instancetype)wrapper:(Class)base {
     return [[self alloc] init:base];
 }
@@ -70,6 +66,10 @@
         _base = base;
     }
     return self;
+}
+
+- (Class)wrapperClass {
+    return [FWObjectWrapper class];
 }
 
 @end
