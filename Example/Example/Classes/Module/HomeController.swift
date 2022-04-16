@@ -67,22 +67,17 @@ private extension HomeController {
 // MARK: - UITableView
 extension HomeController {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 20
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(with: tableView)
-        cell.contentView.backgroundColor = UIColor(red: CGFloat(arc4random() % 255) / 255.0, green: CGFloat(arc4random() % 255) / 255.0, blue: CGFloat(arc4random() % 255) / 255.0, alpha: 1)
+        let cell = HomeCell.fw.cell(with: tableView)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.bounds.height / 5
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -144,6 +139,27 @@ private extension HomeController {
             navigationController?.navigationBar.fw.isTranslucent = false
             navigationController?.navigationBar.fw.backgroundTransparent = true
         }
+    }
+    
+}
+
+// MARK: - HomeCell
+private class HomeCell: UITableViewCell {
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.backgroundColor = UIColor(red: CGFloat(arc4random() % 255) / 255.0, green: CGFloat(arc4random() % 255) / 255.0, blue: CGFloat(arc4random() % 255) / 255.0, alpha: 1)
+        
+        let testLabel = UILabel(font: .systemFont(ofSize: 15), textColor: .white, text: "test.title".fw.localized)
+        contentView.addSubview(testLabel)
+        testLabel.fw.layoutMaker { make in
+            make.edges(UIEdgeInsets(top: 45, left: 15, bottom: 45, right: 15))
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

@@ -50,17 +50,13 @@ private extension TestController {
 // MARK: - UITableView
 extension TestController {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return 20
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(with: tableView)
-        
+        cell.textLabel?.text = "test.title".fw.localized
         return cell
     }
     
