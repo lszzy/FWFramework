@@ -8,6 +8,7 @@
  */
 
 #import "FWAppearance.h"
+#import "FWSwizzle.h"
 #import <objc/runtime.h>
 
 @implementation FWAppearance
@@ -30,6 +31,22 @@
 #pragma clang diagnostic pop
     }
     return appearance;
+}
+
++ (Class)classForAppearance:(id)appearance {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"_%@%@", @"customizable", @"ClassInfo"]);
+    if (![appearance respondsToSelector:selector]) return [appearance class];
+
+    id classInfo = [appearance performSelector:selector];
+    selector = NSSelectorFromString([NSString stringWithFormat:@"_%@%@", @"customizable", @"ViewClass"]);
+    if (!classInfo || ![classInfo respondsToSelector:selector]) return [appearance class];
+    
+    Class viewClass = [classInfo performSelector:selector];
+    if (viewClass && object_isClass(viewClass)) return viewClass;
+    #pragma clang diagnostic pop
+    return [appearance class];
 }
 
 @end

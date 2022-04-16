@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
 + (id)appearanceForClass:(Class)aClass;
 
+/// 获取指定 appearance 对象的关联 Class，通过解析_UIAppearance对象获取
++ (Class)classForAppearance:(id)appearance;
+
 @end
 
 @interface FWObjectWrapper (FWAppearance)
