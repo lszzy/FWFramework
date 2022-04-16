@@ -73,20 +73,26 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速实现包装器宏
-#define FWDefWrapper(baseClass, objectWrapper, classWrapper) \
-    @implementation objectWrapper \
+#define FWDefWrapper(baseClass, objWrapper, clsWrapper) \
+    @implementation objWrapper \
     @dynamic base; \
-    @end \
-    @implementation baseClass (objectWrapper) \
-    - (objectWrapper *)fw { \
-        return [objectWrapper wrapper:self]; \
+    + (Class)classWrapper { \
+        return [clsWrapper class]; \
     } \
     @end \
-    @implementation classWrapper \
+    @implementation baseClass (objWrapper) \
+    - (objWrapper *)fw { \
+        return [objWrapper wrapper:self]; \
+    } \
     @end \
-    @implementation baseClass (classWrapper) \
-    + (classWrapper *)fw { \
-        return [classWrapper wrapper:self]; \
+    @implementation clsWrapper \
+    + (Class)objectWrapper { \
+        return [objWrapper class]; \
+    } \
+    @end \
+    @implementation baseClass (clsWrapper) \
+    + (clsWrapper *)fw { \
+        return [clsWrapper wrapper:self]; \
     } \
     @end
 
@@ -102,6 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
+
+/// 获取关联的类包装器类
++ (Class)classWrapper;
 
 /// 快速创建包装器，自动缓存
 + (instancetype)wrapper:(id)base;
@@ -134,6 +143,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWClassWrapper *fw NS_UNAVAILABLE;
+
+/// 获取关联的对象包装器类
++ (Class)objectWrapper;
 
 /// 快速创建包装器，无缓存
 + (instancetype)wrapper:(Class)base;
