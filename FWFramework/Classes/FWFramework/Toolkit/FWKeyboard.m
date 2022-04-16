@@ -349,6 +349,20 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - FWTextFieldWrapper+FWKeyboard
 
+@implementation UITextField (FWKeyboard)
+
+- (BOOL)keyboardManager
+{
+    return self.fw.keyboardManager;
+}
+
+- (void)setKeyboardManager:(BOOL)keyboardManager
+{
+    self.fw.keyboardManager = keyboardManager;
+}
+
+@end
+
 @implementation FWTextFieldWrapper (FWKeyboard)
 
 - (BOOL)keyboardManager

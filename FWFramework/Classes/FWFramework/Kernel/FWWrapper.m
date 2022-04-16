@@ -18,9 +18,13 @@
     id wrapper = objc_getAssociatedObject(base, @selector(fw));
     if (wrapper) return wrapper;
     
+    // 1. 兼容_UIAppearance对象，未指定包装器类时(FWObjectWrapper)自动查找
+    // 2. 兼容[FWTextFieldWrapper wrapper:UITextField.appearance]自定义包装器
+    // 3. 如果UIAppearance.appearance.fw自定义样式未生效，请改用UIAppearance.appearance实现
+    // 示例：UITextField.appearance.fw.keyboardManager不生效，请使用UITextField.appearance.keyboardManager
     Class wrapperClass = [self class];
-    // 兼容_UIAppearance对象，自动查找对应包装器类
-    if ([base isKindOfClass:NSClassFromString(@"_UIAppearance")]) {
+    if (wrapperClass == [FWObjectWrapper class] &&
+        [base isKindOfClass:NSClassFromString(@"_UIAppearance")]) {
         Class appearanceClass = [FWAppearance classForAppearance:base];
         wrapperClass = [[appearanceClass fw] wrapperClass];
     }
