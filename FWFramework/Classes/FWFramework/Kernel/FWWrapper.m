@@ -13,6 +13,10 @@
 
 @implementation FWObjectWrapper
 
++ (Class)classWrapper {
+    return [FWClassWrapper class];
+}
+
 + (instancetype)wrapper:(id)base {
     id wrapper = objc_getAssociatedObject(base, @selector(fw));
     if (!wrapper) {
@@ -43,6 +47,10 @@
 #pragma mark - FWClassWrapper
 
 @implementation FWClassWrapper
+
++ (Class)objectWrapper {
+    return [FWObjectWrapper class];
+}
 
 + (instancetype)wrapper:(Class)base {
     return [[self alloc] init:base];
