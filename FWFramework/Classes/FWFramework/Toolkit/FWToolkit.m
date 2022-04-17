@@ -1140,7 +1140,13 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
         }));
         
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"dealloc"), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            if (selfObject.fw.completionHandler) selfObject.fw.completionHandler(selfObject.fw.completionResult);
+            // dealloc时不调用fw，防止释放时动态创建包装器对象
+            void (^completionHandler)(id) = objc_getAssociatedObject(selfObject, @selector(completionHandler));
+            if (completionHandler != nil) {
+                id completionResult = objc_getAssociatedObject(selfObject, @selector(completionResult));
+                completionHandler(completionResult);
+            }
+            
             FWSwizzleOriginal();
         }));
     });
