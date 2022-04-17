@@ -349,16 +349,69 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - FWTextFieldWrapper+FWKeyboard
 
+@interface FWTextFieldWrapper (FWKeyboardInternal)
+
+@property (nonatomic, strong, readonly) FWInnerKeyboardTarget *innerKeyboardTarget;
+
+- (void)innerReturnEvent;
+
+@end
+
+@interface UITextField (FWKeyboard)
+
+@end
+
 @implementation UITextField (FWKeyboard)
 
-- (BOOL)keyboardManager
+- (BOOL)innerKeyboardManager
 {
-    return self.fw.keyboardManager;
+    return self.fw.innerKeyboardTarget.keyboardManager;
 }
 
-- (void)setKeyboardManager:(BOOL)keyboardManager
+- (void)setInnerKeyboardManager:(BOOL)keyboardManager
 {
-    self.fw.keyboardManager = keyboardManager;
+    self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
+}
+
+- (CGFloat)innerKeyboardSpacing
+{
+    return self.fw.innerKeyboardTarget.keyboardSpacing;
+}
+
+- (void)setInnerKeyboardSpacing:(CGFloat)keyboardSpacing
+{
+    self.fw.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+}
+
+- (BOOL)innerKeyboardResign
+{
+    return self.fw.innerKeyboardTarget.keyboardResign;
+}
+
+- (void)setInnerKeyboardResign:(BOOL)keyboardResign
+{
+    self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
+}
+
+- (BOOL)innerTouchResign
+{
+    return self.fw.innerKeyboardTarget.touchResign;
+}
+
+- (void)setInnerTouchResign:(BOOL)touchResign
+{
+    self.fw.innerKeyboardTarget.touchResign = touchResign;
+}
+
+- (BOOL)innerReturnResign
+{
+    return self.fw.innerKeyboardTarget.returnResign;
+}
+
+- (void)setInnerReturnResign:(BOOL)returnResign
+{
+    self.fw.innerKeyboardTarget.returnResign = returnResign;
+    [self.fw innerReturnEvent];
 }
 
 @end
@@ -367,42 +420,42 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (BOOL)keyboardManager
 {
-    return self.innerKeyboardTarget.keyboardManager;
+    return self.base.innerKeyboardManager;
 }
 
 - (void)setKeyboardManager:(BOOL)keyboardManager
 {
-    self.innerKeyboardTarget.keyboardManager = keyboardManager;
+    self.base.innerKeyboardManager = keyboardManager;
 }
 
 - (CGFloat)keyboardSpacing
 {
-    return self.innerKeyboardTarget.keyboardSpacing;
+    return self.base.innerKeyboardSpacing;
 }
 
 - (void)setKeyboardSpacing:(CGFloat)keyboardSpacing
 {
-    self.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+    self.base.innerKeyboardSpacing = keyboardSpacing;
 }
 
 - (BOOL)keyboardResign
 {
-    return self.innerKeyboardTarget.keyboardResign;
+    return self.base.innerKeyboardResign;
 }
 
 - (void)setKeyboardResign:(BOOL)keyboardResign
 {
-    self.innerKeyboardTarget.keyboardResign = keyboardResign;
+    self.base.innerKeyboardResign = keyboardResign;
 }
 
 - (BOOL)touchResign
 {
-    return self.innerKeyboardTarget.touchResign;
+    return self.base.innerTouchResign;
 }
 
 - (void)setTouchResign:(BOOL)touchResign
 {
-    self.innerKeyboardTarget.touchResign = touchResign;
+    self.base.innerTouchResign = touchResign;
 }
 
 - (UIScrollView *)keyboardScrollView
@@ -429,13 +482,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (BOOL)returnResign
 {
-    return self.innerKeyboardTarget.returnResign;
+    return self.base.innerReturnResign;
 }
 
 - (void)setReturnResign:(BOOL)returnResign
 {
-    self.innerKeyboardTarget.returnResign = returnResign;
-    [self innerReturnEvent];
+    self.base.innerReturnResign = returnResign;
 }
 
 - (UIResponder *)returnResponder
@@ -485,46 +537,113 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - FWTextViewWrapper+FWKeyboard
 
+@interface FWTextViewWrapper (FWKeyboardInternal)
+
+@property (nonatomic, strong, readonly) FWInnerKeyboardTarget *innerKeyboardTarget;
+
+@property (nonatomic, assign) BOOL delegateProxyEnabled;
+
+@end
+
+@interface UITextView (FWKeyboard)
+
+@end
+
+@implementation UITextView (FWKeyboard)
+
+- (BOOL)innerKeyboardManager
+{
+    return self.fw.innerKeyboardTarget.keyboardManager;
+}
+
+- (void)setInnerKeyboardManager:(BOOL)keyboardManager
+{
+    self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
+}
+
+- (CGFloat)innerKeyboardSpacing
+{
+    return self.fw.innerKeyboardTarget.keyboardSpacing;
+}
+
+- (void)setInnerKeyboardSpacing:(CGFloat)keyboardSpacing
+{
+    self.fw.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+}
+
+- (BOOL)innerKeyboardResign
+{
+    return self.fw.innerKeyboardTarget.keyboardResign;
+}
+
+- (void)setInnerKeyboardResign:(BOOL)keyboardResign
+{
+    self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
+}
+
+- (BOOL)innerTouchResign
+{
+    return self.fw.innerKeyboardTarget.touchResign;
+}
+
+- (void)setInnerTouchResign:(BOOL)touchResign
+{
+    self.fw.innerKeyboardTarget.touchResign = touchResign;
+}
+
+- (BOOL)innerReturnResign
+{
+    return self.fw.innerKeyboardTarget.returnResign;
+}
+
+- (void)setInnerReturnResign:(BOOL)returnResign
+{
+    self.fw.innerKeyboardTarget.returnResign = returnResign;
+    self.fw.delegateProxyEnabled = YES;
+}
+
+@end
+
 @implementation FWTextViewWrapper (FWKeyboard)
 
 - (BOOL)keyboardManager
 {
-    return self.innerKeyboardTarget.keyboardManager;
+    return self.base.innerKeyboardManager;
 }
 
 - (void)setKeyboardManager:(BOOL)keyboardManager
 {
-    self.innerKeyboardTarget.keyboardManager = keyboardManager;
+    self.base.innerKeyboardManager = keyboardManager;
 }
 
 - (CGFloat)keyboardSpacing
 {
-    return self.innerKeyboardTarget.keyboardSpacing;
+    return self.base.innerKeyboardSpacing;
 }
 
 - (void)setKeyboardSpacing:(CGFloat)keyboardSpacing
 {
-    self.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+    self.base.innerKeyboardSpacing = keyboardSpacing;
 }
 
 - (BOOL)keyboardResign
 {
-    return self.innerKeyboardTarget.keyboardResign;
+    return self.base.innerKeyboardResign;
 }
 
 - (void)setKeyboardResign:(BOOL)keyboardResign
 {
-    self.innerKeyboardTarget.keyboardResign = keyboardResign;
+    self.base.innerKeyboardResign = keyboardResign;
 }
 
 - (BOOL)touchResign
 {
-    return self.innerKeyboardTarget.touchResign;
+    return self.base.innerTouchResign;
 }
 
 - (void)setTouchResign:(BOOL)touchResign
 {
-    self.innerKeyboardTarget.touchResign = touchResign;
+    self.base.innerTouchResign = touchResign;
 }
 
 - (UIScrollView *)keyboardScrollView
@@ -545,6 +664,40 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
+}
+
+#pragma mark - Return
+
+- (BOOL)returnResign
+{
+    return self.base.innerReturnResign;
+}
+
+- (void)setReturnResign:(BOOL)returnResign
+{
+    self.base.innerReturnResign = returnResign;
+}
+
+- (UIResponder *)returnResponder
+{
+    return self.innerKeyboardTarget.returnResponder;
+}
+
+- (void)setReturnResponder:(UIResponder *)returnResponder
+{
+    self.innerKeyboardTarget.returnResponder = returnResponder;
+    self.delegateProxyEnabled = YES;
+}
+
+- (void (^)(UITextView *textView))returnBlock
+{
+    return self.innerKeyboardTarget.returnBlock;
+}
+
+- (void)setReturnBlock:(void (^)(UITextView *textView))returnBlock
+{
+    self.innerKeyboardTarget.returnBlock = returnBlock;
+    self.delegateProxyEnabled = YES;
 }
 
 #pragma mark - Delegate
@@ -593,41 +746,6 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         objc_setAssociatedObject(self.base, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return proxy;
-}
-
-#pragma mark - Return
-
-- (BOOL)returnResign
-{
-    return self.innerKeyboardTarget.returnResign;
-}
-
-- (void)setReturnResign:(BOOL)returnResign
-{
-    self.innerKeyboardTarget.returnResign = returnResign;
-    self.delegateProxyEnabled = YES;
-}
-
-- (UIResponder *)returnResponder
-{
-    return self.innerKeyboardTarget.returnResponder;
-}
-
-- (void)setReturnResponder:(UIResponder *)returnResponder
-{
-    self.innerKeyboardTarget.returnResponder = returnResponder;
-    self.delegateProxyEnabled = YES;
-}
-
-- (void (^)(UITextView *textView))returnBlock
-{
-    return self.innerKeyboardTarget.returnBlock;
-}
-
-- (void)setReturnBlock:(void (^)(UITextView *textView))returnBlock
-{
-    self.innerKeyboardTarget.returnBlock = returnBlock;
-    self.delegateProxyEnabled = YES;
 }
 
 #pragma mark - Toolbar
