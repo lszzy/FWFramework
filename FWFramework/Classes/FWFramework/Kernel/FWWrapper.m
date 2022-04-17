@@ -40,7 +40,8 @@
 @implementation NSObject (FWObjectWrapper)
 
 - (FWObjectWrapper *)fw {
-    // 兼容_UIAppearance对象，未指定包装器类时自动查找
+    // 1. 兼容_UIAppearance对象，未指定包装器类时自动查找
+    // 2. 如果appearance.fw自定义样式未生效，需fw内部调用原视图类扩展方法才行(详见FWKeyboard)
     if ([self isKindOfClass:NSClassFromString(@"_UIAppearance")]) {
         Class appearanceClass = [FWAppearance classForAppearance:self];
         Class wrapperClass = [[appearanceClass fw] wrapperClass];
