@@ -14,29 +14,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTextFieldWrapper+FWKeyboard
 
-@interface UITextField (FWKeyboard)
-
-/// 是否启用键盘管理(自动滚动)，默认NO
-@property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
-
-@end
-
 /// 文本输入框键盘管理分类
 @interface FWTextFieldWrapper (FWKeyboard)
 
 #pragma mark - Keyboard
 
 /// 是否启用键盘管理(自动滚动)，默认NO
-@property (nonatomic, assign) BOOL keyboardManager;
+@property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
 /// 设置输入框和键盘的空白高度，默认10.0
-@property (nonatomic, assign) CGFloat keyboardSpacing;
+@property (nonatomic, assign) CGFloat keyboardSpacing UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-@property (nonatomic, assign) BOOL keyboardResign;
+@property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
 
 /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-@property (nonatomic, assign) BOOL touchResign;
+@property (nonatomic, assign) BOOL touchResign UI_APPEARANCE_SELECTOR;
 
 /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
 @property (nullable, nonatomic, weak) UIScrollView *keyboardScrollView;
@@ -44,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Return
 
 /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
-@property (nonatomic, assign) BOOL returnResign;
+@property (nonatomic, assign) BOOL returnResign UI_APPEARANCE_SELECTOR;
 
 /// 设置点击键盘完成按钮自动切换的下一个输入框，二选一
 @property (nullable, nonatomic, weak) UIResponder *returnResponder;
@@ -70,16 +63,16 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Keyboard
 
 /// 是否启用键盘管理(自动滚动)，默认NO
-@property (nonatomic, assign) BOOL keyboardManager;
+@property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
 /// 设置输入框和键盘的空白高度，默认10.0
-@property (nonatomic, assign) CGFloat keyboardSpacing;
+@property (nonatomic, assign) CGFloat keyboardSpacing UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-@property (nonatomic, assign) BOOL keyboardResign;
+@property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
 
 /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-@property (nonatomic, assign) BOOL touchResign;
+@property (nonatomic, assign) BOOL touchResign UI_APPEARANCE_SELECTOR;
 
 /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
 @property (nullable, nonatomic, weak) UIScrollView *keyboardScrollView;
@@ -87,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Return
 
 /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-@property (nonatomic, assign) BOOL returnResign;
+@property (nonatomic, assign) BOOL returnResign UI_APPEARANCE_SELECTOR;
 
 /// 设置点击键盘完成按钮自动切换的下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nullable, nonatomic, weak) UIResponder *returnResponder;
