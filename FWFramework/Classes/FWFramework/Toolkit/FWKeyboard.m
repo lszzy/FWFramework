@@ -25,7 +25,8 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @interface FWInnerKeyboardTarget : NSObject
 
 @property (nonatomic, assign) BOOL keyboardManager;
-@property (nonatomic, assign) CGFloat keyboardSpacing;
+@property (nonatomic, assign) CGFloat keyboardDistance;
+@property (nonatomic, assign) CGFloat reboundHeight;
 @property (nonatomic, assign) BOOL keyboardResign;
 @property (nonatomic, assign) BOOL touchResign;
 
@@ -51,7 +52,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self = [super init];
     if (self) {
         _textInput = textInput;
-        _keyboardSpacing = 10.0;
+        _keyboardDistance = 15.0;
     }
     return self;
 }
@@ -206,9 +207,10 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
         UIView *convertView = self.textInput.window ?: self.viewController.view.window;
         CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
-        CGFloat targetOffsetY = MAX(self.scrollView.contentOffset.y + self.keyboardSpacing + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
-        
         CGPoint contentOffset = self.scrollView.contentOffset;
+        CGFloat targetOffsetY = MAX(contentOffset.y + self.keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
+        if (self.reboundHeight > 0 && targetOffsetY <= contentOffset.y - self.reboundHeight) targetOffsetY = targetOffsetY + self.reboundHeight;
+        
         contentOffset.y = targetOffsetY;
         [UIView animateWithDuration:animationDuration animations:^{
             self.scrollView.contentOffset = contentOffset;
@@ -225,9 +227,10 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
-    CGFloat viewTargetY = MIN(self.viewController.view.frame.origin.y - self.keyboardSpacing + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
-    
     CGRect viewFrame = self.viewController.view.frame;
+    CGFloat viewTargetY = MIN(viewFrame.origin.y - self.keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
+    if (self.reboundHeight > 0 && viewTargetY <= viewFrame.origin.y - self.reboundHeight) viewTargetY = viewTargetY + self.reboundHeight;
+    
     viewFrame.origin.y = viewTargetY;
     [UIView animateWithDuration:animationDuration animations:^{
         // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
@@ -406,14 +409,24 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
 }
 
-- (CGFloat)innerKeyboardSpacing
+- (CGFloat)innerKeyboardDistance
 {
-    return self.fw.innerKeyboardTarget.keyboardSpacing;
+    return self.fw.innerKeyboardTarget.keyboardDistance;
 }
 
-- (void)setInnerKeyboardSpacing:(CGFloat)keyboardSpacing
+- (void)setInnerKeyboardDistance:(CGFloat)keyboardDistance
 {
-    self.fw.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+    self.fw.innerKeyboardTarget.keyboardDistance = keyboardDistance;
+}
+
+- (CGFloat)innerReboundHeight
+{
+    return self.fw.innerKeyboardTarget.reboundHeight;
+}
+
+- (void)setInnerReboundHeight:(CGFloat)reboundHeight
+{
+    self.fw.innerKeyboardTarget.reboundHeight = reboundHeight;
 }
 
 - (BOOL)innerKeyboardResign
@@ -471,14 +484,24 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.base.innerKeyboardManager = keyboardManager;
 }
 
-- (CGFloat)keyboardSpacing
+- (CGFloat)keyboardDistance
 {
-    return self.base.innerKeyboardSpacing;
+    return self.base.innerKeyboardDistance;
 }
 
-- (void)setKeyboardSpacing:(CGFloat)keyboardSpacing
+- (void)setKeyboardDistance:(CGFloat)keyboardDistance
 {
-    self.base.innerKeyboardSpacing = keyboardSpacing;
+    self.base.innerKeyboardDistance = keyboardDistance;
+}
+
+- (CGFloat)reboundHeight
+{
+    return self.base.innerReboundHeight;
+}
+
+- (void)setReboundHeight:(CGFloat)reboundHeight
+{
+    self.base.innerReboundHeight = reboundHeight;
 }
 
 - (BOOL)keyboardResign
@@ -641,14 +664,24 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
 }
 
-- (CGFloat)innerKeyboardSpacing
+- (CGFloat)innerKeyboardDistance
 {
-    return self.fw.innerKeyboardTarget.keyboardSpacing;
+    return self.fw.innerKeyboardTarget.keyboardDistance;
 }
 
-- (void)setInnerKeyboardSpacing:(CGFloat)keyboardSpacing
+- (void)setInnerKeyboardDistance:(CGFloat)keyboardDistance
 {
-    self.fw.innerKeyboardTarget.keyboardSpacing = keyboardSpacing;
+    self.fw.innerKeyboardTarget.keyboardDistance = keyboardDistance;
+}
+
+- (CGFloat)innerReboundHeight
+{
+    return self.fw.innerKeyboardTarget.reboundHeight;
+}
+
+- (void)setInnerReboundHeight:(CGFloat)reboundHeight
+{
+    self.fw.innerKeyboardTarget.reboundHeight = reboundHeight;
 }
 
 - (BOOL)innerKeyboardResign
@@ -706,14 +739,24 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.base.innerKeyboardManager = keyboardManager;
 }
 
-- (CGFloat)keyboardSpacing
+- (CGFloat)keyboardDistance
 {
-    return self.base.innerKeyboardSpacing;
+    return self.base.innerKeyboardDistance;
 }
 
-- (void)setKeyboardSpacing:(CGFloat)keyboardSpacing
+- (void)setKeyboardDistance:(CGFloat)keyboardDistance
 {
-    self.base.innerKeyboardSpacing = keyboardSpacing;
+    self.base.innerKeyboardDistance = keyboardDistance;
+}
+
+- (CGFloat)reboundHeight
+{
+    return self.base.innerReboundHeight;
+}
+
+- (void)setReboundHeight:(CGFloat)reboundHeight
+{
+    self.base.innerReboundHeight = reboundHeight;
 }
 
 - (BOOL)keyboardResign
