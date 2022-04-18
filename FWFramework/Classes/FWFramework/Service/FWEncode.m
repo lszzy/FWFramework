@@ -216,6 +216,67 @@
     return [self.base stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
+- (NSString *)lcfirstString
+{
+    if (self.base.length == 0) return self.base;
+    NSMutableString *string = [NSMutableString string];
+    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].lowercaseString];
+    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
+    return string;
+}
+
+- (NSString *)ucfirstString
+{
+    if (self.base.length == 0) return self.base;
+    NSMutableString *string = [NSMutableString string];
+    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].uppercaseString];
+    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
+    return string;
+}
+
+- (NSString *)underlineString
+{
+    if (self.base.length == 0) return self.base;
+    NSMutableString *string = [NSMutableString string];
+    for (NSUInteger i = 0; i < self.base.length; i++) {
+        unichar c = [self.base characterAtIndex:i];
+        NSString *cString = [NSString stringWithFormat:@"%c", c];
+        NSString *cStringLower = [cString lowercaseString];
+        if ([cString isEqualToString:cStringLower]) {
+            [string appendString:cStringLower];
+        } else {
+            [string appendString:@"_"];
+            [string appendString:cStringLower];
+        }
+    }
+    return string;
+}
+
+- (NSString *)camelString
+{
+    if (self.base.length == 0) return self.base;
+    NSMutableString *string = [NSMutableString string];
+    NSArray *cmps = [self.base componentsSeparatedByString:@"_"];
+    for (NSUInteger i = 0; i < cmps.count; i++) {
+        NSString *cmp = cmps[i];
+        if (i && cmp.length) {
+            [string appendString:[NSString stringWithFormat:@"%c", [cmp characterAtIndex:0]].uppercaseString];
+            if (cmp.length >= 2) [string appendString:[cmp substringFromIndex:1]];
+        } else {
+            [string appendString:cmp];
+        }
+    }
+    return string;
+}
+
+- (NSString *)pinyinString
+{
+    NSMutableString *mutableString = [NSMutableString stringWithString:self.base];
+    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
+    NSString *pinyinStr = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
+    return [pinyinStr lowercaseString];
+}
+
 - (NSData *)utf8Data
 {
     return [self.base dataUsingEncoding:NSUTF8StringEncoding];

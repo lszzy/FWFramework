@@ -276,6 +276,18 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     }
 }
 
+- (NSTimeInterval)formatTimestamp:(NSTimeInterval)timestamp
+{
+    NSString *string = [NSString stringWithFormat:@"%ld", (long)timestamp];
+    if (string.length == 16) {
+        return timestamp / 1000.0 / 1000.0;
+    } else if (string.length == 13) {
+        return timestamp / 1000.0;
+    } else {
+        return timestamp;
+    }
+}
+
 @end
 
 #pragma mark - FWDictionaryWrapper+FWFoundation

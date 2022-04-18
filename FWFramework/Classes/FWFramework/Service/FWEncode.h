@@ -133,39 +133,55 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  去掉空白字符
- 
- @return trim字符串
  */
 @property (nonatomic, copy, readonly) NSString *trimString;
 
 /**
+ 首字母大写
+ */
+@property (nonatomic, copy, readonly) NSString *ucfirstString;
+
+/**
+ 首字母小写
+ */
+@property (nonatomic, copy, readonly) NSString *lcfirstString;
+
+/**
+ 驼峰转下划线
+ */
+@property (nonatomic, copy, readonly) NSString *underlineString;
+
+/**
+ 下划线转驼峰
+ */
+@property (nonatomic, copy, readonly) NSString *camelString;
+
+/**
+ 转拼音
+ */
+@property (nonatomic, copy, readonly) NSString *pinyinString;
+
+/**
  过滤JSON解码特殊字符
- @note 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
+ 
+ 兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
  规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
  参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
- 
- @return JSON过滤字符串
  */
 @property (nonatomic, copy, readonly) NSString *escapeJson;
 
 /**
  转换为UTF8编码数据
- 
- @return UTF8编码数据
  */
 @property (nonatomic, strong, readonly, nullable) NSData *utf8Data;
 
 /**
  转换为NSURL
- 
- @return NSURL
  */
 @property (nonatomic, copy, readonly, nullable) NSURL *url;
 
 /**
  转换为NSNumber
- 
- @return NSNumber
  */
 @property (nonatomic, readonly, nullable) NSNumber *number;
 
