@@ -209,12 +209,20 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
         CGPoint contentOffset = self.scrollView.contentOffset;
         CGFloat targetOffsetY = MAX(contentOffset.y + self.keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
-        if (self.reboundHeight > 0 && targetOffsetY <= contentOffset.y - self.reboundHeight) targetOffsetY = targetOffsetY + self.reboundHeight;
         
-        contentOffset.y = targetOffsetY;
-        [UIView animateWithDuration:animationDuration animations:^{
-            self.scrollView.contentOffset = contentOffset;
-        }];
+        BOOL shouldScroll = NO;
+        if (targetOffsetY > contentOffset.y) {
+            shouldScroll = YES;
+        } else if (targetOffsetY <= contentOffset.y - self.reboundHeight) {
+            shouldScroll = YES;
+            targetOffsetY = targetOffsetY + self.reboundHeight;
+        }
+        if (shouldScroll) {
+            contentOffset.y = targetOffsetY;
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.scrollView.contentOffset = contentOffset;
+            }];
+        }
         return;
     }
     
@@ -231,15 +239,24 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGFloat viewTargetY = MIN(viewFrame.origin.y - self.keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
     if (self.reboundHeight > 0 && viewTargetY <= viewFrame.origin.y - self.reboundHeight) viewTargetY = viewTargetY + self.reboundHeight;
     
-    viewFrame.origin.y = viewTargetY;
-    [UIView animateWithDuration:animationDuration animations:^{
-        // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
-        if (@available(iOS 14.0, *)) {
-            self.viewController.view.layer.frame = viewFrame;
-        } else {
-            self.viewController.view.frame = viewFrame;
-        }
-    }];
+    BOOL shouldScroll = NO;
+    if (viewTargetY > viewFrame.origin.y) {
+        shouldScroll = YES;
+    } else if (viewTargetY <= viewFrame.origin.y - self.reboundHeight) {
+        shouldScroll = YES;
+        viewTargetY = viewTargetY + self.reboundHeight;
+    }
+    if (shouldScroll) {
+        viewFrame.origin.y = viewTargetY;
+        [UIView animateWithDuration:animationDuration animations:^{
+            // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+            if (@available(iOS 14.0, *)) {
+                self.viewController.view.layer.frame = viewFrame;
+            } else {
+                self.viewController.view.frame = viewFrame;
+            }
+        }];
+    }
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
