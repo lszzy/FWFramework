@@ -237,7 +237,6 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
     CGRect viewFrame = self.viewController.view.frame;
     CGFloat viewTargetY = MIN(viewFrame.origin.y - self.keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
-    if (self.reboundHeight > 0 && viewTargetY <= viewFrame.origin.y - self.reboundHeight) viewTargetY = viewTargetY + self.reboundHeight;
     
     BOOL shouldScroll = NO;
     if (viewTargetY > viewFrame.origin.y) {
