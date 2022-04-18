@@ -148,10 +148,11 @@ private class HomeCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = .fw.randomColor
         
-        contentView.backgroundColor = UIColor(red: CGFloat(arc4random() % 255) / 255.0, green: CGFloat(arc4random() % 255) / 255.0, blue: CGFloat(arc4random() % 255) / 255.0, alpha: 1)
-        
-        let testLabel = UILabel(font: .systemFont(ofSize: 15), textColor: .white, text: "test.title".fw.localized)
+        let testLabel = UILabel()
+        testLabel.textColor = .white
+        testLabel.text = "test.title".fw.localized
         contentView.addSubview(testLabel)
         testLabel.fw.layoutMaker { make in
             make.edges(UIEdgeInsets(top: 45, left: 15, bottom: 45, right: 15))

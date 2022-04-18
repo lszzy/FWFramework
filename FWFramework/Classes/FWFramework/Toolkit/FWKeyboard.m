@@ -33,6 +33,10 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @property (nonatomic, weak) UIResponder *returnResponder;
 @property (nonatomic, copy) void (^returnBlock)(id textInput);
 
+@property (nonatomic, strong) UIToolbar *keyboardToolbar;
+@property (nonatomic, weak) UIResponder *previousResponder;
+@property (nonatomic, weak) UIResponder *nextResponder;
+
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, weak) UIViewController *viewController;
@@ -275,35 +279,57 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - Toolbar
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+- (UIToolbar *)keyboardToolbar
 {
-    UIBarButtonItem *rightItem = nil;
-    if (block != nil) {
-        rightItem = [UIBarButtonItem.fw itemWithObject:title block:block];
-        rightItem.style = UIBarButtonItemStyleDone;
-    } else {
-        rightItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self.textInput action:@selector(resignFirstResponder)];
+    if (!_keyboardToolbar) {
+        _keyboardToolbar = [UIToolbar new];
     }
-    return [self addToolbar:barStyle leftItem:nil rightItem:rightItem];
+    return _keyboardToolbar;
 }
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+- (void)addToolbarWithTitle:(id)title
+             previousButton:(id)previousButton
+                 nextButton:(id)nextButton
+                rightButton:(id)rightButton
+                      block:(void (^)(id sender))block
 {
-    NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
-    if (leftItem != nil) {
-        [items addObject:leftItem];
-    }
-    [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
-    if (rightItem != nil) {
-        [items addObject:rightItem];
+    UIBarButtonItem *titleItem = title ? [UIBarButtonItem.fw itemWithObject:title block:nil] : nil;
+    titleItem.enabled = NO;
+    UIBarButtonItem *previousItem = previousButton ? [UIBarButtonItem.fw itemWithObject:previousButton target:self.previousResponder action:@selector(becomeFirstResponder)] : nil;
+    previousItem.enabled = self.previousResponder != nil;
+    UIBarButtonItem *nextItem = nextButton ? [UIBarButtonItem.fw itemWithObject:nextButton target:self.nextResponder action:@selector(becomeFirstResponder)] : nil;
+    nextItem.enabled = self.nextResponder != nil;
+    
+    UIBarButtonItem *rightItem;
+    if (rightButton) {
+        if (block) {
+            rightItem = [UIBarButtonItem.fw itemWithObject:rightButton block:block];
+            rightItem.style = UIBarButtonItemStyleDone;
+        } else {
+            rightItem = [UIBarButtonItem.fw itemWithObject:rightButton target:self.textInput action:@selector(resignFirstResponder)];
+        }
     }
     
-    UIToolbar *toolbar = [UIToolbar new];
+    [self addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem rightItem:rightItem];
+}
+
+- (void)addToolbarWithTitleItem:(nullable UIBarButtonItem *)titleItem
+                   previousItem:(nullable UIBarButtonItem *)previousItem
+                       nextItem:(nullable UIBarButtonItem *)nextItem
+                      rightItem:(nullable UIBarButtonItem *)rightItem
+{
+    NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
+    if (previousItem) [items addObject:previousItem];
+    if (nextItem) [items addObject:nextItem];
+    [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (titleItem) [items addObject:titleItem];
+    if (titleItem) [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (rightItem) [items addObject:rightItem];
+    
+    UIToolbar *toolbar = self.keyboardToolbar;
     toolbar.items = [items copy];
-    toolbar.barStyle = barStyle;
     [toolbar sizeToFit];
     ((UITextField *)self.textInput).inputAccessoryView = toolbar;
-    return toolbar;
 }
 
 @end
@@ -533,14 +559,51 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - Toolbar
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+- (UIToolbar *)keyboardToolbar
 {
-    return [self.innerKeyboardTarget addToolbar:barStyle title:title block:block];
+    return self.innerKeyboardTarget.keyboardToolbar;
 }
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+- (void)setKeyboardToolbar:(UIToolbar *)keyboardToolbar
 {
-    return [self.innerKeyboardTarget addToolbar:barStyle leftItem:leftItem rightItem:rightItem];
+    self.innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
+}
+
+- (UIResponder *)previousResponder
+{
+    return self.innerKeyboardTarget.previousResponder;
+}
+
+- (void)setPreviousResponder:(UIResponder *)previousResponder
+{
+    self.innerKeyboardTarget.previousResponder = previousResponder;
+}
+
+- (UIResponder *)nextResponder
+{
+    return self.innerKeyboardTarget.nextResponder;
+}
+
+- (void)setNextResponder:(UIResponder *)nextResponder
+{
+    self.innerKeyboardTarget.nextResponder = nextResponder;
+}
+
+- (void)addToolbarWithTitle:(id)title
+             previousButton:(id)previousButton
+                 nextButton:(id)nextButton
+                rightButton:(id)rightButton
+                      block:(void (^)(id))block
+{
+    [self.innerKeyboardTarget addToolbarWithTitle:title previousButton:previousButton nextButton:nextButton rightButton:rightButton block:block];
+}
+
+- (void)addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
+                   previousItem:(UIBarButtonItem *)previousItem
+                       nextItem:(UIBarButtonItem *)nextItem
+                      rightItem:(UIBarButtonItem *)rightItem
+{
+    [self.innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem rightItem:rightItem];
 }
 
 @end
@@ -770,14 +833,51 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - Toolbar
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(void (^)(id sender))block
+- (UIToolbar *)keyboardToolbar
 {
-    return [self.innerKeyboardTarget addToolbar:barStyle title:title block:block];
+    return self.innerKeyboardTarget.keyboardToolbar;
 }
 
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle leftItem:(UIBarButtonItem *)leftItem rightItem:(UIBarButtonItem *)rightItem
+- (void)setKeyboardToolbar:(UIToolbar *)keyboardToolbar
 {
-    return [self.innerKeyboardTarget addToolbar:barStyle leftItem:leftItem rightItem:rightItem];
+    self.innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
+}
+
+- (UIResponder *)previousResponder
+{
+    return self.innerKeyboardTarget.previousResponder;
+}
+
+- (void)setPreviousResponder:(UIResponder *)previousResponder
+{
+    self.innerKeyboardTarget.previousResponder = previousResponder;
+}
+
+- (UIResponder *)nextResponder
+{
+    return self.innerKeyboardTarget.nextResponder;
+}
+
+- (void)setNextResponder:(UIResponder *)nextResponder
+{
+    self.innerKeyboardTarget.nextResponder = nextResponder;
+}
+
+- (void)addToolbarWithTitle:(id)title
+             previousButton:(id)previousButton
+                 nextButton:(id)nextButton
+                rightButton:(id)rightButton
+                      block:(void (^)(id))block
+{
+    [self.innerKeyboardTarget addToolbarWithTitle:title previousButton:previousButton nextButton:nextButton rightButton:rightButton block:block];
+}
+
+- (void)addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
+                   previousItem:(UIBarButtonItem *)previousItem
+                       nextItem:(UIBarButtonItem *)nextItem
+                      rightItem:(UIBarButtonItem *)rightItem
+{
+    [self.innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem rightItem:rightItem];
 }
 
 @end
