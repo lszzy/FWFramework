@@ -393,6 +393,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
 }
 
+- (UIScrollView *)innerKeyboardScrollView
+{
+    return self.fw.innerKeyboardTarget.scrollView;
+}
+
+- (void)setInnerKeyboardScrollView:(UIScrollView *)keyboardScrollView
+{
+    self.fw.innerKeyboardTarget.scrollView = keyboardScrollView;
+}
+
 - (BOOL)innerTouchResign
 {
     return self.fw.innerKeyboardTarget.touchResign;
@@ -460,12 +470,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (UIScrollView *)keyboardScrollView
 {
-    return self.innerKeyboardTarget.scrollView;
+    return self.base.innerKeyboardScrollView;
 }
 
 - (void)setKeyboardScrollView:(UIScrollView *)keyboardScrollView
 {
-    self.innerKeyboardTarget.scrollView = keyboardScrollView;
+    self.base.innerKeyboardScrollView = keyboardScrollView;
 }
 
 - (FWInnerKeyboardTarget *)innerKeyboardTarget
@@ -581,6 +591,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
 }
 
+- (UIScrollView *)innerKeyboardScrollView
+{
+    return self.fw.innerKeyboardTarget.scrollView;
+}
+
+- (void)setInnerKeyboardScrollView:(UIScrollView *)keyboardScrollView
+{
+    self.fw.innerKeyboardTarget.scrollView = keyboardScrollView;
+}
+
 - (BOOL)innerTouchResign
 {
     return self.fw.innerKeyboardTarget.touchResign;
@@ -648,12 +668,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (UIScrollView *)keyboardScrollView
 {
-    return self.innerKeyboardTarget.scrollView;
+    return self.base.innerKeyboardScrollView;
 }
 
 - (void)setKeyboardScrollView:(UIScrollView *)keyboardScrollView
 {
-    self.innerKeyboardTarget.scrollView = keyboardScrollView;
+    self.base.innerKeyboardScrollView = keyboardScrollView;
 }
 
 - (FWInnerKeyboardTarget *)innerKeyboardTarget
