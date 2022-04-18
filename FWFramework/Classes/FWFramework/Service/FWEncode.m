@@ -216,20 +216,20 @@
     return [self.base stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-- (NSString *)lcfirstString
-{
-    if (self.base.length == 0) return self.base;
-    NSMutableString *string = [NSMutableString string];
-    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].lowercaseString];
-    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
-    return string;
-}
-
 - (NSString *)ucfirstString
 {
     if (self.base.length == 0) return self.base;
     NSMutableString *string = [NSMutableString string];
     [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].uppercaseString];
+    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
+    return string;
+}
+
+- (NSString *)lcfirstString
+{
+    if (self.base.length == 0) return self.base;
+    NSMutableString *string = [NSMutableString string];
+    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].lowercaseString];
     if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
     return string;
 }
@@ -267,14 +267,6 @@
         }
     }
     return string;
-}
-
-- (NSString *)pinyinString
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:self.base];
-    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
-    NSString *pinyinStr = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
-    return [pinyinStr lowercaseString];
 }
 
 - (NSData *)utf8Data

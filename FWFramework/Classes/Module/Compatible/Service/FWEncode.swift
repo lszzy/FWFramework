@@ -71,7 +71,15 @@ extension FWWrapper where Base == String {
     
     /// base64解码
     public var base64Decode: String? {
-        guard let data = Data(base64Encoded: base, options: .ignoreUnknownCharacters) else { return nil }
+        if let data = Data(base64Encoded: base, options: .ignoreUnknownCharacters) {
+            return String(data: data, encoding: .utf8)
+        }
+        
+        let remainder = base.count % 4
+        guard remainder > 0 else { return nil }
+        
+        let padding = String(repeating: "=", count: 4 - remainder)
+        guard let data = Data(base64Encoded: base + padding, options: .ignoreUnknownCharacters) else { return nil }
         return String(data: data, encoding: .utf8)
     }
     
@@ -227,6 +235,88 @@ extension FWWrapper where Base == String {
     /// 去掉首尾空白字符
     public var trimString: String {
         return base.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    /// 首字母大写
+    public var ucfirstString: String {
+        guard base.count > 0 else { return base }
+        var string = String(format: "%c", (base as NSString).character(at: 0)).uppercased()
+        if base.count > 1 {
+            string.append(contentsOf: substring(from: 1))
+        }
+        return string
+    }
+    
+    /// 首字母小写
+    public var lcfirstString: String {
+        guard base.count > 0 else { return base }
+        var string = String(format: "%c", (base as NSString).character(at: 0)).lowercased()
+        if base.count > 1 {
+            string.append(contentsOf: substring(from: 1))
+        }
+        return string
+    }
+    
+    /// 驼峰转下划线
+    public var underlineString: String {
+        guard base.count > 0 else { return base }
+        var result = ""
+        let str = base as NSString
+        for i in 0 ..< str.length {
+            let cString = String(format: "%c", str.character(at: i))
+            let cStringLower = cString.lowercased()
+            if cString == cStringLower {
+                result.append(contentsOf: cStringLower)
+            } else {
+                result.append(contentsOf: "_")
+                result.append(contentsOf: cStringLower)
+            }
+        }
+        return result
+    }
+    
+    /// 下划线转驼峰
+    public var camelString: String {
+        guard base.count > 0 else { return base }
+        var result = ""
+        let comps = base.components(separatedBy: "_")
+        for i in 0 ..< comps.count {
+            let comp = comps[i] as NSString
+            if i > 0 && comp.length > 0 {
+                result.append(String(format: "%c", comp.character(at: 0)).uppercased())
+                if comp.length > 1 {
+                    result.append(comp.substring(from: 1))
+                }
+            } else {
+                result.append(comp as String)
+            }
+        }
+        return result
+    }
+    
+    /// 是否包含Emoji表情
+    public var containsEmoji: Bool {
+        for scalar in base.unicodeScalars {
+            switch scalar.value {
+            case 0x1F600...0x1F64F,
+                 0x1F300...0x1F5FF,
+                 0x1F680...0x1F6FF,
+                 0x1F1E6...0x1F1FF,
+                 0x2600...0x26FF,
+                 0x2700...0x27BF,
+                 0xE0020...0xE007F,
+                 0xFE00...0xFE0F,
+                 0x1F900...0x1F9FF,
+                 127_000...127_600,
+                 65024...65039,
+                 9100...9300,
+                 8400...8447:
+                return true
+            default:
+                continue
+            }
+        }
+        return false
     }
     
     /// 过滤JSON解码特殊字符

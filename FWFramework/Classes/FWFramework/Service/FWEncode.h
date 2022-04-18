@@ -157,11 +157,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *camelString;
 
 /**
- 转拼音
- */
-@property (nonatomic, copy, readonly) NSString *pinyinString;
-
-/**
  过滤JSON解码特殊字符
  
  兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
