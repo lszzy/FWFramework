@@ -22,8 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启用键盘管理(自动滚动)，默认NO
 @property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的空白高度，默认10.0
-@property (nonatomic, assign) CGFloat keyboardSpacing UI_APPEARANCE_SELECTOR;
+/// 设置输入框和键盘的空白间距，默认15.0
+@property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
+
+/// 设置输入框和键盘的回弹高度，默认0始终回弹
+@property (nonatomic, assign) CGFloat reboundHeight UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
 @property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
@@ -90,8 +93,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启用键盘管理(自动滚动)，默认NO
 @property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的空白高度，默认10.0
-@property (nonatomic, assign) CGFloat keyboardSpacing UI_APPEARANCE_SELECTOR;
+/// 设置输入框和键盘的空白高度，默认15.0
+@property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
+
+/// 设置输入框和键盘的回弹高度，默认0始终回弹
+@property (nonatomic, assign) CGFloat reboundHeight UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
 @property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
