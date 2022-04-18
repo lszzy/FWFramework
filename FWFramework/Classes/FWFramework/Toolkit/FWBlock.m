@@ -363,6 +363,20 @@
     // NSString
     if ([object isKindOfClass:[NSString class]]) {
         barItem = [[self.base alloc] initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
+    // NSAttributedString
+    } else if ([object isKindOfClass:[NSAttributedString class]]) {
+        NSAttributedString *attributedString = (NSAttributedString *)object;
+        barItem = [[self.base alloc] initWithTitle:attributedString.string style:UIBarButtonItemStylePlain target:target action:action];
+        
+        // 只支持NSFontAttributeName和NSForegroundColorAttributeName属性
+        NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
+        NSMutableDictionary *textAttributes = [NSMutableDictionary new];
+        textAttributes[NSFontAttributeName] = attributes[NSFontAttributeName];
+        textAttributes[NSForegroundColorAttributeName] = attributes[NSForegroundColorAttributeName];
+        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+        for (NSNumber *state in states) {
+            [barItem setTitleTextAttributes:textAttributes forState:[state unsignedIntegerValue]];
+        }
     // UIImage
     } else if ([object isKindOfClass:[UIImage class]]) {
         barItem = [[self.base alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];

@@ -320,10 +320,17 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     NSMutableArray<UIBarButtonItem *> *items = [NSMutableArray array];
     if (previousItem) [items addObject:previousItem];
+    if (previousItem && nextItem) {
+        UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+        fixedItem.width = 6;
+        [items addObject:fixedItem];
+    }
     if (nextItem) [items addObject:nextItem];
     [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
-    if (titleItem) [items addObject:titleItem];
-    if (titleItem) [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    if (titleItem) {
+        [items addObject:titleItem];
+        [items addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    }
     if (rightItem) [items addObject:rightItem];
     
     UIToolbar *toolbar = self.keyboardToolbar;

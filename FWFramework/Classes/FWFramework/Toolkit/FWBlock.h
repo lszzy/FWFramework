@@ -202,10 +202,10 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 @interface FWBarButtonItemClassWrapper (FWBlock)
 
-/// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber等
+/// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
 - (UIBarButtonItem *)itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
 
-/// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber等
+/// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
 - (UIBarButtonItem *)itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
 
 @end
