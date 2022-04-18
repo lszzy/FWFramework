@@ -47,11 +47,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Toolbar
 
-/// 添加Toolbar，指定右边按钮标题和句柄(默认收起键盘)
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(nullable void (^)(id sender))block;
+/// 获取关联的键盘Toolbar对象，可自定义样式
+@property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
-/// 添加Toolbar，可选指定左边和右边按钮
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle leftItem:(nullable UIBarButtonItem *)leftItem rightItem:(nullable UIBarButtonItem *)rightItem;
+/// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
+@property (nullable, nonatomic, weak) UIResponder *previousResponder;
+
+/// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
+@property (nullable, nonatomic, weak) UIResponder *nextResponder;
+
+/// 添加Toolbar，指定标题、左侧上一个、下一个按钮和右边按钮
+/// @param title 标题，不能点击
+/// @param previousButton 左侧前一个按钮，聚焦previousResponder
+/// @param nextButton 左侧下一个按钮，聚焦nextResponder
+/// @param rightButton 右侧按钮
+/// @param block 右侧按钮句柄，默认收起键盘
+- (void)addToolbarWithTitle:(nullable id)title
+             previousButton:(nullable id)previousButton
+                 nextButton:(nullable id)nextButton
+                rightButton:(nullable id)rightButton
+                      block:(nullable void (^)(id sender))block;
+
+/// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
+/// @param titleItem 居中标题按钮
+/// @param previousItem 左侧前一个按钮
+/// @param nextItem 左侧下一个按钮
+/// @param rightItem 右侧按钮
+- (void)addToolbarWithTitleItem:(nullable UIBarButtonItem *)titleItem
+                   previousItem:(nullable UIBarButtonItem *)previousItem
+                       nextItem:(nullable UIBarButtonItem *)nextItem
+                      rightItem:(nullable UIBarButtonItem *)rightItem;
 
 @end
 
@@ -93,11 +118,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Toolbar
 
-/// 添加Toolbar，指定右边按钮标题和句柄(默认收起键盘)
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle title:(NSString *)title block:(nullable void (^)(id sender))block;
+/// 获取关联的键盘Toolbar对象，可自定义
+@property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
-/// 添加Toolbar，可选指定左边和右边按钮
-- (UIToolbar *)addToolbar:(UIBarStyle)barStyle leftItem:(nullable UIBarButtonItem *)leftItem rightItem:(nullable UIBarButtonItem *)rightItem;
+/// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
+@property (nullable, nonatomic, weak) UIResponder *previousResponder;
+
+/// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
+@property (nullable, nonatomic, weak) UIResponder *nextResponder;
+
+/// 添加Toolbar，指定标题、左侧上一个、下一个按钮和右边按钮
+/// @param title 标题，不能点击
+/// @param previousButton 左侧前一个按钮，聚焦previousResponder
+/// @param nextButton 左侧下一个按钮，聚焦nextResponder
+/// @param rightButton 右侧按钮
+/// @param block 右侧按钮句柄，默认收起键盘
+- (void)addToolbarWithTitle:(nullable id)title
+             previousButton:(nullable id)previousButton
+                 nextButton:(nullable id)nextButton
+                rightButton:(nullable id)rightButton
+                      block:(nullable void (^)(id sender))block;
+
+/// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
+/// @param titleItem 居中标题按钮
+/// @param previousItem 左侧前一个按钮
+/// @param nextItem 左侧下一个按钮
+/// @param rightItem 右侧按钮
+- (void)addToolbarWithTitleItem:(nullable UIBarButtonItem *)titleItem
+                   previousItem:(nullable UIBarButtonItem *)previousItem
+                       nextItem:(nullable UIBarButtonItem *)nextItem
+                      rightItem:(nullable UIBarButtonItem *)rightItem;
 
 @end
 
