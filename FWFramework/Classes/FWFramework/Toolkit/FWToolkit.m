@@ -355,6 +355,14 @@ static BOOL fwStaticColorARGB = NO;
     fwStaticColorARGB = enabled;
 }
 
+- (UIColor *)randomColor
+{
+    NSInteger red = arc4random() % 255;
+    NSInteger green = arc4random() % 255;
+    NSInteger blue = arc4random() % 255;
+    return [UIColor colorWithRed:red / 255.0 green:green / 255.0 blue:blue / 255.0 alpha:1.0f];
+}
+
 - (UIColor *)colorWithHex:(long)hex
 {
     return [self colorWithHex:hex alpha:1.0f];

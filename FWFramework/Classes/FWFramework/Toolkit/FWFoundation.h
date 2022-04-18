@@ -114,6 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 格式化时长，格式"00:00"或"00:00:00"
 - (NSString *)formatDuration:(NSTimeInterval)duration hasHour:(BOOL)hasHour;
 
+/// 格式化16位、13位时间戳为10位(秒)
+- (NSTimeInterval)formatTimestamp:(NSTimeInterval)timestamp;
+
 @end
 
 #pragma mark - FWDictionaryWrapper+FWFoundation

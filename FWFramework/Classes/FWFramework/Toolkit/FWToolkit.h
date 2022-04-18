@@ -124,6 +124,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
 @property (nonatomic, assign) BOOL colorStandardARGB;
 
+/// 获取透明度为1.0的RGB随机颜色
+@property (nonatomic, readonly) UIColor *randomColor;
+
 /// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
 - (UIColor *)colorWithHex:(long)hex;
 
