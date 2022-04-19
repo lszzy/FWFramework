@@ -52,7 +52,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self = [super init];
     if (self) {
         _textInput = textInput;
-        _keyboardDistance = 15.0;
+        _keyboardDistance = 10.0;
     }
     return self;
 }
@@ -66,56 +66,53 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setKeyboardManager:(BOOL)keyboardManager
 {
-    if (keyboardManager != _keyboardManager) {
-        _keyboardManager = keyboardManager;
-        
-        if (keyboardManager) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-        } else {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-        }
+    if (keyboardManager == _keyboardManager) return;
+    _keyboardManager = keyboardManager;
+    
+    if (keyboardManager) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     }
 }
 
 - (void)setTouchResign:(BOOL)touchResign
 {
-    if (touchResign != _touchResign) {
-        _touchResign = touchResign;
-        
-        if (touchResign) {
-            if ([self.textInput isKindOfClass:[UITextField class]]) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
-            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
-            }
-        } else {
-            if ([self.textInput isKindOfClass:[UITextField class]]) {
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidEndEditingNotification object:self.textInput];
-            } else if ([self.textInput isKindOfClass:[UITextView class]]) {
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidBeginEditingNotification object:self.textInput];
-                [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidEndEditingNotification object:self.textInput];
-            }
+    if (touchResign == _touchResign) return;
+    _touchResign = touchResign;
+    
+    if (touchResign) {
+        if ([self.textInput isKindOfClass:[UITextField class]]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextFieldTextDidEndEditingNotification object:self.textInput];
+        } else if ([self.textInput isKindOfClass:[UITextView class]]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidBegin) name:UITextViewTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editingDidEnd) name:UITextViewTextDidEndEditingNotification object:self.textInput];
+        }
+    } else {
+        if ([self.textInput isKindOfClass:[UITextField class]]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidEndEditingNotification object:self.textInput];
+        } else if ([self.textInput isKindOfClass:[UITextView class]]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidBeginEditingNotification object:self.textInput];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidEndEditingNotification object:self.textInput];
         }
     }
 }
 
 - (void)setKeyboardResign:(BOOL)keyboardResign
 {
-    if (keyboardResign != _keyboardResign) {
-        _keyboardResign = keyboardResign;
-        
-        if (keyboardResign) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        } else {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-        }
+    if (keyboardResign == _keyboardResign) return;
+    _keyboardResign = keyboardResign;
+    
+    if (keyboardResign) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
     }
 }
 
@@ -205,24 +202,17 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         
         CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+        animationCurve = animationCurve << 16;
         UIView *convertView = self.textInput.window ?: self.viewController.view.window;
         CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
         CGPoint contentOffset = self.scrollView.contentOffset;
         CGFloat targetOffsetY = MAX(contentOffset.y + self.keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
         
-        BOOL shouldScroll = NO;
-        if (targetOffsetY > contentOffset.y) {
-            shouldScroll = YES;
-        } else if (targetOffsetY <= contentOffset.y - self.reboundHeight) {
-            shouldScroll = YES;
-            targetOffsetY = targetOffsetY + self.reboundHeight;
-        }
-        if (shouldScroll) {
-            contentOffset.y = targetOffsetY;
-            [UIView animateWithDuration:animationDuration animations:^{
-                self.scrollView.contentOffset = contentOffset;
-            }];
-        }
+        contentOffset.y = targetOffsetY;
+        [UIView animateWithDuration:animationDuration delay:0 options:(animationCurve | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+            self.scrollView.contentOffset = contentOffset;
+        } completion:NULL];
         return;
     }
     
@@ -233,29 +223,22 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    animationCurve = animationCurve << 16;
     UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
     CGRect viewFrame = self.viewController.view.frame;
     CGFloat viewTargetY = MIN(viewFrame.origin.y - self.keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
     
-    BOOL shouldScroll = NO;
-    if (viewTargetY > viewFrame.origin.y) {
-        shouldScroll = YES;
-    } else if (viewTargetY <= viewFrame.origin.y - self.reboundHeight) {
-        shouldScroll = YES;
-        viewTargetY = viewTargetY + self.reboundHeight;
-    }
-    if (shouldScroll) {
-        viewFrame.origin.y = viewTargetY;
-        [UIView animateWithDuration:animationDuration animations:^{
-            // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
-            if (@available(iOS 14.0, *)) {
-                self.viewController.view.layer.frame = viewFrame;
-            } else {
-                self.viewController.view.frame = viewFrame;
-            }
-        }];
-    }
+    viewFrame.origin.y = viewTargetY;
+    [UIView animateWithDuration:animationDuration delay:0 options:(animationCurve | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+        // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+        if (@available(iOS 14.0, *)) {
+            self.viewController.view.layer.frame = viewFrame;
+        } else {
+            self.viewController.view.frame = viewFrame;
+        }
+    } completion:NULL];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
@@ -269,12 +252,14 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         fwStaticKeyboardOffset = 0;
         
         CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+        NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+        animationCurve = animationCurve << 16;
         
         CGPoint contentOffset = self.scrollView.contentOffset;
         contentOffset.y = originOffsetY;
-        [UIView animateWithDuration:animationDuration animations:^{
+        [UIView animateWithDuration:animationDuration delay:0 options:(animationCurve | UIViewAnimationOptionBeginFromCurrentState) animations:^{
             self.scrollView.contentOffset = contentOffset;
-        }];
+        } completion:NULL];
         return;
     }
     
@@ -283,17 +268,19 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     fwStaticKeyboardOrigin = 0;
     
     CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    animationCurve = animationCurve << 16;
     
     CGRect viewFrame = self.viewController.view.frame;
     viewFrame.origin.y = viewOriginY;
-    [UIView animateWithDuration:animationDuration animations:^{
+    [UIView animateWithDuration:animationDuration delay:0 options:(animationCurve | UIViewAnimationOptionBeginFromCurrentState) animations:^{
         // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
         if (@available(iOS 14.0, *)) {
             self.viewController.view.layer.frame = viewFrame;
         } else {
             self.viewController.view.frame = viewFrame;
         }
-    }];
+    } completion:NULL];
 }
 
 #pragma mark - Toolbar
