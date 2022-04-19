@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置输入框和键盘的空白间距，默认10.0
 @property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的回弹高度，默认0始终回弹
-@property (nonatomic, assign) CGFloat reboundHeight UI_APPEARANCE_SELECTOR;
+/// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
+@property (nonatomic, assign) CGFloat reboundDistance UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
 @property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
@@ -53,33 +53,36 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取关联的键盘Toolbar对象，可自定义样式
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
+/// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
+@property (nonatomic, strong) id toolbarPreviousButton;
+
+/// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
+@property (nonatomic, strong) id toolbarNextButton;
+
+/// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
+@property (nonatomic, strong) id toolbarDoneButton;
+
 /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *previousResponder;
 
 /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *nextResponder;
 
-/// 添加Toolbar，指定标题、左侧上一个、下一个按钮和右边按钮
+/// 添加Toolbar，指定标题和完成句柄，使用默认按钮
 /// @param title 标题，不能点击
-/// @param previousButton 左侧前一个按钮，聚焦previousResponder
-/// @param nextButton 左侧下一个按钮，聚焦nextResponder
-/// @param rightButton 右侧按钮
-/// @param block 右侧按钮句柄，默认收起键盘
+/// @param doneBlock 右侧完成按钮句柄，默认收起键盘
 - (void)addToolbarWithTitle:(nullable id)title
-             previousButton:(nullable id)previousButton
-                 nextButton:(nullable id)nextButton
-                rightButton:(nullable id)rightButton
-                      block:(nullable void (^)(id sender))block;
+                  doneBlock:(nullable void (^)(id sender))doneBlock;
 
 /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
 /// @param titleItem 居中标题按钮
 /// @param previousItem 左侧前一个按钮
 /// @param nextItem 左侧下一个按钮
-/// @param rightItem 右侧按钮
+/// @param doneItem 右侧完成按钮
 - (void)addToolbarWithTitleItem:(nullable UIBarButtonItem *)titleItem
                    previousItem:(nullable UIBarButtonItem *)previousItem
                        nextItem:(nullable UIBarButtonItem *)nextItem
-                      rightItem:(nullable UIBarButtonItem *)rightItem;
+                       doneItem:(nullable UIBarButtonItem *)doneItem;
 
 @end
 
@@ -96,8 +99,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的回弹高度，默认0始终回弹
-@property (nonatomic, assign) CGFloat reboundHeight UI_APPEARANCE_SELECTOR;
+/// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
+@property (nonatomic, assign) CGFloat reboundDistance UI_APPEARANCE_SELECTOR;
 
 /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
 @property (nonatomic, assign) BOOL keyboardResign UI_APPEARANCE_SELECTOR;
@@ -127,33 +130,36 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取关联的键盘Toolbar对象，可自定义
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
+/// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
+@property (nonatomic, strong) id toolbarPreviousButton;
+
+/// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
+@property (nonatomic, strong) id toolbarNextButton;
+
+/// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
+@property (nonatomic, strong) id toolbarDoneButton;
+
 /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *previousResponder;
 
 /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *nextResponder;
 
-/// 添加Toolbar，指定标题、左侧上一个、下一个按钮和右边按钮
+/// 添加Toolbar，指定标题和完成句柄，使用默认按钮
 /// @param title 标题，不能点击
-/// @param previousButton 左侧前一个按钮，聚焦previousResponder
-/// @param nextButton 左侧下一个按钮，聚焦nextResponder
-/// @param rightButton 右侧按钮
-/// @param block 右侧按钮句柄，默认收起键盘
+/// @param doneBlock 右侧完成按钮句柄，默认收起键盘
 - (void)addToolbarWithTitle:(nullable id)title
-             previousButton:(nullable id)previousButton
-                 nextButton:(nullable id)nextButton
-                rightButton:(nullable id)rightButton
-                      block:(nullable void (^)(id sender))block;
+                  doneBlock:(nullable void (^)(id sender))doneBlock;
 
 /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
 /// @param titleItem 居中标题按钮
 /// @param previousItem 左侧前一个按钮
 /// @param nextItem 左侧下一个按钮
-/// @param rightItem 右侧按钮
+/// @param doneItem 右侧完成按钮
 - (void)addToolbarWithTitleItem:(nullable UIBarButtonItem *)titleItem
                    previousItem:(nullable UIBarButtonItem *)previousItem
                        nextItem:(nullable UIBarButtonItem *)nextItem
-                      rightItem:(nullable UIBarButtonItem *)rightItem;
+                       doneItem:(nullable UIBarButtonItem *)doneItem;
 
 @end
 
