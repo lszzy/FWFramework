@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启用键盘管理(自动滚动)，默认NO
 @property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的空白间距，默认15.0
+/// 设置输入框和键盘的空白间距，默认10.0
 @property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
 
 /// 设置输入框和键盘的回弹高度，默认0始终回弹
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启用键盘管理(自动滚动)，默认NO
 @property (nonatomic, assign) BOOL keyboardManager UI_APPEARANCE_SELECTOR;
 
-/// 设置输入框和键盘的空白高度，默认15.0
+/// 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat keyboardDistance UI_APPEARANCE_SELECTOR;
 
 /// 设置输入框和键盘的回弹高度，默认0始终回弹
