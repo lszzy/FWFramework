@@ -17,6 +17,7 @@ import FWFramework
 extension FWWrapper where Base == Data {
     /// Foundation对象编码为json数据
     public static func jsonEncode(_ object: Any) -> Data? {
+        guard JSONSerialization.isValidJSONObject(object) else { return nil }
         return try? JSONSerialization.data(withJSONObject: object)
     }
     
