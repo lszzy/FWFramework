@@ -130,16 +130,20 @@ NS_ASSUME_NONNULL_BEGIN
     @interface FWClassWrapper (ext) \
     @property (nonatomic, strong, readonly) FWClassWrapper *ext NS_UNAVAILABLE; \
     @end \
-    @interface NSObject (ext) \
+    @interface NSObject (fw_macro_concat(FWObjectWrapper, ext)) \
     @property (nonatomic, strong, readonly) FWObjectWrapper *ext; \
+    @end \
+    @interface NSObject (fw_macro_concat(FWClassWrapper, ext)) \
     @property (class, nonatomic, strong, readonly) FWClassWrapper *ext; \
     @end \
     FWWrapperFramework_(FWWrapperExtendable, ext);
 
 /// 快速实现自定义包装器宏
 #define FWDefWrapperCustomizable(ext) \
-    @implementation NSObject (ext) \
+    @implementation NSObject (fw_macro_concat(FWObjectWrapper, ext)) \
     - (FWObjectWrapper *)ext { return [self fw]; } \
+    @end \
+    @implementation NSObject (fw_macro_concat(FWClassWrapper, ext)) \
     + (FWClassWrapper *)ext { return [self fw]; } \
     @end \
     FWDefWrapperFramework_(FWDefWrapperExtendable, ext);
