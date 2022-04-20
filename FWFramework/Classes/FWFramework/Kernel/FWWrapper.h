@@ -15,126 +15,103 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速声明包装器宏
 #define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    FWWrapperClass(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
-    FWWrapperExtension(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
+    @interface objectWrapper : objectParent \
+    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
+    @end \
+    @interface classWrapper : classParent \
+    @end \
+    @interface baseClass (FWWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
 
 /// 快速声明可用版本包装器宏
 #define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    FWWrapperClassAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
-    FWWrapperExtensionAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
+    API_AVAILABLE(ios(version)) \
+    @interface objectWrapper : objectParent \
+    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface classWrapper : classParent \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface baseClass (FWWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
 
 /// 快速声明单泛型包装器宏
 #define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    FWWrapperClassGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
-    FWWrapperExtensionGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
-
-/// 快速声明双泛型包装器宏
-#define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    FWWrapperClassGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
-    FWWrapperExtensionGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
-
-/// 快速实现包装器宏
-#define FWDefWrapper(baseClass, fw, objectWrapper, classWrapper) \
-    FWDefWrapperClass(baseClass, fw, objectWrapper, classWrapper); \
-    FWDefWrapperExtension(baseClass, fw, objectWrapper, classWrapper);
-
-/// 快速声明包装器类宏
-#define FWWrapperClass(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    @interface objectWrapper : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
-    @end \
-    @interface classWrapper : classParent \
-    @end
-
-/// 快速声明可用版本包装器类宏
-#define FWWrapperClassAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    API_AVAILABLE(ios(version)) \
-    @interface objectWrapper : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
-    @end \
-    API_AVAILABLE(ios(version)) \
-    @interface classWrapper : classParent \
-    @end
-
-/// 快速声明单泛型包装器类宏
-#define FWWrapperClassGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, weak, nullable, readonly) baseClass<ObjectType> *base; \
     @end \
     @interface classWrapper : classParent \
+    @end \
+    @interface baseClass<ObjectType> (FWWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
-/// 快速声明双泛型包装器类宏
-#define FWWrapperClassGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+/// 快速声明双泛型包装器宏
+#define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, weak, nullable, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
     @interface classWrapper : classParent \
+    @end \
+    @interface baseClass<KeyType, ValueType> (FWWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
-/// 快速实现包装器类宏
-#define FWDefWrapperClass(baseClass, fw, objectWrapper, classWrapper) \
+/// 快速实现包装器宏
+#define FWDefWrapper(baseClass, fw, objectWrapper, classWrapper) \
     @implementation objectWrapper \
     @dynamic base; \
-    - (Class)wrapperClass { \
-        return [classWrapper class]; \
-    } \
+    - (Class)wrapperClass { return [classWrapper class]; } \
     @end \
     @implementation classWrapper \
-    - (Class)wrapperClass { \
-        return [objectWrapper class]; \
-    } \
+    - (Class)wrapperClass { return [objectWrapper class]; } \
+    @end \
+    @implementation baseClass (FWWrapper) \
+    - (objectWrapper *)fw { return [objectWrapper wrapper:self]; } \
+    + (classWrapper *)fw { return [classWrapper wrapper:self]; } \
     @end
 
 /// 快速声明包装器扩展宏
-#define FWWrapperExtension(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    @interface baseClass (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+#define FWWrapperExtendable(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass (ext) \
+    @property (nonatomic, strong, readonly) objectWrapper *ext; \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
     @end
 
 /// 快速声明可用版本包装器扩展宏
-#define FWWrapperExtensionAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperExtendableAvailable(version, baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
-    @interface baseClass (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @end \
-    API_AVAILABLE(ios(version)) \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @interface baseClass (ext) \
+    @property (nonatomic, strong, readonly) objectWrapper *ext; \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
     @end
 
 /// 快速声明单泛型包装器扩展宏
-#define FWWrapperExtensionGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    @interface baseClass<ObjectType> (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+#define FWWrapperExtendableGeneric(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass<ObjectType> (ext) \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *ext; \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
     @end
 
 /// 快速声明双泛型包装器扩展宏
-#define FWWrapperExtensionGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
-    @interface baseClass<KeyType, ValueType> (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+#define FWWrapperExtendableGeneric2(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass<KeyType, ValueType> (ext) \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *ext; \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
     @end
 
 /// 快速实现包装器扩展宏
-#define FWDefWrapperExtension(baseClass, fw, objectWrapper, classWrapper) \
-    @implementation baseClass (objectWrapper) \
-    - (objectWrapper *)fw { \
-        return [objectWrapper wrapper:self]; \
-    } \
-    @end \
-    @implementation baseClass (classWrapper) \
-    + (classWrapper *)fw { \
-        return [classWrapper wrapper:self]; \
-    } \
+#define FWDefWrapperExtendable(baseClass, ext, objectWrapper, classWrapper) \
+    @implementation baseClass (ext) \
+    - (objectWrapper *)ext { return [self fw]; } \
+    + (classWrapper *)ext { return [self fw]; } \
     @end
 
 /// 快速声明自定义包装器宏
@@ -146,12 +123,26 @@ NS_ASSUME_NONNULL_BEGIN
 /// FWDefWrapperCustomizable(app)
 /// 使用示例：
 /// NSString.app.jsonEncode(object)
-#define FWWrapperCustomizable(fw) \
-    FWWrapperFramework_(FWWrapperExtension, fw);
+#define FWWrapperCustomizable(ext) \
+    @interface FWObjectWrapper (ext) \
+    @property (nonatomic, strong, readonly) FWObjectWrapper *ext NS_UNAVAILABLE; \
+    @end \
+    @interface FWClassWrapper (ext) \
+    @property (nonatomic, strong, readonly) FWClassWrapper *ext NS_UNAVAILABLE; \
+    @end \
+    @interface NSObject (ext) \
+    @property (nonatomic, strong, readonly) FWObjectWrapper *ext; \
+    @property (class, nonatomic, strong, readonly) FWClassWrapper *ext; \
+    @end \
+    FWWrapperFramework_(FWWrapperExtendable, ext);
 
 /// 快速实现自定义包装器宏
-#define FWDefWrapperCustomizable(fw) \
-    FWDefWrapperFramework_(FWDefWrapperExtension, fw);
+#define FWDefWrapperCustomizable(ext) \
+    @implementation NSObject (ext) \
+    - (FWObjectWrapper *)ext { return [self fw]; } \
+    + (FWClassWrapper *)ext { return [self fw]; } \
+    @end \
+    FWDefWrapperFramework_(FWDefWrapperExtendable, ext);
 
 /// 内部快速声明所有框架包装器宏
 #define FWWrapperFramework_(macro, fw) \
@@ -306,14 +297,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// NSObject实现包装器协议
-@interface NSObject (FWObjectWrapper) <FWObjectWrapper>
-
-/// 对象包装器
-@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
-
-@end
-
 #pragma mark - FWClassWrapper
 
 /// 框架类包装器
@@ -338,6 +321,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 类包装器
 @property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
+
+@end
+
+#pragma mark - NSObject+FWWrapper
+
+/// NSObject实现对象包装器协议
+@interface NSObject (FWObjectWrapper) <FWObjectWrapper>
+
+/// 对象包装器
+@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
 
 @end
 
