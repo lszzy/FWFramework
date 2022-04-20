@@ -431,8 +431,7 @@
 
 - (NSData *)jsonEncode:(id)object
 {
-    if (!object) return nil;
-    
+    if (!object || ![NSJSONSerialization isValidJSONObject:object]) return nil;
     return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
 }
 
