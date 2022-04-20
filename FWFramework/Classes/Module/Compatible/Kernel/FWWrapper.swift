@@ -25,6 +25,13 @@ public struct FWWrapper<Base> {
 }
 
 /// Swift包装器兼容协议
+///
+/// 自定义fw为任意名称(如app)示例：
+/// extension FWWrapperCompatible {
+///     public static var app: FWWrapper<Self>.Type { FWWrapper<Self>.self }
+///     public var app: FWWrapper<Self> { FWWrapper(self) }
+/// }
+/// 使用：String.app.jsonEncode(object)
 public protocol FWWrapperCompatible {
     /// 关联类型
     associatedtype WrapperBase
