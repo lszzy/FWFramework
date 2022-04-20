@@ -7,87 +7,128 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWMacro.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Macro
 
 /// 快速声明包装器宏
-#define FWWrapperCompatible(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
-    @interface objectWrapper : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
-    @end \
-    @interface baseClass (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @end \
-    @interface classWrapper : classParent \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
-    @end
+#define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    FWWrapperClass(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
+    FWWrapperExtension(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
 
 /// 快速声明可用版本包装器宏
-#define FWWrapperCompatibleAvailable(version, baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    FWWrapperClassAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
+    FWWrapperExtensionAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
+
+/// 快速声明单泛型包装器宏
+#define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    FWWrapperClassGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
+    FWWrapperExtensionGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
+
+/// 快速声明双泛型包装器宏
+#define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    FWWrapperClassGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent); \
+    FWWrapperExtensionGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent);
+
+/// 快速实现包装器宏
+#define FWDefWrapper(baseClass, fw, objectWrapper, classWrapper) \
+    FWDefWrapperClass(baseClass, fw, objectWrapper, classWrapper); \
+    FWDefWrapperExtension(baseClass, fw, objectWrapper, classWrapper);
+
+/// 快速声明包装器类宏
+#define FWWrapperClass(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface objectWrapper : objectParent \
+    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
+    @end \
+    @interface classWrapper : classParent \
+    @end
+
+/// 快速声明可用版本包装器类宏
+#define FWWrapperClassAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface objectWrapper : objectParent \
     @property (nonatomic, weak, nullable, readonly) baseClass *base; \
     @end \
     API_AVAILABLE(ios(version)) \
-    @interface baseClass (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @end \
-    API_AVAILABLE(ios(version)) \
     @interface classWrapper : classParent \
-    @end \
-    API_AVAILABLE(ios(version)) \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
-/// 快速声明单泛型包装器宏
-#define FWWrapperCompatibleGeneric(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+/// 快速声明单泛型包装器类宏
+#define FWWrapperClassGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, weak, nullable, readonly) baseClass<ObjectType> *base; \
     @end \
-    @interface baseClass<ObjectType> (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
-    @end \
     @interface classWrapper : classParent \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
-/// 快速声明双泛型包装器宏
-#define FWWrapperCompatibleGeneric2(baseClass, objectWrapper, objectParent, classWrapper, classParent) \
+/// 快速声明双泛型包装器类宏
+#define FWWrapperClassGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, weak, nullable, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
-    @interface baseClass<KeyType, ValueType> (objectWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
-    @end \
     @interface classWrapper : classParent \
-    @end \
-    @interface baseClass (classWrapper) \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
     @end
 
-/// 快速实现包装器宏
-#define FWDefWrapper(baseClass, objectWrapper, classWrapper) \
+/// 快速实现包装器类宏
+#define FWDefWrapperClass(baseClass, fw, objectWrapper, classWrapper) \
     @implementation objectWrapper \
     @dynamic base; \
     - (Class)wrapperClass { \
         return [classWrapper class]; \
     } \
     @end \
-    @implementation baseClass (objectWrapper) \
-    - (objectWrapper *)fw { \
-        return [objectWrapper wrapper:self]; \
-    } \
-    @end \
     @implementation classWrapper \
     - (Class)wrapperClass { \
         return [objectWrapper class]; \
+    } \
+    @end
+
+/// 快速声明包装器扩展宏
+#define FWWrapperExtension(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
+/// 快速声明可用版本包装器扩展宏
+#define FWWrapperExtensionAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    API_AVAILABLE(ios(version)) \
+    @interface baseClass (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper *fw; \
+    @end \
+    API_AVAILABLE(ios(version)) \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
+/// 快速声明单泛型包装器扩展宏
+#define FWWrapperExtensionGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass<ObjectType> (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
+/// 快速声明双泛型包装器扩展宏
+#define FWWrapperExtensionGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    @interface baseClass<KeyType, ValueType> (objectWrapper) \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
+    @end \
+    @interface baseClass (classWrapper) \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @end
+
+/// 快速实现包装器扩展宏
+#define FWDefWrapperExtension(baseClass, fw, objectWrapper, classWrapper) \
+    @implementation baseClass (objectWrapper) \
+    - (objectWrapper *)fw { \
+        return [objectWrapper wrapper:self]; \
     } \
     @end \
     @implementation baseClass (classWrapper) \
@@ -95,6 +136,146 @@ NS_ASSUME_NONNULL_BEGIN
         return [classWrapper wrapper:self]; \
     } \
     @end
+
+/// 快速声明自定义包装器宏
+///
+/// 自定义fw为任意名称(如app)示例：
+/// h文件声明：
+/// FWWrapperCustomizable(app)
+/// m文件实现：
+/// FWDefWrapperCustomizable(app)
+/// 使用示例：
+/// NSString.app.jsonEncode(object)
+#define FWWrapperCustomizable(fw) \
+    FWWrapperFramework_(FWWrapperExtension, fw);
+
+/// 快速实现自定义包装器宏
+#define FWDefWrapperCustomizable(fw) \
+    FWDefWrapperFramework_(FWDefWrapperExtension, fw);
+
+/// 内部快速声明所有框架包装器宏
+#define FWWrapperFramework_(macro, fw) \
+    macro(CALayer, fw, FWLayerWrapper, FWObjectWrapper, FWLayerClassWrapper, FWClassWrapper); \
+    macro(CAGradientLayer, fw, FWGradientLayerWrapper, FWLayerWrapper, FWGradientLayerClassWrapper, FWLayerClassWrapper); \
+    macro(CAAnimation, fw, FWAnimationWrapper, FWObjectWrapper, FWAnimationClassWrapper, FWClassWrapper); \
+    macro(CADisplayLink, fw, FWDisplayLinkWrapper, FWObjectWrapper, FWDisplayLinkClassWrapper, FWClassWrapper); \
+     \
+    macro(NSString, fw, FWStringWrapper, FWObjectWrapper, FWStringClassWrapper, FWClassWrapper); \
+    macro(NSAttributedString, fw, FWAttributedStringWrapper, FWObjectWrapper, FWAttributedStringClassWrapper, FWClassWrapper); \
+    macro(NSNumber, fw, FWNumberWrapper, FWObjectWrapper, FWNumberClassWrapper, FWClassWrapper); \
+    macro(NSData, fw, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper); \
+    macro(NSDate, fw, FWDateWrapper, FWObjectWrapper, FWDateClassWrapper, FWClassWrapper); \
+    macro(NSURL, fw, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper); \
+    macro(NSURLRequest, fw, FWURLRequestWrapper, FWObjectWrapper, FWURLRequestClassWrapper, FWClassWrapper); \
+    macro(NSBundle, fw, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper); \
+    macro(NSTimer, fw, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper); \
+    macro(NSUserDefaults, fw, FWUserDefaultsWrapper, FWObjectWrapper, FWUserDefaultsClassWrapper, FWClassWrapper); \
+    macro(NSFileManager, fw, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper); \
+    fw_macro_concat(macro, Generic)(NSArray, fw, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper); \
+    fw_macro_concat(macro, Generic)(NSMutableArray, fw, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper); \
+    fw_macro_concat(macro, Generic)(NSSet, fw, FWSetWrapper, FWObjectWrapper, FWSetClassWrapper, FWClassWrapper); \
+    fw_macro_concat(macro, Generic)(NSMutableSet, fw, FWMutableSetWrapper, FWSetWrapper, FWMutableSetClassWrapper, FWSetClassWrapper); \
+    fw_macro_concat(macro, Generic2)(NSDictionary, fw, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper); \
+    fw_macro_concat(macro, Generic2)(NSMutableDictionary, fw, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper); \
+     \
+    macro(UIApplication, fw, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper); \
+    macro(UIBezierPath, fw, FWBezierPathWrapper, FWObjectWrapper, FWBezierPathClassWrapper, FWClassWrapper); \
+    macro(UIDevice, fw, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWrapper, FWClassWrapper); \
+    macro(UIScreen, fw, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper); \
+    macro(UIImage, fw, FWImageWrapper, FWObjectWrapper, FWImageClassWrapper, FWClassWrapper); \
+    macro(UIImageAsset, fw, FWImageAssetWrapper, FWObjectWrapper, FWImageAssetClassWrapper, FWClassWrapper); \
+    macro(UIFont, fw, FWFontWrapper, FWObjectWrapper, FWFontClassWrapper, FWClassWrapper); \
+    macro(UIColor, fw, FWColorWrapper, FWObjectWrapper, FWColorClassWrapper, FWClassWrapper); \
+    macro(UIView, fw, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper); \
+    macro(UILabel, fw, FWLabelWrapper, FWViewWrapper, FWLabelClassWrapper, FWViewClassWrapper); \
+    macro(UIImageView, fw, FWImageViewWrapper, FWViewWrapper, FWImageViewClassWrapper, FWViewClassWrapper); \
+    macro(UIScrollView, fw, FWScrollViewWrapper, FWViewWrapper, FWScrollViewClassWrapper, FWViewClassWrapper); \
+    macro(UITableView, fw, FWTableViewWrapper, FWScrollViewWrapper, FWTableViewClassWrapper, FWScrollViewClassWrapper); \
+    macro(UITableViewHeaderFooterView, fw, FWTableViewHeaderFooterViewWrapper, FWViewWrapper, FWTableViewHeaderFooterViewClassWrapper, FWViewClassWrapper); \
+    macro(UITableViewCell, fw, FWTableViewCellWrapper, FWViewWrapper, FWTableViewCellClassWrapper, FWViewClassWrapper); \
+    macro(UICollectionView, fw, FWCollectionViewWrapper, FWScrollViewWrapper, FWCollectionViewClassWrapper, FWScrollViewClassWrapper); \
+    macro(UICollectionReusableView, fw, FWCollectionReusableViewWrapper, FWViewWrapper, FWCollectionReusableViewClassWrapper, FWViewClassWrapper); \
+    macro(UICollectionViewCell, fw, FWCollectionViewCellWrapper, FWCollectionReusableViewWrapper, FWCollectionViewCellClassWrapper, FWCollectionReusableViewClassWrapper); \
+    macro(UIControl, fw, FWControlWrapper, FWViewWrapper, FWControlClassWrapper, FWViewClassWrapper); \
+    macro(UIButton, fw, FWButtonWrapper, FWControlWrapper, FWButtonClassWrapper, FWControlClassWrapper); \
+    macro(UISwitch, fw, FWSwitchWrapper, FWControlWrapper, FWSwitchClassWrapper, FWControlClassWrapper); \
+    macro(UIPageControl, fw, FWPageControlWrapper, FWControlWrapper, FWPageControlClassWrapper, FWControlClassWrapper); \
+    macro(UISlider, fw, FWSliderWrapper, FWControlWrapper, FWSliderClassWrapper, FWControlClassWrapper); \
+    macro(UITextField, fw, FWTextFieldWrapper, FWControlWrapper, FWTextFieldClassWrapper, FWControlClassWrapper); \
+    macro(UITextView, fw, FWTextViewWrapper, FWScrollViewWrapper, FWTextViewClassWrapper, FWScrollViewClassWrapper); \
+    macro(UIGestureRecognizer, fw, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper); \
+    macro(UIBarItem, fw, FWBarItemWrapper, FWObjectWrapper, FWBarItemClassWrapper, FWClassWrapper); \
+    macro(UIBarButtonItem, fw, FWBarButtonItemWrapper, FWBarItemWrapper, FWBarButtonItemClassWrapper, FWBarItemClassWrapper); \
+    macro(UINavigationBar, fw, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper); \
+    macro(UITabBar, fw, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper); \
+    macro(UIToolbar, fw, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper); \
+    macro(UISearchBar, fw, FWSearchBarWrapper, FWViewWrapper, FWSearchBarClassWrapper, FWViewClassWrapper); \
+    macro(UIWindow, fw, FWWindowWrapper, FWViewWrapper, FWWindowClassWrapper, FWViewClassWrapper); \
+    macro(UIViewController, fw, FWViewControllerWrapper, FWObjectWrapper, FWViewControllerClassWrapper, FWClassWrapper); \
+    macro(UINavigationController, fw, FWNavigationControllerWrapper, FWViewControllerWrapper, FWNavigationControllerClassWrapper, FWViewControllerClassWrapper); \
+    macro(UITabBarController, fw, FWTabBarControllerWrapper, FWViewControllerWrapper, FWTabBarControllerClassWrapper, FWViewControllerClassWrapper);
+
+/// 内部快速实现所有框架包装器宏
+#define FWDefWrapperFramework_(macro, fw) \
+    macro(CALayer, fw, FWLayerWrapper, FWLayerClassWrapper); \
+    macro(CAGradientLayer, fw, FWGradientLayerWrapper, FWGradientLayerClassWrapper); \
+    macro(CAAnimation, fw, FWAnimationWrapper, FWAnimationClassWrapper); \
+    macro(CADisplayLink, fw, FWDisplayLinkWrapper, FWDisplayLinkClassWrapper); \
+     \
+    macro(NSString, fw, FWStringWrapper, FWStringClassWrapper); \
+    macro(NSAttributedString, fw, FWAttributedStringWrapper, FWAttributedStringClassWrapper); \
+    macro(NSNumber, fw, FWNumberWrapper, FWNumberClassWrapper); \
+    macro(NSData, fw, FWDataWrapper, FWDataClassWrapper); \
+    macro(NSDate, fw, FWDateWrapper, FWDateClassWrapper); \
+    macro(NSURL, fw, FWURLWrapper, FWURLClassWrapper); \
+    macro(NSURLRequest, fw, FWURLRequestWrapper, FWURLRequestClassWrapper); \
+    macro(NSBundle, fw, FWBundleWrapper, FWBundleClassWrapper); \
+    macro(NSTimer, fw, FWTimerWrapper, FWTimerClassWrapper); \
+    macro(NSUserDefaults, fw, FWUserDefaultsWrapper, FWUserDefaultsClassWrapper); \
+    macro(NSFileManager, fw, FWFileManagerWrapper, FWFileManagerClassWrapper); \
+    macro(NSArray, fw, FWArrayWrapper, FWArrayClassWrapper); \
+    macro(NSMutableArray, fw, FWMutableArrayWrapper, FWMutableArrayClassWrapper); \
+    macro(NSSet, fw, FWSetWrapper, FWSetClassWrapper); \
+    macro(NSMutableSet, fw, FWMutableSetWrapper, FWMutableSetClassWrapper); \
+    macro(NSDictionary, fw, FWDictionaryWrapper, FWDictionaryClassWrapper); \
+    macro(NSMutableDictionary, fw, FWMutableDictionaryWrapper, FWMutableDictionaryClassWrapper); \
+     \
+    macro(UIApplication, fw, FWApplicationWrapper, FWApplicationClassWrapper); \
+    macro(UIBezierPath, fw, FWBezierPathWrapper, FWBezierPathClassWrapper); \
+    macro(UIDevice, fw, FWDeviceWrapper, FWDeviceClassWrapper); \
+    macro(UIScreen, fw, FWScreenWrapper, FWScreenClassWrapper); \
+    macro(UIImage, fw, FWImageWrapper, FWImageClassWrapper); \
+    macro(UIImageAsset, fw, FWImageAssetWrapper, FWImageAssetClassWrapper); \
+    macro(UIFont, fw, FWFontWrapper, FWFontClassWrapper); \
+    macro(UIColor, fw, FWColorWrapper, FWColorClassWrapper); \
+    macro(UIView, fw, FWViewWrapper, FWViewClassWrapper); \
+    macro(UILabel, fw, FWLabelWrapper, FWLabelClassWrapper); \
+    macro(UIImageView, fw, FWImageViewWrapper, FWImageViewClassWrapper); \
+    macro(UIScrollView, fw, FWScrollViewWrapper, FWScrollViewClassWrapper); \
+    macro(UITableView, fw, FWTableViewWrapper, FWTableViewClassWrapper); \
+    macro(UITableViewHeaderFooterView, fw, FWTableViewHeaderFooterViewWrapper, FWTableViewHeaderFooterViewClassWrapper); \
+    macro(UITableViewCell, fw, FWTableViewCellWrapper, FWTableViewCellClassWrapper); \
+    macro(UICollectionView, fw, FWCollectionViewWrapper, FWCollectionViewClassWrapper); \
+    macro(UICollectionReusableView, fw, FWCollectionReusableViewWrapper, FWCollectionReusableViewClassWrapper); \
+    macro(UICollectionViewCell, fw, FWCollectionViewCellWrapper, FWCollectionViewCellClassWrapper); \
+    macro(UIControl, fw, FWControlWrapper, FWControlClassWrapper); \
+    macro(UIButton, fw, FWButtonWrapper, FWButtonClassWrapper); \
+    macro(UISwitch, fw, FWSwitchWrapper, FWSwitchClassWrapper); \
+    macro(UIPageControl, fw, FWPageControlWrapper, FWPageControlClassWrapper); \
+    macro(UISlider, fw, FWSliderWrapper, FWSliderClassWrapper); \
+    macro(UITextField, fw, FWTextFieldWrapper, FWTextFieldClassWrapper); \
+    macro(UITextView, fw, FWTextViewWrapper, FWTextViewClassWrapper); \
+    macro(UIGestureRecognizer, fw, FWGestureRecognizerWrapper, FWGestureRecognizerClassWrapper); \
+    macro(UIBarItem, fw, FWBarItemWrapper, FWBarItemClassWrapper); \
+    macro(UIBarButtonItem, fw, FWBarButtonItemWrapper, FWBarButtonItemClassWrapper); \
+    macro(UINavigationBar, fw, FWNavigationBarWrapper, FWNavigationBarClassWrapper); \
+    macro(UITabBar, fw, FWTabBarWrapper, FWTabBarClassWrapper); \
+    macro(UIToolbar, fw, FWToolbarWrapper, FWToolbarClassWrapper); \
+    macro(UISearchBar, fw, FWSearchBarWrapper, FWSearchBarClassWrapper); \
+    macro(UIWindow, fw, FWWindowWrapper, FWWindowClassWrapper); \
+    macro(UIViewController, fw, FWViewControllerWrapper, FWViewControllerClassWrapper); \
+    macro(UINavigationController, fw, FWNavigationControllerWrapper, FWNavigationControllerClassWrapper); \
+    macro(UITabBarController, fw, FWTabBarControllerWrapper, FWTabBarControllerClassWrapper);
 
 #pragma mark - FWObjectWrapper
 
@@ -170,64 +351,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWWrapperCompatible
 
-FWWrapperCompatible(CALayer, FWLayerWrapper, FWObjectWrapper, FWLayerClassWrapper, FWClassWrapper);
-FWWrapperCompatible(CAGradientLayer, FWGradientLayerWrapper, FWLayerWrapper, FWGradientLayerClassWrapper, FWLayerClassWrapper);
-FWWrapperCompatible(CAAnimation, FWAnimationWrapper, FWObjectWrapper, FWAnimationClassWrapper, FWClassWrapper);
-FWWrapperCompatible(CADisplayLink, FWDisplayLinkWrapper, FWObjectWrapper, FWDisplayLinkClassWrapper, FWClassWrapper);
-
-FWWrapperCompatible(NSString, FWStringWrapper, FWObjectWrapper, FWStringClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSAttributedString, FWAttributedStringWrapper, FWObjectWrapper, FWAttributedStringClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSNumber, FWNumberWrapper, FWObjectWrapper, FWNumberClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSData, FWDataWrapper, FWObjectWrapper, FWDataClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSDate, FWDateWrapper, FWObjectWrapper, FWDateClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSURL, FWURLWrapper, FWObjectWrapper, FWURLClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSURLRequest, FWURLRequestWrapper, FWObjectWrapper, FWURLRequestClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSBundle, FWBundleWrapper, FWObjectWrapper, FWBundleClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSTimer, FWTimerWrapper, FWObjectWrapper, FWTimerClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSUserDefaults, FWUserDefaultsWrapper, FWObjectWrapper, FWUserDefaultsClassWrapper, FWClassWrapper);
-FWWrapperCompatible(NSFileManager, FWFileManagerWrapper, FWObjectWrapper, FWFileManagerClassWrapper, FWClassWrapper);
-FWWrapperCompatibleGeneric(NSArray, FWArrayWrapper, FWObjectWrapper, FWArrayClassWrapper, FWClassWrapper);
-FWWrapperCompatibleGeneric(NSMutableArray, FWMutableArrayWrapper, FWArrayWrapper, FWMutableArrayClassWrapper, FWArrayClassWrapper);
-FWWrapperCompatibleGeneric(NSSet, FWSetWrapper, FWObjectWrapper, FWSetClassWrapper, FWClassWrapper);
-FWWrapperCompatibleGeneric(NSMutableSet, FWMutableSetWrapper, FWSetWrapper, FWMutableSetClassWrapper, FWSetClassWrapper);
-FWWrapperCompatibleGeneric2(NSDictionary, FWDictionaryWrapper, FWObjectWrapper, FWDictionaryClassWrapper, FWClassWrapper);
-FWWrapperCompatibleGeneric2(NSMutableDictionary, FWMutableDictionaryWrapper, FWDictionaryWrapper, FWMutableDictionaryClassWrapper, FWClassWrapper);
-
-FWWrapperCompatible(UIApplication, FWApplicationWrapper, FWObjectWrapper, FWApplicationClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIBezierPath, FWBezierPathWrapper, FWObjectWrapper, FWBezierPathClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIDevice, FWDeviceWrapper, FWObjectWrapper, FWDeviceClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIScreen, FWScreenWrapper, FWObjectWrapper, FWScreenClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIImage, FWImageWrapper, FWObjectWrapper, FWImageClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIImageAsset, FWImageAssetWrapper, FWObjectWrapper, FWImageAssetClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIFont, FWFontWrapper, FWObjectWrapper, FWFontClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIColor, FWColorWrapper, FWObjectWrapper, FWColorClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIView, FWViewWrapper, FWObjectWrapper, FWViewClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UILabel, FWLabelWrapper, FWViewWrapper, FWLabelClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIImageView, FWImageViewWrapper, FWViewWrapper, FWImageViewClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIScrollView, FWScrollViewWrapper, FWViewWrapper, FWScrollViewClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UITableView, FWTableViewWrapper, FWScrollViewWrapper, FWTableViewClassWrapper, FWScrollViewClassWrapper);
-FWWrapperCompatible(UITableViewHeaderFooterView, FWTableViewHeaderFooterViewWrapper, FWViewWrapper, FWTableViewHeaderFooterViewClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UITableViewCell, FWTableViewCellWrapper, FWViewWrapper, FWTableViewCellClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UICollectionView, FWCollectionViewWrapper, FWScrollViewWrapper, FWCollectionViewClassWrapper, FWScrollViewClassWrapper);
-FWWrapperCompatible(UICollectionReusableView, FWCollectionReusableViewWrapper, FWViewWrapper, FWCollectionReusableViewClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UICollectionViewCell, FWCollectionViewCellWrapper, FWCollectionReusableViewWrapper, FWCollectionViewCellClassWrapper, FWCollectionReusableViewClassWrapper);
-FWWrapperCompatible(UIControl, FWControlWrapper, FWViewWrapper, FWControlClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIButton, FWButtonWrapper, FWControlWrapper, FWButtonClassWrapper, FWControlClassWrapper);
-FWWrapperCompatible(UISwitch, FWSwitchWrapper, FWControlWrapper, FWSwitchClassWrapper, FWControlClassWrapper);
-FWWrapperCompatible(UIPageControl, FWPageControlWrapper, FWControlWrapper, FWPageControlClassWrapper, FWControlClassWrapper);
-FWWrapperCompatible(UISlider, FWSliderWrapper, FWControlWrapper, FWSliderClassWrapper, FWControlClassWrapper);
-FWWrapperCompatible(UITextField, FWTextFieldWrapper, FWControlWrapper, FWTextFieldClassWrapper, FWControlClassWrapper);
-FWWrapperCompatible(UITextView, FWTextViewWrapper, FWScrollViewWrapper, FWTextViewClassWrapper, FWScrollViewClassWrapper);
-FWWrapperCompatible(UIGestureRecognizer, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIBarItem, FWBarItemWrapper, FWObjectWrapper, FWBarItemClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UIBarButtonItem, FWBarButtonItemWrapper, FWBarItemWrapper, FWBarButtonItemClassWrapper, FWBarItemClassWrapper);
-FWWrapperCompatible(UINavigationBar, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UITabBar, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIToolbar, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UISearchBar, FWSearchBarWrapper, FWViewWrapper, FWSearchBarClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIWindow, FWWindowWrapper, FWViewWrapper, FWWindowClassWrapper, FWViewClassWrapper);
-FWWrapperCompatible(UIViewController, FWViewControllerWrapper, FWObjectWrapper, FWViewControllerClassWrapper, FWClassWrapper);
-FWWrapperCompatible(UINavigationController, FWNavigationControllerWrapper, FWViewControllerWrapper, FWNavigationControllerClassWrapper, FWViewControllerClassWrapper);
-FWWrapperCompatible(UITabBarController, FWTabBarControllerWrapper, FWViewControllerWrapper, FWTabBarControllerClassWrapper, FWViewControllerClassWrapper);
+FWWrapperFramework_(FWWrapperCompatible, fw);
 
 NS_ASSUME_NONNULL_END

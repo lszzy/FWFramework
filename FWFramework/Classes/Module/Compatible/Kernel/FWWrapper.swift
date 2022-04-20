@@ -31,7 +31,8 @@ public struct FWWrapper<Base> {
 ///     public static var app: FWWrapper<Self>.Type { FWWrapper<Self>.self }
 ///     public var app: FWWrapper<Self> { FWWrapper(self) }
 /// }
-/// 使用：String.app.jsonEncode(object)
+/// 使用示例：
+/// String.app.jsonEncode(object)
 public protocol FWWrapperCompatible {
     /// 关联类型
     associatedtype WrapperBase
