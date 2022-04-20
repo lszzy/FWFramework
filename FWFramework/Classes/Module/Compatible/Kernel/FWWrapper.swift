@@ -28,8 +28,8 @@ public struct FWWrapper<Base> {
 ///
 /// 自定义fw为任意名称(如app)示例：
 /// extension FWWrapperCompatible {
-///     public static var app: FWWrapper<Self>.Type { FWWrapper<Self>.self }
-///     public var app: FWWrapper<Self> { FWWrapper(self) }
+///     public static var app: FWWrapper<Self>.Type { fw }
+///     public var app: FWWrapper<Self> { fw }
 /// }
 /// 使用示例：
 /// String.app.jsonEncode(object)
