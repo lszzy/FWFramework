@@ -1116,6 +1116,53 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
 #pragma mark - FWViewControllerWrapper+FWToolkit
 
+@interface FWInnerPopGestureTarget : NSObject <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UIViewController *viewController;
+
+@end
+
+@implementation FWInnerPopGestureTarget
+
+- (instancetype)initWithViewController:(UIViewController *)viewController
+{
+    self = [super init];
+    if (self) {
+        _viewController = viewController;
+    }
+    return self;
+}
+
+- (void)setPopGestureEnabled:(BOOL)enabled
+{
+    self.viewController.navigationController.interactivePopGestureRecognizer.enabled = enabled;
+    self.viewController.navigationController.interactivePopGestureRecognizer.delegate = enabled ? self : nil;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    BOOL (^popGestureBlock)(void) = self.viewController.fw.popGestureBlock;
+    if (popGestureBlock) {
+        return popGestureBlock();
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
+}
+
+@end
+
 @implementation FWViewControllerWrapper (FWToolkit)
 
 + (void)load
@@ -1202,6 +1249,37 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 - (void)setCompletionHandler:(void (^)(id _Nullable))completionHandler
 {
     objc_setAssociatedObject(self.base, @selector(completionHandler), completionHandler, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (BOOL)popGestureEnabled
+{
+    return [objc_getAssociatedObject(self.base, @selector(popGestureEnabled)) boolValue];
+}
+
+- (void)setPopGestureEnabled:(BOOL)popGestureEnabled
+{
+    objc_setAssociatedObject(self.base, @selector(popGestureEnabled), @(popGestureEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.innerPopGestureTarget setPopGestureEnabled:popGestureEnabled];
+}
+
+- (BOOL (^)(void))popGestureBlock
+{
+    return objc_getAssociatedObject(self.base, @selector(popGestureBlock));
+}
+
+- (void)setPopGestureBlock:(BOOL (^)(void))popGestureBlock
+{
+    objc_setAssociatedObject(self.base, @selector(popGestureBlock), popGestureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (FWInnerPopGestureTarget *)innerPopGestureTarget
+{
+    FWInnerPopGestureTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    if (!target) {
+        target = [[FWInnerPopGestureTarget alloc] initWithViewController:self.base];
+        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return target;
 }
 
 @end

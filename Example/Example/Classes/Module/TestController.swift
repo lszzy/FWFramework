@@ -12,6 +12,7 @@ import FWFramework
 class TestController: UITableViewController {
     
     // MARK: - Accessor
+    private var confirmBack = false
     
     // MARK: - Subviews
 
@@ -27,14 +28,25 @@ class TestController: UITableViewController {
         testJson()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fw.popGestureEnabled = true
+    }
+    
 }
 
 // MARK: - Setup
 private extension TestController {
     
     private func setupNavbar() {
+        fw.popGestureBlock = { [weak self] in
+            return self?.popGestureAction() ?? false
+        }
+        
         navigationItem.title = "test.title".fw.localized
-        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(rightItemClicked(_:)))
     }
    
     private func setupSubviews() {
@@ -61,17 +73,46 @@ extension TestController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return 100
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        tableCellSelected(indexPath)
     }
     
 }
 
 // MARK: - Action
 @objc private extension TestController {
+    
+    func popGestureAction() -> Bool {
+        if confirmBack {
+            let alertController = UIAlertController(title: nil, message: "Are you sure?", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+            }))
+            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }))
+            present(alertController, animated: true)
+            return false
+        }
+        
+        return true
+    }
+    
+    func leftItemClicked(_ sender: Any) {
+        if popGestureAction() {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    func rightItemClicked(_ sender: Any) {
+        confirmBack = !confirmBack
+    }
+    
+    func tableCellSelected(_ indexPath: IndexPath) {
+        FWRouter.openURL(AppRouter.testUrl)
+    }
     
 }
 
