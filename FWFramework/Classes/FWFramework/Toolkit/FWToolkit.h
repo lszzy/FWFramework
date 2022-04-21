@@ -372,8 +372,8 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 @interface FWNavigationControllerWrapper (FWToolkit)
 
-/// 是否启用返回代理拦截，启用后支持popGestureEnabled功能，默认NO未启用
-@property (nonatomic, assign) BOOL popProxyEnabled;
+/// 启用返回代理拦截，启用后支持popGestureEnabled功能，默认NO未启用
+- (void)enablePopProxy;
 
 @end
 

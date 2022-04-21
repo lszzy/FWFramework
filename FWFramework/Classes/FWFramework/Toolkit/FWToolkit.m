@@ -1234,8 +1234,6 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 @interface FWInnerPopProxyTarget : NSObject <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UINavigationController *navigationController;
-@property (nonatomic, weak) id<UIGestureRecognizerDelegate> navigationDelegate;
-@property (nonatomic, assign) BOOL popProxyEnabled;
 
 @end
 
@@ -1246,15 +1244,8 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
     self = [super init];
     if (self) {
         _navigationController = navigationController;
-        _navigationDelegate = navigationController.interactivePopGestureRecognizer.delegate;
     }
     return self;
-}
-
-- (void)setPopProxyEnabled:(BOOL)enabled
-{
-    _popProxyEnabled = enabled;
-    self.navigationController.interactivePopGestureRecognizer.delegate = enabled ? self : self.navigationDelegate;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -1278,14 +1269,9 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
 @implementation FWNavigationControllerWrapper (FWToolkit)
 
-- (BOOL)popProxyEnabled
+- (void)enablePopProxy
 {
-    return [self.innerPopProxyTarget popProxyEnabled];
-}
-
-- (void)setPopProxyEnabled:(BOOL)enabled
-{
-    self.innerPopProxyTarget.popProxyEnabled = enabled;
+    self.base.interactivePopGestureRecognizer.delegate = self.innerPopProxyTarget;
 }
 
 - (FWInnerPopProxyTarget *)innerPopProxyTarget
