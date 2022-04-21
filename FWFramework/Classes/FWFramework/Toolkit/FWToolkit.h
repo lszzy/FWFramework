@@ -360,11 +360,20 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
 @property (nonatomic, copy, nullable) void (^completionHandler)(id _Nullable result);
 
-/// 自定义侧滑返回手势开关，跟随VC，未设置时同系统。一般在viewWillAppear:设置即可
+/// 自定义侧滑返回手势VC开关，popProxyEnabled启用后生效，自动调用popGestureBlock，默认YES。
 @property (nonatomic, assign) BOOL popGestureEnabled;
 
-/// 自定义侧滑返回手势句柄，popGestureEnabled启用后生效。如需拦截返回按钮，自定义左侧按钮即可
+/// 自定义侧滑返回手势VC句柄，popProxyEnabled启用后生效，popGestureEnabled自动优先调用。如需拦截返回按钮，自定义左侧按钮即可
 @property (nonatomic, copy, nullable) BOOL (^popGestureBlock)(void);
+
+@end
+
+#pragma mark - FWNavigationControllerWrapper+FWToolkit
+
+@interface FWNavigationControllerWrapper (FWToolkit)
+
+/// 是否启用返回代理拦截，启用后支持popGestureEnabled功能，默认NO未启用
+@property (nonatomic, assign) BOOL popProxyEnabled;
 
 @end
 

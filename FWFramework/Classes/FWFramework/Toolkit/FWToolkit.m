@@ -1116,53 +1116,6 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
 #pragma mark - FWViewControllerWrapper+FWToolkit
 
-@interface FWInnerPopGestureTarget : NSObject <UIGestureRecognizerDelegate>
-
-@property (nonatomic, weak) UIViewController *viewController;
-
-@end
-
-@implementation FWInnerPopGestureTarget
-
-- (instancetype)initWithViewController:(UIViewController *)viewController
-{
-    self = [super init];
-    if (self) {
-        _viewController = viewController;
-    }
-    return self;
-}
-
-- (void)setPopGestureEnabled:(BOOL)enabled
-{
-    self.viewController.navigationController.interactivePopGestureRecognizer.enabled = enabled;
-    self.viewController.navigationController.interactivePopGestureRecognizer.delegate = enabled ? self : nil;
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    BOOL (^popGestureBlock)(void) = self.viewController.fw.popGestureBlock;
-    if (popGestureBlock) {
-        return popGestureBlock();
-    } else {
-        return YES;
-    }
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
-}
-
-@end
-
 @implementation FWViewControllerWrapper (FWToolkit)
 
 + (void)load
@@ -1253,13 +1206,15 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
 - (BOOL)popGestureEnabled
 {
-    return [objc_getAssociatedObject(self.base, @selector(popGestureEnabled)) boolValue];
+    BOOL (^block)(void) = self.popGestureBlock;
+    if (block != nil) return block();
+    NSNumber *value = objc_getAssociatedObject(self.base, @selector(popGestureEnabled));
+    return value ? [value boolValue] : YES;
 }
 
 - (void)setPopGestureEnabled:(BOOL)popGestureEnabled
 {
     objc_setAssociatedObject(self.base, @selector(popGestureEnabled), @(popGestureEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPopGestureTarget setPopGestureEnabled:popGestureEnabled];
 }
 
 - (BOOL (^)(void))popGestureBlock
@@ -1272,11 +1227,72 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
     objc_setAssociatedObject(self.base, @selector(popGestureBlock), popGestureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (FWInnerPopGestureTarget *)innerPopGestureTarget
+@end
+
+#pragma mark - FWNavigationControllerWrapper+FWToolkit
+
+@interface FWInnerPopProxyTarget : NSObject <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+@property (nonatomic, weak) id<UIGestureRecognizerDelegate> navigationDelegate;
+@property (nonatomic, assign) BOOL popProxyEnabled;
+
+@end
+
+@implementation FWInnerPopProxyTarget
+
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
 {
-    FWInnerPopGestureTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    self = [super init];
+    if (self) {
+        _navigationController = navigationController;
+        _navigationDelegate = navigationController.interactivePopGestureRecognizer.delegate;
+    }
+    return self;
+}
+
+- (void)setPopProxyEnabled:(BOOL)enabled
+{
+    _popProxyEnabled = enabled;
+    self.navigationController.interactivePopGestureRecognizer.delegate = enabled ? self : self.navigationDelegate;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return self.navigationController.topViewController.fw.popGestureEnabled;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
+}
+
+@end
+
+@implementation FWNavigationControllerWrapper (FWToolkit)
+
+- (BOOL)popProxyEnabled
+{
+    return [self.innerPopProxyTarget popProxyEnabled];
+}
+
+- (void)setPopProxyEnabled:(BOOL)enabled
+{
+    self.innerPopProxyTarget.popProxyEnabled = enabled;
+}
+
+- (FWInnerPopProxyTarget *)innerPopProxyTarget
+{
+    FWInnerPopProxyTarget *target = objc_getAssociatedObject(self.base, _cmd);
     if (!target) {
-        target = [[FWInnerPopGestureTarget alloc] initWithViewController:self.base];
+        target = [[FWInnerPopProxyTarget alloc] initWithNavigationController:self.base];
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
