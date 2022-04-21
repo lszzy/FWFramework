@@ -35,7 +35,7 @@ private extension AppDelegate {
         let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
         
         let navController = UINavigationController(rootViewController: viewController)
-        navController.fw.popProxyEnabled = true
+        navController.fw.enablePopProxy()
         navController.navigationBar.fw.isTranslucent = false
         navController.navigationBar.fw.shadowColor = nil
         navController.navigationBar.fw.foregroundColor = UIColor.fw.themeLight(.black, dark: .white)
