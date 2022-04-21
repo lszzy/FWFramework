@@ -28,12 +28,6 @@ class TestController: UITableViewController {
         testJson()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        fw.popGestureEnabled = true
-    }
-    
 }
 
 // MARK: - Setup
@@ -41,7 +35,13 @@ private extension TestController {
     
     private func setupNavbar() {
         fw.popGestureBlock = { [weak self] in
-            return self?.popGestureAction() ?? false
+            guard let self = self else { return true }
+            
+            if self.confirmBack {
+                self.showAlertController()
+                return false
+            }
+            return true
         }
         
         navigationItem.title = "test.title".fw.localized
@@ -85,23 +85,8 @@ extension TestController {
 // MARK: - Action
 @objc private extension TestController {
     
-    func popGestureAction() -> Bool {
-        if confirmBack {
-            let alertController = UIAlertController(title: nil, message: "Are you sure?", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-            }))
-            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
-                self?.navigationController?.popViewController(animated: true)
-            }))
-            present(alertController, animated: true)
-            return false
-        }
-        
-        return true
-    }
-    
     func leftItemClicked(_ sender: Any) {
-        if popGestureAction() {
+        if fw.popGestureEnabled {
             navigationController?.popViewController(animated: true)
         }
     }
@@ -117,6 +102,21 @@ extension TestController {
 }
 
 // MARK: - Private
+private extension TestController {
+    
+    func showAlertController() {
+        let alertController = UIAlertController(title: nil, message: "Are you sure?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+        }))
+        alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }))
+        present(alertController, animated: true)
+    }
+    
+}
+
+// MARK: - Coder
 private extension TestController {
     
     struct Article: Codable {
