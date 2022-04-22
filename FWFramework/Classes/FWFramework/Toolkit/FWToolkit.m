@@ -9,6 +9,7 @@
 
 #import "FWToolkit.h"
 #import "FWNavigation.h"
+#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <SafariServices/SafariServices.h>
 #import <StoreKit/StoreKit.h>
@@ -1204,27 +1205,42 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
     objc_setAssociatedObject(self.base, @selector(completionHandler), completionHandler, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL)popGestureEnabled
+- (BOOL (^)(void))allowsPopGesture
 {
-    BOOL (^block)(void) = self.popGestureBlock;
-    if (block != nil) return block();
-    NSNumber *value = objc_getAssociatedObject(self.base, @selector(popGestureEnabled));
-    return value ? [value boolValue] : YES;
+    return objc_getAssociatedObject(self.base, @selector(allowsPopGesture));
 }
 
-- (void)setPopGestureEnabled:(BOOL)popGestureEnabled
+- (void)setAllowsPopGesture:(BOOL (^)(void))allowsPopGesture
 {
-    objc_setAssociatedObject(self.base, @selector(popGestureEnabled), @(popGestureEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(allowsPopGesture), allowsPopGesture, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL (^)(void))popGestureBlock
+- (BOOL (^)(void))shouldPopController
 {
-    return objc_getAssociatedObject(self.base, @selector(popGestureBlock));
+    return objc_getAssociatedObject(self.base, @selector(shouldPopController));
 }
 
-- (void)setPopGestureBlock:(BOOL (^)(void))popGestureBlock
+- (void)setShouldPopController:(BOOL (^)(void))shouldPopController
 {
-    objc_setAssociatedObject(self.base, @selector(popGestureBlock), popGestureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(shouldPopController), shouldPopController, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+@end
+
+@implementation UIViewController (FWToolkit)
+
+- (BOOL)allowsPopGesture
+{
+    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(allowsPopGesture));
+    if (block) return block();
+    return YES;
+}
+
+- (BOOL)shouldPopController
+{
+    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(shouldPopController));
+    if (block) return block();
+    return YES;
 }
 
 @end
@@ -1248,11 +1264,10 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
     return self;
 }
 
-#pragma mark - UIGestureRecognizerDelegate
-
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    return self.navigationController.topViewController.fw.popGestureEnabled;
+    UIViewController *topController = self.navigationController.topViewController;
+    return topController.shouldPopController && topController.allowsPopGesture;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
@@ -1267,11 +1282,126 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
 @end
 
+@interface FWGestureRecognizerDelegateProxy : FWDelegateProxy <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+
+@end
+
+@implementation FWGestureRecognizerDelegateProxy
+
+- (BOOL)shouldForceReceive
+{
+    if (self.navigationController.viewControllers.count <= 1) return NO;
+    if (!self.navigationController.interactivePopGestureRecognizer.enabled) return NO;
+    return self.navigationController.topViewController.allowsPopGesture;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
+        BOOL shouldPop = self.navigationController.topViewController.shouldPopController;
+        if (shouldPop) {
+            if ([self.delegate respondsToSelector:@selector(gestureRecognizerShouldBegin:)]) {
+                return [self.delegate gestureRecognizerShouldBegin:gestureRecognizer];
+            }
+        }
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+            BOOL shouldReceive = [self.delegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+            if (!shouldReceive && [self shouldForceReceive]) {
+                return YES;
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
+- (BOOL)_gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+{
+    // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        if ([self.delegate respondsToSelector:@selector(_gestureRecognizer:shouldReceiveEvent:)]) {
+            BOOL shouldReceive = [self.delegate _gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
+            if (!shouldReceive && [self shouldForceReceive]) {
+                return YES;
+            }
+            return shouldReceive;
+        }
+    }
+    return YES;
+}
+
+@end
+
+static BOOL fwStaticPopProxyEnabled = NO;
+
 @implementation FWNavigationControllerWrapper (FWToolkit)
+
++ (void)swizzlePopProxy
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UINavigationController, @selector(navigationBar:shouldPopItem:), FWSwizzleReturn(BOOL), FWSwizzleArgs(UINavigationBar *navigationBar, UINavigationItem *item), FWSwizzleCode({
+            if (fwStaticPopProxyEnabled || [selfObject.fw popProxyEnabled]) {
+                // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+                if (selfObject.viewControllers.count >= navigationBar.items.count &&
+                    !selfObject.topViewController.shouldPopController) {
+                    return NO;
+                }
+            }
+            
+            return FWSwizzleOriginal(navigationBar, item);
+        }));
+        
+        FWSwizzleClass(UINavigationController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            if (!fwStaticPopProxyEnabled || [selfObject.fw popProxyEnabled]) return;
+            
+            // 拦截系统返回手势事件代理，加载自定义代理方法
+            if (selfObject.interactivePopGestureRecognizer.delegate != selfObject.fw.delegateProxy) {
+                selfObject.fw.delegateProxy.delegate = selfObject.interactivePopGestureRecognizer.delegate;
+                selfObject.fw.delegateProxy.navigationController = selfObject;
+                selfObject.interactivePopGestureRecognizer.delegate = selfObject.fw.delegateProxy;
+            }
+        }));
+        
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarHidden), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            if (fwStaticPopProxyEnabled && selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+        FWSwizzleClass(UINavigationController, @selector(childViewControllerForStatusBarStyle), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(), FWSwizzleCode({
+            if (fwStaticPopProxyEnabled && selfObject.topViewController) {
+                return selfObject.topViewController;
+            } else {
+                return FWSwizzleOriginal();
+            }
+        }));
+    });
+}
+
+- (BOOL)popProxyEnabled
+{
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
 
 - (void)enablePopProxy
 {
     self.base.interactivePopGestureRecognizer.delegate = self.innerPopProxyTarget;
+    objc_setAssociatedObject(self.base, @selector(popProxyEnabled), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [FWNavigationControllerWrapper swizzlePopProxy];
 }
 
 - (FWInnerPopProxyTarget *)innerPopProxyTarget
@@ -1282,6 +1412,26 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
+}
+
+- (FWGestureRecognizerDelegateProxy *)delegateProxy
+{
+    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self.base, _cmd);
+    if (!proxy) {
+        proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
+        objc_setAssociatedObject(self.base, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return proxy;
+}
+
+@end
+
+@implementation FWNavigationControllerClassWrapper (FWToolkit)
+
+- (void)enablePopProxy
+{
+    fwStaticPopProxyEnabled = YES;
+    [FWNavigationControllerWrapper swizzlePopProxy];
 }
 
 @end

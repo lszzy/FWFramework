@@ -13,6 +13,15 @@ class TestController: UITableViewController {
     
     // MARK: - Accessor
     private var confirmBack = false
+    private var hasLeftItem = false
+    
+    override var shouldPopController: Bool {
+        if confirmBack {
+            showAlertController()
+            return false
+        }
+        return true
+    }
     
     // MARK: - Subviews
 
@@ -34,18 +43,11 @@ class TestController: UITableViewController {
 private extension TestController {
     
     private func setupNavbar() {
-        fw.popGestureBlock = { [weak self] in
-            guard let self = self else { return true }
-            
-            if self.confirmBack {
-                self.showAlertController()
-                return false
-            }
-            return true
-        }
-        
         navigationItem.title = "test.title".fw.localized
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
+        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
+        if hasLeftItem {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(rightItemClicked(_:)))
     }
    
@@ -86,7 +88,7 @@ extension TestController {
 @objc private extension TestController {
     
     func leftItemClicked(_ sender: Any) {
-        if fw.popGestureEnabled {
+        if shouldPopController {
             navigationController?.popViewController(animated: true)
         }
     }
@@ -96,7 +98,9 @@ extension TestController {
     }
     
     func tableCellSelected(_ indexPath: IndexPath) {
-        FWRouter.openURL(AppRouter.testUrl)
+        let viewController = TestController()
+        viewController.hasLeftItem = !hasLeftItem
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

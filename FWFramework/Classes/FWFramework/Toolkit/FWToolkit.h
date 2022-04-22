@@ -360,11 +360,21 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
 @property (nonatomic, copy, nullable) void (^completionHandler)(id _Nullable result);
 
-/// 自定义侧滑返回手势VC开关，popProxyEnabled启用后生效，自动调用popGestureBlock，默认YES。
-@property (nonatomic, assign) BOOL popGestureEnabled;
+/// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
+@property (nonatomic, copy, nullable) BOOL (^allowsPopGesture)(void);
 
-/// 自定义侧滑返回手势VC句柄，popProxyEnabled启用后生效，popGestureEnabled自动优先调用。如需拦截返回按钮，自定义左侧按钮即可
-@property (nonatomic, copy, nullable) BOOL (^popGestureBlock)(void);
+/// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
+@property (nonatomic, copy, nullable) BOOL (^shouldPopController)(void);
+
+@end
+
+@interface UIViewController (FWToolkit)
+
+/// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认YES
+@property (nonatomic, assign, readonly) BOOL allowsPopGesture;
+
+/// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认YES
+@property (nonatomic, assign, readonly) BOOL shouldPopController;
 
 @end
 
@@ -372,7 +382,17 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 @interface FWNavigationControllerWrapper (FWToolkit)
 
-/// 启用返回代理拦截，启用后支持popGestureEnabled功能，默认NO未启用
+/// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
+- (void)enablePopProxy;
+
+@end
+
+/**
+ 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
+ */
+@interface FWNavigationControllerClassWrapper (FWToolkit)
+
+/// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
 - (void)enablePopProxy;
 
 @end
