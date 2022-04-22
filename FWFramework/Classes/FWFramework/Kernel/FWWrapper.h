@@ -276,7 +276,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 框架包装器
 ///
-/// 备注：因Swift无法扩展OC泛型，未使用OC泛型实现，子类需覆盖base属性声明
+/// 注意：当包装器方法中存在异步调用或者需要监听通知时，不能直接使用self，因为包装器随时可被释放。
+/// 可视情况使用base内部分类、weakBase或者内部target等方式解决，代码示例：
+/// __weak NSObject *weakBase = self.base;
+/// [self asyncMethod:^(){
+///     [weakBase.fw syncMethod];
+/// }];
+///
+/// [self.base innerAsyncMethod];
+///
+/// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
@@ -304,6 +313,17 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWClassWrapper
 
 /// 框架类包装器
+///
+/// 注意：当包装器方法中存在异步调用或者需要监听通知时，不能直接使用self，因为包装器随时可被释放。
+/// 可视情况使用base内部分类、weakBase或者内部target等方式解决，代码示例：
+/// __weak NSObject *weakBase = self.base;
+/// [self asyncMethod:^(){
+///     [weakBase.fw syncMethod];
+/// }];
+///
+/// [self.base innerAsyncMethod];
+///
+/// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
 @interface FWClassWrapper : NSObject
 
 /// 原始类
