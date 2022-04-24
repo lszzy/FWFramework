@@ -286,8 +286,9 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 - (UIImage *)themeImageWithColor:(UIColor *)themeColor
 {
+    __weak UIImage *weakBase = self.base;
     return [UIImage.fw themeImage:^UIImage *(FWThemeStyle style) {
-        UIImage *image = [self imageForStyle:style];
+        UIImage *image = [weakBase.fw imageForStyle:style];
         UIColor *color = [themeColor.fw colorForStyle:style];
         
         UIGraphicsBeginImageContextWithOptions(image.size, NO, 0.0f);

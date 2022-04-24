@@ -291,21 +291,19 @@
 
 #pragma mark - FWBarButtonItemWrapper+FWBlock
 
-@interface FWInnerItemTarget : NSObject
-
-@property (nonatomic, weak) UIBarButtonItem *item;
+@interface UIBarButtonItem (FWBlock)
 
 @end
 
-@implementation FWInnerItemTarget
+@implementation UIBarButtonItem (FWBlock)
 
-- (void)invokeTargetAction:(id)sender
+- (void)innerInvokeTargetAction:(id)sender
 {
-    if (self.item.target && self.item.action && [self.item.target respondsToSelector:self.item.action]) {
+    if (self.target && self.action && [self.target respondsToSelector:self.action]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
-        [self.item.target performSelector:self.item.action withObject:self.item withObject:sender];
+        [self.target performSelector:self.action withObject:self withObject:sender];
 #pragma clang diagnostic pop
     }
 }
@@ -334,21 +332,10 @@
 {
     // 进行self转发，模拟实际action回调参数
     if ([customView isKindOfClass:[UIControl class]]) {
-        [((UIControl *)customView).fw addTouchTarget:self.innerItemTarget action:@selector(invokeTargetAction:)];
+        [((UIControl *)customView).fw addTouchTarget:self.base action:@selector(innerInvokeTargetAction:)];
     } else {
-        [customView.fw addTapGestureWithTarget:self.innerItemTarget action:@selector(invokeTargetAction:)];
+        [customView.fw addTapGestureWithTarget:self.base action:@selector(innerInvokeTargetAction:)];
     }
-}
-
-- (FWInnerItemTarget *)innerItemTarget
-{
-    FWInnerItemTarget *target = objc_getAssociatedObject(self.base, _cmd);
-    if (!target) {
-        target = [[FWInnerItemTarget alloc] init];
-        target.item = self.base;
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return target;
 }
 
 @end
