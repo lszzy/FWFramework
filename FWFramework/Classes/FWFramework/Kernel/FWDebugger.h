@@ -29,10 +29,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *viewInfo;
 
 /// 是否需要添加debug背景色，默认NO
-@property(nonatomic, assign) BOOL showDebugColor;
+@property (nonatomic, assign) BOOL showDebugColor;
 
 /// 是否每个view的背景色随机，如果不随机则统一使用半透明红色，默认NO
-@property(nonatomic, assign) BOOL randomDebugColor;
+@property (nonatomic, assign) BOOL randomDebugColor;
+
+/// 是否需要添加debug边框，默认NO
+@property (nonatomic, assign) BOOL showDebugBorder;
+
+/// 指定debug边框的颜色，默认半透明红色
+@property (nonatomic, strong) UIColor *debugBorderColor;
 
 @end
 

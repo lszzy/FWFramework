@@ -33,6 +33,7 @@
 @interface FWViewWrapper (FWDebuggerInternal)
 
 - (void)updateDebugColor;
+- (void)updateDebugBorder;
 
 @end
 
@@ -59,6 +60,24 @@
     objc_setAssociatedObject(self, @selector(innerRandomDebugColor), @(randomDebugColor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)innerShowDebugBorder {
+    return [objc_getAssociatedObject(self, @selector(innerShowDebugBorder)) boolValue];
+}
+
+- (void)setInnerShowDebugBorder:(BOOL)showDebugBorder {
+    objc_setAssociatedObject(self, @selector(innerShowDebugBorder), @(showDebugBorder), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw updateDebugBorder];
+}
+
+- (UIColor *)innerDebugBorderColor {
+    UIColor *color = objc_getAssociatedObject(self, @selector(innerDebugBorderColor));
+    return color ?: [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
+}
+
+- (void)setInnerDebugBorderColor:(UIColor *)color {
+    objc_setAssociatedObject(self, @selector(innerDebugBorderColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 @implementation FWViewWrapper (FWDebugger)
@@ -82,6 +101,22 @@
 
 - (void)setRandomDebugColor:(BOOL)randomDebugColor {
     self.base.innerRandomDebugColor = randomDebugColor;
+}
+
+- (BOOL)showDebugBorder {
+    return self.base.innerShowDebugBorder;
+}
+
+- (void)setShowDebugBorder:(BOOL)showDebugBorder {
+    self.base.innerShowDebugBorder = showDebugBorder;
+}
+
+- (UIColor *)debugBorderColor {
+    return self.base.innerDebugBorderColor;
+}
+
+- (void)setDebugBorderColor:(UIColor *)debugBorderColor {
+    self.base.innerDebugBorderColor = debugBorderColor;
 }
 
 + (void)swizzleDebugColor {
@@ -129,6 +164,50 @@
         return [UIColor.fw.randomColor colorWithAlphaComponent:0.3];
     } else {
         return [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
+    }
+}
+
++ (void)swizzleDebugBorder {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIView, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (selfObject.innerShowDebugBorder) {
+                selfObject.layer.borderWidth = FWPixelOne;
+                selfObject.layer.borderColor = selfObject.innerDebugBorderColor.CGColor;
+                [selfObject.fw renderDebugBorder:selfObject.subviews];
+            } else if (objc_getAssociatedObject(selfObject, @selector(innerShowDebugBorder))) {
+                selfObject.layer.borderWidth = 0;
+                selfObject.layer.borderColor = nil;
+                [selfObject.fw renderDebugBorder:selfObject.subviews];
+            }
+        }));
+    });
+}
+
+- (void)updateDebugBorder {
+    if (self.showDebugBorder) {
+        [FWViewWrapper swizzleDebugBorder];
+    }
+    [self.base setNeedsLayout];
+}
+
+- (void)renderDebugBorder:(NSArray *)subviews {
+    for (UIView *view in subviews) {
+        if ([view isKindOfClass:[UIStackView class]]) {
+            UIStackView *stackView = (UIStackView *)view;
+            [self renderDebugBorder:stackView.arrangedSubviews];
+        }
+        view.fw.showDebugBorder = self.showDebugBorder;
+        view.fw.debugBorderColor = self.debugBorderColor;
+        if (view.fw.showDebugBorder) {
+            view.layer.borderWidth = FWPixelOne;
+            view.layer.borderColor = view.fw.debugBorderColor.CGColor;
+        } else {
+            view.layer.borderWidth = 0;
+            view.layer.borderColor = nil;
+        }
     }
 }
 
