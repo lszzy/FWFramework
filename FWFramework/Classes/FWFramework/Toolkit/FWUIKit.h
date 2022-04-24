@@ -129,6 +129,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setImage:(nullable UIImage *)image;
 
 /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
+///
+/// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
+/// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
 - (void)setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
 
 @end
