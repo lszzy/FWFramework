@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明包装器宏
 #define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
+    @property (nonatomic, unsafe_unretained, readonly) baseClass *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface objectWrapper : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass *base; \
+    @property (nonatomic, unsafe_unretained, readonly) baseClass *base; \
     @end \
     API_AVAILABLE(ios(version)) \
     @interface classWrapper : classParent \
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明单泛型包装器宏
 #define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass<ObjectType> *base; \
+    @property (nonatomic, unsafe_unretained, readonly) baseClass<ObjectType> *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明双泛型包装器宏
 #define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
-    @property (nonatomic, weak, nullable, readonly) baseClass<KeyType, ValueType> *base; \
+    @property (nonatomic, unsafe_unretained, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -289,7 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
-@property (nonatomic, weak, nullable, readonly) id base;
+@property (nonatomic, unsafe_unretained, readonly) id base;
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;

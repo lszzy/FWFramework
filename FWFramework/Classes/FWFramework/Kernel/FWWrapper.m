@@ -42,7 +42,12 @@
 @implementation FWClassWrapper
 
 + (instancetype)wrapper:(Class)base {
-    return [[self alloc] init:base];
+    id wrapper = objc_getAssociatedObject(base, @selector(fw));
+    if (!wrapper) {
+        wrapper = [[self alloc] init:base];
+        objc_setAssociatedObject(base, @selector(fw), wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return wrapper;
 }
 
 - (instancetype)init:(Class)base {
