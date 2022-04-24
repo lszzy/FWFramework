@@ -520,14 +520,12 @@ extension FWViewWrapper {
 
     /// 链式布局对象
     public var layoutChain: FWLayoutChain {
-        if let base = self.base, let layoutChain = objc_getAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain) as? FWLayoutChain {
+        if let layoutChain = objc_getAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain) as? FWLayoutChain {
             return layoutChain
         }
         
-        let layoutChain = FWLayoutChain(view: self.base)
-        if let base = self.base {
-            objc_setAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        let layoutChain = FWLayoutChain(view: base)
+        objc_setAssociatedObject(base, &FWLayoutChainAssociatedKeys.layoutChain, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return layoutChain
     }
     
