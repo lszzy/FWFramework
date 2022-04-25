@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明包装器宏
 #define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper : objectParent \
-    @property (nonatomic, unsafe_unretained, readonly) baseClass *base; \
+    @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface objectWrapper : objectParent \
-    @property (nonatomic, unsafe_unretained, readonly) baseClass *base; \
+    @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
     API_AVAILABLE(ios(version)) \
     @interface classWrapper : classParent \
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明单泛型包装器宏
 #define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
-    @property (nonatomic, unsafe_unretained, readonly) baseClass<ObjectType> *base; \
+    @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明双泛型包装器宏
 #define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
-    @property (nonatomic, unsafe_unretained, readonly) baseClass<KeyType, ValueType> *base; \
+    @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
     @interface classWrapper : classParent \
     @end \
@@ -74,8 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
     - (Class)wrapperClass { return [objectWrapper class]; } \
     @end \
     @implementation baseClass (FWWrapper) \
-    - (objectWrapper *)fw { return [objectWrapper wrapper:self]; } \
-    + (classWrapper *)fw { return [classWrapper wrapper:self]; } \
+    - (objectWrapper *)fw { return [[objectWrapper alloc] init:self]; } \
+    + (classWrapper *)fw { return [[classWrapper alloc] init:self]; } \
     @end
 
 /// 快速声明包装器扩展宏
@@ -289,7 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
-@property (nonatomic, unsafe_unretained, readonly) id base;
+@property (nonatomic, strong, readonly) id base;
 
 /// 禁用属性
 @property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
@@ -297,8 +297,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取关联的类包装器类
 @property (nonatomic, unsafe_unretained, readonly) Class wrapperClass;
 
-/// 快速创建包装器，自动缓存
-+ (instancetype)wrapper:(id)base;
+/// 创建包装器
+- (instancetype)init:(id)base;
 
 @end
 
@@ -335,8 +335,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取关联的对象包装器类
 @property (nonatomic, unsafe_unretained, readonly) Class wrapperClass;
 
-/// 快速创建包装器，无缓存
-+ (instancetype)wrapper:(Class)base;
+/// 创建包装器
+- (instancetype)init:(Class)base;
 
 @end
 
