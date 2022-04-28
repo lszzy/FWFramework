@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.0] - 2022-04-29
+
+### Added
+* Brand new version, using .fw. calling method
+* Customizable .fw. for any call name
+* Refactored some components and added several functions
+* This version is not compatible with the previous version, the code must be migrated
+
 ## [2.4.0] - 2022-02-12
 
 ### Added
