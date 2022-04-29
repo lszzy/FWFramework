@@ -225,6 +225,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
 - (void)textLengthChanged;
 
+/// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
+- (NSString *)filterText:(NSString *)text;
+
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 
@@ -245,6 +248,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
 - (void)textLengthChanged;
+
+/// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
+- (NSString *)filterText:(NSString *)text;
 
 /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
