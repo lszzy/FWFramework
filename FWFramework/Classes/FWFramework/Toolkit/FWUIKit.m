@@ -995,6 +995,49 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
+- (NSString *)filterText:(NSString *)text
+{
+    NSString *filterText = text;
+    
+    if (self.maxLength > 0) {
+        if (self.textInput.markedTextRange) {
+            if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
+                if (filterText.length > self.maxLength) {
+                    // 获取maxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                    NSRange maxRange = [filterText rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                    filterText = [filterText substringToIndex:maxRange.location];
+                    // 此方法会导致末尾出现半个Emoji
+                    // filterText = [filterText substringToIndex:self.maxLength];
+                }
+            }
+        } else {
+            if (filterText.length > self.maxLength) {
+                // 获取fwMaxLength处的整个字符range，并截取掉整个字符，防止半个Emoji
+                NSRange maxRange = [filterText rangeOfComposedCharacterSequenceAtIndex:self.maxLength];
+                filterText = [filterText substringToIndex:maxRange.location];
+                // 此方法会导致末尾出现半个Emoji
+                // filterText = [filterText substringToIndex:self.maxLength];
+            }
+        }
+    }
+    
+    if (self.maxUnicodeLength > 0) {
+        if (self.textInput.markedTextRange) {
+            if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
+                if ([filterText.fw unicodeLength] > self.maxUnicodeLength) {
+                    filterText = [filterText.fw unicodeSubstring:self.maxUnicodeLength];
+                }
+            }
+        } else {
+            if ([filterText.fw unicodeLength] > self.maxUnicodeLength) {
+                filterText = [filterText.fw unicodeSubstring:self.maxUnicodeLength];
+            }
+        }
+    }
+    
+    return filterText;
+}
+
 - (void)textChangedAction
 {
     [self textLengthChanged];
@@ -1042,6 +1085,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)textLengthChanged
 {
     [[self innerInputTarget:NO] textLengthChanged];
+}
+
+- (NSString *)filterText:(NSString *)text
+{
+    FWInnerInputTarget *target = [self innerInputTarget:NO];
+    return target ? [target filterText:text] : text;
 }
 
 - (NSTimeInterval)autoCompleteInterval
@@ -1106,6 +1155,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)textLengthChanged
 {
     [[self innerInputTarget:NO] textLengthChanged];
+}
+
+- (NSString *)filterText:(NSString *)text
+{
+    FWInnerInputTarget *target = [self innerInputTarget:NO];
+    return target ? [target filterText:text] : text;
 }
 
 - (NSTimeInterval)autoCompleteInterval
