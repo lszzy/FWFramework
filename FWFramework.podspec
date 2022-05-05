@@ -24,26 +24,26 @@ Pod::Spec.new do |s|
   
   s.subspec 'Contacts' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/Contacts/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.dependency 'FWFramework/Compatible'
   end
 
   s.subspec 'Microphone' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/Microphone/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.dependency 'FWFramework/Compatible'
   end
 
   s.subspec 'Calendar' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/Calendar/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.dependency 'FWFramework/Compatible'
   end
 
   s.subspec 'AppleMusic' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/AppleMusic/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.dependency 'FWFramework/Compatible'
   end
 
   s.subspec 'Tracking' do |ss|
     ss.source_files = 'FWFramework/Classes/Module/Tracking/**/*.{h,m,swift}'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.dependency 'FWFramework/Compatible'
   end
 end
