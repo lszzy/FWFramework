@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FWPluginManager Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/FWPluginManager" class="dashAnchor"></a>
+    <a title="FWPluginManager Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">FWFramework 3.0.0 Docs</a> (63% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">FWFramework Reference</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        FWPluginManager Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Categories.html">Categories</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Categories/CAAnimation%28FWWrapper%29.html">CAAnimation(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/CADisplayLink%28FWWrapper%29.html">CADisplayLink(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/CAGradientLayer%28FWWrapper%29.html">CAGradientLayer(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/CALayer%28FWWrapper%29.html">CALayer(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSArray%28FWWrapper%29.html">NSArray(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSAttributedString%28FWWrapper%29.html">NSAttributedString(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSBundle%28FWWrapper%29.html">NSBundle(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSData%28FWWrapper%29.html">NSData(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSDate%28FWWrapper%29.html">NSDate(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSDictionary%28FWWrapper%29.html">NSDictionary(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSFileManager%28FWWrapper%29.html">NSFileManager(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSMutableArray%28FWWrapper%29.html">NSMutableArray(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSMutableDictionary%28FWWrapper%29.html">NSMutableDictionary(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSMutableSet%28FWWrapper%29.html">NSMutableSet(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSNumber%28FWWrapper%29.html">NSNumber(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSObject%28FWClassWrapper%29.html">NSObject(FWClassWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSObject%28FWObjectWrapper%29.html">NSObject(FWObjectWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSSet%28FWWrapper%29.html">NSSet(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSString%28FWWrapper%29.html">NSString(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSTimer%28FWWrapper%29.html">NSTimer(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSURL%28FWWrapper%29.html">NSURL(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSURLRequest%28FWWrapper%29.html">NSURLRequest(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSUserDefaults%28FWWrapper%29.html">NSUserDefaults(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIApplication%28FWWrapper%29.html">UIApplication(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIBarButtonItem%28FWWrapper%29.html">UIBarButtonItem(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIBarItem%28FWWrapper%29.html">UIBarItem(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIBezierPath%28FWWrapper%29.html">UIBezierPath(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIButton%28FWWrapper%29.html">UIButton(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UICollectionReusableView%28FWDynamicLayout%29.html">UICollectionReusableView(FWDynamicLayout)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UICollectionReusableView%28FWWrapper%29.html">UICollectionReusableView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UICollectionView%28FWWrapper%29.html">UICollectionView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UICollectionViewCell%28FWDynamicLayout%29.html">UICollectionViewCell(FWDynamicLayout)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UICollectionViewCell%28FWWrapper%29.html">UICollectionViewCell(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor%28FWWrapper%29.html">UIColor(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIControl%28FWWrapper%29.html">UIControl(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIDevice%28FWWrapper%29.html">UIDevice(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIFont%28FWWrapper%29.html">UIFont(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIGestureRecognizer%28FWBlock%29.html">UIGestureRecognizer(FWBlock)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIGestureRecognizer%28FWWrapper%29.html">UIGestureRecognizer(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIImage%28FWWrapper%29.html">UIImage(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIImageAsset%28FWWrapper%29.html">UIImageAsset(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIImageView%28FWWrapper%29.html">UIImageView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UILabel%28FWWrapper%29.html">UILabel(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UINavigationBar%28FWWrapper%29.html">UINavigationBar(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UINavigationController%28FWWrapper%29.html">UINavigationController(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIPageControl%28FWWrapper%29.html">UIPageControl(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIScreen%28FWWrapper%29.html">UIScreen(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIScrollView%28FWWrapper%29.html">UIScrollView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UISearchBar%28FWWrapper%29.html">UISearchBar(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UISlider%28FWWrapper%29.html">UISlider(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UISwitch%28FWWrapper%29.html">UISwitch(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITabBar%28FWWrapper%29.html">UITabBar(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITabBarController%28FWWrapper%29.html">UITabBarController(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITableView%28FWWrapper%29.html">UITableView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITableViewCell%28FWDynamicLayout%29.html">UITableViewCell(FWDynamicLayout)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITableViewCell%28FWWrapper%29.html">UITableViewCell(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITableViewHeaderFooterView%28FWDynamicLayout%29.html">UITableViewHeaderFooterView(FWDynamicLayout)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITableViewHeaderFooterView%28FWWrapper%29.html">UITableViewHeaderFooterView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITextField%28FWWrapper%29.html">UITextField(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UITextView%28FWWrapper%29.html">UITextView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIToolbar%28FWWrapper%29.html">UIToolbar(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIView%28FWWrapper%29.html">UIView(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIViewController%28FWToolkit%29.html">UIViewController(FWToolkit)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIViewController%28FWWrapper%29.html">UIViewController(FWWrapper)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIWindow%28FWWrapper%29.html">UIWindow(FWWrapper)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/FWABConditionalTest.html">FWABConditionalTest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWABDefaultRepository.html">FWABDefaultRepository</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWABSplitTest.html">FWABSplitTest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWABVersion.html">FWABVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWAnimationClassWrapper">FWAnimationClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAnimationWrapper.html">FWAnimationWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAppearance.html">FWAppearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWApplicationClassWrapper.html">FWApplicationClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWApplicationWrapper.html">FWApplicationWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWArrayClassWrapper">FWArrayClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWArrayWrapper.html">FWArrayWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAttributedStringClassWrapper.html">FWAttributedStringClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAttributedStringWrapper.html">FWAttributedStringWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAuthorizeManager.html">FWAuthorizeManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWAutoloader.html">FWAutoloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBarButtonItemClassWrapper.html">FWBarButtonItemClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBarButtonItemWrapper.html">FWBarButtonItemWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWBarItemClassWrapper">FWBarItemClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBarItemWrapper.html">FWBarItemWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBenchmark.html">FWBenchmark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWBezierPathClassWrapper">FWBezierPathClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBezierPathWrapper.html">FWBezierPathWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBlockProxy.html">FWBlockProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBundleClassWrapper.html">FWBundleClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWBundleWrapper.html">FWBundleWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWButtonClassWrapper.html">FWButtonClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWButtonWrapper.html">FWButtonWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWClassWrapper.html">FWClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWCollectionReusableViewClassWrapper.html">FWCollectionReusableViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWCollectionReusableViewWrapper.html">FWCollectionReusableViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWCollectionViewCellClassWrapper.html">FWCollectionViewCellClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWCollectionViewCellWrapper.html">FWCollectionViewCellWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWCollectionViewClassWrapper">FWCollectionViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWCollectionViewWrapper.html">FWCollectionViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWColorClassWrapper.html">FWColorClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWColorWrapper.html">FWColorWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWControlClassWrapper">FWControlClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWControlWrapper.html">FWControlWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDataClassWrapper.html">FWDataClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDataWrapper.html">FWDataWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDateClassWrapper.html">FWDateClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDateWrapper.html">FWDateWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDelegateProxy.html">FWDelegateProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDeviceClassWrapper.html">FWDeviceClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDeviceWrapper.html">FWDeviceWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWDictionaryClassWrapper">FWDictionaryClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDictionaryWrapper.html">FWDictionaryWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDisplayLinkClassWrapper.html">FWDisplayLinkClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWDisplayLinkWrapper.html">FWDisplayLinkWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWException.html">FWException</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWFileManagerClassWrapper">FWFileManagerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWFileManagerWrapper.html">FWFileManagerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWFontClassWrapper.html">FWFontClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWFontWrapper.html">FWFontWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWGestureRecognizerClassWrapper.html">FWGestureRecognizerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWGestureRecognizerWrapper.html">FWGestureRecognizerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWGradientLayerClassWrapper">FWGradientLayerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWGradientLayerWrapper.html">FWGradientLayerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWIcon.html">FWIcon</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWImageAssetClassWrapper.html">FWImageAssetClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWImageAssetWrapper.html">FWImageAssetWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWImageClassWrapper.html">FWImageClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWImageViewClassWrapper">FWImageViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWImageViewWrapper.html">FWImageViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWImageWrapper.html">FWImageWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWKeychainManager.html">FWKeychainManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLabelClassWrapper.html">FWLabelClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLabelWrapper.html">FWLabelWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWLayerClassWrapper">FWLayerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLayerWrapper.html">FWLayerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLayoutChain.html">FWLayoutChain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLayoutChain.html">FWLayoutChain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLoader.html">FWLoader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLocationManager.html">FWLocationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLogPluginImpl.html">FWLogPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWLogger.html">FWLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWMediator.html">FWMediator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWModuleBundle.html">FWModuleBundle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWMulticastDelegate.html">FWMulticastDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWMutableArrayClassWrapper">FWMutableArrayClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWMutableArrayWrapper.html">FWMutableArrayWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWMutableDictionaryClassWrapper">FWMutableDictionaryClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWMutableDictionaryWrapper.html">FWMutableDictionaryWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWMutableSetClassWrapper">FWMutableSetClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWMutableSetWrapper.html">FWMutableSetWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWNavigationBarClassWrapper">FWNavigationBarClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWNavigationBarWrapper.html">FWNavigationBarWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWNavigationControllerClassWrapper.html">FWNavigationControllerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWNavigationControllerWrapper.html">FWNavigationControllerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWNotificationManager.html">FWNotificationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWNumberClassWrapper">FWNumberClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWNumberWrapper.html">FWNumberWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWObjectWrapper.html">FWObjectWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWPageControlClassWrapper">FWPageControlClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWPageControlWrapper.html">FWPageControlWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWPluginManager.html">FWPluginManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWPromise.html">FWPromise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWRouter.html">FWRouter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWRouterContext.html">FWRouterContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScreenClassWrapper.html">FWScreenClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScreenWrapper.html">FWScreenWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWScrollViewClassWrapper">FWScrollViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScrollViewWrapper.html">FWScrollViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWSearchBarClassWrapper">FWSearchBarClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWSearchBarWrapper.html">FWSearchBarWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWSetClassWrapper">FWSetClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWSetWrapper.html">FWSetWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWSliderClassWrapper">FWSliderClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWSliderWrapper.html">FWSliderWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWState.html">FWState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWStateEvent.html">FWStateEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWStateMachine.html">FWStateMachine</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWStateTransition.html">FWStateTransition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWStringClassWrapper.html">FWStringClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWStringWrapper.html">FWStringWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWSwitchClassWrapper">FWSwitchClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWSwitchWrapper.html">FWSwitchWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWTabBarClassWrapper">FWTabBarClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWTabBarControllerClassWrapper">FWTabBarControllerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTabBarControllerWrapper.html">FWTabBarControllerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTabBarWrapper.html">FWTabBarWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTableViewCellClassWrapper.html">FWTableViewCellClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTableViewCellWrapper.html">FWTableViewCellWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWTableViewClassWrapper">FWTableViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTableViewHeaderFooterViewClassWrapper.html">FWTableViewHeaderFooterViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTableViewHeaderFooterViewWrapper.html">FWTableViewHeaderFooterViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTableViewWrapper.html">FWTableViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTask.html">FWTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTaskManager.html">FWTaskManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWTextFieldClassWrapper">FWTextFieldClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTextFieldWrapper.html">FWTextFieldWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWTextViewClassWrapper">FWTextViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTextViewWrapper.html">FWTextViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWThemeManager.html">FWThemeManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWThemeObject.html">FWThemeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTimerClassWrapper.html">FWTimerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTimerWrapper.html">FWTimerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWToolbarClassWrapper">FWToolbarClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWToolbarWrapper.html">FWToolbarWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWURLClassWrapper.html">FWURLClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWURLRequestClassWrapper">FWURLRequestClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWURLRequestWrapper.html">FWURLRequestWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWURLWrapper.html">FWURLWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWUserDefaultsClassWrapper.html">FWUserDefaultsClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWUserDefaultsWrapper.html">FWUserDefaultsWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWVersionManager.html">FWVersionManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWViewClassWrapper.html">FWViewClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)FWViewControllerClassWrapper">FWViewControllerClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWViewControllerWrapper.html">FWViewControllerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWViewWrapper.html">FWViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWWeakObject.html">FWWeakObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWWeakProxy.html">FWWeakProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWWindowClassWrapper.html">FWWindowClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWWindowWrapper.html">FWWindowWrapper</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Constants.html">Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWExceptionCapturedNotification">FWExceptionCapturedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWFrameworkVersionNumber">FWFrameworkVersionNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWFrameworkVersionString">FWFrameworkVersionString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWHeadingUpdatedNotification">FWHeadingUpdatedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWLanguageChangedNotification">FWLanguageChangedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWLocationFailedNotification">FWLocationFailedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWLocationUpdatedNotification">FWLocationUpdatedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWMediator.h@FWModulePriorityDefault">FWModulePriorityDefault</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch35">FWScreenInch35</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch40">FWScreenInch40</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch47">FWScreenInch47</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch54">FWScreenInch54</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch55">FWScreenInch55</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch58">FWScreenInch58</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch61">FWScreenInch61</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch65">FWScreenInch65</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWAdaptive.h@FWScreenInch67">FWScreenInch67</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWStateChangedNotification">FWStateChangedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWThemeChangedNotification">FWThemeChangedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWTheme.h@FWThemeModeDark">FWThemeModeDark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWTheme.h@FWThemeModeLight">FWThemeModeLight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWTheme.h@FWThemeModeSystem">FWThemeModeSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWTheme.h@FWThemeStyleDark">FWThemeStyleDark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:FWTheme.h@FWThemeStyleLight">FWThemeStyleLight</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/FWAuthorizeStatus.html">FWAuthorizeStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWAuthorizeType.html">FWAuthorizeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWHeaderFooterViewType.html">FWHeaderFooterViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWIndex.html">FWIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWJSONError.html">FWJSONError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWJSONKey.html">FWJSONKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWJSONType.html">FWJSONType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWJSONWritingOptionsKeys.html">FWJSONWritingOptionsKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWLogLevel.html">FWLogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWLogType.html">FWLogType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWVersionStatus.html">FWVersionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWViewControllerVisibleState.html">FWViewControllerVisibleState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/FWABRandomRepository.html">FWABRandomRepository</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWAnyDateFormatter.html">FWAnyDateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWAnyDecoder.html">FWAnyDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWAnyEncoder.html">FWAnyEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWAuthorizeProtocol.html">FWAuthorizeProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWAutoloadProtocol.html">FWAutoloadProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWClassWrapper.html">FWClassWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWJSONSubscriptType.html">FWJSONSubscriptType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWLogPlugin.html">FWLogPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWModuleProtocol.html">FWModuleProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWObjectWrapper.html">FWObjectWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWPluginProtocol.html">FWPluginProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWSafeType.html">FWSafeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWThemeObserver.html">FWThemeObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWWrapperCompatible.html">FWWrapperCompatible</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Type%20Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockBool">FWBlockBool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockBoolParam">FWBlockBoolParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockDouble">FWBlockDouble</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockInt">FWBlockInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockParam">FWBlockParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWBlock.h@T@FWBlockVoid">FWBlockVoid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCellConfigurationBlock">FWCellConfigurationBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCellIndexPathBlock">FWCellIndexPathBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellIndexPathBlock">FWCollectionCellIndexPathBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWHeaderFooterViewConfigurationBlock">FWHeaderFooterViewConfigurationBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWHeaderFooterViewSectionBlock">FWHeaderFooterViewSectionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewIndexPathBlock">FWReusableViewIndexPathBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWRouter.h@T@FWRouterCompletion">FWRouterCompletion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWRouter.h@T@FWRouterHandler">FWRouterHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWAdaptive.h@T@FWScreenInch">FWScreenInch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWTheme.h@T@FWThemeMode">FWThemeMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:FWTheme.h@T@FWThemeStyle">FWThemeStyle</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework1loiySbAA6FWJSONV_ADtF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2leoiySbAA6FWJSONV_ADtF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2eeoiySbAA6FWJSONV_ADtF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework1goiySbAA6FWJSONV_ADtF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2geoiySbAA6FWJSONV_ADtF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWAutoload">FWAutoload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWAutoloadySbypF">FWAutoload(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework16FWBenchmarkBeginyySSF">FWBenchmarkBegin(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework14FWBenchmarkEndySdSSF">FWBenchmarkEnd(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWColorHexySo7UIColorCSi_12CoreGraphics7CGFloatVtF">FWColorHex(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWColorRgbySo7UIColorC12CoreGraphics7CGFloatV_A3GtF">FWColorRgb(_:_:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:FWAdaptive.h@F@FWFlatScale">FWFlatScale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:FWAdaptive.h@F@FWFlatValue">FWFlatValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontBold">FWFontBold</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontLight">FWFontLight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontMedium">FWFontMedium</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontRegular">FWFontRegular</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontSemibold">FWFontSemibold</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWFontSizeySo6UIFontC12CoreGraphics7CGFloatV_So0D6WeightatF">FWFontSize(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWFontThin">FWFontThin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWIconImage">FWIconImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWIconNamed">FWIconNamed</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework9FWIsEmptyySbxSgAA10FWSafeTypeRzlF">FWIsEmpty(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework7FWIsIosySbSiF">FWIsIos(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework12FWIsIosLaterySbSiF">FWIsIosLater(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework14FWIsScreenInchySbSo08FWScreenD0aF">FWIsScreenInch(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework17FWLocalizedStringyS2S_SSSgtF">FWLocalizedString(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWLogDebug__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogDebug(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWLogError__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogError(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWLogGroup_4type6format_4file8function4lineySS_So0B4TypeVSSs7CVarArg_pdS2SSitF">FWLogGroup(_:type:format:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework9FWLogInfo__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogInfo(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework10FWLogTrace__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogTrace(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework9FWLogWarn__4file8function4lineySS_s7CVarArg_pdS2SSitF">FWLogWarn(_:_:file:function:line:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativeHeight">FWRelativeHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework16FWRelativeHeighty12CoreGraphics7CGFloatVAEF">FWRelativeHeight(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativeInsets">FWRelativeInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativePoint">FWRelativePoint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativeRect">FWRelativeRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativeSize">FWRelativeSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWRelativeValue">FWRelativeValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework15FWRelativeValuey12CoreGraphics7CGFloatVAEF">FWRelativeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework15FWRelativeValueySo12UIEdgeInsetsVADF">FWRelativeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework15FWRelativeValueySo6CGRectVADF">FWRelativeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework15FWRelativeValueySo6CGSizeVADF">FWRelativeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework15FWRelativeValueySo7CGPointVADF">FWRelativeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWSafeNumber">FWSafeNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework12FWSafeNumberySo8NSNumberCypSgF">FWSafeNumber(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWSafeString">FWSafeString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework12FWSafeStringySSypSgF">FWSafeString(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@FWSafeURL">FWSafeURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework9FWSafeURLy10Foundation0C0VypSgF">FWSafeURL(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework11FWSafeValueyxxSgAA0B4TypeRzlF">FWSafeValue(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework8fw_asyncyAA9FWPromiseCypSgyKcF">fw_async(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework8fw_awaityypSgAA9FWPromiseCKF">fw_await(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework14FWDeviceHeight12CoreGraphics7CGFloatVvp">FWDeviceHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework18FWDeviceResolutionSo6CGSizeVvp">FWDeviceResolution</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework12FWDeviceSizeSo6CGSizeVvp">FWDeviceSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework13FWDeviceWidth12CoreGraphics7CGFloatVvp">FWDeviceWidth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework12FWIosVersionSdvp">FWIosVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework9FWIsDebugSbvp">FWIsDebug</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework19FWIsDeviceLandscapeSbvp">FWIsDeviceLandscape</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework8FWIsIpadSbvp">FWIsIpad</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework10FWIsIphoneSbvp">FWIsIphone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework13FWIsLandscapeSbvp">FWIsLandscape</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework7FWIsMacSbvp">FWIsMac</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework17FWIsNotchedScreenSbvp">FWIsNotchedScreen</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework13FWIsSimulatorSbvp">FWIsSimulator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework21FWNavigationBarHeight12CoreGraphics7CGFloatVvp">FWNavigationBarHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework10FWPixelOne12CoreGraphics7CGFloatVvp">FWPixelOne</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework21FWRelativeHeightScale12CoreGraphics7CGFloatVvp">FWRelativeHeightScale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework15FWRelativeScale12CoreGraphics7CGFloatVvp">FWRelativeScale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework16FWSafeAreaInsetsSo06UIEdgeD0Vvp">FWSafeAreaInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework14FWScreenHeight12CoreGraphics7CGFloatVvp">FWScreenHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework13FWScreenScale12CoreGraphics7CGFloatVvp">FWScreenScale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework12FWScreenSizeSo6CGSizeVvp">FWScreenSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework13FWScreenWidth12CoreGraphics7CGFloatVvp">FWScreenWidth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework17FWStatusBarHeight12CoreGraphics7CGFloatVvp">FWStatusBarHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework14FWTabBarHeight12CoreGraphics7CGFloatVvp">FWTabBarHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework15FWToolBarHeight12CoreGraphics7CGFloatVvp">FWToolBarHeight</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables.html#/s:11FWFramework14FWTopBarHeight12CoreGraphics7CGFloatVvp">FWTopBarHeight</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation4DateV">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSDateFormatter">DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decoder.html">Decoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Encoder.html">Encoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/FWTestCase.html">FWTestCase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSISO8601DateFormatter">ISO8601DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int16.html">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int32.html">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int8.html">Int8</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation11JSONDecoderC">JSONDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation11JSONEncoderC">JSONEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation19PropertyListEncoderC">PropertyListEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt16.html">UInt16</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt32.html">UInt32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt8.html">UInt8</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/FWJSON.html">FWJSON</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FWModuleAnnotation.html">FWModuleAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FWPluginAnnotation.html">FWPluginAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FWRouterAnnotation.html">FWRouterAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FWUserDefaultAnnotation.html">FWUserDefaultAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FWWrapper.html">FWWrapper</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework11FWBlockBoola">FWBlockBool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework16FWBlockBoolParama">FWBlockBoolParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework13FWBlockDoublea">FWBlockDouble</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework10FWBlockInta">FWBlockInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework12FWBlockParama">FWBlockParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework11FWBlockVoida">FWBlockVoid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework11FWJSONIndexa">FWJSONIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework14FWJSONRawIndexa">FWJSONRawIndex</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>FWPluginManager</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">FWPluginManager</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    和Mediator对比如下：
+Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
+Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
+
+</div>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cpy)sharedLoader"></a>
+                    <a name="//apple_ref/swift/Property/sharedLoader" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cpy)sharedLoader">sharedLoader</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n"><a href="../Classes/FWLoader.html">FWLoader</a></span><span class="o">&lt;</span><span class="n">Protocol</span> <span class="o">*</span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">sharedLoader</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cm)registerPlugin:withObject:"></a>
+                    <a name="//apple_ref/swift/Method/+registerPlugin:withObject:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cm)registerPlugin:withObject:">+registerPlugin:<wbr>withObject:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">registerPlugin</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">Protocol</span> <span class="o">*</span><span class="p">)</span><span class="nv">pluginProtocol</span>
+            <span class="nf">withObject</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">object</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cm)presetPlugin:withObject:"></a>
+                    <a name="//apple_ref/swift/Method/+presetPlugin:withObject:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cm)presetPlugin:withObject:">+presetPlugin:<wbr>withObject:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>预置单例插件，仅当插件未注册时生效，插件类或对象必须实现protocol</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">presetPlugin</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">Protocol</span> <span class="o">*</span><span class="p">)</span><span class="nv">pluginProtocol</span>
+          <span class="nf">withObject</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">object</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cm)unregisterPlugin:"></a>
+                    <a name="//apple_ref/swift/Method/+unregisterPlugin:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cm)unregisterPlugin:">+unregisterPlugin:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>取消插件注册，仅当插件未使用时生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">unregisterPlugin</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">Protocol</span> <span class="o">*</span><span class="p">)</span><span class="nv">pluginProtocol</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cm)loadPlugin:"></a>
+                    <a name="//apple_ref/swift/Method/+loadPlugin:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cm)loadPlugin:">+loadPlugin:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>延迟加载插件对象，调用后不可再注册该插件</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nf">loadPlugin</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">Protocol</span> <span class="o">*</span><span class="p">)</span><span class="nv">pluginProtocol</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPluginManager(cm)unloadPlugin:"></a>
+                    <a name="//apple_ref/swift/Method/+unloadPlugin:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPluginManager(cm)unloadPlugin:">+unloadPlugin:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>释放插件对象并标记为未使用，释放后可重新注册该插件</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">unloadPlugin</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">Protocol</span> <span class="o">*</span><span class="p">)</span><span class="nv">pluginProtocol</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-05-05)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
