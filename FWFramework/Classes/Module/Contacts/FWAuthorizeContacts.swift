@@ -9,6 +9,7 @@
 import Contacts
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 通讯录授权
@@ -39,8 +40,8 @@ private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
-    private func loadFWAuthorizeContacts() {
+@objc extension FWAutoloader {
+    private func loadAuthorizeContacts() {
         FWAuthorizeManager.registerAuthorize(.contacts) {
             return FWAuthorizeContacts()
         }

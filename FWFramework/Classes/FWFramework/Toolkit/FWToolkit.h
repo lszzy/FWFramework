@@ -11,86 +11,86 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import <MessageUI/MessageUI.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIApplication+FWToolkit
+#pragma mark - FWApplicationClassWrapper+FWToolkit
 
 /**
- UIApplication+FWToolkit
- @note 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+ 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
  */
-@interface UIApplication (FWToolkit)
+@interface FWApplicationClassWrapper (FWToolkit)
 
 /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-+ (BOOL)fwCanOpenURL:(id)url;
+- (BOOL)canOpenURL:(id)url;
 
 /// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(id)url;
+- (void)openURL:(id)url;
 
 /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-+ (void)fwOpenURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-+ (void)fwOpenUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-+ (BOOL)fwIsSystemURL:(id)url;
+- (BOOL)isSystemURL:(id)url;
 
 /// 判断URL是否HTTP链接，支持NSString|NSURL
-+ (BOOL)fwIsHttpURL:(id)url;
+- (BOOL)isHttpURL:(id)url;
 
 /// 判断URL是否是AppStore链接，支持NSString|NSURL
-+ (BOOL)fwIsAppStoreURL:(id)url;
+- (BOOL)isAppStoreURL:(id)url;
 
 /// 打开AppStore下载页
-+ (void)fwOpenAppStore:(NSString *)appId;
+- (void)openAppStore:(NSString *)appId;
 
 /// 打开AppStore评价页
-+ (void)fwOpenAppStoreReview:(NSString *)appId;
+- (void)openAppStoreReview:(NSString *)appId;
 
 /// 打开应用内评价，有次数限制
-+ (void)fwOpenAppReview;
+- (void)openAppReview;
 
 /// 打开系统应用设置页
-+ (void)fwOpenAppSettings;
+- (void)openAppSettings;
 
 /// 打开系统邮件App
-+ (void)fwOpenMailApp:(NSString *)email;
+- (void)openMailApp:(NSString *)email;
 
 /// 打开系统短信App
-+ (void)fwOpenMessageApp:(NSString *)phone;
+- (void)openMessageApp:(NSString *)phone;
 
 /// 打开系统电话App
-+ (void)fwOpenPhoneApp:(NSString *)phone;
+- (void)openPhoneApp:(NSString *)phone;
 
 /// 打开系统分享
-+ (void)fwOpenActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
+- (void)openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
 
 /// 打开内部浏览器，支持NSString|NSURL
-+ (void)fwOpenSafariController:(id)url;
+- (void)openSafariController:(id)url;
 
 /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-+ (void)fwOpenSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
+- (void)openSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
 
 /// 打开短信控制器，完成时回调
-+ (void)fwOpenMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开邮件控制器，完成时回调
-+ (void)fwOpenMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开Store控制器，完成时回调
-+ (void)fwOpenStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
+- (void)openStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
 
 /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-+ (nullable AVPlayerViewController *)fwOpenVideoPlayer:(id)url;
+- (nullable AVPlayerViewController *)openVideoPlayer:(id)url;
 
 /// 打开音频播放器，支持NSURL|NSString
-+ (nullable AVAudioPlayer *)fwOpenAudioPlayer:(id)url;
+- (nullable AVAudioPlayer *)openAudioPlayer:(id)url;
 
 @end
 
-#pragma mark - UIColor+FWToolkit
+#pragma mark - FWColorWrapper+FWToolkit
 
 /// 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
 #define FWColorHex( hex, ... ) \
@@ -100,54 +100,58 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWColorRgb( r, g, b, ... ) \
     [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:fw_macro_default(1.0f, ##__VA_ARGS__)]
 
-/**
- UIColor+FWToolkit
- */
-@interface UIColor (FWToolkit)
-
-/// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
-+ (UIColor *)fwColorWithHex:(long)hex;
-
-/// 从十六进制值初始化，格式：0x20B2AA，自定义透明度
-+ (UIColor *)fwColorWithHex:(long)hex alpha:(CGFloat)alpha;
-
-/// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
-+ (void)fwColorStandardARGB:(BOOL)enabled;
-
-/// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0，失败时返回clear
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString;
-
-/// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear
-+ (UIColor *)fwColorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
-
-/// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear
-+ (UIColor *)fwColorWithString:(NSString *)string;
-
-/// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear
-+ (UIColor *)fwColorWithString:(NSString *)string alpha:(CGFloat)alpha;
+@interface FWColorWrapper (FWToolkit)
 
 /// 获取当前颜色指定透明度的新颜色
-- (UIColor *)fwColorWithAlpha:(CGFloat)alpha;
+- (UIColor *)colorWithAlpha:(CGFloat)alpha;
 
 /// 读取颜色的十六进制值RGB，不含透明度
-@property (nonatomic, assign, readonly) long fwHexValue;
+@property (nonatomic, assign, readonly) long hexValue;
 
 /// 读取颜色的透明度值，范围0~1
-@property (nonatomic, assign, readonly) CGFloat fwAlphaValue;
+@property (nonatomic, assign, readonly) CGFloat alphaValue;
 
 /// 读取颜色的十六进制字符串RGB，不含透明度
-@property (nonatomic, copy, readonly) NSString *fwHexString;
+@property (nonatomic, copy, readonly) NSString *hexString;
 
 /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-@property (nonatomic, copy, readonly) NSString *fwHexStringWithAlpha;
+@property (nonatomic, copy, readonly) NSString *hexStringWithAlpha;
 
 @end
 
-#pragma mark - UIFont+FWToolkit
+@interface FWColorClassWrapper (FWToolkit)
+
+/// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
+@property (nonatomic, assign) BOOL colorStandardARGB;
+
+/// 获取透明度为1.0的RGB随机颜色
+@property (nonatomic, readonly) UIColor *randomColor;
+
+/// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
+- (UIColor *)colorWithHex:(long)hex;
+
+/// 从十六进制值初始化，格式：0x20B2AA，自定义透明度
+- (UIColor *)colorWithHex:(long)hex alpha:(CGFloat)alpha;
+
+/// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0，失败时返回clear
+- (UIColor *)colorWithHexString:(NSString *)hexString;
+
+/// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear
+- (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
+
+/// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear
+- (UIColor *)colorWithString:(NSString *)string;
+
+/// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear
+- (UIColor *)colorWithString:(NSString *)string alpha:(CGFloat)alpha;
+
+@end
+
+#pragma mark - FWFontWrapper+FWToolkit
 
 /// 快速创建系统字体，字重可选，默认Regular
 #define FWFontSize( size, ... ) \
-    [UIFont fwFontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+    [UIFont.fw fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建Thin字体
 FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size);
@@ -161,209 +165,235 @@ FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size);
 FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size);
 /// 快速创建Bold字体
 FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
-/// 快速创建斜体字体
-FOUNDATION_EXPORT UIFont * FWFontItalic(CGFloat size);
 
-/**
- UIFont+FWToolkit
- */
-@interface UIFont (FWToolkit)
+@interface FWFontClassWrapper (FWToolkit)
+
+/// 全局自定义字体句柄，优先调用
+@property (nonatomic, copy, nullable) UIFont * (^fontBlock)(CGFloat size, UIFontWeight weight);
 
 /// 返回系统Thin字体
-+ (UIFont *)fwThinFontOfSize:(CGFloat)size;
+- (UIFont *)thinFontOfSize:(CGFloat)size;
 /// 返回系统Light字体
-+ (UIFont *)fwLightFontOfSize:(CGFloat)size;
+- (UIFont *)lightFontOfSize:(CGFloat)size;
 /// 返回系统Regular字体
-+ (UIFont *)fwFontOfSize:(CGFloat)size;
+- (UIFont *)fontOfSize:(CGFloat)size;
 /// 返回系统Medium字体
-+ (UIFont *)fwMediumFontOfSize:(CGFloat)size;
+- (UIFont *)mediumFontOfSize:(CGFloat)size;
 /// 返回系统Semibold字体
-+ (UIFont *)fwSemiboldFontOfSize:(CGFloat)size;
+- (UIFont *)semiboldFontOfSize:(CGFloat)size;
 /// 返回系统Bold字体
-+ (UIFont *)fwBoldFontOfSize:(CGFloat)size;
-/// 返回系统斜体字体
-+ (UIFont *)fwItalicFontOfSize:(CGFloat)size;
+- (UIFont *)boldFontOfSize:(CGFloat)size;
 
 /// 创建指定尺寸和weight的系统字体
-+ (UIFont *)fwFontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
+- (UIFont *)fontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
 
 @end
 
-#pragma mark - UIImage+FWToolkit
+#pragma mark - FWImageWrapper+FWToolkit
 
-/**
- UIImage+FWToolkit
- */
-@interface UIImage (FWToolkit)
-
-/// 从视图创建UIImage，生成截图，主线程调用
-+ (nullable UIImage *)fwImageWithView:(UIView *)view;
-
-/// 从颜色创建UIImage，默认尺寸1x1
-+ (nullable UIImage *)fwImageWithColor:(UIColor *)color;
-
-/// 从颜色创建UIImage，指定尺寸
-+ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size;
-
-/// 从颜色创建UIImage，指定尺寸和圆角
-+ (nullable UIImage *)fwImageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius;
-
-/// 从block创建UIImage，指定尺寸
-+ (nullable UIImage *)fwImageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
+@interface FWImageWrapper (FWToolkit)
 
 /// 从当前图片创建指定透明度的图片
-- (nullable UIImage *)fwImageWithAlpha:(CGFloat)alpha;
+- (nullable UIImage *)imageWithAlpha:(CGFloat)alpha;
 
 /// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
-- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor;
+- (nullable UIImage *)imageWithTintColor:(UIColor *)tintColor;
 
 /// 从当前UIImage混合颜色创建UIImage，自定义模式
-- (nullable UIImage *)fwImageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
+- (nullable UIImage *)imageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
 
 /// 缩放图片到指定大小
-- (nullable UIImage *)fwImageWithScaleSize:(CGSize)size;
+- (nullable UIImage *)imageWithScaleSize:(CGSize)size;
 
 /// 缩放图片到指定大小，指定模式
-- (nullable UIImage *)fwImageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
+- (nullable UIImage *)imageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
 
 /// 按指定模式绘制图片
-- (void)fwDrawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds;
+- (void)drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds;
 
 /// 裁剪指定区域图片
-- (nullable UIImage *)fwImageWithCropRect:(CGRect)rect;
+- (nullable UIImage *)imageWithCropRect:(CGRect)rect;
 
 /// 指定颜色填充图片边缘
-- (nullable UIImage *)fwImageWithInsets:(UIEdgeInsets)insets color:(nullable UIColor *)color;
+- (nullable UIImage *)imageWithInsets:(UIEdgeInsets)insets color:(nullable UIColor *)color;
 
 /// 拉伸图片(平铺模式)，指定端盖区域（不拉伸区域）
-- (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets;
+- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets;
 
 /// 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
-- (UIImage *)fwImageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode;
+- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode;
 
 /// 生成圆角图片
-- (nullable UIImage *)fwImageWithCornerRadius:(CGFloat)radius;
+- (nullable UIImage *)imageWithCornerRadius:(CGFloat)radius;
 
 /// 按角度常数(0~360)转动图片，默认图片尺寸适应内容
-- (nullable UIImage *)fwImageWithRotateDegree:(CGFloat)degree;
+- (nullable UIImage *)imageWithRotateDegree:(CGFloat)degree;
 
 /// 按角度常数(0~360)转动图片，指定图片尺寸是否延伸来适应内容，否则图片尺寸不变，内容被裁剪
-- (nullable UIImage *)fwImageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize;
+- (nullable UIImage *)imageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize;
 
 /// 生成mark图片
-- (nullable UIImage *)fwImageWithMaskImage:(UIImage *)maskImage;
+- (nullable UIImage *)imageWithMaskImage:(UIImage *)maskImage;
 
 /// 图片合并，并制定叠加图片的起始位置
-- (nullable UIImage *)fwImageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point;
+- (nullable UIImage *)imageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point;
 
 /// 图片应用CIFilter滤镜处理
-- (nullable UIImage *)fwImageWithFilter:(CIFilter *)filter;
+- (nullable UIImage *)imageWithFilter:(CIFilter *)filter;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-- (nullable UIImage *)fwCompressImageWithMaxLength:(NSInteger)maxLength;
+- (nullable UIImage *)compressImageWithMaxLength:(NSInteger)maxLength;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
-- (nullable NSData *)fwCompressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
+- (nullable NSData *)compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
 
 /// 长边压缩图片尺寸，获取等比例的图片
-- (nullable UIImage *)fwCompressImageWithMaxWidth:(NSInteger)maxWidth;
+- (nullable UIImage *)compressImageWithMaxWidth:(NSInteger)maxWidth;
 
 /// 通过指定图片最长边，获取等比例的图片size
-- (CGSize)fwScaleSizeWithMaxWidth:(CGFloat)maxWidth;
+- (CGSize)scaleSizeWithMaxWidth:(CGFloat)maxWidth;
 
 /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
-@property (nonatomic, readonly) UIImage *fwOriginalImage;
+@property (nonatomic, readonly) UIImage *originalImage;
 
 /// 获取模板渲染模式图片，始终显示tintColor，不显示原色。默认自动根据上下文
-@property (nonatomic, readonly) UIImage *fwTemplateImage;
+@property (nonatomic, readonly) UIImage *templateImage;
 
 /// 判断图片是否有透明通道
-@property (nonatomic, assign, readonly) BOOL fwHasAlpha;
+@property (nonatomic, assign, readonly) BOOL hasAlpha;
 
 /// 获取当前图片的像素大小，多倍图会放大到一倍
-@property (nonatomic, assign, readonly) CGSize fwPixelSize;
+@property (nonatomic, assign, readonly) CGSize pixelSize;
 
 @end
 
-#pragma mark - UIView+FWToolkit
+@interface FWImageClassWrapper (FWToolkit)
 
-/**
- UIView+FWToolkit
- */
-@interface UIView (FWToolkit)
+/// 从视图创建UIImage，生成截图，主线程调用
+- (nullable UIImage *)imageWithView:(UIView *)view;
+
+/// 从颜色创建UIImage，默认尺寸1x1
+- (nullable UIImage *)imageWithColor:(UIColor *)color;
+
+/// 从颜色创建UIImage，指定尺寸
+- (nullable UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
+
+/// 从颜色创建UIImage，指定尺寸和圆角
+- (nullable UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius;
+
+/// 从block创建UIImage，指定尺寸
+- (nullable UIImage *)imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
+
+@end
+
+#pragma mark - FWViewWrapper+FWToolkit
+
+@interface FWViewWrapper (FWToolkit)
 
 /// 顶部纵坐标，frame.origin.y
-@property (nonatomic, assign) CGFloat fwTop;
+@property (nonatomic, assign) CGFloat top;
 
 /// 底部纵坐标，frame.origin.y + frame.size.height
-@property (nonatomic, assign) CGFloat fwBottom;
+@property (nonatomic, assign) CGFloat bottom;
 
 /// 左边横坐标，frame.origin.x
-@property (nonatomic, assign) CGFloat fwLeft;
+@property (nonatomic, assign) CGFloat left;
 
 /// 右边横坐标，frame.origin.x + frame.size.width
-@property (nonatomic, assign) CGFloat fwRight;
+@property (nonatomic, assign) CGFloat right;
 
 /// 宽度，frame.size.width
-@property (nonatomic, assign) CGFloat fwWidth;
+@property (nonatomic, assign) CGFloat width;
 
 /// 高度，frame.size.height
-@property (nonatomic, assign) CGFloat fwHeight;
+@property (nonatomic, assign) CGFloat height;
 
 /// 中心横坐标，center.x
-@property (nonatomic, assign) CGFloat fwCenterX;
+@property (nonatomic, assign) CGFloat centerX;
 
 /// 中心纵坐标，center.y
-@property (nonatomic, assign) CGFloat fwCenterY;
+@property (nonatomic, assign) CGFloat centerY;
 
 /// 起始横坐标，frame.origin.x
-@property (nonatomic, assign) CGFloat fwX;
+@property (nonatomic, assign) CGFloat x;
 
 /// 起始纵坐标，frame.origin.y
-@property (nonatomic, assign) CGFloat fwY;
+@property (nonatomic, assign) CGFloat y;
 
 /// 起始坐标，frame.origin
-@property (nonatomic, assign) CGPoint fwOrigin;
+@property (nonatomic, assign) CGPoint origin;
 
 /// 大小，frame.size
-@property (nonatomic, assign) CGSize fwSize;
+@property (nonatomic, assign) CGSize size;
 
 @end
 
-#pragma mark - UIViewController+FWToolkit
+#pragma mark - FWViewControllerWrapper+FWToolkit
 
 /// 视图控制器生命周期状态枚举
 typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     /// 未触发ViewDidLoad
     FWViewControllerVisibleStateReady = 0,
     /// 已触发ViewDidLoad
-    FWViewControllerVisibleStateDidLoad,
+    FWViewControllerVisibleStateDidLoad = 1 << 0,
     /// 已触发ViewWillAppear
-    FWViewControllerVisibleStateWillAppear,
+    FWViewControllerVisibleStateWillAppear = 1 << 1,
     /// 已触发ViewDidAppear
-    FWViewControllerVisibleStateDidAppear,
+    FWViewControllerVisibleStateDidAppear = 1 << 2,
     /// 已触发ViewWillDisappear
-    FWViewControllerVisibleStateWillDisappear,
+    FWViewControllerVisibleStateWillDisappear = 1 << 3,
     /// 已触发ViewDidDisappear
-    FWViewControllerVisibleStateDidDisappear,
+    FWViewControllerVisibleStateDidDisappear = 1 << 4,
 };
 
-/**
- UIViewController+FWToolkit
- */
-@interface UIViewController (FWToolkit)
+@interface FWViewControllerWrapper (FWToolkit)
 
 /// 当前生命周期状态，默认Ready
-@property (nonatomic, assign, readonly) FWViewControllerVisibleState fwVisibleState;
+@property (nonatomic, assign, readonly) FWViewControllerVisibleState visibleState;
 
 /// 生命周期变化时通知句柄，默认nil
-@property (nonatomic, copy, nullable) void (^fwVisibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
+@property (nonatomic, copy, nullable) void (^visibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
 
 /// 自定义完成结果对象，默认nil
-@property (nonatomic, strong, nullable) id fwCompletionResult;
+@property (nonatomic, strong, nullable) id completionResult;
 
 /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
-@property (nonatomic, copy, nullable) void (^fwCompletionHandler)(id _Nullable result);
+@property (nonatomic, copy, nullable) void (^completionHandler)(id _Nullable result);
+
+/// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
+@property (nonatomic, copy, nullable) BOOL (^allowsPopGesture)(void);
+
+/// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
+@property (nonatomic, copy, nullable) BOOL (^shouldPopController)(void);
+
+@end
+
+@interface UIViewController (FWToolkit)
+
+/// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认YES
+@property (nonatomic, assign, readonly) BOOL allowsPopGesture;
+
+/// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认YES
+@property (nonatomic, assign, readonly) BOOL shouldPopController;
+
+@end
+
+#pragma mark - FWNavigationControllerWrapper+FWToolkit
+
+@interface FWNavigationControllerWrapper (FWToolkit)
+
+/// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
+- (void)enablePopProxy;
+
+@end
+
+/**
+ 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
+ */
+@interface FWNavigationControllerClassWrapper (FWToolkit)
+
+/// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
+- (void)enablePopProxy;
 
 @end
 

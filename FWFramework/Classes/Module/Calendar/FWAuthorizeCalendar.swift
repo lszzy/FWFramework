@@ -9,6 +9,7 @@
 import EventKit
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 日历授权
@@ -46,8 +47,8 @@ private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
-    private func loadFWAuthorizeCalendar() {
+@objc extension FWAutoloader {
+    private func loadAuthorizeCalendar() {
         FWAuthorizeManager.registerAuthorize(.calendars) {
             return FWAuthorizeCalendar(type: .event)
         }

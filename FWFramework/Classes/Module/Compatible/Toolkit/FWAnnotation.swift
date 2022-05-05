@@ -18,16 +18,21 @@ import FWFramework
 @propertyWrapper
 public struct FWUserDefaultAnnotation<T> {
     let key: String
-    let defaultValue: T
+    let value: T
+    
+    public init(wrappedValue value: T, _ key: String) {
+        self.key = key
+        self.value = value
+    }
     
     public init(_ key: String, defaultValue: T) {
         self.key = key
-        self.defaultValue = defaultValue
+        self.value = defaultValue
     }
     
     public var wrappedValue: T {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            return UserDefaults.standard.object(forKey: key) as? T ?? value
         }
         set {
             UserDefaults.standard.set(newValue, forKey: key)
@@ -102,32 +107,24 @@ public struct FWPluginAnnotation<T> {
 
 /// 路由属性包装器注解
 /// 使用示例：
-/// @FWRouterAnnotation("app://plugin/:id")
-/// static var pluginUrl: String
+/// @FWRouterAnnotation(AppRouter.pluginRouter(_:))
+/// static var pluginUrl: String = "app://plugin/:id"
 @propertyWrapper
-public struct FWRouterAnnotation<T> {
-    var url: Any
+public struct FWRouterAnnotation {
+    var pattern: String
     
-    public init(_ url: String) {
-        self.url = url
+    public init(wrappedValue value: String, _ handler: @escaping FWRouterHandler) {
+        self.pattern = value
+        FWRouter.registerURL(value, withHandler: handler)
     }
     
-    public init(_ url: String, parameters: Any?) {
-        self.url = FWRouter.generateURL(url, parameters: parameters)
+    public init(_ pattern: String, handler: @escaping FWRouterHandler) {
+        self.pattern = pattern
+        FWRouter.registerURL(pattern, withHandler: handler)
     }
     
-    public init(_ url: String, router: FWRouterProtocol.Type) {
-        self.url = url
-        FWRouter.registerClass(router)
-    }
-    
-    public init(_ url: String, handler: @escaping FWRouterHandler) {
-        self.url = url
-        FWRouter.registerURL(url, withHandler: handler)
-    }
-    
-    public var wrappedValue: T {
-        get { return url as! T }
-        set { url = newValue }
+    public var wrappedValue: String {
+        get { return pattern }
+        set { pattern = newValue }
     }
 }

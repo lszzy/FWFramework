@@ -87,7 +87,7 @@
 
 #pragma mark - FWStateMachine
 
-NSString *const FWStateChangedNotification = @"FWStateChangedNotification";
+NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotification";
 
 @interface FWStateMachine ()
 

@@ -9,7 +9,9 @@
 
 #import "FWRouter.h"
 #import "FWLoader.h"
+#import "FWSwizzle.h"
 #import "FWNavigation.h"
+#import <objc/runtime.h>
 
 #pragma mark - FWRouterContext
 
@@ -137,34 +139,69 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Class
 
-+ (BOOL)registerClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)registerClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
-    
-    return [self registerURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz routerHandler:context];
-    }];
+    return [self registerClass:clazz isPreset:NO withMapper:mapper];
 }
 
-+ (BOOL)presetClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)presetClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return NO;
-    if (![clazz respondsToSelector:@selector(routerHandler:)]) return NO;
-    
-    return [self presetURL:[clazz routerURL] withHandler:^id(FWRouterContext *context) {
-        return [clazz routerHandler:context];
-    }];
+    return [self registerClass:clazz isPreset:YES withMapper:mapper];
 }
 
-+ (void)unregisterClass:(Class<FWRouterProtocol>)clazz
++ (BOOL)registerClass:(id)clazz isPreset:(BOOL)isPreset withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
 {
-    if (![clazz conformsToProtocol:@protocol(FWRouterProtocol)]) return;
-    if (![clazz respondsToSelector:@selector(routerURL)]) return;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    __block BOOL result = YES;
+    NSDictionary<NSString *,NSString *> *routes = [self routeClass:clazz withMapper:mapper];
+    [routes enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        id pattern = [clazz performSelector:NSSelectorFromString(key)];
+        result = [self registerURL:pattern withHandler:^id _Nullable(FWRouterContext * _Nonnull context) {
+            return [clazz performSelector:NSSelectorFromString(obj) withObject:context];
+        } isPreset:isPreset] && result;
+    }];
+    return result;
+#pragma clang diagnostic pop
+}
+
++ (void)unregisterClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    NSDictionary<NSString *,NSString *> *routes = [self routeClass:clazz withMapper:mapper];
+    [routes enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        id pattern = [clazz performSelector:NSSelectorFromString(key)];
+        [self unregisterURL:pattern];
+    }];
+#pragma clang diagnostic pop
+}
+
++ (NSDictionary<NSString *,NSString *> *)routeClass:(id)clazz withMapper:(NSDictionary<NSString *,NSString *> * (^)(NSArray<NSString *> *))mapper
+{
+    Class metaClass;
+    if (object_isClass(clazz)) {
+        metaClass = objc_getMetaClass(NSStringFromClass(clazz).UTF8String);
+    } else {
+        metaClass = object_getClass(clazz);
+    }
+    if (!metaClass) return @{};
     
-    [self unregisterURL:[clazz routerURL]];
+    NSArray<NSString *> *methods = [NSObject.fw classMethods:metaClass superclass:NO];
+    if (mapper) {
+        return mapper(methods);
+    }
+    
+    NSMutableDictionary *routes = [NSMutableDictionary dictionary];
+    for (NSString *method in methods) {
+        if ([method hasSuffix:@"Url"] && ![method containsString:@":"]) {
+            NSString *handler = [method stringByReplacingOccurrencesOfString:@"Url" withString:@"Router:"];
+            if ([methods containsObject:handler]) {
+                routes[method] = handler;
+            }
+        }
+    }
+    return routes;
 }
 
 #pragma mark - URL
@@ -197,6 +234,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 + (BOOL)registerURL:(NSString *)pattern withHandler:(FWRouterHandler)handler isPreset:(BOOL)isPreset
 {
+    if (![pattern isKindOfClass:[NSString class]]) return NO;
     if (!handler || pattern.length < 1) return NO;
     
     NSMutableDictionary *subRoutes = [[self sharedInstance] registerRoute:pattern];
@@ -213,7 +251,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         for (id subPattern in pattern) {
             [self unregisterURL:subPattern];
         }
-    } else {
+    } else if ([pattern isKindOfClass:[NSString class]]) {
         NSMutableArray *pathComponents = [NSMutableArray arrayWithArray:[[self sharedInstance] pathComponentsFromURL:pattern]];
         // 只删除该 pattern 的最后一级
         if (pathComponents.count >= 1) {
@@ -488,7 +526,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     
     id object = [self.routeLoader load:url];
     if (object) {
-        [FWRouter registerClass:object];
+        [FWRouter registerClass:object withMapper:nil];
         parameters = [self extractParametersFromURL:url];
     }
     return parameters;
@@ -581,7 +619,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 + (NSString *)rewriteURL:(id)URL
 {
     NSString *rewriteURL = [URL isKindOfClass:[NSURL class]] ? [URL absoluteString] : URL;
-    if (!rewriteURL) return nil;
+    if (!rewriteURL || ![rewriteURL isKindOfClass:[NSString class]]) return nil;
     
     if ([self sharedInstance].rewriteFilter) {
         rewriteURL = [self sharedInstance].rewriteFilter(rewriteURL);
@@ -759,22 +797,22 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[UIWindow fwMainWindow] fwPushViewController:viewController animated:animated];
+    [UIWindow.fw pushViewController:viewController animated:animated];
 }
 
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [[UIWindow fwMainWindow] fwPresentViewController:viewController animated:animated completion:completion];
+    [UIWindow.fw presentViewController:viewController animated:animated completion:completion];
 }
 
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[UIWindow fwMainWindow] fwOpenViewController:viewController animated:animated];
+    [UIWindow.fw openViewController:viewController animated:animated];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated
 {
-    return [[UIWindow fwMainWindow] fwCloseViewControllerAnimated:animated];
+    return [UIWindow.fw closeViewControllerAnimated:animated];
 }
 
 @end

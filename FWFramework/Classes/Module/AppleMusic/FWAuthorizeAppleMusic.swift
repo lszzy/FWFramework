@@ -9,6 +9,7 @@
 import MediaPlayer
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// AppleMusic授权
@@ -39,8 +40,8 @@ private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
-    private func loadFWAuthorizeAppleMusic() {
+@objc extension FWAutoloader {
+    private func loadAuthorizeAppleMusic() {
         FWAuthorizeManager.registerAuthorize(.appleMusic) {
             return FWAuthorizeAppleMusic()
         }

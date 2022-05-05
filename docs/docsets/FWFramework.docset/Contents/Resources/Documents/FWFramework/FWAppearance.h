@@ -7,7 +7,7 @@
  @updated    2020/9/8
  */
 
-#import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,12 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
 + (id)appearanceForClass:(Class)aClass;
 
+/// 获取指定 appearance 对象的关联 Class，通过解析_UIAppearance对象获取
++ (Class)classForAppearance:(id)appearance;
+
 @end
 
-@interface NSObject (FWAppearance)
+@interface FWObjectWrapper (FWAppearance)
 
 /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
-- (void)fwApplyAppearance;
+- (void)applyAppearance;
 
 @end
 

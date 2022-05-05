@@ -8,31 +8,6 @@
  */
 
 #import "FWLoader.h"
-#import <objc/runtime.h>
-
-#pragma mark - FWAutoload
-
-@protocol FWInnerAutoloadProtocol <NSObject>
-@optional
-
-+ (BOOL)autoload:(id)clazz;
-
-@end
-
-@interface FWLoader (FWAutoload) <FWInnerAutoloadProtocol>
-
-@end
-
-@implementation FWLoader (FWAutoload)
-
-@end
-
-BOOL FWAutoload(id clazz) {
-    if ([FWLoader respondsToSelector:@selector(autoload:)]) {
-        return [FWLoader autoload:clazz];
-    }
-    return NO;
-}
 
 #pragma mark - FWInnerLoaderTarget
 
@@ -81,8 +56,6 @@ BOOL FWAutoload(id clazz) {
 
 #pragma mark - FWLoader
 
-static NSArray<NSString *> *fwStaticAutoloadMethods = nil;
-
 @interface FWLoader ()
 
 @property (nonatomic, strong) NSMutableArray *allLoaders;
@@ -90,56 +63,6 @@ static NSArray<NSString *> *fwStaticAutoloadMethods = nil;
 @end
 
 @implementation FWLoader
-
-#pragma mark - Autoload
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [FWLoader autoload];
-    });
-}
-
-+ (void)autoload
-{
-    NSMutableArray<NSString *> *methodNames = [NSMutableArray array];
-    unsigned int methodCount = 0;
-    Method *methods = class_copyMethodList([FWLoader class], &methodCount);
-    for (unsigned int i = 0; i < methodCount; ++i) {
-        const char *methodChar = sel_getName(method_getName(methods[i]));
-        if (!methodChar) continue;
-        NSString *methodName = [NSString stringWithUTF8String:methodChar];
-        if (![methodName hasPrefix:@"load"]) continue;
-        if ([methodName containsString:@":"]) continue;
-        [methodNames addObject:methodName];
-    }
-    free(methods);
-    [methodNames sortUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-        return [obj1 compare:obj2];
-    }];
-    fwStaticAutoloadMethods = [methodNames copy];
-    
-    FWLoader *autoloader = [[FWLoader alloc] init];
-    for (NSString *methodName in methodNames) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [autoloader performSelector:NSSelectorFromString(methodName)];
-#pragma clang diagnostic pop
-    }
-}
-
-+ (NSString *)debugDescription
-{
-    NSMutableString *debugDescription = [[NSMutableString alloc] init];
-    NSInteger debugCount = 0;
-    for (NSString *methodName in fwStaticAutoloadMethods) {
-        [debugDescription appendFormat:@"%@. %@\n", @(++debugCount), methodName];
-    }
-    return [NSString stringWithFormat:@"\n========== LOADER ==========\n%@========== LOADER ==========", debugDescription];
-}
-
-#pragma mark - Loader
 
 - (instancetype)init
 {

@@ -10,63 +10,28 @@
 #import "FWBlock.h"
 #import <objc/runtime.h>
 
-#pragma mark - CADisplayLink+FWBlock
+#pragma mark - FWTimerClassWrapper+FWBlock
 
-@implementation CADisplayLink (FWBlock)
+@implementation FWTimerClassWrapper (FWBlock)
 
-+ (CADisplayLink *)fwCommonDisplayLinkWithTarget:(id)target selector:(SEL)selector
-{
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    return displayLink;
-}
-
-+ (CADisplayLink *)fwCommonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
-{
-    CADisplayLink *displayLink = [self fwDisplayLinkWithBlock:block];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    return displayLink;
-}
-
-+ (CADisplayLink *)fwDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
-{
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(fwInnerDisplayLinkBlock:)];
-    objc_setAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    return displayLink;
-}
-
-+ (void)fwInnerDisplayLinkBlock:(CADisplayLink *)displayLink
-{
-    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(fwDisplayLinkWithBlock:));
-    if (block) {
-        block(displayLink);
-    }
-}
-
-@end
-
-#pragma mark - NSTimer+FWBlock
-
-@implementation NSTimer (FWBlock)
-
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(id)userInfo repeats:(BOOL)repeats
 {
     NSTimer *timer = [NSTimer timerWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     return timer;
 }
 
-+ (NSTimer *)fwCommonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    NSTimer *timer = [NSTimer fwTimerWithTimeInterval:seconds block:block repeats:repeats];
+    NSTimer *timer = [self timerWithTimeInterval:seconds block:block repeats:repeats];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     return timer;
 }
 
-+ (NSTimer *)fwCommonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
+- (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
 {
     __block NSInteger countdown = seconds;
-    NSTimer *timer = [self fwCommonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
+    NSTimer *timer = [self commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
         if (countdown <= 0) {
             block(0);
             [timer invalidate];
@@ -82,17 +47,17 @@
     return timer;
 }
 
-+ (NSTimer *)fwScheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    return [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+    return [NSTimer scheduledTimerWithTimeInterval:seconds target:[self class] selector:@selector(timerAction:) userInfo:[block copy] repeats:repeats];
 }
 
-+ (NSTimer *)fwTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
+- (NSTimer *)timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *))block repeats:(BOOL)repeats
 {
-    return [NSTimer timerWithTimeInterval:seconds target:self selector:@selector(fwInnerTimerBlock:) userInfo:[block copy] repeats:repeats];
+    return [NSTimer timerWithTimeInterval:seconds target:[self class] selector:@selector(timerAction:) userInfo:[block copy] repeats:repeats];
 }
 
-+ (void)fwInnerTimerBlock:(NSTimer *)timer
++ (void)timerAction:(NSTimer *)timer
 {
     if ([timer userInfo]) {
         void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];
@@ -136,132 +101,147 @@
 
 @end
 
-#pragma mark - UIGestureRecognizer+FWBlock
+#pragma mark - FWGestureRecognizerWrapper+FWBlock
 
-@implementation UIGestureRecognizer (FWBlock)
+@implementation FWGestureRecognizerWrapper (FWBlock)
 
-+ (instancetype)fwGestureRecognizerWithBlock:(void (^)(id))block
-{
-    UIGestureRecognizer *gestureRecognizer = [[self alloc] init];
-    [gestureRecognizer fwAddBlock:block];
-    return gestureRecognizer;
-}
-
-- (NSString *)fwAddBlock:(void (^)(id sender))block
+- (NSString *)addBlock:(void (^)(id sender))block
 {
     FWInnerBlockTarget *target = [[FWInnerBlockTarget alloc] init];
     target.block = block;
-    [self addTarget:target action:@selector(invoke:)];
-    NSMutableArray *targets = [self fwInnerBlockTargets];
+    [self.base addTarget:target action:@selector(invoke:)];
+    NSMutableArray *targets = [self innerBlockTargets];
     [targets addObject:target];
     return target.identifier;
 }
 
-- (void)fwRemoveBlock:(NSString *)identifier
+- (void)removeBlock:(NSString *)identifier
 {
     if (!identifier) return;
-    NSMutableArray *targets = [self fwInnerBlockTargets];
+    NSMutableArray *targets = [self innerBlockTargets];
     [targets enumerateObjectsUsingBlock:^(FWInnerBlockTarget *target, NSUInteger idx, BOOL *stop) {
         if ([identifier isEqualToString:target.identifier]) {
-            [self removeTarget:target action:@selector(invoke:)];
+            [self.base removeTarget:target action:@selector(invoke:)];
             [targets removeObject:target];
         }
     }];
 }
 
-- (void)fwRemoveAllBlocks
+- (void)removeAllBlocks
 {
-    NSMutableArray *targets = [self fwInnerBlockTargets];
+    NSMutableArray *targets = [self innerBlockTargets];
     [targets enumerateObjectsUsingBlock:^(id target, NSUInteger idx, BOOL *stop) {
-        [self removeTarget:target action:@selector(invoke:)];
+        [self.base removeTarget:target action:@selector(invoke:)];
     }];
     [targets removeAllObjects];
 }
 
-- (NSMutableArray *)fwInnerBlockTargets
+- (NSMutableArray *)innerBlockTargets
 {
-    NSMutableArray *targets = objc_getAssociatedObject(self, _cmd);
+    NSMutableArray *targets = objc_getAssociatedObject(self.base, _cmd);
     if (!targets) {
         targets = [NSMutableArray array];
-        objc_setAssociatedObject(self, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }
 
 @end
 
-#pragma mark - UIView+FWBlock
+#pragma mark - FWGestureRecognizerClassWrapper+FWBlock
 
-@implementation UIView (FWBlock)
+@implementation UIGestureRecognizer (FWBlock)
 
-- (void)fwAddTapGestureWithTarget:(id)target action:(SEL)action
++ (instancetype)gestureRecognizerWithBlock:(void (^)(id _Nonnull))block
 {
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
-    [self addGestureRecognizer:gesture];
+    return [[self fw] gestureRecognizerWithBlock:block];
 }
 
-- (NSString *)fwAddTapGestureWithBlock:(void (^)(id sender))block
+@end
+
+@implementation FWGestureRecognizerClassWrapper (FWBlock)
+
+- (__kindof UIGestureRecognizer *)gestureRecognizerWithBlock:(void (^)(id))block
+{
+    UIGestureRecognizer *gestureRecognizer = [[self.base alloc] init];
+    [gestureRecognizer.fw addBlock:block];
+    return gestureRecognizer;
+}
+
+@end
+
+#pragma mark - FWViewWrapper+FWBlock
+
+@implementation FWViewWrapper (FWBlock)
+
+- (void)addTapGestureWithTarget:(id)target action:(SEL)action
+{
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
+    [self.base addGestureRecognizer:gesture];
+}
+
+- (NSString *)addTapGestureWithBlock:(void (^)(id sender))block
 {
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] init];
-    NSString *identifier = [gesture fwAddBlock:block];
-    objc_setAssociatedObject(gesture, @selector(fwAddTapGestureWithBlock:), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self addGestureRecognizer:gesture];
+    NSString *identifier = [gesture.fw addBlock:block];
+    objc_setAssociatedObject(gesture, @selector(addTapGestureWithBlock:), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.base addGestureRecognizer:gesture];
     return identifier;
 }
 
-- (void)fwRemoveTapGesture:(NSString *)identifier
+- (void)removeTapGesture:(NSString *)identifier
 {
     if (!identifier) return;
-    for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+    for (UIGestureRecognizer *gesture in self.base.gestureRecognizers) {
         if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
-            NSString *gestureIdentifier = objc_getAssociatedObject(gesture, @selector(fwAddTapGestureWithBlock:));
+            NSString *gestureIdentifier = objc_getAssociatedObject(gesture, @selector(addTapGestureWithBlock:));
             if (gestureIdentifier && [identifier isEqualToString:gestureIdentifier]) {
-                [self removeGestureRecognizer:gesture];
+                [self.base removeGestureRecognizer:gesture];
             }
         }
     }
 }
 
-- (void)fwRemoveAllTapGestures
+- (void)removeAllTapGestures
 {
-    for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+    for (UIGestureRecognizer *gesture in self.base.gestureRecognizers) {
         if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
-            [self removeGestureRecognizer:gesture];
+            [self.base removeGestureRecognizer:gesture];
         }
     }
 }
 
 @end
 
-#pragma mark - UIControl+FWBlock
+#pragma mark - FWControlWrapper+FWBlock
 
-@implementation UIControl (FWBlock)
+@implementation FWControlWrapper (FWBlock)
 
-- (NSString *)fwAddBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents
+- (NSString *)addBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents
 {
     FWInnerBlockTarget *target = [[FWInnerBlockTarget alloc] init];
     target.block = block;
     target.events = controlEvents;
-    [self addTarget:target action:@selector(invoke:) forControlEvents:controlEvents];
-    NSMutableArray *targets = [self fwInnerBlockTargets];
+    [self.base addTarget:target action:@selector(invoke:) forControlEvents:controlEvents];
+    NSMutableArray *targets = [self innerBlockTargets];
     [targets addObject:target];
     return target.identifier;
 }
 
-- (void)fwRemoveBlock:(NSString *)identifier forControlEvents:(UIControlEvents)controlEvents
+- (void)removeBlock:(NSString *)identifier forControlEvents:(UIControlEvents)controlEvents
 {
     if (!identifier) return;
-    [self fwRemoveAllBlocksForControlEvents:controlEvents identifier:identifier];
+    [self removeAllBlocksForControlEvents:controlEvents identifier:identifier];
 }
 
-- (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents
+- (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents
 {
-    [self fwRemoveAllBlocksForControlEvents:controlEvents identifier:nil];
+    [self removeAllBlocksForControlEvents:controlEvents identifier:nil];
 }
 
-- (void)fwRemoveAllBlocksForControlEvents:(UIControlEvents)controlEvents identifier:(NSString *)identifier
+- (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents identifier:(NSString *)identifier
 {
-    NSMutableArray *targets = [self fwInnerBlockTargets];
+    NSMutableArray *targets = [self innerBlockTargets];
     NSMutableArray *removes = [NSMutableArray array];
     for (FWInnerBlockTarget *target in targets) {
         if (target.events & controlEvents) {
@@ -270,11 +250,11 @@
             
             UIControlEvents newEvent = target.events & (~controlEvents);
             if (newEvent) {
-                [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                [self.base removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
                 target.events = newEvent;
-                [self addTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                [self.base addTarget:target action:@selector(invoke:) forControlEvents:target.events];
             } else {
-                [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
+                [self.base removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
                 [removes addObject:target];
             }
         }
@@ -282,79 +262,57 @@
     [targets removeObjectsInArray:removes];
 }
 
-- (NSMutableArray *)fwInnerBlockTargets
+- (NSMutableArray *)innerBlockTargets
 {
-    NSMutableArray *targets = objc_getAssociatedObject(self, _cmd);
+    NSMutableArray *targets = objc_getAssociatedObject(self.base, _cmd);
     if (!targets) {
         targets = [NSMutableArray array];
-        objc_setAssociatedObject(self, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }
 
-- (void)fwAddTouchTarget:(id)target action:(SEL)action
+- (void)addTouchTarget:(id)target action:(SEL)action
 {
-    [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [self.base addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (NSString *)fwAddTouchBlock:(void (^)(id sender))block
+- (NSString *)addTouchBlock:(void (^)(id sender))block
 {
-    return [self fwAddBlock:block forControlEvents:UIControlEventTouchUpInside];
+    return [self addBlock:block forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)fwRemoveTouchBlock:(NSString *)identifier
+- (void)removeTouchBlock:(NSString *)identifier
 {
-    [self fwRemoveBlock:identifier forControlEvents:UIControlEventTouchUpInside];
+    [self removeBlock:identifier forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end
 
-#pragma mark - UIBarButtonItem+FWBlock
+#pragma mark - FWBarButtonItemWrapper+FWBlock
 
-static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
+@interface UIBarButtonItem (FWBlock)
+
+@end
 
 @implementation UIBarButtonItem (FWBlock)
 
-+ (instancetype)fwBarItemWithObject:(id)object target:(id)target action:(SEL)action
+- (void)innerInvokeTargetAction:(id)sender
 {
-    UIBarButtonItem *barItem = nil;
-    // NSString
-    if ([object isKindOfClass:[NSString class]]) {
-        barItem = [[self alloc] initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
-    // UIImage
-    } else if ([object isKindOfClass:[UIImage class]]) {
-        barItem = [[self alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
-    // NSNumber
-    } else if ([object isKindOfClass:[NSNumber class]]) {
-        barItem = [[self alloc] initWithBarButtonSystemItem:[object integerValue] target:target action:action];
-    // UIView
-    } else if ([object isKindOfClass:[UIView class]]) {
-        barItem = [[self alloc] initWithCustomView:object];
-        barItem.target = target;
-        barItem.action = action;
-        // 进行self转发，模拟实际action回调参数
-        if ([object isKindOfClass:[UIControl class]]) {
-            [(UIControl *)object fwAddTouchTarget:barItem action:@selector(fwInnerTargetAction:)];
-        } else {
-            [(UIView *)object fwAddTapGestureWithTarget:barItem action:@selector(fwInnerTargetAction:)];
-        }
-    // Other
-    } else {
-        barItem = [[self alloc] init];
-        barItem.target = target;
-        barItem.action = action;
+    if (self.target && self.action && [self.target respondsToSelector:self.action]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
+        [self.target performSelector:self.action withObject:self withObject:sender];
+#pragma clang diagnostic pop
     }
-    return barItem;
 }
 
-+ (instancetype)fwBarItemWithObject:(id)object block:(void (^)(id))block
-{
-    UIBarButtonItem *barItem = [self fwBarItemWithObject:object target:nil action:nil];
-    [barItem fwSetBlock:block];
-    return barItem;
-}
+@end
 
-- (void)fwSetBlock:(void (^)(id))block
+@implementation FWBarButtonItemWrapper (FWBlock)
+
+- (void)setBlock:(void (^)(id))block
 {
     FWInnerBlockTarget *target = nil;
     SEL action = NULL;
@@ -364,21 +322,74 @@ static void *kUIBarButtonItemFWBlockKey = &kUIBarButtonItemFWBlockKey;
         action = @selector(invoke:);
     }
     
-    self.target = target;
-    self.action = action;
+    self.base.target = target;
+    self.base.action = action;
     // 设置target为强引用，因为self.target为弱引用
-    objc_setAssociatedObject(self, kUIBarButtonItemFWBlockKey, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self.base, @selector(setBlock:), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)fwInnerTargetAction:(id)sender
+- (void)addItemEvent:(UIView *)customView
 {
-    if (self.target && self.action && [self.target respondsToSelector:self.action]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
-        [self.target performSelector:self.action withObject:self withObject:sender];
-#pragma clang diagnostic pop
+    // 进行self转发，模拟实际action回调参数
+    if ([customView isKindOfClass:[UIControl class]]) {
+        [((UIControl *)customView).fw addTouchTarget:self.base action:@selector(innerInvokeTargetAction:)];
+    } else {
+        [customView.fw addTapGestureWithTarget:self.base action:@selector(innerInvokeTargetAction:)];
     }
+}
+
+@end
+
+#pragma mark - FWBarButtonItemClassWrapper+FWBlock
+
+@implementation FWBarButtonItemClassWrapper (FWBlock)
+
+- (UIBarButtonItem *)itemWithObject:(id)object target:(id)target action:(SEL)action
+{
+    UIBarButtonItem *barItem = nil;
+    // NSString
+    if ([object isKindOfClass:[NSString class]]) {
+        barItem = [[self.base alloc] initWithTitle:object style:UIBarButtonItemStylePlain target:target action:action];
+    // NSAttributedString
+    } else if ([object isKindOfClass:[NSAttributedString class]]) {
+        NSAttributedString *attributedString = (NSAttributedString *)object;
+        barItem = [[self.base alloc] initWithTitle:attributedString.string style:UIBarButtonItemStylePlain target:target action:action];
+        
+        // 只支持NSFontAttributeName和NSForegroundColorAttributeName属性
+        NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
+        NSMutableDictionary *textAttributes = [NSMutableDictionary new];
+        textAttributes[NSFontAttributeName] = attributes[NSFontAttributeName];
+        textAttributes[NSForegroundColorAttributeName] = attributes[NSForegroundColorAttributeName];
+        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+        for (NSNumber *state in states) {
+            [barItem setTitleTextAttributes:textAttributes forState:[state unsignedIntegerValue]];
+        }
+    // UIImage
+    } else if ([object isKindOfClass:[UIImage class]]) {
+        barItem = [[self.base alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
+    // NSNumber
+    } else if ([object isKindOfClass:[NSNumber class]]) {
+        barItem = [[self.base alloc] initWithBarButtonSystemItem:[object integerValue] target:target action:action];
+    // UIView
+    } else if ([object isKindOfClass:[UIView class]]) {
+        barItem = [[self.base alloc] initWithCustomView:object];
+        barItem.target = target;
+        barItem.action = action;
+        [barItem.fw addItemEvent:object];
+    // Other
+    } else {
+        barItem = [[self.base alloc] init];
+        barItem.target = target;
+        barItem.action = action;
+    }
+    return barItem;
+}
+
+- (UIBarButtonItem *)itemWithObject:(id)object block:(void (^)(id))block
+{
+    UIBarButtonItem *barItem = [self itemWithObject:object target:nil action:nil];
+    [barItem.fw setBlock:block];
+    return barItem;
 }
 
 @end

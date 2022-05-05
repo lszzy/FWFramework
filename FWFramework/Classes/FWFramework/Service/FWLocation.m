@@ -8,20 +8,11 @@
 
 #import "FWLocation.h"
 
-NSString * FWLocationStringWithCoordinate(CLLocationCoordinate2D coordinate) {
-    return [NSString stringWithFormat:@"%@,%@", @(coordinate.latitude), @(coordinate.longitude)];
-}
-
-CLLocationCoordinate2D FWLocationCoordinateWithString(NSString *string) {
-    NSArray<NSString *> *degrees = [string componentsSeparatedByString:@","];
-    return CLLocationCoordinate2DMake(degrees.firstObject.doubleValue, degrees.lastObject.doubleValue);
-}
-
 #pragma mark - FWLocationManager
 
-NSString *const FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
-NSString *const FWLocationFailedNotification = @"FWLocationFailedNotification";
-NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
+NSNotificationName const FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
+NSNotificationName const FWLocationFailedNotification = @"FWLocationFailedNotification";
+NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
 @interface FWLocationManager () <CLLocationManagerDelegate>
 
@@ -63,6 +54,19 @@ NSString *const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
         headingEnabled = NO;
     }
     _headingEnabled = headingEnabled;
+}
+
+#pragma mark - Static
+
++ (NSString *)locationString:(CLLocationCoordinate2D)coordinate
+{
+    return [NSString stringWithFormat:@"%@,%@", @(coordinate.latitude), @(coordinate.longitude)];
+}
+
++ (CLLocationCoordinate2D)locationCoordinate:(NSString *)string
+{
+    NSArray<NSString *> *degrees = [string componentsSeparatedByString:@","];
+    return CLLocationCoordinate2DMake(degrees.firstObject.doubleValue, degrees.lastObject.doubleValue);
 }
 
 #pragma mark - Public

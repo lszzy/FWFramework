@@ -8,10 +8,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIApplication+FWAdaptive
+#pragma mark - FWApplicationClassWrapper+FWAdaptive
 
 /// 是否是调试模式
 #ifdef DEBUG
@@ -20,17 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
     #define FWIsDebug NO
 #endif
 
-/**
- UIApplication+FWAdaptive
- */
-@interface UIApplication (FWAdaptive)
+@interface FWApplicationClassWrapper (FWAdaptive)
 
 /// 是否是调试模式
-@property (class, nonatomic, assign, readonly) BOOL fwIsDebug;
+@property (nonatomic, assign, readonly) BOOL isDebug;
 
 @end
 
-#pragma mark - UIDevice+FWAdaptive
+#pragma mark - FWDeviceClassWrapper+FWAdaptive
 
 /// 是否是模拟器
 #if TARGET_OS_SIMULATOR
@@ -44,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否是iPad设备
 #define FWIsIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 /// 是否是Mac设备
-#define FWIsMac [UIDevice fwIsMac]
+#define FWIsMac [UIDevice.fw isMac]
 
 /// 界面是否横屏
 #define FWIsLandscape UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation)
@@ -67,47 +65,44 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设备分辨率，跟横竖屏无关
 #define FWDeviceResolution CGSizeMake(FWDeviceWidth * [UIScreen mainScreen].scale, FWDeviceHeight * [UIScreen mainScreen].scale)
 
-/**
- UIDevice+FWAdaptive
- */
-@interface UIDevice (FWAdaptive)
+@interface FWDeviceClassWrapper (FWAdaptive)
 
 /// 是否是模拟器
-@property (class, nonatomic, assign, readonly) BOOL fwIsSimulator;
+@property (nonatomic, assign, readonly) BOOL isSimulator;
 
 /// 是否是iPhone
-@property (class, nonatomic, assign, readonly) BOOL fwIsIphone;
+@property (nonatomic, assign, readonly) BOOL isIphone;
 /// 是否是iPad
-@property (class, nonatomic, assign, readonly) BOOL fwIsIpad;
+@property (nonatomic, assign, readonly) BOOL isIpad;
 /// 是否是Mac
-@property (class, nonatomic, assign, readonly) BOOL fwIsMac;
+@property (nonatomic, assign, readonly) BOOL isMac;
 
 /// 界面是否横屏
-@property (class, nonatomic, assign, readonly) BOOL fwIsLandscape;
+@property (nonatomic, assign, readonly) BOOL isLandscape;
 /// 设备是否横屏，无论支不支持横屏
-@property (class, nonatomic, assign, readonly) BOOL fwIsDeviceLandscape;
+@property (nonatomic, assign, readonly) BOOL isDeviceLandscape;
 /// 设置界面方向，支持旋转方向时生效
-+ (BOOL)fwSetDeviceOrientation:(UIDeviceOrientation)orientation;
+- (BOOL)setDeviceOrientation:(UIDeviceOrientation)orientation;
 
 /// iOS系统版本
-@property (class, nonatomic, assign, readonly) double fwIosVersion;
+@property (nonatomic, assign, readonly) double iosVersion;
 /// 是否是指定iOS主版本
-+ (BOOL)fwIsIos:(NSInteger)version;
+- (BOOL)isIos:(NSInteger)version;
 /// 是否是大于等于指定iOS主版本
-+ (BOOL)fwIsIosLater:(NSInteger)version;
+- (BOOL)isIosLater:(NSInteger)version;
 
 /// 设备尺寸，跟横竖屏无关
-@property (class, nonatomic, assign, readonly) CGSize fwDeviceSize;
+@property (nonatomic, assign, readonly) CGSize deviceSize;
 /// 设备宽度，跟横竖屏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwDeviceWidth;
+@property (nonatomic, assign, readonly) CGFloat deviceWidth;
 /// 设备高度，跟横竖屏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwDeviceHeight;
+@property (nonatomic, assign, readonly) CGFloat deviceHeight;
 /// 设备分辨率，跟横竖屏无关
-@property (class, nonatomic, assign, readonly) CGSize fwDeviceResolution;
+@property (nonatomic, assign, readonly) CGSize deviceResolution;
 
 @end
 
-#pragma mark - UIScreen+FWAdaptive
+#pragma mark - FWScreenClassWrapper+FWAdaptive
 
 /// 屏幕尺寸可扩展枚举
 typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
@@ -130,32 +125,34 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 屏幕像素比例
 #define FWScreenScale [UIScreen mainScreen].scale
 /// 判断屏幕英寸
-#define FWIsScreenInch( inch ) [UIScreen fwIsScreenInch:inch]
+#define FWIsScreenInch( inch ) [UIScreen.fw isScreenInch:inch]
 /// 是否是全面屏屏幕
-#define FWIsNotchedScreen [UIScreen fwIsNotchedScreen]
+#define FWIsNotchedScreen [UIScreen.fw isNotchedScreen]
 /// 屏幕一像素的大小
-#define FWPixelOne [UIScreen fwPixelOne]
+#define FWPixelOne [UIScreen.fw pixelOne]
 /// 屏幕安全区域距离
-#define FWSafeAreaInsets [UIScreen fwSafeAreaInsets]
+#define FWSafeAreaInsets [UIScreen.fw safeAreaInsets]
 
 /// 状态栏高度，与是否隐藏无关
-#define FWStatusBarHeight [UIScreen fwStatusBarHeight]
+#define FWStatusBarHeight [UIScreen.fw statusBarHeight]
 /// 导航栏高度，与是否隐藏无关
-#define FWNavigationBarHeight [UIScreen fwNavigationBarHeight]
+#define FWNavigationBarHeight [UIScreen.fw navigationBarHeight]
 /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-#define FWTopBarHeight [UIScreen fwTopBarHeight]
+#define FWTopBarHeight [UIScreen.fw topBarHeight]
 /// 标签栏高度，与是否隐藏无关
-#define FWTabBarHeight [UIScreen fwTabBarHeight]
+#define FWTabBarHeight [UIScreen.fw tabBarHeight]
 /// 工具栏高度，与是否隐藏无关
-#define FWToolBarHeight [UIScreen fwToolBarHeight]
+#define FWToolBarHeight [UIScreen.fw toolBarHeight]
 
 /// 当前屏幕宽度缩放比例
-#define FWRelativeScale [UIScreen fwRelativeScale]
+#define FWRelativeScale [UIScreen.fw relativeScale]
 /// 当前屏幕高度缩放比例
-#define FWRelativeHeightScale [UIScreen fwRelativeHeightScale]
+#define FWRelativeHeightScale [UIScreen.fw relativeHeightScale]
 
-/// 获取相对设计图等比例缩放值
+/// 获取相对设计图宽度等比例缩放值
 FOUNDATION_EXPORT CGFloat FWRelativeValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图高度等比例缩放值
+FOUNDATION_EXPORT CGFloat FWRelativeHeight(CGFloat value) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放size
 FOUNDATION_EXPORT CGSize FWRelativeSize(CGSize size) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放point
@@ -178,78 +175,75 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
     return FWFlatScale(floatValue, 0);
 }
 
-/**
- UIScreen+FWAdaptive
- */
-@interface UIScreen (FWAdaptive)
+@interface FWScreenClassWrapper (FWAdaptive)
 
 /// 屏幕尺寸
-@property (class, nonatomic, assign, readonly) CGSize fwScreenSize;
+@property (nonatomic, assign, readonly) CGSize screenSize;
 /// 屏幕宽度
-@property (class, nonatomic, assign, readonly) CGFloat fwScreenWidth;
+@property (nonatomic, assign, readonly) CGFloat screenWidth;
 /// 屏幕高度
-@property (class, nonatomic, assign, readonly) CGFloat fwScreenHeight;
+@property (nonatomic, assign, readonly) CGFloat screenHeight;
 /// 屏幕像素比例
-@property (class, nonatomic, assign, readonly) CGFloat fwScreenScale;
+@property (nonatomic, assign, readonly) CGFloat screenScale;
 /// 是否是指定英寸屏幕
-+ (BOOL)fwIsScreenInch:(FWScreenInch)inch;
+- (BOOL)isScreenInch:(FWScreenInch)inch;
 /// 是否是全面屏屏幕
-@property (class, nonatomic, assign, readonly) BOOL fwIsNotchedScreen;
+@property (nonatomic, assign, readonly) BOOL isNotchedScreen;
 
 /// 获取一像素的大小
-@property (class, nonatomic, assign, readonly) CGFloat fwPixelOne;
+@property (nonatomic, assign, readonly) CGFloat pixelOne;
 /// 检查是否含有安全区域，可用来判断iPhoneX
-@property (class, nonatomic, assign, readonly) BOOL fwHasSafeAreaInsets;
+@property (nonatomic, assign, readonly) BOOL hasSafeAreaInsets;
 /// 获取安全区域距离
-@property (class, nonatomic, assign, readonly) UIEdgeInsets fwSafeAreaInsets;
+@property (nonatomic, assign, readonly) UIEdgeInsets safeAreaInsets;
 
 /// 状态栏高度，与是否隐藏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
+@property (nonatomic, assign, readonly) CGFloat statusBarHeight;
 /// 导航栏高度，与是否隐藏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
+@property (nonatomic, assign, readonly) CGFloat navigationBarHeight;
 /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwTopBarHeight;
+@property (nonatomic, assign, readonly) CGFloat topBarHeight;
 /// 标签栏高度，与是否隐藏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwTabBarHeight;
+@property (nonatomic, assign, readonly) CGFloat tabBarHeight;
 /// 工具栏高度，与是否隐藏无关
-@property (class, nonatomic, assign, readonly) CGFloat fwToolBarHeight;
+@property (nonatomic, assign, readonly) CGFloat toolBarHeight;
 
 /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
-@property (class, nonatomic, assign) CGSize fwReferenceSize;
+@property (nonatomic, assign) CGSize referenceSize;
 /// 获取当前屏幕宽度缩放比例，宽度常用
-@property (class, nonatomic, assign, readonly) CGFloat fwRelativeScale;
+@property (nonatomic, assign, readonly) CGFloat relativeScale;
 /// 获取当前屏幕高度缩放比例，高度不常用
-@property (class, nonatomic, assign, readonly) CGFloat fwRelativeHeightScale;
+@property (nonatomic, assign, readonly) CGFloat relativeHeightScale;
 
 /// 获取相对设计图宽度等比例缩放值
-+ (CGFloat)fwRelativeValue:(CGFloat)value;
+- (CGFloat)relativeValue:(CGFloat)value;
+
+/// 获取相对设计图高度等比例缩放值
+- (CGFloat)relativeHeight:(CGFloat)value;
 
 @end
 
-#pragma mark - UIViewController+FWAdaptive
+#pragma mark - FWViewControllerWrapper+FWAdaptive
 
-/**
- UIViewController+FWAdaptive
- */
-@interface UIViewController (FWAdaptive)
+@interface FWViewControllerWrapper (FWAdaptive)
 
 /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwStatusBarHeight;
+@property (nonatomic, assign, readonly) CGFloat statusBarHeight;
 
 /// 当前导航栏布局高度，隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwNavigationBarHeight;
+@property (nonatomic, assign, readonly) CGFloat navigationBarHeight;
 
 /// 当前顶部栏布局高度，导航栏隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwTopBarHeight;
+@property (nonatomic, assign, readonly) CGFloat topBarHeight;
 
 /// 当前标签栏布局高度，隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwTabBarHeight;
+@property (nonatomic, assign, readonly) CGFloat tabBarHeight;
 
 /// 当前工具栏布局高度，隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwToolBarHeight;
+@property (nonatomic, assign, readonly) CGFloat toolBarHeight;
 
 /// 当前底部栏布局高度，包含标签栏和工具栏，隐藏时为0，推荐使用
-@property (nonatomic, assign, readonly) CGFloat fwBottomBarHeight;
+@property (nonatomic, assign, readonly) CGFloat bottomBarHeight;
 
 @end
 
