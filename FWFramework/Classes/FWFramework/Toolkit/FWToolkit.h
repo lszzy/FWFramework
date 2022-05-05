@@ -335,15 +335,15 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     /// 未触发ViewDidLoad
     FWViewControllerVisibleStateReady = 0,
     /// 已触发ViewDidLoad
-    FWViewControllerVisibleStateDidLoad,
+    FWViewControllerVisibleStateDidLoad = 1 << 0,
     /// 已触发ViewWillAppear
-    FWViewControllerVisibleStateWillAppear,
+    FWViewControllerVisibleStateWillAppear = 1 << 1,
     /// 已触发ViewDidAppear
-    FWViewControllerVisibleStateDidAppear,
+    FWViewControllerVisibleStateDidAppear = 1 << 2,
     /// 已触发ViewWillDisappear
-    FWViewControllerVisibleStateWillDisappear,
+    FWViewControllerVisibleStateWillDisappear = 1 << 3,
     /// 已触发ViewDidDisappear
-    FWViewControllerVisibleStateDidDisappear,
+    FWViewControllerVisibleStateDidDisappear = 1 << 4,
 };
 
 @interface FWViewControllerWrapper (FWToolkit)
