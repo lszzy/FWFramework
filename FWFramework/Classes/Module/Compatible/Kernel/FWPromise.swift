@@ -26,11 +26,11 @@ public func fw_await(_ promise: FWPromise) throws -> Any? {
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = DispatchQueue.main
     /// 约定默认错误，约定失败时可选使用，可用于错误判断，支持自定义
-    public static var defaultError: Error = NSError(domain: "site.wuyong.error.promise", code: 0, userInfo: [NSLocalizedDescriptionKey: "Promise failed"])
+    public static var defaultError: Error = NSError(domain: "site.wuyong.FWPromise", code: 2001, userInfo: [NSLocalizedDescriptionKey: "Promise failed"])
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    public static var validationError: Error = NSError(domain: "site.wuyong.error.promise", code: 1, userInfo: [NSLocalizedDescriptionKey: "Promise validation failed"])
+    public static var validationError: Error = NSError(domain: "site.wuyong.FWPromise", code: 2002, userInfo: [NSLocalizedDescriptionKey: "Promise validation failed"])
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    public static var timeoutError: Error = NSError(domain: "site.wuyong.error.promise", code: 2, userInfo: [NSLocalizedDescriptionKey: "Promise timeout"])
+    public static var timeoutError: Error = NSError(domain: "site.wuyong.FWPromise", code: 2003, userInfo: [NSLocalizedDescriptionKey: "Promise timeout"])
     
     // MARK: - Private
     /// 约定内部属性

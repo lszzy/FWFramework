@@ -9,6 +9,7 @@
 import AVFoundation
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 /// 麦克风授权
@@ -37,8 +38,8 @@ private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
-    private func loadFWAuthorizeMicrophone() {
+@objc extension FWAutoloader {
+    private func loadAuthorizeMicrophone() {
         FWAuthorizeManager.registerAuthorize(.microphone) {
             return FWAuthorizeMicrophone()
         }

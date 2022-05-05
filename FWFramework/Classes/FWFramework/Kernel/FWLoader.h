@@ -11,13 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 自动加载Swift类并调用autoload方法，参数为Class或String
-FOUNDATION_EXPORT BOOL FWAutoload(id clazz);
-
 /**
- 加载器，处理swift不支持load方法问题
- @note 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单
-    使用方法：新增FWLoader扩展objc类方法，以load开头即会自动调用，注意方法名不要重复，建议load+类名+扩展名
+ 通用加载器，添加处理句柄后指定输入即可加载输出结果
  */
 @interface FWLoader<__covariant InputType, __covariant OutputType> : NSObject
 

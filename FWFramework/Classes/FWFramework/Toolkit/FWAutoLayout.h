@@ -8,97 +8,95 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
- @note 如果约束条件完全相同，会自动更新约束而不是重新添加。
- 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
- */
-@interface UIView (FWAutoLayout)
-
-#pragma mark - AutoLayout
+@interface FWViewClassWrapper (FWAutoLayout)
 
 /**
  是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
  @note 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
  手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
  */
-@property (class, nonatomic, assign) BOOL fwAutoLayoutRTL;
+@property (nonatomic, assign) BOOL autoLayoutRTL;
+
+@end
+
+/**
+ UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
+ @note 如果约束条件完全相同，会自动更新约束而不是重新添加。
+ 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
+ */
+@interface FWViewWrapper (FWAutoLayout)
+
+#pragma mark - AutoLayout
 
 /**
  是否启用自动布局
  */
-@property (nonatomic, assign) BOOL fwAutoLayout;
-
-/**
- 创建自动布局视图
- 
- @return 自动布局视图
- */
-+ (instancetype)fwAutoLayoutView;
+@property (nonatomic, assign) BOOL autoLayout;
 
 /**
  执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
  */
-- (void)fwAutoLayoutSubviews;
+- (void)autoLayoutSubviews;
 
 /**
  计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
  */
-- (CGFloat)fwLayoutHeightWithWidth:(CGFloat)width;
+- (CGFloat)layoutHeightWithWidth:(CGFloat)width;
 
 /**
  计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
  */
-- (CGFloat)fwLayoutWidthWithHeight:(CGFloat)height;
+- (CGFloat)layoutWidthWithHeight:(CGFloat)height;
 
 #pragma mark - Compression
 
 /**
  设置水平方向抗压缩优先级
  */
-@property (nonatomic, assign) UILayoutPriority fwCompressionHorizontal;
+@property (nonatomic, assign) UILayoutPriority compressionHorizontal;
 
 /**
  设置垂直方向抗压缩优先级
  */
-@property (nonatomic, assign) UILayoutPriority fwCompressionVertical;
+@property (nonatomic, assign) UILayoutPriority compressionVertical;
 
 /**
  设置水平方向抗拉伸优先级
  */
-@property (nonatomic, assign) UILayoutPriority fwHuggingHorizontal;
+@property (nonatomic, assign) UILayoutPriority huggingHorizontal;
 
 /**
  设置垂直方向抗拉伸优先级
  */
-@property (nonatomic, assign) UILayoutPriority fwHuggingVertical;
+@property (nonatomic, assign) UILayoutPriority huggingVertical;
 
 #pragma mark - Collapse
 
 /**
  设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
  */
-@property (nonatomic, assign) BOOL fwCollapsed;
+@property (nonatomic, assign) BOOL collapsed;
 
 /**
  设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
  */
-@property (nonatomic, assign) BOOL fwAutoCollapse;
+@property (nonatomic, assign) BOOL autoCollapse;
 
 /**
  设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
  */
-@property (nonatomic, assign) BOOL fwHiddenCollapse;
+@property (nonatomic, assign) BOOL hiddenCollapse;
 
 /**
  添加视图的收缩常量，必须先添加才能生效
  
  @see https://github.com/forkingdog/UIView-FDCollapsibleConstraints
  */
-- (void)fwAddCollapseConstraint:(NSLayoutConstraint *)constraint;
+- (void)addCollapseConstraint:(NSLayoutConstraint *)constraint;
 
 #pragma mark - Axis
 
@@ -107,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperview;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperview;
 
 /**
  父视图居中偏移指定距离
@@ -115,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewWithOffset:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewWithOffset:(CGPoint)offset;
 
 /**
  父视图属性居中
@@ -123,7 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param axis 居中属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis;
+- (NSLayoutConstraint *)alignAxisToSuperview:(NSLayoutAttribute)axis;
 
 /**
  父视图属性居中偏移指定距离
@@ -132,7 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)alignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
 
 /**
  与另一视图居中相同
@@ -141,7 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 另一视图或UILayoutGuide，下同
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxis:(NSLayoutAttribute)axis toView:(id)otherView;
+- (NSLayoutConstraint *)alignAxis:(NSLayoutAttribute)axis toView:(id)otherView;
 
 /**
  与另一视图居中偏移指定距离
@@ -151,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxis:(NSLayoutAttribute)axis toView:(id)otherView withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)alignAxis:(NSLayoutAttribute)axis toView:(id)otherView withOffset:(CGFloat)offset;
 
 /**
  与另一视图居中指定比例
@@ -161,7 +159,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param multiplier 指定比例
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxis:(NSLayoutAttribute)axis toView:(id)otherView withMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)alignAxis:(NSLayoutAttribute)axis toView:(id)otherView withMultiplier:(CGFloat)multiplier;
 
 #pragma mark - Edge
 
@@ -170,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperview;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperview;
 
 /**
  与父视图四条边属性距离指定距离
@@ -178,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param insets 指定距离insets
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets;
 
 /**
  与父视图三条边属性距离指定距离
@@ -187,21 +185,21 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 排除的边
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /**
  与父视图水平方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewHorizontal;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal;
 
 /**
  与父视图垂直方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewVertical;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical;
 
 /**
  与父视图边属性相同
@@ -209,7 +207,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 指定边属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperview:(NSLayoutAttribute)edge;
+- (NSLayoutConstraint *)pinEdgeToSuperview:(NSLayoutAttribute)edge;
 
 /**
  与父视图边属性偏移指定距离
@@ -218,7 +216,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
+- (NSLayoutConstraint *)pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
 
 /**
  与父视图边属性偏移指定距离，指定关系
@@ -228,7 +226,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
 
 /**
  与指定视图边属性相同
@@ -238,7 +236,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 另一视图
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView;
+- (NSLayoutConstraint *)pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView;
 
 /**
  与指定视图边属性偏移指定距离
@@ -249,7 +247,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset;
 
 /**
  与指定视图边属性偏移指定距离，指定关系
@@ -261,7 +259,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
 
 #pragma mark - SafeArea
 
@@ -270,7 +268,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeArea;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeArea;
 
 /**
  父视图安全区域居中偏移指定距离。iOS11以下使用Superview实现，下同
@@ -278,7 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwAlignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset;
 
 /**
  父视图安全区域属性居中
@@ -286,7 +284,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param axis 居中属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis;
+- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis;
 
 /**
  父视图安全区域属性居中偏移指定距离
@@ -295,14 +293,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwAlignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
 
 /**
  与父视图安全区域四条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeArea;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeArea;
 
 /**
  与父视图安全区域四条边属性距离指定距离
@@ -310,7 +308,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param insets 指定距离insets
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets;
 
 /**
  与父视图安全区域三条边属性距离指定距离
@@ -319,21 +317,21 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 排除的边
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /**
  与父视图安全区域水平方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaHorizontal;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal;
 
 /**
  与父视图安全区域垂直方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwPinEdgesToSuperviewSafeAreaVertical;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical;
 
 /**
  与父视图安全区域边属性相同
@@ -341,7 +339,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 指定边属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge;
+- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge;
 
 /**
  与父视图安全区域边属性偏移指定距离
@@ -350,7 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
+- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
 
 /**
  与父视图安全区域边属性偏移指定距离，指定关系
@@ -360,7 +358,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwPinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
 
 #pragma mark - Dimension
 
@@ -370,7 +368,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param size 尺寸大小
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)fwSetDimensionsToSize:(CGSize)size;
+- (NSArray<NSLayoutConstraint *> *)setDimensionsToSize:(CGSize)size;
 
 /**
  设置某个尺寸
@@ -379,7 +377,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param size 尺寸大小
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size;
+- (NSLayoutConstraint *)setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size;
 
 /**
  设置某个尺寸，指定关系
@@ -389,7 +387,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwSetDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation;
 
 /**
  与视图自身尺寸属性指定比例
@@ -399,7 +397,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param multiplier 指定比例
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier;
 
 /**
  与视图自身尺寸属性指定比例，指定关系
@@ -410,7 +408,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
 /**
  与指定视图尺寸属性相同
@@ -420,7 +418,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView;
 
 /**
  与指定视图尺寸属性相差指定大小
@@ -431,7 +429,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 相差大小
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset;
 
 /**
  与指定视图尺寸属性相差指定大小，指定关系
@@ -443,7 +441,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
 
 /**
  与指定视图尺寸属性指定比例
@@ -454,7 +452,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param multiplier 指定比例
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier;
 
 /**
  与指定视图尺寸属性指定比例，指定关系
@@ -466,7 +464,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwMatchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
 #pragma mark - Constrain
 
@@ -478,7 +476,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
+- (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
 
 /**
  与指定视图属性偏移指定距离
@@ -489,7 +487,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset;
 
 /**
  与指定视图属性偏移指定距离，指定关系
@@ -501,7 +499,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation;
 
 /**
  与指定视图属性指定比例
@@ -512,7 +510,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param multiplier 指定比例
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
+- (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
 
 /**
  与指定视图属性指定比例，指定关系
@@ -524,14 +522,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)fwConstrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
 #pragma mark - Constraint
 
 /**
  最近一条添加或更新的布局约束
  */
-@property (nullable, nonatomic, readonly) NSLayoutConstraint *fwLastConstraint;
+@property (nullable, nonatomic, readonly) NSLayoutConstraint *lastConstraint;
 
 /**
  获取添加的与父视图属性的约束
@@ -539,7 +537,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param attribute 指定属性
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraintToSuperview:(NSLayoutAttribute)attribute;
+- (nullable NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute;
 
 /**
  获取添加的与父视图属性的约束，指定关系
@@ -548,7 +546,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
 
 /**
  获取添加的与父视图安全区域属性的约束
@@ -556,7 +554,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param attribute 指定属性
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraintToSuperviewSafeArea:(NSLayoutAttribute)attribute;
+- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute;
 
 /**
  获取添加的与父视图安全区域属性的约束，指定关系
@@ -565,7 +563,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
 
 /**
  获取添加的与指定视图属性的约束
@@ -575,7 +573,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
+- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
 
 /**
  获取添加的与指定视图属性的约束，指定关系
@@ -586,7 +584,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView relation:(NSLayoutRelation)relation;
 
 /**
  获取添加的与指定视图属性指定比例的约束
@@ -597,7 +595,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param multiplier 指定比例
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
+- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
 
 /**
  获取添加的与指定视图属性指定比例的约束，指定关系
@@ -609,7 +607,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
 #pragma mark - Key
 
@@ -619,7 +617,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param constraint 布局约束
  @param key 保存key
  */
-- (void)fwSetConstraint:(nullable NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
+- (void)setConstraint:(nullable NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key;
 
 /**
  获取键名对应约束
@@ -627,7 +625,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param key 保存key
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)fwConstraintForKey:(id<NSCopying>)key;
+- (nullable NSLayoutConstraint *)constraintForKey:(id<NSCopying>)key;
 
 #pragma mark - All
 
@@ -636,17 +634,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束列表
  */
-@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fwAllConstraints;
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *allConstraints;
 
 /**
  移除当前指定约束，不包含Key
  */
-- (void)fwRemoveConstraint:(NSLayoutConstraint *)constraint;
+- (void)removeConstraint:(NSLayoutConstraint *)constraint;
 
 /**
  移除当前所有约束，不包含Key
  */
-- (void)fwRemoveAllConstraints;
+- (void)removeAllConstraints;
 
 @end
 
@@ -788,18 +786,18 @@ NS_SWIFT_UNAVAILABLE("")
 
 @end
 
-#pragma mark - UIView+FWLayoutChain
+#pragma mark - FWViewWrapper+FWLayoutChain
 
 /**
  视图链式布局分类
  */
-@interface UIView (FWLayoutChain)
+@interface FWViewWrapper (FWLayoutChain)
 
 /// 链式布局对象
-@property (nonatomic, strong, readonly) FWLayoutChain *fwLayoutChain NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, readonly) FWLayoutChain *layoutChain NS_SWIFT_UNAVAILABLE("");
 
 /// 链式布局句柄
-- (void)fwLayoutMaker:(void (NS_NOESCAPE ^)(FWLayoutChain *make))block NS_REFINED_FOR_SWIFT;
+- (void)layoutMaker:(void (NS_NOESCAPE ^)(FWLayoutChain *make))block NS_SWIFT_UNAVAILABLE("");
 
 @end
 

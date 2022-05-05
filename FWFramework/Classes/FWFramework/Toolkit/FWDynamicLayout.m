@@ -104,181 +104,191 @@
 
 @end
 
-#pragma mark - UITableViewCell+FWDynamicLayout
+#pragma mark - FWTableViewCellWrapper+FWDynamicLayout
 
-@implementation UITableViewCell (FWDynamicLayout)
+@implementation FWTableViewCellWrapper (FWDynamicLayout)
 
-- (BOOL)fwMaxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
+- (BOOL)maxYViewFixed {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
 }
 
-- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMaxYViewFixed:(BOOL)maxYViewFixed {
+    objc_setAssociatedObject(self.base, @selector(maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CGFloat)fwMaxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+- (CGFloat)maxYViewPadding {
+    return [objc_getAssociatedObject(self.base, _cmd) doubleValue];
 }
 
-- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMaxYViewPadding:(CGFloat)maxYViewPadding {
+    objc_setAssociatedObject(self.base, @selector(maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)fwMaxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
+- (BOOL)maxYViewExpanded {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
 }
 
-- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setMaxYViewExpanded:(BOOL)maxYViewExpanded {
+    objc_setAssociatedObject(self.base, @selector(maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIView *)fwMaxYView {
-    return objc_getAssociatedObject(self, _cmd);
+- (UIView *)maxYView {
+    return objc_getAssociatedObject(self.base, _cmd);
 }
 
-- (void)setFwMaxYView:(UIView *)fwMaxYView {
-    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id)fwViewModel {
-    return objc_getAssociatedObject(self, @selector(fwViewModel));
-}
-
-- (void)setFwViewModel:(id)fwViewModel {
-    if (fwViewModel != self.fwViewModel) {
-        [self willChangeValueForKey:@"fwViewModel"];
-        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwViewModel"];
-    }
-}
-
-+ (instancetype)fwCellWithTableView:(UITableView *)tableView {
-    return [self fwCellWithTableView:tableView style:UITableViewCellStyleDefault];
-}
-
-+ (instancetype)fwCellWithTableView:(UITableView *)tableView
-                              style:(UITableViewCellStyle)style {
-    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self fwCellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
-}
-
-+ (instancetype)fwCellWithTableView:(UITableView *)tableView
-                              style:(UITableViewCellStyle)style
-                    reuseIdentifier:(NSString *)reuseIdentifier {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-    if (cell) return cell;
-    return [[self alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
-}
-
-+ (CGFloat)fwHeightWithViewModel:(id)viewModel
-                       tableView:(UITableView *)tableView {
-    return [tableView fwHeightWithCellClass:self configuration:^(__kindof UITableViewCell * _Nonnull cell) {
-        cell.fwViewModel = viewModel;
-    }];
+- (void)setMaxYView:(UIView *)maxYView {
+    objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
 
-#pragma mark - UITableViewHeaderFooterView+FWDynamicLayout
+@implementation UITableViewCell (FWDynamicLayout)
+
++ (instancetype)cellWithTableView:(UITableView *)tableView {
+    return [[self fw] cellWithTableView:tableView];
+}
+
++ (instancetype)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style {
+    return [[self fw] cellWithTableView:tableView style:style];
+}
+
++ (instancetype)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style
+                                reuseIdentifier:(NSString *)reuseIdentifier {
+    return [[self fw] cellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
+}
+
+@end
+
+@implementation FWTableViewCellClassWrapper (FWDynamicLayout)
+
+- (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView {
+    return [self cellWithTableView:tableView style:UITableViewCellStyleDefault];
+}
+
+- (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style {
+    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self cellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
+}
+
+- (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView
+                                          style:(UITableViewCellStyle)style
+                                reuseIdentifier:(NSString *)reuseIdentifier {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    if (cell) return cell;
+    return [[self.base alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
+}
+
+- (CGFloat)heightWithTableView:(UITableView *)tableView
+                 configuration:(FWCellConfigurationBlock)configuration {
+    return [tableView.fw heightWithCellClass:self.base configuration:configuration];
+}
+
+@end
+
+#pragma mark - FWTableViewHeaderFooterViewWrapper+FWDynamicLayout
+
+@implementation FWTableViewHeaderFooterViewWrapper (FWDynamicLayout)
+
+- (BOOL)maxYViewFixed {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewFixed:(BOOL)maxYViewFixed {
+    objc_setAssociatedObject(self.base, @selector(maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)maxYViewPadding {
+    return [objc_getAssociatedObject(self.base, _cmd) doubleValue];
+}
+
+- (void)setMaxYViewPadding:(CGFloat)maxYViewPadding {
+    objc_setAssociatedObject(self.base, @selector(maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)maxYViewExpanded {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewExpanded:(BOOL)maxYViewExpanded {
+    objc_setAssociatedObject(self.base, @selector(maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)maxYView {
+    return objc_getAssociatedObject(self.base, _cmd);
+}
+
+- (void)setMaxYView:(UIView *)maxYView {
+    objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
 
 @implementation UITableViewHeaderFooterView (FWDynamicLayout)
 
-- (BOOL)fwMaxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
++ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView {
+    return [[self fw] headerFooterViewWithTableView:tableView];
 }
 
-- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier {
+    return [[self fw] headerFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
 }
 
-- (CGFloat)fwMaxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+@end
+
+@implementation FWTableViewHeaderFooterViewClassWrapper (FWDynamicLayout)
+
+- (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView {
+    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self headerFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
 }
 
-- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fwMaxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIView *)fwMaxYView {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setFwMaxYView:(UIView *)fwMaxYView {
-    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id)fwViewModel {
-    return objc_getAssociatedObject(self, @selector(fwViewModel));
-}
-
-- (void)setFwViewModel:(id)fwViewModel {
-    if (fwViewModel != self.fwViewModel) {
-        [self willChangeValueForKey:@"fwViewModel"];
-        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwViewModel"];
-    }
-}
-
-+ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView {
-    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self fwHeaderFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
-}
-
-+ (instancetype)fwHeaderFooterViewWithTableView:(UITableView *)tableView
-                                reuseIdentifier:(NSString *)reuseIdentifier {
+- (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier {
     SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
     if ([objc_getAssociatedObject(tableView, reuseSelector) boolValue]) {
         return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
     }
-    [tableView registerClass:self forHeaderFooterViewReuseIdentifier:reuseIdentifier];
+    [tableView registerClass:self.base forHeaderFooterViewReuseIdentifier:reuseIdentifier];
     objc_setAssociatedObject(tableView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
 }
 
-+ (CGFloat)fwHeightWithViewModel:(id)viewModel
-                            type:(FWHeaderFooterViewType)type
-                       tableView:(UITableView *)tableView {
-    return [tableView fwHeightWithHeaderFooterViewClass:self type:type configuration:^(__kindof UITableViewHeaderFooterView * _Nonnull headerFooterView) {
-        headerFooterView.fwViewModel = viewModel;
-    }];
+- (CGFloat)heightWithTableView:(UITableView *)tableView
+                          type:(FWHeaderFooterViewType)type
+                 configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    return [tableView.fw heightWithHeaderFooterViewClass:self.base type:type configuration:configuration];
 }
 
 @end
 
-#pragma mark - UITableView+FWDynamicLayout
+#pragma mark - FWTableViewWrapper+FWDynamicLayout
 
-@implementation UITableView (FWDynamicLayout)
+@implementation FWTableViewWrapper (FWDynamicLayout)
 
-- (void)fwClearHeightCache
+- (void)clearHeightCache
 {
-    [self.fwDynamicLayoutHeightCache removeAllObjects];
+    [self.dynamicLayoutHeightCache removeAllObjects];
 }
 
-- (FWDynamicLayoutHeightCache *)fwDynamicLayoutHeightCache {
-    FWDynamicLayoutHeightCache *cache = objc_getAssociatedObject(self, _cmd);
+- (FWDynamicLayoutHeightCache *)dynamicLayoutHeightCache {
+    FWDynamicLayoutHeightCache *cache = objc_getAssociatedObject(self.base, _cmd);
     if (__builtin_expect((cache == nil), 0)) {
         cache = [[FWDynamicLayoutHeightCache alloc] init];
-        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return cache;
 }
 
 #pragma mark - Cell
 
-- (UIView *)fwDynamicViewWithCellClass:(Class)clazz {
+- (UIView *)dynamicViewWithCellClass:(Class)clazz {
     NSString *className = NSStringFromClass(clazz);
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
+    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     UIView *view = dict[className];
     if (view) return view;
@@ -291,16 +301,16 @@
     return view;
 }
 
-- (CGFloat)fwDynamicHeightWithCellClass:(Class)clazz
-                          configuration:(FWCellConfigurationBlock)configuration
-                            shouldCache:(BOOL *)shouldCache {
-    UIView *view = [self fwDynamicViewWithCellClass:clazz];
-    CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0 && self.superview) {
+- (CGFloat)dynamicHeightWithCellClass:(Class)clazz
+                        configuration:(FWCellConfigurationBlock)configuration
+                          shouldCache:(BOOL *)shouldCache {
+    UIView *view = [self dynamicViewWithCellClass:clazz];
+    CGFloat width = CGRectGetWidth(self.base.frame);
+    if (width <= 0 && self.base.superview) {
         // 获取 TableView 宽度
-        [self.superview setNeedsLayout];
-        [self.superview layoutIfNeeded];
-        width = CGRectGetWidth(self.frame);
+        [self.base.superview setNeedsLayout];
+        [self.base.superview layoutIfNeeded];
+        width = CGRectGetWidth(self.base.frame);
     }
     if (shouldCache) *shouldCache = width > 0;
 
@@ -314,8 +324,8 @@
     !configuration ? : configuration(cell);
     
     // 自动撑开方式
-    if (cell.fwMaxYViewExpanded) {
-        return [cell fwLayoutHeightWithWidth:width];
+    if (cell.fw.maxYViewExpanded) {
+        return [cell.fw layoutHeightWithWidth:width];
     }
 
     // 刷新布局
@@ -324,9 +334,9 @@
 
     // 获取需要的高度
     __block CGFloat maxY = 0.0;
-    if (cell.fwMaxYViewFixed) {
-        if (cell.fwMaxYView) {
-            maxY = CGRectGetMaxY(cell.fwMaxYView.frame);
+    if (cell.fw.maxYViewFixed) {
+        if (cell.fw.maxYView) {
+            maxY = CGRectGetMaxY(cell.fw.maxYView.frame);
         } else {
             __block UIView *maxYView = nil;
             [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -336,7 +346,7 @@
                     maxYView = obj;
                 }
             }];
-            cell.fwMaxYView = maxYView;
+            cell.fw.maxYView = maxYView;
         }
     } else {
         [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -346,44 +356,44 @@
             }
         }];
     }
-    maxY += cell.fwMaxYViewPadding;
+    maxY += cell.fw.maxYViewPadding;
     return maxY;
 }
 
-- (CGFloat)fwHeightWithCellClass:(Class)clazz
-                   configuration:(FWCellConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithCellClass:clazz configuration:configuration shouldCache:NULL];
+- (CGFloat)heightWithCellClass:(Class)clazz
+                 configuration:(FWCellConfigurationBlock)configuration {
+    return [self dynamicHeightWithCellClass:clazz configuration:configuration shouldCache:NULL];
 }
 
-- (CGFloat)fwHeightWithCellClass:(Class)clazz
-                cacheByIndexPath:(NSIndexPath *)indexPath
-                   configuration:(FWCellConfigurationBlock)configuration {
-    return [self fwHeightWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
+- (CGFloat)heightWithCellClass:(Class)clazz
+              cacheByIndexPath:(NSIndexPath *)indexPath
+                 configuration:(FWCellConfigurationBlock)configuration {
+    return [self heightWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
 }
 
-- (CGFloat)fwHeightWithCellClass:(Class)clazz
-                      cacheByKey:(id<NSCopying>)key
-                   configuration:(FWCellConfigurationBlock)configuration {
-    if (key && self.fwDynamicLayoutHeightCache.heightDictionary[key]) {
-        return self.fwDynamicLayoutHeightCache.heightDictionary[key].doubleValue;
+- (CGFloat)heightWithCellClass:(Class)clazz
+                    cacheByKey:(id<NSCopying>)key
+                 configuration:(FWCellConfigurationBlock)configuration {
+    if (key && self.dynamicLayoutHeightCache.heightDictionary[key]) {
+        return self.dynamicLayoutHeightCache.heightDictionary[key].doubleValue;
     }
     BOOL shouldCache = YES;
-    CGFloat cellHeight = [self fwDynamicHeightWithCellClass:clazz configuration:configuration shouldCache:&shouldCache];
+    CGFloat cellHeight = [self dynamicHeightWithCellClass:clazz configuration:configuration shouldCache:&shouldCache];
     if (key && shouldCache) {
-        self.fwDynamicLayoutHeightCache.heightDictionary[key] = @(cellHeight);
+        self.dynamicLayoutHeightCache.heightDictionary[key] = @(cellHeight);
     }
     return cellHeight;
 }
 
 #pragma mark - HeaderFooterView
 
-- (UIView *)fwDynamicViewWithHeaderFooterViewClass:(Class)clazz
-                                        identifier:(NSString *)identifier {
+- (UIView *)dynamicViewWithHeaderFooterViewClass:(Class)clazz
+                                      identifier:(NSString *)identifier {
     NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
+    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     UIView *view = dict[classIdentifier];
     if (view) return view;
@@ -395,18 +405,18 @@
     return view;
 }
 
-- (CGFloat)fwDynamicHeightWithHeaderFooterViewClass:(Class)clazz
-                                               type:(FWHeaderFooterViewType)type
-                                      configuration:(FWHeaderFooterViewConfigurationBlock)configuration
-                                        shouldCache:(BOOL *)shouldCache {
+- (CGFloat)dynamicHeightWithHeaderFooterViewClass:(Class)clazz
+                                             type:(FWHeaderFooterViewType)type
+                                    configuration:(FWHeaderFooterViewConfigurationBlock)configuration
+                                      shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@", @(type)];
-    UIView *view = [self fwDynamicViewWithHeaderFooterViewClass:clazz identifier:identifier];
-    CGFloat width = CGRectGetWidth(self.frame);
-    if (width <= 0 && self.superview) {
+    UIView *view = [self dynamicViewWithHeaderFooterViewClass:clazz identifier:identifier];
+    CGFloat width = CGRectGetWidth(self.base.frame);
+    if (width <= 0 && self.base.superview) {
         // 获取 TableView 宽度
-        [self.superview setNeedsLayout];
-        [self.superview layoutIfNeeded];
-        width = CGRectGetWidth(self.frame);
+        [self.base.superview setNeedsLayout];
+        [self.base.superview layoutIfNeeded];
+        width = CGRectGetWidth(self.base.frame);
     }
     if (shouldCache) *shouldCache = width > 0;
 
@@ -420,8 +430,8 @@
     !configuration ? : configuration(headerFooterView);
     
     // 自动撑开方式
-    if (headerFooterView.fwMaxYViewExpanded) {
-        return [headerFooterView fwLayoutHeightWithWidth:width];
+    if (headerFooterView.fw.maxYViewExpanded) {
+        return [headerFooterView.fw layoutHeightWithWidth:width];
     }
     
     // 刷新布局
@@ -431,9 +441,9 @@
     // 获取需要的高度
     __block CGFloat maxY  = 0.0;
     UIView *contentView = headerFooterView.contentView.subviews.count ? headerFooterView.contentView : headerFooterView;
-    if (headerFooterView.fwMaxYViewFixed) {
-        if (headerFooterView.fwMaxYView) {
-            maxY = CGRectGetMaxY(headerFooterView.fwMaxYView.frame);
+    if (headerFooterView.fw.maxYViewFixed) {
+        if (headerFooterView.fw.maxYView) {
+            maxY = CGRectGetMaxY(headerFooterView.fw.maxYView.frame);
         } else {
             __block UIView *maxYView = nil;
             [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -443,7 +453,7 @@
                     maxYView = obj;
                 }
             }];
-            headerFooterView.fwMaxYView = maxYView;
+            headerFooterView.fw.maxYView = maxYView;
         }
     } else {
         [contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -453,45 +463,45 @@
             }
         }];
     }
-    maxY += headerFooterView.fwMaxYViewPadding;
+    maxY += headerFooterView.fw.maxYViewPadding;
     return maxY;
 }
 
-- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
-                                        type:(FWHeaderFooterViewType)type
-                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:NULL];
+- (CGFloat)heightWithHeaderFooterViewClass:(Class)clazz
+                                      type:(FWHeaderFooterViewType)type
+                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    return [self dynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:NULL];
 }
 
-- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
-                                        type:(FWHeaderFooterViewType)type
-                              cacheBySection:(NSInteger)section
-                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
-    return [self fwHeightWithHeaderFooterViewClass:clazz type:type cacheByKey:@(section) configuration:configuration];
+- (CGFloat)heightWithHeaderFooterViewClass:(Class)clazz
+                                      type:(FWHeaderFooterViewType)type
+                            cacheBySection:(NSInteger)section
+                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+    return [self heightWithHeaderFooterViewClass:clazz type:type cacheByKey:@(section) configuration:configuration];
 }
 
-- (CGFloat)fwHeightWithHeaderFooterViewClass:(Class)clazz
-                                        type:(FWHeaderFooterViewType)type
-                                  cacheByKey:(id<NSCopying>)key
-                               configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+- (CGFloat)heightWithHeaderFooterViewClass:(Class)clazz
+                                      type:(FWHeaderFooterViewType)type
+                                cacheByKey:(id<NSCopying>)key
+                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
     if (type == FWHeaderFooterViewTypeHeader) {
-        if (key && self.fwDynamicLayoutHeightCache.headerHeightDictionary[key]) {
-            return self.fwDynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
+        if (key && self.dynamicLayoutHeightCache.headerHeightDictionary[key]) {
+            return self.dynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
         }
         BOOL shouldCache = YES;
-        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
+        CGFloat viewHeight = [self dynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
         if (key && shouldCache) {
-            self.fwDynamicLayoutHeightCache.headerHeightDictionary[key] = @(viewHeight);
+            self.dynamicLayoutHeightCache.headerHeightDictionary[key] = @(viewHeight);
         }
         return viewHeight;
     } else {
-        if (key && self.fwDynamicLayoutHeightCache.footerHeightDictionary[key]) {
-            return self.fwDynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
+        if (key && self.dynamicLayoutHeightCache.footerHeightDictionary[key]) {
+            return self.dynamicLayoutHeightCache.footerHeightDictionary[key].doubleValue;
         }
         BOOL shouldCache = YES;
-        CGFloat viewHeight = [self fwDynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
+        CGFloat viewHeight = [self dynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:&shouldCache];
         if (key && shouldCache) {
-            self.fwDynamicLayoutHeightCache.footerHeightDictionary[key] = @(viewHeight);
+            self.dynamicLayoutHeightCache.footerHeightDictionary[key] = @(viewHeight);
         }
         return viewHeight;
     }
@@ -592,153 +602,163 @@
 
 @end
 
-#pragma mark - UICollectionViewCell+FWDynamicLayout
+#pragma mark - FWCollectionViewCellWrapper+FWDynamicLayout
+
+@implementation FWCollectionViewCellWrapper (FWDynamicLayout)
+
+- (BOOL)maxYViewFixed {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewFixed:(BOOL)maxYViewFixed {
+    objc_setAssociatedObject(self.base, @selector(maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)maxYViewPadding {
+    return [objc_getAssociatedObject(self.base, _cmd) doubleValue];
+}
+
+- (void)setMaxYViewPadding:(CGFloat)maxYViewPadding {
+    objc_setAssociatedObject(self.base, @selector(maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)maxYViewExpanded {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewExpanded:(BOOL)maxYViewExpanded {
+    objc_setAssociatedObject(self.base, @selector(maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)maxYView {
+    return objc_getAssociatedObject(self.base, _cmd);
+}
+
+- (void)setMaxYView:(UIView *)maxYView {
+    objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
 
 @implementation UICollectionViewCell (FWDynamicLayout)
 
-- (BOOL)fwMaxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fwMaxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fwMaxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIView *)fwMaxYView {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setFwMaxYView:(UIView *)fwMaxYView {
-    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id)fwViewModel {
-    return objc_getAssociatedObject(self, @selector(fwViewModel));
-}
-
-- (void)setFwViewModel:(id)fwViewModel {
-    if (fwViewModel != self.fwViewModel) {
-        [self willChangeValueForKey:@"fwViewModel"];
-        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwViewModel"];
-    }
-}
-
-+ (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath {
-    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self fwCellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
+    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath];
 }
 
-+ (instancetype)fwCellWithCollectionView:(UICollectionView *)collectionView
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath
+                         reuseIdentifier:(NSString *)reuseIdentifier {
+    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
+@end
+
+@implementation FWCollectionViewCellClassWrapper (FWDynamicLayout)
+
+- (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
+                               indexPath:(NSIndexPath *)indexPath {
+    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
+- (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath
                          reuseIdentifier:(NSString *)reuseIdentifier {
     SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
     if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     }
-    [collectionView registerClass:self forCellWithReuseIdentifier:reuseIdentifier];
+    [collectionView registerClass:self.base forCellWithReuseIdentifier:reuseIdentifier];
     objc_setAssociatedObject(collectionView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel
-               collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithCellClass:self configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithCellClass:self.base configuration:configuration];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel
-                        width:(CGFloat)width
-               collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithCellClass:self width:width configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                           width:(CGFloat)width
+                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithCellClass:self.base width:width configuration:configuration];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel
-                       height:(CGFloat)height
-               collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithCellClass:self height:height configuration:^(__kindof UICollectionViewCell * _Nonnull cell) {
-        cell.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                          height:(CGFloat)height
+                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithCellClass:self.base height:height configuration:configuration];
 }
 
 @end
 
-#pragma mark - UICollectionReusableView+FWDynamicLayout
+#pragma mark - FWCollectionReusableViewWrapper+FWDynamicLayout
+
+@implementation FWCollectionReusableViewWrapper (FWDynamicLayout)
+
+- (BOOL)maxYViewFixed {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewFixed:(BOOL)maxYViewFixed {
+    objc_setAssociatedObject(self.base, @selector(maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)maxYViewPadding {
+    return [objc_getAssociatedObject(self.base, _cmd) doubleValue];
+}
+
+- (void)setMaxYViewPadding:(CGFloat)maxYViewPadding {
+    objc_setAssociatedObject(self.base, @selector(maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)maxYViewExpanded {
+    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+}
+
+- (void)setMaxYViewExpanded:(BOOL)maxYViewExpanded {
+    objc_setAssociatedObject(self.base, @selector(maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)maxYView {
+    return objc_getAssociatedObject(self.base, _cmd);
+}
+
+- (void)setMaxYView:(UIView *)maxYView {
+    objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
 
 @implementation UICollectionReusableView (FWDynamicLayout)
 
-- (BOOL)fwMaxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwMaxYViewFixed:(BOOL)fwMaxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewFixed), @(fwMaxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fwMaxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFwMaxYViewPadding:(CGFloat)fwMaxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewPadding), @(fwMaxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fwMaxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFwMaxYViewExpanded:(BOOL)fwMaxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fwMaxYViewExpanded), @(fwMaxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIView *)fwMaxYView {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setFwMaxYView:(UIView *)fwMaxYView {
-    objc_setAssociatedObject(self, @selector(fwMaxYView), fwMaxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id)fwViewModel {
-    return objc_getAssociatedObject(self, @selector(fwViewModel));
-}
-
-- (void)setFwViewModel:(id)fwViewModel {
-    if (fwViewModel != self.fwViewModel) {
-        [self willChangeValueForKey:@"fwViewModel"];
-        objc_setAssociatedObject(self, @selector(fwViewModel), fwViewModel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self didChangeValueForKey:@"fwViewModel"];
-    }
-}
-
-+ (instancetype)fwReusableViewWithCollectionView:(UICollectionView *)collectionView
++ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath {
-    NSString *reuseIdentifier = [NSStringFromClass(self.class) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self fwReusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
+    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath];
 }
 
-+ (instancetype)fwReusableViewWithCollectionView:(UICollectionView *)collectionView
++ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath
+                                 reuseIdentifier:(NSString *)reuseIdentifier {
+    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
+@end
+
+@implementation FWCollectionReusableViewClassWrapper (FWDynamicLayout)
+
+- (__kindof UICollectionReusableView *)reusableViewWithCollectionView:(UICollectionView *)collectionView
+                                            kind:(NSString *)kind
+                                       indexPath:(NSIndexPath *)indexPath {
+    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
+    return [self reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
+}
+
+- (__kindof UICollectionReusableView *)reusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath
                                  reuseIdentifier:(NSString *)reuseIdentifier {
@@ -746,58 +766,60 @@
     if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     }
-    [collectionView registerClass:self forSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier];
+    [collectionView registerClass:self.base forSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier];
     objc_setAssociatedObject(collectionView, reuseSelector, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithReusableViewClass:self kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithReusableViewClass:self.base kind:kind configuration:configuration];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel width:(CGFloat)width kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithReusableViewClass:self width:width kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                           width:(CGFloat)width
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithReusableViewClass:self.base width:width kind:kind configuration:configuration];
 }
 
-+ (CGSize)fwSizeWithViewModel:(id)viewModel height:(CGFloat)height kind:(NSString *)kind collectionView:(UICollectionView *)collectionView {
-    return [collectionView fwSizeWithReusableViewClass:self height:height kind:kind configuration:^(__kindof UICollectionReusableView * _Nonnull reusableView) {
-        reusableView.fwViewModel = viewModel;
-    }];
+- (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
+                          height:(CGFloat)height
+                            kind:(NSString *)kind
+                   configuration:(FWReusableViewConfigurationBlock)configuration {
+    return [collectionView.fw sizeWithReusableViewClass:self.base height:height kind:kind configuration:configuration];
 }
 
 @end
 
-#pragma mark - UICollectionView+FWDynamicLayout
+#pragma mark - FWCollectionViewWrapper+FWDynamicLayout
 
-@implementation UICollectionView (FWDynamicLayout)
+@implementation FWCollectionViewWrapper (FWDynamicLayout)
 
-- (void)fwClearSizeCache
+- (void)clearSizeCache
 {
-    [self.fwDynamicLayoutSizeCache removeAllObjects];
+    [self.dynamicLayoutSizeCache removeAllObjects];
 }
 
-- (FWDynamicLayoutSizeCache *)fwDynamicLayoutSizeCache {
-    FWDynamicLayoutSizeCache *cache = objc_getAssociatedObject(self, _cmd);
+- (FWDynamicLayoutSizeCache *)dynamicLayoutSizeCache {
+    FWDynamicLayoutSizeCache *cache = objc_getAssociatedObject(self.base, _cmd);
     if (__builtin_expect((cache == nil), 0)) {
         cache = [[FWDynamicLayoutSizeCache alloc] init];
-        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return cache;
 }
 
 #pragma mark - Cell
 
-- (UIView *)fwDynamicViewWithCellClass:(Class)clazz
-                            identifier:(NSString *)identifier {
+- (UIView *)dynamicViewWithCellClass:(Class)clazz
+                          identifier:(NSString *)identifier {
     NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
+    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     UIView *view = dict[classIdentifier];
     if (view) return view;
@@ -809,22 +831,22 @@
     return view;
 }
 
-- (CGSize)fwDynamicSizeWithCellClass:(Class)clazz
+- (CGSize)dynamicSizeWithCellClass:(Class)clazz
                                width:(CGFloat)fixedWidth
                               height:(CGFloat)fixedHeight
                        configuration:(FWCollectionCellConfigurationBlock)configuration
                          shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@-%@", @(fixedWidth), @(fixedHeight)];
-    UIView *view = [self fwDynamicViewWithCellClass:clazz identifier:identifier];
+    UIView *view = [self dynamicViewWithCellClass:clazz identifier:identifier];
     CGFloat width = fixedWidth;
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
-        width = CGRectGetWidth(self.frame);
-        if (width <= 0 && self.superview) {
+        width = CGRectGetWidth(self.base.frame);
+        if (width <= 0 && self.base.superview) {
             // 获取 CollectionView 宽度
-            [self.superview setNeedsLayout];
-            [self.superview layoutIfNeeded];
-            width = CGRectGetWidth(self.frame);
+            [self.base.superview setNeedsLayout];
+            [self.base.superview layoutIfNeeded];
+            width = CGRectGetWidth(self.base.frame);
         }
     }
     if (shouldCache) *shouldCache = fixedHeight > 0 || width > 0;
@@ -839,11 +861,11 @@
     !configuration ? : configuration(cell);
     
     // 自动撑开方式
-    if (cell.fwMaxYViewExpanded) {
+    if (cell.fw.maxYViewExpanded) {
         if (fixedHeight > 0) {
-            width = [cell fwLayoutWidthWithHeight:height];
+            width = [cell.fw layoutWidthWithHeight:height];
         } else {
-            height = [cell fwLayoutHeightWithWidth:width];
+            height = [cell.fw layoutHeightWithWidth:width];
         }
         return CGSizeMake(width, height);
     }
@@ -857,9 +879,9 @@
     CGFloat (^maxYBlock)(UIView *view) = ^CGFloat(UIView *view) {
         return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame);
     };
-    if (cell.fwMaxYViewFixed) {
-        if (cell.fwMaxYView) {
-            maxY = maxYBlock(cell.fwMaxYView);
+    if (cell.fw.maxYViewFixed) {
+        if (cell.fw.maxYView) {
+            maxY = maxYBlock(cell.fw.maxYView);
         } else {
             __block UIView *maxYView = nil;
             [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -869,7 +891,7 @@
                     maxYView = obj;
                 }
             }];
-            cell.fwMaxYView = maxYView;
+            cell.fw.maxYView = maxYView;
         }
     } else {
         [cell.contentView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -879,65 +901,65 @@
             }
         }];
     }
-    maxY += cell.fwMaxYViewPadding;
+    maxY += cell.fw.maxYViewPadding;
     return fixedHeight > 0 ? CGSizeMake(maxY, height) : CGSizeMake(width, maxY);
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:0 height:0 configuration:configuration shouldCache:NULL];
+- (CGSize)sizeWithCellClass:(Class)clazz
+              configuration:(FWCollectionCellConfigurationBlock)configuration {
+    return [self dynamicSizeWithCellClass:clazz width:0 height:0 configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:width height:0 configuration:configuration shouldCache:NULL];
+    return [self dynamicSizeWithCellClass:clazz width:width height:0 configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithCellClass:clazz width:0 height:height configuration:configuration shouldCache:NULL];
+    return [self dynamicSizeWithCellClass:clazz width:0 height:height configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
              cacheByIndexPath:(NSIndexPath *)indexPath
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
+    return [self sizeWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
              cacheByIndexPath:(NSIndexPath *)indexPath
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz width:width cacheByKey:indexPath configuration:configuration];
+    return [self sizeWithCellClass:clazz width:width cacheByKey:indexPath configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
              cacheByIndexPath:(NSIndexPath *)indexPath
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz height:height cacheByKey:indexPath configuration:configuration];
+    return [self sizeWithCellClass:clazz height:height cacheByKey:indexPath configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                    cacheByKey:(id<NSCopying>)key
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz width:0 height:0 cacheByKey:key configuration:configuration];
+    return [self sizeWithCellClass:clazz width:0 height:0 cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
                    cacheByKey:(id<NSCopying>)key
                 configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz width:width height:0 cacheByKey:key configuration:configuration];
+    return [self sizeWithCellClass:clazz width:width height:0 cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz height:(CGFloat)height cacheByKey:(id<NSCopying>)key configuration:(FWCollectionCellConfigurationBlock)configuration {
-    return [self fwSizeWithCellClass:clazz width:0 height:height cacheByKey:key configuration:configuration];
+- (CGSize)sizeWithCellClass:(Class)clazz height:(CGFloat)height cacheByKey:(id<NSCopying>)key configuration:(FWCollectionCellConfigurationBlock)configuration {
+    return [self sizeWithCellClass:clazz width:0 height:height cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithCellClass:(Class)clazz
+- (CGSize)sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
                        height:(CGFloat)height
                    cacheByKey:(id<NSCopying>)key
@@ -947,26 +969,26 @@
         cacheKey = [NSString stringWithFormat:@"%@-%@-%@", cacheKey, @(width), @(height)];
     }
     
-    if (cacheKey && self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey]) {
-        return self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey].CGSizeValue;
+    if (cacheKey && self.dynamicLayoutSizeCache.sizeDictionary[cacheKey]) {
+        return self.dynamicLayoutSizeCache.sizeDictionary[cacheKey].CGSizeValue;
     }
     BOOL shouldCache = YES;
-    CGSize cellSize = [self fwDynamicSizeWithCellClass:clazz width:width height:height configuration:configuration shouldCache:&shouldCache];
+    CGSize cellSize = [self dynamicSizeWithCellClass:clazz width:width height:height configuration:configuration shouldCache:&shouldCache];
     if (cacheKey && shouldCache) {
-        self.fwDynamicLayoutSizeCache.sizeDictionary[cacheKey] = [NSValue valueWithCGSize:cellSize];
+        self.dynamicLayoutSizeCache.sizeDictionary[cacheKey] = [NSValue valueWithCGSize:cellSize];
     }
     return cellSize;
 }
 
 #pragma mark - ReusableView
 
-- (UIView *)fwDynamicViewWithReusableViewClass:(Class)clazz
-                                    identifier:(NSString *)identifier {
+- (UIView *)dynamicViewWithReusableViewClass:(Class)clazz
+                                  identifier:(NSString *)identifier {
     NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
-    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
+    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
     if (!dict) {
         dict = @{}.mutableCopy;
-        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     UIView *view = dict[classIdentifier];
     if (view) return view;
@@ -978,23 +1000,23 @@
     return view;
 }
 
-- (CGSize)fwDynamicSizeWithReusableViewClass:(Class)clazz
+- (CGSize)dynamicSizeWithReusableViewClass:(Class)clazz
                                        width:(CGFloat)fixedWidth
                                       height:(CGFloat)fixedHeight
                                         kind:(NSString *)kind
                                configuration:(FWReusableViewConfigurationBlock)configuration
                                  shouldCache:(BOOL *)shouldCache {
     NSString *identifier = [NSString stringWithFormat:@"%@-%@-%@", kind, @(fixedWidth), @(fixedHeight)];
-    UIView *view = [self fwDynamicViewWithReusableViewClass:clazz identifier:identifier];
+    UIView *view = [self dynamicViewWithReusableViewClass:clazz identifier:identifier];
     CGFloat width = fixedWidth;
     CGFloat height = fixedHeight;
     if (width <= 0 && height <= 0) {
-        width = CGRectGetWidth(self.frame);
-        if (width <= 0 && self.superview) {
+        width = CGRectGetWidth(self.base.frame);
+        if (width <= 0 && self.base.superview) {
             // 获取 CollectionView 宽度
-            [self.superview setNeedsLayout];
-            [self.superview layoutIfNeeded];
-            width = CGRectGetWidth(self.frame);
+            [self.base.superview setNeedsLayout];
+            [self.base.superview layoutIfNeeded];
+            width = CGRectGetWidth(self.base.frame);
         }
     }
     if (shouldCache) *shouldCache = fixedHeight > 0 || width > 0;
@@ -1009,11 +1031,11 @@
     !configuration ? : configuration(reusableView);
     
     // 自动撑开方式
-    if (reusableView.fwMaxYViewExpanded) {
+    if (reusableView.fw.maxYViewExpanded) {
         if (fixedHeight > 0) {
-            width = [reusableView fwLayoutWidthWithHeight:height];
+            width = [reusableView.fw layoutWidthWithHeight:height];
         } else {
-            height = [reusableView fwLayoutHeightWithWidth:width];
+            height = [reusableView.fw layoutHeightWithWidth:width];
         }
         return CGSizeMake(width, height);
     }
@@ -1027,9 +1049,9 @@
     CGFloat (^maxYBlock)(UIView *view) = ^CGFloat(UIView *view) {
         return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame);
     };
-    if (reusableView.fwMaxYViewFixed) {
-        if (reusableView.fwMaxYView) {
-            maxY = maxYBlock(reusableView.fwMaxYView);
+    if (reusableView.fw.maxYViewFixed) {
+        if (reusableView.fw.maxYView) {
+            maxY = maxYBlock(reusableView.fw.maxYView);
         } else {
             __block UIView *maxYView = nil;
             [reusableView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1039,7 +1061,7 @@
                     maxYView = obj;
                 }
             }];
-            reusableView.fwMaxYView = maxYView;
+            reusableView.fw.maxYView = maxYView;
         }
     } else {
         [reusableView.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1049,77 +1071,77 @@
             }
         }];
     }
-    maxY += reusableView.fwMaxYViewPadding;
+    maxY += reusableView.fw.maxYViewPadding;
     return fixedHeight > 0 ? CGSizeMake(maxY, height) : CGSizeMake(width, maxY);
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:0 kind:kind configuration:configuration shouldCache:NULL];
+    return [self dynamicSizeWithReusableViewClass:clazz width:0 height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:width height:0 kind:kind configuration:configuration shouldCache:NULL];
+    return [self dynamicSizeWithReusableViewClass:clazz width:width height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwDynamicSizeWithReusableViewClass:clazz width:0 height:height kind:kind configuration:configuration shouldCache:NULL];
+    return [self dynamicSizeWithReusableViewClass:clazz width:0 height:height kind:kind configuration:configuration shouldCache:NULL];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz kind:kind cacheByKey:@(section) configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz width:width kind:kind cacheByKey:@(section) configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz width:width kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz height:height kind:kind cacheByKey:@(section) configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz height:height kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz width:0 height:0 kind:kind cacheByKey:key configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz width:0 height:0 kind:kind cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz width:width height:0 kind:kind cacheByKey:key configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz width:width height:0 kind:kind cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
                         configuration:(FWReusableViewConfigurationBlock)configuration {
-    return [self fwSizeWithReusableViewClass:clazz width:0 height:height kind:kind cacheByKey:key configuration:configuration];
+    return [self sizeWithReusableViewClass:clazz width:0 height:height kind:kind cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fwSizeWithReusableViewClass:(Class)clazz
+- (CGSize)sizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                height:(CGFloat)height
                                  kind:(NSString *)kind
@@ -1131,23 +1153,23 @@
     }
     
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        if (cacheKey && self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey]) {
-            return self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey].CGSizeValue;
+        if (cacheKey && self.dynamicLayoutSizeCache.headerSizeDictionary[cacheKey]) {
+            return self.dynamicLayoutSizeCache.headerSizeDictionary[cacheKey].CGSizeValue;
         }
         BOOL shouldCache = YES;
-        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
+        CGSize viewSize = [self dynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
         if (cacheKey && shouldCache) {
-            self.fwDynamicLayoutSizeCache.headerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
+            self.dynamicLayoutSizeCache.headerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
         }
         return viewSize;
     } else {
-        if (cacheKey && self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey]) {
-            return self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey].CGSizeValue;
+        if (cacheKey && self.dynamicLayoutSizeCache.footerSizeDictionary[cacheKey]) {
+            return self.dynamicLayoutSizeCache.footerSizeDictionary[cacheKey].CGSizeValue;
         }
         BOOL shouldCache = YES;
-        CGSize viewSize = [self fwDynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
+        CGSize viewSize = [self dynamicSizeWithReusableViewClass:clazz width:width height:height kind:kind configuration:configuration shouldCache:&shouldCache];
         if (cacheKey && shouldCache) {
-            self.fwDynamicLayoutSizeCache.footerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
+            self.dynamicLayoutSizeCache.footerSizeDictionary[cacheKey] = [NSValue valueWithCGSize:viewSize];
         }
         return viewSize;
     }

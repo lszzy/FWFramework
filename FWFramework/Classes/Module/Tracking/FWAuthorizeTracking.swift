@@ -11,6 +11,7 @@ import AdSupport
 import AppTrackingTransparency
 #if FWFrameworkSPM
 import FWFramework
+import FWFrameworkCompatible
 #endif
 
 @objc extension UIDevice {
@@ -61,8 +62,8 @@ private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
     }
 }
 
-@objc extension FWLoader {
-    private func loadFWAuthorizeTracking() {
+@objc extension FWAutoloader {
+    private func loadAuthorizeTracking() {
         FWAuthorizeManager.registerAuthorize(.tracking) {
             return FWAuthorizeTracking()
         }
