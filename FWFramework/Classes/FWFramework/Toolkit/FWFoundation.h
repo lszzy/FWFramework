@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWAttributedStringClassWrapper+FWFoundation
 
 /**
- 如果需要实现行内图片可点击效果，可使用UITextView添加NSLinkAttributeName链接并实现delegate.shouldInteractWithURL方法即可
+ 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可
  */
 @interface FWAttributedStringClassWrapper (FWFoundation)
 
