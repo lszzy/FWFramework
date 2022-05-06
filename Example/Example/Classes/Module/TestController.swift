@@ -37,12 +37,15 @@ class TestController: UIViewController {
         return view
     }()
     
-    private lazy var textFieldLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor.fw.themeLight(.black, dark: .white)
-        label.numberOfLines = 0
-        return label
+    private lazy var textFieldLabel: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.delegate = self
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.textColor = UIColor.fw.themeLight(.black, dark: .white)
+        textView.textContainer.lineFragmentPadding = 0
+        return textView
     }()
     
     private lazy var textField: UITextField = {
@@ -107,7 +110,7 @@ private extension TestController {
             make.left().right().height(100).bottom(UIScreen.fw.safeAreaInsets.bottom)
         }
         textFieldLabel.fw.layoutMaker { make in
-            make.left(15).right(15).top(10)
+            make.left(15).right(15).top(10).height(55)
         }
         textField.fw.layoutMaker { make in
             make.left(15).right(15).bottom(10).height(25)
@@ -115,8 +118,11 @@ private extension TestController {
     }
     
     private func renderData() {
-        let attributedText = NSMutableAttributedString(string: "我是超过一行的文本，我可以显示两行，还可以显示图片，不信你看嘛")
-        attributedText.append(NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: round(UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16)))
+        let attributedText = NSMutableAttributedString(string: "我是超过一行的文本，我可以显示图片，还可以点击图片，不信你看嘛", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.fw.themeLight(.black, dark: .white)
+        ])
+        attributedText.append(NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: round(UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16))))
         textFieldLabel.attributedText = attributedText
     }
     
@@ -141,6 +147,17 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableCellSelected(indexPath)
+    }
+    
+}
+
+// MARK: - UITextViewDelegate
+extension TestController: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        tableCellSelected(IndexPath(row: 0, section: 0))
+        
+        return false
     }
     
 }
