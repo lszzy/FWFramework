@@ -189,18 +189,18 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     objc_setAssociatedObject(self.base, @selector(touchInsets), [NSValue valueWithUIEdgeInsets:touchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CGRect)fitsFrame
+- (CGRect)fitFrame
 {
     return self.base.frame;
 }
 
-- (void)setFitsFrame:(CGRect)fitsFrame
+- (void)setFitFrame:(CGRect)fitFrame
 {
-    fitsFrame.size = [self fitsSizeWithDrawSize:CGSizeMake(fitsFrame.size.width, CGFLOAT_MAX)];
-    self.base.frame = fitsFrame;
+    fitFrame.size = [self fitSizeWithDrawSize:CGSizeMake(fitFrame.size.width, CGFLOAT_MAX)];
+    self.base.frame = fitFrame;
 }
 
-- (CGSize)fitsSize
+- (CGSize)fitSize
 {
     if (CGSizeEqualToSize(self.base.frame.size, CGSizeZero)) {
         [self.base setNeedsLayout];
@@ -208,10 +208,10 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
     
     CGSize drawSize = CGSizeMake(self.base.frame.size.width, CGFLOAT_MAX);
-    return [self fitsSizeWithDrawSize:drawSize];
+    return [self fitSizeWithDrawSize:drawSize];
 }
 
-- (CGSize)fitsSizeWithDrawSize:(CGSize)drawSize
+- (CGSize)fitSizeWithDrawSize:(CGSize)drawSize
 {
     CGSize size = [self.base sizeThatFits:drawSize];
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));

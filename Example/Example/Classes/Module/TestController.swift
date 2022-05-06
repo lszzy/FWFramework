@@ -125,8 +125,8 @@ private extension TestController {
         attributedText.append(NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: round(UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16))))
         textFieldLabel.attributedText = attributedText
         
-        let fitsSize = textFieldLabel.fw.fitsSize
-        textFieldLabel.fw.layoutChain.height(fitsSize.height)
+        let fitSize = textFieldLabel.fw.fitSize
+        textFieldLabel.fw.layoutChain.height(fitSize.height)
     }
     
 }
