@@ -110,7 +110,7 @@ private extension TestController {
             make.left().right().height(100).bottom(UIScreen.fw.safeAreaInsets.bottom)
         }
         textFieldLabel.fw.layoutMaker { make in
-            make.left(15).right(15).top(10).height(55)
+            make.left(15).right(15).top(10)
         }
         textField.fw.layoutMaker { make in
             make.left(15).right(15).bottom(10).height(25)
@@ -124,6 +124,9 @@ private extension TestController {
         ])
         attributedText.append(NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: round(UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16))))
         textFieldLabel.attributedText = attributedText
+        
+        let fitsSize = textFieldLabel.fw.fitsSize
+        textFieldLabel.fw.layoutChain.height(fitsSize.height)
     }
     
 }

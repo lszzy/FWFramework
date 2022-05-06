@@ -43,6 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置额外热区(点击区域)
 @property (nonatomic, assign) UIEdgeInsets touchInsets;
 
+/// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
+@property (nonatomic, assign) CGRect fitsFrame;
+
+/// 计算当前视图适合大小，需实现sizeThatFits:方法
+@property (nonatomic, assign, readonly) CGSize fitsSize;
+
+/// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
+- (CGSize)fitsSizeWithDrawSize:(CGSize)drawSize;
+
 /// 设置阴影颜色、偏移和半径
 - (void)setShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 

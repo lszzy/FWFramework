@@ -189,6 +189,34 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     objc_setAssociatedObject(self.base, @selector(touchInsets), [NSValue valueWithUIEdgeInsets:touchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (CGRect)fitsFrame
+{
+    return self.base.frame;
+}
+
+- (void)setFitsFrame:(CGRect)fitsFrame
+{
+    fitsFrame.size = [self fitsSizeWithDrawSize:CGSizeMake(fitsFrame.size.width, CGFLOAT_MAX)];
+    self.base.frame = fitsFrame;
+}
+
+- (CGSize)fitsSize
+{
+    if (CGSizeEqualToSize(self.base.frame.size, CGSizeZero)) {
+        [self.base setNeedsLayout];
+        [self.base layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.base.frame.size.width, CGFLOAT_MAX);
+    return [self fitsSizeWithDrawSize:drawSize];
+}
+
+- (CGSize)fitsSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self.base sizeThatFits:drawSize];
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
 - (void)setShadowColor:(UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius
