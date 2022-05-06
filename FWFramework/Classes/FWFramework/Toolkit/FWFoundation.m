@@ -109,6 +109,23 @@
     } documentAttributes:nil error:nil];
 }
 
+- (NSAttributedString *)attributedStringWithImage:(UIImage *)image bounds:(CGRect)bounds
+{
+    NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+    imageAttachment.image = image;
+    imageAttachment.bounds = CGRectMake(0, bounds.origin.y, bounds.size.width, bounds.size.height);
+    NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
+    if (bounds.origin.x <= 0) return imageString;
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    NSTextAttachment *spacingAttachment = [[NSTextAttachment alloc] init];
+    spacingAttachment.image = nil;
+    spacingAttachment.bounds = CGRectMake(0, bounds.origin.y, bounds.origin.x, bounds.size.height);
+    [attributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:spacingAttachment]];
+    [attributedString appendAttributedString:imageString];
+    return attributedString;
+}
+
 @end
 
 #pragma mark - FWDataWrapper+FWFoundation
