@@ -49,10 +49,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWAttributedStringClassWrapper+FWFoundation
 
+/**
+ 如果需要实现行内图片可点击效果，可使用UITextView添加NSLinkAttributeName链接并实现delegate.shouldInteractWithURL方法即可
+ */
 @interface FWAttributedStringClassWrapper (FWFoundation)
 
 /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
 - (nullable NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString;
+
+/// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：round(font.capHeight - image.size.height) / 2.0
+- (NSAttributedString *)attributedStringWithImage:(nullable UIImage *)image bounds:(CGRect)bounds;
 
 @end
 

@@ -33,7 +33,16 @@ class TestController: UIViewController {
     
     private lazy var textFieldView: UIView = {
         let view = UIView()
+        view.fw.setBorderView(.top, color: UIColor.gray, width: UIScreen.fw.pixelOne)
         return view
+    }()
+    
+    private lazy var textFieldLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = UIColor.fw.themeLight(.black, dark: .white)
+        label.numberOfLines = 0
+        return label
     }()
     
     private lazy var textField: UITextField = {
@@ -57,6 +66,7 @@ class TestController: UIViewController {
         setupSubviews()
         setupConstraints()
         
+        renderData()
         testCoder()
         testJson()
     }
@@ -84,6 +94,7 @@ private extension TestController {
         
         view.addSubview(tableView)
         view.addSubview(textFieldView)
+        textFieldView.addSubview(textFieldLabel)
         textFieldView.addSubview(textField)
     }
     
@@ -93,11 +104,20 @@ private extension TestController {
         }
         textFieldView.fw.layoutMaker { make in
             make.topToBottomOfView(tableView)
-            make.left().right().height(70).bottom(UIScreen.fw.safeAreaInsets.bottom)
+            make.left().right().height(100).bottom(UIScreen.fw.safeAreaInsets.bottom)
+        }
+        textFieldLabel.fw.layoutMaker { make in
+            make.left(15).right(15).top(10)
         }
         textField.fw.layoutMaker { make in
-            make.left(15).right(15).centerY().height(40)
+            make.left(15).right(15).bottom(10).height(25)
         }
+    }
+    
+    private func renderData() {
+        let attributedText = NSMutableAttributedString(string: "我是超过一行的文本，我可以显示两行，还可以显示图片，不信你看嘛")
+        attributedText.append(NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: round(UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16)))
+        textFieldLabel.attributedText = attributedText
     }
     
 }
