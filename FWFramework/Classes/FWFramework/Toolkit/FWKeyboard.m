@@ -326,6 +326,23 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     return _toolbarDoneButton;
 }
 
+- (CGFloat)keyboardHeight:(NSNotification *)notification
+{
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    return keyboardRect.size.height;
+}
+
+- (void)keyboardAnimate:(NSNotification *)notification
+             animations:(void (^)(void))animations
+             completion:(void (^ __nullable)(BOOL finished))completion
+{
+    CGFloat animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    animationCurve = animationCurve << 16;
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:(animationCurve | UIViewAnimationOptionBeginFromCurrentState) animations:animations completion:completion];
+}
+
 - (void)addToolbarWithTitle:(id)title
                   doneBlock:(void (^)(id sender))doneBlock
 {
@@ -700,6 +717,18 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.innerKeyboardTarget.nextResponder = nextResponder;
 }
 
+- (CGFloat)keyboardHeight:(NSNotification *)notification
+{
+    return [self.innerKeyboardTarget keyboardHeight:notification];
+}
+
+- (void)keyboardAnimate:(NSNotification *)notification
+             animations:(void (^)(void))animations
+             completion:(void (^)(BOOL))completion
+{
+    [self.innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
+}
+
 - (void)addToolbarWithTitle:(id)title
                   doneBlock:(void (^)(id sender))doneBlock
 {
@@ -1019,6 +1048,18 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)setNextResponder:(UIResponder *)nextResponder
 {
     self.innerKeyboardTarget.nextResponder = nextResponder;
+}
+
+- (CGFloat)keyboardHeight:(NSNotification *)notification
+{
+    return [self.innerKeyboardTarget keyboardHeight:notification];
+}
+
+- (void)keyboardAnimate:(NSNotification *)notification
+             animations:(void (^)(void))animations
+             completion:(void (^)(BOOL))completion
+{
+    [self.innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
 }
 
 - (void)addToolbarWithTitle:(id)title

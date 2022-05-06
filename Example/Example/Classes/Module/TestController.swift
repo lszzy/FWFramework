@@ -9,7 +9,7 @@
 import UIKit
 import FWFramework
 
-class TestController: UITableViewController {
+class TestController: UIViewController {
     
     // MARK: - Accessor
     private var confirmBack = false
@@ -24,10 +24,34 @@ class TestController: UITableViewController {
     }
     
     // MARK: - Subviews
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.dataSource = self
+        tableView.delegate = self
+        return tableView
+    }()
+    
+    private lazy var textFieldView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var textField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Test"
+        textField.layer.masksToBounds = true
+        textField.layer.borderWidth = UIScreen.fw.pixelOne
+        textField.layer.cornerRadius = 4
+        textField.fw.touchResign = true
+        return textField
+    }()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIApplication.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIApplication.keyboardWillHideNotification, object: nil)
 
         setupNavbar()
         setupSubviews()
@@ -35,6 +59,10 @@ class TestController: UITableViewController {
         
         testCoder()
         testJson()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
 }
@@ -52,33 +80,46 @@ private extension TestController {
     }
    
     private func setupSubviews() {
+        view.backgroundColor = UIColor.fw.themeLight(.white, dark: .black)
         
+        view.addSubview(tableView)
+        view.addSubview(textFieldView)
+        textFieldView.addSubview(textField)
     }
     
     private func setupConstraints() {
-        
+        tableView.fw.layoutMaker { make in
+            make.left().right().top()
+        }
+        textFieldView.fw.layoutMaker { make in
+            make.topToBottomOfView(tableView)
+            make.left().right().height(70).bottom(UIScreen.fw.safeAreaInsets.bottom)
+        }
+        textField.fw.layoutMaker { make in
+            make.left(15).right(15).centerY().height(40)
+        }
     }
     
 }
 
 // MARK: - UITableView
-extension TestController {
+extension TestController: UITableViewDataSource, UITableViewDelegate {
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(with: tableView)
         cell.textLabel?.text = "test.title".fw.localized
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableCellSelected(indexPath)
     }
     
@@ -86,6 +127,23 @@ extension TestController {
 
 // MARK: - Action
 @objc private extension TestController {
+    
+    func keyboardWillShow(_ notification: Notification) {
+        let keyboardHeight = textField.fw.keyboardHeight(notification)
+        textFieldView.fw.layoutChain.bottom(keyboardHeight)
+        
+        textField.fw.keyboardAnimate(notification) { [weak self] in
+            self?.view.layoutIfNeeded()
+        }
+    }
+    
+    func keyboardWillHide(_ notification: Notification) {
+        textFieldView.fw.layoutChain.bottom(UIScreen.fw.safeAreaInsets.bottom)
+        
+        textField.fw.keyboardAnimate(notification) { [weak self] in
+            self?.view.layoutIfNeeded()
+        }
+    }
     
     func leftItemClicked(_ sender: Any) {
         if shouldPopController {
