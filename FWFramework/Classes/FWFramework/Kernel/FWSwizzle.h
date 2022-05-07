@@ -355,6 +355,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用
+ @note Swift实现代码示例：
+     NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString("viewDidLoad")) { targetClass, originalCMD, originalIMP in
+         let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in
+             typealias originalMSGType = @convention(c)(UIViewController, Selector) -> Void
+             let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+             originalMSG(selfObject, originalCMD)
+ 
+             // ...
+         }
+         return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+     }
  
  @param originalClass 原始类
  @param originalSelector 原始方法
