@@ -100,6 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment verticalAlignment;
 
+/// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
+- (void)addLinkGestureWithBlock:(void (^)(id link))block;
+
+/// 获取手势触发位置的文本属性，可实现行内点击效果等。为了识别更准确，attributedText需指定font
+- (NSDictionary<NSAttributedStringKey, id> *)attributesWithGesture:(UIGestureRecognizer *)gesture;
+
 /// 快速设置标签
 - (void)setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
 

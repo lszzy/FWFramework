@@ -9,6 +9,7 @@
 
 #import "FWUIKit.h"
 #import "FWAutoLayout.h"
+#import "FWBlock.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
@@ -546,6 +547,37 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 {
     objc_setAssociatedObject(self.base, @selector(verticalAlignment), @(verticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self.base setNeedsDisplay];
+}
+
+- (void)addLinkGestureWithBlock:(void (^)(id))block
+{
+    self.base.userInteractionEnabled = YES;
+    [self addTapGestureWithBlock:^(UITapGestureRecognizer *gesture) {
+        if (![gesture.view isKindOfClass:[UILabel class]]) return;
+        
+        UILabel *label = (UILabel *)gesture.view;
+        NSDictionary *attributes = [label.fw attributesWithGesture:gesture];
+        id link = attributes[NSLinkAttributeName];
+        if (!link) return;
+        
+        block(link);
+    }];
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)attributesWithGesture:(UIGestureRecognizer *)gesture
+{
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:self.base.bounds.size];
+    textContainer.lineFragmentPadding = 0;
+    textContainer.maximumNumberOfLines = self.base.numberOfLines;
+    textContainer.lineBreakMode = self.base.lineBreakMode;
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    [layoutManager addTextContainer:textContainer];
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self.base.attributedText];
+    [textStorage addLayoutManager:layoutManager];
+
+    CGPoint point = [gesture locationInView:self.base];
+    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
+    return [self.base.attributedText attributesAtIndex:index effectiveRange:NULL];
 }
 
 - (void)setFont:(UIFont *)font textColor:(UIColor *)textColor
