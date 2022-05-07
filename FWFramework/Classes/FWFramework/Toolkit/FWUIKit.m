@@ -556,7 +556,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         if (![gesture.view isKindOfClass:[UILabel class]]) return;
         
         UILabel *label = (UILabel *)gesture.view;
-        NSDictionary *attributes = [label.fw attributesWithGesture:gesture];
+        NSDictionary *attributes = [label.fw attributesWithGesture:gesture allowsSpacing:NO];
         id link = attributes[NSLinkAttributeName];
         if (!link) return;
         
@@ -564,7 +564,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }];
 }
 
-- (NSDictionary<NSAttributedStringKey,id> *)attributesWithGesture:(UIGestureRecognizer *)gesture
+- (NSDictionary<NSAttributedStringKey,id> *)attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing
 {
     NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:self.base.bounds.size];
     textContainer.lineFragmentPadding = 0;
@@ -576,7 +576,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [textStorage addLayoutManager:layoutManager];
 
     CGPoint point = [gesture locationInView:self.base];
-    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
+    CGFloat distance = 0;
+    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&distance];
+    if (!allowsSpacing && distance >= 1) return @{};
     return [self.base.attributedText attributesAtIndex:index effectiveRange:NULL];
 }
 
