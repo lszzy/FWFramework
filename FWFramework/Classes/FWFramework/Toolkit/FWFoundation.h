@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
 - (nullable NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString;
 
-/// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：round(font.capHeight - image.size.height) / 2.0
+/// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
 - (NSAttributedString *)attributedStringWithImage:(nullable UIImage *)image bounds:(CGRect)bounds;
 
 @end
