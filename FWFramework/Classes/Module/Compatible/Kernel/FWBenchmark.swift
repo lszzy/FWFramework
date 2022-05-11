@@ -13,7 +13,7 @@ extension FWWrapper {
     ///
     /// - Parameter name: 调试标签，默认空字符串
     public static func benchmarkBegin(_ name: String = "") {
-        FWBenchmark.begin(name)
+        Benchmark.begin(name)
     }
 
     /// 标记时间调试结束并打印消耗时间
@@ -22,12 +22,13 @@ extension FWWrapper {
     /// - Returns: 消耗时间
     @discardableResult
     public static func benchmarkEnd(_ name: String = "") -> TimeInterval {
-        return FWBenchmark.end(name)
+        return Benchmark.end(name)
     }
 }
 
 /// 时间调试器
-@objcMembers public class FWBenchmark: NSObject {
+@objc(FWBenchmark)
+@objcMembers public class Benchmark: NSObject {
     private static var times: [String : TimeInterval] = [:]
     
     /// 标记时间调试开始

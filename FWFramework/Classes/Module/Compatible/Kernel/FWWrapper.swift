@@ -91,3 +91,4 @@ extension URL: FWWrapperExtended {}
 extension Array: FWWrapperExtended {}
 extension Set: FWWrapperExtended {}
 extension Dictionary: FWWrapperExtended {}
+extension NSObject: FWWrapperExtended {}
