@@ -8,14 +8,16 @@
 
 import Foundation
 
-/// 读取本地化字符串
-///
-/// - Parameters:
-///   - key: 本地化键名
-///   - table: 本地化表名，默认Localizable.strings
-/// - Returns: 本地化字符串
-public func FWLocalizedString(_ key: String, _ table: String? = nil) -> String {
-    return Bundle.fw.localizedString(key, table: table)
+extension FWWrapper {
+    /// 读取本地化字符串
+    ///
+    /// - Parameters:
+    ///   - key: 本地化键名
+    ///   - table: 本地化表名，默认Localizable.strings
+    /// - Returns: 本地化字符串
+    public static func localizedString(_ key: String, _ table: String? = nil) -> String {
+        return Bundle.fw.localizedString(key, table: table)
+    }
 }
 
 extension FWWrapperExtension where Base == String {

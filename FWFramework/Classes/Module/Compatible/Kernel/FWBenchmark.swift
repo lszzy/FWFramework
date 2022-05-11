@@ -8,20 +8,22 @@
 
 import Foundation
 
-/// 标记时间调试开始
-///
-/// - Parameter name: 调试标签，默认空字符串
-public func FWBenchmarkBegin(_ name: String = "") {
-    FWBenchmark.begin(name)
-}
+extension FWWrapper {
+    /// 标记时间调试开始
+    ///
+    /// - Parameter name: 调试标签，默认空字符串
+    public static func benchmarkBegin(_ name: String = "") {
+        FWBenchmark.begin(name)
+    }
 
-/// 标记时间调试结束并打印消耗时间
-///
-/// - Parameter name: 调试标签，默认空字符串
-/// - Returns: 消耗时间
-@discardableResult
-public func FWBenchmarkEnd(_ name: String = "") -> TimeInterval {
-    return FWBenchmark.end(name)
+    /// 标记时间调试结束并打印消耗时间
+    ///
+    /// - Parameter name: 调试标签，默认空字符串
+    /// - Returns: 消耗时间
+    @discardableResult
+    public static func benchmarkEnd(_ name: String = "") -> TimeInterval {
+        return FWBenchmark.end(name)
+    }
 }
 
 /// 时间调试器
