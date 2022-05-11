@@ -40,4 +40,24 @@ extension FWWrapper {
     public static func font(size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
         return UIFont.fw.font(ofSize: size, weight: weight)
     }
+    
+    /// 快速创建图标对象
+    ///
+    /// - Parameters:
+    ///   - named: 图标名称
+    ///   - size: 图标大小
+    /// - Returns: FWIcon对象
+    public static func icon(named: String, size: CGFloat) -> FWIcon? {
+        return FWIcon(named: named, size: size)
+    }
+    
+    /// 快速创建图标图像
+    /// 
+    /// - Parameters:
+    ///   - name: 图标名称
+    ///   - size: 图片大小
+    /// - Returns: UIImage对象
+    public static func iconImage(_ name: String, size: CGFloat) -> UIImage? {
+        return FWIcon.iconImage(name, size: size)
+    }
 }

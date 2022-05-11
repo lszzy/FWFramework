@@ -454,14 +454,14 @@ extension FWWrapper {
     public static func safeNumber(_ value: Any?) -> NSNumber {
         guard let value = value else { return NSNumber(value: 0) }
         if let number = value as? NSNumber { return number }
-        return FWWrapper.safeString(value).fw.number ?? NSNumber(value: 0)
+        return safeString(value).fw.number ?? NSNumber(value: 0)
     }
 
     /// 安全URL，不为nil
     public static func safeURL(_ value: Any?) -> URL {
         guard let value = value else { return NSURL() as URL }
         if let url = value as? URL { return url }
-        if let url = URL.fw.url(string: FWWrapper.safeString(value)) { return url }
+        if let url = URL.fw.url(string: safeString(value)) { return url }
         return NSURL() as URL
     }
 }

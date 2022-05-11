@@ -154,17 +154,17 @@ NS_ASSUME_NONNULL_BEGIN
     [UIFont.fw fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建Thin字体
-FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Light字体
-FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Regular字体
-FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Medium字体
-FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Semibold字体
-FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Bold字体
-FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 @interface FWFontClassWrapper (FWToolkit)
 
