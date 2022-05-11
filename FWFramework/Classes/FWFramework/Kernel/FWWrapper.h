@@ -370,27 +370,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 FWWrapperFramework_(FWWrapperExtended, fw);
 
-#pragma mark - FWWrapper
-
-/// 全局包装器
-NS_SWIFT_UNAVAILABLE("")
-@interface FWWrapper : NSObject
-
-/// 禁用属性
-@property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_UNAVAILABLE;
-
-/// 禁用类属性
-@property (class, nonatomic, strong, readonly) FWClassWrapper *fw NS_UNAVAILABLE;
-
-@end
-
-/// 全局包装器别名
-///
-/// 自定义FW为任意名称(如APP)示例：
-/// 声明：
-/// typedef FWWrapper APP NS_SWIFT_UNAVAILABLE("");
-/// 使用示例：
-/// APP.safeString(object)
-typedef FWWrapper FW NS_SWIFT_UNAVAILABLE("");
-
 NS_ASSUME_NONNULL_END
