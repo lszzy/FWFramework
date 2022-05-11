@@ -8,16 +8,18 @@
 
 import Foundation
 
-/// 仿协程异步执行方法
-@discardableResult
-public func fw_async(_ block: @escaping () throws -> Any?) -> FWPromise {
-    return FWPromise.async(block)
-}
+extension FWWrapper {
+    /// 仿协程异步执行方法
+    @discardableResult
+    public static func async(_ block: @escaping () throws -> Any?) -> FWPromise {
+        return FWPromise.async(block)
+    }
 
-/// 仿协程同步返回结果
-@discardableResult
-public func fw_await(_ promise: FWPromise) throws -> Any? {
-    return try FWPromise.await(promise)
+    /// 仿协程同步返回结果
+    @discardableResult
+    public static func await(_ promise: FWPromise) throws -> Any? {
+        return try FWPromise.await(promise)
+    }
 }
 
 /// 框架约定类

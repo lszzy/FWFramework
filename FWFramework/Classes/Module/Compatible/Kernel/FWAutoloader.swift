@@ -11,10 +11,12 @@ import Foundation
 import FWFramework
 #endif
 
-/// 自动加载Swift类并调用autoload方法，参数为Class或String
-@discardableResult
-public func FWAutoload(_ clazz: Any) -> Bool {
-    return FWAutoloader.autoload(clazz)
+extension FWWrapper {
+    /// 自动加载Swift类并调用autoload方法，参数为Class或String
+    @discardableResult
+    public static func autoload(_ clazz: Any) -> Bool {
+        return FWAutoloader.autoload(clazz)
+    }
 }
 
 /// Swift自动加载协议，配合FWAutoload方法使用

@@ -182,7 +182,7 @@ extension FWWrapperExtension where Base == String {
         var result = ""
         for (key, value) in dict {
             if result.count > 0 { result.append("&") }
-            let string = FWSafeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
+            let string = FWWrapper.safeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
             result.append("\(key)=\(string)")
         }
         return result
@@ -440,28 +440,30 @@ extension FWWrapperExtension where Base == URL {
 
 // MARK: - FWSafeValue
 
-/// 安全字符串，不为nil
-public func FWSafeString(_ value: Any?) -> String {
-    guard let value = value, !(value is NSNull) else { return "" }
-    if let string = value as? String { return string }
-    if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
-    if let object = value as? NSObjectProtocol { return object.description }
-    return String(describing: value)
-}
+extension FWWrapper {
+    /// 安全字符串，不为nil
+    public static func safeString(_ value: Any?) -> String {
+        guard let value = value, !(value is NSNull) else { return "" }
+        if let string = value as? String { return string }
+        if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
+        if let object = value as? NSObjectProtocol { return object.description }
+        return String(describing: value)
+    }
 
-/// 安全数字，不为nil
-public func FWSafeNumber(_ value: Any?) -> NSNumber {
-    guard let value = value else { return NSNumber(value: 0) }
-    if let number = value as? NSNumber { return number }
-    return FWSafeString(value).fw.number ?? NSNumber(value: 0)
-}
+    /// 安全数字，不为nil
+    public static func safeNumber(_ value: Any?) -> NSNumber {
+        guard let value = value else { return NSNumber(value: 0) }
+        if let number = value as? NSNumber { return number }
+        return FWWrapper.safeString(value).fw.number ?? NSNumber(value: 0)
+    }
 
-/// 安全URL，不为nil
-public func FWSafeURL(_ value: Any?) -> URL {
-    guard let value = value else { return NSURL() as URL }
-    if let url = value as? URL { return url }
-    if let url = URL.fw.url(string: FWSafeString(value)) { return url }
-    return NSURL() as URL
+    /// 安全URL，不为nil
+    public static func safeURL(_ value: Any?) -> URL {
+        guard let value = value else { return NSURL() as URL }
+        if let url = value as? URL { return url }
+        if let url = URL.fw.url(string: FWWrapper.safeString(value)) { return url }
+        return NSURL() as URL
+    }
 }
 
 /// 包装器安全转换，不为nil
@@ -470,8 +472,8 @@ extension FWWrapperExtension {
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return FWSafeString(base) }
-    public var safeNumber: NSNumber { return FWSafeNumber(base) }
+    public var safeString: String { return FWWrapper.safeString(base) }
+    public var safeNumber: NSNumber { return FWWrapper.safeNumber(base) }
     public var safeArray: [Any] { return (base as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
 }
@@ -484,22 +486,24 @@ extension Optional {
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return FWSafeString(self) }
-    public var safeNumber: NSNumber { return FWSafeNumber(self) }
+    public var safeString: String { return FWWrapper.safeString(self) }
+    public var safeNumber: NSNumber { return FWWrapper.safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
 }
 
 // MARK: - FWSafeType
 
-/// 获取安全值
-public func FWSafeValue<T: FWSafeType>(_ value: T?) -> T {
-    return value.safeValue
-}
+extension FWWrapper {
+    /// 获取安全值
+    public static func safeValue<T: FWSafeType>(_ value: T?) -> T {
+        return value.safeValue
+    }
 
-/// 判断是否为空
-public func FWIsEmpty<T: FWSafeType>(_ value: T?) -> Bool {
-    return value.isEmpty
+    /// 判断是否为空
+    public static func isEmpty<T: FWSafeType>(_ value: T?) -> Bool {
+        return value.isEmpty
+    }
 }
 
 public protocol FWSafeType {
