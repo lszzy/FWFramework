@@ -7,6 +7,9 @@
 //
 
 import UIKit
+#if FWFrameworkSPM
+import FWFramework
+#endif
 
 extension FWWrapper {
     /// 从16进制创建UIColor
