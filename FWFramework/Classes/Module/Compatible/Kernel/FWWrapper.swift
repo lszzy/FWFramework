@@ -11,10 +11,10 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - FWWrapper
+// MARK: - FWWrapperExtension
 
 /// Swift包装器
-public struct FWWrapper<Base> {
+public struct FWWrapperExtension<Base> {
     /// 原始对象
     public let base: Base
     
@@ -27,54 +27,54 @@ public struct FWWrapper<Base> {
 /// Swift包装器兼容协议
 ///
 /// 自定义fw为任意名称(如app)示例：
-/// extension FWWrapperCompatible {
-///     public static var app: FWWrapper<Self>.Type { fw }
-///     public var app: FWWrapper<Self> { fw }
+/// extension FWWrapperExtended {
+///     public static var app: FWWrapperExtension<Self>.Type { fw }
+///     public var app: FWWrapperExtension<Self> { fw }
 /// }
 /// 使用示例：
 /// String.app.jsonEncode(object)
-public protocol FWWrapperCompatible {
+public protocol FWWrapperExtended {
     /// 关联类型
-    associatedtype WrapperBase
+    associatedtype Base
     
     /// 类包装器属性
-    static var fw: FWWrapper<WrapperBase>.Type { get }
+    static var fw: FWWrapperExtension<Base>.Type { get }
     
     /// 对象包装器属性
-    var fw: FWWrapper<WrapperBase> { get }
+    var fw: FWWrapperExtension<Base> { get }
 }
 
-extension FWWrapperCompatible {
+extension FWWrapperExtended {
     /// 类包装器属性
-    public static var fw: FWWrapper<Self>.Type {
-        return FWWrapper<Self>.self
+    public static var fw: FWWrapperExtension<Self>.Type {
+        return FWWrapperExtension<Self>.self
     }
     
     /// 对象包装器属性
-    public var fw: FWWrapper<Self> {
-        return FWWrapper(self)
+    public var fw: FWWrapperExtension<Self> {
+        return FWWrapperExtension(self)
     }
 }
 
-// MARK: - FWWrapperCompatible
+// MARK: - FWWrapperExtended
 
-extension Int: FWWrapperCompatible {}
-extension Int8: FWWrapperCompatible {}
-extension Int16: FWWrapperCompatible {}
-extension Int32: FWWrapperCompatible {}
-extension Int64: FWWrapperCompatible {}
-extension UInt: FWWrapperCompatible {}
-extension UInt8: FWWrapperCompatible {}
-extension UInt16: FWWrapperCompatible {}
-extension UInt32: FWWrapperCompatible {}
-extension UInt64: FWWrapperCompatible {}
-extension Float: FWWrapperCompatible {}
-extension Double: FWWrapperCompatible {}
-extension Bool: FWWrapperCompatible {}
-extension String: FWWrapperCompatible {}
-extension Data: FWWrapperCompatible {}
-extension Date: FWWrapperCompatible {}
-extension URL: FWWrapperCompatible {}
-extension Array: FWWrapperCompatible {}
-extension Set: FWWrapperCompatible {}
-extension Dictionary: FWWrapperCompatible {}
+extension Int: FWWrapperExtended {}
+extension Int8: FWWrapperExtended {}
+extension Int16: FWWrapperExtended {}
+extension Int32: FWWrapperExtended {}
+extension Int64: FWWrapperExtended {}
+extension UInt: FWWrapperExtended {}
+extension UInt8: FWWrapperExtended {}
+extension UInt16: FWWrapperExtended {}
+extension UInt32: FWWrapperExtended {}
+extension UInt64: FWWrapperExtended {}
+extension Float: FWWrapperExtended {}
+extension Double: FWWrapperExtended {}
+extension Bool: FWWrapperExtended {}
+extension String: FWWrapperExtended {}
+extension Data: FWWrapperExtended {}
+extension Date: FWWrapperExtended {}
+extension URL: FWWrapperExtended {}
+extension Array: FWWrapperExtended {}
+extension Set: FWWrapperExtended {}
+extension Dictionary: FWWrapperExtended {}
