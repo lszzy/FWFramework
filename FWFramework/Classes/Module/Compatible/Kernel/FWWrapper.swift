@@ -11,9 +11,22 @@ import Foundation
 import FWFramework
 #endif
 
+// MARK: - FWWrapper
+
+/// 全局包装器
+public struct FWWrapper {}
+
+/// 全局包装器别名
+///
+/// 自定义FW为任意名称(如APP)示例：
+/// public typealias APP = FWWrapper
+/// 使用示例：
+/// APP.safeString(object)
+public typealias FW = FWWrapper
+
 // MARK: - FWWrapperExtension
 
-/// Swift包装器
+/// 扩展包装器
 public struct FWWrapperExtension<Base> {
     /// 原始对象
     public let base: Base
@@ -24,7 +37,7 @@ public struct FWWrapperExtension<Base> {
     }
 }
 
-/// Swift包装器兼容协议
+/// 包装器扩展协议
 ///
 /// 自定义fw为任意名称(如app)示例：
 /// extension FWWrapperExtended {

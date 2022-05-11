@@ -75,3 +75,9 @@
 #pragma mark - FWWrapperExtended
 
 FWDefWrapperFramework_(FWDefWrapper, fw);
+
+#pragma mark - FWWrapper
+
+@implementation FWWrapper
+
+@end
