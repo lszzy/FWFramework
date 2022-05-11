@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-extension FWWrapper where Base == Data {
+extension FWWrapperExtension where Base == Data {
     /// 使用NSKeyedArchiver压缩对象
     public static func archiveObject(_ object: Any) -> Data? {
         let data = try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
@@ -40,7 +40,7 @@ extension FWWrapper where Base == Data {
     }
 }
 
-extension FWWrapper where Base == Date {
+extension FWWrapperExtension where Base == Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
     public static var currentTime: TimeInterval {
         return NSDate.fw.currentTime
@@ -90,7 +90,7 @@ extension FWWrapper where Base == Date {
     }
 }
 
-extension FWWrapper where Base == String {
+extension FWWrapperExtension where Base == String {
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
     public func size(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize {
         var attr: [NSAttributedString.Key: Any] = [:]

@@ -14,7 +14,7 @@ import FWFramework
 
 // MARK: - FWEncode
 
-extension FWWrapper where Base == Data {
+extension FWWrapperExtension where Base == Data {
     /// Foundation对象编码为json数据
     public static func jsonEncode(_ object: Any) -> Data? {
         guard JSONSerialization.isValidJSONObject(object) else { return nil }
@@ -51,7 +51,7 @@ extension FWWrapper where Base == Data {
     }
 }
 
-extension FWWrapper where Base == String {
+extension FWWrapperExtension where Base == String {
     /// Foundation对象编码为json字符串
     public static func jsonEncode(_ object: Any) -> String? {
         guard let data = Data.fw.jsonEncode(object) else { return nil }
@@ -395,7 +395,7 @@ extension FWWrapper where Base == String {
     }
 }
 
-extension FWWrapper where Base == URL {
+extension FWWrapperExtension where Base == URL {
     /// 生成URL，中文自动URL编码
     public static func url(string: String?) -> URL? {
         guard let string = string else { return nil }
@@ -465,7 +465,7 @@ public func FWSafeURL(_ value: Any?) -> URL {
 }
 
 /// 包装器安全转换，不为nil
-extension FWWrapper {
+extension FWWrapperExtension {
     public var safeInt: Int { return safeNumber.intValue }
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Macro
 
 /// 快速声明包装器宏
-#define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperExtended(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明可用版本包装器宏
-#define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperExtendedAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明单泛型包装器宏
-#define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperExtendedGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
     @end \
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明双泛型包装器宏
-#define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperExtendedGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
@@ -348,7 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSObject+FWWrapper
+#pragma mark - NSObject+FWWrapperExtended
 
 /// NSObject实现对象包装器协议
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
@@ -366,8 +366,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWWrapperCompatible
+#pragma mark - FWWrapperExtended
 
-FWWrapperFramework_(FWWrapperCompatible, fw);
+FWWrapperFramework_(FWWrapperExtended, fw);
 
 NS_ASSUME_NONNULL_END

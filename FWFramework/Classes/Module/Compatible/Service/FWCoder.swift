@@ -21,17 +21,17 @@ extension JSONEncoder: FWAnyEncoder {}
 extension PropertyListEncoder: FWAnyEncoder {}
 #endif
 
-extension FWWrapper where Base == Data {
+extension FWWrapperExtension where Base == Data {
     public static func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
     }
 }
 
-/// Encoder|Decoder协议暂不开放FWWrapper包装，防止协议fw属性和类fw属性重复声明冲突
+/// Encoder|Decoder协议暂不开放FWWrapperExtension包装，防止协议fw属性和类fw属性重复声明冲突
 ///
 /// 协议使用FWWrapper示例：
-/// extension Encoder { public var fw: FWWrapper<Encoder> { return FWWrapper(self) } }
-/// extension FWWrapper where Base == Encoder { }
+/// extension Encoder { public var fw: FWWrapperExtension<Encoder> { return FWWrapperExtension(self) } }
+/// extension FWWrapperExtension where Base == Encoder { }
 extension Encoder {
     public func encodeSingle<T: Encodable>(_ value: T) throws {
         var container = singleValueContainer()
@@ -69,7 +69,7 @@ extension JSONDecoder: FWAnyDecoder {}
 extension PropertyListDecoder: FWAnyDecoder {}
 #endif
 
-extension FWWrapper where Base == Data {
+extension FWWrapperExtension where Base == Data {
     public func decoded<T: Decodable>(as type: T.Type = T.self,
                                       using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
         return try decoder.decode(T.self, from: self.base)
