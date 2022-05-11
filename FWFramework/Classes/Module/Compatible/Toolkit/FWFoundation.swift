@@ -6,8 +6,10 @@
 //  Copyright © 2020 wuyong.site. All rights reserved.
 //
 
-import Foundation
 import UIKit
+#if FWFrameworkSPM
+import FWFramework
+#endif
 
 extension FWWrapperExtension where Base == Data {
     /// 使用NSKeyedArchiver压缩对象
