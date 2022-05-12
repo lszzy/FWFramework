@@ -188,6 +188,7 @@
         NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
         
         NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
+        formatClass = [formatClass stringByReplacingOccurrencesOfString:@"TestCase_" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"TestCase" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"_" withString:@"."];
         NSString *formatMethod = nil;

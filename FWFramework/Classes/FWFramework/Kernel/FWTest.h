@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  单元测试用例基类，所有单元测试用例必须继承
  @note 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name
  */
+NS_SWIFT_NAME(TestCase)
 @interface FWTestCase : NSObject
 
 /**
