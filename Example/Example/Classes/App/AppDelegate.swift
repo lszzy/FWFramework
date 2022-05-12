@@ -15,13 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FWMediator.setupAllModules()
+        FWRouter.registerClass(AppRouter.self)
         return true
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
-        window?.rootViewController = rootController()
+        window?.rootViewController = setupController()
         window?.makeKeyAndVisible()
         return true
     }
@@ -30,10 +31,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - Private
 private extension AppDelegate {
     
-    func rootController() -> UIViewController {
-        FWRouter.registerClass(AppRouter.self)
-        let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
+    func setupController() -> UIViewController {
+        let homeController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
+        homeController.hidesBottomBarWhenPushed = false
+        let homeNav = navigationController(homeController)
+        homeNav.tabBarItem.title = APP.localized("home.title")
         
+        let testController = FWRouter.object(forURL: AppRouter.testUrl) as! UIViewController
+        testController.hidesBottomBarWhenPushed = false
+        let testNav = navigationController(testController)
+        testNav.tabBarItem.title = APP.localized("test.title")
+        
+        let settingsController = FWRouter.object(forURL: AppRouter.settingsUrl) as! UIViewController
+        settingsController.hidesBottomBarWhenPushed = false
+        let settingsNav = navigationController(settingsController)
+        settingsNav.tabBarItem.title = APP.localized("settings.title")
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [homeNav, testNav, settingsNav]
+        return tabBarController
+    }
+    
+    func navigationController(_ viewController: UIViewController) -> UINavigationController {
         let navController = UINavigationController(rootViewController: viewController)
         navController.fw.enablePopProxy()
         navController.navigationBar.fw.isTranslucent = false

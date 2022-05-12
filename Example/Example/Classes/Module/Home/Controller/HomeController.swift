@@ -123,7 +123,7 @@ private extension HomeController {
         #else
         let envTitle = "home.envDevelopment".fw.localized
         #endif
-        title = "FWFramework - \(envTitle)"
+        navigationItem.title = "FWFramework - \(envTitle)"
     }
     
     func renderStyle() {
