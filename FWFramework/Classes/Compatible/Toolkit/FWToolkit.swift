@@ -11,6 +11,8 @@ import UIKit
 import FWFramework
 #endif
 
+// MARK: - FWWrapper+FWToolkit
+
 extension FWWrapper {
     /// 从16进制创建UIColor
     ///
@@ -64,3 +66,16 @@ extension FWWrapper {
         return FWIcon.iconImage(name, size: size)
     }
 }
+
+// MARK: - UIDevice+FWToolkit
+
+#if FWMacroTracking
+import AdSupport
+
+extension FWWrapperExtension where Base: UIDevice {
+    /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
+    public static var deviceIDFA: String {
+        return ASIdentifierManager.shared().advertisingIdentifier.uuidString
+    }
+}
+#endif

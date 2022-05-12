@@ -17,6 +17,10 @@
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 
+#if FWMacroTracking
+@import AdSupport;
+#endif
+
 #pragma mark - FWDeviceClassWrapper+FWUIKit
 
 @implementation FWDeviceClassWrapper (FWUIKit)
@@ -61,6 +65,15 @@
 - (NSString *)deviceIDFV
 {
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
+- (NSString *)deviceIDFA
+{
+    #if FWMacroTracking
+    return ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString;
+    #else
+    return nil;
+    #endif
 }
 
 @end
