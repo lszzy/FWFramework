@@ -22,8 +22,14 @@ import FWFrameworkCompatible
 }
 
 /// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
-private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
-    func authorizeStatus() -> FWAuthorizeStatus {
+@objcMembers public class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol, FWAutoloadProtocol {
+    public static func autoload() {
+        FWAuthorizeManager.registerAuthorize(.tracking) {
+            return FWAuthorizeTracking()
+        }
+    }
+    
+    public func authorizeStatus() -> FWAuthorizeStatus {
         if #available(iOS 14.0, *) {
             let status = ATTrackingManager.trackingAuthorizationStatus
             switch status {
@@ -41,7 +47,7 @@ private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {
@@ -58,14 +64,6 @@ private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
                     completion?(self.authorizeStatus())
                 }
             }
-        }
-    }
-}
-
-@objc extension FWAutoloader {
-    private func loadAuthorizeTracking() {
-        FWAuthorizeManager.registerAuthorize(.tracking) {
-            return FWAuthorizeTracking()
         }
     }
 }
