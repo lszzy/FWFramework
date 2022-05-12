@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速实现包装器宏
-#define FWDefWrapper(baseClass, fw, objectWrapper, classWrapper) \
+#define FWDefWrapperExtended(baseClass, fw, objectWrapper, classWrapper) \
     @implementation objectWrapper \
     @dynamic base; \
     - (Class)wrapperClass { return [classWrapper class]; } \
