@@ -15,7 +15,7 @@ extension FWWrapper {
     ///   - key: 本地化键名
     ///   - table: 本地化表名，默认Localizable.strings
     /// - Returns: 本地化字符串
-    public static func localizedString(_ key: String, _ table: String? = nil) -> String {
+    public static func localized(_ key: String, _ table: String? = nil) -> String {
         return Bundle.fw.localizedString(key, table: table)
     }
 }
