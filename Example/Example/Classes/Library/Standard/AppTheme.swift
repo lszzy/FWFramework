@@ -8,12 +8,12 @@
 
 import FWFramework
 
-public typealias APP = FWWrapper
+public typealias APP = Wrapper
 
-extension FWWrapperExtended {
+extension WrapperExtended {
     
-    public static var app: FWWrapperExtension<Self>.Type { get { fw } set {} }
-    public var app: FWWrapperExtension<Self> { get { fw } set {} }
+    public static var app: WrapperExtension<Self>.Type { get { fw } set {} }
+    public var app: WrapperExtension<Self> { get { fw } set {} }
     
 }
 

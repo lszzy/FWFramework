@@ -13,7 +13,7 @@ import FWFramework
 
 // MARK: - FWWrapper+FWToolkit
 
-extension FWWrapper {
+extension Wrapper {
     /// 从16进制创建UIColor
     ///
     /// - Parameters:
@@ -72,7 +72,7 @@ extension FWWrapper {
 #if FWMacroTracking
 import AdSupport
 
-extension FWWrapperExtension where Base: UIDevice {
+extension WrapperExtension where Base: UIDevice {
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
     public static var deviceIDFA: String {
         return ASIdentifierManager.shared().advertisingIdentifier.uuidString

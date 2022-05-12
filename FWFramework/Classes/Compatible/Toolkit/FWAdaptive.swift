@@ -12,7 +12,7 @@ import FWFramework
 #endif
 
 // MARK: - FWWrapper+FWAdaptive
-extension FWWrapper {
+extension Wrapper {
     // MARK: - UIApplication
     /// 是否是调试模式
     public static let isDebug: Bool = UIApplication.fw.isDebug

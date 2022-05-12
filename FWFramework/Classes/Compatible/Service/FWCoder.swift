@@ -21,7 +21,7 @@ extension JSONEncoder: FWAnyEncoder {}
 extension PropertyListEncoder: FWAnyEncoder {}
 #endif
 
-extension FWWrapperExtension where Base == Data {
+extension WrapperExtension where Base == Data {
     public static func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
     }
@@ -69,7 +69,7 @@ extension JSONDecoder: FWAnyDecoder {}
 extension PropertyListDecoder: FWAnyDecoder {}
 #endif
 
-extension FWWrapperExtension where Base == Data {
+extension WrapperExtension where Base == Data {
     public func decoded<T: Decodable>(as type: T.Type = T.self,
                                       using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
         return try decoder.decode(T.self, from: self.base)

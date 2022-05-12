@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension FWWrapper {
+extension Wrapper {
     /// 仿协程异步执行方法
     @discardableResult
     public static func async(_ block: @escaping () throws -> Any?) -> FWPromise {
