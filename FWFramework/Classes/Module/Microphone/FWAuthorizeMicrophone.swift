@@ -13,8 +13,14 @@ import FWFrameworkCompatible
 #endif
 
 /// 麦克风授权
-private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
-    func authorizeStatus() -> FWAuthorizeStatus {
+@objcMembers public class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol, FWAutoloadProtocol {
+    public static func autoload() {
+        FWAuthorizeManager.registerAuthorize(.microphone) {
+            return FWAuthorizeMicrophone()
+        }
+    }
+    
+    public func authorizeStatus() -> FWAuthorizeStatus {
         let status = AVAudioSession.sharedInstance().recordPermission
         switch status {
         case .denied:
@@ -26,7 +32,7 @@ private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             let status: FWAuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -34,14 +40,6 @@ private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
                     completion?(status)
                 }
             }
-        }
-    }
-}
-
-@objc extension FWAutoloader {
-    private func loadAuthorizeMicrophone() {
-        FWAuthorizeManager.registerAuthorize(.microphone) {
-            return FWAuthorizeMicrophone()
         }
     }
 }

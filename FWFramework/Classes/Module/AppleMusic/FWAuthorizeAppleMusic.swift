@@ -13,8 +13,14 @@ import FWFrameworkCompatible
 #endif
 
 /// AppleMusic授权
-private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
-    func authorizeStatus() -> FWAuthorizeStatus {
+@objcMembers public class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol, FWAutoloadProtocol {
+    public static func autoload() {
+        FWAuthorizeManager.registerAuthorize(.appleMusic) {
+            return FWAuthorizeAppleMusic()
+        }
+    }
+    
+    public func authorizeStatus() -> FWAuthorizeStatus {
         let status = MPMediaLibrary.authorizationStatus()
         switch status {
         case .denied:
@@ -28,7 +34,7 @@ private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         MPMediaLibrary.requestAuthorization { status in
             if completion != nil {
                 DispatchQueue.main.async { [weak self] in
@@ -36,14 +42,6 @@ private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
                     completion?(self.authorizeStatus())
                 }
             }
-        }
-    }
-}
-
-@objc extension FWAutoloader {
-    private func loadAuthorizeAppleMusic() {
-        FWAuthorizeManager.registerAuthorize(.appleMusic) {
-            return FWAuthorizeAppleMusic()
         }
     }
 }

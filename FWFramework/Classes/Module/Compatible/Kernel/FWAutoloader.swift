@@ -58,7 +58,7 @@ public protocol FWAutoloadProtocol {
     /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单。
     /// 使用方法：新增FWAutoloader扩展objc方法，以load开头即会自动调用，建议load+类名+扩展名
     public static func autoload() {
-        // 获取FWAutoload自动加载方法列表
+        // 获取FWAutoloader自动加载方法列表
         autoloadMethods = NSObject.fw
             .classMethods(FWAutoloader.self, superclass: false)
             .filter({ methodName in
@@ -73,6 +73,18 @@ public protocol FWAutoloadProtocol {
                 autoloader.perform(NSSelectorFromString(methodName))
             }
         }
+        
+        // 调用FWAutoloader自动加载引导方法
+        bootstrap()
+    }
+    
+    /// 自动加载引导方法
+    private static func bootstrap() {
+        autoload("FWFramework.FWAuthorizeAppleMusic")
+        autoload("FWFramework.FWAuthorizeCalendar")
+        autoload("FWFramework.FWAuthorizeContacts")
+        autoload("FWFramework.FWAuthorizeMicrophone")
+        autoload("FWFramework.FWAuthorizeTracking")
     }
     
     /// 插件调试描述

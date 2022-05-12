@@ -13,15 +13,24 @@ import FWFrameworkCompatible
 #endif
 
 /// 日历授权
-private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
+@objcMembers public class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol, FWAutoloadProtocol {
     private var type: EKEntityType = .event
     
-    init(type: EKEntityType) {
+    public static func autoload() {
+        FWAuthorizeManager.registerAuthorize(.calendars) {
+            return FWAuthorizeCalendar(type: .event)
+        }
+        FWAuthorizeManager.registerAuthorize(.reminders) {
+            return FWAuthorizeCalendar(type: .reminder)
+        }
+    }
+    
+    public init(type: EKEntityType) {
         super.init()
         self.type = type
     }
     
-    func authorizeStatus() -> FWAuthorizeStatus {
+    public func authorizeStatus() -> FWAuthorizeStatus {
         let status = EKEventStore.authorizationStatus(for: type)
         switch status {
         case .restricted:
@@ -35,7 +44,7 @@ private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         EKEventStore().requestAccess(to: type) { granted, error in
             let status: FWAuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -43,17 +52,6 @@ private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
                     completion?(status)
                 }
             }
-        }
-    }
-}
-
-@objc extension FWAutoloader {
-    private func loadAuthorizeCalendar() {
-        FWAuthorizeManager.registerAuthorize(.calendars) {
-            return FWAuthorizeCalendar(type: .event)
-        }
-        FWAuthorizeManager.registerAuthorize(.reminders) {
-            return FWAuthorizeCalendar(type: .reminder)
         }
     }
 }

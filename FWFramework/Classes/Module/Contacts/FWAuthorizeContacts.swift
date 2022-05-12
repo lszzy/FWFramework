@@ -13,8 +13,14 @@ import FWFrameworkCompatible
 #endif
 
 /// 通讯录授权
-private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
-    func authorizeStatus() -> FWAuthorizeStatus {
+@objcMembers public class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol, FWAutoloadProtocol {
+    public static func autoload() {
+        FWAuthorizeManager.registerAuthorize(.contacts) {
+            return FWAuthorizeContacts()
+        }
+    }
+    
+    public func authorizeStatus() -> FWAuthorizeStatus {
         let status = CNContactStore.authorizationStatus(for: .contacts)
         switch status {
         case .restricted:
@@ -28,7 +34,7 @@ private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         CNContactStore().requestAccess(for: .contacts) { granted, error in
             let status: FWAuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -36,14 +42,6 @@ private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
                     completion?(status)
                 }
             }
-        }
-    }
-}
-
-@objc extension FWAutoloader {
-    private func loadAuthorizeContacts() {
-        FWAuthorizeManager.registerAuthorize(.contacts) {
-            return FWAuthorizeContacts()
         }
     }
 }
