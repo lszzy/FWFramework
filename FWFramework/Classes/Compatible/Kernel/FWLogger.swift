@@ -11,7 +11,7 @@ import Foundation
 import FWFramework
 #endif
 
-extension FWWrapper {
+extension Wrapper {
     /// 记录跟踪日志
     ///
     /// - Parameters:

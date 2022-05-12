@@ -11,8 +11,8 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - FWWrapper+Autoloader
-extension FWWrapper {
+// MARK: - Wrapper+Autoloader
+extension Wrapper {
     
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
     @discardableResult

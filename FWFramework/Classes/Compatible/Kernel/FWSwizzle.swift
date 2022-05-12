@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension FWWrapperExtension where Base: NSObject {
+extension WrapperExtension where Base: NSObject {
     /// 临时对象，强引用
     public var tempObject: Any? {
         get {
