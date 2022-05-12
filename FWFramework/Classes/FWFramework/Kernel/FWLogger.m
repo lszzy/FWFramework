@@ -101,7 +101,9 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     [self log:FWLogTypeError message:message];
 }
 
-+ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...
++ (void)group:(NSString *)group
+         type:(FWLogType)type
+       format:(NSString *)format, ...
 {
     if (![self check:type]) return;
     
@@ -113,12 +115,16 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     [self log:type message:message group:group userInfo:nil];
 }
 
-+ (void)log:(FWLogType)type message:(NSString *)message
++ (void)log:(FWLogType)type
+    message:(NSString *)message
 {
     [self log:type message:message group:nil userInfo:nil];
 }
 
-+ (void)log:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
++ (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(NSString *)group
+   userInfo:(NSDictionary *)userInfo
 {
     // 过滤不支持的级别
     if (![self check:type]) return;
@@ -147,7 +153,10 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     return instance;
 }
 
-- (void)log:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
+- (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(NSString *)group
+   userInfo:(NSDictionary *)userInfo
 {
     NSString *groupStr = group ? [NSString stringWithFormat:@" [%@]", group] : @"";
     NSString *infoStr = userInfo ? [NSString stringWithFormat:@" %@", userInfo] : @"";

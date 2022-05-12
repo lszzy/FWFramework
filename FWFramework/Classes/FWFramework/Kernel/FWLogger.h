@@ -166,7 +166,9 @@ NS_SWIFT_NAME(Logger)
  @param type 日志类型
  @param format 日志格式，同NSLog
  */
-+ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...;
++ (void)group:(NSString *)group
+         type:(FWLogType)type
+       format:(NSString *)format, ...;
 
 /**
  记录类型日志
@@ -174,7 +176,8 @@ NS_SWIFT_NAME(Logger)
  @param type 日志类型
  @param message 日志消息
  */
-+ (void)log:(FWLogType)type message:(NSString *)message;
++ (void)log:(FWLogType)type
+    message:(NSString *)message;
 
 /**
  记录类型日志，支持分组和用户信息
@@ -184,7 +187,10 @@ NS_SWIFT_NAME(Logger)
  @param group 日志分组
  @param userInfo 用户信息
  */
-+ (void)log:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
++ (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(nullable NSString *)group
+   userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
@@ -206,7 +212,10 @@ NS_SWIFT_NAME(LoggerPlugin)
  @param group 日志分组
  @param userInfo 用户信息
  */
-- (void)log:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
+- (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(nullable NSString *)group
+   userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 

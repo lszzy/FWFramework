@@ -22,7 +22,7 @@ public enum FWJSONError: Int, Swift.Error {
 extension FWJSONError: CustomNSError {
 
     /// return the error domain of FWJSONError
-    public static var errorDomain: String { return "site.wuyong.FWJSON" }
+    public static var errorDomain: String { return "FWFramework.JSON" }
 
     /// return the error code of FWJSONError
     public var errorCode: Int { return self.rawValue }
