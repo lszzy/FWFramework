@@ -7,7 +7,7 @@
 //
 
 import UIKit
-#if FWFrameworkSPM
+#if FWMacroSPM
 import FWFramework
 #endif
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-#if FWFrameworkSPM
+#if FWMacroSPM
 import FWFramework
 #endif
 
