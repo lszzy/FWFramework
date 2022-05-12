@@ -7,7 +7,7 @@
 //
 
 import UserNotifications
-#if FWFrameworkSPM
+#if FWMacroSPM
 import FWFramework
 #endif
 

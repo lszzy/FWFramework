@@ -8,7 +8,7 @@
 
 import Foundation
 import CommonCrypto
-#if FWFrameworkSPM
+#if FWMacroSPM
 import FWFramework
 #endif
 
