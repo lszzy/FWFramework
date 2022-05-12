@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Macro
 
 /// 快速声明包装器宏
-#define FWWrapperExtended(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明可用版本包装器宏
-#define FWWrapperExtendedAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明单泛型包装器宏
-#define FWWrapperExtendedGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
     @end \
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速声明双泛型包装器宏
-#define FWWrapperExtendedGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+#define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
     @end
 
 /// 快速实现包装器宏
-#define FWDefWrapperExtended(baseClass, fw, objectWrapper, classWrapper) \
+#define FWDefWrapper(baseClass, fw, objectWrapper, classWrapper) \
     @implementation objectWrapper \
     @dynamic base; \
     - (Class)wrapperClass { return [classWrapper class]; } \
@@ -348,7 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSObject+FWWrapperExtended
+#pragma mark - NSObject+FWWrapper
 
 /// NSObject实现对象包装器协议
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
@@ -366,8 +366,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWWrapperExtended
+#pragma mark - FWWrapperCompatible
 
-FWWrapperFramework_(FWWrapperExtended, fw);
+FWWrapperFramework_(FWWrapperCompatible, fw);
 
 NS_ASSUME_NONNULL_END

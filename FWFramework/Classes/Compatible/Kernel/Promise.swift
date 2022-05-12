@@ -8,8 +8,8 @@
 
 import Foundation
 
-// MARK: - Wrapper+Promise
-extension Wrapper {
+// MARK: - FW+Promise
+extension FW {
     
     /// 仿协程异步执行方法
     @discardableResult

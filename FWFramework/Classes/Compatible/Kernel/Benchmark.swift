@@ -8,8 +8,8 @@
 
 import Foundation
 
-// MARK: - Wrapper+Benchmark
-extension Wrapper {
+// MARK: - FW+Benchmark
+extension FW {
     
     /// 标记时间调试开始
     ///

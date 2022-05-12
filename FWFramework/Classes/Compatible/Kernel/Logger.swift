@@ -11,8 +11,8 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - Wrapper+Logger
-extension Wrapper {
+// MARK: - FW+Logger
+extension FW {
     
     /// 记录跟踪日志
     ///

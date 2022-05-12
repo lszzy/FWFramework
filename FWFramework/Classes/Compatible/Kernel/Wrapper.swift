@@ -11,21 +11,18 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - Wrapper
+// MARK: - FW
 /// 全局包装器
-public struct Wrapper {}
-
-/// 全局包装器别名
 ///
 /// 自定义FW为任意名称(如APP)示例：
-/// public typealias APP = Wrapper
+/// public typealias APP = FW
 /// 使用示例：
 /// APP.safeString(object)
-public typealias FW = Wrapper
+public struct FW {}
 
-// MARK: - WrapperExtension
-/// 扩展包装器
-public struct WrapperExtension<Base> {
+// MARK: - Wrapper
+/// 属性包装器
+public struct Wrapper<Base> {
     
     /// 原始对象
     public let base: Base
@@ -37,62 +34,62 @@ public struct WrapperExtension<Base> {
     
 }
 
-// MARK: - WrapperExtended
-/// 包装器扩展协议
+// MARK: - WrapperCompatible
+/// 属性包装器兼容协议
 ///
 /// 自定义fw为任意名称(如app)示例：
-/// extension WrapperExtended {
-///     public static var app: WrapperExtension<Self>.Type { fw }
-///     public var app: WrapperExtension<Self> { fw }
+/// extension WrapperCompatible {
+///     public static var app: Wrapper<Self>.Type { fw }
+///     public var app: Wrapper<Self> { fw }
 /// }
 /// 使用示例：
 /// String.app.jsonEncode(object)
-public protocol WrapperExtended {
+public protocol WrapperCompatible {
     
     /// 关联类型
-    associatedtype Base
+    associatedtype WrapperBase
     
     /// 类包装器属性
-    static var fw: WrapperExtension<Base>.Type { get }
+    static var fw: Wrapper<WrapperBase>.Type { get }
     
     /// 对象包装器属性
-    var fw: WrapperExtension<Base> { get }
+    var fw: Wrapper<WrapperBase> { get }
     
 }
 
-extension WrapperExtended {
+extension WrapperCompatible {
     
     /// 类包装器属性
-    public static var fw: WrapperExtension<Self>.Type {
-        return WrapperExtension<Self>.self
+    public static var fw: Wrapper<Self>.Type {
+        return Wrapper<Self>.self
     }
     
     /// 对象包装器属性
-    public var fw: WrapperExtension<Self> {
-        return WrapperExtension(self)
+    public var fw: Wrapper<Self> {
+        return Wrapper(self)
     }
     
 }
 
-// MARK: - WrapperExtended
-extension Int: WrapperExtended {}
-extension Int8: WrapperExtended {}
-extension Int16: WrapperExtended {}
-extension Int32: WrapperExtended {}
-extension Int64: WrapperExtended {}
-extension UInt: WrapperExtended {}
-extension UInt8: WrapperExtended {}
-extension UInt16: WrapperExtended {}
-extension UInt32: WrapperExtended {}
-extension UInt64: WrapperExtended {}
-extension Float: WrapperExtended {}
-extension Double: WrapperExtended {}
-extension Bool: WrapperExtended {}
-extension String: WrapperExtended {}
-extension Data: WrapperExtended {}
-extension Date: WrapperExtended {}
-extension URL: WrapperExtended {}
-extension Array: WrapperExtended {}
-extension Set: WrapperExtended {}
-extension Dictionary: WrapperExtended {}
-extension NSObject: WrapperExtended {}
+// MARK: - WrapperCompatible
+extension Int: WrapperCompatible {}
+extension Int8: WrapperCompatible {}
+extension Int16: WrapperCompatible {}
+extension Int32: WrapperCompatible {}
+extension Int64: WrapperCompatible {}
+extension UInt: WrapperCompatible {}
+extension UInt8: WrapperCompatible {}
+extension UInt16: WrapperCompatible {}
+extension UInt32: WrapperCompatible {}
+extension UInt64: WrapperCompatible {}
+extension Float: WrapperCompatible {}
+extension Double: WrapperCompatible {}
+extension Bool: WrapperCompatible {}
+extension String: WrapperCompatible {}
+extension Data: WrapperCompatible {}
+extension Date: WrapperCompatible {}
+extension URL: WrapperCompatible {}
+extension Array: WrapperCompatible {}
+extension Set: WrapperCompatible {}
+extension Dictionary: WrapperCompatible {}
+extension NSObject: WrapperCompatible {}
