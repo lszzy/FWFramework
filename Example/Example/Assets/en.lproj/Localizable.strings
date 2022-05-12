@@ -12,4 +12,6 @@
 "home.envTesting" = "Testing";
 "home.envDevelopment" = "Development";
 
+"home.title" = "Home";
 "test.title" = "Test";
+"settings.title" = "Settings";
