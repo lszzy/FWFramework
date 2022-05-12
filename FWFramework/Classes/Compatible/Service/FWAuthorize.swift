@@ -104,6 +104,28 @@ import UserNotifications
             return FWAuthorizeCamera()
         case .notifications:
             return FWAuthorizeNotifications()
+        #if FWMacroCalendar
+        case .calendars:
+            return FWAuthorizeCalendar(type: .event)
+        case .reminders:
+            return FWAuthorizeCalendar(type: .reminder)
+        #endif
+        #if FWMacroContacts
+        case .contacts:
+            return FWAuthorizeContacts()
+        #endif
+        #if FWMacroMicrophone
+        case .microphone:
+            return FWAuthorizeMicrophone()
+        #endif
+        #if FWMacroAppleMusic
+        case .appleMusic:
+            return FWAuthorizeAppleMusic()
+        #endif
+        #if FWMacroTracking
+        case .tracking:
+            return FWAuthorizeTracking()
+        #endif
         default:
             return nil
         }
@@ -113,7 +135,7 @@ import UserNotifications
 // MARK: - FWAuthorizeLocation
 
 /// 定位授权
-@objcMembers public class FWAuthorizeLocation: NSObject, FWAuthorizeProtocol, CLLocationManagerDelegate {
+private class FWAuthorizeLocation: NSObject, FWAuthorizeProtocol, CLLocationManagerDelegate {
     private lazy var locationManager: CLLocationManager = {
         let result = CLLocationManager()
         result.delegate = self
@@ -124,12 +146,12 @@ import UserNotifications
     private var changeIgnored: Bool = false
     private var isAlways: Bool = false
     
-    public init(isAlways: Bool) {
+    init(isAlways: Bool) {
         super.init()
         self.isAlways = isAlways
     }
     
-    public func authorizeStatus() -> FWAuthorizeStatus {
+    func authorizeStatus() -> FWAuthorizeStatus {
         // 定位功能未打开时返回Denied，可自行调用[CLLocationManager locationServicesEnabled]判断
         let status = CLLocationManager.authorizationStatus()
         switch status {
@@ -151,7 +173,7 @@ import UserNotifications
         }
     }
     
-    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         completionBlock = completion
         
         if isAlways {
@@ -164,7 +186,7 @@ import UserNotifications
         }
     }
     
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         // 如果请求always权限且当前已经是WhenInUse权限，系统会先回调此方法一次，忽略之
         if isAlways && !changeIgnored {
             if status == .notDetermined || status == .authorizedWhenInUse {
@@ -187,8 +209,8 @@ import UserNotifications
 // MARK: - FWAuthorizePhotoLibrary
 
 /// 相册授权
-@objcMembers public class FWAuthorizePhotoLibrary: NSObject, FWAuthorizeProtocol {
-    public func authorizeStatus() -> FWAuthorizeStatus {
+private class FWAuthorizePhotoLibrary: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status {
         case .restricted:
@@ -202,7 +224,7 @@ import UserNotifications
         }
     }
     
-    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
                 DispatchQueue.main.async { [weak self] in
@@ -217,8 +239,8 @@ import UserNotifications
 // MARK: - FWAuthorizeCamera
 
 /// 照相机授权
-@objcMembers public class FWAuthorizeCamera: NSObject, FWAuthorizeProtocol {
-    public func authorizeStatus() -> FWAuthorizeStatus {
+private class FWAuthorizeCamera: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
         // 模拟器不支持照相机，返回受限制
         let mediaType = AVMediaType.video
         guard let device = AVCaptureDevice.default(for: mediaType) else { return .restricted }
@@ -237,7 +259,7 @@ import UserNotifications
         }
     }
     
-    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
                 DispatchQueue.main.async { [weak self] in
@@ -252,8 +274,8 @@ import UserNotifications
 // MARK: - FWAuthorizeNotifications
 
 /// 通知授权
-@objcMembers public class FWAuthorizeNotifications: NSObject, FWAuthorizeProtocol {
-    public func authorizeStatus() -> FWAuthorizeStatus {
+private class FWAuthorizeNotifications: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
         var status: FWAuthorizeStatus = .notDetermined
         // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
         let semaphore = DispatchSemaphore(value: 0)
@@ -274,7 +296,7 @@ import UserNotifications
         return status
     }
     
-    public func authorizeStatus(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    func authorizeStatus(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             var status: FWAuthorizeStatus = .notDetermined
             switch settings.authorizationStatus {
@@ -296,7 +318,7 @@ import UserNotifications
         }
     }
     
-    public func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
         let options: UNAuthorizationOptions = [.badge, .sound, .alert]
         UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
             let status: FWAuthorizeStatus = granted ? .authorized : .denied
@@ -309,3 +331,192 @@ import UserNotifications
         UIApplication.shared.registerForRemoteNotifications()
     }
 }
+
+// MARK: - FWAuthorizeAppleMusic
+
+#if FWMacroAppleMusic
+import MediaPlayer
+
+/// AppleMusic授权
+private class FWAuthorizeAppleMusic: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
+        let status = MPMediaLibrary.authorizationStatus()
+        switch status {
+        case .denied:
+            return .denied
+        case .restricted:
+            return .restricted
+        case .authorized:
+            return .authorized
+        default:
+            return .notDetermined
+        }
+    }
+    
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+        MPMediaLibrary.requestAuthorization { status in
+            if completion != nil {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    completion?(self.authorizeStatus())
+                }
+            }
+        }
+    }
+}
+#endif
+
+// MARK: - FWAuthorizeCalendar
+
+#if FWMacroCalendar
+import EventKit
+
+/// 日历授权
+private class FWAuthorizeCalendar: NSObject, FWAuthorizeProtocol {
+    private var type: EKEntityType = .event
+    
+    init(type: EKEntityType) {
+        super.init()
+        self.type = type
+    }
+    
+    func authorizeStatus() -> FWAuthorizeStatus {
+        let status = EKEventStore.authorizationStatus(for: type)
+        switch status {
+        case .restricted:
+            return .restricted
+        case .denied:
+            return .denied
+        case .authorized:
+            return .authorized
+        default:
+            return .notDetermined
+        }
+    }
+    
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+        EKEventStore().requestAccess(to: type) { granted, error in
+            let status: FWAuthorizeStatus = granted ? .authorized : .denied
+            if completion != nil {
+                DispatchQueue.main.async {
+                    completion?(status)
+                }
+            }
+        }
+    }
+}
+#endif
+
+// MARK: - FWAuthorizeContacts
+
+#if FWMacroContacts
+import Contacts
+
+/// 通讯录授权
+private class FWAuthorizeContacts: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
+        let status = CNContactStore.authorizationStatus(for: .contacts)
+        switch status {
+        case .restricted:
+            return .restricted
+        case .denied:
+            return .denied
+        case .authorized:
+            return .authorized
+        default:
+            return .notDetermined
+        }
+    }
+    
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+        CNContactStore().requestAccess(for: .contacts) { granted, error in
+            let status: FWAuthorizeStatus = granted ? .authorized : .denied
+            if completion != nil {
+                DispatchQueue.main.async {
+                    completion?(status)
+                }
+            }
+        }
+    }
+}
+#endif
+
+// MARK: - FWAuthorizeMicrophone
+
+#if FWMacroMicrophone
+import AVFoundation
+
+/// 麦克风授权
+private class FWAuthorizeMicrophone: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
+        let status = AVAudioSession.sharedInstance().recordPermission
+        switch status {
+        case .denied:
+            return .denied
+        case .granted:
+            return .authorized
+        default:
+            return .notDetermined
+        }
+    }
+    
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            let status: FWAuthorizeStatus = granted ? .authorized : .denied
+            if completion != nil {
+                DispatchQueue.main.async {
+                    completion?(status)
+                }
+            }
+        }
+    }
+}
+#endif
+
+// MARK: - FWAuthorizeTracking
+
+#if FWMacroTracking
+import AdSupport
+import AppTrackingTransparency
+
+/// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
+private class FWAuthorizeTracking: NSObject, FWAuthorizeProtocol {
+    func authorizeStatus() -> FWAuthorizeStatus {
+        if #available(iOS 14.0, *) {
+            let status = ATTrackingManager.trackingAuthorizationStatus
+            switch status {
+            case .restricted:
+                return .restricted
+            case .denied:
+                return .denied
+            case .authorized:
+                return .authorized
+            default:
+                return .notDetermined
+            }
+        } else {
+            return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .authorized : .denied
+        }
+    }
+    
+    func authorize(_ completion: ((FWAuthorizeStatus) -> Void)?) {
+        if #available(iOS 14.0, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if completion != nil {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        completion?(self.authorizeStatus())
+                    }
+                }
+            }
+        } else {
+            if completion != nil {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    completion?(self.authorizeStatus())
+                }
+            }
+        }
+    }
+}
+#endif
