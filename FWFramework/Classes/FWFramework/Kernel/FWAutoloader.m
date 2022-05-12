@@ -8,14 +8,18 @@
 
 #import "FWAutoloader.h"
 
-@protocol FWInnerAutoloadProtocol <NSObject>
+#pragma mark - FWAutoloadProtocol
+
+@protocol FWAutoloadProtocol <NSObject>
 @optional
 
 + (BOOL)autoload:(id)clazz;
 
 @end
 
-@interface FWAutoloader () <FWInnerAutoloadProtocol>
+#pragma mark - FWAutoloader
+
+@interface FWAutoloader () <FWAutoloadProtocol>
 
 @end
 
@@ -30,6 +34,8 @@
 }
 
 @end
+
+#pragma mark - Function
 
 BOOL FWAutoload(id clazz) {
     if ([FWAutoloader respondsToSelector:@selector(autoload:)]) {

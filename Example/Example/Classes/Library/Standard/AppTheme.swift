@@ -11,8 +11,10 @@ import FWFramework
 public typealias APP = FWWrapper
 
 extension FWWrapperExtended {
+    
     public static var app: FWWrapperExtension<Self>.Type { get { fw } set {} }
     public var app: FWWrapperExtension<Self> { get { fw } set {} }
+    
 }
 
 class AppTheme {

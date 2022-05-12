@@ -1,5 +1,5 @@
 //
-//  FWABTest.swift
+//  ABTest.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/29.
@@ -14,6 +14,7 @@ import Foundation
 /// [ABKit](https://github.com/recruit-mp/ABKit)
 @objc(FWABVersion)
 @objcMembers public class ABVersion: NSObject {
+    
     // MARK: - Accessor
     /// 版本名称
     public let name: String
@@ -25,12 +26,14 @@ import Foundation
         self.name = name
         self.behavior = behavior
     }
+    
 }
 
 // MARK: - ABSplitTest
 /// AB分离测试类
 @objc(FWABSplitTest)
 @objcMembers public class ABSplitTest: NSObject {
+    
     // MARK: - Accessor
     /// 测试名称
     public let name: String
@@ -89,12 +92,14 @@ import Foundation
         let version = versions.first ?? defaultVersion
         version.behavior(version)
     }
+    
 }
 
 // MARK: - ABConditionalTest
 /// AB条件测试类
 @objc(FWABConditionalTest)
 @objcMembers public class ABConditionalTest: NSObject {
+    
     // MARK: - Accessor
     /// 测试名称
     public let name: String
@@ -132,24 +137,28 @@ import Foundation
             defaultVersion.behavior(defaultVersion)
         }
     }
+    
 }
 
 // MARK: - ABRandomRepository
 /// 随机数仓库协议
 @objc(FWABRandomRepository)
 public protocol ABRandomRepository {
+    
     /// 获取指定key随机数
     func getRandomNumber(key: String) -> Int
     /// 设置指定key随机数
     func setRandomNumber(_ randomNumber: Int, key: String)
     /// 删除指定key随机数
     func removeRandomNumber(key: String)
+    
 }
 
 // MARK: - ABDefaultRepository
 /// 默认随机数仓库，存储于UserDefaults
 @objc(FWABDefaultRepository)
 @objcMembers public class ABDefaultRepository: NSObject, ABRandomRepository {
+    
     // MARK: - Accessor
     /// 单例模式
     public static let sharedInstance = ABDefaultRepository()
@@ -190,11 +199,13 @@ public protocol ABRandomRepository {
         userDefaults.removeObject(forKey: key)
         userDefaults.synchronize()
     }
+    
 }
 
 // MARK: - ABVersionWeight
 /// 内部版本权重类
 class ABVersionWeight {
+    
     // MARK: - Accessor
     let version: ABVersion
     let weight: Int
@@ -210,11 +221,13 @@ class ABVersionWeight {
     func contains(number: Int) -> Bool {
         return weightRange.contains(number)
     }
+    
 }
 
 // MARK: - ABConditionalVersion
 /// 内部条件版本类
 class ABConditionalVersion: ABVersion {
+    
     // MARK: - Accessor
     let condition: (Any?) -> Bool
     
@@ -223,4 +236,5 @@ class ABConditionalVersion: ABVersion {
         self.condition = condition
         super.init(name: name, behavior: behavior)
     }
+    
 }
