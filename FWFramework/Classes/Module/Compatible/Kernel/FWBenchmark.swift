@@ -12,7 +12,7 @@ extension FWWrapper {
     /// 标记时间调试开始
     ///
     /// - Parameter name: 调试标签，默认空字符串
-    public static func benchmarkBegin(_ name: String = "") {
+    public static func begin(_ name: String = "") {
         Benchmark.begin(name)
     }
 
@@ -21,7 +21,7 @@ extension FWWrapper {
     /// - Parameter name: 调试标签，默认空字符串
     /// - Returns: 消耗时间
     @discardableResult
-    public static func benchmarkEnd(_ name: String = "") -> TimeInterval {
+    public static func end(_ name: String = "") -> TimeInterval {
         return Benchmark.end(name)
     }
 }
