@@ -46,7 +46,7 @@
 
 @end
 
-#pragma mark - NSObject+FWWrapperExtended
+#pragma mark - NSObject+FWWrapper
 
 @implementation NSObject (FWObjectWrapper)
 
@@ -72,6 +72,6 @@
 
 @end
 
-#pragma mark - FWWrapperExtended
+#pragma mark - FWWrapperCompatible
 
-FWDefWrapperFramework_(FWDefWrapperExtended, fw);
+FWDefWrapperFramework_(FWDefWrapper, fw);

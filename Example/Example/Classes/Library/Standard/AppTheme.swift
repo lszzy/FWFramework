@@ -8,13 +8,11 @@
 
 import FWFramework
 
-public typealias APP = Wrapper
+public typealias APP = FW
 
-extension WrapperExtended {
-    
-    public static var app: WrapperExtension<Self>.Type { get { fw } set {} }
-    public var app: WrapperExtension<Self> { get { fw } set {} }
-    
+extension WrapperCompatible {
+    public static var app: Wrapper<Self>.Type { get { fw } set {} }
+    public var app: Wrapper<Self> { get { fw } set {} }
 }
 
 class AppTheme {

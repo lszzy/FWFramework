@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Wrapper {
+extension FW {
     /// 读取本地化字符串
     ///
     /// - Parameters:
@@ -20,7 +20,7 @@ extension Wrapper {
     }
 }
 
-extension WrapperExtension where Base == String {
+extension Wrapper where Base == String {
     /// 快速读取本地化语言
     public var localized: String {
         return Bundle.fw.localizedString(self.base)
