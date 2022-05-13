@@ -102,18 +102,18 @@ extension Wrapper where Base: NSObject {
     /// 发送点对点消息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - receiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, to receiver: Any) {
-        base.__fw.sendMessage(name, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public func sendMessage(_ name: Notification.Name, toReceiver: Any) {
+        base.__fw.sendMessage(name, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象
-    ///   - receiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, to receiver: Any) {
-        base.__fw.sendMessage(name, object: object, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
+        base.__fw.sendMessage(name, object: object, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -121,26 +121,26 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - object: 消息对象
     ///   - userInfo: 用户信息
-    ///   - receiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, to receiver: Any) {
-        base.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+        base.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - receiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, to receiver: Any) {
-        NSObject.__fw.sendMessage(name, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public static func sendMessage(_ name: Notification.Name, toReceiver: Any) {
+        NSObject.__fw.sendMessage(name, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象
-    ///   - receiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, to receiver: Any) {
-        NSObject.__fw.sendMessage(name, object: object, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public static func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
+        NSObject.__fw.sendMessage(name, object: object, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -148,9 +148,9 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - object: 消息对象
     ///   - userInfo: 用户信息
-    ///   - receiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, to receiver: Any) {
-        NSObject.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: receiver)
+    ///   - toReceiver: 消息接收者
+    public static func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+        NSObject.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
 }
