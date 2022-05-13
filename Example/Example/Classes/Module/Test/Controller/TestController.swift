@@ -236,7 +236,7 @@ private extension TestController {
     }
     
     func testJson() {
-        var model = FWJSON(["id": 1, "info": ["name": "NAME"], "list": ["VAL1"]])
+        var model = JSON(["id": 1, "info": ["name": "NAME"], "list": ["VAL1"]])
         
         var id = model["id"].intValue
         var name = model["info"]["name"].stringValue
@@ -249,7 +249,7 @@ private extension TestController {
         print("json: id => \(id), name => \(name), list => \(list)")
         
         model.id = 2
-        model.name = FWJSON("NAME2")
+        model.name = JSON("NAME2")
         model.list.0 = "VAL2"
         id = model.id.intValue
         name = model.info.name.stringValue

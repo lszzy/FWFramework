@@ -1,5 +1,5 @@
 //
-//  FWJson.swift
+//  JSON.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/5/15.
@@ -8,9 +8,8 @@
 
 import Foundation
 
-// MARK: - JSON Error
-// swiftlint:disable line_length
-public enum FWJSONError: Int, Swift.Error {
+// MARK: - JSONError
+public enum JSONError: Int, Swift.Error {
     case unsupportedType = 999
     case indexOutOfBounds = 900
     case elementTooDeep = 902
@@ -19,15 +18,11 @@ public enum FWJSONError: Int, Swift.Error {
     case invalidJSON = 490
 }
 
-extension FWJSONError: CustomNSError {
-
-    /// return the error domain of FWJSONError
+extension JSONError: CustomNSError {
     public static var errorDomain: String { return "FWFramework.JSON" }
-
-    /// return the error code of FWJSONError
+    
     public var errorCode: Int { return self.rawValue }
-
-    /// return the userInfo of FWJSONError
+    
     public var errorUserInfo: [String: Any] {
         switch self {
         case .unsupportedType:
@@ -46,14 +41,8 @@ extension FWJSONError: CustomNSError {
     }
 }
 
-// MARK: - JSON Type
-
-/**
-JSON's type definitions.
-
-See http://www.json.org
-*/
-public enum FWJSONType: Int {
+// MARK: - JSONType
+public enum JSONType: Int {
     case number
     case string
     case bool
@@ -63,37 +52,20 @@ public enum FWJSONType: Int {
     case unknown
 }
 
-// MARK: - JSON Base
-
+// MARK: - JSON
 /**
- FWJSON
+ JSON
  
  - see: [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
  */
 @dynamicMemberLookup
-public struct FWJSON {
+public struct JSON {
 
-    /**
-     Creates a JSON using the data.
-    
-     - parameter data: The NSData used to convert to json.Top level object in data is an NSArray or NSDictionary
-     - parameter opt: The JSON serialization reading options. `[]` by default.
-    
-     - returns: The created JSON
-     */
     public init(data: Data, options opt: JSONSerialization.ReadingOptions = []) throws {
         let object: Any = try JSONSerialization.jsonObject(with: data, options: opt)
         self.init(jsonObject: object)
     }
 
-    /**
-     Creates a JSON object
-     - note: this does not parse a `String` into JSON, instead use `init(parseJSON: String)`
-    
-     - parameter object: the object
-
-     - returns: the created JSON object
-     */
     public init(_ object: Any) {
         switch object {
         case let object as Data:
@@ -107,13 +79,6 @@ public struct FWJSON {
         }
     }
 
-    /**
-     Parses the JSON string into a JSON object
-    
-     - parameter json: the JSON string
-    
-     - returns: the created JSON object
-    */
     public init(parseJSON jsonString: String) {
         if let data = jsonString.data(using: .utf8) {
             self.init(data)
@@ -122,50 +87,21 @@ public struct FWJSON {
         }
     }
 
-    /**
-     Creates a JSON using the object.
-    
-     - parameter jsonObject:  The object must have the following properties: All objects are NSString/String, NSNumber/Int/Float/Double/Bool, NSArray/Array, NSDictionary/Dictionary, or NSNull; All dictionary keys are NSStrings/String; NSNumbers are not NaN or infinity.
-    
-     - returns: The created JSON
-     */
     fileprivate init(jsonObject: Any) {
         object = jsonObject
     }
 
-    /**
-     Merges another JSON into this JSON, whereas primitive values which are not present in this JSON are getting added,
-     present values getting overwritten, array values getting appended and nested JSONs getting merged the same way.
- 
-     - parameter other: The JSON which gets merged into this JSON
-    
-     - throws `ErrorWrongType` if the other JSONs differs in type on the top level.
-     */
-    public mutating func merge(with other: FWJSON) throws {
+    public mutating func merge(with other: JSON) throws {
         try self.merge(with: other, typecheck: true)
     }
 
-    /**
-     Merges another JSON into this JSON and returns a new JSON, whereas primitive values which are not present in this JSON are getting added,
-     present values getting overwritten, array values getting appended and nested JSONS getting merged the same way.
-    
-     - parameter other: The JSON which gets merged into this JSON
-    
-     - throws `ErrorWrongType` if the other JSONs differs in type on the top level.
-    
-     - returns: New merged JSON
-     */
-    public func merged(with other: FWJSON) throws -> FWJSON {
+    public func merged(with other: JSON) throws -> JSON {
         var merged = self
         try merged.merge(with: other, typecheck: true)
         return merged
     }
 
-    /**
-     Private woker function which does the actual merging
-     Typecheck is set to true for the first recursion level to prevent total override of the source JSON
-     */
-     fileprivate mutating func merge(with other: FWJSON, typecheck: Bool) throws {
+    fileprivate mutating func merge(with other: JSON, typecheck: Bool) throws {
         if type == other.type {
             switch type {
             case .dictionary:
@@ -173,20 +109,19 @@ public struct FWJSON {
                     try self[key].merge(with: other[key], typecheck: false)
                 }
             case .array:
-                self = FWJSON(arrayValue + other.arrayValue)
+                self = JSON(arrayValue + other.arrayValue)
             default:
                 self = other
             }
         } else {
             if typecheck {
-                throw FWJSONError.wrongType
+                throw JSONError.wrongType
             } else {
                 self = other
             }
         }
     }
 
-    /// Private object
     fileprivate var rawArray: [Any] = []
     fileprivate var rawDictionary: [String: Any] = [:]
     fileprivate var rawString: String = ""
@@ -194,13 +129,10 @@ public struct FWJSON {
     fileprivate var rawNull: NSNull = NSNull()
     fileprivate var rawBool: Bool = false
 
-    /// JSON type, fileprivate setter
-    public fileprivate(set) var type: FWJSONType = .null
+    public fileprivate(set) var type: JSONType = .null
 
-    /// Error in JSON, fileprivate setter
-    public fileprivate(set) var error: FWJSONError?
+    public fileprivate(set) var error: JSONError?
 
-    /// Object in JSON
     public var object: Any {
         get {
             switch type {
@@ -214,7 +146,7 @@ public struct FWJSON {
         }
         set {
             error = nil
-            switch fwjson_unwrap(newValue) {
+            switch jsonUnwrap(newValue) {
             case let number as NSNumber:
                 if number.isBool {
                     type = .bool
@@ -238,26 +170,24 @@ public struct FWJSON {
                 rawDictionary = dictionary
             default:
                 type = .unknown
-                error = FWJSONError.unsupportedType
+                error = JSONError.unsupportedType
             }
         }
     }
 
-    /// The static null JSON
-    public static var null: FWJSON { return FWJSON(NSNull()) }
+    public static var null: JSON { return JSON(NSNull()) }
 }
 
-/// Private method to unwarp an object recursively
-private func fwjson_unwrap(_ object: Any) -> Any {
+private func jsonUnwrap(_ object: Any) -> Any {
     switch object {
-    case let json as FWJSON:
-        return fwjson_unwrap(json.object)
+    case let json as JSON:
+        return jsonUnwrap(json.object)
     case let array as [Any]:
-        return array.map(fwjson_unwrap)
+        return array.map(jsonUnwrap)
     case let dictionary as [String: Any]:
         var d = dictionary
         dictionary.forEach { pair in
-            d[pair.key] = fwjson_unwrap(pair.value)
+            d[pair.key] = jsonUnwrap(pair.value)
         }
         return d
     default:
@@ -265,12 +195,13 @@ private func fwjson_unwrap(_ object: Any) -> Any {
     }
 }
 
-public enum FWIndex<T: Any>: Comparable {
+// MARK: - Index
+public enum Index<T: Any>: Comparable {
     case array(Int)
     case dictionary(DictionaryIndex<String, T>)
     case null
 
-    static public func == (lhs: FWIndex, rhs: FWIndex) -> Bool {
+    static public func == (lhs: Index, rhs: Index) -> Bool {
         switch (lhs, rhs) {
         case (.array(let left), .array(let right)):           return left == right
         case (.dictionary(let left), .dictionary(let right)): return left == right
@@ -279,7 +210,7 @@ public enum FWIndex<T: Any>: Comparable {
         }
     }
 
-    static public func < (lhs: FWIndex, rhs: FWIndex) -> Bool {
+    static public func < (lhs: Index, rhs: Index) -> Bool {
         switch (lhs, rhs) {
         case (.array(let left), .array(let right)):           return left < right
         case (.dictionary(let left), .dictionary(let right)): return left < right
@@ -288,12 +219,12 @@ public enum FWIndex<T: Any>: Comparable {
     }
 }
 
-public typealias FWJSONIndex = FWIndex<FWJSON>
-public typealias FWJSONRawIndex = FWIndex<Any>
+public typealias JSONIndex = Index<JSON>
+public typealias JSONRawIndex = Index<Any>
 
-extension FWJSON: Swift.Collection {
+extension JSON: Swift.Collection {
 
-    public typealias Index = FWJSONRawIndex
+    public typealias Index = JSONRawIndex
 
     public var startIndex: Index {
         switch type {
@@ -319,55 +250,50 @@ extension FWJSON: Swift.Collection {
         }
     }
 
-    public subscript (position: Index) -> (String, FWJSON) {
+    public subscript (position: Index) -> (String, JSON) {
         switch position {
-        case .array(let idx):      return (String(idx), FWJSON(rawArray[idx]))
-        case .dictionary(let idx): return (rawDictionary[idx].key, FWJSON(rawDictionary[idx].value))
-        default:                   return ("", FWJSON.null)
+        case .array(let idx):      return (String(idx), JSON(rawArray[idx]))
+        case .dictionary(let idx): return (rawDictionary[idx].key, JSON(rawDictionary[idx].value))
+        default:                   return ("", JSON.null)
         }
     }
 }
 
 // MARK: - Subscript
-
-/**
- *  To mark both String and Int can be used in subscript.
- */
-public enum FWJSONKey {
+public enum JSONKey {
     case index(Int)
     case key(String)
 }
 
-public protocol FWJSONSubscriptType {
-    var jsonKey: FWJSONKey { get }
+public protocol JSONSubscriptType {
+    var jsonKey: JSONKey { get }
 }
 
-extension Int: FWJSONSubscriptType {
-    public var jsonKey: FWJSONKey {
-        return FWJSONKey.index(self)
+extension Int: JSONSubscriptType {
+    public var jsonKey: JSONKey {
+        return JSONKey.index(self)
     }
 }
 
-extension String: FWJSONSubscriptType {
-    public var jsonKey: FWJSONKey {
-        return FWJSONKey.key(self)
+extension String: JSONSubscriptType {
+    public var jsonKey: JSONKey {
+        return JSONKey.key(self)
     }
 }
 
-extension FWJSON {
+extension JSON {
 
-    /// If `type` is `.array`, return json whose object is `array[index]`, otherwise return null json with error.
-    fileprivate subscript(index index: Int) -> FWJSON {
+    fileprivate subscript(index index: Int) -> JSON {
         get {
             if type != .array {
-                var r = FWJSON.null
-                r.error = self.error ?? FWJSONError.wrongType
+                var r = JSON.null
+                r.error = self.error ?? JSONError.wrongType
                 return r
             } else if rawArray.indices.contains(index) {
-                return FWJSON(rawArray[index])
+                return JSON(rawArray[index])
             } else {
-                var r = FWJSON.null
-                r.error = FWJSONError.indexOutOfBounds
+                var r = JSON.null
+                r.error = JSONError.indexOutOfBounds
                 return r
             }
         }
@@ -380,18 +306,17 @@ extension FWJSON {
         }
     }
 
-    /// If `type` is `.dictionary`, return json whose object is `dictionary[key]` , otherwise return null json with error.
-    fileprivate subscript(key key: String) -> FWJSON {
+    fileprivate subscript(key key: String) -> JSON {
         get {
-            var r = FWJSON.null
+            var r = JSON.null
             if type == .dictionary {
                 if let o = rawDictionary[key] {
-                    r = FWJSON(o)
+                    r = JSON(o)
                 } else {
-                    r.error = FWJSONError.notExist
+                    r.error = JSONError.notExist
                 }
             } else {
-                r.error = self.error ?? FWJSONError.wrongType
+                r.error = self.error ?? JSONError.wrongType
             }
             return r
         }
@@ -402,8 +327,7 @@ extension FWJSON {
         }
     }
 
-    /// If `sub` is `Int`, return `subscript(index:)`; If `sub` is `String`,  return `subscript(key:)`.
-    fileprivate subscript(sub sub: FWJSONSubscriptType) -> FWJSON {
+    fileprivate subscript(sub sub: JSONSubscriptType) -> JSON {
         get {
             switch sub.jsonKey {
             case .index(let index): return self[index: index]
@@ -418,24 +342,7 @@ extension FWJSON {
         }
     }
 
-    /**
-     Find a json in the complex data structures by using array of Int and/or String as path.
-    
-     Example:
-    
-     ```
-     let json = JSON[data]
-     let path = [9,"list","person","name"]
-     let name = json[path]
-     ```
-    
-     The same as: let name = json[9]["list"]["person"]["name"]
-    
-     - parameter path: The target json's path.
-    
-     - returns: Return a json found by the path or a null json with error
-     */
-    public subscript(path: [FWJSONSubscriptType]) -> FWJSON {
+    public subscript(path: [JSONSubscriptType]) -> JSON {
         get {
             return path.reduce(self) { $0[sub: $1] }
         }
@@ -453,18 +360,7 @@ extension FWJSON {
         }
     }
 
-    /**
-     Find a json in the complex data structures by using array of Int and/or String as path.
-
-     - parameter path: The target json's path. Example:
-
-     let name = json[9,"list","person","name"]
-
-     The same as: let name = json[9]["list"]["person"]["name"]
-
-     - returns: Return a json found by the path or a null json with error
-     */
-    public subscript(path: FWJSONSubscriptType...) -> FWJSON {
+    public subscript(path: JSONSubscriptType...) -> JSON {
         get {
             return self[path]
         }
@@ -475,17 +371,15 @@ extension FWJSON {
 }
 
 // MARK: - Dynamic
-
-extension FWJSON {
+extension JSON {
     
-    /// If `type` is `.dictionary`, return json whose object is `dictionary[key]` , otherwise return null json with error.
-    public subscript(dynamicMember key: String) -> FWJSON {
+    public subscript(dynamicMember key: String) -> JSON {
         get {
-            let sub: FWJSONSubscriptType = Int(key) ?? key
+            let sub: JSONSubscriptType = Int(key) ?? key
             return self[sub]
         }
         set {
-            let sub: FWJSONSubscriptType = Int(key) ?? key
+            let sub: JSONSubscriptType = Int(key) ?? key
             self[sub] = newValue
         }
     }
@@ -493,8 +387,7 @@ extension FWJSON {
 }
 
 // MARK: - LiteralConvertible
-
-extension FWJSON: Swift.ExpressibleByStringLiteral {
+extension JSON: Swift.ExpressibleByStringLiteral {
 
     public init(stringLiteral value: StringLiteralType) {
         self.init(value)
@@ -509,35 +402,35 @@ extension FWJSON: Swift.ExpressibleByStringLiteral {
     }
 }
 
-extension FWJSON: Swift.ExpressibleByIntegerLiteral {
+extension JSON: Swift.ExpressibleByIntegerLiteral {
 
     public init(integerLiteral value: IntegerLiteralType) {
         self.init(value)
     }
 }
 
-extension FWJSON: Swift.ExpressibleByBooleanLiteral {
+extension JSON: Swift.ExpressibleByBooleanLiteral {
 
     public init(booleanLiteral value: BooleanLiteralType) {
         self.init(value)
     }
 }
 
-extension FWJSON: Swift.ExpressibleByFloatLiteral {
+extension JSON: Swift.ExpressibleByFloatLiteral {
 
     public init(floatLiteral value: FloatLiteralType) {
         self.init(value)
     }
 }
 
-extension FWJSON: Swift.ExpressibleByDictionaryLiteral {
+extension JSON: Swift.ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, Any)...) {
         let dictionary = elements.reduce(into: [String: Any](), { $0[$1.0] = $1.1})
         self.init(dictionary)
     }
 }
 
-extension FWJSON: Swift.ExpressibleByArrayLiteral {
+extension JSON: Swift.ExpressibleByArrayLiteral {
 
     public init(arrayLiteral elements: Any...) {
         self.init(elements)
@@ -545,11 +438,10 @@ extension FWJSON: Swift.ExpressibleByArrayLiteral {
 }
 
 // MARK: - Raw
-
-extension FWJSON: Swift.RawRepresentable {
+extension JSON: Swift.RawRepresentable {
 
     public init?(rawValue: Any) {
-        if FWJSON(rawValue).type == .unknown {
+        if JSON(rawValue).type == .unknown {
             return nil
         } else {
             self.init(rawValue)
@@ -562,7 +454,7 @@ extension FWJSON: Swift.RawRepresentable {
 
     public func rawData(options opt: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Data {
         guard JSONSerialization.isValidJSONObject(object) else {
-            throw FWJSONError.invalidJSON
+            throw JSONError.invalidJSON
         }
 
         return try JSONSerialization.data(withJSONObject: object, options: opt)
@@ -577,7 +469,7 @@ extension FWJSON: Swift.RawRepresentable {
         }
     }
 
-    public func rawString(_ options: [FWJSONWritingOptionsKeys: Any]) -> String? {
+    public func rawString(_ options: [JSONWritingOptionsKeys: Any]) -> String? {
         let encoding = options[.encoding] as? String.Encoding ?? String.Encoding.utf8
         let maxObjectDepth = options[.maxObjextDepth] as? Int ?? 10
         do {
@@ -588,8 +480,8 @@ extension FWJSON: Swift.RawRepresentable {
         }
     }
 
-    fileprivate func _rawString(_ encoding: String.Encoding = .utf8, options: [FWJSONWritingOptionsKeys: Any], maxObjectDepth: Int = 10) throws -> String? {
-        guard maxObjectDepth > 0 else { throw FWJSONError.invalidJSON }
+    fileprivate func _rawString(_ encoding: String.Encoding = .utf8, options: [JSONWritingOptionsKeys: Any], maxObjectDepth: Int = 10) throws -> String? {
+        guard maxObjectDepth > 0 else { throw JSONError.invalidJSON }
         switch type {
         case .dictionary:
             do {
@@ -610,9 +502,9 @@ extension FWJSON: Swift.RawRepresentable {
                         return "\"\(key)\": null"
                     }
 
-                    let nestedValue = FWJSON(unwrappedValue)
+                    let nestedValue = JSON(unwrappedValue)
                     guard let nestedString = try nestedValue._rawString(encoding, options: options, maxObjectDepth: maxObjectDepth - 1) else {
-                        throw FWJSONError.elementTooDeep
+                        throw JSONError.elementTooDeep
                     }
                     if nestedValue.type == .string {
                         return "\"\(key)\": \"\(nestedString.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
@@ -641,9 +533,9 @@ extension FWJSON: Swift.RawRepresentable {
                         return "null"
                     }
 
-                    let nestedValue = FWJSON(unwrappedValue)
+                    let nestedValue = JSON(unwrappedValue)
                     guard let nestedString = try nestedValue._rawString(encoding, options: options, maxObjectDepth: maxObjectDepth - 1) else {
-                        throw FWJSONError.invalidJSON
+                        throw JSONError.invalidJSON
                     }
                     if nestedValue.type == .string {
                         return "\"\(nestedString.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
@@ -665,9 +557,8 @@ extension FWJSON: Swift.RawRepresentable {
     }
 }
 
-// MARK: - Printable, DebugPrintable
-
-extension FWJSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+// MARK: - Printable
+extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
 
     public var description: String {
         return rawString(options: .prettyPrinted) ?? "unknown"
@@ -679,20 +570,16 @@ extension FWJSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConverti
 }
 
 // MARK: - Array
+extension JSON {
 
-extension FWJSON {
-
-    //Optional [JSON]
-    public var array: [FWJSON]? {
-        return type == .array ? rawArray.map { FWJSON($0) } : nil
+    public var array: [JSON]? {
+        return type == .array ? rawArray.map { JSON($0) } : nil
     }
 
-    //Non-optional [JSON]
-    public var arrayValue: [FWJSON] {
+    public var arrayValue: [JSON] {
         return self.array ?? []
     }
 
-    //Optional [Any]
     public var arrayObject: [Any]? {
         get {
             switch type {
@@ -707,15 +594,13 @@ extension FWJSON {
 }
 
 // MARK: - Dictionary
+extension JSON {
 
-extension FWJSON {
-
-    //Optional [String : JSON]
-    public var dictionary: [String: FWJSON]? {
+    public var dictionary: [String: JSON]? {
         if type == .dictionary {
-            var d = [String: FWJSON](minimumCapacity: rawDictionary.count)
+            var d = [String: JSON](minimumCapacity: rawDictionary.count)
             rawDictionary.forEach { pair in
-                d[pair.key] = FWJSON(pair.value)
+                d[pair.key] = JSON(pair.value)
             }
             return d
         } else {
@@ -723,12 +608,9 @@ extension FWJSON {
         }
     }
 
-    //Non-optional [String : JSON]
-    public var dictionaryValue: [String: FWJSON] {
+    public var dictionaryValue: [String: JSON] {
         return dictionary ?? [:]
     }
-
-    //Optional [String : Any]
 
     public var dictionaryObject: [String: Any]? {
         get {
@@ -744,10 +626,8 @@ extension FWJSON {
 }
 
 // MARK: - Bool
+extension JSON {
 
-extension FWJSON { // : Swift.Bool
-
-    //Optional bool
     public var bool: Bool? {
         get {
             switch type {
@@ -760,7 +640,6 @@ extension FWJSON { // : Swift.Bool
         }
     }
 
-    //Non-optional bool
     public var boolValue: Bool {
         get {
             switch type {
@@ -777,10 +656,8 @@ extension FWJSON { // : Swift.Bool
 }
 
 // MARK: - String
+extension JSON {
 
-extension FWJSON {
-
-    //Optional string
     public var string: String? {
         get {
             switch type {
@@ -793,7 +670,6 @@ extension FWJSON {
         }
     }
 
-    //Non-optional string
     public var stringValue: String {
         get {
             switch type {
@@ -810,10 +686,8 @@ extension FWJSON {
 }
 
 // MARK: - Number
+extension JSON {
 
-extension FWJSON {
-
-    //Optional number
     public var number: NSNumber? {
         get {
             switch type {
@@ -827,7 +701,6 @@ extension FWJSON {
         }
     }
 
-    //Non-optional number
     public var numberValue: NSNumber {
         get {
             switch type {
@@ -846,8 +719,7 @@ extension FWJSON {
 }
 
 // MARK: - Null
-
-extension FWJSON {
+extension JSON {
 
     public var null: NSNull? {
         set {
@@ -860,6 +732,7 @@ extension FWJSON {
             }
         }
     }
+    
     public func exists() -> Bool {
         if let errorValue = error, (400...1000).contains(errorValue.errorCode) {
             return false
@@ -869,19 +742,15 @@ extension FWJSON {
 }
 
 // MARK: - URL
+extension JSON {
 
-extension FWJSON {
-
-    //Optional URL
     public var url: URL? {
         get {
             switch type {
             case .string:
-                // Check for existing percent escapes first to prevent double-escaping of % character
                 if rawString.range(of: "%[0-9A-Fa-f]{2}", options: .regularExpression, range: nil, locale: nil) != nil {
                     return Foundation.URL(string: rawString)
                 } else if let encodedString_ = rawString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
-                    // We have to use `Foundation.URL` otherwise it conflicts with the variable name.
                     return Foundation.URL(string: encodedString_)
                 } else {
                     return nil
@@ -896,9 +765,8 @@ extension FWJSON {
     }
 }
 
-// MARK: - Int, Double, Float, Int8, Int16, Int32, Int64
-
-extension FWJSON {
+// MARK: - Digital
+extension JSON {
 
     public var double: Double? {
         get {
@@ -1166,10 +1034,9 @@ extension FWJSON {
 }
 
 // MARK: - Comparable
+extension JSON: Swift.Comparable {}
 
-extension FWJSON: Swift.Comparable {}
-
-public func == (lhs: FWJSON, rhs: FWJSON) -> Bool {
+public func == (lhs: JSON, rhs: JSON) -> Bool {
 
     switch (lhs.type, rhs.type) {
     case (.number, .number): return lhs.rawNumber == rhs.rawNumber
@@ -1182,7 +1049,7 @@ public func == (lhs: FWJSON, rhs: FWJSON) -> Bool {
     }
 }
 
-public func <= (lhs: FWJSON, rhs: FWJSON) -> Bool {
+public func <= (lhs: JSON, rhs: JSON) -> Bool {
 
     switch (lhs.type, rhs.type) {
     case (.number, .number): return lhs.rawNumber <= rhs.rawNumber
@@ -1195,7 +1062,7 @@ public func <= (lhs: FWJSON, rhs: FWJSON) -> Bool {
     }
 }
 
-public func >= (lhs: FWJSON, rhs: FWJSON) -> Bool {
+public func >= (lhs: JSON, rhs: JSON) -> Bool {
 
     switch (lhs.type, rhs.type) {
     case (.number, .number): return lhs.rawNumber >= rhs.rawNumber
@@ -1208,7 +1075,7 @@ public func >= (lhs: FWJSON, rhs: FWJSON) -> Bool {
     }
 }
 
-public func > (lhs: FWJSON, rhs: FWJSON) -> Bool {
+public func > (lhs: JSON, rhs: JSON) -> Bool {
 
     switch (lhs.type, rhs.type) {
     case (.number, .number): return lhs.rawNumber > rhs.rawNumber
@@ -1217,7 +1084,7 @@ public func > (lhs: FWJSON, rhs: FWJSON) -> Bool {
     }
 }
 
-public func < (lhs: FWJSON, rhs: FWJSON) -> Bool {
+public func < (lhs: JSON, rhs: JSON) -> Bool {
 
     switch (lhs.type, rhs.type) {
     case (.number, .number): return lhs.rawNumber < rhs.rawNumber
@@ -1232,7 +1099,6 @@ private let trueObjCType = String(cString: trueNumber.objCType)
 private let falseObjCType = String(cString: falseNumber.objCType)
 
 // MARK: - NSNumber: Comparable
-
 extension NSNumber {
     fileprivate var isBool: Bool {
         let objCType = String(cString: self.objCType)
@@ -1292,7 +1158,7 @@ func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-public enum FWJSONWritingOptionsKeys {
+public enum JSONWritingOptionsKeys {
     case jsonSerialization
     case castNilToNSNull
     case maxObjextDepth
@@ -1300,7 +1166,7 @@ public enum FWJSONWritingOptionsKeys {
 }
 
 // MARK: - JSON: Codable
-extension FWJSON: Codable {
+extension JSON: Codable {
     private static var codableTypes: [Codable.Type] {
         return [
             Bool.self,
@@ -1316,19 +1182,19 @@ extension FWJSON: Codable {
             UInt64.self,
             Double.self,
             String.self,
-            [FWJSON].self,
-            [String: FWJSON].self
+            [JSON].self,
+            [String: JSON].self
         ]
     }
     public init(from decoder: Decoder) throws {
         var object: Any?
 
         if let container = try? decoder.singleValueContainer(), !container.decodeNil() {
-            for type in FWJSON.codableTypes {
+            for type in JSON.codableTypes {
                 if object != nil {
                     break
                 }
-                // try to decode value
+                
                 switch type {
                 case let boolType as Bool.Type:
                     object = try? container.decode(boolType)
@@ -1354,9 +1220,9 @@ extension FWJSON: Codable {
                     object = try? container.decode(doubleType)
                 case let stringType as String.Type:
                     object = try? container.decode(stringType)
-                case let jsonValueArrayType as [FWJSON].Type:
+                case let jsonValueArrayType as [JSON].Type:
                     object = try? container.decode(jsonValueArrayType)
-                case let jsonValueDictType as [String: FWJSON].Type:
+                case let jsonValueDictType as [String: JSON].Type:
                     object = try? container.decode(jsonValueDictType)
                 default:
                     break
@@ -1365,6 +1231,7 @@ extension FWJSON: Codable {
         }
         self.init(object ?? NSNull())
     }
+    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         if object is NSNull {
