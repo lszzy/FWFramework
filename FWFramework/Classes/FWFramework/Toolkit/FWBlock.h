@@ -130,13 +130,6 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 #pragma mark - FWGestureRecognizerClassWrapper+FWBlock
 
-@interface UIGestureRecognizer (FWBlock)
-
-/// 从事件句柄初始化
-+ (instancetype)gestureRecognizerWithBlock:(void (^)(id sender))block;
-
-@end
-
 @interface FWGestureRecognizerClassWrapper (FWBlock)
 
 /// 从事件句柄初始化

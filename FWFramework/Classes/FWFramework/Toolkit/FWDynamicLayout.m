@@ -142,25 +142,6 @@
 
 @end
 
-@implementation UITableViewCell (FWDynamicLayout)
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView {
-    return [[self fw] cellWithTableView:tableView];
-}
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style {
-    return [[self fw] cellWithTableView:tableView style:style];
-}
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style
-                                reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] cellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWTableViewCellClassWrapper (FWDynamicLayout)
 
 - (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView {
@@ -222,18 +203,6 @@
 
 - (void)setMaxYView:(UIView *)maxYView {
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-@implementation UITableViewHeaderFooterView (FWDynamicLayout)
-
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView {
-    return [[self fw] headerFooterViewWithTableView:tableView];
-}
-
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] headerFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
 }
 
 @end
@@ -640,21 +609,6 @@
 
 @end
 
-@implementation UICollectionViewCell (FWDynamicLayout)
-
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath {
-    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath];
-}
-
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath
-                         reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWCollectionViewCellClassWrapper (FWDynamicLayout)
 
 - (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
@@ -728,23 +682,6 @@
 
 - (void)setMaxYView:(UIView *)maxYView {
     objc_setAssociatedObject(self.base, @selector(maxYView), maxYView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-@implementation UICollectionReusableView (FWDynamicLayout)
-
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath {
-    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath];
-}
-
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath
-                                 reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
 }
 
 @end

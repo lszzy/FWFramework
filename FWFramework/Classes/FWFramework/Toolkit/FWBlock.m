@@ -150,15 +150,6 @@
 
 #pragma mark - FWGestureRecognizerClassWrapper+FWBlock
 
-@implementation UIGestureRecognizer (FWBlock)
-
-+ (instancetype)gestureRecognizerWithBlock:(void (^)(id _Nonnull))block
-{
-    return [[self fw] gestureRecognizerWithBlock:block];
-}
-
-@end
-
 @implementation FWGestureRecognizerClassWrapper (FWBlock)
 
 - (__kindof UIGestureRecognizer *)gestureRecognizerWithBlock:(void (^)(id))block
