@@ -1,5 +1,5 @@
 //
-//  FWCoder.swift
+//  Coder.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/10/30.
@@ -8,30 +8,26 @@
 
 import Foundation
 
-// MARK: - FWAnyEncoder
-
+// MARK: - AnyEncoder
 /// https://github.com/JohnSundell/Codextended
-public protocol FWAnyEncoder {
+public protocol AnyEncoder {
     func encode<T: Encodable>(_ value: T) throws -> Data
 }
 
-extension JSONEncoder: FWAnyEncoder {}
+extension JSONEncoder: AnyEncoder {}
 
 #if canImport(ObjectiveC) || swift(>=5.1)
-extension PropertyListEncoder: FWAnyEncoder {}
+extension PropertyListEncoder: AnyEncoder {}
 #endif
 
+// MARK: - Wrapper+AnyEncoder
 extension Wrapper where Base == Data {
-    public static func encoded<T>(_ value: T, using encoder: FWAnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+    public static func encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
     }
 }
 
-/// Encoder|Decoder协议暂不开放FWWrapperExtension包装，防止协议fw属性和类fw属性重复声明冲突
-///
-/// 协议使用FWWrapper示例：
-/// extension Encoder { public var fw: FWWrapperExtension<Encoder> { return FWWrapperExtension(self) } }
-/// extension FWWrapperExtension where Base == Encoder { }
+// MARK: - Encoder+AnyEncoder
 extension Encoder {
     public func encodeSingle<T: Encodable>(_ value: T) throws {
         var container = singleValueContainer()
@@ -39,7 +35,7 @@ extension Encoder {
     }
 
     public func encode<T: Encodable>(_ value: T, for key: String) throws {
-        try encode(value, for: FWAnyCodingKey(key))
+        try encode(value, for: AnyCodingKey(key))
     }
 
     public func encode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
@@ -47,35 +43,36 @@ extension Encoder {
         try container.encode(value, forKey: key)
     }
 
-    public func encode<F: FWAnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
-        try encode(date, for: FWAnyCodingKey(key), using: formatter)
+    public func encode<F: AnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
+        try encode(date, for: AnyCodingKey(key), using: formatter)
     }
 
-    public func encode<K: CodingKey, F: FWAnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
+    public func encode<K: CodingKey, F: AnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
         let string = formatter.string(from: date)
         try encode(string, for: key)
     }
 }
 
-// MARK: - FWAnyDecoder
-
-public protocol FWAnyDecoder {
+// MARK: - AnyDecoder
+public protocol AnyDecoder {
     func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
 }
 
-extension JSONDecoder: FWAnyDecoder {}
+extension JSONDecoder: AnyDecoder {}
 
 #if canImport(ObjectiveC) || swift(>=5.1)
-extension PropertyListDecoder: FWAnyDecoder {}
+extension PropertyListDecoder: AnyDecoder {}
 #endif
 
+// MARK: - Wrapper+AnyDecoder
 extension Wrapper where Base == Data {
     public func decoded<T: Decodable>(as type: T.Type = T.self,
-                                      using decoder: FWAnyDecoder = JSONDecoder()) throws -> T {
+                                      using decoder: AnyDecoder = JSONDecoder()) throws -> T {
         return try decoder.decode(T.self, from: self.base)
     }
 }
 
+// MARK: - Decoder+AnyDecoder
 extension Decoder {
     public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
         let container = try singleValueContainer()
@@ -83,7 +80,7 @@ extension Decoder {
     }
 
     public func decode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try decode(FWAnyCodingKey(key), as: type)
+        return try decode(AnyCodingKey(key), as: type)
     }
 
     public func decode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
@@ -92,7 +89,7 @@ extension Decoder {
     }
 
     public func decodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try decodeIf(FWAnyCodingKey(key), as: type)
+        return try decodeIf(AnyCodingKey(key), as: type)
     }
 
     public func decodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
@@ -100,11 +97,11 @@ extension Decoder {
         return try container.decodeIfPresent(type, forKey: key)
     }
 
-    public func decode<F: FWAnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
-        return try decode(FWAnyCodingKey(key), using: formatter)
+    public func decode<F: AnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
+        return try decode(AnyCodingKey(key), using: formatter)
     }
 
-    public func decode<K: CodingKey, F: FWAnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
+    public func decode<K: CodingKey, F: AnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
         let container = try container(keyedBy: K.self)
         let rawString = try container.decode(String.self, forKey: key)
 
@@ -119,60 +116,58 @@ extension Decoder {
         return date
     }
     
-    // MARK: - FWJSON
-    
-    public func jsonSingle() throws -> FWJSON {
-        return try decodeSingle(as: FWJSON.self)
+    // MARK: - JSON
+    public func jsonSingle() throws -> JSON {
+        return try decodeSingle(as: JSON.self)
     }
     
-    public func json(_ key: String) throws -> FWJSON {
-        return try decodeIf(key, as: FWJSON.self) ?? FWJSON.null
+    public func json(_ key: String) throws -> JSON {
+        return try decodeIf(key, as: JSON.self) ?? JSON.null
     }
     
-    public func json<K: CodingKey>(_ key: K) throws -> FWJSON {
-        return try decodeIf(key, as: FWJSON.self) ?? FWJSON.null
+    public func json<K: CodingKey>(_ key: K) throws -> JSON {
+        return try decodeIf(key, as: JSON.self) ?? JSON.null
     }
 
-    public func jsonIf(_ key: String) throws -> FWJSON? {
-        return try decodeIf(key, as: FWJSON.self)
+    public func jsonIf(_ key: String) throws -> JSON? {
+        return try decodeIf(key, as: JSON.self)
     }
 
-    public func jsonIf<K: CodingKey>(_ key: K) throws -> FWJSON? {
-        return try decodeIf(key, as: FWJSON.self)
+    public func jsonIf<K: CodingKey>(_ key: K) throws -> JSON? {
+        return try decodeIf(key, as: JSON.self)
     }
     
     // MARK: - Value
-    
     public func valueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        if let value = value(with: try decodeSingle(as: FWJSON.self), as: type) {
+        if let value = value(with: try decodeSingle(as: JSON.self), as: type) {
             return value
         }
         return try decodeSingle(as: type)
     }
     
     public func value<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try value(FWAnyCodingKey(key), as: type)
+        return try value(AnyCodingKey(key), as: type)
     }
 
     public func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        if let value = value(with: try decodeIf(key, as: FWJSON.self) ?? FWJSON.null, as: type) {
+        if let value = value(with: try decodeIf(key, as: JSON.self) ?? JSON.null, as: type) {
             return value
         }
         return try decode(key, as: type)
     }
 
     public func valueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try valueIf(FWAnyCodingKey(key), as: type)
+        return try valueIf(AnyCodingKey(key), as: type)
     }
 
     public func valueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        if let json = try decodeIf(key, as: FWJSON.self), let value = value(with: json, as: type) {
+        if let json = try decodeIf(key, as: JSON.self), let value = value(with: json, as: type) {
             return value
         }
         return try decodeIf(key, as: type)
     }
     
-    private func value<T>(with json: FWJSON, as type: T.Type) -> T? {
+    private func value<T>(with json: JSON, as type: T.Type) -> T? {
         switch type {
         case is Bool.Type:
             return json.boolValue as? T
@@ -208,16 +203,18 @@ extension Decoder {
     }
 }
 
-public protocol FWAnyDateFormatter {
+// MARK: - AnyDateFormatter
+public protocol AnyDateFormatter {
     func date(from string: String) -> Date?
     func string(from date: Date) -> String
 }
 
-extension DateFormatter: FWAnyDateFormatter {}
+extension DateFormatter: AnyDateFormatter {}
 
-extension ISO8601DateFormatter: FWAnyDateFormatter {}
+extension ISO8601DateFormatter: AnyDateFormatter {}
 
-private struct FWAnyCodingKey: CodingKey {
+// MARK: - AnyCodingKey
+private struct AnyCodingKey: CodingKey {
     var stringValue: String
     var intValue: Int?
 
