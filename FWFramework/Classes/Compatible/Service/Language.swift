@@ -1,5 +1,5 @@
 //
-//  FWLanguage.swift
+//  Language.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/27.
@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - FW+Language
 extension FW {
     /// 读取本地化字符串
     ///
@@ -20,6 +21,7 @@ extension FW {
     }
 }
 
+// MARK: - Wrapper+Language
 extension Wrapper where Base == String {
     /// 快速读取本地化语言
     public var localized: String {
