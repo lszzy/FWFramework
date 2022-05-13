@@ -491,95 +491,95 @@ extension Optional {
 // MARK: - SafeType
 extension FW {
     /// 获取安全值
-    public static func safeValue<T: FWSafeType>(_ value: T?) -> T {
+    public static func safeValue<T: SafeType>(_ value: T?) -> T {
         return value.safeValue
     }
 
     /// 判断是否为空
-    public static func isEmpty<T: FWSafeType>(_ value: T?) -> Bool {
+    public static func isEmpty<T: SafeType>(_ value: T?) -> Bool {
         return value.isEmpty
     }
 }
 
-public protocol FWSafeType {
+public protocol SafeType {
     static var safeValue: Self { get }
     var isEmpty: Bool { get }
 }
 
-extension Optional where Wrapped: FWSafeType {
+extension Optional where Wrapped: SafeType {
     public static var safeValue: Wrapped { return .safeValue }
     public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
     public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
 }
 
-extension Int: FWSafeType {
+extension Int: SafeType {
     public static var safeValue: Int = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int8: FWSafeType {
+extension Int8: SafeType {
     public static var safeValue: Int8 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int16: FWSafeType {
+extension Int16: SafeType {
     public static var safeValue: Int16 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int32: FWSafeType {
+extension Int32: SafeType {
     public static var safeValue: Int32 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Int64: FWSafeType {
+extension Int64: SafeType {
     public static var safeValue: Int64 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt: FWSafeType {
+extension UInt: SafeType {
     public static var safeValue: UInt = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt8: FWSafeType {
+extension UInt8: SafeType {
     public static var safeValue: UInt8 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt16: FWSafeType {
+extension UInt16: SafeType {
     public static var safeValue: UInt16 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt32: FWSafeType {
+extension UInt32: SafeType {
     public static var safeValue: UInt32 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension UInt64: FWSafeType {
+extension UInt64: SafeType {
     public static var safeValue: UInt64 = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Float: FWSafeType {
+extension Float: SafeType {
     public static var safeValue: Float = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Double: FWSafeType {
+extension Double: SafeType {
     public static var safeValue: Double = .zero
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension Bool: FWSafeType {
+extension Bool: SafeType {
     public static var safeValue: Bool = false
     public var isEmpty: Bool { return self == .safeValue }
 }
-extension URL: FWSafeType {
+extension URL: SafeType {
     public static var safeValue: URL = NSURL() as URL
     public var isEmpty: Bool { return absoluteString.isEmpty }
 }
-extension Data: FWSafeType {
+extension Data: SafeType {
     public static var safeValue: Data = Data()
 }
-extension String: FWSafeType {
+extension String: SafeType {
     public static var safeValue: String = ""
 }
-extension Array: FWSafeType {
+extension Array: SafeType {
     public static var safeValue: Array<Element> { return [] }
 }
-extension Set: FWSafeType {
+extension Set: SafeType {
     public static var safeValue: Set<Element> { return [] }
 }
-extension Dictionary: FWSafeType {
+extension Dictionary: SafeType {
     public static var safeValue: Dictionary<Key, Value> { return [:] }
 }

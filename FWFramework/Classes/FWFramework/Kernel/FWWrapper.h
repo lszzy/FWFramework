@@ -15,9 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速声明包装器宏
 #define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass (FWWrapper) \
@@ -28,10 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明可用版本包装器宏
 #define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
     API_AVAILABLE(ios(version)) \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     API_AVAILABLE(ios(version)) \
@@ -42,9 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速声明单泛型包装器宏
 #define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass<ObjectType> (FWWrapper) \
@@ -54,9 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速声明双泛型包装器宏
 #define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass<KeyType, ValueType> (FWWrapper) \
@@ -286,6 +294,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// [self.base innerAsyncMethod];
 ///
 /// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
+NS_REFINED_FOR_SWIFT
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
@@ -303,6 +312,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// 框架包装器协议
+NS_REFINED_FOR_SWIFT
 @protocol FWObjectWrapper <NSObject>
 
 /// 对象包装器
@@ -324,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// [self.base innerAsyncMethod];
 ///
 /// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
+NS_REFINED_FOR_SWIFT
 @interface FWClassWrapper : NSObject
 
 /// 原始类
@@ -341,6 +352,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// 框架类包装器协议
+NS_REFINED_FOR_SWIFT
 @protocol FWClassWrapper <NSObject>
 
 /// 类包装器
