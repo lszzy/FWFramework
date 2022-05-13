@@ -91,7 +91,7 @@ public struct PluginAnnotation<T> {
     
     public init(_ pluginProtocol: Protocol, object: Any) {
         self.pluginProtocol = pluginProtocol
-        FWPluginManager.registerPlugin(pluginProtocol, with: object)
+        PluginManager.registerPlugin(pluginProtocol, with: object)
     }
     
     public var wrappedValue: T {
@@ -99,7 +99,7 @@ public struct PluginAnnotation<T> {
             if let value = plugin {
                 return value
             } else {
-                return FWPluginManager.loadPlugin(pluginProtocol) as! T
+                return PluginManager.loadPlugin(pluginProtocol) as! T
             }
         }
         set {
@@ -117,14 +117,14 @@ public struct PluginAnnotation<T> {
 public struct RouterAnnotation {
     var pattern: String
     
-    public init(wrappedValue value: String, _ handler: @escaping FWRouterHandler) {
+    public init(wrappedValue value: String, _ handler: @escaping RouterHandler) {
         self.pattern = value
-        FWRouter.registerURL(value, withHandler: handler)
+        Router.registerURL(value, withHandler: handler)
     }
     
-    public init(_ pattern: String, handler: @escaping FWRouterHandler) {
+    public init(_ pattern: String, handler: @escaping RouterHandler) {
         self.pattern = pattern
-        FWRouter.registerURL(pattern, withHandler: handler)
+        Router.registerURL(pattern, withHandler: handler)
     }
     
     public var wrappedValue: String {

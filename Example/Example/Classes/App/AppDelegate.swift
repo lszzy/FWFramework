@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Mediator.setupAllModules()
-        FWRouter.registerClass(AppRouter.self)
+        Router.registerClass(AppRouter.self)
         return true
     }
     
@@ -34,17 +34,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 private extension AppDelegate {
     
     func setupController() -> UIViewController {
-        let homeController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
+        let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
         homeController.hidesBottomBarWhenPushed = false
         let homeNav = navigationController(homeController)
         homeNav.tabBarItem.title = APP.localized("home.title")
         
-        let testController = FWRouter.object(forURL: AppRouter.testUrl) as! UIViewController
+        let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
         testController.hidesBottomBarWhenPushed = false
         let testNav = navigationController(testController)
         testNav.tabBarItem.title = APP.localized("test.title")
         
-        let settingsController = FWRouter.object(forURL: AppRouter.settingsUrl) as! UIViewController
+        let settingsController = Router.object(forURL: AppRouter.settingsUrl) as! UIViewController
         settingsController.hidesBottomBarWhenPushed = false
         let settingsNav = navigationController(settingsController)
         settingsNav.tabBarItem.title = APP.localized("settings.title")
