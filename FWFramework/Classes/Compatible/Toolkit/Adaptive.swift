@@ -1,5 +1,5 @@
 //
-//  FWAdaptive.swift
+//  Adaptive.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/9/8.
@@ -11,7 +11,7 @@ import UIKit
 import FWFramework
 #endif
 
-// MARK: - FW+FWAdaptive
+// MARK: - FW+Adaptive
 extension FW {
     // MARK: - UIApplication
     /// 是否是调试模式

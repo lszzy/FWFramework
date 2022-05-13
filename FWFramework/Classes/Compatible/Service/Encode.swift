@@ -1,5 +1,5 @@
 //
-//  FWEncode.swift
+//  Encode.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/10/30.
@@ -12,8 +12,7 @@ import CommonCrypto
 import FWFramework
 #endif
 
-// MARK: - FWEncode
-
+// MARK: - Encode
 extension Wrapper where Base == Data {
     /// Foundation对象编码为json数据
     public static func jsonEncode(_ object: Any) -> Data? {
@@ -438,8 +437,7 @@ extension Wrapper where Base == URL {
     }
 }
 
-// MARK: - FWSafeValue
-
+// MARK: - SafeValue
 extension FW {
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
@@ -479,8 +477,6 @@ extension Wrapper {
 }
 
 /// 可选类安全转换，不为nil
-///
-/// Optional类暂不开放FWWrapper包装，防止Optional类fw属性和Wrapped类fw属性重复声明冲突
 extension Optional {
     public var safeInt: Int { return safeNumber.intValue }
     public var safeBool: Bool { return safeNumber.boolValue }
@@ -492,8 +488,7 @@ extension Optional {
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
 }
 
-// MARK: - FWSafeType
-
+// MARK: - SafeType
 extension FW {
     /// 获取安全值
     public static func safeValue<T: FWSafeType>(_ value: T?) -> T {

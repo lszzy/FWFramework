@@ -1,5 +1,5 @@
 //
-//  FWAnnotation.swift
+//  Annotation.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/12/1.
@@ -11,12 +11,13 @@ import Foundation
 import FWFramework
 #endif
 
+// MARK: - UserDefaultAnnotation
 /// UserDefault属性包装器注解
 /// 使用示例：
-/// @FWUserDefaultAnnotation("userName", defaultValue: "test")
+/// @UserDefaultAnnotation("userName", defaultValue: "test")
 /// public static var userName: String
 @propertyWrapper
-public struct FWUserDefaultAnnotation<T> {
+public struct UserDefaultAnnotation<T> {
     let key: String
     let value: T
     
@@ -41,12 +42,13 @@ public struct FWUserDefaultAnnotation<T> {
     }
 }
 
+// MARK: - ModuleAnnotation
 /// 模块属性包装器注解
 /// 使用示例：
-/// @FWModuleAnnotation(UserModuleService.self)
+/// @ModuleAnnotation(UserModuleService.self)
 /// static var userModule: UserModuleService
 @propertyWrapper
-public struct FWModuleAnnotation<T> {
+public struct ModuleAnnotation<T> {
     let serviceProtocol: Protocol
     var module: T?
     
@@ -73,12 +75,13 @@ public struct FWModuleAnnotation<T> {
     }
 }
 
+// MARK: - PluginAnnotation
 /// 插件属性包装器注解
 /// 使用示例：
-/// @FWPluginAnnotation(TestPluginProtocol.self)
+/// @PluginAnnotation(TestPluginProtocol.self)
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
-public struct FWPluginAnnotation<T> {
+public struct PluginAnnotation<T> {
     let pluginProtocol: Protocol
     var plugin: T?
     
@@ -105,12 +108,13 @@ public struct FWPluginAnnotation<T> {
     }
 }
 
+// MARK: - RouterAnnotation
 /// 路由属性包装器注解
 /// 使用示例：
-/// @FWRouterAnnotation(AppRouter.pluginRouter(_:))
+/// @RouterAnnotation(AppRouter.pluginRouter(_:))
 /// static var pluginUrl: String = "app://plugin/:id"
 @propertyWrapper
-public struct FWRouterAnnotation {
+public struct RouterAnnotation {
     var pattern: String
     
     public init(wrappedValue value: String, _ handler: @escaping FWRouterHandler) {
