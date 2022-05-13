@@ -260,8 +260,8 @@
 		2FF8D87824C886EC006A83B5 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				2FF8D89424C8883F006A83B5 /* Classes */,
 				2FF8D89524C88863006A83B5 /* Assets */,
+				2FF8D89424C8883F006A83B5 /* Classes */,
 				2FF8D89624C8887B006A83B5 /* Supporting Files */,
 			);
 			path = Example;

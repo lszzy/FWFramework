@@ -12,26 +12,6 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#pragma mark - NSObject+FWSwizzle
-
-@implementation NSObject (FWSwizzle)
-
-#pragma mark - Property
-
-- (id)fw_tempObject
-{
-    return objc_getAssociatedObject(self, @selector(fw_tempObject));
-}
-
-- (void)setFw_tempObject:(id)tempObject
-{
-    if (tempObject != self.fw_tempObject) {
-        objc_setAssociatedObject(self, @selector(fw_tempObject), tempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-@end
-
 #pragma mark - FWObjectWrapper+FWSwizzle
 
 @implementation FWObjectWrapper (FWSwizzle)
