@@ -1,5 +1,5 @@
 //
-//  FWFoundation.swift
+//  Foundation.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/10/22.
@@ -11,6 +11,7 @@ import UIKit
 import FWFramework
 #endif
 
+// MARK: - Wrapper+Foundation
 extension Wrapper where Base == Data {
     /// 使用NSKeyedArchiver压缩对象
     public static func archiveObject(_ object: Any) -> Data? {

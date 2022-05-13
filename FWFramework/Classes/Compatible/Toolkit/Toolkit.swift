@@ -1,5 +1,5 @@
 //
-//  FWToolkit.swift
+//  Toolkit.swift
 //  FWFramework
 //
 //  Created by wuyong on 2020/10/22.
@@ -11,8 +11,7 @@ import UIKit
 import FWFramework
 #endif
 
-// MARK: - FW+FWToolkit
-
+// MARK: - FW+Toolkit
 extension FW {
     /// 从16进制创建UIColor
     ///
@@ -67,8 +66,7 @@ extension FW {
     }
 }
 
-// MARK: - UIDevice+FWToolkit
-
+// MARK: - UIDevice+Toolkit
 #if FWMacroTracking
 import AdSupport
 
