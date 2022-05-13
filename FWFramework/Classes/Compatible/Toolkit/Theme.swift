@@ -15,7 +15,7 @@ extension Wrapper where Base: UIColor {
     }
 
     /// 动态创建主题色，指定提供句柄
-    public static func themeColor(_ provider: @escaping (FWThemeStyle) -> UIColor) -> UIColor {
+    public static func themeColor(_ provider: @escaping (ThemeStyle) -> UIColor) -> UIColor {
         return UIColor.__fw.themeColor(provider)
     }
 

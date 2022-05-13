@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTableViewCellWrapper+FWDynamicLayout
 
-typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
-typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath);
+typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell) NS_SWIFT_NAME(CellConfigurationBlock);
+typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath) NS_SWIFT_NAME(CellIndexPathBlock);
 
 @interface FWTableViewCellWrapper (FWDynamicLayout)
 
@@ -55,10 +55,10 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
     FWHeaderFooterViewTypeHeader = 0,
     FWHeaderFooterViewTypeFooter = 1,
-};
+} NS_SWIFT_NAME(HeaderFooterViewType);
 
-typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
-typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section);
+typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView) NS_SWIFT_NAME(HeaderFooterViewConfigurationBlock);
+typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section) NS_SWIFT_NAME(HeaderFooterViewSectionBlock);
 
 @interface FWTableViewHeaderFooterViewWrapper (FWDynamicLayout)
 
@@ -159,8 +159,8 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 #pragma mark - FWCollectionViewCellWrapper+FWDynamicLayout
 
-typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell);
-typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath);
+typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell) NS_SWIFT_NAME(CollectionCellConfigurationBlock);
+typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath) NS_SWIFT_NAME(CollectionCellIndexPathBlock);
 
 @interface FWCollectionViewCellWrapper (FWDynamicLayout)
 
@@ -204,8 +204,8 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 #pragma mark - FWCollectionReusableViewWrapper+FWDynamicLayout
 
-typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView);
-typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
+typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView) NS_SWIFT_NAME(ReusableViewConfigurationBlock);
+typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath) NS_SWIFT_NAME(ReusableViewIndexPathBlock);
 
 @interface FWCollectionReusableViewWrapper (FWDynamicLayout)
 

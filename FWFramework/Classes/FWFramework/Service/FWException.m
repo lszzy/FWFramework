@@ -19,7 +19,7 @@ NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCaptured
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 
-@implementation FWException
+@implementation FWExceptionManager
 
 #pragma mark - Capture
 
