@@ -55,24 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
 #define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
 
-#pragma mark - NSObject+FWSwizzle
-
-@interface NSObject (FWSwizzle)
-
-#pragma mark - Property
-
-/**
- 临时对象，强引用
- @note 备注：key的几种形式的声明和使用，下同
-    1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey
-    2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey
-    3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
-    4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
- */
-@property (nullable, nonatomic, strong) id fw_tempObject NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - FWObjectWrapper+FWSwizzle
 
 @interface FWObjectWrapper (FWSwizzle)
