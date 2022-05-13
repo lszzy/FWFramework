@@ -11,13 +11,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 异常捕获通知，object为NSException对象，userInfo为附加信息(name|reason|method|remark|symbols)
-extern NSNotificationName const FWExceptionCapturedNotification;
+extern NSNotificationName const FWExceptionCapturedNotification NS_SWIFT_NAME(ExceptionCaptured);
 
 /// 框架异常捕获类
 ///
 /// @see https://github.com/jezzmemo/JJException
 /// @see https://github.com/chenfanfang/AvoidCrash
-@interface FWException : NSObject
+NS_SWIFT_NAME(ExceptionManager)
+@interface FWExceptionManager : NSObject
 
 /// 自定义需要捕获未定义方法异常的类，默认[NSNull, NSNumber, NSString, NSArray, NSDictionary]
 @property (class, nonatomic, copy) NSArray<Class> *captureClasses;

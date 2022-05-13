@@ -344,7 +344,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     FWViewControllerVisibleStateWillDisappear = 1 << 3,
     /// 已触发ViewDidDisappear
     FWViewControllerVisibleStateDidDisappear = 1 << 4,
-};
+} NS_SWIFT_NAME(ViewControllerVisibleState);
 
 @interface FWViewControllerWrapper (FWToolkit)
 

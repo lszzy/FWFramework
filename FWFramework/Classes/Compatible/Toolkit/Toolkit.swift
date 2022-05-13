@@ -51,8 +51,8 @@ extension FW {
     ///   - named: 图标名称
     ///   - size: 图标大小
     /// - Returns: FWIcon对象
-    public static func icon(_ named: String, _ size: CGFloat) -> FWIcon? {
-        return FWIcon(named: named, size: size)
+    public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
+        return Icon(named: named, size: size)
     }
     
     /// 快速创建图标图像
@@ -62,7 +62,7 @@ extension FW {
     ///   - size: 图片大小
     /// - Returns: UIImage对象
     public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
-        return FWIcon.iconImage(name, size: size)
+        return Icon.iconImage(name, size: size)
     }
 }
 

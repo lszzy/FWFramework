@@ -30,6 +30,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size) 
  
  @see https://github.com/PrideChung/FontAwesomeKit
  */
+NS_SWIFT_NAME(Icon)
 @interface FWIcon : NSObject
 
 #pragma mark - Static

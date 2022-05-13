@@ -65,7 +65,7 @@ extension FW {
     /// 屏幕像素比例
     public static var screenScale: CGFloat { return UIScreen.main.scale }
     /// 判断屏幕英寸
-    public static func isScreenInch(_ inch: FWScreenInch) -> Bool { return UIScreen.__fw.isScreenInch(inch) }
+    public static func isScreenInch(_ inch: ScreenInch) -> Bool { return UIScreen.__fw.isScreenInch(inch) }
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool { return UIScreen.__fw.isNotchedScreen }
     /// 屏幕一像素的大小
