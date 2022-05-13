@@ -12,20 +12,20 @@ import FWFramework
 #endif
 
 // MARK: - FW
-/// 全局包装器
+/// 全局包装器(因struct只读，只能用class)
 ///
 /// 自定义FW为任意名称(如APP)示例：
 /// public typealias APP = FW
 /// 使用示例：
 /// APP.safeString(object)
-public struct FW {}
+public class FW {}
 
 // MARK: - Wrapper
-/// 属性包装器
-public struct Wrapper<Base> {
+/// 属性包装器(因struct只读，只能用class)
+public class Wrapper<Base> {
     
     /// 原始对象
-    public let base: Base
+    public private(set) var base: Base
     
     /// 初始化方法
     public init(_ base: Base) {
@@ -39,8 +39,8 @@ public struct Wrapper<Base> {
 ///
 /// 自定义fw为任意名称(如app)示例：
 /// extension WrapperCompatible {
-///     public static var app: Wrapper<Self>.Type { fw }
-///     public var app: Wrapper<Self> { fw }
+///     public static var app: Wrapper<Self>.Type { get { fw } set {} }
+///     public var app: Wrapper<Self> { get { fw } set {} }
 /// }
 /// 使用示例：
 /// String.app.jsonEncode(object)
@@ -50,10 +50,10 @@ public protocol WrapperCompatible {
     associatedtype WrapperBase
     
     /// 类包装器属性
-    static var fw: Wrapper<WrapperBase>.Type { get }
+    static var fw: Wrapper<WrapperBase>.Type { get set }
     
     /// 对象包装器属性
-    var fw: Wrapper<WrapperBase> { get }
+    var fw: Wrapper<WrapperBase> { get set }
     
 }
 
@@ -61,12 +61,14 @@ extension WrapperCompatible {
     
     /// 类包装器属性
     public static var fw: Wrapper<Self>.Type {
-        return Wrapper<Self>.self
+        get { Wrapper<Self>.self }
+        set {}
     }
     
     /// 对象包装器属性
     public var fw: Wrapper<Self> {
-        return Wrapper(self)
+        get { Wrapper(self) }
+        set {}
     }
     
 }

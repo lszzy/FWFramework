@@ -29,3 +29,18 @@ public typealias BlockDouble = (Double) -> ()
 
 /// 通用(Bool, Any)参数block
 public typealias BlockBoolParam = (Bool, Any?) -> ()
+
+// MARK: UIBarButtonItem+Block
+extension Wrapper where Base: UIBarButtonItem {
+    
+    /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
+    public static func item(object: Any?, target: Any?, action: Selector?) -> UIBarButtonItem {
+        return UIBarButtonItem.__fw.item(with: object, target: target, action: action)
+    }
+
+    /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
+    public static func item(object: Any?, block: ((Any) -> Void)?) -> UIBarButtonItem {
+        return UIBarButtonItem.__fw.item(with: object, block: block)
+    }
+    
+}

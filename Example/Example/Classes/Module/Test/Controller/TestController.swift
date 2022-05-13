@@ -33,7 +33,7 @@ class TestController: UIViewController {
     
     private lazy var textFieldView: UIView = {
         let view = UIView()
-        view.fw.setBorderView(.top, color: UIColor.gray, width: UIScreen.fw.pixelOne)
+        view.fw.setBorderView(.top, color: UIColor.gray, width: FW.pixelOne)
         return view
     }()
     
@@ -52,7 +52,7 @@ class TestController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Test"
         textField.layer.masksToBounds = true
-        textField.layer.borderWidth = UIScreen.fw.pixelOne
+        textField.layer.borderWidth = FW.pixelOne
         textField.layer.cornerRadius = 4
         textField.fw.touchResign = true
         return textField
@@ -107,7 +107,7 @@ private extension TestController {
         }
         textFieldView.fw.layoutMaker { make in
             make.topToBottomOfView(tableView)
-            make.left().right().height(100).bottom(UIScreen.fw.safeAreaInsets.bottom)
+            make.left().right().height(100).bottom(FW.safeAreaInsets.bottom)
         }
         textFieldLabel.fw.layoutMaker { make in
             make.left(15).right(15).top(10)
@@ -119,7 +119,7 @@ private extension TestController {
     
     private func renderData() {
         let attributedText = NSMutableAttributedString(string: "我是超过一行的文本，我可以显示图片，还可以点击图片，不信你看嘛", attributes: [.font: UIFont.systemFont(ofSize: 16)])
-        let imageAttachment = NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(with: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: (UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16)))
+        let imageAttachment = NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(image: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: (UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16)))
         imageAttachment.addAttribute(.link, value: "app://test", range: NSMakeRange(0, imageAttachment.length))
         attributedText.append(imageAttachment)
         textFieldLabel.attributedText = attributedText
@@ -135,7 +135,7 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(with: tableView)
+        let cell = UITableViewCell.fw.cell(tableView: tableView)
         cell.textLabel?.text = "test.title".fw.localized
         return cell
     }
@@ -163,7 +163,7 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func keyboardWillHide(_ notification: Notification) {
-        textFieldView.fw.layoutChain.bottom(UIScreen.fw.safeAreaInsets.bottom)
+        textFieldView.fw.layoutChain.bottom(FW.safeAreaInsets.bottom)
         
         textField.fw.keyboardAnimate(notification) { [weak self] in
             self?.view.layoutIfNeeded()

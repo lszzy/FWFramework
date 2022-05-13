@@ -48,10 +48,10 @@ private extension HomeController {
     
     private func setupNavbar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
-        navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(with: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(object: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
         
         let isChinese = Bundle.fw.currentLanguage?.hasPrefix("zh") ?? false
-        navigationItem.rightBarButtonItem = UIBarButtonItem.fw.item(with: isChinese ? "中文" : "English", target: self, action: #selector(rightItemClicked(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.fw.item(object: isChinese ? "中文" : "English", target: self, action: #selector(rightItemClicked(_:)))
     }
    
     private func setupSubviews() {
@@ -71,7 +71,7 @@ extension HomeController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = HomeCell.fw.cell(with: tableView)
+        let cell = HomeCell.fw.cell(tableView: tableView)
         return cell
     }
     
@@ -130,10 +130,10 @@ private extension HomeController {
         switch style {
         case 0:
             navigationController?.navigationBar.fw.isTranslucent = false
-            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
+            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA), dark: .fw.color(hex: 0x121212))
         case 1:
             navigationController?.navigationBar.fw.isTranslucent = true
-            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA, alpha: 0.5), dark: .fw.color(withHex: 0x121212, alpha: 0.5))
+            navigationController?.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA, alpha: 0.5), dark: .fw.color(hex: 0x121212, alpha: 0.5))
         default:
             navigationController?.navigationBar.fw.isTranslucent = false
             navigationController?.navigationBar.fw.backgroundTransparent = true
