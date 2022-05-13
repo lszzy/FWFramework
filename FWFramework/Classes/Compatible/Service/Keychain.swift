@@ -1,5 +1,5 @@
 //
-//  FWKeychain.swift
+//  Keychain.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/27.
@@ -9,13 +9,18 @@
 import Foundation
 import Security
 
+// MARK: - KeychainManager
 /// Keychain管理器
-@objcMembers public class FWKeychainManager: NSObject {
+@objc(FWKeychainManager)
+@objcMembers public class KeychainManager: NSObject {
+    
+    // MARK: - Accessor
     /// 单例模式
-    public static let sharedInstance = FWKeychainManager()
+    public static let sharedInstance = KeychainManager()
     
     private var group: String?
     
+    // MARK: - Lifecycle
     /// 公用对象
     public override init() {
         super.init()
@@ -27,15 +32,7 @@ import Security
         self.group = group
     }
     
-    private func query(forService service: String?, account: String?) -> [String: Any] {
-        var query: [String: Any] = [:]
-        query[String(kSecClass)] = kSecClassGenericPassword
-        if let service = service { query[String(kSecAttrService)] = service }
-        if let account = account { query[String(kSecAttrAccount)] = account }
-        if let group = group { query[String(kSecAttrAccessGroup)] = group }
-        return query
-    }
-    
+    // MARK: - Public
     /// 读取String数据
     public func password(forService service: String?, account: String?) -> String? {
         guard let passwordData = passwordData(forService: service, account: account) else { return nil }
@@ -99,4 +96,15 @@ import Security
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess
     }
+    
+    // MARK: - Private
+    private func query(forService service: String?, account: String?) -> [String: Any] {
+        var query: [String: Any] = [:]
+        query[String(kSecClass)] = kSecClassGenericPassword
+        if let service = service { query[String(kSecAttrService)] = service }
+        if let account = account { query[String(kSecAttrAccount)] = account }
+        if let group = group { query[String(kSecAttrAccessGroup)] = group }
+        return query
+    }
+    
 }

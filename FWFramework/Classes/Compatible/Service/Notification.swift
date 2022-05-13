@@ -1,5 +1,5 @@
 //
-//  FWNotification.swift
+//  Notification.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/27.
@@ -11,13 +11,16 @@ import UserNotifications
 import FWFramework
 #endif
 
+// MARK: - NotificationManager
 /// 通知管理器
-@objcMembers public class FWNotificationManager: NSObject, UNUserNotificationCenterDelegate {
+@objc(FWNotificationManager)
+@objcMembers public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+    
+    // MARK: - Accessor
     /// 单例模式
-    public static let sharedInstance = FWNotificationManager()
+    public static let sharedInstance = NotificationManager()
     
     // MARK: - Authorize
-    
     /// 异步查询通知权限状态，当前线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
         AuthorizeManager.manager(type: .notifications)?.authorizeStatus?(completion)
@@ -29,14 +32,12 @@ import FWFramework
     }
     
     // MARK: - Badge
-    
     /// 清空图标通知计数
     public func clearNotificationBadges() {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     // MARK: - Handler
-    
     /// 设置远程推送处理句柄，参数为userInfo和原始通知对象
     public var remoteNotificationHandler: (([AnyHashable: Any]?, Any) -> Void)?
     
@@ -79,7 +80,6 @@ import FWFramework
     }
     
     // MARK: - Local
-    
     /// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
     public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, soundName: String?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)?) {
         let notification = UNMutableNotificationContent()
@@ -132,4 +132,5 @@ import FWFramework
             completionHandler()
         }
     }
+    
 }
