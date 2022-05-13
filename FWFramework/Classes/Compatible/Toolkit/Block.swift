@@ -1,5 +1,5 @@
 //
-//  FWBlock.swift
+//  Block.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/29.
@@ -11,22 +11,21 @@ import UIKit
 import FWFramework
 #endif
 
-// MARK: - FWBlock
-
+// MARK: - Block
 /// 通用无参数block
-public typealias FWBlockVoid = () -> ()
+public typealias BlockVoid = () -> ()
 
 /// 通用Any参数block
-public typealias FWBlockParam = (Any?) -> ()
+public typealias BlockParam = (Any?) -> ()
 
 /// 通用Bool参数block
-public typealias FWBlockBool = (Bool) -> ()
+public typealias BlockBool = (Bool) -> ()
 
 /// 通用Int参数block
-public typealias FWBlockInt = (Int) -> ()
+public typealias BlockInt = (Int) -> ()
 
 /// 通用Double参数block
-public typealias FWBlockDouble = (Double) -> ()
+public typealias BlockDouble = (Double) -> ()
 
 /// 通用(Bool, Any)参数block
-public typealias FWBlockBoolParam = (Bool, Any?) -> ()
+public typealias BlockBoolParam = (Bool, Any?) -> ()
