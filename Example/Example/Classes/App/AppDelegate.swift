@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FWMediator.setupAllModules()
+        Mediator.setupAllModules()
         FWRouter.registerClass(AppRouter.self)
         return true
     }

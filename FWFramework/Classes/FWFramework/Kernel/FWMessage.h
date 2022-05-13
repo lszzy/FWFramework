@@ -376,7 +376,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block    目标句柄，block参数依次为object、优化的change字典(不含NSNull)
  @return 监听唯一标志
  */
-- (NSString *)observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary *change))block;
+- (NSString *)observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 
 /**
  监听对象某个属性，对象释放时自动移除监听，添加多次执行多次

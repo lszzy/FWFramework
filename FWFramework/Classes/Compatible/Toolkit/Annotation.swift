@@ -56,9 +56,9 @@ public struct ModuleAnnotation<T> {
         self.serviceProtocol = serviceProtocol
     }
     
-    public init(_ serviceProtocol: Protocol, module: FWModuleProtocol.Type) {
+    public init(_ serviceProtocol: Protocol, module: ModuleProtocol.Type) {
         self.serviceProtocol = serviceProtocol
-        FWMediator.registerService(serviceProtocol, withModule: module)
+        Mediator.registerService(serviceProtocol, withModule: module)
     }
     
     public var wrappedValue: T {
@@ -66,7 +66,7 @@ public struct ModuleAnnotation<T> {
             if let value = module {
                 return value
             } else {
-                return FWMediator.loadModule(serviceProtocol) as! T
+                return Mediator.loadModule(serviceProtocol) as! T
             }
         }
         set {

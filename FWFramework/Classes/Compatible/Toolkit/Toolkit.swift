@@ -42,7 +42,7 @@ extension FW {
     ///   - weight: 字重可选，默认Regular
     /// - Returns: UIFont
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
-        return UIFont.fw.font(ofSize: size, weight: weight)
+        return UIFont.__fw.font(ofSize: size, weight: weight)
     }
     
     /// 快速创建图标对象

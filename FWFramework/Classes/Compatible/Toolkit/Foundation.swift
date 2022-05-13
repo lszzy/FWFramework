@@ -46,7 +46,7 @@ extension Wrapper where Base == Data {
 extension Wrapper where Base == Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
     public static var currentTime: TimeInterval {
-        return NSDate.fw.currentTime
+        return NSDate.__fw.currentTime
     }
     
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
