@@ -105,7 +105,7 @@ extension HomeController {
     }
     
     func tableCellSelected(_ indexPath: IndexPath) {
-        FWRouter.openURL(AppRouter.testUrl)
+        Router.openURL(AppRouter.testUrl)
     }
     
 }

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWStateTransition;
 
 /// 状态类
+NS_SWIFT_NAME(State)
 @interface FWState : NSObject
 
 /// 状态名称，只读
@@ -40,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWStateEvent
 
 /// 状态事件类
+NS_SWIFT_NAME(StateEvent)
 @interface FWStateEvent : NSObject
 
 /// 事件名称，只读
@@ -73,6 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWStateMachine;
 
 /// 状态转换器
+NS_SWIFT_NAME(StateTransition)
 @interface FWStateTransition : NSObject
 
 /// 有限状态机，只读
@@ -98,13 +101,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWStateMachine
 
 /// 状态改变通知
-extern NSNotificationName const FWStateChangedNotification;
+extern NSNotificationName const FWStateChangedNotification NS_SWIFT_NAME(StateChanged);
 
 /**
  有限状态机
  
  @see https://github.com/blakewatters/TransitionKit
  */
+NS_SWIFT_NAME(StateMachine)
 @interface FWStateMachine : NSObject
 
 /// 状态列表，只读

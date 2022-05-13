@@ -43,7 +43,7 @@ class TestController: UIViewController {
         label.textColor = UIColor.fw.themeLight(.black, dark: .white)
         label.numberOfLines = 0
         label.fw.addLinkGesture { link in
-            FWRouter.openURL(link)
+            Router.openURL(link)
         }
         return label
     }()

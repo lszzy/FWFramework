@@ -447,7 +447,7 @@
 
 @property (nonatomic) SEL action;
 
-@property (nonatomic, copy) void (^block)(__weak id object, NSDictionary *change);
+@property (nonatomic, copy) void (^block)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change);
 
 @property (nonatomic, readonly) BOOL isObserving;
 
@@ -486,7 +486,7 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context
 {
     // 不回调的情况
     BOOL isPrior = [[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue];
@@ -527,7 +527,7 @@
 
 @implementation FWObjectWrapper (FWKvo)
 
-- (NSString *)observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary *change))block
+- (NSString *)observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change))block
 {
     NSMutableDictionary *dict = [self innerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
