@@ -1,5 +1,5 @@
 //
-//  FWVersion.swift
+//  Version.swift
 //  FWFramework
 //
 //  Created by wuyong on 2019/6/27.
@@ -8,22 +8,26 @@
 
 import UIKit
 
+// MARK: - VersionStatus
 /// 版本状态
-@objc public enum FWVersionStatus: Int {
+@objc(FWVersionStatus)
+public enum VersionStatus: Int {
     /// 已发布
-    case publish = 0
+    case published = 0
     /// 需要更新
-    case update = 1
+    case updating = 1
     /// 正在审核
-    case audit = 2
+    case auditing = 2
 }
 
+// MARK: - VersionManager
 /// 版本管理器
-@objcMembers public class FWVersionManager: NSObject {
-    /// 单例模式
-    public static let sharedInstance = FWVersionManager()
+@objc(FWVersionManager)
+@objcMembers public class VersionManager: NSObject {
     
-    // MARK: - Store
+    // MARK: - Accessor
+    /// 单例模式
+    public static let sharedInstance = VersionManager()
     
     /// 当前版本号，可自定义。小于最新版本号表示需要更新，大于最新版本号表示正在审核
     public var currentVersion: String = ""
@@ -32,7 +36,7 @@ import UIKit
     public var latestVersion: String?
     
     /// 当前版本状态，可自定义。根据最新版本号和当前版本号比较获得
-    public var status: FWVersionStatus = .publish
+    public var status: VersionStatus = .published
     
     /// 最新版本更新备注，可自定义。默认从AppStore获取
     public var releaseNotes: String?
@@ -46,10 +50,14 @@ import UIKit
     /// 版本发布延迟检测天数，可选，默认1天，防止上架后AppStore缓存用户无法立即更新
     public var delayDays: Int = 1
     
+    /// 数据版本号，可自定义。当数据版本号小于当前版本号时，会依次执行数据更新句柄
+    public var dataVersion: String?
+    
     private var checkDate: Date?
     private var hasResult: Bool = false
     private var dataMigrators: [String: () -> Void] = [:]
     
+    // MARK: - Lifecycle
     public override init() {
         super.init()
         currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
@@ -57,6 +65,7 @@ import UIKit
         dataVersion = UserDefaults.standard.object(forKey: "FWVersionManagerDataVersion") as? String
     }
     
+    // MARK: - Public
     /// 检查应用版本号并进行比较，检查成功时回调。interval为频率(天)，0立即检查，1一天一次，7一周一次
     @discardableResult
     public func checkVersion(_ interval: Int, completion: (() -> Void)?) -> Bool {
@@ -87,11 +96,6 @@ import UIKit
             UIApplication.shared.open(storeUrl, options: [:], completionHandler: nil)
         }
     }
-    
-    // MARK: - Data
-    
-    /// 数据版本号，可自定义。当数据版本号小于当前版本号时，会依次执行数据更新句柄
-    public var dataVersion: String?
     
     /// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
     @discardableResult
@@ -136,7 +140,6 @@ import UIKit
     }
     
     // MARK: - Private
-    
     private func requestVersion(_ completion: (() -> Void)?) {
         var requestUrl = "https://itunes.apple.com/lookup"
         if let appId = appId {
@@ -202,21 +205,21 @@ import UIKit
                 switch result {
                 // 当前版本小于最新版本，需要更新
                 case .orderedAscending:
-                    self.status = .update
+                    self.status = .updating
                 // 当前版本大于最新版本，正在审核
                 case .orderedDescending:
-                    self.status = .audit
+                    self.status = .auditing
                 // 当前版本等于最新版本，已发布
                 default:
-                    self.status = .publish
+                    self.status = .published
                 }
             } else {
                 // 有结果，但不符合条件，不需要更新
                 if self.hasResult {
-                    self.status = .publish
+                    self.status = .published
                 // 第一次审核查询不到结果，正在审核
                 } else {
-                    self.status = .audit
+                    self.status = .auditing
                 }
             }
             
@@ -245,4 +248,5 @@ import UIKit
         let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
         return Calendar.current.date(from: components) ?? date
     }
+    
 }
