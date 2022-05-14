@@ -45,8 +45,21 @@ extension Wrapper where Base == String {
     }
 }
 
+// MARK: - Bundle+Language
 extension Wrapper where Base: Bundle {
     
+    // MARK: - Bundle
+    /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
+    public func localizedBundle() -> Bundle {
+        return base.__fw.localizedBundle()
+    }
+
+    /// 加载当前bundle内指定语言文件，加载失败返回nil
+    public func localizedBundle(language: String?) -> Bundle? {
+        return base.__fw.localizedBundle(withLanguage: language)
+    }
+    
+    // MARK: - Main
     /// 读取应用当前语言，如果localizedLanguage存在则返回，否则返回systemLanguage
     public static var currentLanguage: String? {
         return Bundle.__fw.currentLanguage
@@ -66,6 +79,27 @@ extension Wrapper where Base: Bundle {
     /// 读取本地化字符串，可指定table，strings文件需位于mainBundle，支持动态切换
     public static func localizedString(_ key: String, table: String? = nil) -> String {
         return Bundle.__fw.localizedString(key, table: table)
+    }
+    
+    // MARK: - Bundle
+    /// 加载指定名称bundle对象，bundle文件需位于mainBundle
+    public static func bundle(name: String) -> Bundle? {
+        return Base.__fw.bundle(withName: name)
+    }
+
+    /// 加载指定类所在bundle对象，可指定子目录名称，一般用于Framework内bundle文件
+    public static func bundle(with clazz: AnyClass, name: String?) -> Bundle? {
+        return Base.__fw.bundle(with: clazz, name: name)
+    }
+
+    /// 读取指定bundle内strings文件本地化字符串，支持动态切换
+    public static func localizedString(_ key: String, bundle: Bundle?) -> String {
+        return Base.__fw.localizedString(key, bundle: bundle)
+    }
+
+    /// 读取指定bundle内strings文件本地化字符串，指定table，支持动态切换
+    public static func localizedString(_ key: String, table: String?, bundle: Bundle?) -> String {
+        return Base.__fw.localizedString(key, table: table, bundle: bundle)
     }
     
 }
