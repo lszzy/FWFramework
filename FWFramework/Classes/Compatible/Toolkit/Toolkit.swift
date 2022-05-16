@@ -66,18 +66,6 @@ extension FW {
     }
 }
 
-// MARK: - UIDevice+Toolkit
-#if FWMacroTracking
-import AdSupport
-
-extension Wrapper where Base: UIDevice {
-    /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
-    public static var deviceIDFA: String {
-        return ASIdentifierManager.shared().advertisingIdentifier.uuidString
-    }
-}
-#endif
-
 extension Wrapper where Base: UIColor {
     
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
