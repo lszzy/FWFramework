@@ -94,7 +94,7 @@ extension Wrapper where Base: UIView {
     /// 添加视图的收缩常量，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func addCollapse(_ constraint: NSLayoutConstraint) {
+    public func addCollapseConstraint(_ constraint: NSLayoutConstraint) {
         base.__fw.addCollapse(constraint)
     }
     
@@ -163,7 +163,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesHorizontal(toSuperview inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinEdgesHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewHorizontal(withInset: inset)
     }
     
@@ -172,7 +172,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesVertical(toSuperview inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinEdgesVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewVertical(withInset: inset)
     }
     
@@ -264,6 +264,171 @@ extension Wrapper where Base: UIView {
     @discardableResult
     public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
         return base.__fw.pinEdge(toSuperviewSafeArea: edge, withInset: inset, relation: relation)
+    }
+    
+    // MARK: - Dimension
+    /// 设置宽高尺寸
+    /// - Parameter size: 尺寸大小
+    /// - Returns: 约束数组
+    @discardableResult
+    public func setDimensions(_ size: CGSize) -> [NSLayoutConstraint] {
+        return base.__fw.setDimensionsTo(size)
+    }
+
+    /// 设置某个尺寸，可指定关系
+    /// - Parameters:
+    ///   - dimension: 尺寸属性
+    ///   - size: 尺寸大小
+    ///   - relation: 约束关系，默认相等
+    /// - Returns: 布局约束
+    @discardableResult
+    public func setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.setDimension(dimension, toSize: size, relation: relation)
+    }
+
+    /// 与视图自身尺寸属性指定比例，指定关系
+    /// - Parameters:
+    ///   - dimension: 尺寸属性
+    ///   - toDimension: 目标尺寸属性
+    ///   - multiplier: 指定比例
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    @discardableResult
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.matchDimension(dimension, toDimension: toDimension, withMultiplier: multiplier, relation: relation)
+    }
+
+    /// 与指定视图尺寸属性相同，可指定相差大小和关系
+    /// - Parameters:
+    ///   - dimension: 尺寸属性
+    ///   - toDimension: 目标尺寸属性
+    ///   - ofView: 目标视图
+    ///   - offset: 相差大小，默认0
+    ///   - relation: 约束关系，默认相等
+    /// - Returns: 布局约束
+    @discardableResult
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.matchDimension(dimension, toDimension: toDimension, ofView: ofView, withOffset: offset, relation: relation)
+    }
+
+    /// 与指定视图尺寸属性指定比例，可指定关系
+    /// - Parameters:
+    ///   - dimension: 尺寸属性
+    ///   - toDimension: 目标尺寸属性
+    ///   - ofView: 目标视图
+    ///   - multiplier: 指定比例
+    ///   - relation: 约束关系，默认相等
+    /// - Returns: 布局约束
+    @discardableResult
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.matchDimension(dimension, toDimension: toDimension, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    }
+    
+    // MARK: - Constrain
+    /// 与指定视图属性偏移指定距离，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - offset: 偏移距离
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    @discardableResult
+    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.constrainAttribute(attribute, to: toAttribute, ofView: ofView, withOffset: offset, relation: relation)
+    }
+
+    /// 与指定视图属性指定比例，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - multiplier: 指定比例
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    @discardableResult
+    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
+        return base.__fw.constrainAttribute(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    }
+    
+    // MARK: - Constraint
+    /// 最近一条添加或更新的布局约束
+    public var lastConstraint: NSLayoutConstraint? {
+        return base.__fw.lastConstraint
+    }
+
+    /// 获取添加的与父视图属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(toSuperview: attribute, relation: relation)
+    }
+
+    /// 获取添加的与父视图安全区域属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
+    }
+
+    /// 获取添加的与指定视图属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, relation: relation)
+    }
+
+    /// 获取添加的与指定视图属性指定比例的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - multiplier: 指定比例
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    }
+    
+    // MARK: - Key
+    /// 设置约束保存键名，方便更新约束常量
+    /// - Parameters:
+    ///   - constraint: 布局约束
+    ///   - forKey: 保存key
+    public func setConstraint(_ constraint: NSLayoutConstraint?, forKey: NSCopying) {
+        base.__fw.setConstraint(constraint, forKey: forKey)
+    }
+
+    /// 获取键名对应约束
+    /// - Parameter forKey: 保存key
+    /// - Returns: 布局约束
+    public func constraint(forKey: NSCopying) -> NSLayoutConstraint? {
+        return base.__fw.constraint(forKey: forKey)
+    }
+    
+    // MARK: - All
+    /// 获取当前所有约束，不包含Key
+    public var allConstraints: [NSLayoutConstraint] {
+        return base.__fw.allConstraints
+    }
+
+    /// 移除当前指定约束，不包含Key
+    /// - Parameter constraint: 布局约束
+    public func removeConstraint(_ constraint: NSLayoutConstraint) {
+        base.__fw.remove(constraint)
+    }
+
+    /// 移除当前所有约束，不包含Key
+    public func removeAllConstraints() {
+        base.__fw.removeAllConstraints()
     }
     
 }
