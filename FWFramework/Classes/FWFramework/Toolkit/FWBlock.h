@@ -113,6 +113,21 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 @end
 
+#pragma mark - FWTimerWrapper+FWFoundation
+
+@interface FWTimerWrapper (FWFoundation)
+
+/// 暂停NSTimer
+- (void)pauseTimer;
+
+/// 开始NSTimer
+- (void)resumeTimer;
+
+/// 延迟delay秒后开始NSTimer
+- (void)resumeTimerAfterDelay:(NSTimeInterval)delay;
+
+@end
+
 #pragma mark - FWGestureRecognizerWrapper+FWBlock
 
 @interface FWGestureRecognizerWrapper (FWBlock)

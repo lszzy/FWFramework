@@ -179,21 +179,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWTimerWrapper+FWFoundation
-
-@interface FWTimerWrapper (FWFoundation)
-
-/// 暂停NSTimer
-- (void)pauseTimer;
-
-/// 开始NSTimer
-- (void)resumeTimer;
-
-/// 延迟delay秒后开始NSTimer
-- (void)resumeTimerAfterDelay:(NSTimeInterval)delay;
-
-@end
-
 #pragma mark - FWUserDefaultsWrapper+FWFoundation
 
 @interface FWUserDefaultsWrapper (FWFoundation)

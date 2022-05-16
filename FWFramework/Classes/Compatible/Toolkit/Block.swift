@@ -86,6 +86,21 @@ extension Wrapper where Base: Timer {
         return Base.__fw.scheduledTimer(withTimeInterval: timeInterval, block: block, repeats: repeats)
     }
     
+    /// 暂停NSTimer
+    public func pauseTimer() {
+        base.__fw.pauseTimer()
+    }
+
+    /// 开始NSTimer
+    public func resumeTimer() {
+        base.__fw.resumeTimer()
+    }
+
+    /// 延迟delay秒后开始NSTimer
+    public func resumeTimer(afterDelay: TimeInterval) {
+        base.__fw.resumeTimer(afterDelay: afterDelay)
+    }
+    
 }
 
 // MARK: - UIGestureRecognizer+Block

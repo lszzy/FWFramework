@@ -67,6 +67,30 @@
 
 @end
 
+#pragma mark - FWTimerWrapper+FWFoundation
+
+@implementation FWTimerWrapper (FWFoundation)
+
+- (void)pauseTimer
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate distantFuture]];
+}
+
+- (void)resumeTimer
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate date]];
+}
+
+- (void)resumeTimerAfterDelay:(NSTimeInterval)delay
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
+}
+
+@end
+
 #pragma mark - FWInnerBlockTarget
 
 @interface FWInnerBlockTarget : NSObject
