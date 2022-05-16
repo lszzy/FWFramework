@@ -324,17 +324,27 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal
 {
+    return [self pinEdgesToSuperviewHorizontalWithInset:0.0];
+}
+
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontalWithInset:(CGFloat)inset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeLeft]];
-    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeRight]];
+    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeLeft withInset:inset]];
+    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeRight withInset:inset]];
     return constraints;
 }
 
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical
 {
+    return [self pinEdgesToSuperviewVerticalWithInset:0.0];
+}
+
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVerticalWithInset:(CGFloat)inset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeTop]];
-    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeBottom]];
+    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeTop withInset:inset]];
+    [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeBottom withInset:inset]];
     return constraints;
 }
 
@@ -428,17 +438,27 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal
 {
+    return [self pinEdgesToSuperviewSafeAreaHorizontalWithInset:0.0];
+}
+
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontalWithInset:(CGFloat)inset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight]];
+    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:inset]];
+    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:inset]];
     return constraints;
 }
 
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical
 {
+    return [self pinEdgesToSuperviewSafeAreaVerticalWithInset:0.0];
+}
+
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVerticalWithInset:(CGFloat)inset
+{
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom]];
+    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:inset]];
+    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:inset]];
     return constraints;
 }
 

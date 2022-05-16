@@ -195,11 +195,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal;
 
 /**
+ 与父视图水平方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontalWithInset:(CGFloat)inset;
+
+/**
  与父视图垂直方向两条边属性相同
  
  @return 约束数组
  */
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical;
+
+/**
+ 与父视图垂直方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVerticalWithInset:(CGFloat)inset;
 
 /**
  与父视图边属性相同
@@ -327,11 +343,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal;
 
 /**
+ 与父视图安全区域水平方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontalWithInset:(CGFloat)inset;
+
+/**
  与父视图安全区域垂直方向两条边属性相同
  
  @return 约束数组
  */
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical;
+
+/**
+ 与父视图安全区域垂直方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVerticalWithInset:(CGFloat)inset;
 
 /**
  与父视图安全区域边属性相同
