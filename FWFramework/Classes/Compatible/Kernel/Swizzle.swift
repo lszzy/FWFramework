@@ -39,6 +39,7 @@ extension Wrapper where Base: NSObject {
     /// 安全调用方法，如果不能响应，则忽略之
     /// - Parameter selector: 要执行的方法
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
     public func invokeMethod(_ selector: Selector) -> Any? {
         return base.__fw.invokeMethod(selector)
     }
@@ -48,6 +49,7 @@ extension Wrapper where Base: NSObject {
     ///   - selector: 要执行的方法
     ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
     public func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
         return base.__fw.invokeMethod(selector, with: object)
     }
@@ -55,6 +57,7 @@ extension Wrapper where Base: NSObject {
     /// 对super发送消息
     /// - Parameter selector: 要执行的方法，需返回id类型
     /// - Returns: 方法执行后返回的值
+    @discardableResult
     public func invokeSuperMethod(_ selector: Selector) -> Any? {
         return base.__fw.invokeSuperMethod(selector)
     }
@@ -64,6 +67,7 @@ extension Wrapper where Base: NSObject {
     ///   - selector: 要执行的方法，需返回id类型
     ///   - object: 传递的方法参数
     /// - Returns: 方法执行后返回的值
+    @discardableResult
     public func invokeSuperMethod(_ selector: Selector, object: Any?) -> Any? {
         return base.__fw.invokeSuperMethod(selector, with: object)
     }
@@ -84,6 +88,7 @@ extension Wrapper where Base: NSObject {
     ///   - name: 内部属性名称
     ///   - object: 传递的方法参数
     /// - Returns: 方法执行后返回的值
+    @discardableResult
     public func invokeSetter(_ name: String, object: Any?) -> Any? {
         return base.__fw.invokeSetter(name, with: object)
     }
