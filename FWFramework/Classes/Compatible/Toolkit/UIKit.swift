@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 #if FWMacroTracking
 import AdSupport
 #endif

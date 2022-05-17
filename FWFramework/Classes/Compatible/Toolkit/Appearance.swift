@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - NSObject+Appearance
 extension Wrapper where Base: NSObject {
