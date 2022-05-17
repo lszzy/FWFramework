@@ -20,7 +20,7 @@ extension JSONEncoder: AnyEncoder {}
 extension PropertyListEncoder: AnyEncoder {}
 #endif
 
-// MARK: - Wrapper+AnyEncoder
+// MARK: - Data+AnyEncoder
 extension Wrapper where Base == Data {
     public static func encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
@@ -64,7 +64,7 @@ extension JSONDecoder: AnyDecoder {}
 extension PropertyListDecoder: AnyDecoder {}
 #endif
 
-// MARK: - Wrapper+AnyDecoder
+// MARK: - Data+AnyDecoder
 extension Wrapper where Base == Data {
     public func decoded<T: Decodable>(as type: T.Type = T.self,
                                       using decoder: AnyDecoder = JSONDecoder()) throws -> T {

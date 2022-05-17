@@ -66,6 +66,7 @@ extension FW {
     }
 }
 
+// MARK: - UIApplication+Toolkit
 /// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
 extension Wrapper where Base: UIApplication {
     
@@ -171,6 +172,7 @@ extension Wrapper where Base: UIApplication {
     
 }
 
+// MARK: - UIColor+Toolkit
 extension Wrapper where Base: UIColor {
     
     /// 获取当前颜色指定透明度的新颜色
@@ -226,6 +228,7 @@ extension Wrapper where Base: UIColor {
     
 }
 
+// MARK: - UIFont+Toolkit
 extension Wrapper where Base: UIFont {
     
     /// 全局自定义字体句柄，优先调用
@@ -266,6 +269,7 @@ extension Wrapper where Base: UIFont {
     
 }
 
+// MARK: - UIImage+Toolkit
 extension Wrapper where Base: UIImage {
     
     /// 从当前图片创建指定透明度的图片
@@ -395,6 +399,7 @@ extension Wrapper where Base: UIImage {
     
 }
 
+// MARK: - UIView+Toolkit
 extension Wrapper where Base: UIView {
     
     /// 顶部纵坐标，frame.origin.y
@@ -471,6 +476,7 @@ extension Wrapper where Base: UIView {
     
 }
 
+// MARK: - UIViewController+Toolkit
 extension Wrapper where Base: UIViewController {
     
     /// 当前生命周期状态，默认Ready
@@ -510,6 +516,7 @@ extension Wrapper where Base: UIViewController {
     
 }
 
+// MARK: - UINavigationController+Toolkit
 /// 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
 extension Wrapper where Base: UINavigationController {
     

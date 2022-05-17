@@ -7,6 +7,7 @@
 
 import QuartzCore
 
+// MARK: - CADisplayLink+QuartzCore
 /// 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
 extension Wrapper where Base: CADisplayLink {
     
@@ -37,6 +38,7 @@ extension Wrapper where Base: CADisplayLink {
     
 }
 
+// MARK: - CAAnimation+QuartzCore
 extension Wrapper where Base: CAAnimation {
     
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
@@ -53,6 +55,7 @@ extension Wrapper where Base: CAAnimation {
     
 }
 
+// MARK: - CALayer+QuartzCore
 extension Wrapper where Base: CALayer {
     
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
@@ -81,6 +84,7 @@ extension Wrapper where Base: CALayer {
     
 }
 
+// MARK: - CAGradientLayer+QuartzCore
 extension Wrapper where Base: CAGradientLayer {
     
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil

@@ -11,7 +11,7 @@ import UIKit
 import FWFramework
 #endif
 
-// MARK: - Wrapper+Foundation
+// MARK: - Data+Foundation
 extension Wrapper where Base == Data {
     /// 使用NSKeyedArchiver压缩对象
     public static func archiveObject(_ object: Any) -> Data? {
@@ -43,6 +43,7 @@ extension Wrapper where Base == Data {
     }
 }
 
+// MARK: - Date+Foundation
 extension Wrapper where Base == Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
     public static var currentTime: TimeInterval {
@@ -99,6 +100,7 @@ extension Wrapper where Base == Date {
     }
 }
 
+// MARK: - String+Foundation
 extension Wrapper where Base == String {
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
     public func size(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize {
@@ -137,6 +139,7 @@ extension Wrapper where Base == String {
     }
 }
 
+// MARK: - NSAttributedString+Foundation
 /// 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可
 extension Wrapper where Base: NSAttributedString {
     
@@ -167,6 +170,7 @@ extension Wrapper where Base: NSAttributedString {
     
 }
 
+// MARK: - NSObject+Foundation
 extension Wrapper where Base: NSObject {
     
     /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
@@ -181,6 +185,7 @@ extension Wrapper where Base: NSObject {
     
 }
 
+// MARK: - UserDefaults+Foundation
 extension Wrapper where Base: UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象

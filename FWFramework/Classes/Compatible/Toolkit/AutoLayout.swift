@@ -11,6 +11,7 @@ import UIKit
 import FWFramework
 #endif
 
+// MARK: - UIView+AutoLayout
 /// UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
 /// 如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
@@ -930,7 +931,7 @@ public class LayoutChain {
     
 }
 
-// MARK: - Wrapper+LayoutChain
+// MARK: - UIView+LayoutChain
 extension Wrapper where Base: UIView {
 
     /// 链式布局对象

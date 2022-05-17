@@ -10,6 +10,7 @@ import UIKit
 import AdSupport
 #endif
 
+// MARK: - UIDevice+UIKit
 extension Wrapper where Base: UIDevice {
     
     /// 设置设备token原始Data，格式化并保存
@@ -43,6 +44,7 @@ extension Wrapper where Base: UIDevice {
     
 }
 
+// MARK: - UIView+UIKit
 extension Wrapper where Base: UIView {
     
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
@@ -129,6 +131,7 @@ extension Wrapper where Base: UIView {
     
 }
 
+// MARK: - UILabel+UIKit
 extension Wrapper where Base: UILabel {
     
     /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
@@ -177,6 +180,7 @@ extension Wrapper where Base: UILabel {
     
 }
 
+// MARK: - UIButton+UIKit
 extension Wrapper where Base: UIButton {
     
     /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
@@ -226,6 +230,7 @@ extension Wrapper where Base: UIButton {
     
 }
 
+// MARK: - UIScrollView+UIKit
 extension Wrapper where Base: UIScrollView {
     
     /// 判断当前scrollView内容是否足够滚动
@@ -281,6 +286,7 @@ extension Wrapper where Base: UIScrollView {
     
 }
 
+// MARK: - UIPageControl+UIKit
 extension Wrapper where Base: UIPageControl {
     
     /// 自定义圆点大小，默认{10, 10}
@@ -291,6 +297,7 @@ extension Wrapper where Base: UIPageControl {
     
 }
 
+// MARK: - UISlider+UIKit
 extension Wrapper where Base: UISlider {
     
     /// 中间圆球的大小，默认zero
@@ -307,6 +314,7 @@ extension Wrapper where Base: UISlider {
     
 }
 
+// MARK: - UISwitch+UIKit
 extension Wrapper where Base: UISwitch {
     
     /// 自定义尺寸大小，默认{51,31}
@@ -317,6 +325,7 @@ extension Wrapper where Base: UISwitch {
     
 }
 
+// MARK: - UITextField+UIKit
 extension Wrapper where Base: UITextField {
     
     /// 最大字数限制，0为无限制，二选一
@@ -355,6 +364,7 @@ extension Wrapper where Base: UITextField {
     
 }
 
+// MARK: - UITextView+UIKit
 extension Wrapper where Base: UITextView {
     
     /// 最大字数限制，0为无限制，二选一
@@ -393,6 +403,7 @@ extension Wrapper where Base: UITextView {
     
 }
 
+// MARK: - UIViewController+UIKit
 extension Wrapper where Base: UIViewController {
     
     /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES

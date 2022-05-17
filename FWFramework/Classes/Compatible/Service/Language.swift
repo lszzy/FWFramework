@@ -21,7 +21,7 @@ extension FW {
     }
 }
 
-// MARK: - Wrapper+Language
+// MARK: - String+Language
 extension Wrapper where Base == String {
     /// 快速读取本地化语言
     public var localized: String {
