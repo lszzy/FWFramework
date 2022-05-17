@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - FW+Language
 extension FW {

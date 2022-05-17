@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - UITableViewCell+DynamicLayout
 extension Wrapper where Base: UITableViewCell {

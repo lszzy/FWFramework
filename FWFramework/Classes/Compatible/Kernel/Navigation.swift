@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - UIWindow+Navigation
 extension Wrapper where Base: UIWindow {

@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 
 extension Wrapper where Base: NSObject {
     /// 获取当前对象的所有 @property、方法，父类的方法也会分别列出

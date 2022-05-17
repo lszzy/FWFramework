@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - UIColor+Theme
 extension Wrapper where Base: UIColor {
