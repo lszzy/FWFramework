@@ -180,7 +180,8 @@ extension Wrapper where Base: UIControl {
     }
 
     /// 添加点击句柄
-    public func addTouchBlock(_ block: @escaping (Any) -> Void) -> String {
+    @discardableResult
+    public func addTouch(block: @escaping (Any) -> Void) -> String {
         return base.__fw.addTouch(block)
     }
 
