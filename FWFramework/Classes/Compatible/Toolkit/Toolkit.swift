@@ -386,9 +386,14 @@ extension Wrapper where Base: UIImage {
     public static func image(view: UIView) -> UIImage? {
         return Base.__fw.image(with: view)
     }
-
-    /// 从颜色创建UIImage，可指定尺寸和圆角，默认1x1，圆角0
-    public static func image(color: UIColor, size: CGSize = .init(width: 1.0, height: 1.0), cornerRadius: CGFloat) -> UIImage? {
+    
+    /// 从颜色创建UIImage，尺寸默认1x1
+    public static func image(color: UIColor) -> UIImage? {
+        return Base.__fw.image(with: color)
+    }
+    
+    /// 从颜色创建UIImage，可指定尺寸和圆角，默认圆角0
+    public static func image(color: UIColor, size: CGSize, cornerRadius: CGFloat = 0) -> UIImage? {
         return Base.__fw.image(with: color, size: size, cornerRadius: cornerRadius)
     }
 
