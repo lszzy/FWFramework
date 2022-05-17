@@ -120,6 +120,7 @@ extension FW {
     }
 }
 
+// MARK: - UIApplication+Adaptive
 extension Wrapper where Base: UIApplication {
     
     /// 是否是调试模式
@@ -129,6 +130,7 @@ extension Wrapper where Base: UIApplication {
     
 }
 
+// MARK: - UIDevice+Adaptive
 extension Wrapper where Base: UIDevice {
     
     /// 是否是模拟器
@@ -208,6 +210,7 @@ extension Wrapper where Base: UIDevice {
     
 }
 
+// MARK: - UIScreen+Adaptive
 extension Wrapper where Base: UIScreen {
     
     /// 屏幕尺寸
@@ -317,6 +320,7 @@ extension Wrapper where Base: UIScreen {
     
 }
 
+// MARK: - UIViewController+Adaptive
 extension Wrapper where Base: UIViewController {
     
     /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用

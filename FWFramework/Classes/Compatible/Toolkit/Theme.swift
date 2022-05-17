@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - UIColor+Theme
 extension Wrapper where Base: UIColor {
     
     /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
@@ -56,6 +57,7 @@ extension Wrapper where Base: UIColor {
     
 }
 
+// MARK: - UIImage+Theme
 /// 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
 /// 为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
 extension Wrapper where Base: UIImage {
@@ -127,6 +129,7 @@ extension Wrapper where Base: UIImage {
     
 }
 
+// MARK: - UIImageAsset+Theme
 extension Wrapper where Base: UIImageAsset {
     
     /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
@@ -156,6 +159,7 @@ extension Wrapper where Base: UIImageAsset {
     
 }
 
+// MARK: - NSObject+Theme
 extension Wrapper where Base: NSObject {
     
     /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
@@ -186,6 +190,7 @@ extension Wrapper where Base: NSObject {
     
 }
 
+// MARK: - UIImageView+Theme
 extension Wrapper where Base: UIImageView {
     
     /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一

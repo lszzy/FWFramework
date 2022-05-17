@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - UITableViewCell+DynamicLayout
 extension Wrapper where Base: UITableViewCell {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
@@ -46,6 +47,7 @@ extension Wrapper where Base: UITableViewCell {
     
 }
 
+// MARK: - UITableViewHeaderFooterView+DynamicLayout
 extension Wrapper where Base: UITableViewHeaderFooterView {
     
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
@@ -85,6 +87,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
     
 }
 
+// MARK: - UITableView+DynamicLayout
 /// 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 ///
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
@@ -185,6 +188,7 @@ extension Wrapper where Base: UITableView {
     
 }
 
+// MARK: - UICollectionViewCell+DynamicLayout
 extension Wrapper where Base: UICollectionViewCell {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
@@ -242,6 +246,7 @@ extension Wrapper where Base: UICollectionViewCell {
     
 }
 
+// MARK: - UICollectionReusableView+DynamicLayout
 extension Wrapper where Base: UICollectionReusableView {
     
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
@@ -303,6 +308,7 @@ extension Wrapper where Base: UICollectionReusableView {
     
 }
 
+// MARK: - UICollectionView+DynamicLayout
 extension Wrapper where Base: UICollectionView {
     
     /// 手工清空尺寸缓存，用于尺寸发生变化的情况
