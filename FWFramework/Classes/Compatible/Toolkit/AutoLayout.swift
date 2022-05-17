@@ -155,7 +155,7 @@ extension Wrapper where Base: UIView {
     ///   - excludingEdge: 排除的边
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperview insets: UIEdgeInsets, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+    public func pinEdges(toSuperview insets: UIEdgeInsets = .zero, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperview(with: insets, excludingEdge: excludingEdge)
     }
     
@@ -750,7 +750,7 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func edges(toSafeArea insets: UIEdgeInsets = UIEdgeInsets.zero, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
+    public func edges(toSafeArea insets: UIEdgeInsets, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
         view?.__fw.pinEdgesToSuperviewSafeArea(with: insets, excludingEdge: edge)
         return self
     }
