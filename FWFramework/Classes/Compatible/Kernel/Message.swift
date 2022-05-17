@@ -19,6 +19,7 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - block: 消息句柄
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
         return base.__fw.observeMessage(name, block: block)
     }
@@ -29,6 +30,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象，值为nil时表示所有
     ///   - block: 消息句柄
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeMessage(_ name: Notification.Name, object: Any?, block: @escaping (Notification) -> Void) -> String {
         return base.__fw.observeMessage(name, object: object, block: block)
     }
@@ -39,6 +41,7 @@ extension Wrapper where Base: NSObject {
     ///   - target: 消息目标
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeMessage(_ name: Notification.Name, target: Any?, action: Selector) -> String {
         return base.__fw.observeMessage(name, target: target, action: action)
     }
@@ -50,6 +53,7 @@ extension Wrapper where Base: NSObject {
     ///   - target: 消息目标
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeMessage(_ name: Notification.Name, object: Any?, target: Any?, action: Selector) -> String {
         return base.__fw.observeMessage(name, object: object, target: target, action: action)
     }
@@ -167,6 +171,7 @@ extension Wrapper where Base: NSObject {
     ///   - name: 通知名称
     ///   - block: 通知句柄
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
         return base.__fw.observeNotification(name, block: block)
     }
@@ -177,6 +182,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 通知对象，值为nil时表示所有
     ///   - block: 通知句柄
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeNotification(_ name: Notification.Name, object: Any?, block: @escaping (Notification) -> Void) -> String {
         return base.__fw.observeNotification(name, object: object, block: block)
     }
@@ -187,6 +193,7 @@ extension Wrapper where Base: NSObject {
     ///   - target: 通知目标
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeNotification(_ name: Notification.Name, target: Any?, action: Selector) -> String {
         return base.__fw.observeNotification(name, target: target, action: action)
     }
@@ -198,6 +205,7 @@ extension Wrapper where Base: NSObject {
     ///   - target: 通知目标
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeNotification(_ name: Notification.Name, object: Any?, target: Any?, action: Selector) -> String {
         return base.__fw.observeNotification(name, object: object, target: target, action: action)
     }
@@ -278,6 +286,7 @@ extension Wrapper where Base: NSObject {
     ///   - property: 属性名称
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
         return base.__fw.observeProperty(property, block: block)
     }
@@ -288,6 +297,7 @@ extension Wrapper where Base: NSObject {
     ///   - target: 目标对象
     ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
+    @discardableResult
     public func observeProperty(_ property: String, target: Any?, action: Selector) -> String {
         return base.__fw.observeProperty(property, target: target, action: action)
     }
