@@ -90,7 +90,7 @@ extension FW {
     public static var relativeHeightScale: CGFloat { return UIScreen.__fw.relativeHeightScale }
 
     /// 获取相对设计图宽度等比例缩放值
-    public static func relativeValue(_ value: CGFloat) -> CGFloat {
+    public static func relative(_ value: CGFloat) -> CGFloat {
         return UIScreen.__fw.relativeValue(value)
     }
     /// 获取相对设计图高度等比例缩放值
@@ -98,24 +98,24 @@ extension FW {
         return UIScreen.__fw.relativeHeight(value)
     }
     /// 获取相对设计图等比例缩放size
-    public static func relativeValue(_ size: CGSize) -> CGSize {
-        return CGSize(width: relativeValue(size.width), height: relativeValue(size.height))
+    public static func relative(_ size: CGSize) -> CGSize {
+        return CGSize(width: relative(size.width), height: relative(size.height))
     }
     /// 获取相对设计图等比例缩放point
-    public static func relativeValue(_ point: CGPoint) -> CGPoint {
-        return CGPoint(x: relativeValue(point.x), y: relativeValue(point.y))
+    public static func relative(_ point: CGPoint) -> CGPoint {
+        return CGPoint(x: relative(point.x), y: relative(point.y))
     }
     /// 获取相对设计图等比例缩放rect
-    public static func relativeValue(_ rect: CGRect) -> CGRect {
-        return CGRect(origin: relativeValue(rect.origin), size: relativeValue(rect.size))
+    public static func relative(_ rect: CGRect) -> CGRect {
+        return CGRect(origin: relative(rect.origin), size: relative(rect.size))
     }
     /// 获取相对设计图等比例缩放insets
-    public static func relativeValue(_ insets: UIEdgeInsets) -> UIEdgeInsets {
-        return UIEdgeInsets(top: relativeValue(insets.top), left: relativeValue(insets.left), bottom: relativeValue(insets.bottom), right: relativeValue(insets.right))
+    public static func relative(_ insets: UIEdgeInsets) -> UIEdgeInsets {
+        return UIEdgeInsets(top: relative(insets.top), left: relative(insets.left), bottom: relative(insets.bottom), right: relative(insets.right))
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-    public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
+    public static func flat(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         return UIScreen.__fw.flatValue(value, scale: scale)
     }
 }
