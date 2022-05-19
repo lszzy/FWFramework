@@ -196,8 +196,8 @@ extension Wrapper where Base: UIColor {
     }
 
     /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-    public var hexStringWithAlpha: String {
-        return base.__fw.hexStringWithAlpha
+    public var hexAlphaString: String {
+        return base.__fw.hexAlphaString
     }
     
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA

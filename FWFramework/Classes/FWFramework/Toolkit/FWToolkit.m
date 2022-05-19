@@ -327,7 +327,7 @@ static BOOL fwStaticColorARGB = NO;
     return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
 }
 
-- (NSString *)hexStringWithAlpha
+- (NSString *)hexAlphaString
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self.base getRed:&r green:&g blue:&b alpha:&a]) {

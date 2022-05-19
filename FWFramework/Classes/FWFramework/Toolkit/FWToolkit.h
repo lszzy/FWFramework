@@ -115,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *hexString;
 
 /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-@property (nonatomic, copy, readonly) NSString *hexStringWithAlpha;
+@property (nonatomic, copy, readonly) NSString *hexAlphaString;
 
 @end
 
