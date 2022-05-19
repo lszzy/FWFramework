@@ -171,6 +171,9 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 全局自定义字体句柄，优先调用
 @property (nonatomic, copy, nullable) UIFont * (^fontBlock)(CGFloat size, UIFontWeight weight);
 
+/// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
+@property (nonatomic, assign) BOOL autoScale;
+
 /// 返回系统Thin字体
 - (UIFont *)thinFontOfSize:(CGFloat)size;
 /// 返回系统Light字体

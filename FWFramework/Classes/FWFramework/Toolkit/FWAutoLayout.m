@@ -8,6 +8,7 @@
  */
 
 #import "FWAutoLayout.h"
+#import "FWAdaptive.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -32,6 +33,7 @@
 @end
 
 static BOOL fwStaticAutoLayoutRTL = NO;
+static BOOL fwStaticAutoScaleLayout = NO;
 
 @implementation FWViewClassWrapper (FWAutoLayout)
 
@@ -43,6 +45,16 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 - (void)setAutoLayoutRTL:(BOOL)enabled
 {
     fwStaticAutoLayoutRTL = enabled;
+}
+
+- (BOOL)autoScale
+{
+    return fwStaticAutoScaleLayout;
+}
+
+- (void)setAutoScale:(BOOL)autoScale
+{
+    fwStaticAutoScaleLayout = autoScale;
 }
 
 @end
@@ -84,6 +96,17 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 }
 
 #pragma mark - AutoLayout
+
+- (BOOL)autoScale
+{
+    NSNumber *value = objc_getAssociatedObject(self.base, _cmd);
+    return value ? [value boolValue] : fwStaticAutoScaleLayout;
+}
+
+- (void)setAutoScale:(BOOL)autoScale
+{
+    objc_setAssociatedObject(self.base, @selector(autoScale), @(autoScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (BOOL)autoLayout
 {
@@ -661,6 +684,12 @@ static BOOL fwStaticAutoLayoutRTL = NO;
 
 - (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation
 {
+    NSNumber *scaleValue = objc_getAssociatedObject(self.base, @selector(autoScale));
+    BOOL autoScale = scaleValue ? [scaleValue boolValue] : fwStaticAutoScaleLayout;
+    if (autoScale) {
+        offset = [UIScreen.fw relativeValue:offset];
+    }
+    
     if (fwStaticAutoLayoutRTL) {
         switch (attribute) {
             case NSLayoutAttributeLeft: { attribute = NSLayoutAttributeLeading; break; }

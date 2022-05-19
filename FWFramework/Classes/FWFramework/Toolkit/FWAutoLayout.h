@@ -21,6 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL autoLayoutRTL;
 
+/**
+ 是否全局自动等比例缩放布局，默认NO
+ @note 启用后所有offset值都会自动*relativeScale，注意可能产生的影响。
+ 启用后注意事项：
+ 1. 屏幕宽度约束不能使用screenWidth约束，需要使用375设计标准
+ 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
+ 2. 只会对offset值生效，其他属性不受影响
+ 3. 如需特殊处理，可以指定某个视图关闭该功能
+ */
+@property (nonatomic, assign) BOOL autoScale;
+
 @end
 
 /**
@@ -32,9 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - AutoLayout
 
-/**
- 是否启用自动布局
- */
+/// 视图是否自动等比例缩放布局，默认返回全局开关
+@property (nonatomic, assign) BOOL autoScale;
+
+/// 是否启用自动布局
 @property (nonatomic, assign) BOOL autoLayout;
 
 /**
