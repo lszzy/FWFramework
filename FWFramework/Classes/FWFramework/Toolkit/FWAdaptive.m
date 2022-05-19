@@ -129,6 +129,14 @@ CGFloat FWRelativeHeight(CGFloat value) {
     return [UIScreen.fw relativeHeight:value];
 }
 
+CGFloat FWFixedValue(CGFloat value) {
+    return [UIScreen.fw fixedValue:value];
+}
+
+CGFloat FWFixedHeight(CGFloat value) {
+    return [UIScreen.fw fixedHeight:value];
+}
+
 CGSize FWRelativeSize(CGSize size) {
     return CGSizeMake(FWRelativeValue(size.width), FWRelativeValue(size.height));
 }
@@ -351,6 +359,16 @@ static CGFloat fwStaticReferenceHeight = 812;
 - (CGFloat)relativeHeight:(CGFloat)value
 {
     return value * [self relativeHeightScale];
+}
+
+- (CGFloat)fixedValue:(CGFloat)value
+{
+    return value / [self relativeScale];
+}
+
+- (CGFloat)fixedHeight:(CGFloat)value
+{
+    return value / [self relativeHeightScale];
 }
 
 - (CGFloat)flatValue:(CGFloat)value

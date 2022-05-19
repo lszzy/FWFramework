@@ -236,6 +236,12 @@ extension Wrapper where Base: UIFont {
         get { return Base.__fw.fontBlock }
         set { Base.__fw.fontBlock = newValue }
     }
+    
+    /// 是否自动等比例缩放字体，默认NO
+    public static var autoScale: Bool {
+        get { return Base.__fw.autoScale }
+        set { Base.__fw.autoScale = newValue }
+    }
 
     /// 返回系统Thin字体
     public static func thinFont(ofSize: CGFloat) -> UIFont {

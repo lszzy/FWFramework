@@ -8,6 +8,7 @@
  */
 
 #import "FWToolkit.h"
+#import "FWAdaptive.h"
 #import "FWNavigation.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
@@ -483,7 +484,19 @@ UIFont * FWFontMedium(CGFloat size) { return [UIFont.fw mediumFontOfSize:size]; 
 UIFont * FWFontSemibold(CGFloat size) { return [UIFont.fw semiboldFontOfSize:size]; }
 UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
 
+static BOOL fwStaticAutoScaleFont = NO;
+
 @implementation FWFontClassWrapper (FWToolkit)
+
+- (BOOL)autoScale
+{
+    return fwStaticAutoScaleFont;
+}
+
+- (void)setAutoScale:(BOOL)autoScale
+{
+    fwStaticAutoScaleFont = autoScale;
+}
 
 - (UIFont *)thinFontOfSize:(CGFloat)size
 {
@@ -530,6 +543,9 @@ UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
     UIFont * (^fontBlock)(CGFloat, UIFontWeight) = self.fontBlock;
     if (fontBlock) return fontBlock(size, weight);
     
+    if (fwStaticAutoScaleFont) {
+        size = [UIScreen.fw relativeValue:size];
+    }
     return [UIFont systemFontOfSize:size weight:weight];
 }
 

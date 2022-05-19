@@ -153,6 +153,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 FOUNDATION_EXPORT CGFloat FWRelativeValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图高度等比例缩放值
 FOUNDATION_EXPORT CGFloat FWRelativeHeight(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图宽度等比例缩放时的固定宽度值
+FOUNDATION_EXPORT CGFloat FWFixedValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图高度等比例缩放时的固定高度值
+FOUNDATION_EXPORT CGFloat FWFixedHeight(CGFloat value) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放size
 FOUNDATION_EXPORT CGSize FWRelativeSize(CGSize size) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放point
@@ -212,6 +216,12 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 
 /// 获取相对设计图高度等比例缩放值
 - (CGFloat)relativeHeight:(CGFloat)value;
+
+/// 获取相对设计图宽度等比例缩放时的固定宽度值
+- (CGFloat)fixedValue:(CGFloat)value;
+
+/// 获取相对设计图高度等比例缩放时的固定高度值
+- (CGFloat)fixedHeight:(CGFloat)value;
 
 /// 基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整
 - (CGFloat)flatValue:(CGFloat)value;

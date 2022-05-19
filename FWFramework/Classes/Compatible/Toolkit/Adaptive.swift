@@ -97,6 +97,14 @@ extension FW {
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
         return UIScreen.__fw.relativeHeight(value)
     }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public static func fixed(_ value: CGFloat) -> CGFloat {
+        return UIScreen.__fw.fixedValue(value)
+    }
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public static func fixedHeight(_ value: CGFloat) -> CGFloat {
+        return UIScreen.__fw.fixedHeight(value)
+    }
     /// 获取相对设计图等比例缩放size
     public static func relative(_ size: CGSize) -> CGSize {
         return CGSize(width: relative(size.width), height: relative(size.height))
@@ -311,6 +319,16 @@ extension Wrapper where Base: UIScreen {
     /// 获取相对设计图高度等比例缩放值
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
         return UIScreen.__fw.relativeHeight(value)
+    }
+    
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public static func fixedValue(_ value: CGFloat) -> CGFloat {
+        return UIScreen.__fw.fixedValue(value)
+    }
+
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public static func fixedHeight(_ value: CGFloat) -> CGFloat {
+        return UIScreen.__fw.fixedHeight(value)
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
