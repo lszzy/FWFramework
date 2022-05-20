@@ -24,7 +24,7 @@ class HomeController: UITableViewController {
 
         setupNavbar()
         setupSubviews()
-        setupConstraints()
+        setupLayout()
         
         renderData()
     }
@@ -58,7 +58,7 @@ private extension HomeController {
         
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         
     }
 }
