@@ -67,7 +67,7 @@ class TestController: UIViewController {
 
         setupNavbar()
         setupSubviews()
-        setupConstraints()
+        setupLayout()
         
         renderData()
         testCoder()
@@ -101,7 +101,7 @@ private extension TestController {
         textFieldView.addSubview(textField)
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         tableView.fw.layoutMaker { make in
             make.left().right().top()
         }

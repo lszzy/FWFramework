@@ -16,7 +16,7 @@ class SettingsController: UIViewController {
 
         setupNavbar()
         setupSubviews()
-        setupConstraints()
+        setupLayout()
     }
     
 }
@@ -32,7 +32,7 @@ private extension SettingsController {
         
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         
     }
     

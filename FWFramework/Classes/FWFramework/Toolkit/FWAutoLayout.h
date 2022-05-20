@@ -568,92 +568,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
+#pragma mark - Offset
+
+/// 修改最近一批添加或更新的布局约束偏移值
+- (NSArray<NSLayoutConstraint *> *)setOffset:(CGFloat)offset;
+
+/// 修改最近一批添加或更新的布局约束内间距值
+- (NSArray<NSLayoutConstraint *> *)setInset:(CGFloat)inset;
+
+/// 修改最近一批添加或更新的布局约束优先级
+- (NSArray<NSLayoutConstraint *> *)setPriority:(UILayoutPriority)priority;
+
 #pragma mark - Constraint
-
-/**
- 最近一条添加或更新的布局约束
- */
-@property (nullable, nonatomic, readonly) NSLayoutConstraint *lastConstraint;
-
-/**
- 获取添加的与父视图属性的约束
- 
- @param attribute 指定属性
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute;
-
-/**
- 获取添加的与父视图属性的约束，指定关系
- 
- @param attribute 指定属性
- @param relation 约束关系
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
-
-/**
- 获取添加的与父视图安全区域属性的约束
- 
- @param attribute 指定属性
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute;
-
-/**
- 获取添加的与父视图安全区域属性的约束，指定关系
- 
- @param attribute 指定属性
- @param relation 约束关系
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
-
-/**
- 获取添加的与指定视图属性的约束
- 
- @param attribute 指定属性
- @param toAttribute 目标视图属性
- @param otherView 目标视图
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView;
-
-/**
- 获取添加的与指定视图属性的约束，指定关系
- 
- @param attribute 指定属性
- @param toAttribute 目标视图属性
- @param otherView 目标视图
- @param relation 约束关系
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView relation:(NSLayoutRelation)relation;
-
-/**
- 获取添加的与指定视图属性指定比例的约束
- 
- @param attribute 指定属性
- @param toAttribute 目标视图属性
- @param otherView 目标视图
- @param multiplier 指定比例
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier;
-
-/**
- 获取添加的与指定视图属性指定比例的约束，指定关系
- 
- @param attribute 指定属性
- @param toAttribute 目标视图属性
- @param otherView 目标视图
- @param multiplier 指定比例
- @param relation 约束关系
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
-
-#pragma mark - Key
 
 /**
  设置约束保存键名，方便更新约束常量
@@ -671,7 +597,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSLayoutConstraint *)constraintForKey:(id<NSCopying>)key;
 
-#pragma mark - All
+/**
+ 最近一批添加或更新的布局约束
+ */
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *lastConstraints;
+
+/**
+ 最近一条添加或更新的布局约束
+ */
+@property (nullable, nonatomic, readonly) NSLayoutConstraint *lastConstraint;
 
 /**
  获取当前所有约束，不包含Key
@@ -818,15 +752,12 @@ NS_SWIFT_UNAVAILABLE("")
 
 #pragma mark - Constraint
 
+@property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
+
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *constraints;
 @property (nonatomic, nullable, readonly) NSLayoutConstraint *constraint;
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperview)(NSLayoutAttribute attribute);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperviewWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSafeArea)(NSLayoutAttribute attribute);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSafeAreaWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToView)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, NSLayoutRelation relation);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier);
-@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation);
 
 @end
 

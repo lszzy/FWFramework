@@ -371,54 +371,26 @@ extension Wrapper where Base: UIView {
         return base.__fw.constrainAttribute(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
     }
     
-    // MARK: - Constraint
-    /// 最近一条添加或更新的布局约束
-    public var lastConstraint: NSLayoutConstraint? {
-        return base.__fw.lastConstraint
+    // MARK: - Offset
+    /// 修改最近一批添加或更新的布局约束偏移值
+    @discardableResult
+    public func setOffset(_ offset: CGFloat) -> [NSLayoutConstraint] {
+        return base.__fw.setOffset(offset)
     }
 
-    /// 获取添加的与父视图属性的约束，指定关系
-    /// - Parameters:
-    ///   - attribute: 指定属性
-    ///   - relation: 约束关系
-    /// - Returns: 布局约束
-    public func constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return base.__fw.constraint(toSuperview: attribute, relation: relation)
+    /// 修改最近一批添加或更新的布局约束内间距值
+    @discardableResult
+    public func setInset(_ inset: CGFloat) -> [NSLayoutConstraint] {
+        return base.__fw.setInset(inset)
     }
 
-    /// 获取添加的与父视图安全区域属性的约束，指定关系
-    /// - Parameters:
-    ///   - attribute: 指定属性
-    ///   - relation: 约束关系
-    /// - Returns: 布局约束
-    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return base.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
-    }
-
-    /// 获取添加的与指定视图属性的约束，指定关系
-    /// - Parameters:
-    ///   - attribute: 指定属性
-    ///   - toAttribute: 目标视图属性
-    ///   - ofView: 目标视图
-    ///   - relation: 约束关系
-    /// - Returns: 布局约束
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, relation: relation)
-    }
-
-    /// 获取添加的与指定视图属性指定比例的约束，指定关系
-    /// - Parameters:
-    ///   - attribute: 指定属性
-    ///   - toAttribute: 目标视图属性
-    ///   - ofView: 目标视图
-    ///   - multiplier: 指定比例
-    ///   - relation: 约束关系
-    /// - Returns: 布局约束
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    /// 修改最近一批添加或更新的布局约束优先级
+    @discardableResult
+    public func setPriority(_ priority: UILayoutPriority) -> [NSLayoutConstraint] {
+        return base.__fw.setPriority(priority)
     }
     
-    // MARK: - Key
+    // MARK: - Constraint
     /// 设置约束保存键名，方便更新约束常量
     /// - Parameters:
     ///   - constraint: 布局约束
@@ -434,7 +406,16 @@ extension Wrapper where Base: UIView {
         return base.__fw.constraint(forKey: forKey)
     }
     
-    // MARK: - All
+    /// 最近一批添加或更新的布局约束
+    public var lastConstraints: [NSLayoutConstraint] {
+        return base.__fw.lastConstraints
+    }
+    
+    /// 最近一条添加或更新的布局约束
+    public var lastConstraint: NSLayoutConstraint? {
+        return base.__fw.lastConstraint
+    }
+    
     /// 获取当前所有约束，不包含Key
     public var allConstraints: [NSLayoutConstraint] {
         return base.__fw.allConstraints
@@ -927,25 +908,32 @@ public class LayoutChain {
         return self
     }
     
+    // MARK: - Offset
+    @discardableResult
+    public func offset(_ offset: CGFloat) -> Self {
+        self.view?.__fw.setOffset(offset)
+        return self
+    }
+    
+    @discardableResult
+    public func inset(_ inset: CGFloat) -> Self {
+        self.view?.__fw.setInset(inset)
+        return self
+    }
+    
+    @discardableResult
+    public func priority(_ priority: UILayoutPriority) -> Self {
+        self.view?.__fw.setPriority(priority)
+        return self
+    }
+    
     // MARK: - Constraint
+    public var constraints: [NSLayoutConstraint] {
+        return self.view?.__fw.lastConstraints ?? []
+    }
+    
     public var constraint: NSLayoutConstraint? {
         return self.view?.__fw.lastConstraint
-    }
-    
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.__fw.constraint(toSuperview: attribute, relation: relation)
-    }
-    
-    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
-    }
-
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.__fw.constraint(attribute, to: toAttribute, ofView: view, relation: relation)
-    }
-    
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.__fw.constraint(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
     }
     
 }
@@ -968,5 +956,17 @@ extension Wrapper where Base: UIView {
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         closure(layoutChain)
     }
+    
+}
+
+// MARK: - UILayoutPriority+AutoLayout
+extension UILayoutPriority: WrapperCompatible {}
+
+extension Wrapper where Base == UILayoutPriority {
+    
+    public static let required: UILayoutPriority = .required
+    public static let high: UILayoutPriority = .init(750)
+    public static let medium: UILayoutPriority = .init(500)
+    public static let low: UILayoutPriority = .init(250)
     
 }
