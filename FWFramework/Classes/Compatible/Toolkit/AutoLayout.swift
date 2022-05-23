@@ -391,6 +391,47 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - Constraint
+    /// 获取添加的与父视图属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(toSuperview: attribute, relation: relation)
+    }
+
+    /// 获取添加的与父视图安全区域属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
+    }
+
+    /// 获取添加的与指定视图属性的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, relation: relation)
+    }
+
+    /// 获取添加的与指定视图属性指定比例的约束，指定关系
+    /// - Parameters:
+    ///   - attribute: 指定属性
+    ///   - toAttribute: 目标视图属性
+    ///   - ofView: 目标视图
+    ///   - multiplier: 指定比例
+    ///   - relation: 约束关系
+    /// - Returns: 布局约束
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return base.__fw.constraint(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    }
+    
     /// 设置约束保存键名，方便更新约束常量
     /// - Parameters:
     ///   - constraint: 布局约束
@@ -934,6 +975,22 @@ public class LayoutChain {
     
     public var constraint: NSLayoutConstraint? {
         return self.view?.__fw.lastConstraint
+    }
+    
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.__fw.constraint(toSuperview: attribute, relation: relation)
+    }
+    
+    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
+    }
+
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.__fw.constraint(attribute, to: toAttribute, ofView: view, relation: relation)
+    }
+    
+    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
+        return self.view?.__fw.constraint(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
     }
     
 }

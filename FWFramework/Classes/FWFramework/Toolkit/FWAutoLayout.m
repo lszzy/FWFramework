@@ -632,6 +632,78 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 #pragma mark - Constraint
 
+- (NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute
+{
+    return [self constraintToSuperview:attribute relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)constraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation
+{
+    return [self constraint:attribute toSuperview:self.base.superview relation:relation];
+}
+
+- (NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute
+{
+    return [self constraintToSuperviewSafeArea:attribute relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation
+{
+    return [self constraint:attribute toSuperview:self.base.superview.safeAreaLayoutGuide relation:relation];
+}
+
+- (NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toSuperview:(id)superview relation:(NSLayoutRelation)relation
+{
+    NSAssert(self.base.superview, @"View's superview must not be nil.\nView: %@", self.base);
+    if (attribute == NSLayoutAttributeBottom || attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeTrailing) {
+        if (relation == NSLayoutRelationLessThanOrEqual) {
+            relation = NSLayoutRelationGreaterThanOrEqual;
+        } else if (relation == NSLayoutRelationGreaterThanOrEqual) {
+            relation = NSLayoutRelationLessThanOrEqual;
+        }
+    }
+    return [self constraint:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 relation:relation];
+}
+
+- (NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView
+{
+    return [self constraint:attribute toAttribute:toAttribute ofView:otherView relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView relation:(NSLayoutRelation)relation
+{
+    return [self constraint:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 relation:relation];
+}
+
+- (NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier
+{
+    return [self constraint:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
+}
+
+- (NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+{
+    if (fwStaticAutoLayoutRTL) {
+        switch (attribute) {
+            case NSLayoutAttributeLeft: { attribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { attribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { attribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { attribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
+        }
+        switch (toAttribute) {
+            case NSLayoutAttributeLeft: { toAttribute = NSLayoutAttributeLeading; break; }
+            case NSLayoutAttributeRight: { toAttribute = NSLayoutAttributeTrailing; break; }
+            case NSLayoutAttributeLeftMargin: { toAttribute = NSLayoutAttributeLeadingMargin; break; }
+            case NSLayoutAttributeRightMargin: { toAttribute = NSLayoutAttributeTrailingMargin; break; }
+            default: break;
+        }
+    }
+    
+    // 自动生成唯一约束Key，存在则获取之
+    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
+    return [self.innerLayoutConstraints objectForKey:layoutKey];
+}
+
 - (void)setConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key
 {
     NSMutableDictionary *constraints = objc_getAssociatedObject(self.base, @selector(constraintForKey:));
@@ -1525,6 +1597,62 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (NSLayoutConstraint *)constraint
 {
     return self.view.fw.lastConstraint;
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSuperview
+{
+    return ^id(NSLayoutAttribute attribute) {
+        return [self.view.fw constraintToSuperview:attribute];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutRelation))constraintToSuperviewWithRelation
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutRelation relation) {
+        return [self.view.fw constraintToSuperview:attribute relation:relation];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSafeArea
+{
+    return ^id(NSLayoutAttribute attribute) {
+        return [self.view.fw constraintToSuperviewSafeArea:attribute];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutRelation))constraintToSafeAreaWithRelation
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutRelation relation) {
+        return [self.view.fw constraintToSuperviewSafeArea:attribute relation:relation];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id))constraintToView
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView) {
+        return [self.view.fw constraint:attribute toAttribute:toAttribute ofView:ofView];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, NSLayoutRelation))constraintToViewWithRelation
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, NSLayoutRelation relation) {
+        return [self.view.fw constraint:attribute toAttribute:toAttribute ofView:ofView relation:relation];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat))constraintToViewWithMultiplier
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier) {
+        return [self.view.fw constraint:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))constraintToViewWithMultiplierAndRelation
+{
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
+        return [self.view.fw constraint:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
+    };
 }
 
 @end
