@@ -206,6 +206,12 @@ extension Wrapper where Base: UIBarButtonItem {
         return UIBarButtonItem.__fw.item(with: object, block: block)
     }
     
+    /// 自定义标题样式属性，兼容appearance，默认nil同系统
+    public var titleAttributes: [NSAttributedString.Key: Any]? {
+        get { return base.__fw.titleAttributes }
+        set { base.__fw.titleAttributes = newValue }
+    }
+    
     /// 设置当前Item触发句柄，nil时清空句柄
     public func setBlock(_ block: ((Any) -> Void)?) {
         base.__fw.setBlock(block)
