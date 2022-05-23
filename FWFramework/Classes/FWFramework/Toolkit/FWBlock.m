@@ -327,6 +327,20 @@
 
 @implementation FWBarButtonItemWrapper (FWBlock)
 
+- (NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+{
+    return objc_getAssociatedObject(self.base, @selector(titleAttributes));
+}
+
+- (void)setTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+{
+    objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+    for (NSNumber *state in states) {
+        [self.base setTitleTextAttributes:titleAttributes forState:[state unsignedIntegerValue]];
+    }
+}
+
 - (void)setBlock:(void (^)(id))block
 {
     FWInnerBlockTarget *target = nil;

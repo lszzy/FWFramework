@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Mediator.setupAllModules()
         Router.registerClass(AppRouter.self)
+        setupAppearance()
         return true
     }
     
@@ -32,6 +33,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 // MARK: - Private
 private extension AppDelegate {
+    
+    func setupAppearance() {
+        if #available(iOS 15.0, *) {
+            UITableView.appearance().sectionHeaderTopPadding = .zero
+        }
+        
+        UINavigationController.fw.enablePopProxy()
+        UIBarButtonItem.appearance().fw.titleAttributes = [.foregroundColor: UIColor.fw.themeLight(.black, dark: .white)]
+    }
     
     func setupController() -> UIViewController {
         let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
@@ -56,7 +66,6 @@ private extension AppDelegate {
     
     func navigationController(_ viewController: UIViewController) -> UINavigationController {
         let navController = UINavigationController(rootViewController: viewController)
-        navController.fw.enablePopProxy()
         navController.navigationBar.fw.isTranslucent = false
         navController.navigationBar.fw.shadowColor = nil
         navController.navigationBar.fw.foregroundColor = UIColor.fw.themeLight(.black, dark: .white)
