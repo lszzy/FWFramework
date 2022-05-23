@@ -958,15 +958,3 @@ extension Wrapper where Base: UIView {
     }
     
 }
-
-// MARK: - UILayoutPriority+AutoLayout
-extension UILayoutPriority: WrapperCompatible {}
-
-extension Wrapper where Base == UILayoutPriority {
-    
-    public static let required: UILayoutPriority = .required
-    public static let high: UILayoutPriority = .init(750)
-    public static let medium: UILayoutPriority = .init(500)
-    public static let low: UILayoutPriority = .init(250)
-    
-}
