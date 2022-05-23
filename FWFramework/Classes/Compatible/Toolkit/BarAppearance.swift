@@ -39,9 +39,9 @@ extension Wrapper where Base: UINavigationBar {
     }
 
     /// 单独设置标题颜色，nil时显示前景颜色
-    public var titleColor: UIColor? {
-        get { return base.__fw.titleColor }
-        set { base.__fw.titleColor = newValue }
+    public var titleAttributes: [NSAttributedString.Key: Any]? {
+        get { return base.__fw.titleAttributes }
+        set { base.__fw.titleAttributes = newValue }
     }
 
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效

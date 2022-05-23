@@ -71,40 +71,42 @@
 - (void)setForegroundColor:(UIColor *)color
 {
     self.base.tintColor = color;
-    [self updateTitleColor];
+    [self updateTitleAttributes];
 }
 
-- (UIColor *)titleColor
+- (NSDictionary<NSAttributedStringKey,id> *)titleAttributes
 {
-    return objc_getAssociatedObject(self.base, @selector(titleColor));
+    return objc_getAssociatedObject(self.base, @selector(titleAttributes));
 }
 
-- (void)setTitleColor:(UIColor *)titleColor
+- (void)setTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
 {
-    objc_setAssociatedObject(self.base, @selector(titleColor), titleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateTitleColor];
+    objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateTitleAttributes];
 }
 
-- (void)updateTitleColor
+- (void)updateTitleAttributes
 {
     if (@available(iOS 15.0, *)) {
-        UIColor *titleColor = self.titleColor ?: self.base.tintColor;
         NSMutableDictionary *titleAttrs = self.appearance.titleTextAttributes ? [self.appearance.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
-        titleAttrs[NSForegroundColorAttributeName] = titleColor;
+        titleAttrs[NSForegroundColorAttributeName] = self.base.tintColor;
+        if (self.titleAttributes) [titleAttrs addEntriesFromDictionary:self.titleAttributes];
         self.appearance.titleTextAttributes = [titleAttrs copy];
         
         NSMutableDictionary *largeTitleAttrs = self.appearance.largeTitleTextAttributes ? [self.appearance.largeTitleTextAttributes mutableCopy] : [NSMutableDictionary new];
-        largeTitleAttrs[NSForegroundColorAttributeName] = titleColor;
+        largeTitleAttrs[NSForegroundColorAttributeName] = self.base.tintColor;
+        if (self.titleAttributes) [largeTitleAttrs addEntriesFromDictionary:self.titleAttributes];
         self.appearance.largeTitleTextAttributes = [largeTitleAttrs copy];
         [self updateAppearance];
     } else {
-        UIColor *titleColor = self.titleColor ?: self.base.tintColor;
         NSMutableDictionary *titleAttrs = self.base.titleTextAttributes ? [self.base.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
-        titleAttrs[NSForegroundColorAttributeName] = titleColor;
+        titleAttrs[NSForegroundColorAttributeName] = self.base.tintColor;
+        if (self.titleAttributes) [titleAttrs addEntriesFromDictionary:self.titleAttributes];
         self.base.titleTextAttributes = [titleAttrs copy];
         
         NSMutableDictionary *largeTitleAttrs = self.base.largeTitleTextAttributes ? [self.base.largeTitleTextAttributes mutableCopy] : [NSMutableDictionary new];
-        largeTitleAttrs[NSForegroundColorAttributeName] = titleColor;
+        largeTitleAttrs[NSForegroundColorAttributeName] = self.base.tintColor;
+        if (self.titleAttributes) [largeTitleAttrs addEntriesFromDictionary:self.titleAttributes];
         self.base.largeTitleTextAttributes = [largeTitleAttrs copy];
     }
 }
