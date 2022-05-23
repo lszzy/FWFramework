@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *foregroundColor UI_APPEARANCE_SELECTOR;
 
-/// 单独设置标题颜色，nil时显示前景颜色
-@property (nonatomic, strong, nullable) UIColor *titleColor UI_APPEARANCE_SELECTOR;
+/// 单独设置标题样式属性，nil时显示前景颜色
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes UI_APPEARANCE_SELECTOR;
 
 /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
