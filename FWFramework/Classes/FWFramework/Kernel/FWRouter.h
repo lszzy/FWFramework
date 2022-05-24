@@ -128,6 +128,11 @@ NS_SWIFT_NAME(Router)
 @property (class, nonatomic, copy, nullable) id _Nullable (^postFilter)(FWRouterContext *context, id object);
 
 /**
+ *  设置全局预置过滤器，仅当postFilter未设置时生效，作用同postFilter，方便模块化开发
+ */
+@property (class, nonatomic, copy, nullable) id _Nullable (^presetFilter)(FWRouterContext *context, id object);
+
+/**
  *  设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
  */
 @property (class, nonatomic, copy, nullable) void (^errorHandler)(FWRouterContext *context);
