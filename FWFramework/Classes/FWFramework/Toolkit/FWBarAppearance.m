@@ -14,6 +14,29 @@
 
 #pragma mark - FWNavigationBarWrapper+FWBarAppearance
 
+static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttributes = nil;
+
+@implementation FWNavigationBarClassWrapper (FWBarAppearance)
+
+- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    return fwStaticNavigationBarButtonAttributes;
+}
+
+- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    fwStaticNavigationBarButtonAttributes = buttonAttributes;
+    if (@available(iOS 15.0, *)) {} else {
+        UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UINavigationBar.class, nil]];
+        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+        for (NSNumber *state in states) {
+            [appearance setTitleTextAttributes:buttonAttributes forState:[state unsignedIntegerValue]];
+        }
+    }
+}
+
+@end
+
 @implementation FWNavigationBarWrapper (FWBarAppearance)
 
 - (UINavigationBarAppearance *)appearance
@@ -29,6 +52,8 @@
 
 - (void)updateAppearance
 {
+    [self updateButtonAttributes];
+    
     self.base.standardAppearance = self.appearance;
     self.base.compactAppearance = self.appearance;
     self.base.scrollEdgeAppearance = self.appearance;
@@ -37,6 +62,19 @@
         self.base.compactScrollEdgeAppearance = self.appearance;
     }
 #endif
+}
+
+- (void)updateButtonAttributes
+{
+    if (@available(iOS 15.0, *)) {
+        if (!fwStaticNavigationBarButtonAttributes) return;
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, self.appearance.backButtonAppearance, nil];
+        for (UIBarButtonItemAppearance *appearance in appearances) {
+            appearance.normal.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
+            appearance.highlighted.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
+            appearance.disabled.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
+        }
+    }
 }
 
 - (BOOL)isTranslucent
@@ -542,6 +580,29 @@
 
 @end
 
+static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes = nil;
+
+@implementation FWToolbarClassWrapper (FWBarAppearance)
+
+- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    return fwStaticToolbarButtonAttributes;
+}
+
+- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    fwStaticToolbarButtonAttributes = buttonAttributes;
+    if (@available(iOS 15.0, *)) {} else {
+        UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UIToolbar.class, nil]];
+        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+        for (NSNumber *state in states) {
+            [appearance setTitleTextAttributes:buttonAttributes forState:[state unsignedIntegerValue]];
+        }
+    }
+}
+
+@end
+
 @implementation FWToolbarWrapper (FWBarAppearance)
 
 - (UIToolbarAppearance *)appearance
@@ -557,6 +618,8 @@
 
 - (void)updateAppearance
 {
+    [self updateButtonAttributes];
+    
     self.base.standardAppearance = self.appearance;
     self.base.compactAppearance = self.appearance;
 #if __IPHONE_15_0
@@ -565,6 +628,19 @@
         self.base.compactScrollEdgeAppearance = self.appearance;
     }
 #endif
+}
+
+- (void)updateButtonAttributes
+{
+    if (@available(iOS 15.0, *)) {
+        if (!fwStaticToolbarButtonAttributes) return;
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
+        for (UIBarButtonItemAppearance *appearance in appearances) {
+            appearance.normal.titleTextAttributes = fwStaticToolbarButtonAttributes;
+            appearance.highlighted.titleTextAttributes = fwStaticToolbarButtonAttributes;
+            appearance.disabled.titleTextAttributes = fwStaticToolbarButtonAttributes;
+        }
+    }
 }
 
 - (BOOL)isTranslucent
@@ -599,6 +675,9 @@
 - (void)setForegroundColor:(UIColor *)color
 {
     self.base.tintColor = color;
+    if (@available(iOS 15.0, *)) {
+        [self updateAppearance];
+    }
 }
 
 - (UIColor *)backgroundColor
