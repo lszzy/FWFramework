@@ -26,6 +26,8 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
 - (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
 {
     fwStaticNavigationBarButtonAttributes = buttonAttributes;
+    if (!fwStaticNavigationBarButtonAttributes) return;
+    
     if (@available(iOS 15.0, *)) {} else {
         UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UINavigationBar.class, nil]];
         NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
@@ -68,6 +70,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
 {
     if (@available(iOS 15.0, *)) {
         if (!fwStaticNavigationBarButtonAttributes) return;
+        
         NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, self.appearance.backButtonAppearance, nil];
         for (UIBarButtonItemAppearance *appearance in appearances) {
             appearance.normal.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
@@ -592,6 +595,8 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes 
 - (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
 {
     fwStaticToolbarButtonAttributes = buttonAttributes;
+    if (!fwStaticToolbarButtonAttributes) return;
+    
     if (@available(iOS 15.0, *)) {} else {
         UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UIToolbar.class, nil]];
         NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
@@ -634,6 +639,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes 
 {
     if (@available(iOS 15.0, *)) {
         if (!fwStaticToolbarButtonAttributes) return;
+        
         NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
         for (UIBarButtonItemAppearance *appearance in appearances) {
             appearance.normal.titleTextAttributes = fwStaticToolbarButtonAttributes;

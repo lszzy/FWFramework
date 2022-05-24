@@ -40,10 +40,6 @@ private extension AppDelegate {
         }
         
         UINavigationController.fw.enablePopProxy()
-        UINavigationBar.fw.buttonAttributes = [
-            .foregroundColor: UIColor.fw.themeLight(.black, dark: .white),
-            .font: FW.font(15)
-        ]
     }
     
     func setupController() -> UIViewController {
