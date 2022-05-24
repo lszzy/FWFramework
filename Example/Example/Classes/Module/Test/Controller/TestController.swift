@@ -89,7 +89,7 @@ private extension TestController {
         if hasLeftItem {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
         }
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "切换", style: .done, target: self, action: #selector(rightItemClicked(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "切换", style: .plain, target: self, action: #selector(rightItemClicked(_:)))
     }
    
     private func setupSubviews() {
