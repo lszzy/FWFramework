@@ -15,6 +15,16 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWNavigationBarWrapper+FWBarAppearance
 
 /**
+ 导航栏全局分类，处理导航栏按钮样式问题。iOS15+启用appearance，iOS14及以下使用旧版本api
+ */
+@interface FWNavigationBarClassWrapper (FWBarAppearance)
+
+/// 设置全局按钮样式属性，nil时系统默认
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
+
+@end
+
+/**
  导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
 @interface FWNavigationBarWrapper (FWBarAppearance)
@@ -91,6 +101,16 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 #pragma mark - FWToolbarWrapper+FWBarAppearance
+
+/**
+ 工具栏全局分类，处理工具栏按钮样式问题。iOS15+启用appearance，iOS14及以下使用旧版本api
+ */
+@interface FWToolbarClassWrapper (FWBarAppearance)
+
+/// 设置全局按钮样式属性，nil时系统默认
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
+
+@end
 
 /**
  工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api

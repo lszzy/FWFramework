@@ -42,8 +42,8 @@ class TestController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor.fw.themeLight(.black, dark: .white)
         label.numberOfLines = 0
-        label.fw.addLinkGesture { link in
-            Router.openURL(link)
+        label.fw.addLinkGesture { [weak self] link in
+            self?.helpIconClicked(link)
         }
         return label
     }()
@@ -89,7 +89,7 @@ private extension TestController {
         if hasLeftItem {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
         }
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(rightItemClicked(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "切换", style: .done, target: self, action: #selector(rightItemClicked(_:)))
     }
    
     private func setupSubviews() {
@@ -178,6 +178,19 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     
     func rightItemClicked(_ sender: Any) {
         confirmBack = !confirmBack
+    }
+    
+    func helpIconClicked(_ link: Any) {
+        toolbarItems = [
+            UIBarButtonItem.fw.item(object: "取消", block: { [weak self] _ in
+                self?.navigationController?.setToolbarHidden(true, animated: true)
+            }),
+            UIBarButtonItem.fw.item(object: "打开", block: { [weak self] _ in
+                self?.navigationController?.setToolbarHidden(true, animated: true)
+                Router.openURL(link)
+            }),
+        ]
+        navigationController?.setToolbarHidden(false, animated: true)
     }
     
     func tableCellSelected(_ indexPath: IndexPath) {
