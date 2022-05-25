@@ -347,24 +347,6 @@
     }
 }
 
-- (NSDictionary<NSAttributedStringKey,id> *)presetAttributes
-{
-    return objc_getAssociatedObject(self.base, @selector(presetAttributes));
-}
-
-- (void)setPresetAttributes:(NSDictionary<NSAttributedStringKey,id> *)presetAttributes
-{
-    objc_setAssociatedObject(self.base, @selector(presetAttributes), presetAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
-    for (NSNumber *state in states) {
-        NSMutableDictionary *attrs = [NSMutableDictionary new];
-        if (presetAttributes) [attrs addEntriesFromDictionary:presetAttributes];
-        NSDictionary *prevAttrs = [self.base titleTextAttributesForState:[state unsignedIntegerValue]];
-        if (prevAttrs) [attrs addEntriesFromDictionary:prevAttrs];
-        [self.base setTitleTextAttributes:attrs forState:[state unsignedIntegerValue]];
-    }
-}
-
 - (void)setBlock:(void (^)(id))block
 {
     FWInnerBlockTarget *target = nil;

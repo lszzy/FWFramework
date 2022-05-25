@@ -212,12 +212,6 @@ extension Wrapper where Base: UIBarButtonItem {
         set { base.__fw.titleAttributes = newValue }
     }
     
-    /// 设置默认标题样式属性，仅在未自定义样式时生效
-    public var presetAttributes: [NSAttributedString.Key: Any]? {
-        get { return base.__fw.presetAttributes }
-        set { base.__fw.presetAttributes = newValue }
-    }
-    
     /// 设置当前Item触发句柄，nil时清空句柄
     public func setBlock(_ block: ((Any) -> Void)?) {
         base.__fw.setBlock(block)
