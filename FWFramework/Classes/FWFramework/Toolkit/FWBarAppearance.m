@@ -126,26 +126,29 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)updateTitleAttributes
 {
+    NSDictionary *titleAttributes = self.titleAttributes;
+    if (!titleAttributes) return;
+    
     if (@available(iOS 15.0, *)) {
-        NSMutableDictionary *attributes = self.appearance.titleTextAttributes ? [self.appearance.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
+        NSMutableDictionary *attributes = self.appearance.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
+        [attributes addEntriesFromDictionary:titleAttributes];
         self.appearance.titleTextAttributes = [attributes copy];
         
-        NSMutableDictionary *largeAttributes = self.appearance.largeTitleTextAttributes ? [self.appearance.largeTitleTextAttributes mutableCopy] : [NSMutableDictionary new];
+        NSMutableDictionary *largeAttributes = self.appearance.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
+        [largeAttributes addEntriesFromDictionary:titleAttributes];
         self.appearance.largeTitleTextAttributes = [largeAttributes copy];
         [self updateAppearance];
     } else {
-        NSMutableDictionary *attributes = self.base.titleTextAttributes ? [self.base.titleTextAttributes mutableCopy] : [NSMutableDictionary new];
+        NSMutableDictionary *attributes = self.base.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
+        [attributes addEntriesFromDictionary:titleAttributes];
         self.base.titleTextAttributes = [attributes copy];
         
-        NSMutableDictionary *largeAttributes = self.base.largeTitleTextAttributes ? [self.base.largeTitleTextAttributes mutableCopy] : [NSMutableDictionary new];
+        NSMutableDictionary *largeAttributes = self.base.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
+        [largeAttributes addEntriesFromDictionary:titleAttributes];
         self.base.largeTitleTextAttributes = [largeAttributes copy];
     }
 }
@@ -676,12 +679,15 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 - (void)updateButtonAttributes
 {
     if (@available(iOS 15.0, *)) {
+        NSDictionary *buttonAttributes = self.buttonAttributes;
+        if (!buttonAttributes) return;
+        
         NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
         for (UIBarButtonItemAppearance *appearance in appearances) {
             NSArray<UIBarButtonItemStateAppearance *> *stateAppearances = [NSArray arrayWithObjects:appearance.normal, appearance.highlighted, appearance.disabled, nil];
             for (UIBarButtonItemStateAppearance *stateAppearance in stateAppearances) {
                 NSMutableDictionary *attributes = [stateAppearance.titleTextAttributes mutableCopy] ?: [NSMutableDictionary new];
-                if (self.buttonAttributes) [attributes addEntriesFromDictionary:self.buttonAttributes];
+                [attributes addEntriesFromDictionary:buttonAttributes];
                 stateAppearance.titleTextAttributes = [attributes copy];
             }
         }
