@@ -209,6 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
     macro(UIGestureRecognizer, fw, FWGestureRecognizerWrapper, FWObjectWrapper, FWGestureRecognizerClassWrapper, FWClassWrapper); \
     macro(UIBarItem, fw, FWBarItemWrapper, FWObjectWrapper, FWBarItemClassWrapper, FWClassWrapper); \
     macro(UIBarButtonItem, fw, FWBarButtonItemWrapper, FWBarItemWrapper, FWBarButtonItemClassWrapper, FWBarItemClassWrapper); \
+    macro(UINavigationItem, fw, FWNavigationItemWrapper, FWObjectWrapper, FWNavigationItemClassWrapper, FWClassWrapper); \
     macro(UINavigationBar, fw, FWNavigationBarWrapper, FWViewWrapper, FWNavigationBarClassWrapper, FWViewClassWrapper); \
     macro(UITabBar, fw, FWTabBarWrapper, FWViewWrapper, FWTabBarClassWrapper, FWViewClassWrapper); \
     macro(UIToolbar, fw, FWToolbarWrapper, FWViewWrapper, FWToolbarClassWrapper, FWViewClassWrapper); \
@@ -271,6 +272,7 @@ NS_ASSUME_NONNULL_BEGIN
     macro(UIGestureRecognizer, fw, FWGestureRecognizerWrapper, FWGestureRecognizerClassWrapper); \
     macro(UIBarItem, fw, FWBarItemWrapper, FWBarItemClassWrapper); \
     macro(UIBarButtonItem, fw, FWBarButtonItemWrapper, FWBarButtonItemClassWrapper); \
+    macro(UINavigationItem, fw, FWNavigationItemWrapper, FWNavigationItemClassWrapper); \
     macro(UINavigationBar, fw, FWNavigationBarWrapper, FWNavigationBarClassWrapper); \
     macro(UITabBar, fw, FWTabBarWrapper, FWTabBarClassWrapper); \
     macro(UIToolbar, fw, FWToolbarWrapper, FWToolbarClassWrapper); \

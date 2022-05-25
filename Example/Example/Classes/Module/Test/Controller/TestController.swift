@@ -13,7 +13,6 @@ class TestController: UIViewController {
     
     // MARK: - Accessor
     private var confirmBack = false
-    private var hasLeftItem = false
     
     override var shouldPopController: Bool {
         if confirmBack {
@@ -85,8 +84,7 @@ private extension TestController {
     
     private func setupNavbar() {
         navigationItem.title = "test.title".fw.localized
-        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
-        if hasLeftItem {
+        if (navigationController?.children.count ?? 0) > 1 {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navBack"), style: .plain, target: self, action: #selector(leftItemClicked(_:)))
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "切换", style: .plain, target: self, action: #selector(rightItemClicked(_:)))
@@ -195,7 +193,6 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     
     func tableCellSelected(_ indexPath: IndexPath) {
         let viewController = TestController()
-        viewController.hasLeftItem = !hasLeftItem
         navigationController?.pushViewController(viewController, animated: true)
     }
     
