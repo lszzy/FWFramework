@@ -473,7 +473,7 @@
                 <a href="../Classes/FWMutableSetWrapper.html">FWMutableSetWrapper</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes.html#/c:objc(cs)FWNavigationBarClassWrapper">FWNavigationBarClassWrapper</a>
+                <a href="../Classes/FWNavigationBarClassWrapper.html">FWNavigationBarClassWrapper</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWNavigationBarWrapper.html">FWNavigationBarWrapper</a>
@@ -13085,6 +13085,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/buttonAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvpZ">buttonAttributes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置全局按钮样式属性，nil时系统默认</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">buttonAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE10appearanceSo0cD10AppearanceCvp"></a>
                     <a name="//apple_ref/swift/Property/appearance" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE10appearanceSo0cD10AppearanceCvp">appearance</a>
@@ -13195,9 +13222,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE10titleColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/titleColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE10titleColorSo7UIColorCSgvp">titleColor</a>
+                    <a name="/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE15titleAttributesSDySo21NSAttributedStringKeyaypGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/titleAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE15titleAttributesSDySo21NSAttributedStringKeyaypGSgvp">titleAttributes</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -13212,7 +13239,34 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">titleColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">titleAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/buttonAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo15UINavigationBarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvp">buttonAttributes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">buttonAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -13756,6 +13810,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">foregroundColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo9UIToolbarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/buttonAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo9UIToolbarCRbzlE16buttonAttributesSDySo21NSAttributedStringKeyaypGSgvp">buttonAttributes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">buttonAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -14893,6 +14974,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo15UIBarButtonItemCRbzlE15titleAttributesSDySo21NSAttributedStringKeyaypGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/titleAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo15UIBarButtonItemCRbzlE15titleAttributesSDySo21NSAttributedStringKeyaypGSgvp">titleAttributes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义标题样式属性，兼容appearance，默认nil同系统</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">titleAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo15UIBarButtonItemCRbzlE8setBlockyyyypcSgF"></a>
                     <a name="//apple_ref/swift/Method/setBlock(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo15UIBarButtonItemCRbzlE8setBlockyyyypcSgF">setBlock(_:<wbr>)</a>
@@ -14911,6 +15019,343 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setBlock</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Available%20where%20%60Base%60%3A%20%60UIViewController%603"></a>
+                <a name="//apple_ref/swift/Section/Available where `Base`: `UIViewController`" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIViewController%603"></a>
+                  <h3 class="section-name"><span>Available where <code>Base</code>: <code>UIViewController</code></span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5titleSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/title" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5titleSSSgvp">title</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置导航栏标题文字</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE11backBarItemypSgvp"></a>
+                    <a name="//apple_ref/swift/Property/backBarItem" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE11backBarItemypSgvp">backBarItem</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">backBarItem</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE11leftBarItemypSgvp"></a>
+                    <a name="//apple_ref/swift/Property/leftBarItem" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE11leftBarItemypSgvp">leftBarItem</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">leftBarItem</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE12rightBarItemypSgvp"></a>
+                    <a name="//apple_ref/swift/Property/rightBarItem" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE12rightBarItemypSgvp">rightBarItem</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">rightBarItem</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14setLeftBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF"></a>
+                    <a name="//apple_ref/swift/Method/setLeftBarItem(_:target:action:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14setLeftBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF">setLeftBarItem(_:<wbr>target:<wbr>action:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setLeftBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14setLeftBarItem_5blockyypSg_yypctF"></a>
+                    <a name="//apple_ref/swift/Method/setLeftBarItem(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14setLeftBarItem_5blockyypSg_yypctF">setLeftBarItem(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setLeftBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15setRightBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF"></a>
+                    <a name="//apple_ref/swift/Method/setRightBarItem(_:target:action:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15setRightBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF">setRightBarItem(_:<wbr>target:<wbr>action:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置导航栏右侧按钮</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setRightBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15setRightBarItem_5blockyypSg_yypctF"></a>
+                    <a name="//apple_ref/swift/Method/setRightBarItem(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15setRightBarItem_5blockyypSg_yypctF">setRightBarItem(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置导航栏右侧按钮，block事件</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setRightBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14addLeftBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF"></a>
+                    <a name="//apple_ref/swift/Method/addLeftBarItem(_:target:action:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14addLeftBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF">addLeftBarItem(_:<wbr>target:<wbr>action:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addLeftBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14addLeftBarItem_5blockyypSg_yypctF"></a>
+                    <a name="//apple_ref/swift/Method/addLeftBarItem(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE14addLeftBarItem_5blockyypSg_yypctF">addLeftBarItem(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addLeftBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15addRightBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF"></a>
+                    <a name="//apple_ref/swift/Method/addRightBarItem(_:target:action:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15addRightBarItem_6target6actionyypSg_yp10ObjectiveC8SelectorVtF">addRightBarItem(_:<wbr>target:<wbr>action:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷添加导航栏右侧按钮</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addRightBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15addRightBarItem_5blockyypSg_yypctF"></a>
+                    <a name="//apple_ref/swift/Method/addRightBarItem(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE15addRightBarItem_5blockyypSg_yypctF">addRightBarItem(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷添加导航栏右侧按钮，block事件</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addRightBarItem</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -23737,10 +24182,10 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Available%20where%20%60Base%60%3A%20%60UIViewController%603"></a>
+                <a name="/Available%20where%20%60Base%60%3A%20%60UIViewController%604"></a>
                 <a name="//apple_ref/swift/Section/Available where `Base`: `UIViewController`" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIViewController%603"></a>
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIViewController%604"></a>
                   <h3 class="section-name"><span>Available where <code>Base</code>: <code>UIViewController</code></span>
 </h3>
                 </div>
@@ -25813,10 +26258,10 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Available%20where%20%60Base%60%3A%20%60UIViewController%604"></a>
+                <a name="/Available%20where%20%60Base%60%3A%20%60UIViewController%605"></a>
                 <a name="//apple_ref/swift/Section/Available where `Base`: `UIViewController`" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIViewController%604"></a>
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIViewController%605"></a>
                   <h3 class="section-name"><span>Available where <code>Base</code>: <code>UIViewController</code></span>
 </h3>
                 </div>
@@ -25989,7 +26434,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-05-23)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-05-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
