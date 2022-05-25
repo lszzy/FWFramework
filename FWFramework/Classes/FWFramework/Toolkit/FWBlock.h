@@ -204,9 +204,6 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 /// 自定义标题样式属性，兼容appearance，默认nil同系统
 @property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes;
 
-/// 设置默认标题样式属性，仅在未自定义样式时生效
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *presetAttributes;
-
 /// 设置当前Item触发句柄，nil时清空句柄
 - (void)setBlock:(nullable void (^)(id sender))block;
 
@@ -226,6 +223,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 #pragma mark - FWViewControllerWrapper+FWBlock
 
+/// iOS13+支持针对VC.navigationItem单独设置导航栏样式，如最低兼容iOS13时可使用
 @interface FWViewControllerWrapper (FWBlock)
 
 /// 快捷设置导航栏标题
