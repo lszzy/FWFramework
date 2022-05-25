@@ -338,12 +338,13 @@
 - (void)setTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
 {
     objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (!titleAttributes) return;
+    
     NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
     for (NSNumber *state in states) {
-        NSDictionary *prevAttrs = [self.base titleTextAttributesForState:[state unsignedIntegerValue]];
-        NSMutableDictionary *attrs = prevAttrs ? [prevAttrs mutableCopy] : [NSMutableDictionary new];
-        if (titleAttributes) [attrs addEntriesFromDictionary:titleAttributes];
-        [self.base setTitleTextAttributes:attrs forState:[state unsignedIntegerValue]];
+        NSMutableDictionary *attributes = [self.base titleTextAttributesForState:[state unsignedIntegerValue]].mutableCopy ?: [NSMutableDictionary new];
+        [attributes addEntriesFromDictionary:titleAttributes];
+        [self.base setTitleTextAttributes:attributes forState:[state unsignedIntegerValue]];
     }
 }
 
