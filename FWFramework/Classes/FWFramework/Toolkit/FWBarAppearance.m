@@ -14,31 +14,6 @@
 
 #pragma mark - FWNavigationBarWrapper+FWBarAppearance
 
-static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttributes = nil;
-
-@implementation FWNavigationBarClassWrapper (FWBarAppearance)
-
-- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
-{
-    return fwStaticNavigationBarButtonAttributes;
-}
-
-- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
-{
-    fwStaticNavigationBarButtonAttributes = buttonAttributes;
-    if (!fwStaticNavigationBarButtonAttributes) return;
-    
-    if (@available(iOS 15.0, *)) {} else {
-        UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UINavigationBar.class, nil]];
-        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
-        for (NSNumber *state in states) {
-            [appearance setTitleTextAttributes:buttonAttributes forState:[state unsignedIntegerValue]];
-        }
-    }
-}
-
-@end
-
 @implementation FWNavigationBarWrapper (FWBarAppearance)
 
 - (UINavigationBarAppearance *)appearance
@@ -54,8 +29,6 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
 
 - (void)updateAppearance
 {
-    [self updateButtonAttributes];
-    
     self.base.standardAppearance = self.appearance;
     self.base.compactAppearance = self.appearance;
     self.base.scrollEdgeAppearance = self.appearance;
@@ -64,20 +37,6 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
         self.base.compactScrollEdgeAppearance = self.appearance;
     }
 #endif
-}
-
-- (void)updateButtonAttributes
-{
-    if (@available(iOS 15.0, *)) {
-        if (!fwStaticNavigationBarButtonAttributes) return;
-        
-        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, self.appearance.backButtonAppearance, nil];
-        for (UIBarButtonItemAppearance *appearance in appearances) {
-            appearance.normal.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
-            appearance.highlighted.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
-            appearance.disabled.titleTextAttributes = fwStaticNavigationBarButtonAttributes;
-        }
-    }
 }
 
 - (BOOL)isTranslucent
@@ -126,6 +85,17 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
     [self updateTitleAttributes];
 }
 
+- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    return objc_getAssociatedObject(self.base, @selector(buttonAttributes));
+}
+
+- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    objc_setAssociatedObject(self.base, @selector(buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateButtonAttributes];
+}
+
 - (void)updateTitleAttributes
 {
     if (@available(iOS 15.0, *)) {
@@ -149,6 +119,22 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
         largeTitleAttrs[NSForegroundColorAttributeName] = self.base.tintColor;
         if (self.titleAttributes) [largeTitleAttrs addEntriesFromDictionary:self.titleAttributes];
         self.base.largeTitleTextAttributes = [largeTitleAttrs copy];
+    }
+}
+
+- (void)updateButtonAttributes
+{
+    if (@available(iOS 15.0, *)) {
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, self.appearance.backButtonAppearance, nil];
+        for (UIBarButtonItemAppearance *appearance in appearances) {
+            NSArray<UIBarButtonItemStateAppearance *> *stateAppearances = [NSArray arrayWithObjects:appearance.normal, appearance.highlighted, appearance.disabled, nil];
+            for (UIBarButtonItemStateAppearance *stateAppearance in stateAppearances) {
+                NSMutableDictionary *buttonAttrs = [stateAppearance.titleTextAttributes mutableCopy] ?: [NSMutableDictionary new];
+                if (self.buttonAttributes) [buttonAttrs addEntriesFromDictionary:self.buttonAttributes];
+                stateAppearance.titleTextAttributes = buttonAttrs;
+            }
+        }
+        [self updateAppearance];
     }
 }
 
@@ -583,31 +569,6 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticNavigationBarButtonAttri
 
 @end
 
-static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes = nil;
-
-@implementation FWToolbarClassWrapper (FWBarAppearance)
-
-- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
-{
-    return fwStaticToolbarButtonAttributes;
-}
-
-- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
-{
-    fwStaticToolbarButtonAttributes = buttonAttributes;
-    if (!fwStaticToolbarButtonAttributes) return;
-    
-    if (@available(iOS 15.0, *)) {} else {
-        UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UIToolbar.class, nil]];
-        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
-        for (NSNumber *state in states) {
-            [appearance setTitleTextAttributes:buttonAttributes forState:[state unsignedIntegerValue]];
-        }
-    }
-}
-
-@end
-
 @implementation FWToolbarWrapper (FWBarAppearance)
 
 - (UIToolbarAppearance *)appearance
@@ -623,8 +584,6 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes 
 
 - (void)updateAppearance
 {
-    [self updateButtonAttributes];
-    
     self.base.standardAppearance = self.appearance;
     self.base.compactAppearance = self.appearance;
 #if __IPHONE_15_0
@@ -633,20 +592,6 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes 
         self.base.compactScrollEdgeAppearance = self.appearance;
     }
 #endif
-}
-
-- (void)updateButtonAttributes
-{
-    if (@available(iOS 15.0, *)) {
-        if (!fwStaticToolbarButtonAttributes) return;
-        
-        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
-        for (UIBarButtonItemAppearance *appearance in appearances) {
-            appearance.normal.titleTextAttributes = fwStaticToolbarButtonAttributes;
-            appearance.highlighted.titleTextAttributes = fwStaticToolbarButtonAttributes;
-            appearance.disabled.titleTextAttributes = fwStaticToolbarButtonAttributes;
-        }
-    }
 }
 
 - (BOOL)isTranslucent
@@ -682,6 +627,33 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticToolbarButtonAttributes 
 {
     self.base.tintColor = color;
     if (@available(iOS 15.0, *)) {
+        [self updateAppearance];
+    }
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    return objc_getAssociatedObject(self.base, @selector(buttonAttributes));
+}
+
+- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+{
+    objc_setAssociatedObject(self.base, @selector(buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateButtonAttributes];
+}
+
+- (void)updateButtonAttributes
+{
+    if (@available(iOS 15.0, *)) {
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
+        for (UIBarButtonItemAppearance *appearance in appearances) {
+            NSArray<UIBarButtonItemStateAppearance *> *stateAppearances = [NSArray arrayWithObjects:appearance.normal, appearance.highlighted, appearance.disabled, nil];
+            for (UIBarButtonItemStateAppearance *stateAppearance in stateAppearances) {
+                NSMutableDictionary *buttonAttrs = [stateAppearance.titleTextAttributes mutableCopy] ?: [NSMutableDictionary new];
+                if (self.buttonAttributes) [buttonAttrs addEntriesFromDictionary:self.buttonAttributes];
+                stateAppearance.titleTextAttributes = buttonAttrs;
+            }
+        }
         [self updateAppearance];
     }
 }

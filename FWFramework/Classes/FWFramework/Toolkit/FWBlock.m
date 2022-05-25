@@ -337,7 +337,28 @@
     objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
     NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
     for (NSNumber *state in states) {
-        [self.base setTitleTextAttributes:titleAttributes forState:[state unsignedIntegerValue]];
+        NSDictionary *prevAttrs = [self.base titleTextAttributesForState:[state unsignedIntegerValue]];
+        NSMutableDictionary *attrs = prevAttrs ? [prevAttrs mutableCopy] : [NSMutableDictionary new];
+        if (titleAttributes) [attrs addEntriesFromDictionary:titleAttributes];
+        [self.base setTitleTextAttributes:attrs forState:[state unsignedIntegerValue]];
+    }
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)presetAttributes
+{
+    return objc_getAssociatedObject(self.base, @selector(presetAttributes));
+}
+
+- (void)setPresetAttributes:(NSDictionary<NSAttributedStringKey,id> *)presetAttributes
+{
+    objc_setAssociatedObject(self.base, @selector(presetAttributes), presetAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+    for (NSNumber *state in states) {
+        NSMutableDictionary *attrs = [NSMutableDictionary new];
+        if (presetAttributes) [attrs addEntriesFromDictionary:presetAttributes];
+        NSDictionary *prevAttrs = [self.base titleTextAttributesForState:[state unsignedIntegerValue]];
+        if (prevAttrs) [attrs addEntriesFromDictionary:prevAttrs];
+        [self.base setTitleTextAttributes:attrs forState:[state unsignedIntegerValue]];
     }
 }
 

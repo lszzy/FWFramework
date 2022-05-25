@@ -201,8 +201,11 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  */
 @interface FWBarButtonItemWrapper (FWBlock)
 
-/// 自定义标题样式属性，默认nil同系统
+/// 自定义标题样式属性，兼容appearance，默认nil同系统
 @property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes;
+
+/// 设置默认标题样式属性，仅在未自定义样式时生效
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *presetAttributes;
 
 /// 设置当前Item触发句柄，nil时清空句柄
 - (void)setBlock:(nullable void (^)(id sender))block;

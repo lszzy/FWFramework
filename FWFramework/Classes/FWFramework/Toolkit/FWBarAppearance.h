@@ -15,16 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWNavigationBarWrapper+FWBarAppearance
 
 /**
- 导航栏全局分类，处理导航栏按钮样式问题。iOS15+启用appearance，iOS14及以下使用旧版本api
- */
-@interface FWNavigationBarClassWrapper (FWBarAppearance)
-
-/// 设置全局按钮样式属性，nil时系统默认
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
-
-@end
-
-/**
  导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  */
 @interface FWNavigationBarWrapper (FWBarAppearance)
@@ -43,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 单独设置标题样式属性，nil时显示前景颜色
 @property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes UI_APPEARANCE_SELECTOR;
+
+/// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
 
 /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
@@ -103,16 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWToolbarWrapper+FWBarAppearance
 
 /**
- 工具栏全局分类，处理工具栏按钮样式问题。iOS15+启用appearance，iOS14及以下使用旧版本api
- */
-@interface FWToolbarClassWrapper (FWBarAppearance)
-
-/// 设置全局按钮样式属性，nil时系统默认
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
-
-@end
-
-/**
  工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
  @note 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
  */
@@ -129,6 +112,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置前景颜色，包含文字和按钮等
 @property (nonatomic, strong, nullable) UIColor *foregroundColor UI_APPEARANCE_SELECTOR;
+
+/// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *buttonAttributes UI_APPEARANCE_SELECTOR;
 
 /// 设置背景颜色，兼容主题颜色，后设置生效
 @property (nonatomic, strong, nullable) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;

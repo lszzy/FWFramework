@@ -40,6 +40,9 @@ private extension AppDelegate {
         }
         
         UINavigationController.fw.enablePopProxy()
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).fw.titleAttributes = [
+            .foregroundColor: UIColor.fw.themeLight(.black, dark: .white)
+        ]
     }
     
     func setupController() -> UIViewController {
@@ -68,6 +71,9 @@ private extension AppDelegate {
         navController.navigationBar.fw.isTranslucent = false
         navController.navigationBar.fw.shadowColor = nil
         navController.navigationBar.fw.foregroundColor = UIColor.fw.themeLight(.black, dark: .white)
+        navController.navigationBar.fw.buttonAttributes = [
+            .foregroundColor: UIColor.fw.themeLight(.black, dark: .white)
+        ]
         navController.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA), dark: .fw.color(hex: 0x121212))
         navController.navigationBar.fw.backImage = UIImage(named: "navBack")
         return navController

@@ -14,12 +14,6 @@ import FWFramework
 /// 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
 extension Wrapper where Base: UINavigationBar {
     
-    /// 设置全局按钮样式属性，nil时系统默认
-    public static var buttonAttributes: [NSAttributedString.Key: Any]? {
-        get { return Base.__fw.buttonAttributes }
-        set { Base.__fw.buttonAttributes = newValue }
-    }
-    
     /// 导航栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
     public var appearance: UINavigationBarAppearance {
@@ -48,6 +42,12 @@ extension Wrapper where Base: UINavigationBar {
     public var titleAttributes: [NSAttributedString.Key: Any]? {
         get { return base.__fw.titleAttributes }
         set { base.__fw.titleAttributes = newValue }
+    }
+    
+    /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
+    public var buttonAttributes: [NSAttributedString.Key: Any]? {
+        get { return base.__fw.buttonAttributes }
+        set { base.__fw.buttonAttributes = newValue }
     }
 
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
@@ -153,12 +153,6 @@ extension Wrapper where Base: UITabBar {
 /// 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
 extension Wrapper where Base: UIToolbar {
     
-    /// 设置全局按钮样式属性，nil时系统默认
-    public static var buttonAttributes: [NSAttributedString.Key: Any]? {
-        get { return Base.__fw.buttonAttributes }
-        set { Base.__fw.buttonAttributes = newValue }
-    }
-    
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
     public var appearance: UIToolbarAppearance {
@@ -181,6 +175,12 @@ extension Wrapper where Base: UIToolbar {
     public var foregroundColor: UIColor? {
         get { return base.__fw.foregroundColor }
         set { base.__fw.foregroundColor = newValue }
+    }
+    
+    /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
+    public var buttonAttributes: [NSAttributedString.Key: Any]? {
+        get { return base.__fw.buttonAttributes }
+        set { base.__fw.buttonAttributes = newValue }
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
