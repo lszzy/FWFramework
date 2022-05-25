@@ -47,7 +47,6 @@ class HomeController: UITableViewController {
 private extension HomeController {
     
     private func setupNavbar() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(object: "home.btnStyle".fw.localized, target: self, action: #selector(leftItemClicked(_:)))
         
         let isChinese = Bundle.fw.currentLanguage?.hasPrefix("zh") ?? false

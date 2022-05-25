@@ -224,4 +224,46 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 @end
 
+#pragma mark - FWViewControllerWrapper+FWBlock
+
+@interface FWViewControllerWrapper (FWBlock)
+
+/// 快捷设置导航栏标题
+@property (nonatomic, copy, nullable) NSString *title;
+
+/// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
+@property (nonatomic, strong, nullable) id backBarItem;
+
+/// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id leftBarItem;
+
+/// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id rightBarItem;
+
+/// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)setLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)setLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷设置导航栏右侧按钮
+- (void)setRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷设置导航栏右侧按钮，block事件
+- (void)setRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)addLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)addLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏右侧按钮
+- (void)addRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏右侧按钮，block事件
+- (void)addRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -75,7 +75,6 @@ private extension AppDelegate {
             .foregroundColor: UIColor.fw.themeLight(.black, dark: .white)
         ]
         navController.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA), dark: .fw.color(hex: 0x121212))
-        navController.navigationBar.fw.backImage = UIImage(named: "navBack")
         return navController
     }
     
