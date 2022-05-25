@@ -126,29 +126,26 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)updateTitleAttributes
 {
-    NSDictionary *titleAttributes = self.titleAttributes;
-    if (!titleAttributes) return;
-    
     if (@available(iOS 15.0, *)) {
         NSMutableDictionary *attributes = self.appearance.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        [attributes addEntriesFromDictionary:titleAttributes];
+        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
         self.appearance.titleTextAttributes = [attributes copy];
         
         NSMutableDictionary *largeAttributes = self.appearance.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        [largeAttributes addEntriesFromDictionary:titleAttributes];
+        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
         self.appearance.largeTitleTextAttributes = [largeAttributes copy];
         [self updateAppearance];
     } else {
         NSMutableDictionary *attributes = self.base.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        [attributes addEntriesFromDictionary:titleAttributes];
+        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
         self.base.titleTextAttributes = [attributes copy];
         
         NSMutableDictionary *largeAttributes = self.base.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        [largeAttributes addEntriesFromDictionary:titleAttributes];
+        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
         self.base.largeTitleTextAttributes = [largeAttributes copy];
     }
 }
