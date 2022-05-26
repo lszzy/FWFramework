@@ -113,6 +113,21 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 @end
 
+#pragma mark - FWTimerWrapper+FWFoundation
+
+@interface FWTimerWrapper (FWFoundation)
+
+/// 暂停NSTimer
+- (void)pauseTimer;
+
+/// 开始NSTimer
+- (void)resumeTimer;
+
+/// 延迟delay秒后开始NSTimer
+- (void)resumeTimerAfterDelay:(NSTimeInterval)delay;
+
+@end
+
 #pragma mark - FWGestureRecognizerWrapper+FWBlock
 
 @interface FWGestureRecognizerWrapper (FWBlock)
@@ -129,13 +144,6 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 @end
 
 #pragma mark - FWGestureRecognizerClassWrapper+FWBlock
-
-@interface UIGestureRecognizer (FWBlock)
-
-/// 从事件句柄初始化
-+ (instancetype)gestureRecognizerWithBlock:(void (^)(id sender))block;
-
-@end
 
 @interface FWGestureRecognizerClassWrapper (FWBlock)
 
@@ -193,6 +201,9 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  */
 @interface FWBarButtonItemWrapper (FWBlock)
 
+/// 自定义标题样式属性，兼容appearance，默认nil同系统
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes;
+
 /// 设置当前Item触发句柄，nil时清空句柄
 - (void)setBlock:(nullable void (^)(id sender))block;
 
@@ -207,6 +218,49 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
 
 /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
 - (UIBarButtonItem *)itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
+
+@end
+
+#pragma mark - FWViewControllerWrapper+FWBlock
+
+/// iOS13+支持针对VC.navigationItem单独设置导航栏样式，如最低兼容iOS13时可使用
+@interface FWViewControllerWrapper (FWBlock)
+
+/// 快捷设置导航栏标题
+@property (nonatomic, copy, nullable) NSString *title;
+
+/// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
+@property (nonatomic, strong, nullable) id backBarItem;
+
+/// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id leftBarItem;
+
+/// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+@property (nonatomic, strong, nullable) id rightBarItem;
+
+/// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)setLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)setLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷设置导航栏右侧按钮
+- (void)setRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷设置导航栏右侧按钮，block事件
+- (void)setRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
+- (void)addLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
+- (void)addLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+
+/// 快捷添加导航栏右侧按钮
+- (void)addRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+
+/// 快捷添加导航栏右侧按钮，block事件
+- (void)addRightBarItem:(nullable id)object block:(void (^)(id sender))block;
 
 @end
 

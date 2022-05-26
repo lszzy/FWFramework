@@ -15,14 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWThemeManager
 
 /// 主题样式枚举，可扩展
-typedef NSInteger FWThemeStyle NS_TYPED_EXTENSIBLE_ENUM;
+typedef NSInteger FWThemeStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ThemeStyle);
 /// 浅色样式
 static const FWThemeStyle FWThemeStyleLight = 1;
 /// 深色样式
 static const FWThemeStyle FWThemeStyleDark = 2;
 
 /// 主题模式枚举，可扩展(扩展值与样式值相同即可)
-typedef NSInteger FWThemeMode NS_TYPED_EXTENSIBLE_ENUM;
+typedef NSInteger FWThemeMode NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ThemeMode);
 /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
 static const FWThemeMode FWThemeModeSystem = 0;
 /// 固定浅色模式
@@ -31,13 +31,14 @@ static const FWThemeMode FWThemeModeLight = FWThemeStyleLight;
 static const FWThemeMode FWThemeModeDark = FWThemeStyleDark;
 
 /// iOS13主题改变通知，object为FWThemeManager时表示手工切换，object为UIScreen时为系统切换
-extern NSNotificationName const FWThemeChangedNotification;
+extern NSNotificationName const FWThemeChangedNotification NS_SWIFT_NAME(ThemeChanged);
 
 /**
  主题管理器，iOS13+可跟随系统改变
  @note 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发fwThemeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fwThemeContext才能生效
  注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fwColor相关方法
  */
+NS_SWIFT_NAME(ThemeManager)
 @interface FWThemeManager : NSObject
 
 /// 单例模式
@@ -60,6 +61,7 @@ extern NSNotificationName const FWThemeChangedNotification;
 /**
  主题动态对象，可获取当前主题静态对象
  */
+NS_SWIFT_NAME(ThemeObject)
 @interface FWThemeObject<__covariant ObjectType> : NSObject
 
 /// 创建主题动态对象，分别指定浅色和深色
@@ -196,6 +198,7 @@ extern NSNotificationName const FWThemeChangedNotification;
 #pragma mark - FWObjectWrapper+FWTheme
 
 /// iOS13主题订阅观察者监听协议，主题改变时自动通知
+NS_SWIFT_NAME(ThemeObserver)
 @protocol FWThemeObserver <NSObject>
 
 @optional

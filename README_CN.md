@@ -28,7 +28,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	  pod 'FWFramework'
 	  
 	  # 引入指定子模块，子模块列表详见podspec文件
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Compatible', 'Tracking']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Compatible']
 	end
 
 ### Swift Package Manager
@@ -41,7 +41,6 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	
 	# 勾选并引入指定子模块，子模块列表详见Package.swift文件
 	import FWFrameworkCompatible
-	import FWFrameworkTracking
 
 ## [Api文档](https://fwframework.wuyong.site)
 文档位于docs文件夹，浏览器打开index.html即可，也可运行docs.sh自动生成Api文档。
@@ -49,7 +48,7 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 ## [更新日志](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
-	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '3.0.0'
+	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '3.1.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Deprecated子模块，并在后续版本删除
 
 ## 第三方库

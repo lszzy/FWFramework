@@ -12,4 +12,6 @@
 "home.envTesting" = "测试";
 "home.envDevelopment" = "开发";
 
+"home.title" = "首页";
 "test.title" = "测试";
+"settings.title" = "设置";

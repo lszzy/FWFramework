@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  弱引用代理类，用于解决NSTimer和CADisplayLink中的循环引用target问题(默认NSTimer会强引用target,直到invalidate)
  */
+NS_SWIFT_NAME(WeakProxy)
 @interface FWWeakProxy : NSProxy
 
 /** 原target对象 */
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  弱引用对象容器类，用于解决关联对象weak引用等
  */
+NS_SWIFT_NAME(WeakObject)
 @interface FWWeakObject : NSObject
 
 /// 弱引用对象，释放后自动变为nil，不会产生野指针
@@ -61,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://github.com/BlocksKit/BlocksKit
  */
+NS_SWIFT_NAME(BlockProxy)
 @interface FWBlockProxy : NSObject
 
 /** 只读block */
@@ -116,6 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  事件协议代理基类，可继承重写事件代理方法
  */
+NS_SWIFT_NAME(DelegateProxy)
 @interface FWDelegateProxy : NSObject
 
 /** 代理事件协议 */
@@ -163,6 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  多代理转发类
  */
+NS_SWIFT_NAME(MulticastDelegate)
 @interface FWMulticastDelegate<__covariant T> : NSObject
 
 /// 是否是空，不包含delegate

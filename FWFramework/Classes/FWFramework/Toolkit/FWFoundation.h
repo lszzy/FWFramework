@@ -49,10 +49,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWAttributedStringClassWrapper+FWFoundation
 
+/**
+ 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可
+ */
 @interface FWAttributedStringClassWrapper (FWFoundation)
 
 /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
-- (nullable NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString;
+- (nullable __kindof NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString;
+
+/// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
+- (NSAttributedString *)attributedStringWithImage:(nullable UIImage *)image bounds:(CGRect)bounds;
 
 @end
 
@@ -170,21 +176,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 格式化文件大小为".0K/.1M/.1G"
 - (NSString *)sizeString:(NSUInteger)fileSize;
-
-@end
-
-#pragma mark - FWTimerWrapper+FWFoundation
-
-@interface FWTimerWrapper (FWFoundation)
-
-/// 暂停NSTimer
-- (void)pauseTimer;
-
-/// 开始NSTimer
-- (void)resumeTimer;
-
-/// 延迟delay秒后开始NSTimer
-- (void)resumeTimerAfterDelay:(NSTimeInterval)delay;
 
 @end
 

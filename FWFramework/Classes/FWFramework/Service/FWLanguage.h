@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
     [NSBundle.fw localizedString:key table:fw_macro_default(nil, ##__VA_ARGS__)]
 
 /// 本地化语言改变通知，object为本地化语言名称
-extern NSNotificationName const FWLanguageChangedNotification;
+extern NSNotificationName const FWLanguageChangedNotification NS_SWIFT_NAME(LanguageChanged);
 
 #pragma mark - FWBundleWrapper+FWLanguage
 

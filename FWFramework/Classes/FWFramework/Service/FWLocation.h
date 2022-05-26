@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWLocationManager
 
 /// 定位更新通知
-extern NSNotificationName const FWLocationUpdatedNotification;
+extern NSNotificationName const FWLocationUpdatedNotification NS_SWIFT_NAME(LocationUpdated);
 /// 定位失败通知
-extern NSNotificationName const FWLocationFailedNotification;
+extern NSNotificationName const FWLocationFailedNotification NS_SWIFT_NAME(LocationFailed);
 /// 方向改变通知
-extern NSNotificationName const FWHeadingUpdatedNotification;
+extern NSNotificationName const FWHeadingUpdatedNotification NS_SWIFT_NAME(HeadingUpdated);
 
 /**
  位置服务
@@ -26,6 +26,7 @@ extern NSNotificationName const FWHeadingUpdatedNotification;
  如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项
  iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
  */
+NS_SWIFT_NAME(LocationManager)
 @interface FWLocationManager : NSObject
 
 /// 单例模式

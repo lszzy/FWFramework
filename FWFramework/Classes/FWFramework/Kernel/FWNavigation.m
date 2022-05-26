@@ -129,9 +129,9 @@
     return [self.mainWindow.fw topPresentedController];
 }
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (BOOL)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [self.mainWindow.fw pushViewController:viewController animated:animated];
+    return [self.mainWindow.fw pushViewController:viewController animated:animated];
 }
 
 - (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion

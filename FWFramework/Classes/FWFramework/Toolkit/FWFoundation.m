@@ -98,7 +98,7 @@
 
 @implementation FWAttributedStringClassWrapper (FWFoundation)
 
-- (NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString
+- (__kindof NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString
 {
     NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
     if (!htmlData || htmlData.length < 1) return nil;
@@ -107,6 +107,23 @@
         NSDocumentTypeDocumentOption: NSHTMLTextDocumentType,
         NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding),
     } documentAttributes:nil error:nil];
+}
+
+- (NSAttributedString *)attributedStringWithImage:(UIImage *)image bounds:(CGRect)bounds
+{
+    NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+    imageAttachment.image = image;
+    imageAttachment.bounds = CGRectMake(0, bounds.origin.y, bounds.size.width, bounds.size.height);
+    NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
+    if (bounds.origin.x <= 0) return imageString;
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    NSTextAttachment *spacingAttachment = [[NSTextAttachment alloc] init];
+    spacingAttachment.image = nil;
+    spacingAttachment.bounds = CGRectMake(0, bounds.origin.y, bounds.origin.x, bounds.size.height);
+    [attributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:spacingAttachment]];
+    [attributedString appendAttributedString:imageString];
+    return attributedString;
 }
 
 @end
@@ -428,30 +445,6 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
         }
     }
     return sizeStr;
-}
-
-@end
-
-#pragma mark - FWTimerWrapper+FWFoundation
-
-@implementation FWTimerWrapper (FWFoundation)
-
-- (void)pauseTimer
-{
-    if (![self.base isValid]) return;
-    [self.base setFireDate:[NSDate distantFuture]];
-}
-
-- (void)resumeTimer
-{
-    if (![self.base isValid]) return;
-    [self.base setFireDate:[NSDate date]];
-}
-
-- (void)resumeTimerAfterDelay:(NSTimeInterval)delay
-{
-    if (![self.base isValid]) return;
-    [self.base setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
 }
 
 @end

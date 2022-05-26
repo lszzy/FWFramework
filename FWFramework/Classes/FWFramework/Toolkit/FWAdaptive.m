@@ -129,6 +129,14 @@ CGFloat FWRelativeHeight(CGFloat value) {
     return [UIScreen.fw relativeHeight:value];
 }
 
+CGFloat FWFixedValue(CGFloat value) {
+    return [UIScreen.fw fixedValue:value];
+}
+
+CGFloat FWFixedHeight(CGFloat value) {
+    return [UIScreen.fw fixedHeight:value];
+}
+
 CGSize FWRelativeSize(CGSize size) {
     return CGSizeMake(FWRelativeValue(size.width), FWRelativeValue(size.height));
 }
@@ -143,6 +151,14 @@ CGRect FWRelativeRect(CGRect rect) {
 
 UIEdgeInsets FWRelativeInsets(UIEdgeInsets insets) {
     return UIEdgeInsetsMake(FWRelativeValue(insets.top), FWRelativeValue(insets.left), FWRelativeValue(insets.bottom), FWRelativeValue(insets.right));
+}
+
+CGFloat FWFlatValue(CGFloat value) {
+    return [UIScreen.fw flatValue:value];
+}
+
+CGFloat FWFlatScale(CGFloat value, CGFloat scale) {
+    return [UIScreen.fw flatValue:value scale:scale];
 }
 
 static CGFloat fwStaticReferenceWidth = 375;
@@ -343,6 +359,29 @@ static CGFloat fwStaticReferenceHeight = 812;
 - (CGFloat)relativeHeight:(CGFloat)value
 {
     return value * [self relativeHeightScale];
+}
+
+- (CGFloat)fixedValue:(CGFloat)value
+{
+    return value / [self relativeScale];
+}
+
+- (CGFloat)fixedHeight:(CGFloat)value
+{
+    return value / [self relativeHeightScale];
+}
+
+- (CGFloat)flatValue:(CGFloat)value
+{
+    return [self flatValue:value scale:0];
+}
+
+- (CGFloat)flatValue:(CGFloat)value scale:(CGFloat)scale
+{
+    value = (value == CGFLOAT_MIN) ? 0 : value;
+    scale = scale ?: [UIScreen mainScreen].scale;
+    CGFloat flattedValue = ceil(value * scale) / scale;
+    return flattedValue;
 }
 
 @end
