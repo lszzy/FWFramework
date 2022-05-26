@@ -100,6 +100,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 @property (nonatomic, copy) BOOL (^preFilter)(FWRouterContext *context);
 @property (nonatomic, copy) id (^postFilter)(FWRouterContext *context, id object);
+@property (nonatomic, copy) id (^presetFilter)(FWRouterContext *context, id object);
 @property (nonatomic, copy) void (^errorHandler)(FWRouterContext *context);
 
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
@@ -302,6 +303,16 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     [self sharedInstance].postFilter = postFilter;
 }
 
++ (id (^)(FWRouterContext *, id))presetFilter
+{
+    return [self sharedInstance].presetFilter;
+}
+
++ (void)setPresetFilter:(id (^)(FWRouterContext *, id))presetFilter
+{
+    [self sharedInstance].presetFilter = presetFilter;
+}
+
 + (void (^)(FWRouterContext *))errorHandler
 {
     return [self sharedInstance].errorHandler;
@@ -358,6 +369,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         id object = handler(context);
         if (object && [self sharedInstance].postFilter) {
             [self sharedInstance].postFilter(context, object);
+        } else if (object && [self sharedInstance].presetFilter) {
+            [self sharedInstance].presetFilter(context, object);
         }
         return;
     }
@@ -400,6 +413,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         id object = handler(context);
         if (object && [self sharedInstance].postFilter) {
             return [self sharedInstance].postFilter(context, object);
+        } else if (object && [self sharedInstance].presetFilter) {
+            return [self sharedInstance].presetFilter(context, object);
         }
         return object;
     }

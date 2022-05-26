@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWTableViewCellWrapper+FWDynamicLayout
 
-typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell);
-typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath);
+typedef void(^FWCellConfigurationBlock)(__kindof UITableViewCell *cell) NS_SWIFT_NAME(CellConfigurationBlock);
+typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath *indexPath) NS_SWIFT_NAME(CellIndexPathBlock);
 
 @interface FWTableViewCellWrapper (FWDynamicLayout)
 
@@ -27,22 +27,6 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 
 /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
 @property (nonatomic, assign) BOOL maxYViewExpanded;
-
-@end
-
-@interface UITableViewCell (FWDynamicLayout)
-
-/// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
-+ (instancetype)cellWithTableView:(UITableView *)tableView;
-
-/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style;
-
-/// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型，指定reuseIdentifier
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style
-                                reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end
 
@@ -58,7 +42,7 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 /// 免注册alloc创建UITableViewCell，内部自动处理缓冲池，指定style类型，指定reuseIdentifier
 - (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView
                                           style:(UITableViewCellStyle)style
-                                reuseIdentifier:(NSString *)reuseIdentifier;
+                                reuseIdentifier:(nullable NSString *)reuseIdentifier;
 
 /// 根据配置自动计算cell高度，不使用缓存，子类可重写
 - (CGFloat)heightWithTableView:(UITableView *)tableView
@@ -71,10 +55,10 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 typedef NS_ENUM(NSInteger, FWHeaderFooterViewType) {
     FWHeaderFooterViewTypeHeader = 0,
     FWHeaderFooterViewTypeFooter = 1,
-};
+} NS_SWIFT_NAME(HeaderFooterViewType);
 
-typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView);
-typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section);
+typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFooterView *headerFooterView) NS_SWIFT_NAME(HeaderFooterViewConfigurationBlock);
+typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section) NS_SWIFT_NAME(HeaderFooterViewSectionBlock);
 
 @interface FWTableViewHeaderFooterViewWrapper (FWDynamicLayout)
 
@@ -89,23 +73,13 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 @end
 
-@interface UITableViewHeaderFooterView (FWDynamicLayout)
-
-/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView;
-
-/// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier;
-
-@end
-
 @interface FWTableViewHeaderFooterViewClassWrapper (FWDynamicLayout)
 
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
 - (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView;
 
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
-- (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier;
+- (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(nullable NSString *)reuseIdentifier;
 
 /// 根据配置自动计算cell高度，不使用缓存，子类可重写
 - (CGFloat)heightWithTableView:(UITableView *)tableView
@@ -185,8 +159,8 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 
 #pragma mark - FWCollectionViewCellWrapper+FWDynamicLayout
 
-typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell);
-typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath);
+typedef void(^FWCollectionCellConfigurationBlock)(__kindof UICollectionViewCell *cell) NS_SWIFT_NAME(CollectionCellConfigurationBlock);
+typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cell, NSIndexPath *indexPath) NS_SWIFT_NAME(CollectionCellIndexPathBlock);
 
 @interface FWCollectionViewCellWrapper (FWDynamicLayout)
 
@@ -201,19 +175,6 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 @end
 
-@interface UICollectionViewCell (FWDynamicLayout)
-
-/// 免注册创建UICollectionViewCell，内部自动处理缓冲池
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath;
-
-/// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath
-                         reuseIdentifier:(NSString *)reuseIdentifier;
-
-@end
-
 @interface FWCollectionViewCellClassWrapper (FWDynamicLayout)
 
 /// 免注册创建UICollectionViewCell，内部自动处理缓冲池
@@ -223,7 +184,7 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 /// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
 - (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath
-                         reuseIdentifier:(NSString *)reuseIdentifier;
+                         reuseIdentifier:(nullable NSString *)reuseIdentifier;
 
 /// 根据配置自动计算view大小，子类可重写
 - (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView
@@ -243,8 +204,8 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 #pragma mark - FWCollectionReusableViewWrapper+FWDynamicLayout
 
-typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView);
-typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
+typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableView *reusableView) NS_SWIFT_NAME(ReusableViewConfigurationBlock);
+typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath) NS_SWIFT_NAME(ReusableViewIndexPathBlock);
 
 @interface FWCollectionReusableViewWrapper (FWDynamicLayout)
 
@@ -259,21 +220,6 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 
 @end
 
-@interface UICollectionReusableView (FWDynamicLayout)
-
-/// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath;
-
-/// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath
-                                 reuseIdentifier:(NSString *)reuseIdentifier;
-
-@end
-
 @interface FWCollectionReusableViewClassWrapper (FWDynamicLayout)
 
 /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池
@@ -285,7 +231,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (__kindof UICollectionReusableView *)reusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath
-                                 reuseIdentifier:(NSString *)reuseIdentifier;
+                                 reuseIdentifier:(nullable NSString *)reuseIdentifier;
 
 /// 根据配置自动计算view大小，子类可重写
 - (CGSize)sizeWithCollectionView:(UICollectionView *)collectionView

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWTask
 
 /// 任务基类
+NS_SWIFT_NAME(Task)
 @interface FWTask : NSOperation
 
 /** 错误信息 */
@@ -32,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWTaskManager
 
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
+NS_SWIFT_NAME(TaskManager)
 @interface FWTaskManager : NSObject
 
 /** 单例模式 */

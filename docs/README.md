@@ -28,7 +28,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Compatible', 'Tracking']
+	  # pod 'FWFramework', :subspecs => ['FWFramework', 'Compatible']
 	end
 
 ### Swift Package Manager
@@ -41,7 +41,6 @@ This framework supports Swift Package Manager, just add and check the required m
 	
 	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 	import FWFrameworkCompatible
-	import FWFrameworkTracking
 
 ## [Api](https://fwframework.wuyong.site)
 The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.
@@ -49,7 +48,7 @@ The document is located in the docs folder, just open index.html in the browser,
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '3.0.0'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod'FWFramework', '3.1.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
 ## Vendor

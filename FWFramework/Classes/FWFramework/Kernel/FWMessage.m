@@ -80,8 +80,6 @@
 
 - (NSString *)observeMessage:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    if (!name || !block) return nil;
-    
     NSMutableDictionary *dict = [self innerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
@@ -104,8 +102,6 @@
 
 - (NSString *)observeMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
-    if (!name || !target || !action) return nil;
-    
     NSMutableDictionary *dict = [self innerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
@@ -267,8 +263,6 @@
 
 - (NSString *)observeNotification:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    if (!name || !block) return nil;
-    
     NSMutableDictionary *dict = [self innerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
@@ -292,8 +286,6 @@
 
 - (NSString *)observeNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
-    if (!name || !target || !action) return nil;
-    
     NSMutableDictionary *dict = [self innerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
@@ -455,7 +447,7 @@
 
 @property (nonatomic) SEL action;
 
-@property (nonatomic, copy) void (^block)(__weak id object, NSDictionary *change);
+@property (nonatomic, copy) void (^block)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change);
 
 @property (nonatomic, readonly) BOOL isObserving;
 
@@ -494,7 +486,7 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context
 {
     // 不回调的情况
     BOOL isPrior = [[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue];
@@ -535,10 +527,8 @@
 
 @implementation FWObjectWrapper (FWKvo)
 
-- (NSString *)observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary *change))block
+- (NSString *)observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change))block
 {
-    if (!property || !block) return nil;
-    
     NSMutableDictionary *dict = [self innerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
     if (!arr) {
@@ -557,8 +547,6 @@
 
 - (NSString *)observeProperty:(NSString *)property target:(id)target action:(SEL)action
 {
-    if (!property || !target || !action) return nil;
-    
     NSMutableDictionary *dict = [self innerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
     if (!arr) {

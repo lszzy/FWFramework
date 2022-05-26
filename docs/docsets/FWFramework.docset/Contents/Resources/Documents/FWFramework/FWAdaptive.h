@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWScreenClassWrapper+FWAdaptive
 
 /// 屏幕尺寸可扩展枚举
-typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM;
+typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ScreenInch);
 static const FWScreenInch FWScreenInch35 = 35;
 static const FWScreenInch FWScreenInch40 = 40;
 static const FWScreenInch FWScreenInch47 = 47;
@@ -153,6 +153,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 FOUNDATION_EXPORT CGFloat FWRelativeValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图高度等比例缩放值
 FOUNDATION_EXPORT CGFloat FWRelativeHeight(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图宽度等比例缩放时的固定宽度值
+FOUNDATION_EXPORT CGFloat FWFixedValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 获取相对设计图高度等比例缩放时的固定高度值
+FOUNDATION_EXPORT CGFloat FWFixedHeight(CGFloat value) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放size
 FOUNDATION_EXPORT CGSize FWRelativeSize(CGSize size) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放point
@@ -162,18 +166,10 @@ FOUNDATION_EXPORT CGRect FWRelativeRect(CGRect rect) NS_SWIFT_UNAVAILABLE("");
 /// 获取相对设计图等比例缩放insets
 FOUNDATION_EXPORT UIEdgeInsets FWRelativeInsets(UIEdgeInsets insets) NS_SWIFT_UNAVAILABLE("");
 
-/// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-CG_INLINE CGFloat FWFlatScale(CGFloat floatValue, CGFloat scale) {
-    floatValue = (floatValue == CGFLOAT_MIN) ? 0 : floatValue;
-    scale = scale ?: [UIScreen mainScreen].scale;
-    CGFloat flattedValue = ceil(floatValue * scale) / scale;
-    return flattedValue;
-}
-
 /// 基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整
-CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
-    return FWFlatScale(floatValue, 0);
-}
+FOUNDATION_EXPORT CGFloat FWFlatValue(CGFloat value) NS_SWIFT_UNAVAILABLE("");
+/// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
+FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNAVAILABLE("");
 
 @interface FWScreenClassWrapper (FWAdaptive)
 
@@ -220,6 +216,18 @@ CG_INLINE CGFloat FWFlatValue(CGFloat floatValue) {
 
 /// 获取相对设计图高度等比例缩放值
 - (CGFloat)relativeHeight:(CGFloat)value;
+
+/// 获取相对设计图宽度等比例缩放时的固定宽度值
+- (CGFloat)fixedValue:(CGFloat)value;
+
+/// 获取相对设计图高度等比例缩放时的固定高度值
+- (CGFloat)fixedHeight:(CGFloat)value;
+
+/// 基于当前设备的屏幕倍数，对传进来的floatValue进行像素取整
+- (CGFloat)flatValue:(CGFloat)value;
+
+/// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
+- (CGFloat)flatValue:(CGFloat)value scale:(CGFloat)scale;
 
 @end
 

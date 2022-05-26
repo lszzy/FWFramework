@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0] - 2022-05-26
+
+### Added
+* Refactor Swift version Api method
+* Added FW global method, you can customize the call name
+* Refactored some components and added several functions
+* This version is not compatible with the previous version, the code must be migrated
+
 ## [3.0.0] - 2022-04-29
 
 ### Added

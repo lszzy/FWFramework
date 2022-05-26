@@ -11,36 +11,64 @@ import FWFramework
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     var window: UIWindow?
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FWMediator.setupAllModules()
+        Mediator.setupAllModules()
+        Router.registerClass(AppRouter.self)
+        setupAppearance()
         return true
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
-        window?.rootViewController = rootController()
+        window?.rootViewController = setupController()
         window?.makeKeyAndVisible()
         return true
     }
+    
 }
 
 // MARK: - Private
 private extension AppDelegate {
     
-    func rootController() -> UIViewController {
-        FWRouter.registerClass(AppRouter.self)
-        let viewController = FWRouter.object(forURL: AppRouter.homeUrl) as! UIViewController
+    func setupAppearance() {
+        if #available(iOS 15.0, *) {
+            UITableView.appearance().sectionHeaderTopPadding = .zero
+        }
         
+        UINavigationController.fw.enablePopProxy()
+    }
+    
+    func setupController() -> UIViewController {
+        let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
+        homeController.hidesBottomBarWhenPushed = false
+        let homeNav = navigationController(homeController)
+        homeNav.tabBarItem.title = APP.localized("home.title")
+        
+        let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
+        testController.hidesBottomBarWhenPushed = false
+        let testNav = navigationController(testController)
+        testNav.tabBarItem.title = APP.localized("test.title")
+        
+        let settingsController = Router.object(forURL: AppRouter.settingsUrl) as! UIViewController
+        settingsController.hidesBottomBarWhenPushed = false
+        let settingsNav = navigationController(settingsController)
+        settingsNav.tabBarItem.title = APP.localized("settings.title")
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [homeNav, testNav, settingsNav]
+        return tabBarController
+    }
+    
+    func navigationController(_ viewController: UIViewController) -> UINavigationController {
         let navController = UINavigationController(rootViewController: viewController)
-        navController.fw.enablePopProxy()
         navController.navigationBar.fw.isTranslucent = false
         navController.navigationBar.fw.shadowColor = nil
         navController.navigationBar.fw.foregroundColor = UIColor.fw.themeLight(.black, dark: .white)
-        navController.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(withHex: 0xFAFAFA), dark: .fw.color(withHex: 0x121212))
-        navController.navigationBar.fw.backImage = UIImage(named: "navBack")
+        navController.navigationBar.fw.backgroundColor = UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA), dark: .fw.color(hex: 0x121212))
         return navController
     }
     

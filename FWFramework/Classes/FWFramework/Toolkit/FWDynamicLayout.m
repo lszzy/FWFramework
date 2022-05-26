@@ -142,25 +142,6 @@
 
 @end
 
-@implementation UITableViewCell (FWDynamicLayout)
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView {
-    return [[self fw] cellWithTableView:tableView];
-}
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style {
-    return [[self fw] cellWithTableView:tableView style:style];
-}
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-                                          style:(UITableViewCellStyle)style
-                                reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] cellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWTableViewCellClassWrapper (FWDynamicLayout)
 
 - (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView {
@@ -169,13 +150,13 @@
 
 - (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView
                                           style:(UITableViewCellStyle)style {
-    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self cellWithTableView:tableView style:style reuseIdentifier:reuseIdentifier];
+    return [self cellWithTableView:tableView style:style reuseIdentifier:nil];
 }
 
 - (__kindof UITableViewCell *)cellWithTableView:(UITableView *)tableView
                                           style:(UITableViewCellStyle)style
                                 reuseIdentifier:(NSString *)reuseIdentifier {
+    if (!reuseIdentifier) reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell) return cell;
     return [[self.base alloc] initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -226,26 +207,14 @@
 
 @end
 
-@implementation UITableViewHeaderFooterView (FWDynamicLayout)
-
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView {
-    return [[self fw] headerFooterViewWithTableView:tableView];
-}
-
-+ (instancetype)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] headerFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWTableViewHeaderFooterViewClassWrapper (FWDynamicLayout)
 
 - (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView {
-    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self headerFooterViewWithTableView:tableView reuseIdentifier:reuseIdentifier];
+    return [self headerFooterViewWithTableView:tableView reuseIdentifier:nil];
 }
 
 - (__kindof UITableViewHeaderFooterView *)headerFooterViewWithTableView:(UITableView *)tableView reuseIdentifier:(NSString *)reuseIdentifier {
+    if (!reuseIdentifier) reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
     if ([objc_getAssociatedObject(tableView, reuseSelector) boolValue]) {
         return [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseIdentifier];
@@ -640,32 +609,17 @@
 
 @end
 
-@implementation UICollectionViewCell (FWDynamicLayout)
-
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath {
-    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath];
-}
-
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                               indexPath:(NSIndexPath *)indexPath
-                         reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWCollectionViewCellClassWrapper (FWDynamicLayout)
 
 - (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath {
-    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:reuseIdentifier];
+    return [self cellWithCollectionView:collectionView indexPath:indexPath reuseIdentifier:nil];
 }
 
 - (__kindof UICollectionViewCell *)cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath
                          reuseIdentifier:(NSString *)reuseIdentifier {
+    if (!reuseIdentifier) reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     SEL reuseSelector = NSSelectorFromString(reuseIdentifier);
     if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
@@ -732,36 +686,19 @@
 
 @end
 
-@implementation UICollectionReusableView (FWDynamicLayout)
-
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath {
-    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath];
-}
-
-+ (instancetype)reusableViewWithCollectionView:(UICollectionView *)collectionView
-                                            kind:(NSString *)kind
-                                       indexPath:(NSIndexPath *)indexPath
-                                 reuseIdentifier:(NSString *)reuseIdentifier {
-    return [[self fw] reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
-}
-
-@end
-
 @implementation FWCollectionReusableViewClassWrapper (FWDynamicLayout)
 
 - (__kindof UICollectionReusableView *)reusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath {
-    NSString *reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
-    return [self reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:reuseIdentifier];
+    return [self reusableViewWithCollectionView:collectionView kind:kind indexPath:indexPath reuseIdentifier:nil];
 }
 
 - (__kindof UICollectionReusableView *)reusableViewWithCollectionView:(UICollectionView *)collectionView
                                             kind:(NSString *)kind
                                        indexPath:(NSIndexPath *)indexPath
                                  reuseIdentifier:(NSString *)reuseIdentifier {
+    if (!reuseIdentifier) reuseIdentifier = [NSStringFromClass(self.base) stringByAppendingString:@"FWDynamicLayoutReuseIdentifier"];
     SEL reuseSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@", reuseIdentifier, kind]);
     if ([objc_getAssociatedObject(collectionView, reuseSelector) boolValue]) {
         return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:reuseIdentifier forIndexPath:indexPath];

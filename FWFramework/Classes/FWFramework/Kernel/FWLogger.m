@@ -50,7 +50,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:FWLogTypeTrace message:message];
+    [self log:FWLogTypeTrace message:message];
 }
 
 + (void)debug:(NSString *)format, ...
@@ -62,7 +62,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:FWLogTypeDebug message:message];
+    [self log:FWLogTypeDebug message:message];
 }
 
 + (void)info:(NSString *)format, ...
@@ -74,7 +74,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:FWLogTypeInfo message:message];
+    [self log:FWLogTypeInfo message:message];
 }
 
 + (void)warn:(NSString *)format, ...
@@ -86,7 +86,7 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:FWLogTypeWarn message:message];
+    [self log:FWLogTypeWarn message:message];
 }
 
 + (void)error:(NSString *)format, ...
@@ -98,10 +98,12 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:FWLogTypeError message:message];
+    [self log:FWLogTypeError message:message];
 }
 
-+ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...
++ (void)group:(NSString *)group
+         type:(FWLogType)type
+       format:(NSString *)format, ...
 {
     if (![self check:type]) return;
     
@@ -110,44 +112,51 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     
-    [self logWithType:type message:message group:group userInfo:nil];
+    [self log:type message:message group:group userInfo:nil];
 }
 
-+ (void)logWithType:(FWLogType)type message:(NSString *)message
++ (void)log:(FWLogType)type
+    message:(NSString *)message
 {
-    [self logWithType:type message:message group:nil userInfo:nil];
+    [self log:type message:message group:nil userInfo:nil];
 }
 
-+ (void)logWithType:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
++ (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(NSString *)group
+   userInfo:(NSDictionary *)userInfo
 {
     // 过滤不支持的级别
     if (![self check:type]) return;
     
     // 插件存在，调用插件；否则使用默认插件
-    id<FWLogPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWLogPlugin)];
-    if (!plugin || ![plugin respondsToSelector:@selector(logWithType:message:group:userInfo:)]) {
-        plugin = FWLogPluginImpl.sharedInstance;
+    id<FWLoggerPlugin> plugin = [FWPluginManager loadPlugin:@protocol(FWLoggerPlugin)];
+    if (!plugin || ![plugin respondsToSelector:@selector(log:message:group:userInfo:)]) {
+        plugin = FWLoggerPluginImpl.sharedInstance;
     }
-    [plugin logWithType:type message:message group:group userInfo:userInfo];
+    [plugin log:type message:message group:group userInfo:userInfo];
 }
 
 @end
 
-#pragma mark - FWLogPluginImpl
+#pragma mark - FWLoggerPluginImpl
 
-@implementation FWLogPluginImpl
+@implementation FWLoggerPluginImpl
 
-+ (FWLogPluginImpl *)sharedInstance
++ (FWLoggerPluginImpl *)sharedInstance
 {
-    static FWLogPluginImpl *instance = nil;
+    static FWLoggerPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWLogPluginImpl alloc] init];
+        instance = [[FWLoggerPluginImpl alloc] init];
     });
     return instance;
 }
 
-- (void)logWithType:(FWLogType)type message:(NSString *)message group:(NSString *)group userInfo:(NSDictionary *)userInfo
+- (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(NSString *)group
+   userInfo:(NSDictionary *)userInfo
 {
     NSString *groupStr = group ? [NSString stringWithFormat:@" [%@]", group] : @"";
     NSString *infoStr = userInfo ? [NSString stringWithFormat:@" %@", userInfo] : @"";

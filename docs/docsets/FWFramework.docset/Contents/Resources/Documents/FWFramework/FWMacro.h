@@ -290,15 +290,4 @@
 #define fw_macro_default_at_8( N, X, A, B, C, D, E, F, G ) \
     N > 7 ? X : fw_macro_default_at_7( N, G, A, B, C, D, E, F )
 
-
-#pragma mark - Benchmark
-
-/// 标记时间调试开始
-#define FWBenchmarkBegin( x ) \
-    [FWBenchmark begin:@(#x)];
-
-/// 标记时间调试结束并打印消耗时间
-#define FWBenchmarkEnd( x ) \
-    [FWBenchmark end:@(#x)];
-
 #endif /* FWMacro_h */

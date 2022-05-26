@@ -15,10 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWLoader<InputType, OutputType>;
 
 /// 指定名称和大小初始化图标对象
-FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size);
+FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /// 指定名称和大小初始化图标图像
-FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
+FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /**
  字体图标抽象基类，子类需继承
@@ -30,6 +30,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size);
  
  @see https://github.com/PrideChung/FontAwesomeKit
  */
+NS_SWIFT_NAME(Icon)
 @interface FWIcon : NSObject
 
 #pragma mark - Static

@@ -8,6 +8,9 @@
  */
 
 #import "FWBlock.h"
+#import "FWBarAppearance.h"
+#import "FWNavigation.h"
+#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWTimerClassWrapper+FWBlock
@@ -63,6 +66,30 @@
         void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];
         block(timer);
     }
+}
+
+@end
+
+#pragma mark - FWTimerWrapper+FWFoundation
+
+@implementation FWTimerWrapper (FWFoundation)
+
+- (void)pauseTimer
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate distantFuture]];
+}
+
+- (void)resumeTimer
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate date]];
+}
+
+- (void)resumeTimerAfterDelay:(NSTimeInterval)delay
+{
+    if (![self.base isValid]) return;
+    [self.base setFireDate:[NSDate dateWithTimeIntervalSinceNow:delay]];
 }
 
 @end
@@ -149,15 +176,6 @@
 @end
 
 #pragma mark - FWGestureRecognizerClassWrapper+FWBlock
-
-@implementation UIGestureRecognizer (FWBlock)
-
-+ (instancetype)gestureRecognizerWithBlock:(void (^)(id _Nonnull))block
-{
-    return [[self fw] gestureRecognizerWithBlock:block];
-}
-
-@end
 
 @implementation FWGestureRecognizerClassWrapper (FWBlock)
 
@@ -312,6 +330,24 @@
 
 @implementation FWBarButtonItemWrapper (FWBlock)
 
+- (NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+{
+    return objc_getAssociatedObject(self.base, @selector(titleAttributes));
+}
+
+- (void)setTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+{
+    objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (!titleAttributes) return;
+    
+    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+    for (NSNumber *state in states) {
+        NSMutableDictionary *attributes = [self.base titleTextAttributesForState:[state unsignedIntegerValue]].mutableCopy ?: [NSMutableDictionary new];
+        [attributes addEntriesFromDictionary:titleAttributes];
+        [self.base setTitleTextAttributes:attributes forState:[state unsignedIntegerValue]];
+    }
+}
+
 - (void)setBlock:(void (^)(id))block
 {
     FWInnerBlockTarget *target = nil;
@@ -354,16 +390,7 @@
     } else if ([object isKindOfClass:[NSAttributedString class]]) {
         NSAttributedString *attributedString = (NSAttributedString *)object;
         barItem = [[self.base alloc] initWithTitle:attributedString.string style:UIBarButtonItemStylePlain target:target action:action];
-        
-        // 只支持NSFontAttributeName和NSForegroundColorAttributeName属性
-        NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
-        NSMutableDictionary *textAttributes = [NSMutableDictionary new];
-        textAttributes[NSFontAttributeName] = attributes[NSFontAttributeName];
-        textAttributes[NSForegroundColorAttributeName] = attributes[NSForegroundColorAttributeName];
-        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
-        for (NSNumber *state in states) {
-            [barItem setTitleTextAttributes:textAttributes forState:[state unsignedIntegerValue]];
-        }
+        barItem.fw.titleAttributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
     // UIImage
     } else if ([object isKindOfClass:[UIImage class]]) {
         barItem = [[self.base alloc] initWithImage:object style:UIBarButtonItemStylePlain target:target action:action];
@@ -390,6 +417,127 @@
     UIBarButtonItem *barItem = [self itemWithObject:object target:nil action:nil];
     [barItem.fw setBlock:block];
     return barItem;
+}
+
+@end
+
+#pragma mark - FWViewControllerWrapper+FWBlock
+
+@implementation FWViewControllerWrapper (FWBlock)
+
+- (NSString *)title
+{
+    return self.base.navigationItem.title;
+}
+
+- (void)setTitle:(NSString *)title
+{
+    self.base.navigationItem.title = title;
+}
+
+- (id)backBarItem
+{
+    return self.base.navigationItem.backBarButtonItem;
+}
+
+- (void)setBackBarItem:(id)object
+{
+    if ([object isKindOfClass:[UIImage class]]) {
+        self.base.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.base.navigationController.navigationBar.fw.backImage = (UIImage *)object;
+    } else {
+        UIBarButtonItem *backItem = [object isKindOfClass:[UIBarButtonItem class]] ? (UIBarButtonItem *)object : [UIBarButtonItem.fw itemWithObject:object ?: [UIImage new] target:nil action:nil];
+        self.base.navigationItem.backBarButtonItem = backItem;
+        self.base.navigationController.navigationBar.fw.backImage = nil;
+    }
+}
+
+- (id)leftBarItem
+{
+    return self.base.navigationItem.leftBarButtonItem;
+}
+
+- (void)setLeftBarItem:(id)object
+{
+    if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
+        self.base.navigationItem.leftBarButtonItem = object;
+    } else {
+        __weak UIViewController *weakController = self.base;
+        self.base.navigationItem.leftBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:^(id  _Nonnull sender) {
+            if (![weakController shouldPopController]) return;
+            [weakController.fw closeViewControllerAnimated:YES];
+        }];
+    }
+}
+
+- (id)rightBarItem
+{
+    return self.base.navigationItem.rightBarButtonItem;
+}
+
+- (void)setRightBarItem:(id)object
+{
+    if (!object || [object isKindOfClass:[UIBarButtonItem class]]) {
+        self.base.navigationItem.rightBarButtonItem = object;
+    } else {
+        __weak UIViewController *weakController = self.base;
+        self.base.navigationItem.rightBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:^(id  _Nonnull sender) {
+            if (![weakController shouldPopController]) return;
+            [weakController.fw closeViewControllerAnimated:YES];
+        }];
+    }
+}
+
+- (void)setLeftBarItem:(id)object target:(id)target action:(SEL)action
+{
+    self.base.navigationItem.leftBarButtonItem = [UIBarButtonItem.fw itemWithObject:object target:target action:action];
+}
+
+- (void)setLeftBarItem:(id)object block:(void (^)(id sender))block
+{
+    self.base.navigationItem.leftBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:block];
+}
+
+- (void)setRightBarItem:(id)object target:(id)target action:(SEL)action
+{
+    self.base.navigationItem.rightBarButtonItem = [UIBarButtonItem.fw itemWithObject:object target:target action:action];
+}
+
+- (void)setRightBarItem:(id)object block:(void (^)(id sender))block
+{
+    self.base.navigationItem.rightBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:block];
+}
+
+- (void)addLeftBarItem:(id)object target:(id)target action:(SEL)action
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem.fw itemWithObject:object target:target action:action];
+    NSMutableArray *items = self.base.navigationItem.leftBarButtonItems ? [self.base.navigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.base.navigationItem.leftBarButtonItems = [items copy];
+}
+
+- (void)addLeftBarItem:(id)object block:(void (^)(id sender))block
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem.fw itemWithObject:object block:block];
+    NSMutableArray *items = self.base.navigationItem.leftBarButtonItems ? [self.base.navigationItem.leftBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.base.navigationItem.leftBarButtonItems = [items copy];
+}
+
+- (void)addRightBarItem:(id)object target:(id)target action:(SEL)action
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem.fw itemWithObject:object target:target action:action];
+    NSMutableArray *items = self.base.navigationItem.rightBarButtonItems ? [self.base.navigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.base.navigationItem.rightBarButtonItems = [items copy];
+}
+
+- (void)addRightBarItem:(id)object block:(void (^)(id sender))block
+{
+    UIBarButtonItem *barItem = [UIBarButtonItem.fw itemWithObject:object block:block];
+    NSMutableArray *items = self.base.navigationItem.rightBarButtonItems ? [self.base.navigationItem.rightBarButtonItems mutableCopy] : [NSMutableArray new];
+    [items addObject:barItem];
+    self.base.navigationItem.rightBarButtonItems = [items copy];
 }
 
 @end

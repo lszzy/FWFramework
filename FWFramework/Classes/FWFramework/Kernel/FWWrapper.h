@@ -15,53 +15,61 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速声明包装器宏
 #define FWWrapperCompatible(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass (FWWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @property (nonatomic, strong, readonly) objectWrapper *fw NS_REFINED_FOR_SWIFT; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw NS_REFINED_FOR_SWIFT; \
     @end
 
 /// 快速声明可用版本包装器宏
 #define FWWrapperCompatibleAvailable(version, baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper : objectParent \
     @property (nonatomic, strong, readonly) baseClass *base; \
     @end \
     API_AVAILABLE(ios(version)) \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     API_AVAILABLE(ios(version)) \
     @interface baseClass (FWWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper *fw; \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @property (nonatomic, strong, readonly) objectWrapper *fw NS_REFINED_FOR_SWIFT; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw NS_REFINED_FOR_SWIFT; \
     @end
 
 /// 快速声明单泛型包装器宏
 #define FWWrapperCompatibleGeneric(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper<__covariant ObjectType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<ObjectType> *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass<ObjectType> (FWWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw; \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *fw NS_REFINED_FOR_SWIFT; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw NS_REFINED_FOR_SWIFT; \
     @end
 
 /// 快速声明双泛型包装器宏
 #define FWWrapperCompatibleGeneric2(baseClass, fw, objectWrapper, objectParent, classWrapper, classParent) \
+    NS_REFINED_FOR_SWIFT \
     @interface objectWrapper<__covariant KeyType, __covariant ValueType> : objectParent \
     @property (nonatomic, strong, readonly) baseClass<KeyType, ValueType> *base; \
     @end \
+    NS_REFINED_FOR_SWIFT \
     @interface classWrapper : classParent \
     @end \
     @interface baseClass<KeyType, ValueType> (FWWrapper) \
-    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw; \
-    @property (class, nonatomic, strong, readonly) classWrapper *fw; \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *fw NS_REFINED_FOR_SWIFT; \
+    @property (class, nonatomic, strong, readonly) classWrapper *fw NS_REFINED_FOR_SWIFT; \
     @end
 
 /// 快速实现包装器宏
@@ -81,30 +89,30 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速声明包装器扩展宏
 #define FWWrapperExtendable(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
     @interface baseClass (ext) \
-    @property (nonatomic, strong, readonly) objectWrapper *ext; \
-    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
+    @property (nonatomic, strong, readonly) objectWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end
 
 /// 快速声明可用版本包装器扩展宏
 #define FWWrapperExtendableAvailable(version, baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
     API_AVAILABLE(ios(version)) \
     @interface baseClass (ext) \
-    @property (nonatomic, strong, readonly) objectWrapper *ext; \
-    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
+    @property (nonatomic, strong, readonly) objectWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end
 
 /// 快速声明单泛型包装器扩展宏
 #define FWWrapperExtendableGeneric(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
     @interface baseClass<ObjectType> (ext) \
-    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *ext; \
-    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
+    @property (nonatomic, strong, readonly) objectWrapper<ObjectType> *ext NS_SWIFT_UNAVAILABLE(""); \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end
 
 /// 快速声明双泛型包装器扩展宏
 #define FWWrapperExtendableGeneric2(baseClass, ext, objectWrapper, objectParent, classWrapper, classParent) \
     @interface baseClass<KeyType, ValueType> (ext) \
-    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *ext; \
-    @property (class, nonatomic, strong, readonly) classWrapper *ext; \
+    @property (nonatomic, strong, readonly) objectWrapper<KeyType, ValueType> *ext NS_SWIFT_UNAVAILABLE(""); \
+    @property (class, nonatomic, strong, readonly) classWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end
 
 /// 快速实现包装器扩展宏
@@ -131,10 +139,10 @@ NS_ASSUME_NONNULL_BEGIN
     @property (nonatomic, strong, readonly) FWClassWrapper *ext NS_UNAVAILABLE; \
     @end \
     @interface NSObject (fw_macro_concat(FWObjectWrapper, ext)) \
-    @property (nonatomic, strong, readonly) FWObjectWrapper *ext; \
+    @property (nonatomic, strong, readonly) FWObjectWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end \
     @interface NSObject (fw_macro_concat(FWClassWrapper, ext)) \
-    @property (class, nonatomic, strong, readonly) FWClassWrapper *ext; \
+    @property (class, nonatomic, strong, readonly) FWClassWrapper *ext NS_SWIFT_UNAVAILABLE(""); \
     @end \
     FWWrapperFramework_(FWWrapperExtendable, ext);
 
@@ -286,6 +294,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// [self.base innerAsyncMethod];
 ///
 /// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
+NS_REFINED_FOR_SWIFT
 @interface FWObjectWrapper : NSObject
 
 /// 原始对象
@@ -303,10 +312,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// 框架包装器协议
+NS_REFINED_FOR_SWIFT
 @protocol FWObjectWrapper <NSObject>
 
 /// 对象包装器
-@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
+@property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -324,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// [self.base innerAsyncMethod];
 ///
 /// [self.base addTarget:self.innerTarget action:action forControlEvents:controlEvents];
+NS_REFINED_FOR_SWIFT
 @interface FWClassWrapper : NSObject
 
 /// 原始类
@@ -341,10 +352,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// 框架类包装器协议
+NS_REFINED_FOR_SWIFT
 @protocol FWClassWrapper <NSObject>
 
 /// 类包装器
-@property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
+@property (class, nonatomic, strong, readonly) FWClassWrapper *fw NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -354,7 +366,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (FWObjectWrapper) <FWObjectWrapper>
 
 /// 对象包装器
-@property (nonatomic, strong, readonly) FWObjectWrapper *fw;
+@property (nonatomic, strong, readonly) FWObjectWrapper *fw NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -362,7 +374,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (FWClassWrapper) <FWClassWrapper>
 
 /// 类包装器
-@property (class, nonatomic, strong, readonly) FWClassWrapper *fw;
+@property (class, nonatomic, strong, readonly) FWClassWrapper *fw NS_REFINED_FOR_SWIFT;
 
 @end
 

@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 消息句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
+- (NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  消息句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSNotificationName)name target:(id)target action:(SEL)action;
+- (NSString *)observeMessage:(NSNotificationName)name target:(nullable id)target action:(SEL)action;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
 
 /**
  手工移除某个点对点消息指定监听
@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       消息名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveMessage:(NSNotificationName)name identifier:(nullable NSString *)identifier;
+- (void)unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier;
 
 /**
  手工移除某个点对点消息所有监听
@@ -225,7 +225,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 通知句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
+- (NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -235,7 +235,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  通知句柄
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
 
 /**
  监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -245,7 +245,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSNotificationName)name target:(id)target action:(SEL)action;
+- (NSString *)observeNotification:(NSNotificationName)name target:(nullable id)target action:(SEL)action;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -256,7 +256,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (nullable NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object target:(id)target action:(SEL)action;
+- (NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
 
 /**
  手工移除某个广播通知指定监听
@@ -283,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       通知名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveNotification:(NSNotificationName)name identifier:(nullable NSString *)identifier;
+- (void)unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier;
 
 /**
  手工移除某个广播通知所有监听
@@ -376,7 +376,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block    目标句柄，block参数依次为object、优化的change字典(不含NSNull)
  @return 监听唯一标志
  */
-- (nullable NSString *)observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary *change))block;
+- (NSString *)observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 
 /**
  监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -386,7 +386,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action   目标动作，action参数依次为object、优化的change字典(不含NSNull)
  @return 监听唯一标志
  */
-- (nullable NSString *)observeProperty:(NSString *)property target:(id)target action:(SEL)action;
+- (NSString *)observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
 
 /**
  手工移除某个属性指定监听
@@ -403,7 +403,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param property   属性名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveProperty:(NSString *)property identifier:(nullable NSString *)identifier;
+- (void)unobserveProperty:(NSString *)property identifier:(NSString *)identifier;
 
 /**
  手工移除某个属性所有监听

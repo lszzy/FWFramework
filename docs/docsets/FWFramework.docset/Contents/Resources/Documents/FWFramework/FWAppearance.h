@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://github.com/Tencent/QMUI_iOS
  */
+NS_SWIFT_NAME(Appearance)
 @interface FWAppearance : NSObject
 
 /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象

@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWMediator
+#pragma mark - Macro
 
 /// 加载指定业务模块
 #define FWModule(serviceProtocol) \
@@ -21,12 +21,20 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWRegModule(serviceProtocol) \
     [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
 
-/// 模块默认优先级，100
-static const NSUInteger FWModulePriorityDefault = 100;
+#pragma mark - FWModulePriority
+
+/// 模块优先级可扩展枚举
+typedef NSUInteger FWModulePriority NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ModulePriority);
+static const FWModulePriority FWModulePriorityLow = 250;
+static const FWModulePriority FWModulePriorityDefault = 500;
+static const FWModulePriority FWModulePriorityHigh = 750;
+
+#pragma mark - FWModuleProtocol
 
 /**
  业务模块协议，各业务必须实现
  */
+NS_SWIFT_NAME(ModuleProtocol)
 @protocol FWModuleProtocol <UIApplicationDelegate, NSObject>
 
 @required
@@ -47,6 +55,8 @@ static const NSUInteger FWModulePriorityDefault = 100;
 
 @end
 
+#pragma mark - FWMediator
+
 @class FWLoader<InputType, OutputType>;
 
 /**
@@ -54,6 +64,7 @@ static const NSUInteger FWModulePriorityDefault = 100;
  
  @see https://github.com/youzan/Bifrost
  */
+NS_SWIFT_NAME(Mediator)
 @interface FWMediator : NSObject
 
 /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
@@ -87,6 +98,7 @@ static const NSUInteger FWModulePriorityDefault = 100;
 /**
  业务模块Bundle基类，各模块可继承
  */
+NS_SWIFT_NAME(ModuleBundle)
 @interface FWModuleBundle : NSObject
 
 /// 获取当前模块Bundle，默认主Bundle，子类可重写

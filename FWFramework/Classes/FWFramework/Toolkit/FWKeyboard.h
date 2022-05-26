@@ -68,6 +68,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *nextResponder;
 
+/// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
+- (CGFloat)keyboardHeight:(NSNotification *)notification;
+
+/// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
+- (void)keyboardAnimate:(NSNotification *)notification
+             animations:(void (^)(void))animations
+             completion:(void (^ __nullable)(BOOL finished))completion;
+
 /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
 /// @param title 标题，不能点击
 /// @param doneBlock 右侧完成按钮句柄，默认收起键盘
@@ -144,6 +152,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *nextResponder;
+
+/// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
+- (CGFloat)keyboardHeight:(NSNotification *)notification;
+
+/// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
+- (void)keyboardAnimate:(NSNotification *)notification
+             animations:(void (^)(void))animations
+             completion:(void (^ __nullable)(BOOL finished))completion;
 
 /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
 /// @param title 标题，不能点击

@@ -21,6 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL autoLayoutRTL;
 
+/**
+ 是否全局自动等比例缩放布局，默认NO
+ @note 启用后所有offset值都会自动*relativeScale，注意可能产生的影响。
+ 启用后注意事项：
+ 1. 屏幕宽度约束不能使用screenWidth约束，需要使用375设计标准
+ 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
+ 2. 只会对offset值生效，其他属性不受影响
+ 3. 如需特殊处理，可以指定某个视图关闭该功能
+ */
+@property (nonatomic, assign) BOOL autoScale;
+
 @end
 
 /**
@@ -32,9 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - AutoLayout
 
-/**
- 是否启用自动布局
- */
+/// 视图是否自动等比例缩放布局，默认返回全局开关
+@property (nonatomic, assign) BOOL autoScale;
+
+/// 是否启用自动布局
 @property (nonatomic, assign) BOOL autoLayout;
 
 /**
@@ -195,11 +207,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal;
 
 /**
+ 与父视图水平方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontalWithInset:(CGFloat)inset;
+
+/**
  与父视图垂直方向两条边属性相同
  
  @return 约束数组
  */
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical;
+
+/**
+ 与父视图垂直方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVerticalWithInset:(CGFloat)inset;
 
 /**
  与父视图边属性相同
@@ -327,11 +355,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal;
 
 /**
+ 与父视图安全区域水平方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontalWithInset:(CGFloat)inset;
+
+/**
  与父视图安全区域垂直方向两条边属性相同
  
  @return 约束数组
  */
 - (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical;
+
+/**
+ 与父视图安全区域垂直方向两条边属性偏移指定距离
+ 
+ @param inset 偏移距离
+ @return 约束数组
+ */
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVerticalWithInset:(CGFloat)inset;
 
 /**
  与父视图安全区域边属性相同
@@ -524,12 +568,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
-#pragma mark - Constraint
+#pragma mark - Offset
 
-/**
- 最近一条添加或更新的布局约束
- */
-@property (nullable, nonatomic, readonly) NSLayoutConstraint *lastConstraint;
+/// 修改最近一批添加或更新的布局约束偏移值
+- (NSArray<NSLayoutConstraint *> *)setOffset:(CGFloat)offset;
+
+/// 修改最近一批添加或更新的布局约束内间距值
+- (NSArray<NSLayoutConstraint *> *)setInset:(CGFloat)inset;
+
+/// 修改最近一批添加或更新的布局约束优先级
+- (NSArray<NSLayoutConstraint *> *)setPriority:(UILayoutPriority)priority;
+
+#pragma mark - Constraint
 
 /**
  获取添加的与父视图属性的约束
@@ -609,8 +659,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSLayoutConstraint *)constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
-#pragma mark - Key
-
 /**
  设置约束保存键名，方便更新约束常量
  
@@ -627,7 +675,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSLayoutConstraint *)constraintForKey:(id<NSCopying>)key;
 
-#pragma mark - All
+/**
+ 最近一批添加或更新的布局约束
+ */
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *lastConstraints;
+
+/**
+ 最近一条添加或更新的布局约束
+ */
+@property (nullable, nonatomic, readonly) NSLayoutConstraint *lastConstraint;
 
 /**
  获取当前所有约束，不包含Key
@@ -774,6 +830,11 @@ NS_SWIFT_UNAVAILABLE("")
 
 #pragma mark - Constraint
 
+@property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
+
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *constraints;
 @property (nonatomic, nullable, readonly) NSLayoutConstraint *constraint;
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperview)(NSLayoutAttribute attribute);
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToSuperviewWithRelation)(NSLayoutAttribute attribute, NSLayoutRelation relation);

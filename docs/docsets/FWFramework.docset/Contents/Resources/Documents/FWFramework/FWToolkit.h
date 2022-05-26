@@ -115,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *hexString;
 
 /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-@property (nonatomic, copy, readonly) NSString *hexStringWithAlpha;
+@property (nonatomic, copy, readonly) NSString *hexAlphaString;
 
 @end
 
@@ -154,22 +154,25 @@ NS_ASSUME_NONNULL_BEGIN
     [UIFont.fw fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建Thin字体
-FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Light字体
-FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontLight(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Regular字体
-FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontRegular(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Medium字体
-FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontMedium(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Semibold字体
-FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 快速创建Bold字体
-FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size);
+FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 @interface FWFontClassWrapper (FWToolkit)
 
 /// 全局自定义字体句柄，优先调用
 @property (nonatomic, copy, nullable) UIFont * (^fontBlock)(CGFloat size, UIFontWeight weight);
+
+/// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
+@property (nonatomic, assign) BOOL autoScale;
 
 /// 返回系统Thin字体
 - (UIFont *)thinFontOfSize:(CGFloat)size;
@@ -344,7 +347,7 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     FWViewControllerVisibleStateWillDisappear = 1 << 3,
     /// 已触发ViewDidDisappear
     FWViewControllerVisibleStateDidDisappear = 1 << 4,
-};
+} NS_SWIFT_NAME(ViewControllerVisibleState);
 
 @interface FWViewControllerWrapper (FWToolkit)
 

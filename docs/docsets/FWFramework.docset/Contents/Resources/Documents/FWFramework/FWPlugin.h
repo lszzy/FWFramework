@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - Macro
+
 /// 加载指定插件
 #define FWPlugin(pluginProtocol) \
     ((id<pluginProtocol>)[FWPluginManager loadPlugin:@protocol(pluginProtocol)])
@@ -19,7 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWRegPlugin(pluginProtocol) \
     [FWPluginManager registerPlugin:@protocol(pluginProtocol) withObject:self.class];
 
+#pragma mark - FWPluginProtocol
+
 /// 可选插件协议，可不实现。未实现时默认调用sharedInstance > init方法
+NS_SWIFT_NAME(PluginProtocol)
 @protocol FWPluginProtocol <NSObject>
 @optional
 
@@ -37,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - FWPluginManager
+
 @class FWLoader<InputType, OutputType>;
 
 /**
@@ -45,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
     Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
     Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
  */
+NS_SWIFT_NAME(PluginManager)
 @interface FWPluginManager : NSObject
 
 /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数

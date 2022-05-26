@@ -61,7 +61,9 @@
 #define FWLogGroup( aGroup, aType, aFormat, ... ) \
     if ([FWLogger check:aType]) [FWLogger group:aGroup type:aType format:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__];
 
-#pragma mark - FWLogger
+#pragma mark - FWLogType
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  日志类型定义
@@ -78,7 +80,9 @@ typedef NS_OPTIONS(NSUInteger, FWLogType) {
     FWLogTypeInfo  = 1 << 2,
     FWLogTypeDebug = 1 << 3,
     FWLogTypeTrace = 1 << 4,
-};
+} NS_SWIFT_NAME(LogType);
+
+#pragma mark - FWLogLevel
 
 /**
  日志级别定义
@@ -99,13 +103,14 @@ typedef NS_ENUM(NSUInteger, FWLogLevel) {
     FWLogLevelDebug = FWLogLevelInfo  | FWLogTypeDebug,
     FWLogLevelTrace = FWLogLevelDebug | FWLogTypeTrace,
     FWLogLevelAll   = NSUIntegerMax,
-};
+} NS_SWIFT_NAME(LogLevel);
 
-NS_ASSUME_NONNULL_BEGIN
+#pragma mark - FWLogger
 
 /**
- 日志记录类。支持设置全局日志级别和自定义FWLogPlugin插件
+ 日志记录类。支持设置全局日志级别和自定义FWLoggerPlugin插件
  */
+NS_SWIFT_NAME(Logger)
 @interface FWLogger : NSObject
 
 /// 全局日志级别，默认调试为All，正式为Off
@@ -161,7 +166,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param type 日志类型
  @param format 日志格式，同NSLog
  */
-+ (void)group:(NSString *)group type:(FWLogType)type format:(NSString *)format, ...;
++ (void)group:(NSString *)group
+         type:(FWLogType)type
+       format:(NSString *)format, ...;
 
 /**
  记录类型日志
@@ -169,7 +176,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param type 日志类型
  @param message 日志消息
  */
-+ (void)logWithType:(FWLogType)type message:(NSString *)message;
++ (void)log:(FWLogType)type
+    message:(NSString *)message;
 
 /**
  记录类型日志，支持分组和用户信息
@@ -179,16 +187,20 @@ NS_ASSUME_NONNULL_BEGIN
  @param group 日志分组
  @param userInfo 用户信息
  */
-+ (void)logWithType:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
++ (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(nullable NSString *)group
+   userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
-#pragma mark - FWLogPlugin
+#pragma mark - FWLoggerPlugin
 
 /**
  日志插件协议
  */
-@protocol FWLogPlugin <NSObject>
+NS_SWIFT_NAME(LoggerPlugin)
+@protocol FWLoggerPlugin <NSObject>
 
 @required
 
@@ -200,19 +212,23 @@ NS_ASSUME_NONNULL_BEGIN
  @param group 日志分组
  @param userInfo 用户信息
  */
-- (void)logWithType:(FWLogType)type message:(NSString *)message group:(nullable NSString *)group userInfo:(nullable NSDictionary *)userInfo;
+- (void)log:(FWLogType)type
+    message:(NSString *)message
+      group:(nullable NSString *)group
+   userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
-#pragma mark - FWLogPluginImpl
+#pragma mark - FWLoggerPluginImpl
 
 /**
  默认NSLog日志插件
  */
-@interface FWLogPluginImpl : NSObject <FWLogPlugin>
+NS_SWIFT_NAME(LoggerPluginImpl)
+@interface FWLoggerPluginImpl : NSObject <FWLoggerPlugin>
 
 /// 单例模式对象
-@property (class, nonatomic, readonly) FWLogPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWLoggerPluginImpl *sharedInstance;
 
 @end
 

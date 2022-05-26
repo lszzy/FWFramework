@@ -9,12 +9,17 @@
 
 #import "FWUIKit.h"
 #import "FWAutoLayout.h"
+#import "FWBlock.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
+
+#if FWMacroTracking
+@import AdSupport;
+#endif
 
 #pragma mark - FWDeviceClassWrapper+FWUIKit
 
@@ -60,6 +65,15 @@
 - (NSString *)deviceIDFV
 {
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
+- (NSString *)deviceIDFA
+{
+    #if FWMacroTracking
+    return ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString;
+    #else
+    return nil;
+    #endif
 }
 
 @end
@@ -187,6 +201,34 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)setTouchInsets:(UIEdgeInsets)touchInsets
 {
     objc_setAssociatedObject(self.base, @selector(touchInsets), [NSValue valueWithUIEdgeInsets:touchInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGRect)fitFrame
+{
+    return self.base.frame;
+}
+
+- (void)setFitFrame:(CGRect)fitFrame
+{
+    fitFrame.size = [self fitSizeWithDrawSize:CGSizeMake(fitFrame.size.width, CGFLOAT_MAX)];
+    self.base.frame = fitFrame;
+}
+
+- (CGSize)fitSize
+{
+    if (CGSizeEqualToSize(self.base.frame.size, CGSizeZero)) {
+        [self.base setNeedsLayout];
+        [self.base layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.base.frame.size.width, CGFLOAT_MAX);
+    return [self fitSizeWithDrawSize:drawSize];
+}
+
+- (CGSize)fitSizeWithDrawSize:(CGSize)drawSize
+{
+    CGSize size = [self.base sizeThatFits:drawSize];
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
 - (void)setShadowColor:(UIColor *)color
@@ -518,6 +560,39 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 {
     objc_setAssociatedObject(self.base, @selector(verticalAlignment), @(verticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self.base setNeedsDisplay];
+}
+
+- (void)addLinkGestureWithBlock:(void (^)(id))block
+{
+    self.base.userInteractionEnabled = YES;
+    [self addTapGestureWithBlock:^(UITapGestureRecognizer *gesture) {
+        if (![gesture.view isKindOfClass:[UILabel class]]) return;
+        
+        UILabel *label = (UILabel *)gesture.view;
+        NSDictionary *attributes = [label.fw attributesWithGesture:gesture allowsSpacing:NO];
+        id link = attributes[NSLinkAttributeName];
+        if (!link) return;
+        
+        block(link);
+    }];
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing
+{
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:self.base.bounds.size];
+    textContainer.lineFragmentPadding = 0;
+    textContainer.maximumNumberOfLines = self.base.numberOfLines;
+    textContainer.lineBreakMode = self.base.lineBreakMode;
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    [layoutManager addTextContainer:textContainer];
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self.base.attributedText];
+    [textStorage addLayoutManager:layoutManager];
+
+    CGPoint point = [gesture locationInView:self.base];
+    CGFloat distance = 0;
+    NSUInteger index = [layoutManager characterIndexForPoint:point inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&distance];
+    if (!allowsSpacing && distance >= 1) return @{};
+    return [self.base.attributedText attributesAtIndex:index effectiveRange:NULL];
 }
 
 - (void)setFont:(UIFont *)font textColor:(UIColor *)textColor
