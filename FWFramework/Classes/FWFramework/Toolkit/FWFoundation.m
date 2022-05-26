@@ -98,7 +98,7 @@
 
 @implementation FWAttributedStringClassWrapper (FWFoundation)
 
-- (NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString
+- (__kindof NSAttributedString *)attributedStringWithHtmlString:(NSString *)htmlString
 {
     NSData *htmlData = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
     if (!htmlData || htmlData.length < 1) return nil;
