@@ -72,7 +72,6 @@ class TestController: UIViewController {
         testCoder()
         testJson()
         testWrapper()
-        testExtension()
     }
     
     deinit {
@@ -270,6 +269,7 @@ private extension TestController {
     }
     
     func testWrapper() {
+        // Success
         TestController.fw.testWrapper()
         let clazz1 = TestController.self
         clazz1.fw.testWrapper()
@@ -278,28 +278,27 @@ private extension TestController {
             clazz.fw.testWrapper()
         }
         
-        let clazz3: UIViewController.Type = TestController.self
-        clazz3.fw.testWrapper()
+        TestController.testWrapper()
+        let clazz3 = TestController.self
+        clazz3.testWrapper()
         let clazz4: AnyClass = TestController.self
-        if let clazz = clazz4 as? UIViewController.Type {
-            clazz.fw.testWrapper()
-        }
-    }
-    
-    func testExtension() {
-        TestController.testExtension()
-        let clazz1 = TestController.self
-        clazz1.testExtension()
-        let clazz2: AnyClass = TestController.self
-        if let clazz = clazz2 as? TestController.Type {
-            clazz.testExtension()
+        if let clazz = clazz4 as? TestController.Type {
+            clazz.testWrapper()
         }
         
-        let clazz3: UIViewController.Type = TestController.self
-        clazz3.testExtension()
-        let clazz4: AnyClass = TestController.self
-        if let clazz = clazz4 as? UIViewController.Type {
-            clazz.testExtension()
+        let clazz5: UIViewController.Type = TestController.self
+        clazz5.testWrapper()
+        let clazz6: AnyClass = TestController.self
+        if let clazz = clazz6 as? UIViewController.Type {
+            clazz.testWrapper()
+        }
+        
+        // Error
+        let clazz7: UIViewController.Type = TestController.self
+        clazz7.fw.testWrapper()
+        let clazz8: AnyClass = TestController.self
+        if let clazz = clazz8 as? UIViewController.Type {
+            clazz.fw.testWrapper()
         }
     }
     
@@ -307,13 +306,12 @@ private extension TestController {
 
 extension UIViewController {
     
-    public static func testExtension() {
-        let controller = String(describing: Self.self)
-        if controller == String(describing: TestController.self) {
-            Logger.debug("extension succeed: \(controller)")
-        } else {
-            Logger.error("extension failed: \(controller)")
-        }
+    public static func testWrapper() {
+        // Success
+        Self.fw.testWrapper()
+        
+        // Error
+        // fw.testWrapper()
     }
     
 }
