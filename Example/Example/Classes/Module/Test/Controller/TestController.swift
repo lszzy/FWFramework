@@ -72,6 +72,7 @@ class TestController: UIViewController {
         testCoder()
         testJson()
         testWrapper()
+        testExtension()
     }
     
     deinit {
@@ -269,19 +270,49 @@ private extension TestController {
     }
     
     func testWrapper() {
-        TestController.app.testWrapper()
+        TestController.fw.testWrapper()
         let clazz1 = TestController.self
-        clazz1.app.testWrapper()
+        clazz1.fw.testWrapper()
         let clazz2: AnyClass = TestController.self
         if let clazz = clazz2 as? TestController.Type {
-            clazz.app.testWrapper()
+            clazz.fw.testWrapper()
         }
         
         let clazz3: UIViewController.Type = TestController.self
-        clazz3.app.testWrapper()
+        clazz3.fw.testWrapper()
         let clazz4: AnyClass = TestController.self
         if let clazz = clazz4 as? UIViewController.Type {
-            clazz.app.testWrapper()
+            clazz.fw.testWrapper()
+        }
+    }
+    
+    func testExtension() {
+        TestController.testExtension()
+        let clazz1 = TestController.self
+        clazz1.testExtension()
+        let clazz2: AnyClass = TestController.self
+        if let clazz = clazz2 as? TestController.Type {
+            clazz.testExtension()
+        }
+        
+        let clazz3: UIViewController.Type = TestController.self
+        clazz3.testExtension()
+        let clazz4: AnyClass = TestController.self
+        if let clazz = clazz4 as? UIViewController.Type {
+            clazz.testExtension()
+        }
+    }
+    
+}
+
+extension UIViewController {
+    
+    public static func testExtension() {
+        let controller = String(describing: Self.self)
+        if controller == String(describing: TestController.self) {
+            Logger.debug("extension succeed: \(controller)")
+        } else {
+            Logger.error("extension failed: \(controller)")
         }
     }
     
