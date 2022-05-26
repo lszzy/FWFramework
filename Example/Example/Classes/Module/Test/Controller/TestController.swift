@@ -293,15 +293,12 @@ private extension TestController {
             clazz.testWrapper()
         }
         
-        let clazz7: UIViewController.Type = TestController.self
-        Wrapper(clazz7).base.testWrapper()
         // Error
-        // clazz7.fw.testWrapper()
+        let clazz7: UIViewController.Type = TestController.self
+        clazz7.fw.testWrapper()
         let clazz8: AnyClass = TestController.self
         if let clazz = clazz8 as? UIViewController.Type {
-            Wrapper(clazz).base.testWrapper()
-            // Error
-            // clazz.fw.testWrapper()
+            clazz.fw.testWrapper()
         }
     }
     
