@@ -162,7 +162,7 @@ extension Wrapper where Base: UIDevice {
     
     /// 是否是Mac
     public static var isMac: Bool {
-        return UIDevice.__fw.isMac
+        return Base.__fw.isMac
     }
 
     /// 界面是否横屏
@@ -183,17 +183,17 @@ extension Wrapper where Base: UIDevice {
 
     /// iOS系统版本
     public static var iosVersion: Double {
-        return UIDevice.__fw.iosVersion
+        return Base.__fw.iosVersion
     }
     
     /// 是否是指定iOS主版本
     public static func isIos(_ version: Int) -> Bool {
-        return UIDevice.__fw.isIos(version)
+        return Base.__fw.isIos(version)
     }
     
     /// 是否是大于等于指定iOS主版本
     public static func isIosLater(_ version: Int) -> Bool {
-        return UIDevice.__fw.isIosLater(version)
+        return Base.__fw.isIosLater(version)
     }
 
     /// 设备尺寸，跟横竖屏无关
@@ -243,97 +243,97 @@ extension Wrapper where Base: UIScreen {
     
     /// 判断屏幕英寸
     public static func isScreenInch(_ inch: ScreenInch) -> Bool {
-        return UIScreen.__fw.isScreenInch(inch)
+        return Base.__fw.isScreenInch(inch)
     }
     
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool {
-        return UIScreen.__fw.isNotchedScreen
+        return Base.__fw.isNotchedScreen
     }
     
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
-        return UIScreen.__fw.pixelOne
+        return Base.__fw.pixelOne
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
     public static var hasSafeAreaInsets: Bool {
-        return UIScreen.__fw.hasSafeAreaInsets
+        return Base.__fw.hasSafeAreaInsets
     }
     
     /// 屏幕安全区域距离
     public static var safeAreaInsets: UIEdgeInsets {
-        return UIScreen.__fw.safeAreaInsets
+        return Base.__fw.safeAreaInsets
     }
 
     /// 状态栏高度，与是否隐藏无关
     public static var statusBarHeight: CGFloat {
-        return UIScreen.__fw.statusBarHeight
+        return Base.__fw.statusBarHeight
         
     }
     
     /// 导航栏高度，与是否隐藏无关
     public static var navigationBarHeight: CGFloat {
-        return UIScreen.__fw.navigationBarHeight
+        return Base.__fw.navigationBarHeight
         
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
     public static var topBarHeight: CGFloat {
-        return UIScreen.__fw.topBarHeight
+        return Base.__fw.topBarHeight
         
     }
     
     /// 标签栏高度，与是否隐藏无关
     public static var tabBarHeight: CGFloat {
-        return UIScreen.__fw.tabBarHeight
+        return Base.__fw.tabBarHeight
         
     }
     
     /// 工具栏高度，与是否隐藏无关
     public static var toolBarHeight: CGFloat {
-        return UIScreen.__fw.toolBarHeight
+        return Base.__fw.toolBarHeight
     }
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var referenceSize: CGSize {
-        get { return UIScreen.__fw.referenceSize }
-        set { UIScreen.__fw.referenceSize = newValue }
+        get { return Base.__fw.referenceSize }
+        set { Base.__fw.referenceSize = newValue }
     }
     
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
-        return UIScreen.__fw.relativeScale
+        return Base.__fw.relativeScale
     }
     
     /// 获取当前屏幕高度缩放比例，高度不常用
     public static var relativeHeightScale: CGFloat {
-        return UIScreen.__fw.relativeHeightScale
+        return Base.__fw.relativeHeightScale
     }
 
     /// 获取相对设计图宽度等比例缩放值
     public static func relativeValue(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.relativeValue(value)
+        return Base.__fw.relativeValue(value)
     }
 
     /// 获取相对设计图高度等比例缩放值
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.relativeHeight(value)
+        return Base.__fw.relativeHeight(value)
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public static func fixedValue(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.fixedValue(value)
+        return Base.__fw.fixedValue(value)
     }
 
     /// 获取相对设计图高度等比例缩放时的固定高度值
     public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.fixedHeight(value)
+        return Base.__fw.fixedHeight(value)
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
-        return UIScreen.__fw.flatValue(value, scale: scale)
+        return Base.__fw.flatValue(value, scale: scale)
     }
     
 }
