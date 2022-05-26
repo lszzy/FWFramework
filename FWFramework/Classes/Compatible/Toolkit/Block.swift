@@ -198,12 +198,12 @@ extension Wrapper where Base: UIBarButtonItem {
     
     /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
     public static func item(object: Any?, target: Any?, action: Selector?) -> UIBarButtonItem {
-        return UIBarButtonItem.__fw.item(with: object, target: target, action: action)
+        return Base.__fw.item(with: object, target: target, action: action)
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
     public static func item(object: Any?, block: ((Any) -> Void)?) -> UIBarButtonItem {
-        return UIBarButtonItem.__fw.item(with: object, block: block)
+        return Base.__fw.item(with: object, block: block)
     }
     
     /// 自定义标题样式属性，兼容appearance，默认nil同系统

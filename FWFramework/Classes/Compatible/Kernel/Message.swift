@@ -138,7 +138,7 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - toReceiver: 消息接收者
     public static func sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        NSObject.__fw.sendMessage(name, toReceiver: toReceiver)
+        Base.__fw.sendMessage(name, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象
@@ -147,7 +147,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象
     ///   - toReceiver: 消息接收者
     public static func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        NSObject.__fw.sendMessage(name, object: object, toReceiver: toReceiver)
+        Base.__fw.sendMessage(name, object: object, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -157,7 +157,7 @@ extension Wrapper where Base: NSObject {
     ///   - userInfo: 用户信息
     ///   - toReceiver: 消息接收者
     public static func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
-        NSObject.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
+        Base.__fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
 }
@@ -273,7 +273,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 通知对象
     ///   - userInfo: 用户信息
     public static func postNotification(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
-        NSObject.__fw.postNotification(name, object: object, userInfo: userInfo)
+        Base.__fw.postNotification(name, object: object, userInfo: userInfo)
     }
     
 }

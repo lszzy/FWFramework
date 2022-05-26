@@ -54,50 +54,50 @@ extension Wrapper where Base: UIWindow {
     // MARK: - Static
     /// 获取当前主window
     public static var main: UIWindow? {
-        return UIWindow.__fw.mainWindow
+        return Base.__fw.mainWindow
     }
 
     /// 获取当前主场景
     @available(iOS 13.0, *)
     public static var mainScene: UIWindowScene? {
-        return UIWindow.__fw.mainScene
+        return Base.__fw.mainScene
     }
     
     /// 获取最顶部的视图控制器
     public static var topViewController: UIViewController? {
-        return UIWindow.__fw.topViewController
+        return Base.__fw.topViewController
     }
 
     /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
     public static var topNavigationController: UINavigationController? {
-        return UIWindow.__fw.topNavigationController
+        return Base.__fw.topNavigationController
     }
 
     /// 获取最顶部的显示控制器
     public static var topPresentedController: UIViewController? {
-        return UIWindow.__fw.topPresentedController
+        return Base.__fw.topPresentedController
     }
 
     /// 使用最顶部的导航栏控制器打开控制器
     @discardableResult
     public static func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
-        return UIWindow.__fw.push(viewController, animated: animated)
+        return Base.__fw.push(viewController, animated: animated)
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public static func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        UIWindow.__fw.present(viewController, animated: animated, completion: completion)
+        Base.__fw.present(viewController, animated: animated, completion: completion)
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
     public static func open(_ viewController: UIViewController, animated: Bool = true) {
-        UIWindow.__fw.open(viewController, animated: animated)
+        Base.__fw.open(viewController, animated: animated)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
     public static func close(animated: Bool = true) -> Bool {
-        return UIWindow.__fw.closeViewController(animated: true)
+        return Base.__fw.closeViewController(animated: true)
     }
     
 }
