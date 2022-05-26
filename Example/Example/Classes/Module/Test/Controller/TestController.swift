@@ -71,6 +71,7 @@ class TestController: UIViewController {
         renderData()
         testCoder()
         testJson()
+        testWrapper()
     }
     
     deinit {
@@ -265,6 +266,36 @@ private extension TestController {
         name = model.info.name.stringValue
         list = model.list.0.stringValue
         print("json: id => \(id), name => \(name), list => \(list)")
+    }
+    
+    func testWrapper() {
+        TestController.app.testWrapper()
+        let clazz1 = TestController.self
+        clazz1.app.testWrapper()
+        let clazz2: AnyClass = TestController.self
+        if let clazz = clazz2 as? TestController.Type {
+            clazz.app.testWrapper()
+        }
+        
+        let clazz3: UIViewController.Type = TestController.self
+        clazz3.app.testWrapper()
+        let clazz4: AnyClass = TestController.self
+        if let clazz = clazz4 as? UIViewController.Type {
+            clazz.app.testWrapper()
+        }
+    }
+    
+}
+
+extension Wrapper where Base: UIViewController {
+    
+    public static func testWrapper() {
+        let controller = String(describing: Base.self)
+        if controller == String(describing: TestController.self) {
+            Logger.debug("wrapper succeed: \(controller)")
+        } else {
+            Logger.error("wrapper failed: \(controller)")
+        }
     }
     
 }
