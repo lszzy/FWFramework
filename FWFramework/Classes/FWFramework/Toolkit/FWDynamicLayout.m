@@ -787,9 +787,62 @@
 
 @implementation FWCollectionViewWrapper (FWDynamicLayout)
 
+#pragma mark - Cache
+
 - (void)clearSizeCache
 {
     [self.dynamicLayoutSizeCache removeAllObjects];
+}
+
+- (void)setCellSizeCache:(CGSize)size forIndexPath:(NSIndexPath *)indexPath
+{
+    [self setCellSizeCache:size forKey:indexPath];
+}
+
+- (void)setCellSizeCache:(CGSize)size forKey:(id<NSCopying>)key
+{
+    self.dynamicLayoutSizeCache.sizeDictionary[key] = (size.width > 0 && size.height > 0) ? [NSValue valueWithCGSize:size] : nil;
+}
+
+- (CGSize)cellSizeCacheForIndexPath:(NSIndexPath *)indexPath
+{
+    return [self cellSizeCacheForKey:indexPath];
+}
+
+- (CGSize)cellSizeCacheForKey:(id<NSCopying>)key
+{
+    NSValue *value = self.dynamicLayoutSizeCache.sizeDictionary[key];
+    return value ? value.CGSizeValue : UICollectionViewFlowLayoutAutomaticSize;
+}
+
+- (void)setReusableViewSizeCache:(CGSize)size kind:(NSString *)kind forSection:(NSInteger)section
+{
+    [self setReusableViewSizeCache:size kind:kind forKey:@(section)];
+}
+
+- (void)setReusableViewSizeCache:(CGSize)size kind:(NSString *)kind forKey:(id<NSCopying>)key
+{
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        self.dynamicLayoutSizeCache.headerSizeDictionary[key] = (size.width > 0 && size.height > 0) ? [NSValue valueWithCGSize:size] : nil;
+    } else {
+        self.dynamicLayoutSizeCache.footerSizeDictionary[key] = (size.width > 0 && size.height > 0) ? [NSValue valueWithCGSize:size] : nil;
+    }
+}
+
+- (CGSize)reusableViewSizeCache:(NSString *)kind forSection:(NSInteger)section
+{
+    return [self reusableViewSizeCache:kind forKey:@(section)];
+}
+
+- (CGSize)reusableViewSizeCache:(NSString *)kind forKey:(id<NSCopying>)key
+{
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        NSValue *value = self.dynamicLayoutSizeCache.headerSizeDictionary[key];
+        return value ? value.CGSizeValue : UICollectionViewFlowLayoutAutomaticSize;
+    } else {
+        NSValue *value = self.dynamicLayoutSizeCache.footerSizeDictionary[key];
+        return value ? value.CGSizeValue : UICollectionViewFlowLayoutAutomaticSize;
+    }
 }
 
 - (FWDynamicLayoutSizeCache *)dynamicLayoutSizeCache {
