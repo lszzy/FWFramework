@@ -93,6 +93,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /**
  表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 
+ 如果使用系统自动高度，建议设置estimatedRowHeight提高性能
  @see https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight
 */
 @interface FWTableViewWrapper (FWDynamicLayout)
@@ -102,28 +103,28 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 手工清空所有高度缓存，用于高度发生变化的情况
 - (void)clearHeightCache;
 
-/// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+/// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
 - (void)setCellHeightCache:(CGFloat)height forIndexPath:(NSIndexPath *)indexPath;
 
-/// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+/// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
 - (void)setCellHeightCache:(CGFloat)height forKey:(id<NSCopying>)key;
 
-/// 指定indexPath获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+/// 指定indexPath获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
 - (CGFloat)cellHeightCacheForIndexPath:(NSIndexPath *)indexPath;
 
-/// 指定key获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+/// 指定key获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
 - (CGFloat)cellHeightCacheForKey:(id<NSCopying>)key;
 
-/// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+/// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
 - (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forSection:(NSInteger)section;
 
-/// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+/// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
 - (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key;
 
-/// 指定section获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+/// 指定section获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
 - (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forSection:(NSInteger)section;
 
-/// 指定key获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+/// 指定key获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
 - (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key;
 
 #pragma mark - Cell
@@ -282,11 +283,39 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 
 /**
  集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
+ 
+ 如果使用系统自动尺寸，建议设置estimatedItemSize提高性能
 */
 @interface FWCollectionViewWrapper (FWDynamicLayout)
 
+#pragma mark - Cache
+
 /// 手工清空尺寸缓存，用于尺寸发生变化的情况
 - (void)clearSizeCache;
+
+/// 指定indexPath设置cell尺寸缓存，设置为zero时清除缓存
+- (void)setCellSizeCache:(CGSize)size forIndexPath:(NSIndexPath *)indexPath;
+
+/// 指定key设置cell尺寸缓存，设置为zero时清除缓存
+- (void)setCellSizeCache:(CGSize)size forKey:(id<NSCopying>)key;
+
+/// 指定indexPath获取cell缓存尺寸，默认值automaticSize
+- (CGSize)cellSizeCacheForIndexPath:(NSIndexPath *)indexPath;
+
+/// 指定key获取cell缓存尺寸，默认值automaticSize
+- (CGSize)cellSizeCacheForKey:(id<NSCopying>)key;
+
+/// 指定section设置ReusableView尺寸缓存，设置为zero时清除缓存
+- (void)setReusableViewSizeCache:(CGSize)size kind:(NSString *)kind forSection:(NSInteger)section;
+
+/// 指定key设置ReusableView尺寸缓存，设置为zero时清除缓存
+- (void)setReusableViewSizeCache:(CGSize)size kind:(NSString *)kind forKey:(id<NSCopying>)key;
+
+/// 指定section获取ReusableView缓存尺寸，默认值automaticSize
+- (CGSize)reusableViewSizeCache:(NSString *)kind forSection:(NSInteger)section;
+
+/// 指定key获取ReusableView缓存尺寸，默认值automaticSize
+- (CGSize)reusableViewSizeCache:(NSString *)kind forKey:(id<NSCopying>)key;
 
 #pragma mark - Cell
 
