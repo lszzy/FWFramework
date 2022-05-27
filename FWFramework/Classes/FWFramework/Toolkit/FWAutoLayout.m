@@ -1172,7 +1172,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id))topToBottomOfView
+- (FWLayoutChain * (^)(id))topToViewBottom
 {
     return ^id(id view) {
         [self.view.fw pinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:view];
@@ -1180,7 +1180,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id))bottomToTopOfView
+- (FWLayoutChain * (^)(id))bottomToViewTop
 {
     return ^id(id view) {
         [self.view.fw pinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:view];
@@ -1188,7 +1188,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id))leftToRightOfView
+- (FWLayoutChain * (^)(id))leftToViewRight
 {
     return ^id(id view) {
         [self.view.fw pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:view];
@@ -1196,7 +1196,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id))rightToLeftOfView
+- (FWLayoutChain * (^)(id))rightToViewLeft
 {
     return ^id(id view) {
         [self.view.fw pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view];
@@ -1236,7 +1236,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id, CGFloat))topToBottomOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))topToViewBottomWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view.fw pinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:view withOffset:offset];
@@ -1244,7 +1244,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id, CGFloat))bottomToTopOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))bottomToViewTopWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view.fw pinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:view withOffset:offset];
@@ -1252,7 +1252,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id, CGFloat))leftToRightOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))leftToViewRightWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view.fw pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:view withOffset:offset];
@@ -1260,7 +1260,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(id, CGFloat))rightToLeftOfViewWithOffset
+- (FWLayoutChain * (^)(id, CGFloat))rightToViewLeftWithOffset
 {
     return ^id(id view, CGFloat offset) {
         [self.view.fw pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:view withOffset:offset];
