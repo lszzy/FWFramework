@@ -204,7 +204,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal;
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSuperview;
 
 /**
  与父视图水平方向两条边属性偏移指定距离
@@ -212,14 +212,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontalWithInset:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSuperviewWithInset:(CGFloat)inset;
 
 /**
  与父视图垂直方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical;
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSuperview;
 
 /**
  与父视图垂直方向两条边属性偏移指定距离
@@ -227,7 +227,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVerticalWithInset:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSuperviewWithInset:(CGFloat)inset;
 
 /**
  与父视图边属性相同
@@ -296,7 +296,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeArea;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSafeArea;
 
 /**
  父视图安全区域居中偏移指定距离。iOS11以下使用Superview实现，下同
@@ -304,7 +304,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSafeAreaWithOffset:(CGPoint)offset;
 
 /**
  父视图安全区域属性居中
@@ -312,7 +312,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param axis 居中属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis;
+- (NSLayoutConstraint *)alignAxisToSafeArea:(NSLayoutAttribute)axis;
 
 /**
  父视图安全区域属性居中偏移指定距离
@@ -321,14 +321,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
+- (NSLayoutConstraint *)alignAxisToSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset;
 
 /**
  与父视图安全区域四条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeArea;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeArea;
 
 /**
  与父视图安全区域四条边属性距离指定距离
@@ -336,7 +336,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param insets 指定距离insets
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeAreaWithInsets:(UIEdgeInsets)insets;
 
 /**
  与父视图安全区域三条边属性距离指定距离
@@ -345,14 +345,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 排除的边
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 /**
  与父视图安全区域水平方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal;
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSafeArea;
 
 /**
  与父视图安全区域水平方向两条边属性偏移指定距离
@@ -360,14 +360,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontalWithInset:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSafeAreaWithInset:(CGFloat)inset;
 
 /**
  与父视图安全区域垂直方向两条边属性相同
  
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical;
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSafeArea;
 
 /**
  与父视图安全区域垂直方向两条边属性偏移指定距离
@@ -375,7 +375,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 约束数组
  */
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVerticalWithInset:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSafeAreaWithInset:(CGFloat)inset;
 
 /**
  与父视图安全区域边属性相同
@@ -383,7 +383,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 指定边属性
  @return 布局约束
  */
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge;
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge;
 
 /**
  与父视图安全区域边属性偏移指定距离
@@ -392,7 +392,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param inset 偏移距离
  @return 布局约束
  */
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset;
 
 /**
  与父视图安全区域边属性偏移指定距离，指定关系
@@ -402,7 +402,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation;
 
 #pragma mark - Dimension
 
@@ -604,7 +604,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param attribute 指定属性
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute;
+- (nullable NSLayoutConstraint *)constraintToSafeArea:(NSLayoutAttribute)attribute;
 
 /**
  获取添加的与父视图安全区域属性的约束，指定关系
@@ -613,7 +613,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param relation 约束关系
  @return 布局约束
  */
-- (nullable NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)constraintToSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
 
 /**
  获取添加的与指定视图属性的约束
@@ -756,8 +756,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edges)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edgesWithInsets)(UIEdgeInsets insets);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edgesWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesHorizontal)(void);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesVertical)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^horizontal)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^vertical)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^top)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottom)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^left)(void);
@@ -794,8 +794,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeArea)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaWithInsets)(UIEdgeInsets insets);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaWithInsetsExcludingEdge)(UIEdgeInsets insets, NSLayoutAttribute edge);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaHorizontal)(void);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^edgesToSafeAreaVertical)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^horizontalToSafeArea)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^verticalToSafeArea)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^topToSafeArea)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToSafeArea)(void);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^leftToSafeArea)(void);

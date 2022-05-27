@@ -183,8 +183,8 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperviewHorizontal inset: CGFloat = .zero) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewHorizontal(withInset: inset)
+    public func pinHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+        return base.__fw.pinHorizontalToSuperview(withInset: inset)
     }
     
     /// 与父视图垂直方向两条边属性相同，可指定偏移距离
@@ -192,8 +192,8 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperviewVertical inset: CGFloat = .zero) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewVertical(withInset: inset)
+    public func pinVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+        return base.__fw.pinVerticalToSuperview(withInset: inset)
     }
     
     /// 与父视图边属性相同，可指定偏移距离和关系
@@ -226,7 +226,7 @@ extension Wrapper where Base: UIView {
     /// - Returns: 约束数组
     @discardableResult
     public func alignCenter(toSafeArea offset: CGPoint) -> [NSLayoutConstraint] {
-        return base.__fw.alignCenterToSuperviewSafeArea(withOffset: offset)
+        return base.__fw.alignCenterToSafeArea(withOffset: offset)
     }
     
     /// 父视图安全区域属性居中，可指定偏移距离
@@ -236,7 +236,7 @@ extension Wrapper where Base: UIView {
     /// - Returns: 布局约束
     @discardableResult
     public func alignAxis(toSafeArea axis: NSLayoutConstraint.Attribute, offset: CGFloat = .zero) -> NSLayoutConstraint {
-        return base.__fw.alignAxis(toSuperviewSafeArea: axis, withOffset: offset)
+        return base.__fw.alignAxis(toSafeArea: axis, withOffset: offset)
     }
 
     /// 与父视图安全区域四条边属性相同，可指定距离insets
@@ -244,7 +244,7 @@ extension Wrapper where Base: UIView {
     /// - Returns: 约束数组
     @discardableResult
     public func pinEdges(toSafeArea insets: UIEdgeInsets) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewSafeArea(with: insets)
+        return base.__fw.pinEdgesToSafeArea(with: insets)
     }
 
     /// 与父视图安全区域三条边属性距离指定距离
@@ -254,7 +254,7 @@ extension Wrapper where Base: UIView {
     /// - Returns: 约束数组
     @discardableResult
     public func pinEdges(toSafeArea insets: UIEdgeInsets, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewSafeArea(with: insets, excludingEdge: excludingEdge)
+        return base.__fw.pinEdgesToSafeArea(with: insets, excludingEdge: excludingEdge)
     }
 
     /// 与父视图安全区域水平方向两条边属性相同，可指定偏移距离
@@ -262,8 +262,8 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeAreaHorizontal inset: CGFloat) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewSafeAreaHorizontal(withInset: inset)
+    public func pinHorizontal(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+        return base.__fw.pinHorizontalToSafeArea(withInset: inset)
     }
     
     /// 与父视图安全区域垂直方向两条边属性相同，可指定偏移距离
@@ -271,8 +271,8 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeAreaVertical inset: CGFloat) -> [NSLayoutConstraint] {
-        return base.__fw.pinEdgesToSuperviewSafeAreaVertical(withInset: inset)
+    public func pinVertical(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+        return base.__fw.pinVerticalToSafeArea(withInset: inset)
     }
     
     /// 与父视图安全区域边属性相同，可指定偏移距离和关系
@@ -283,7 +283,7 @@ extension Wrapper where Base: UIView {
     /// - Returns: 布局约束
     @discardableResult
     public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw.pinEdge(toSuperviewSafeArea: edge, withInset: inset, relation: relation)
+        return base.__fw.pinEdge(toSafeArea: edge, withInset: inset, relation: relation)
     }
     
     // MARK: - Dimension
@@ -406,7 +406,7 @@ extension Wrapper where Base: UIView {
     ///   - relation: 约束关系
     /// - Returns: 布局约束
     public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return base.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
+        return base.__fw.constraint(toSafeArea: attribute, relation: relation)
     }
 
     /// 获取添加的与指定视图属性的约束，指定关系
@@ -610,14 +610,14 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func edges(horizontal inset: CGFloat = .zero) -> Self {
-        view?.__fw.pinEdgesToSuperviewHorizontal(withInset: inset)
+    public func horizontal(_ inset: CGFloat = .zero) -> Self {
+        view?.__fw.pinHorizontalToSuperview(withInset: inset)
         return self
     }
 
     @discardableResult
-    public func edges(vertical inset: CGFloat = .zero) -> Self {
-        view?.__fw.pinEdgesToSuperviewVertical(withInset: inset)
+    public func vertical(_ inset: CGFloat = .zero) -> Self {
+        view?.__fw.pinVerticalToSuperview(withInset: inset)
         return self
     }
 
@@ -768,91 +768,91 @@ public class LayoutChain {
     // MARK: - SafeArea
     @discardableResult
     public func center(toSafeArea offset: CGPoint) -> Self {
-        view?.__fw.alignCenterToSuperviewSafeArea(withOffset: offset)
+        view?.__fw.alignCenterToSafeArea(withOffset: offset)
         return self
     }
 
     @discardableResult
     public func centerX(toSafeArea offset: CGFloat) -> Self {
-        view?.__fw.alignAxis(toSuperviewSafeArea: .centerX, withOffset: offset)
+        view?.__fw.alignAxis(toSafeArea: .centerX, withOffset: offset)
         return self
     }
 
     @discardableResult
     public func centerY(toSafeArea offset: CGFloat) -> Self {
-        view?.__fw.alignAxis(toSuperviewSafeArea: .centerY, withOffset: offset)
+        view?.__fw.alignAxis(toSafeArea: .centerY, withOffset: offset)
         return self
     }
 
     @discardableResult
     public func edges(toSafeArea insets: UIEdgeInsets) -> Self {
-        view?.__fw.pinEdgesToSuperviewSafeArea(with: insets)
+        view?.__fw.pinEdgesToSafeArea(with: insets)
         return self
     }
     
     @discardableResult
     public func edges(toSafeArea insets: UIEdgeInsets, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
-        view?.__fw.pinEdgesToSuperviewSafeArea(with: insets, excludingEdge: edge)
+        view?.__fw.pinEdgesToSafeArea(with: insets, excludingEdge: edge)
         return self
     }
 
     @discardableResult
-    public func edges(toSafeAreaHorizontal inset: CGFloat) -> Self {
-        view?.__fw.pinEdgesToSuperviewSafeAreaHorizontal(withInset: inset)
+    public func horizontal(toSafeArea inset: CGFloat) -> Self {
+        view?.__fw.pinHorizontalToSafeArea(withInset: inset)
         return self
     }
 
     @discardableResult
-    public func edges(toSafeAreaVertical inset: CGFloat) -> Self {
-        view?.__fw.pinEdgesToSuperviewSafeAreaVertical(withInset: inset)
+    public func vertical(toSafeArea inset: CGFloat) -> Self {
+        view?.__fw.pinVerticalToSafeArea(withInset: inset)
         return self
     }
 
     @discardableResult
     public func top(toSafeArea inset: CGFloat) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .top, withInset: inset)
+        view?.__fw.pinEdge(toSafeArea: .top, withInset: inset)
         return self
     }
     
     @discardableResult
     public func top(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .top, withInset: inset, relation: relation)
+        view?.__fw.pinEdge(toSafeArea: .top, withInset: inset, relation: relation)
         return self
     }
     
     @discardableResult
     public func bottom(toSafeArea inset: CGFloat) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .bottom, withInset: inset)
+        view?.__fw.pinEdge(toSafeArea: .bottom, withInset: inset)
         return self
     }
 
     @discardableResult
     public func bottom(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .bottom, withInset: inset, relation: relation)
+        view?.__fw.pinEdge(toSafeArea: .bottom, withInset: inset, relation: relation)
         return self
     }
 
     @discardableResult
     public func left(toSafeArea inset: CGFloat) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .left, withInset: inset)
+        view?.__fw.pinEdge(toSafeArea: .left, withInset: inset)
         return self
     }
     
     @discardableResult
     public func left(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .left, withInset: inset, relation: relation)
+        view?.__fw.pinEdge(toSafeArea: .left, withInset: inset, relation: relation)
         return self
     }
     
     @discardableResult
     public func right(toSafeArea inset: CGFloat) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .right, withInset: inset)
+        view?.__fw.pinEdge(toSafeArea: .right, withInset: inset)
         return self
     }
 
     @discardableResult
     public func right(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw.pinEdge(toSuperviewSafeArea: .right, withInset: inset, relation: relation)
+        view?.__fw.pinEdge(toSafeArea: .right, withInset: inset, relation: relation)
         return self
     }
 
@@ -982,7 +982,7 @@ public class LayoutChain {
     }
     
     public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.__fw.constraint(toSuperviewSafeArea: attribute, relation: relation)
+        return self.view?.__fw.constraint(toSafeArea: attribute, relation: relation)
     }
 
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
