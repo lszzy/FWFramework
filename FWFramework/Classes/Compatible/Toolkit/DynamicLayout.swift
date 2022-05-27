@@ -93,12 +93,54 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
 // MARK: - UITableView+DynamicLayout
 /// 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 ///
+/// 如果使用系统自动高度，建议设置estimatedRowHeight提高性能
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
 extension Wrapper where Base: UITableView {
     
+    // MARK: - Cache
     /// 手工清空高度缓存，用于高度发生变化的情况
     public func clearHeightCache() {
         base.__fw.clearHeightCache()
+    }
+    
+    /// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
+    public func setCellHeightCache(_ height: CGFloat, for indexPath: IndexPath) {
+        base.__fw.setCellHeightCache(height, for: indexPath)
+    }
+
+    /// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
+    public func setCellHeightCache(_ height: CGFloat, for key: NSCopying) {
+        base.__fw.setCellHeightCache(height, forKey: key)
+    }
+
+    /// 指定indexPath获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
+    public func cellHeightCache(for indexPath: IndexPath) -> CGFloat {
+        return base.__fw.cellHeightCache(for: indexPath)
+    }
+
+    /// 指定key获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
+    public func cellHeightCache(for key: NSCopying) -> CGFloat {
+        return base.__fw.cellHeightCache(forKey: key)
+    }
+
+    /// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
+    public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for section: Int) {
+        base.__fw.setHeaderFooterHeightCache(height, type: type, forSection: section)
+    }
+
+    /// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
+    public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for key: NSCopying) {
+        base.__fw.setHeaderFooterHeightCache(height, type: type, forKey: key)
+    }
+
+    /// 指定section获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
+    public func headerFooterHeightCache(_ type: HeaderFooterViewType, forSection section: Int) -> CGFloat {
+        return base.__fw.headerFooterHeightCache(type, forSection: section)
+    }
+
+    /// 指定key获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
+    public func headerFooterHeightCache(_ type: HeaderFooterViewType, for key: NSCopying) -> CGFloat {
+        return base.__fw.headerFooterHeightCache(type, forKey: key)
     }
 
     // MARK: - Cell
@@ -312,11 +354,55 @@ extension Wrapper where Base: UICollectionReusableView {
 }
 
 // MARK: - UICollectionView+DynamicLayout
+/// 集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
+///
+/// 如果使用系统自动尺寸，建议设置estimatedItemSize提高性能
 extension Wrapper where Base: UICollectionView {
     
+    // MARK: - Cache
     /// 手工清空尺寸缓存，用于尺寸发生变化的情况
     public func clearSizeCache() {
         base.__fw.clearSizeCache()
+    }
+    
+    /// 指定indexPath设置cell尺寸缓存，设置为zero时清除缓存
+    public func setCellSizeCache(_ size: CGSize, for indexPath: IndexPath) {
+        base.__fw.setCellSizeCache(size, for: indexPath)
+    }
+
+    /// 指定key设置cell尺寸缓存，设置为zero时清除缓存
+    public func setCellSizeCache(_ size: CGSize, for key: NSCopying) {
+        base.__fw.setCellSizeCache(size, forKey: key)
+    }
+
+    /// 指定indexPath获取cell缓存尺寸，默认值automaticSize
+    public func cellSizeCache(for indexPath: IndexPath) -> CGSize {
+        return base.__fw.cellSizeCache(for: indexPath)
+    }
+
+    /// 指定key获取cell缓存尺寸，默认值automaticSize
+    public func cellSizeCache(for key: NSCopying) -> CGSize {
+        return base.__fw.cellSizeCache(forKey: key)
+    }
+
+    /// 指定section设置ReusableView尺寸缓存，设置为zero时清除缓存
+    public func setReusableViewSizeCache(_ size: CGSize, kind: String, for section: Int) {
+        base.__fw.setReusableViewSizeCache(size, kind: kind, forSection: section)
+    }
+
+    /// 指定key设置ReusableView尺寸缓存，设置为zero时清除缓存
+    public func setReusableViewSizeCache(_ size: CGSize, kind: String, for key: NSCopying) {
+        base.__fw.setReusableViewSizeCache(size, kind: kind, forKey: key)
+    }
+
+    /// 指定section获取ReusableView缓存尺寸，默认值automaticSize
+    public func reusableViewSizeCache(_ kind: String, forSection section: Int) -> CGSize {
+        return base.__fw.reusableViewSizeCache(kind, forSection: section)
+    }
+
+    /// 指定key获取ReusableView缓存尺寸，默认值automaticSize
+    public func reusableViewSizeCache(_ kind: String, for key: NSCopying) -> CGSize {
+        return base.__fw.reusableViewSizeCache(kind, forKey: key)
     }
 
     // MARK: - Cell
