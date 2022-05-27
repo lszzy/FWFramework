@@ -17,7 +17,7 @@
     <a title="FWCollectionViewWrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.1.0 Docs</a> (71% documented)</p>
+        <p><a href="../index.html">FWFramework 3.2.0 Docs</a> (71% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1213,11 +1213,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/FWDynamicLayout"></a>
-                <a name="//apple_ref/swift/Section/FWDynamicLayout" class="dashAnchor"></a>
+                <a name="/Cache"></a>
+                <a name="//apple_ref/swift/Section/Cache" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/FWDynamicLayout"></a>
-                  <h3 class="section-name"><span>FWDynamicLayout</span>
+                  <a class="section-name-link" href="#/Cache"></a>
+                  <h3 class="section-name"><span>Cache</span>
 </h3>
                 </div>
               </div>
@@ -1243,6 +1243,229 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">clearSizeCache</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)setCellSizeCache:forIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/-setCellSizeCache:forIndexPath:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)setCellSizeCache:forIndexPath:">-setCellSizeCache:<wbr>forIndexPath:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定indexPath设置cell尺寸缓存，设置为zero时清除缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setCellSizeCache</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span>
+            <span class="nf">forIndexPath</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)setCellSizeCache:forKey:"></a>
+                    <a name="//apple_ref/swift/Method/-setCellSizeCache:forKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)setCellSizeCache:forKey:">-setCellSizeCache:<wbr>forKey:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定key设置cell尺寸缓存，设置为zero时清除缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setCellSizeCache</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span> <span class="nf">forKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)cellSizeCacheForIndexPath:"></a>
+                    <a name="//apple_ref/swift/Method/-cellSizeCacheForIndexPath:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)cellSizeCacheForIndexPath:">-cellSizeCacheForIndexPath:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定indexPath获取cell缓存尺寸，默认值automaticSize</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">cellSizeCacheForIndexPath</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)cellSizeCacheForKey:"></a>
+                    <a name="//apple_ref/swift/Method/-cellSizeCacheForKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)cellSizeCacheForKey:">-cellSizeCacheForKey:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定key获取cell缓存尺寸，默认值automaticSize</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">cellSizeCacheForKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)setReusableViewSizeCache:kind:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/-setReusableViewSizeCache:kind:forSection:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)setReusableViewSizeCache:kind:forSection:">-setReusableViewSizeCache:<wbr>kind:<wbr>forSection:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定section设置ReusableView尺寸缓存，设置为zero时清除缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setReusableViewSizeCache</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span>
+                            <span class="nf">kind</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
+                      <span class="nf">forSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)setReusableViewSizeCache:kind:forKey:"></a>
+                    <a name="//apple_ref/swift/Method/-setReusableViewSizeCache:kind:forKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)setReusableViewSizeCache:kind:forKey:">-setReusableViewSizeCache:<wbr>kind:<wbr>forKey:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定key设置ReusableView尺寸缓存，设置为zero时清除缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setReusableViewSizeCache</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">size</span>
+                            <span class="nf">kind</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
+                          <span class="nf">forKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)reusableViewSizeCache:forSection:"></a>
+                    <a name="//apple_ref/swift/Method/-reusableViewSizeCache:forSection:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)reusableViewSizeCache:forSection:">-reusableViewSizeCache:<wbr>forSection:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定section获取ReusableView缓存尺寸，默认值automaticSize</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">reusableViewSizeCache</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
+                     <span class="nf">forSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWCollectionViewWrapper(im)reusableViewSizeCache:forKey:"></a>
+                    <a name="//apple_ref/swift/Method/-reusableViewSizeCache:forKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWCollectionViewWrapper(im)reusableViewSizeCache:forKey:">-reusableViewSizeCache:<wbr>forKey:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>指定key获取ReusableView缓存尺寸，默认值automaticSize</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">reusableViewSizeCache</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
+                         <span class="nf">forKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2801,7 +3024,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-05-25)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-05-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
