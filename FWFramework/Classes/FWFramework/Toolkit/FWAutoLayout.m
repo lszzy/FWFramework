@@ -359,12 +359,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontal
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSuperview
 {
-    return [self pinEdgesToSuperviewHorizontalWithInset:0.0];
+    return [self pinHorizontalToSuperviewWithInset:0.0];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewHorizontalWithInset:(CGFloat)inset
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSuperviewWithInset:(CGFloat)inset
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeLeft withInset:inset]];
@@ -373,12 +373,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVertical
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSuperview
 {
-    return [self pinEdgesToSuperviewVerticalWithInset:0.0];
+    return [self pinVerticalToSuperviewWithInset:0.0];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewVerticalWithInset:(CGFloat)inset
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSuperviewWithInset:(CGFloat)inset
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     [constraints addObject:[self pinEdgeToSuperview:NSLayoutAttributeTop withInset:inset]];
@@ -419,104 +419,104 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 #pragma mark - SafeArea
 
-- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeArea
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSafeArea
 {
-    return [self alignCenterToSuperviewSafeAreaWithOffset:CGPointZero];
+    return [self alignCenterToSafeAreaWithOffset:CGPointZero];
 }
 
-- (NSArray<NSLayoutConstraint *> *)alignCenterToSuperviewSafeAreaWithOffset:(CGPoint)offset
+- (NSArray<NSLayoutConstraint *> *)alignCenterToSafeAreaWithOffset:(CGPoint)offset
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX withOffset:offset.x]];
-    [constraints addObject:[self alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY withOffset:offset.y]];
+    [constraints addObject:[self alignAxisToSafeArea:NSLayoutAttributeCenterX withOffset:offset.x]];
+    [constraints addObject:[self alignAxisToSafeArea:NSLayoutAttributeCenterY withOffset:offset.y]];
     [self.innerLastConstraints setArray:constraints];
     return constraints;
 }
 
-- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis
+- (NSLayoutConstraint *)alignAxisToSafeArea:(NSLayoutAttribute)axis
 {
-    return [self alignAxisToSuperview:axis withOffset:0.0];
+    return [self alignAxisToSafeArea:axis withOffset:0.0];
 }
 
-- (NSLayoutConstraint *)alignAxisToSuperviewSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
+- (NSLayoutConstraint *)alignAxisToSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
     return [self constrainAttribute:axis toSuperview:self.base.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeArea
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeArea
 {
-    return [self pinEdgesToSuperviewSafeAreaWithInsets:UIEdgeInsetsZero];
+    return [self pinEdgesToSafeAreaWithInsets:UIEdgeInsetsZero];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeAreaWithInsets:(UIEdgeInsets)insets
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:insets.top]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:insets.right]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeTop withInset:insets.top]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeRight withInset:insets.right]];
     [self.innerLastConstraints setArray:constraints];
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge
+- (NSArray<NSLayoutConstraint *> *)pinEdgesToSafeAreaWithInsets:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
     if (edge != NSLayoutAttributeTop) {
-        [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:insets.top]];
+        [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeTop withInset:insets.top]];
     }
     if (edge != NSLayoutAttributeLeading && edge != NSLayoutAttributeLeft) {
-        [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
+        [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeLeft withInset:insets.left]];
     }
     if (edge != NSLayoutAttributeBottom) {
-        [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
+        [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeBottom withInset:insets.bottom]];
     }
     if (edge != NSLayoutAttributeTrailing && edge != NSLayoutAttributeRight) {
-        [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:insets.right]];
+        [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeRight withInset:insets.right]];
     }
     [self.innerLastConstraints setArray:constraints];
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontal
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSafeArea
 {
-    return [self pinEdgesToSuperviewSafeAreaHorizontalWithInset:0.0];
+    return [self pinHorizontalToSafeAreaWithInset:0.0];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaHorizontalWithInset:(CGFloat)inset
+- (NSArray<NSLayoutConstraint *> *)pinHorizontalToSafeAreaWithInset:(CGFloat)inset
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:inset]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:inset]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeLeft withInset:inset]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeRight withInset:inset]];
     [self.innerLastConstraints setArray:constraints];
     return constraints;
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVertical
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSafeArea
 {
-    return [self pinEdgesToSuperviewSafeAreaVerticalWithInset:0.0];
+    return [self pinVerticalToSafeAreaWithInset:0.0];
 }
 
-- (NSArray<NSLayoutConstraint *> *)pinEdgesToSuperviewSafeAreaVerticalWithInset:(CGFloat)inset
+- (NSArray<NSLayoutConstraint *> *)pinVerticalToSafeAreaWithInset:(CGFloat)inset
 {
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:inset]];
-    [constraints addObject:[self pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:inset]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeTop withInset:inset]];
+    [constraints addObject:[self pinEdgeToSafeArea:NSLayoutAttributeBottom withInset:inset]];
     [self.innerLastConstraints setArray:constraints];
     return constraints;
 }
 
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge
 {
-    return [self pinEdgeToSuperviewSafeArea:edge withInset:0.0];
+    return [self pinEdgeToSafeArea:edge withInset:0.0];
 }
 
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset
 {
-    return [self pinEdgeToSuperviewSafeArea:edge withInset:inset relation:NSLayoutRelationEqual];
+    return [self pinEdgeToSafeArea:edge withInset:inset relation:NSLayoutRelationEqual];
 }
 
-- (NSLayoutConstraint *)pinEdgeToSuperviewSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
 {
     return [self constrainAttribute:edge toSuperview:self.base.superview.safeAreaLayoutGuide withOffset:inset relation:relation];
 }
@@ -642,12 +642,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return [self constraint:attribute toSuperview:self.base.superview relation:relation];
 }
 
-- (NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute
+- (NSLayoutConstraint *)constraintToSafeArea:(NSLayoutAttribute)attribute
 {
-    return [self constraintToSuperviewSafeArea:attribute relation:NSLayoutRelationEqual];
+    return [self constraintToSafeArea:attribute relation:NSLayoutRelationEqual];
 }
 
-- (NSLayoutConstraint *)constraintToSuperviewSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)constraintToSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation
 {
     return [self constraint:attribute toSuperview:self.base.superview.safeAreaLayoutGuide relation:relation];
 }
@@ -1060,18 +1060,18 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(void))edgesHorizontal
+- (FWLayoutChain * (^)(void))horizontal
 {
     return ^id(void) {
-        [self.view.fw pinEdgesToSuperviewHorizontal];
+        [self.view.fw pinHorizontalToSuperview];
         return self;
     };
 }
 
-- (FWLayoutChain * (^)(void))edgesVertical
+- (FWLayoutChain * (^)(void))vertical
 {
     return ^id(void) {
-        [self.view.fw pinEdgesToSuperviewVertical];
+        [self.view.fw pinVerticalToSuperview];
         return self;
     };
 }
@@ -1273,7 +1273,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))centerToSafeArea
 {
     return ^id(void) {
-        [self.view.fw alignCenterToSuperviewSafeArea];
+        [self.view.fw alignCenterToSafeArea];
         return self;
     };
 }
@@ -1281,7 +1281,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))centerXToSafeArea
 {
     return ^id(void) {
-        [self.view.fw alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX];
+        [self.view.fw alignAxisToSafeArea:NSLayoutAttributeCenterX];
         return self;
     };
 }
@@ -1289,7 +1289,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))centerYToSafeArea
 {
     return ^id(void) {
-        [self.view.fw alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY];
+        [self.view.fw alignAxisToSafeArea:NSLayoutAttributeCenterY];
         return self;
     };
 }
@@ -1297,7 +1297,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGPoint))centerToSafeAreaWithOffset
 {
     return ^id(CGPoint offset) {
-        [self.view.fw alignCenterToSuperviewSafeAreaWithOffset:offset];
+        [self.view.fw alignCenterToSafeAreaWithOffset:offset];
         return self;
     };
 }
@@ -1305,7 +1305,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))centerXToSafeAreaWithOffset
 {
     return ^id(CGFloat offset) {
-        [self.view.fw alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterX withOffset:offset];
+        [self.view.fw alignAxisToSafeArea:NSLayoutAttributeCenterX withOffset:offset];
         return self;
     };
 }
@@ -1313,7 +1313,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))centerYToSafeAreaWithOffset
 {
     return ^id(CGFloat offset) {
-        [self.view.fw alignAxisToSuperviewSafeArea:NSLayoutAttributeCenterY withOffset:offset];
+        [self.view.fw alignAxisToSafeArea:NSLayoutAttributeCenterY withOffset:offset];
         return self;
     };
 }
@@ -1321,7 +1321,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))edgesToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgesToSuperviewSafeArea];
+        [self.view.fw pinEdgesToSafeArea];
         return self;
     };
 }
@@ -1329,7 +1329,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(UIEdgeInsets))edgesToSafeAreaWithInsets
 {
     return ^id(UIEdgeInsets insets) {
-        [self.view.fw pinEdgesToSuperviewSafeAreaWithInsets:insets];
+        [self.view.fw pinEdgesToSafeAreaWithInsets:insets];
         return self;
     };
 }
@@ -1337,23 +1337,23 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(UIEdgeInsets, NSLayoutAttribute))edgesToSafeAreaWithInsetsExcludingEdge
 {
     return ^id(UIEdgeInsets insets, NSLayoutAttribute edge) {
-        [self.view.fw pinEdgesToSuperviewSafeAreaWithInsets:insets excludingEdge:edge];
+        [self.view.fw pinEdgesToSafeAreaWithInsets:insets excludingEdge:edge];
         return self;
     };
 }
 
-- (FWLayoutChain * (^)(void))edgesToSafeAreaHorizontal
+- (FWLayoutChain * (^)(void))horizontalToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgesToSuperviewSafeAreaHorizontal];
+        [self.view.fw pinHorizontalToSafeArea];
         return self;
     };
 }
 
-- (FWLayoutChain * (^)(void))edgesToSafeAreaVertical
+- (FWLayoutChain * (^)(void))verticalToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgesToSuperviewSafeAreaVertical];
+        [self.view.fw pinVerticalToSafeArea];
         return self;
     };
 }
@@ -1361,7 +1361,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))topToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeTop];
         return self;
     };
 }
@@ -1369,7 +1369,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))bottomToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeBottom];
         return self;
     };
 }
@@ -1377,7 +1377,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))leftToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeLeft];
         return self;
     };
 }
@@ -1385,7 +1385,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))rightToSafeArea
 {
     return ^id(void) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeRight];
         return self;
     };
 }
@@ -1393,7 +1393,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))topToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeTop withInset:inset];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeTop withInset:inset];
         return self;
     };
 }
@@ -1401,7 +1401,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))bottomToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeBottom withInset:inset];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeBottom withInset:inset];
         return self;
     };
 }
@@ -1409,7 +1409,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))leftToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeLeft withInset:inset];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeLeft withInset:inset];
         return self;
     };
 }
@@ -1417,7 +1417,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))rightToSafeAreaWithInset
 {
     return ^id(CGFloat inset) {
-        [self.view.fw pinEdgeToSuperviewSafeArea:NSLayoutAttributeRight withInset:inset];
+        [self.view.fw pinEdgeToSafeArea:NSLayoutAttributeRight withInset:inset];
         return self;
     };
 }
@@ -1616,14 +1616,14 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSafeArea
 {
     return ^id(NSLayoutAttribute attribute) {
-        return [self.view.fw constraintToSuperviewSafeArea:attribute];
+        return [self.view.fw constraintToSafeArea:attribute];
     };
 }
 
 - (NSLayoutConstraint * (^)(NSLayoutAttribute, NSLayoutRelation))constraintToSafeAreaWithRelation
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutRelation relation) {
-        return [self.view.fw constraintToSuperviewSafeArea:attribute relation:relation];
+        return [self.view.fw constraintToSafeArea:attribute relation:relation];
     };
 }
 
