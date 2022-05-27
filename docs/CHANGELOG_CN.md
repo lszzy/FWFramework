@@ -1,5 +1,11 @@
 # 更新日志
 
+## [3.2.0] - 2022-05-27
+
+### Added
+* 重构AutoLayout布局语法，更加美观
+* 新增UITableView和UICollectionView自定义缓存方法
+
 ## [3.1.0] - 2022-05-26
 
 ### Added
