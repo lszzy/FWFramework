@@ -236,9 +236,62 @@
 
 @implementation FWTableViewWrapper (FWDynamicLayout)
 
+#pragma mark - Cache
+
 - (void)clearHeightCache
 {
     [self.dynamicLayoutHeightCache removeAllObjects];
+}
+
+- (void)setCellHeightCache:(CGFloat)height forIndexPath:(NSIndexPath *)indexPath
+{
+    [self setCellHeightCache:height forKey:indexPath];
+}
+
+- (void)setCellHeightCache:(CGFloat)height forKey:(id<NSCopying>)key
+{
+    self.dynamicLayoutHeightCache.heightDictionary[key] = height > 0 ? @(height) : nil;
+}
+
+- (CGFloat)cellHeightCacheForIndexPath:(NSIndexPath *)indexPath
+{
+    return [self cellHeightCacheForKey:indexPath];
+}
+
+- (CGFloat)cellHeightCacheForKey:(id<NSCopying>)key
+{
+    NSNumber *height = self.dynamicLayoutHeightCache.heightDictionary[key];
+    return height ? height.doubleValue : UITableViewAutomaticDimension;
+}
+
+- (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forSection:(NSInteger)section
+{
+    [self setHeaderFooterHeightCache:height type:type forKey:@(section)];
+}
+
+- (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key
+{
+    if (type == FWHeaderFooterViewTypeHeader) {
+        self.dynamicLayoutHeightCache.headerHeightDictionary[key] = height > 0 ? @(height) : nil;
+    } else {
+        self.dynamicLayoutHeightCache.footerHeightDictionary[key] = height > 0 ? @(height) : nil;
+    }
+}
+
+- (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forSection:(NSInteger)section
+{
+    return [self headerFooterHeightCache:type forKey:@(section)];
+}
+
+- (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key
+{
+    if (type == FWHeaderFooterViewTypeHeader) {
+        NSNumber *height = self.dynamicLayoutHeightCache.headerHeightDictionary[key];
+        return height ? height.doubleValue : UITableViewAutomaticDimension;
+    } else {
+        NSNumber *height = self.dynamicLayoutHeightCache.footerHeightDictionary[key];
+        return height ? height.doubleValue : UITableViewAutomaticDimension;
+    }
 }
 
 - (FWDynamicLayoutHeightCache *)dynamicLayoutHeightCache {
