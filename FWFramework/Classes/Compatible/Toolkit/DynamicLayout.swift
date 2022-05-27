@@ -96,9 +96,50 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
 extension Wrapper where Base: UITableView {
     
+    // MARK: - Cache
     /// 手工清空高度缓存，用于高度发生变化的情况
     public func clearHeightCache() {
         base.__fw.clearHeightCache()
+    }
+    
+    /// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+    public func setCellHeightCache(_ height: CGFloat, for indexPath: IndexPath) {
+        base.__fw.setCellHeightCache(height, for: indexPath)
+    }
+
+    /// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+    public func setCellHeightCache(_ height: CGFloat, for key: NSCopying) {
+        base.__fw.setCellHeightCache(height, forKey: key)
+    }
+
+    /// 指定indexPath获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+    public func cellHeightCache(for indexPath: IndexPath) -> CGFloat {
+        return base.__fw.cellHeightCache(for: indexPath)
+    }
+
+    /// 指定key获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+    public func cellHeightCache(for key: NSCopying) -> CGFloat {
+        return base.__fw.cellHeightCache(forKey: key)
+    }
+
+    /// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+    public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for section: Int) {
+        base.__fw.setHeaderFooterHeightCache(height, type: type, forSection: section)
+    }
+
+    /// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+    public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for key: NSCopying) {
+        base.__fw.setHeaderFooterHeightCache(height, type: type, forKey: key)
+    }
+
+    /// 指定section获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+    public func headerFooterHeightCache(_ type: HeaderFooterViewType, forSection section: Int) -> CGFloat {
+        return base.__fw.headerFooterHeightCache(type, forSection: section)
+    }
+
+    /// 指定key获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+    public func headerFooterHeightCache(_ type: HeaderFooterViewType, for key: NSCopying) -> CGFloat {
+        return base.__fw.headerFooterHeightCache(type, forKey: key)
     }
 
     // MARK: - Cell

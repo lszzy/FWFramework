@@ -97,8 +97,34 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 */
 @interface FWTableViewWrapper (FWDynamicLayout)
 
-/// 手工清空高度缓存，用于高度发生变化的情况
+#pragma mark - Cache
+
+/// 手工清空所有高度缓存，用于高度发生变化的情况
 - (void)clearHeightCache;
+
+/// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+- (void)setCellHeightCache:(CGFloat)height forIndexPath:(NSIndexPath *)indexPath;
+
+/// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+- (void)setCellHeightCache:(CGFloat)height forKey:(id<NSCopying>)key;
+
+/// 指定indexPath获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+- (CGFloat)cellHeightCacheForIndexPath:(NSIndexPath *)indexPath;
+
+/// 指定key获取cell缓存高度，estimatedHeightForRowAtIndexPath调用即可。解决reloadData闪烁跳动问题
+- (CGFloat)cellHeightCacheForKey:(id<NSCopying>)key;
+
+/// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+- (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forSection:(NSInteger)section;
+
+/// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height。设置为0时清除缓存。解决reloadData闪烁跳动问题
+- (void)setHeaderFooterHeightCache:(CGFloat)height type:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key;
+
+/// 指定section获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+- (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forSection:(NSInteger)section;
+
+/// 指定key获取HeaderFooter缓存高度，estimatedHeightForHeaderFooterInSection调用即可。解决reloadData闪烁跳动问题
+- (CGFloat)headerFooterHeightCache:(FWHeaderFooterViewType)type forKey:(id<NSCopying>)key;
 
 #pragma mark - Cell
 
