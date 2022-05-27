@@ -770,18 +770,18 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^leftToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^rightToView)(id view);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^topToBottomOfView)(id view);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToTopOfView)(id view);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToRightOfView)(id view);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToLeftOfView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToViewBottom)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToViewTop)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToViewRight)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToViewLeft)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^topToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^leftToViewWithOffset)(id view, CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^rightToViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^topToBottomOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToTopOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToRightOfViewWithOffset)(id view, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToLeftOfViewWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^topToViewBottomWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToViewTopWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^leftToViewRightWithOffset)(id view, CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^rightToViewLeftWithOffset)(id view, CGFloat offset);
 
 #pragma mark - SafeArea
 
