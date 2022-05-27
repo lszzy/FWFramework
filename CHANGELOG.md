@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.0] - 2022-05-27
+
+### Added
+* Refactor AutoLayout layout syntax to be more beautiful
+* Added UITableView and UICollectionView custom cache methods
+
 ## [3.1.0] - 2022-05-26
 
 ### Added
