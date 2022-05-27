@@ -183,7 +183,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func pinEdges(toSuperviewHorizontal inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewHorizontal(withInset: inset)
     }
     
@@ -192,7 +192,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func pinEdges(toSuperviewVertical inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewVertical(withInset: inset)
     }
     
@@ -262,7 +262,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesHorizontal(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinEdges(toSafeAreaHorizontal inset: CGFloat) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewSafeAreaHorizontal(withInset: inset)
     }
     
@@ -271,7 +271,7 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdgesVertical(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinEdges(toSafeAreaVertical inset: CGFloat) -> [NSLayoutConstraint] {
         return base.__fw.pinEdgesToSuperviewSafeAreaVertical(withInset: inset)
     }
     
@@ -504,25 +504,25 @@ public class LayoutChain {
 
     // MARK: - Compression
     @discardableResult
-    public func compressionHorizontal(_ priority: UILayoutPriority) -> Self {
+    public func compression(horizontal priority: UILayoutPriority) -> Self {
         view?.__fw.compressionHorizontal = priority
         return self
     }
 
     @discardableResult
-    public func compressionVertical(_ priority: UILayoutPriority) -> Self {
+    public func compression(vertical priority: UILayoutPriority) -> Self {
         view?.__fw.compressionVertical = priority
         return self
     }
     
     @discardableResult
-    public func huggingHorizontal(_ priority: UILayoutPriority) -> Self {
+    public func hugging(horizontal priority: UILayoutPriority) -> Self {
         view?.__fw.huggingHorizontal = priority
         return self
     }
 
     @discardableResult
-    public func huggingVertical(_ priority: UILayoutPriority) -> Self {
+    public func hugging(vertical priority: UILayoutPriority) -> Self {
         view?.__fw.huggingVertical = priority
         return self
     }
@@ -610,13 +610,13 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func edgesHorizontal(_ inset: CGFloat = .zero) -> Self {
+    public func edges(horizontal inset: CGFloat = .zero) -> Self {
         view?.__fw.pinEdgesToSuperviewHorizontal(withInset: inset)
         return self
     }
 
     @discardableResult
-    public func edgesVertical(_ inset: CGFloat = .zero) -> Self {
+    public func edges(vertical inset: CGFloat = .zero) -> Self {
         view?.__fw.pinEdgesToSuperviewVertical(withInset: inset)
         return self
     }
@@ -718,49 +718,49 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func topToBottom(ofView view: Any, offset: CGFloat = 0) -> Self {
+    public func top(toViewBottom view: Any, offset: CGFloat = 0) -> Self {
         self.view?.__fw.pinEdge(.top, toEdge: .bottom, ofView: view, withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func topToBottom(ofView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
+    public func top(toViewBottom view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
         self.view?.__fw.pinEdge(.top, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func bottomToTop(ofView view: Any, offset: CGFloat = 0) -> Self {
+    public func bottom(toViewTop view: Any, offset: CGFloat = 0) -> Self {
         self.view?.__fw.pinEdge(.bottom, toEdge: .top, ofView: view, withOffset: offset)
         return self
     }
 
     @discardableResult
-    public func bottomToTop(ofView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
+    public func bottom(toViewTop view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
         self.view?.__fw.pinEdge(.bottom, toEdge: .top, ofView: view, withOffset: offset, relation: relation)
         return self
     }
 
     @discardableResult
-    public func leftToRight(ofView view: Any, offset: CGFloat = 0) -> Self {
+    public func left(toViewRight view: Any, offset: CGFloat = 0) -> Self {
         self.view?.__fw.pinEdge(.left, toEdge: .right, ofView: view, withOffset: offset)
         return self
     }
     
     @discardableResult
-    public func leftToRight(ofView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
+    public func left(toViewRight view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
         self.view?.__fw.pinEdge(.left, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
         return self
     }
     
     @discardableResult
-    public func rightToLeft(ofView view: Any, offset: CGFloat = 0) -> Self {
+    public func right(toViewLeft view: Any, offset: CGFloat = 0) -> Self {
         self.view?.__fw.pinEdge(.right, toEdge: .left, ofView: view, withOffset: offset)
         return self
     }
 
     @discardableResult
-    public func rightToLeft(ofView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
+    public func right(toViewLeft view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
         self.view?.__fw.pinEdge(.right, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
         return self
     }
@@ -797,13 +797,13 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func edgesHorizontal(toSafeArea inset: CGFloat) -> Self {
+    public func edges(toSafeAreaHorizontal inset: CGFloat) -> Self {
         view?.__fw.pinEdgesToSuperviewSafeAreaHorizontal(withInset: inset)
         return self
     }
 
     @discardableResult
-    public func edgesVertical(toSafeArea inset: CGFloat) -> Self {
+    public func edges(toSafeAreaVertical inset: CGFloat) -> Self {
         view?.__fw.pinEdgesToSuperviewSafeAreaVertical(withInset: inset)
         return self
     }
@@ -876,13 +876,13 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func widthToHeight(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
+    public func width(toHeight multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
         view?.__fw.matchDimension(.width, toDimension: .height, withMultiplier: multiplier, relation: relation)
         return self
     }
     
     @discardableResult
-    public func heightToWidth(_ multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
+    public func height(toWidth multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
         view?.__fw.matchDimension(.height, toDimension: .width, withMultiplier: multiplier, relation: relation)
         return self
     }

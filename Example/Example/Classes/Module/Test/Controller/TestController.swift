@@ -105,7 +105,7 @@ private extension TestController {
             make.left().right().top()
         }
         textFieldView.fw.layoutMaker { make in
-            make.topToBottom(ofView: tableView)
+            make.top(toViewBottom: tableView)
             make.left().right().height(100).bottom(FW.safeAreaInsets.bottom)
         }
         textFieldLabel.fw.layoutMaker { make in
