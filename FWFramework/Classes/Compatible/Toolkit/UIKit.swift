@@ -342,6 +342,12 @@ extension Wrapper where Base: UITextField {
         get { return base.__fw.maxUnicodeLength }
         set { base.__fw.maxUnicodeLength = newValue }
     }
+    
+    /// 自定义文字改变处理句柄，自动trimString，默认nil
+    public var textChangedBlock: ((String) -> Void)? {
+        get { return base.__fw.textChangedBlock }
+        set { base.__fw.textChangedBlock = newValue }
+    }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func textLengthChanged() {
@@ -353,13 +359,13 @@ extension Wrapper where Base: UITextField {
         return base.__fw.filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw.autoCompleteInterval }
         set { base.__fw.autoCompleteInterval = newValue }
     }
 
-    /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
+    /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
     public var autoCompleteBlock: ((String) -> Void)? {
         get { return base.__fw.autoCompleteBlock }
         set { base.__fw.autoCompleteBlock = newValue }
@@ -381,6 +387,12 @@ extension Wrapper where Base: UITextView {
         get { return base.__fw.maxUnicodeLength }
         set { base.__fw.maxUnicodeLength = newValue }
     }
+    
+    /// 自定义文字改变处理句柄，自动trimString，默认nil
+    public var textChangedBlock: ((String) -> Void)? {
+        get { return base.__fw.textChangedBlock }
+        set { base.__fw.textChangedBlock = newValue }
+    }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func textLengthChanged() {
@@ -392,7 +404,7 @@ extension Wrapper where Base: UITextView {
         return base.__fw.filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw.autoCompleteInterval }
         set { base.__fw.autoCompleteInterval = newValue }
