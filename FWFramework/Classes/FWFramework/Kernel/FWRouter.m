@@ -98,9 +98,8 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 // 路由列表，结构类似 @{@"beauty": @{@":id": {FWRouterCoreKey: [block copy]}}}
 @property (nonatomic, strong) NSMutableDictionary *routes;
 
-@property (nonatomic, copy) BOOL (^preFilter)(FWRouterContext *context);
-@property (nonatomic, copy) id (^postFilter)(FWRouterContext *context, id object);
-@property (nonatomic, copy) id (^presetFilter)(FWRouterContext *context, id object);
+@property (nonatomic, copy) BOOL (^routeFilter)(FWRouterContext *context);
+@property (nonatomic, copy) id (^routeHandler)(FWRouterContext *context, id object);
 @property (nonatomic, copy) void (^errorHandler)(FWRouterContext *context);
 
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
@@ -283,44 +282,32 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
 
 #pragma mark - Handler
 
-+ (BOOL (^)(FWRouterContext *))preFilter
++ (void)setRouteFilter:(BOOL (^)(FWRouterContext *))filter
 {
-    return [self sharedInstance].preFilter;
+    [self sharedInstance].routeFilter = filter;
 }
 
-+ (void)setPreFilter:(BOOL (^)(FWRouterContext *))preFilter
++ (void)setRouteHandler:(id (^)(FWRouterContext *, id))handler
 {
-    [self sharedInstance].preFilter = preFilter;
+    [self sharedInstance].routeHandler = handler;
 }
 
-+ (id (^)(FWRouterContext *, id))postFilter
++ (void)presetRouteHandler:(id (^)(FWRouterContext *, id))handler
 {
-    return [self sharedInstance].postFilter;
+    if ([self sharedInstance].routeHandler) return;
+    
+    [self sharedInstance].routeHandler = handler ?: ^id(FWRouterContext *context, id object) {
+        if (!context.isOpening) return object;
+        if (![object isKindOfClass:[UIViewController class]]) return object;
+        
+        [FWRouter openViewController:(UIViewController *)object animated:YES];
+        return nil;
+    };
 }
 
-+ (void)setPostFilter:(id (^)(FWRouterContext *, id))postFilter
++ (void)setErrorHandler:(void (^)(FWRouterContext *))handler
 {
-    [self sharedInstance].postFilter = postFilter;
-}
-
-+ (id (^)(FWRouterContext *, id))presetFilter
-{
-    return [self sharedInstance].presetFilter;
-}
-
-+ (void)setPresetFilter:(id (^)(FWRouterContext *, id))presetFilter
-{
-    [self sharedInstance].presetFilter = presetFilter;
-}
-
-+ (void (^)(FWRouterContext *))errorHandler
-{
-    return [self sharedInstance].errorHandler;
-}
-
-+ (void)setErrorHandler:(void (^)(FWRouterContext *))errorHandler
-{
-    [self sharedInstance].errorHandler = errorHandler;
+    [self sharedInstance].errorHandler = handler;
 }
 
 #pragma mark - Open
@@ -362,15 +349,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     context.URLParameters = [URLParameters copy];
     context.isOpening = YES;
     
-    if ([self sharedInstance].preFilter) {
-        if (![self sharedInstance].preFilter(context)) return;
+    if ([self sharedInstance].routeFilter) {
+        if (![self sharedInstance].routeFilter(context)) return;
     }
     if (handler) {
         id object = handler(context);
-        if (object && [self sharedInstance].postFilter) {
-            [self sharedInstance].postFilter(context, object);
-        } else if (object && [self sharedInstance].presetFilter) {
-            [self sharedInstance].presetFilter(context, object);
+        if (object && [self sharedInstance].routeHandler) {
+            [self sharedInstance].routeHandler(context, object);
         }
         return;
     }
@@ -406,15 +391,13 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     context.URLParameters = [URLParameters copy];
     context.isOpening = NO;
     
-    if ([self sharedInstance].preFilter) {
-        if (![self sharedInstance].preFilter(context)) return nil;
+    if ([self sharedInstance].routeFilter) {
+        if (![self sharedInstance].routeFilter(context)) return nil;
     }
     if (handler) {
         id object = handler(context);
-        if (object && [self sharedInstance].postFilter) {
-            return [self sharedInstance].postFilter(context, object);
-        } else if (object && [self sharedInstance].presetFilter) {
-            return [self sharedInstance].presetFilter(context, object);
+        if (object && [self sharedInstance].routeHandler) {
+            return [self sharedInstance].routeHandler(context, object);
         }
         return object;
     }

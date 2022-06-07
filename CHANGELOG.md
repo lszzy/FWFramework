@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.1] - 2022-06-08
+
+### Added
+* Refactor Router routing component method name
+* Added UIKit input component tool method
+
 ## [3.2.0] - 2022-05-27
 
 ### Added

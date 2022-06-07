@@ -583,14 +583,21 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 581,
+      "line": 579,
+      "symbol": "Array.safeElement(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
+      "line": 584,
       "symbol": "Set.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 584,
+      "line": 587,
       "symbol": "Dictionary.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
@@ -3537,14 +3544,14 @@
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 259,
+      "line": 262,
       "symbol": "FWTextViewWrapper(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 283,
+      "line": 289,
       "symbol": "FWViewControllerWrapper(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

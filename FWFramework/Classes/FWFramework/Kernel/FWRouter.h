@@ -118,24 +118,24 @@ NS_SWIFT_NAME(Router)
 #pragma mark - Handler
 
 /**
- *  设置全局前置过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
+ *  设置全局路由过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
  */
-@property (class, nonatomic, copy, nullable) BOOL (^preFilter)(FWRouterContext *context);
++ (void)setRouteFilter:(nullable BOOL (^)(FWRouterContext *context))filter;
 
 /**
- *  设置全局后置过滤器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
+ *  设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
  */
-@property (class, nonatomic, copy, nullable) id _Nullable (^postFilter)(FWRouterContext *context, id object);
++ (void)setRouteHandler:(nullable id _Nullable (^)(FWRouterContext *context, id object))handler;
 
 /**
- *  设置全局预置过滤器，仅当postFilter未设置时生效，作用同postFilter，方便模块化开发
+ *  预置全局路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
  */
-@property (class, nonatomic, copy, nullable) id _Nullable (^presetFilter)(FWRouterContext *context, id object);
++ (void)presetRouteHandler:(nullable id _Nullable (^)(FWRouterContext *context, id object))handler;
 
 /**
  *  设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
  */
-@property (class, nonatomic, copy, nullable) void (^errorHandler)(FWRouterContext *context);
++ (void)setErrorHandler:(nullable void (^)(FWRouterContext *context))handler;
 
 #pragma mark - Open
 

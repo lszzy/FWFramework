@@ -576,6 +576,9 @@ extension String: SafeType {
 }
 extension Array: SafeType {
     public static var safeValue: Array<Element> { return [] }
+    public func safeElement(_ index: Int) -> Element? {
+        return index >= 0 && index < count ? self[index] : nil
+    }
 }
 extension Set: SafeType {
     public static var safeValue: Set<Element> { return [] }

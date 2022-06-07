@@ -144,6 +144,7 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         tableCellSelected(indexPath)
     }
     
@@ -193,8 +194,7 @@ extension TestController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableCellSelected(_ indexPath: IndexPath) {
-        let viewController = TestController()
-        navigationController?.pushViewController(viewController, animated: true)
+        Router.openURL(AppRouter.testUrl)
     }
     
 }
