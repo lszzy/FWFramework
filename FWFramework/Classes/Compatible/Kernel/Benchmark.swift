@@ -35,21 +35,35 @@ extension FW {
 @objcMembers public class Benchmark: NSObject {
     
     // MARK: - Accessor
-    private static var times: [String : TimeInterval] = [:]
+    private static var beginTimes: [String : TimeInterval] = [:]
+    private static var endTimes: [String : TimeInterval] = [:]
     
     // MARK: - Public
     /// 标记时间调试开始
     public static func begin(_ name: String) {
-        times[name] = Date().timeIntervalSince1970
+        beginTimes[name] = Date().timeIntervalSince1970
     }
     
     /// 标记时间调试结束并打印消耗时间
     @discardableResult
     public static func end(_ name: String) -> TimeInterval {
-        let beginTime = times[name] ?? Date().timeIntervalSince1970
-        let timeInterval = Date().timeIntervalSince1970 - beginTime
+        let beginTime = beginTimes[name] ?? Date().timeIntervalSince1970
+        let endTime = Date().timeIntervalSince1970
+        endTimes[name] = endTime
+        
+        let timeInterval = endTime - beginTime
         NSLog("FWBenchmark-%@: %.3fms", name, timeInterval * 1000)
         return timeInterval
+    }
+    
+    /// 获取所有的消耗时间数据
+    public static func benchmarks() -> [String: TimeInterval] {
+        var times: [String: TimeInterval] = [:]
+        for (name, endTime) in endTimes {
+            let beginTime = beginTimes[name] ?? Date().timeIntervalSince1970
+            times[name] = endTime - beginTime
+        }
+        return times
     }
     
 }
