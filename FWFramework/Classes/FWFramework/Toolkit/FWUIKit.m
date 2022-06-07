@@ -1003,6 +1003,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 @property (nonatomic, weak, readonly) UITextField *textField;
 @property (nonatomic, assign) NSInteger maxLength;
 @property (nonatomic, assign) NSInteger maxUnicodeLength;
+@property (nonatomic, copy) void (^textChangedBlock)(NSString *text);
 @property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 @property (nonatomic, assign) NSTimeInterval autoCompleteTimestamp;
 @property (nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
@@ -1117,10 +1118,15 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 {
     [self textLengthChanged];
     
+    if (self.textChangedBlock) {
+        NSString *inputText = self.textField.text.fw.trimString;
+        self.textChangedBlock(inputText ?: @"");
+    }
+    
     if (self.autoCompleteBlock) {
         self.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
-        NSString *inputText = self.textField.text;
-        if (inputText.fw.trimString.length < 1) {
+        NSString *inputText = self.textField.text.fw.trimString;
+        if (inputText.length < 1) {
             self.autoCompleteBlock(@"");
         } else {
             NSTimeInterval currentTimestamp = self.autoCompleteTimestamp;
@@ -1155,6 +1161,16 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
     [self innerInputTarget:YES].maxUnicodeLength = maxUnicodeLength;
+}
+
+- (void (^)(NSString *))textChangedBlock
+{
+    return [self innerInputTarget:NO].textChangedBlock;
+}
+
+- (void)setTextChangedBlock:(void (^)(NSString *))textChangedBlock
+{
+    [self innerInputTarget:YES].textChangedBlock = textChangedBlock;
 }
 
 - (void)textLengthChanged
@@ -1225,6 +1241,16 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)setMaxUnicodeLength:(NSInteger)maxUnicodeLength
 {
     [self innerInputTarget:YES].maxUnicodeLength = maxUnicodeLength;
+}
+
+- (void (^)(NSString *))textChangedBlock
+{
+    return [self innerInputTarget:NO].textChangedBlock;
+}
+
+- (void)setTextChangedBlock:(void (^)(NSString *))textChangedBlock
+{
+    [self innerInputTarget:YES].textChangedBlock = textChangedBlock;
 }
 
 - (void)textLengthChanged
