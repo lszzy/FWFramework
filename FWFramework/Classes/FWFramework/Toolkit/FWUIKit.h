@@ -240,13 +240,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
 @property (nonatomic, assign) NSInteger maxUnicodeLength;
 
+/// 自定义文字改变处理句柄，默认nil
+@property (nonatomic, copy, nullable) void (^textChangedBlock)(NSString *text);
+
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
 - (void)textLengthChanged;
 
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)filterText:(NSString *)text;
 
-/// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
@@ -264,16 +267,19 @@ NS_ASSUME_NONNULL_BEGIN
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
 @property (nonatomic, assign) NSInteger maxUnicodeLength;
 
+/// 自定义文字改变处理句柄，自动trimString，默认nil
+@property (nonatomic, copy, nullable) void (^textChangedBlock)(NSString *text);
+
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
 - (void)textLengthChanged;
 
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)filterText:(NSString *)text;
 
-/// 设置自动完成时间间隔，默认1秒，和fwAutoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
 
-/// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
+/// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
 @property (nullable, nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
 
 @end
