@@ -28,10 +28,7 @@ extension AppRouter {
     class func testRouter(_ context: RouterContext) -> Any? {
         let viewController = TestController()
         viewController.hidesBottomBarWhenPushed = true
-        if !context.isOpening { return viewController }
-        
-        Router.push(viewController, animated: true)
-        return nil
+        return viewController
     }
     
     class func settingsRouter(_ context: RouterContext) -> Any? {
