@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.3.0] - 2022-06-11
+
+### Added
+* New configuration management and configuration template protocol
+
 ## [3.2.1] - 2022-06-08
 
 ### Added
