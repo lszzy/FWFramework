@@ -9,15 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 配置模板基类，使用时继承即可
-NS_SWIFT_NAME(ConfigurationTemplate)
-@interface FWConfigurationTemplate : NSObject
-
-/// 应用配置方法，子类重写
-- (void)applyConfiguration;
-
-@end
-
 /// 配置基类，使用时继承即可
 NS_SWIFT_NAME(Configuration)
 @interface FWConfiguration : NSObject
@@ -27,6 +18,15 @@ NS_SWIFT_NAME(Configuration)
 
 /// 初始化配置，子类可重写，默认自动查找类名格式：[FWConfiguration]+Template
 - (void)initializeConfiguration;
+
+@end
+
+/// 配置模板基类，使用时继承即可
+NS_SWIFT_NAME(ConfigurationTemplate)
+@interface FWConfigurationTemplate : NSObject
+
+/// 应用配置方法，子类重写
+- (void)applyConfiguration;
 
 @end
 
