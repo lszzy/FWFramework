@@ -8,6 +8,12 @@
 #import "FWConfiguration.h"
 #import <objc/runtime.h>
 
+@interface FWConfiguration ()
+
+@property (nonatomic, assign) BOOL configurationInitialized;
+
+@end
+
 @implementation FWConfiguration
 
 + (instancetype)sharedInstance {
@@ -26,19 +32,28 @@
 }
 
 - (void)initializeConfiguration {
-    Class templateClass = NSClassFromString([NSStringFromClass([self class]) stringByAppendingString:@"Template"]);
-    if (!templateClass) return;
+    if (self.configurationInitialized) return;
+    self.configurationInitialized = YES;
     
-    FWConfigurationTemplate *templateConfiguration = [[templateClass alloc] init];
-    if ([templateConfiguration respondsToSelector:@selector(applyConfiguration)]) {
-        [templateConfiguration applyConfiguration];
+    NSString *className = NSStringFromClass([self class]);
+    Class templateClass = NSClassFromString([className stringByAppendingString:@"Template"]);
+    if (templateClass) {
+        self.configurationTemplate = [[templateClass alloc] init];
+        return;
+    }
+    
+    templateClass = NSClassFromString([className stringByAppendingString:@"DefaultTemplate"]);
+    if (templateClass) {
+        self.configurationTemplate = [[templateClass alloc] init];
     }
 }
 
-@end
-
-@implementation FWConfigurationTemplate
-
-- (void)applyConfiguration {}
+- (void)setConfigurationTemplate:(id<FWConfigurationTemplateProtocol>)configurationTemplate {
+    _configurationTemplate = configurationTemplate;
+    
+    if ([configurationTemplate respondsToSelector:@selector(applyConfiguration)]) {
+        [configurationTemplate applyConfiguration];
+    }
+}
 
 @end

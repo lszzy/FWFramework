@@ -9,24 +9,30 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 配置模板协议，配置模板类需实现
+NS_SWIFT_NAME(ConfigurationTemplateProtocol)
+@protocol FWConfigurationTemplateProtocol <NSObject>
+
+@required
+/// 应用配置方法，必须实现
+- (void)applyConfiguration;
+
+@end
+
 /// 配置基类，使用时继承即可
+///
+/// 默认自动查找类名格式优先级：[配置类]+Template > [配置类]+DefaultTemplate
 NS_SWIFT_NAME(Configuration)
 @interface FWConfiguration : NSObject
+
+/// 当前所使用配置版本
+@property (nonatomic, strong, nullable) id<FWConfigurationTemplateProtocol> configurationTemplate;
 
 /// 单例模式对象
 + (instancetype)sharedInstance NS_REFINED_FOR_SWIFT;
 
-/// 初始化配置，子类可重写，默认自动查找类名格式：[FWConfiguration]+Template
+/// 初始化配置，重复调用无效，子类可重写
 - (void)initializeConfiguration;
-
-@end
-
-/// 配置模板基类，使用时继承即可
-NS_SWIFT_NAME(ConfigurationTemplate)
-@interface FWConfigurationTemplate : NSObject
-
-/// 应用配置方法，子类重写
-- (void)applyConfiguration;
 
 @end
 
