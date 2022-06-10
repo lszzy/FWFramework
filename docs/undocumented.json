@@ -1927,14 +1927,14 @@
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 48,
+      "line": 49,
       "symbol": "FWFrameworkVersionNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 49,
+      "line": 50,
       "symbol": "FWFrameworkVersionString",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
