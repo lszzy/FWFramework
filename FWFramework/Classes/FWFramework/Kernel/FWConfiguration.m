@@ -8,12 +8,6 @@
 #import "FWConfiguration.h"
 #import <objc/runtime.h>
 
-@implementation FWConfigurationTemplate
-
-- (void)applyConfiguration {}
-
-@end
-
 @implementation FWConfiguration
 
 + (instancetype)sharedInstance {
@@ -40,5 +34,11 @@
         [templateConfiguration applyConfiguration];
     }
 }
+
+@end
+
+@implementation FWConfigurationTemplate
+
+- (void)applyConfiguration {}
 
 @end
