@@ -25,6 +25,7 @@
         if (!instance) {
             instance = [[self alloc] init];
             objc_setAssociatedObject([self class], @selector(sharedInstance), instance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            [instance initializeConfiguration];
         }
         return instance;
     }
