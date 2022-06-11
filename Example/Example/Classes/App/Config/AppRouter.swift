@@ -31,7 +31,7 @@ extension AppRouter {
         return viewController
     }
     
-    class func settingsRouter(_ context: RouterContext) -> Any? {
+    class func settingsDefaultRouter(_ context: RouterContext) -> Any? {
         let viewController = SettingsController()
         viewController.hidesBottomBarWhenPushed = true
         return viewController
