@@ -35,14 +35,15 @@
     if (self.configurationInitialized) return;
     self.configurationInitialized = YES;
     
+    // 1. 当前模块.[配置类]+Template
     NSString *className = NSStringFromClass([self class]);
+    NSString *applicationName = [NSBundle.mainBundle objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleExecutableKey];
     Class templateClass = NSClassFromString([className stringByAppendingString:@"Template"]);
-    if (templateClass) {
-        self.configurationTemplate = [[templateClass alloc] init];
-        return;
-    }
+    // 2. 主项目.[配置类]+Template
+    if (!templateClass) templateClass = NSClassFromString([NSString stringWithFormat:@"%@.%@Template", applicationName, [className componentsSeparatedByString:@"."].lastObject]);
+    // 3. 当前模块.[配置类]+DefaultTemplate
+    if (!templateClass) templateClass = NSClassFromString([className stringByAppendingString:@"DefaultTemplate"]);
     
-    templateClass = NSClassFromString([className stringByAppendingString:@"DefaultTemplate"]);
     if (templateClass) {
         self.configurationTemplate = [[templateClass alloc] init];
     }
