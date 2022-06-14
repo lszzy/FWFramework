@@ -63,26 +63,26 @@ extension Wrapper where Base: CALayer {
     
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeBackgroundColor: UIColor? {
-        get { return base.__fw.themeBackgroundColor }
-        set { base.__fw.themeBackgroundColor = newValue }
+        get { return base.__fw_themeBackgroundColor }
+        set { base.__fw_themeBackgroundColor = newValue }
     }
 
     /// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeBorderColor: UIColor? {
-        get { return base.__fw.themeBorderColor }
-        set { base.__fw.themeBorderColor = newValue }
+        get { return base.__fw_themeBorderColor }
+        set { base.__fw_themeBorderColor = newValue }
     }
 
     /// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeShadowColor: UIColor? {
-        get { return base.__fw.themeShadowColor }
-        set { base.__fw.themeShadowColor = newValue }
+        get { return base.__fw_themeShadowColor }
+        set { base.__fw_themeShadowColor = newValue }
     }
 
     /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeContents: UIImage? {
-        get { return base.__fw.themeContents }
-        set { base.__fw.themeContents = newValue }
+        get { return base.__fw_themeContents }
+        set { base.__fw_themeContents = newValue }
     }
     
 }
@@ -92,8 +92,8 @@ extension Wrapper where Base: CAGradientLayer {
     
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeColors: [UIColor]? {
-        get { return base.__fw.themeColors }
-        set { base.__fw.themeColors = newValue }
+        get { return base.__fw_themeColors }
+        set { base.__fw_themeColors = newValue }
     }
     
 }

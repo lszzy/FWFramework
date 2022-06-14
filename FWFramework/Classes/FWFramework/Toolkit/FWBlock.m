@@ -444,11 +444,11 @@
 {
     if ([object isKindOfClass:[UIImage class]]) {
         self.base.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-        self.base.navigationController.navigationBar.fw.backImage = (UIImage *)object;
+        self.base.navigationController.navigationBar.fw_backImage = (UIImage *)object;
     } else {
         UIBarButtonItem *backItem = [object isKindOfClass:[UIBarButtonItem class]] ? (UIBarButtonItem *)object : [UIBarButtonItem.fw itemWithObject:object ?: [UIImage new] target:nil action:nil];
         self.base.navigationItem.backBarButtonItem = backItem;
-        self.base.navigationController.navigationBar.fw.backImage = nil;
+        self.base.navigationController.navigationBar.fw_backImage = nil;
     }
 }
 
