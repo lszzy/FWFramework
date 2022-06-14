@@ -38,6 +38,9 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @property (nonatomic, strong) id toolbarPreviousButton;
 @property (nonatomic, strong) id toolbarNextButton;
 @property (nonatomic, strong) id toolbarDoneButton;
+@property (nonatomic, assign) BOOL previousButtonInitialized;
+@property (nonatomic, assign) BOOL nextButtonInitialized;
+@property (nonatomic, assign) BOOL doneButtonInitialized;
 @property (nonatomic, weak) UIResponder *previousResponder;
 @property (nonatomic, weak) UIResponder *nextResponder;
 
@@ -304,7 +307,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (id)toolbarPreviousButton
 {
-    if (!_toolbarPreviousButton) {
+    if (!_toolbarPreviousButton && !_previousButtonInitialized) {
         _toolbarPreviousButton = [self.class toolbarPreviousImage];
     }
     return _toolbarPreviousButton;
@@ -312,7 +315,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (id)toolbarNextButton
 {
-    if (!_toolbarNextButton) {
+    if (!_toolbarNextButton && !_nextButtonInitialized) {
         _toolbarNextButton = [self.class toolbarNextImage];
     }
     return _toolbarNextButton;
@@ -320,7 +323,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (id)toolbarDoneButton
 {
-    if (!_toolbarDoneButton) {
+    if (!_toolbarDoneButton && !_doneButtonInitialized) {
         _toolbarDoneButton = @(UIBarButtonSystemItemDone);
     }
     return _toolbarDoneButton;
@@ -348,11 +351,11 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     UIBarButtonItem *titleItem = title ? [UIBarButtonItem.fw itemWithObject:title block:nil] : nil;
     titleItem.enabled = NO;
-    UIBarButtonItem *previousItem = [UIBarButtonItem.fw itemWithObject:self.toolbarPreviousButton target:self.previousResponder action:@selector(becomeFirstResponder)];
+    UIBarButtonItem *previousItem = self.toolbarPreviousButton ? [UIBarButtonItem.fw itemWithObject:self.toolbarPreviousButton target:self.previousResponder action:@selector(becomeFirstResponder)] : nil;
     previousItem.enabled = self.previousResponder != nil;
-    UIBarButtonItem *nextItem = [UIBarButtonItem.fw itemWithObject:self.toolbarNextButton target:self.nextResponder action:@selector(becomeFirstResponder)];
+    UIBarButtonItem *nextItem = self.toolbarNextButton ? [UIBarButtonItem.fw itemWithObject:self.toolbarNextButton target:self.nextResponder action:@selector(becomeFirstResponder)] : nil;
     nextItem.enabled = self.nextResponder != nil;
-    UIBarButtonItem *doneItem = doneBlock ? [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton block:doneBlock] : [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton target:self.textInput action:@selector(resignFirstResponder)];
+    UIBarButtonItem *doneItem = self.toolbarDoneButton ? (doneBlock ? [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton block:doneBlock] : [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton target:self.textInput action:@selector(resignFirstResponder)]) : nil;
     doneItem.style = UIBarButtonItemStyleDone;
     
     [self addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];
@@ -674,6 +677,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarPreviousButton:(id)toolbarPreviousButton
 {
+    self.innerKeyboardTarget.previousButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
 }
 
@@ -684,6 +688,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarNextButton:(id)toolbarNextButton
 {
+    self.innerKeyboardTarget.nextButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
 }
 
@@ -694,6 +699,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarDoneButton:(id)toolbarDoneButton
 {
+    self.innerKeyboardTarget.doneButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 
@@ -1007,6 +1013,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarPreviousButton:(id)toolbarPreviousButton
 {
+    self.innerKeyboardTarget.previousButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
 }
 
@@ -1017,6 +1024,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarNextButton:(id)toolbarNextButton
 {
+    self.innerKeyboardTarget.nextButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
 }
 
@@ -1027,6 +1035,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 - (void)setToolbarDoneButton:(id)toolbarDoneButton
 {
+    self.innerKeyboardTarget.doneButtonInitialized = YES;
     self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 

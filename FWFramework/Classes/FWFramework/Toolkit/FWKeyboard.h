@@ -54,13 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
 /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-@property (nonatomic, strong) id toolbarPreviousButton;
+@property (nonatomic, strong, nullable) id toolbarPreviousButton;
 
 /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-@property (nonatomic, strong) id toolbarNextButton;
+@property (nonatomic, strong, nullable) id toolbarNextButton;
 
 /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-@property (nonatomic, strong) id toolbarDoneButton;
+@property (nonatomic, strong, nullable) id toolbarDoneButton;
 
 /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *previousResponder;
@@ -139,13 +139,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
 /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-@property (nonatomic, strong) id toolbarPreviousButton;
+@property (nonatomic, strong, nullable) id toolbarPreviousButton;
 
 /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-@property (nonatomic, strong) id toolbarNextButton;
+@property (nonatomic, strong, nullable) id toolbarNextButton;
 
 /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-@property (nonatomic, strong) id toolbarDoneButton;
+@property (nonatomic, strong, nullable) id toolbarDoneButton;
 
 /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
 @property (nullable, nonatomic, weak) UIResponder *previousResponder;
