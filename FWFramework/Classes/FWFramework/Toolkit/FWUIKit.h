@@ -85,6 +85,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 绘制单边或多边边框。使用AutoLayout
 - (void)setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
 
+/// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
+- (dispatch_source_t)startCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+
 @end
 
 #pragma mark - FWLabelWrapper+FWUIKit

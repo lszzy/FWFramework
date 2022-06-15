@@ -11,6 +11,7 @@
 #import "FWBarAppearance.h"
 #import "FWNavigation.h"
 #import "FWToolkit.h"
+#import "FWFoundation.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWTimerClassWrapper+FWBlock
@@ -33,16 +34,17 @@
 
 - (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
 {
-    __block NSInteger countdown = seconds;
+    NSTimeInterval startTime = NSDate.fw.currentTime;
     NSTimer *timer = [self commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        if (countdown <= 0) {
-            block(0);
-            [timer invalidate];
-        } else {
-            countdown--;
-            // 时间+1，防止倒计时显示0秒
-            block(countdown + 1);
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSInteger countDown = seconds - (NSInteger)round(NSDate.fw.currentTime - startTime);
+            if (countDown <= 0) {
+                block(0);
+                [timer invalidate];
+            } else {
+                block(countDown);
+            }
+        });
     } repeats:YES];
     
     // 立即触发定时器，默认等待1秒后才执行
@@ -444,11 +446,11 @@
 {
     if ([object isKindOfClass:[UIImage class]]) {
         self.base.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-        self.base.navigationController.navigationBar.fw.backImage = (UIImage *)object;
+        self.base.navigationController.navigationBar.fw_backImage = (UIImage *)object;
     } else {
         UIBarButtonItem *backItem = [object isKindOfClass:[UIBarButtonItem class]] ? (UIBarButtonItem *)object : [UIBarButtonItem.fw itemWithObject:object ?: [UIImage new] target:nil action:nil];
         self.base.navigationItem.backBarButtonItem = backItem;
-        self.base.navigationController.navigationBar.fw.backImage = nil;
+        self.base.navigationController.navigationBar.fw_backImage = nil;
     }
 }
 

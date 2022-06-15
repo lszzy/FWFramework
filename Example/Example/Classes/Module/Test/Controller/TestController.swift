@@ -54,6 +54,9 @@ class TestController: UIViewController {
         textField.layer.borderWidth = FW.pixelOne
         textField.layer.cornerRadius = 4
         textField.fw.touchResign = true
+        textField.fw.toolbarPreviousButton = nil
+        textField.fw.toolbarNextButton = nil
+        textField.fw.addToolbar(title: "Test", doneBlock: nil)
         return textField
     }()
 

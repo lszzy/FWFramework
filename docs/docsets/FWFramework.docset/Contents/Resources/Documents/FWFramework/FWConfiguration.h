@@ -21,7 +21,10 @@ NS_SWIFT_NAME(ConfigurationTemplateProtocol)
 
 /// 配置基类，使用时继承即可
 ///
-/// 默认自动查找类名格式优先级：[配置类]+Template > [配置类]+DefaultTemplate
+/// 默认自动查找模板类名格式优先级如下：
+/// 1. 当前模块.[配置类]+Template
+/// 2. 主项目.[配置类]+Template
+/// 3. 当前模块.[配置类]+DefaultTemplate
 NS_SWIFT_NAME(Configuration)
 @interface FWConfiguration : NSObject
 
