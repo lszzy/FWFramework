@@ -405,18 +405,15 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), 1.0 * NSEC_PER_SEC, 0);
     
     NSTimeInterval startTime = NSDate.fw.currentTime;
-    __block NSInteger countDown = seconds;
     __weak UIView *weakBase = self.base;
     __block BOOL hasWindow = NO;
     dispatch_source_set_event_handler(_timer, ^{
-        // 倒计时时间
-        countDown = seconds - (NSInteger)(NSDate.fw.currentTime - startTime);
-        if (countDown <= 0) {
-            dispatch_source_cancel(_timer);
-        }
-        
-        // 主线程更新按钮
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSInteger countDown = seconds - (NSInteger)round(NSDate.fw.currentTime - startTime);
+            if (countDown <= 0) {
+                dispatch_source_cancel(_timer);
+            }
+            
             // 按钮从window移除时自动cancel倒计时
             if (!hasWindow && weakBase.window) {
                 hasWindow = YES;
