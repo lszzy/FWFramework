@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.1] - 2022-06-15
+
+### Changed
+* Route support lookup DefaultRouter: format method
+* Keyboard management support to hide default previous and next buttons
+* Fix the calculation problem when the countdown method is running in the background
+* Fix the abnormal problems of the theme colorForStyle and other methods
+
 ## [3.3.0] - 2022-06-11
 
 ### Added
