@@ -132,6 +132,12 @@ extension Wrapper where Base: UIView {
         base.__fw.setBorderView(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
     }
     
+    /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
+    @discardableResult
+    public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSource {
+        return base.__fw.startCountDown(seconds, block: block)
+    }
+    
 }
 
 // MARK: - UILabel+UIKit

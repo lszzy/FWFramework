@@ -63,7 +63,7 @@ NS_SWIFT_NAME(Router)
 *  注册路由类或对象，批量注册路由规则
 *
 *  @param clazz    路由类或对象，不遍历父类
-*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
+*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:
 */
 + (BOOL)registerClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 
@@ -71,7 +71,7 @@ NS_SWIFT_NAME(Router)
 *  预置路由类或对象，批量注册路由规则，仅当路由未被注册时生效
 *
 *  @param clazz    路由类或对象，不遍历父类
-*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
+*  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:
 */
 + (BOOL)presetClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 
@@ -79,7 +79,7 @@ NS_SWIFT_NAME(Router)
  *  取消注册某个路由类或对象
  *
  *  @param clazz    路由类或对象，不遍历父类
- *  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter:
+ *  @param mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:
  */
 + (void)unregisterClass:(id)clazz withMapper:(nullable NSDictionary<NSString *, NSString *> * (^)(NSArray<NSString *> *methods))mapper;
 

@@ -12,18 +12,18 @@
 #import "FWToolkit.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWNavigationBarWrapper+FWBarAppearance
+#pragma mark - UINavigationBar+FWBarAppearance
 
 static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
-@implementation FWNavigationBarClassWrapper (FWBarAppearance)
+@implementation UINavigationBar (FWBarAppearance)
 
-- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
++ (NSDictionary<NSAttributedStringKey,id> *)fw_buttonAttributes
 {
     return fwStaticButtonAttributes;
 }
 
-- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
++ (void)setFw_buttonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
 {
     fwStaticButtonAttributes = buttonAttributes;
     if (!fwStaticButtonAttributes) return;
@@ -39,124 +39,120 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     }
 }
 
-@end
-
-@implementation FWNavigationBarWrapper (FWBarAppearance)
-
-- (UINavigationBarAppearance *)appearance
+- (UINavigationBarAppearance *)fw_appearance
 {
-    UINavigationBarAppearance *appearance = objc_getAssociatedObject(self.base, _cmd);
+    UINavigationBarAppearance *appearance = objc_getAssociatedObject(self, _cmd);
     if (!appearance) {
         appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        objc_setAssociatedObject(self.base, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
 }
 
-- (void)updateAppearance
+- (void)fw_updateAppearance
 {
-    self.base.standardAppearance = self.appearance;
-    self.base.compactAppearance = self.appearance;
-    self.base.scrollEdgeAppearance = self.appearance;
+    self.standardAppearance = self.fw_appearance;
+    self.compactAppearance = self.fw_appearance;
+    self.scrollEdgeAppearance = self.fw_appearance;
 #if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
-        self.base.compactScrollEdgeAppearance = self.appearance;
+        self.compactScrollEdgeAppearance = self.fw_appearance;
     }
 #endif
 }
 
-- (BOOL)isTranslucent
+- (BOOL)fw_isTranslucent
 {
-    return [objc_getAssociatedObject(self.base, @selector(isTranslucent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_isTranslucent)) boolValue];
 }
 
-- (void)setIsTranslucent:(BOOL)translucent
+- (void)setFw_isTranslucent:(BOOL)translucent
 {
-    objc_setAssociatedObject(self.base, @selector(isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
         if (translucent) {
-            [self.appearance configureWithDefaultBackground];
+            [self.fw_appearance configureWithDefaultBackground];
         } else {
-            [self.appearance configureWithTransparentBackground];
+            [self.fw_appearance configureWithTransparentBackground];
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
         if (translucent) {
-            [self.base setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+            [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         } else {
-            self.base.barTintColor = nil;
+            self.barTintColor = nil;
         }
     }
 }
 
-- (UIColor *)foregroundColor
+- (UIColor *)fw_foregroundColor
 {
-    return self.base.tintColor;
+    return self.tintColor;
 }
 
-- (void)setForegroundColor:(UIColor *)color
+- (void)setFw_foregroundColor:(UIColor *)color
 {
-    self.base.tintColor = color;
-    [self updateTitleAttributes];
-    [self updateButtonAttributes];
+    self.tintColor = color;
+    [self fw_updateTitleAttributes];
+    [self fw_updateButtonAttributes];
 }
 
-- (NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+- (NSDictionary<NSAttributedStringKey,id> *)fw_titleAttributes
 {
-    return objc_getAssociatedObject(self.base, @selector(titleAttributes));
+    return objc_getAssociatedObject(self, @selector(fw_titleAttributes));
 }
 
-- (void)setTitleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
+- (void)setFw_titleAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleAttributes
 {
-    objc_setAssociatedObject(self.base, @selector(titleAttributes), titleAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateTitleAttributes];
+    objc_setAssociatedObject(self, @selector(fw_titleAttributes), titleAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updateTitleAttributes];
 }
 
-- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+- (NSDictionary<NSAttributedStringKey,id> *)fw_buttonAttributes
 {
-    return objc_getAssociatedObject(self.base, @selector(buttonAttributes));
+    return objc_getAssociatedObject(self, @selector(fw_buttonAttributes));
 }
 
-- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+- (void)setFw_buttonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
 {
-    objc_setAssociatedObject(self.base, @selector(buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateButtonAttributes];
+    objc_setAssociatedObject(self, @selector(fw_buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updateButtonAttributes];
 }
 
-- (void)updateTitleAttributes
+- (void)fw_updateTitleAttributes
 {
     if (@available(iOS 15.0, *)) {
-        NSMutableDictionary *attributes = self.appearance.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
-        attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
-        self.appearance.titleTextAttributes = [attributes copy];
+        NSMutableDictionary *attributes = self.fw_appearance.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
+        attributes[NSForegroundColorAttributeName] = self.tintColor;
+        if (self.fw_titleAttributes) [attributes addEntriesFromDictionary:self.fw_titleAttributes];
+        self.fw_appearance.titleTextAttributes = [attributes copy];
         
-        NSMutableDictionary *largeAttributes = self.appearance.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
-        largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
-        self.appearance.largeTitleTextAttributes = [largeAttributes copy];
-        [self updateAppearance];
+        NSMutableDictionary *largeAttributes = self.fw_appearance.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
+        largeAttributes[NSForegroundColorAttributeName] = self.tintColor;
+        if (self.fw_titleAttributes) [largeAttributes addEntriesFromDictionary:self.fw_titleAttributes];
+        self.fw_appearance.largeTitleTextAttributes = [largeAttributes copy];
+        [self fw_updateAppearance];
     } else {
-        NSMutableDictionary *attributes = self.base.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
-        attributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [attributes addEntriesFromDictionary:self.titleAttributes];
-        self.base.titleTextAttributes = [attributes copy];
+        NSMutableDictionary *attributes = self.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
+        attributes[NSForegroundColorAttributeName] = self.tintColor;
+        if (self.fw_titleAttributes) [attributes addEntriesFromDictionary:self.fw_titleAttributes];
+        self.titleTextAttributes = [attributes copy];
         
-        NSMutableDictionary *largeAttributes = self.base.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
-        largeAttributes[NSForegroundColorAttributeName] = self.base.tintColor;
-        if (self.titleAttributes) [largeAttributes addEntriesFromDictionary:self.titleAttributes];
-        self.base.largeTitleTextAttributes = [largeAttributes copy];
+        NSMutableDictionary *largeAttributes = self.largeTitleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
+        largeAttributes[NSForegroundColorAttributeName] = self.tintColor;
+        if (self.fw_titleAttributes) [largeAttributes addEntriesFromDictionary:self.fw_titleAttributes];
+        self.largeTitleTextAttributes = [largeAttributes copy];
     }
 }
 
-- (void)updateButtonAttributes
+- (void)fw_updateButtonAttributes
 {
     if (@available(iOS 15.0, *)) {
-        NSDictionary *buttonAttributes = self.buttonAttributes ?: fwStaticButtonAttributes;
+        NSDictionary *buttonAttributes = self.fw_buttonAttributes ?: fwStaticButtonAttributes;
         if (!buttonAttributes) return;
         
-        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, self.appearance.backButtonAppearance, nil];
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.fw_appearance.buttonAppearance, self.fw_appearance.doneButtonAppearance, self.fw_appearance.backButtonAppearance, nil];
         for (UIBarButtonItemAppearance *appearance in appearances) {
             NSArray<UIBarButtonItemStateAppearance *> *stateAppearances = [NSArray arrayWithObjects:appearance.normal, appearance.highlighted, appearance.disabled, nil];
             for (UIBarButtonItemStateAppearance *stateAppearance in stateAppearances) {
@@ -165,425 +161,425 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 stateAppearance.titleTextAttributes = [attributes copy];
             }
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     }
 }
 
-- (UIColor *)backgroundColor
+- (UIColor *)fw_backgroundColor
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundColor));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundColor));
 }
 
-- (void)setBackgroundColor:(UIColor *)color
+- (void)setFw_backgroundColor:(UIColor *)color
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        if (self.isTranslucent) {
-            self.appearance.backgroundColor = color;
-            self.appearance.backgroundImage = nil;
+        if (self.fw_isTranslucent) {
+            self.fw_appearance.backgroundColor = color;
+            self.fw_appearance.backgroundImage = nil;
         } else {
             UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = image;
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = image;
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
-        if (self.isTranslucent) {
-            self.base.barTintColor = color;
-            [self.base setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+        if (self.fw_isTranslucent) {
+            self.barTintColor = color;
+            [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         } else {
-            self.base.barTintColor = nil;
+            self.barTintColor = nil;
             UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
-            [self.base setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+            [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         }
     }
 }
 
-- (UIImage *)backgroundImage
+- (UIImage *)fw_backgroundImage
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundImage));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundImage));
 }
 
-- (void)setBackgroundImage:(UIImage *)backgroundImage
+- (void)setFw_backgroundImage:(UIImage *)backgroundImage
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    UIImage *image = backgroundImage.fw.image ?: [UIImage new];
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIImage *image = backgroundImage.fw_image ?: [UIImage new];
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        [self.base setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        self.barTintColor = nil;
+        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     }
 }
 
-- (BOOL)backgroundTransparent
+- (BOOL)fw_backgroundTransparent
 {
-    return [objc_getAssociatedObject(self.base, @selector(backgroundTransparent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_backgroundTransparent)) boolValue];
 }
 
-- (void)setBackgroundTransparent:(BOOL)transparent
+- (void)setFw_backgroundTransparent:(BOOL)transparent
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        [self.base setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        self.barTintColor = nil;
+        [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     }
 }
 
-- (UIColor *)shadowColor
+- (UIColor *)fw_shadowColor
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowColor));
+    return objc_getAssociatedObject(self, @selector(fw_shadowColor));
 }
 
-- (void)setShadowColor:(UIColor *)shadowColor
+- (void)setFw_shadowColor:(UIColor *)shadowColor
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = shadowColor;
-        self.appearance.shadowImage = nil;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = shadowColor;
+        self.fw_appearance.shadowImage = nil;
+        [self fw_updateAppearance];
     } else {
-        self.base.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
-- (UIImage *)shadowImage
+- (UIImage *)fw_shadowImage
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowImage));
+    return objc_getAssociatedObject(self, @selector(fw_shadowImage));
 }
 
-- (void)setShadowImage:(UIImage *)shadowImage
+- (void)setFw_shadowImage:(UIImage *)shadowImage
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = nil;
-        self.appearance.shadowImage = shadowImage.fw.image;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = nil;
+        self.fw_appearance.shadowImage = shadowImage.fw_image;
+        [self fw_updateAppearance];
     } else {
-        self.base.shadowImage = shadowImage.fw.image ?: [UIImage new];
+        self.shadowImage = shadowImage.fw_image ?: [UIImage new];
     }
 }
 
-- (UIImage *)backImage
+- (UIImage *)fw_backImage
 {
     if (@available(iOS 15.0, *)) {
-        return self.appearance.backIndicatorImage;
+        return self.fw_appearance.backIndicatorImage;
     } else {
-        return self.base.backIndicatorImage;
+        return self.backIndicatorImage;
     }
 }
 
-- (void)setBackImage:(UIImage *)backImage
+- (void)setFw_backImage:(UIImage *)backImage
 {
     UIImage *image = [backImage.fw imageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
     if (@available(iOS 15.0, *)) {
-        [self.appearance setBackIndicatorImage:image transitionMaskImage:image];
-        [self updateAppearance];
+        [self.fw_appearance setBackIndicatorImage:image transitionMaskImage:image];
+        [self fw_updateAppearance];
     } else {
-        self.base.backIndicatorImage = image;
-        self.base.backIndicatorTransitionMaskImage = image;
+        self.backIndicatorImage = image;
+        self.backIndicatorTransitionMaskImage = image;
     }
 }
 
-- (void)themeChanged:(FWThemeStyle)style
+- (void)fw_themeChanged:(FWThemeStyle)style
 {
-    [super themeChanged:style];
+    [super fw_themeChanged:style];
     
-    if (self.backgroundColor && self.backgroundColor.fw.isThemeColor) {
+    if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            if (self.isTranslucent) {
-                self.appearance.backgroundColor = self.backgroundColor.fw.color;
-                self.appearance.backgroundImage = nil;
+            if (self.fw_isTranslucent) {
+                self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
+                self.fw_appearance.backgroundImage = nil;
             } else {
-                UIImage *image = [UIImage.fw imageWithColor:self.backgroundColor.fw.color] ?: [UIImage new];
-                self.appearance.backgroundColor = nil;
-                self.appearance.backgroundImage = image;
+                UIImage *image = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
+                self.fw_appearance.backgroundColor = nil;
+                self.fw_appearance.backgroundImage = image;
             }
-            [self updateAppearance];
+            [self fw_updateAppearance];
         } else {
-            if (self.isTranslucent) {
-                self.base.barTintColor = self.backgroundColor.fw.color;
-                [self.base setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+            if (self.fw_isTranslucent) {
+                self.barTintColor = self.fw_backgroundColor.fw_color;
+                [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
             } else {
-                UIImage *image = [UIImage.fw imageWithColor:self.backgroundColor.fw.color] ?: [UIImage new];
-                self.base.barTintColor = nil;
-                [self.base setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+                UIImage *image = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
+                self.barTintColor = nil;
+                [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
             }
         }
     }
     
-    if (self.backgroundImage && self.backgroundImage.fw.isThemeImage) {
-        UIImage *image = self.backgroundImage.fw.image ?: [UIImage new];
+    if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
+        UIImage *image = self.fw_backgroundImage.fw_image ?: [UIImage new];
         if (@available(iOS 15.0, *)) {
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = image;
-            [self updateAppearance];
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = image;
+            [self fw_updateAppearance];
         } else {
-            self.base.barTintColor = nil;
-            [self.base setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+            self.barTintColor = nil;
+            [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         }
     }
     
-    if (self.shadowColor && self.shadowColor.fw.isThemeColor) {
+    if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = self.shadowColor.fw.color;
-            self.appearance.shadowImage = nil;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
+            self.fw_appearance.shadowImage = nil;
+            [self fw_updateAppearance];
         } else {
-            self.base.shadowImage = [UIImage.fw imageWithColor:self.shadowColor.fw.color] ?: [UIImage new];
+            self.shadowImage = [UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
-    if (self.shadowImage && self.shadowImage.fw.isThemeImage) {
+    if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = nil;
-            self.appearance.shadowImage = self.shadowImage.fw.image;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = nil;
+            self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
+            [self fw_updateAppearance];
         } else {
-            self.base.shadowImage = self.shadowImage.fw.image ?: [UIImage new];
+            self.shadowImage = self.fw_shadowImage.fw_image ?: [UIImage new];
         }
     }
 }
 
 @end
 
-#pragma mark - FWTabBarWrapper+FWBarAppearance
+#pragma mark - UITabBar+FWBarAppearance
 
-@implementation FWTabBarWrapper (FWBarAppearance)
+@implementation UITabBar (FWBarAppearance)
 
-- (UITabBarAppearance *)appearance
+- (UITabBarAppearance *)fw_appearance
 {
-    UITabBarAppearance *appearance = objc_getAssociatedObject(self.base, _cmd);
+    UITabBarAppearance *appearance = objc_getAssociatedObject(self, _cmd);
     if (!appearance) {
         appearance = [[UITabBarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        objc_setAssociatedObject(self.base, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
 }
 
-- (void)updateAppearance
+- (void)fw_updateAppearance
 {
-    self.base.standardAppearance = self.appearance;
+    self.standardAppearance = self.fw_appearance;
 #if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
-        self.base.scrollEdgeAppearance = self.appearance;
+        self.scrollEdgeAppearance = self.fw_appearance;
     }
 #endif
 }
 
-- (BOOL)isTranslucent
+- (BOOL)fw_isTranslucent
 {
-    return [objc_getAssociatedObject(self.base, @selector(isTranslucent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_isTranslucent)) boolValue];
 }
 
-- (void)setIsTranslucent:(BOOL)translucent
+- (void)setFw_isTranslucent:(BOOL)translucent
 {
-    objc_setAssociatedObject(self.base, @selector(isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
         if (translucent) {
-            [self.appearance configureWithDefaultBackground];
+            [self.fw_appearance configureWithDefaultBackground];
         } else {
-            [self.appearance configureWithTransparentBackground];
+            [self.fw_appearance configureWithTransparentBackground];
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
         if (translucent) {
-            self.base.backgroundImage = nil;
+            self.backgroundImage = nil;
         } else {
-            self.base.barTintColor = nil;
+            self.barTintColor = nil;
         }
     }
 }
 
-- (UIColor *)foregroundColor
+- (UIColor *)fw_foregroundColor
 {
-    return self.base.tintColor;
+    return self.tintColor;
 }
 
-- (void)setForegroundColor:(UIColor *)color
+- (void)setFw_foregroundColor:(UIColor *)color
 {
-    self.base.tintColor = color;
+    self.tintColor = color;
 }
 
-- (UIColor *)backgroundColor
+- (UIColor *)fw_backgroundColor
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundColor));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundColor));
 }
 
-- (void)setBackgroundColor:(UIColor *)color
+- (void)setFw_backgroundColor:(UIColor *)color
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        if (self.isTranslucent) {
-            self.appearance.backgroundColor = color;
-            self.appearance.backgroundImage = nil;
+        if (self.fw_isTranslucent) {
+            self.fw_appearance.backgroundColor = color;
+            self.fw_appearance.backgroundImage = nil;
         } else {
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:color];
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
-        if (self.isTranslucent) {
-            self.base.barTintColor = color;
-            self.base.backgroundImage = nil;
+        if (self.fw_isTranslucent) {
+            self.barTintColor = color;
+            self.backgroundImage = nil;
         } else {
-            self.base.barTintColor = nil;
-            self.base.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.barTintColor = nil;
+            self.backgroundImage = [UIImage.fw imageWithColor:color];
         }
     }
 }
 
-- (UIImage *)backgroundImage
+- (UIImage *)fw_backgroundImage
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundImage));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundImage));
 }
 
-- (void)setBackgroundImage:(UIImage *)image
+- (void)setFw_backgroundImage:(UIImage *)image
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image.fw.image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image.fw_image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        self.base.backgroundImage = image.fw.image;
+        self.barTintColor = nil;
+        self.backgroundImage = image.fw_image;
     }
 }
 
-- (BOOL)backgroundTransparent
+- (BOOL)fw_backgroundTransparent
 {
-    return [objc_getAssociatedObject(self.base, @selector(backgroundTransparent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_backgroundTransparent)) boolValue];
 }
 
-- (void)setBackgroundTransparent:(BOOL)transparent
+- (void)setFw_backgroundTransparent:(BOOL)transparent
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        self.base.backgroundImage = image;
+        self.barTintColor = nil;
+        self.backgroundImage = image;
     }
 }
 
-- (UIColor *)shadowColor
+- (UIColor *)fw_shadowColor
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowColor));
+    return objc_getAssociatedObject(self, @selector(fw_shadowColor));
 }
 
-- (void)setShadowColor:(UIColor *)shadowColor
+- (void)setFw_shadowColor:(UIColor *)shadowColor
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = shadowColor;
-        self.appearance.shadowImage = nil;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = shadowColor;
+        self.fw_appearance.shadowImage = nil;
+        [self fw_updateAppearance];
     } else {
-        self.base.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
-- (UIImage *)shadowImage
+- (UIImage *)fw_shadowImage
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowImage));
+    return objc_getAssociatedObject(self, @selector(fw_shadowImage));
 }
 
-- (void)setShadowImage:(UIImage *)image
+- (void)setFw_shadowImage:(UIImage *)image
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = nil;
-        self.appearance.shadowImage = image.fw.image;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = nil;
+        self.fw_appearance.shadowImage = image.fw_image;
+        [self fw_updateAppearance];
     } else {
-        self.base.shadowImage = image.fw.image ?: [UIImage new];
+        self.shadowImage = image.fw_image ?: [UIImage new];
     }
 }
 
-- (void)themeChanged:(FWThemeStyle)style
+- (void)fw_themeChanged:(FWThemeStyle)style
 {
-    [super themeChanged:style];
+    [super fw_themeChanged:style];
     
-    if (self.backgroundColor && self.backgroundColor.fw.isThemeColor) {
+    if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            if (self.isTranslucent) {
-                self.appearance.backgroundColor = self.backgroundColor.fw.color;
-                self.appearance.backgroundImage = nil;
+            if (self.fw_isTranslucent) {
+                self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
+                self.fw_appearance.backgroundImage = nil;
             } else {
-                self.appearance.backgroundColor = nil;
-                self.appearance.backgroundImage = [UIImage.fw imageWithColor:self.backgroundColor.fw.color];
+                self.fw_appearance.backgroundColor = nil;
+                self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
             }
-            [self updateAppearance];
+            [self fw_updateAppearance];
         } else {
-            if (self.isTranslucent) {
-                self.base.barTintColor = self.backgroundColor.fw.color;
-                self.base.backgroundImage = nil;
+            if (self.fw_isTranslucent) {
+                self.barTintColor = self.fw_backgroundColor.fw_color;
+                self.backgroundImage = nil;
             } else {
-                self.base.barTintColor = nil;
-                self.base.backgroundImage = [UIImage.fw imageWithColor:self.backgroundColor.fw.color];
+                self.barTintColor = nil;
+                self.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
             }
         }
     }
     
-    if (self.backgroundImage && self.backgroundImage.fw.isThemeImage) {
+    if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = self.backgroundImage.fw.image;
-            [self updateAppearance];
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = self.fw_backgroundImage.fw_image;
+            [self fw_updateAppearance];
         } else {
-            self.base.barTintColor = nil;
-            self.base.backgroundImage = self.backgroundImage.fw.image;
+            self.barTintColor = nil;
+            self.backgroundImage = self.fw_backgroundImage.fw_image;
         }
     }
     
-    if (self.shadowColor && self.shadowColor.fw.isThemeColor) {
+    if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = self.shadowColor.fw.color;
-            self.appearance.shadowImage = nil;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
+            self.fw_appearance.shadowImage = nil;
+            [self fw_updateAppearance];
         } else {
-            self.base.shadowImage = [UIImage.fw imageWithColor:self.shadowColor.fw.color] ?: [UIImage new];
+            self.shadowImage = [UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
-    if (self.shadowImage && self.shadowImage.fw.isThemeImage) {
+    if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = nil;
-            self.appearance.shadowImage = self.shadowImage.fw.image;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = nil;
+            self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
+            [self fw_updateAppearance];
         } else {
-            self.base.shadowImage = self.shadowImage.fw.image ?: [UIImage new];
+            self.shadowImage = self.fw_shadowImage.fw_image ?: [UIImage new];
         }
     }
 }
 
 @end
 
-#pragma mark - FWToolbarWrapper+FWBarAppearance
+#pragma mark - UIToolbar+FWBarAppearance
 
 @interface FWToolbarDelegate : NSObject <UIToolbarDelegate>
 
@@ -600,86 +596,86 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 @end
 
-@implementation FWToolbarWrapper (FWBarAppearance)
+@implementation UIToolbar (FWBarAppearance)
 
-- (UIToolbarAppearance *)appearance
+- (UIToolbarAppearance *)fw_appearance
 {
-    UIToolbarAppearance *appearance = objc_getAssociatedObject(self.base, _cmd);
+    UIToolbarAppearance *appearance = objc_getAssociatedObject(self, _cmd);
     if (!appearance) {
         appearance = [[UIToolbarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
-        objc_setAssociatedObject(self.base, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, appearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return appearance;
 }
 
-- (void)updateAppearance
+- (void)fw_updateAppearance
 {
-    self.base.standardAppearance = self.appearance;
-    self.base.compactAppearance = self.appearance;
+    self.standardAppearance = self.fw_appearance;
+    self.compactAppearance = self.fw_appearance;
 #if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
-        self.base.scrollEdgeAppearance = self.appearance;
-        self.base.compactScrollEdgeAppearance = self.appearance;
+        self.scrollEdgeAppearance = self.fw_appearance;
+        self.compactScrollEdgeAppearance = self.fw_appearance;
     }
 #endif
 }
 
-- (BOOL)isTranslucent
+- (BOOL)fw_isTranslucent
 {
-    return [objc_getAssociatedObject(self.base, @selector(isTranslucent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_isTranslucent)) boolValue];
 }
 
-- (void)setIsTranslucent:(BOOL)translucent
+- (void)setFw_isTranslucent:(BOOL)translucent
 {
-    objc_setAssociatedObject(self.base, @selector(isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
         if (translucent) {
-            [self.appearance configureWithDefaultBackground];
+            [self.fw_appearance configureWithDefaultBackground];
         } else {
-            [self.appearance configureWithTransparentBackground];
+            [self.fw_appearance configureWithTransparentBackground];
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
         if (translucent) {
-            [self.base setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         } else {
-            self.base.barTintColor = nil;
+            self.barTintColor = nil;
         }
     }
 }
 
-- (UIColor *)foregroundColor
+- (UIColor *)fw_foregroundColor
 {
-    return self.base.tintColor;
+    return self.tintColor;
 }
 
-- (void)setForegroundColor:(UIColor *)color
+- (void)setFw_foregroundColor:(UIColor *)color
 {
-    self.base.tintColor = color;
+    self.tintColor = color;
     if (@available(iOS 15.0, *)) {
-        [self updateAppearance];
+        [self fw_updateAppearance];
     }
 }
 
-- (NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+- (NSDictionary<NSAttributedStringKey,id> *)fw_buttonAttributes
 {
-    return objc_getAssociatedObject(self.base, @selector(buttonAttributes));
+    return objc_getAssociatedObject(self, @selector(fw_buttonAttributes));
 }
 
-- (void)setButtonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
+- (void)setFw_buttonAttributes:(NSDictionary<NSAttributedStringKey,id> *)buttonAttributes
 {
-    objc_setAssociatedObject(self.base, @selector(buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateButtonAttributes];
+    objc_setAssociatedObject(self, @selector(fw_buttonAttributes), buttonAttributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updateButtonAttributes];
 }
 
-- (void)updateButtonAttributes
+- (void)fw_updateButtonAttributes
 {
     if (@available(iOS 15.0, *)) {
-        NSDictionary *buttonAttributes = self.buttonAttributes;
+        NSDictionary *buttonAttributes = self.fw_buttonAttributes;
         if (!buttonAttributes) return;
         
-        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.appearance.buttonAppearance, self.appearance.doneButtonAppearance, nil];
+        NSArray<UIBarButtonItemAppearance *> *appearances = [NSArray arrayWithObjects:self.fw_appearance.buttonAppearance, self.fw_appearance.doneButtonAppearance, nil];
         for (UIBarButtonItemAppearance *appearance in appearances) {
             NSArray<UIBarButtonItemStateAppearance *> *stateAppearances = [NSArray arrayWithObjects:appearance.normal, appearance.highlighted, appearance.disabled, nil];
             for (UIBarButtonItemStateAppearance *stateAppearance in stateAppearances) {
@@ -688,190 +684,190 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 stateAppearance.titleTextAttributes = [attributes copy];
             }
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     }
 }
 
-- (UIColor *)backgroundColor
+- (UIColor *)fw_backgroundColor
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundColor));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundColor));
 }
 
-- (void)setBackgroundColor:(UIColor *)color
+- (void)setFw_backgroundColor:(UIColor *)color
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        if (self.isTranslucent) {
-            self.appearance.backgroundColor = color;
-            self.appearance.backgroundImage = nil;
+        if (self.fw_isTranslucent) {
+            self.fw_appearance.backgroundColor = color;
+            self.fw_appearance.backgroundImage = nil;
         } else {
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:color];
         }
-        [self updateAppearance];
+        [self fw_updateAppearance];
     } else {
-        if (self.isTranslucent) {
-            self.base.barTintColor = color;
-            [self.base setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        if (self.fw_isTranslucent) {
+            self.barTintColor = color;
+            [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         } else {
-            self.base.barTintColor = nil;
-            [self.base setBackgroundImage:[UIImage.fw imageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            self.barTintColor = nil;
+            [self setBackgroundImage:[UIImage.fw imageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         }
     }
 }
 
-- (UIImage *)backgroundImage
+- (UIImage *)fw_backgroundImage
 {
-    return objc_getAssociatedObject(self.base, @selector(backgroundImage));
+    return objc_getAssociatedObject(self, @selector(fw_backgroundImage));
 }
 
-- (void)setBackgroundImage:(UIImage *)image
+- (void)setFw_backgroundImage:(UIImage *)image
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image.fw.image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image.fw_image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        [self.base setBackgroundImage:image.fw.image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        self.barTintColor = nil;
+        [self setBackgroundImage:image.fw_image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     }
 }
 
-- (BOOL)backgroundTransparent
+- (BOOL)fw_backgroundTransparent
 {
-    return [objc_getAssociatedObject(self.base, @selector(backgroundTransparent)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_backgroundTransparent)) boolValue];
 }
 
-- (void)setBackgroundTransparent:(BOOL)transparent
+- (void)setFw_backgroundTransparent:(BOOL)transparent
 {
-    objc_setAssociatedObject(self.base, @selector(backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundTransparent), @(transparent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
     if (@available(iOS 15.0, *)) {
-        self.appearance.backgroundColor = nil;
-        self.appearance.backgroundImage = image;
-        [self updateAppearance];
+        self.fw_appearance.backgroundColor = nil;
+        self.fw_appearance.backgroundImage = image;
+        [self fw_updateAppearance];
     } else {
-        self.base.barTintColor = nil;
-        [self.base setBackgroundImage:image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        self.barTintColor = nil;
+        [self setBackgroundImage:image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     }
 }
 
-- (UIColor *)shadowColor
+- (UIColor *)fw_shadowColor
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowColor));
+    return objc_getAssociatedObject(self, @selector(fw_shadowColor));
 }
 
-- (void)setShadowColor:(UIColor *)shadowColor
+- (void)setFw_shadowColor:(UIColor *)shadowColor
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = shadowColor;
-        self.appearance.shadowImage = nil;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = shadowColor;
+        self.fw_appearance.shadowImage = nil;
+        [self fw_updateAppearance];
     } else {
-        [self.base setShadowImage:[UIImage.fw imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+        [self setShadowImage:[UIImage.fw imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
 
-- (UIImage *)shadowImage
+- (UIImage *)fw_shadowImage
 {
-    return objc_getAssociatedObject(self.base, @selector(shadowImage));
+    return objc_getAssociatedObject(self, @selector(fw_shadowImage));
 }
 
-- (void)setShadowImage:(UIImage *)shadowImage
+- (void)setFw_shadowImage:(UIImage *)shadowImage
 {
-    objc_setAssociatedObject(self.base, @selector(shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.base, @selector(shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (@available(iOS 15.0, *)) {
-        self.appearance.shadowColor = nil;
-        self.appearance.shadowImage = shadowImage.fw.image;
-        [self updateAppearance];
+        self.fw_appearance.shadowColor = nil;
+        self.fw_appearance.shadowImage = shadowImage.fw_image;
+        [self fw_updateAppearance];
     } else {
-        [self.base setShadowImage:shadowImage.fw.image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+        [self setShadowImage:shadowImage.fw_image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
 
-- (void)themeChanged:(FWThemeStyle)style
+- (void)fw_themeChanged:(FWThemeStyle)style
 {
-    [super themeChanged:style];
+    [super fw_themeChanged:style];
     
-    if (self.backgroundColor && self.backgroundColor.fw.isThemeColor) {
+    if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            if (self.isTranslucent) {
-                self.appearance.backgroundColor = self.backgroundColor.fw.color;
-                self.appearance.backgroundImage = nil;
+            if (self.fw_isTranslucent) {
+                self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
+                self.fw_appearance.backgroundImage = nil;
             } else {
-                self.appearance.backgroundColor = nil;
-                self.appearance.backgroundImage = [UIImage.fw imageWithColor:self.backgroundColor.fw.color];
+                self.fw_appearance.backgroundColor = nil;
+                self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
             }
-            [self updateAppearance];
+            [self fw_updateAppearance];
         } else {
-            if (self.isTranslucent) {
-                self.base.barTintColor = self.backgroundColor.fw.color;
-                [self.base setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            if (self.fw_isTranslucent) {
+                self.barTintColor = self.fw_backgroundColor.fw_color;
+                [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             } else {
-                self.base.barTintColor = nil;
-                [self.base setBackgroundImage:[UIImage.fw imageWithColor:self.backgroundColor.fw.color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+                self.barTintColor = nil;
+                [self setBackgroundImage:[UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             }
         }
     }
     
-    if (self.backgroundImage && self.backgroundImage.fw.isThemeImage) {
+    if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.backgroundColor = nil;
-            self.appearance.backgroundImage = self.backgroundImage.fw.image;
-            [self updateAppearance];
+            self.fw_appearance.backgroundColor = nil;
+            self.fw_appearance.backgroundImage = self.fw_backgroundImage.fw_image;
+            [self fw_updateAppearance];
         } else {
-            self.base.barTintColor = nil;
-            [self.base setBackgroundImage:self.backgroundImage.fw.image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            self.barTintColor = nil;
+            [self setBackgroundImage:self.fw_backgroundImage.fw_image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         }
     }
     
-    if (self.shadowColor && self.shadowColor.fw.isThemeColor) {
+    if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = self.shadowColor.fw.color;
-            self.appearance.shadowImage = nil;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
+            self.fw_appearance.shadowImage = nil;
+            [self fw_updateAppearance];
         } else {
-            [self.base setShadowImage:[UIImage.fw imageWithColor:self.shadowColor.fw.color] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+            [self setShadowImage:[UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
     
-    if (self.shadowImage && self.shadowImage.fw.isThemeImage) {
+    if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
         if (@available(iOS 15.0, *)) {
-            self.appearance.shadowColor = nil;
-            self.appearance.shadowImage = self.shadowImage.fw.image;
-            [self updateAppearance];
+            self.fw_appearance.shadowColor = nil;
+            self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
+            [self fw_updateAppearance];
         } else {
-            [self.base setShadowImage:self.shadowImage.fw.image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+            [self setShadowImage:self.fw_shadowImage.fw_image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
 }
 
-- (UIBarPosition)barPosition
+- (UIBarPosition)fw_barPosition
 {
-    return [objc_getAssociatedObject(self.base, @selector(barPosition)) integerValue];
+    return [objc_getAssociatedObject(self, @selector(fw_barPosition)) integerValue];
 }
 
-- (void)setBarPosition:(UIBarPosition)barPosition
+- (void)setFw_barPosition:(UIBarPosition)barPosition
 {
-    objc_setAssociatedObject(self.base, @selector(barPosition), @(barPosition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.toolbarDelegate.barPosition = barPosition;
+    objc_setAssociatedObject(self, @selector(fw_barPosition), @(barPosition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.fw_toolbarDelegate.barPosition = barPosition;
 }
 
-- (FWToolbarDelegate *)toolbarDelegate
+- (FWToolbarDelegate *)fw_toolbarDelegate
 {
-    FWToolbarDelegate *delegate = objc_getAssociatedObject(self.base, _cmd);
+    FWToolbarDelegate *delegate = objc_getAssociatedObject(self, _cmd);
     if (!delegate) {
         delegate = [[FWToolbarDelegate alloc] init];
-        self.base.delegate = delegate;
-        objc_setAssociatedObject(self.base, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        self.delegate = delegate;
+        objc_setAssociatedObject(self, _cmd, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return delegate;
 }

@@ -77,19 +77,19 @@ extension Wrapper where Base: UITextField {
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-    public var toolbarPreviousButton: Any {
+    public var toolbarPreviousButton: Any? {
         get { return base.__fw.toolbarPreviousButton }
         set { base.__fw.toolbarPreviousButton = newValue }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-    public var toolbarNextButton: Any {
+    public var toolbarNextButton: Any? {
         get { return base.__fw.toolbarNextButton }
         set { base.__fw.toolbarNextButton = newValue }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-    public var toolbarDoneButton: Any {
+    public var toolbarDoneButton: Any? {
         get { return base.__fw.toolbarDoneButton }
         set { base.__fw.toolbarDoneButton = newValue }
     }
@@ -209,19 +209,19 @@ extension Wrapper where Base: UITextView {
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-    public var toolbarPreviousButton: Any {
+    public var toolbarPreviousButton: Any? {
         get { return base.__fw.toolbarPreviousButton }
         set { base.__fw.toolbarPreviousButton = newValue }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-    public var toolbarNextButton: Any {
+    public var toolbarNextButton: Any? {
         get { return base.__fw.toolbarNextButton }
         set { base.__fw.toolbarNextButton = newValue }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-    public var toolbarDoneButton: Any {
+    public var toolbarDoneButton: Any? {
         get { return base.__fw.toolbarDoneButton }
         set { base.__fw.toolbarDoneButton = newValue }
     }
