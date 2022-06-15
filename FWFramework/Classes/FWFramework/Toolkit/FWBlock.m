@@ -36,13 +36,15 @@
 {
     NSTimeInterval startTime = NSDate.fw.currentTime;
     NSTimer *timer = [self commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        NSInteger countDown = seconds - (NSInteger)(NSDate.fw.currentTime - startTime);
-        if (countDown <= 0) {
-            block(0);
-            [timer invalidate];
-        } else {
-            block(countDown);
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSInteger countDown = seconds - (NSInteger)round(NSDate.fw.currentTime - startTime);
+            if (countDown <= 0) {
+                block(0);
+                [timer invalidate];
+            } else {
+                block(countDown);
+            }
+        });
     } repeats:YES];
     
     // 立即触发定时器，默认等待1秒后才执行
