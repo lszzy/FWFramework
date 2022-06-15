@@ -11,6 +11,7 @@
 #import "FWBarAppearance.h"
 #import "FWNavigation.h"
 #import "FWToolkit.h"
+#import "FWFoundation.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWTimerClassWrapper+FWBlock
@@ -33,15 +34,14 @@
 
 - (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
 {
-    __block NSInteger countdown = seconds;
+    NSTimeInterval startTime = NSDate.fw.currentTime;
     NSTimer *timer = [self commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
-        if (countdown <= 0) {
+        NSInteger countDown = seconds - (NSInteger)(NSDate.fw.currentTime - startTime);
+        if (countDown <= 0) {
             block(0);
             [timer invalidate];
         } else {
-            countdown--;
-            // 时间+1，防止倒计时显示0秒
-            block(countdown + 1);
+            block(countDown);
         }
     } repeats:YES];
     
