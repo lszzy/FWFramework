@@ -46,7 +46,7 @@ NS_SWIFT_NAME(ThemeManager)
 /// 当前主题模式，默认跟随系统模式
 @property (nonatomic, assign) FWThemeMode mode;
 
-/// iOS13切换主题模式时是否覆盖主window样式(立即生效)，默认NO(不会立即生效，需刷新界面)。如果不满足需求，可自定义处理
+/// iOS13切换主题模式时是否覆盖主window样式(立即生效)，默认NO。如果固定主题模式时颜色不正常，可尝试开启本属性
 @property (nonatomic, assign) BOOL overrideWindow;
 
 /// 当前全局主题样式

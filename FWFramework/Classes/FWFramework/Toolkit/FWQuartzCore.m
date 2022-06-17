@@ -10,34 +10,34 @@
 #import "FWTheme.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWDisplayLinkClassWrapper+FWQuartzCore
+#pragma mark - CADisplayLink+FWQuartzCore
 
-@implementation FWDisplayLinkClassWrapper (FWQuartzCore)
+@implementation CADisplayLink (FWQuartzCore)
 
-- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector
++ (CADisplayLink *)fw_commonDisplayLinkWithTarget:(id)target selector:(SEL)selector
 {
     CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:target selector:selector];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     return displayLink;
 }
 
-- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
++ (CADisplayLink *)fw_commonDisplayLinkWithBlock:(void (^)(CADisplayLink *))block
 {
-    CADisplayLink *displayLink = [self displayLinkWithBlock:block];
+    CADisplayLink *displayLink = [self fw_displayLinkWithBlock:block];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     return displayLink;
 }
 
-- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *))block
++ (CADisplayLink *)fw_displayLinkWithBlock:(void (^)(CADisplayLink *))block
 {
-    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:[self class] selector:@selector(displayLinkAction:)];
-    objc_setAssociatedObject(displayLink, @selector(displayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:[self class] selector:@selector(fw_displayLinkAction:)];
+    objc_setAssociatedObject(displayLink, @selector(fw_displayLinkWithBlock:), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     return displayLink;
 }
 
-+ (void)displayLinkAction:(CADisplayLink *)displayLink
++ (void)fw_displayLinkAction:(CADisplayLink *)displayLink
 {
-    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(displayLinkWithBlock:));
+    void (^block)(CADisplayLink *displayLink) = objc_getAssociatedObject(displayLink, @selector(fw_displayLinkWithBlock:));
     if (block) {
         block(displayLink);
     }
@@ -69,42 +69,42 @@
 
 @end
 
-@implementation FWAnimationWrapper (FWQuartzCore)
+@implementation CAAnimation (FWQuartzCore)
 
-- (FWInnerAnimationTarget *)innerAnimationTarget:(BOOL)lazyload
+- (FWInnerAnimationTarget *)fw_innerAnimationTarget:(BOOL)lazyload
 {
-    FWInnerAnimationTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    FWInnerAnimationTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target && lazyload) {
         target = [[FWInnerAnimationTarget alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
-- (void (^)(CAAnimation * _Nonnull))startBlock
+- (void (^)(CAAnimation * _Nonnull))fw_startBlock
 {
-    FWInnerAnimationTarget *target = [self innerAnimationTarget:NO];
+    FWInnerAnimationTarget *target = [self fw_innerAnimationTarget:NO];
     return target.startBlock;
 }
 
-- (void)setStartBlock:(void (^)(CAAnimation * _Nonnull))startBlock
+- (void)setFw_startBlock:(void (^)(CAAnimation * _Nonnull))startBlock
 {
-    FWInnerAnimationTarget *target = [self innerAnimationTarget:YES];
+    FWInnerAnimationTarget *target = [self fw_innerAnimationTarget:YES];
     target.startBlock = startBlock;
-    self.base.delegate = target;
+    self.delegate = target;
 }
 
-- (void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
+- (void (^)(CAAnimation * _Nonnull, BOOL))fw_stopBlock
 {
-    FWInnerAnimationTarget *target = [self innerAnimationTarget:NO];
+    FWInnerAnimationTarget *target = [self fw_innerAnimationTarget:NO];
     return target.stopBlock;
 }
 
-- (void)setStopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
+- (void)setFw_stopBlock:(void (^)(CAAnimation * _Nonnull, BOOL))stopBlock
 {
-    FWInnerAnimationTarget *target = [self innerAnimationTarget:YES];
+    FWInnerAnimationTarget *target = [self fw_innerAnimationTarget:YES];
     target.stopBlock = stopBlock;
-    self.base.delegate = target;
+    self.delegate = target;
 }
 
 @end

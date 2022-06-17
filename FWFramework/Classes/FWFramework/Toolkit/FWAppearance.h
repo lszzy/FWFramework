@@ -7,7 +7,7 @@
  @updated    2020/9/8
  */
 
-#import "FWWrapper.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,10 +28,10 @@ NS_SWIFT_NAME(Appearance)
 
 @end
 
-@interface FWObjectWrapper (FWAppearance)
+@interface NSObject (FWAppearance)
 
 /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
-- (void)applyAppearance;
+- (void)fw_applyAppearance NS_REFINED_FOR_SWIFT;
 
 @end
 
