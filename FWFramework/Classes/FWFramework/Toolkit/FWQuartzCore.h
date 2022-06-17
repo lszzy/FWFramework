@@ -7,16 +7,15 @@
  */
 
 #import <QuartzCore/QuartzCore.h>
-#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWDisplayLinkClassWrapper+FWQuartzCore
+#pragma mark - CADisplayLink+FWQuartzCore
 
 /**
  如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
  */
-@interface FWDisplayLinkClassWrapper (FWQuartzCore)
+@interface CADisplayLink (FWQuartzCore)
 
 /**
  创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -25,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param selector 方法
  @return CADisplayLink
  */
-- (CADisplayLink *)commonDisplayLinkWithTarget:(id)target selector:(SEL)selector;
++ (CADisplayLink *)fw_commonDisplayLinkWithTarget:(id)target selector:(SEL)selector NS_REFINED_FOR_SWIFT;
 
 /**
  创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -33,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 代码块
  @return CADisplayLink
  */
-- (CADisplayLink *)commonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
++ (CADisplayLink *)fw_commonDisplayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block NS_REFINED_FOR_SWIFT;
 
 /**
  创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -42,19 +41,19 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 代码块
  @return CADisplayLink
  */
-- (CADisplayLink *)displayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block;
++ (CADisplayLink *)fw_displayLinkWithBlock:(void (^)(CADisplayLink *displayLink))block NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWAnimationWrapper+FWQuartzCore
+#pragma mark - CAAnimation+FWQuartzCore
 
-@interface FWAnimationWrapper (FWQuartzCore)
+@interface CAAnimation (FWQuartzCore)
 
 /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
-@property (nonatomic, copy, nullable) void (^startBlock)(CAAnimation *animation);
+@property (nonatomic, copy, nullable) void (^fw_startBlock)(CAAnimation *animation) NS_REFINED_FOR_SWIFT;
 
 /// 设置动画停止回调
-@property (nonatomic, copy, nullable) void (^stopBlock)(CAAnimation *animation, BOOL finished);
+@property (nonatomic, copy, nullable) void (^fw_stopBlock)(CAAnimation *animation, BOOL finished) NS_REFINED_FOR_SWIFT;
 
 @end
 
