@@ -67,20 +67,20 @@
 
 @end
 
-#pragma mark - FWObjectWrapper+FWMessage
+#pragma mark - NSObject+FWMessage
 
-@implementation FWObjectWrapper (FWMessage)
+@implementation NSObject (FWMessage)
 
 #pragma mark - Observer
 
-- (NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *))block
+- (NSString *)fw_observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *))block
 {
-    return [self observeMessage:name object:nil block:block];
+    return [self fw_observeMessage:name object:nil block:block];
 }
 
-- (NSString *)observeMessage:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)fw_observeMessage:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    NSMutableDictionary *dict = [self innerMessageTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -95,14 +95,14 @@
     return messageTarget.identifier;
 }
 
-- (NSString *)observeMessage:(NSNotificationName)name target:(id)target action:(SEL)action
+- (NSString *)fw_observeMessage:(NSNotificationName)name target:(id)target action:(SEL)action
 {
-    return [self observeMessage:name object:nil target:target action:action];
+    return [self fw_observeMessage:name object:nil target:target action:action];
 }
 
-- (NSString *)observeMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)fw_observeMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
-    NSMutableDictionary *dict = [self innerMessageTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerMessageTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -118,16 +118,16 @@
     return messageTarget.identifier;
 }
 
-- (void)unobserveMessage:(NSNotificationName)name target:(id)target action:(SEL)action
+- (void)fw_unobserveMessage:(NSNotificationName)name target:(id)target action:(SEL)action
 {
-    [self unobserveMessage:name object:nil target:target action:action];
+    [self fw_unobserveMessage:name object:nil target:target action:action];
 }
 
-- (void)unobserveMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
+- (void)fw_unobserveMessage:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name) return;
     
-    NSMutableDictionary *dict = [self innerMessageTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerMessageTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[name];
@@ -151,11 +151,11 @@
     }
 }
 
-- (void)unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier
+- (void)fw_unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier
 {
     if (!name || !identifier) return;
     
-    NSMutableDictionary *dict = [self innerMessageTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerMessageTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[name];
@@ -166,74 +166,66 @@
     }];
 }
 
-- (void)unobserveMessage:(NSNotificationName)name
+- (void)fw_unobserveMessage:(NSNotificationName)name
 {
-    [self unobserveMessage:name object:nil];
+    [self fw_unobserveMessage:name object:nil];
 }
 
-- (void)unobserveMessage:(NSNotificationName)name object:(id)object
+- (void)fw_unobserveMessage:(NSNotificationName)name object:(id)object
 {
-    [self unobserveMessage:name object:object target:nil action:NULL];
+    [self fw_unobserveMessage:name object:object target:nil action:NULL];
 }
 
-- (void)unobserveAllMessages
+- (void)fw_unobserveAllMessages
 {
-    NSMutableDictionary *dict = [self innerMessageTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerMessageTargets:NO];
     if (!dict) return;
     
     [dict removeAllObjects];
 }
 
-- (NSMutableDictionary *)innerMessageTargets:(BOOL)lazyload
+- (NSMutableDictionary *)fw_innerMessageTargets:(BOOL)lazyload
 {
-    NSMutableDictionary *targets = objc_getAssociatedObject(self.base, _cmd);
+    NSMutableDictionary *targets = objc_getAssociatedObject(self, _cmd);
     if (!targets && lazyload) {
         targets = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }
 
 #pragma mark - Subject
 
-- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver
+- (void)fw_sendMessage:(NSNotificationName)name toReceiver:(id)receiver
 {
-    [NSObject.fw sendMessage:name toReceiver:receiver];
+    [NSObject fw_sendMessage:name toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
+- (void)fw_sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
 {
-    [NSObject.fw sendMessage:name object:object toReceiver:receiver];
+    [NSObject fw_sendMessage:name object:object toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
+- (void)fw_sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
 {
-    [NSObject.fw sendMessage:name object:object userInfo:userInfo toReceiver:receiver];
+    [NSObject fw_sendMessage:name object:object userInfo:userInfo toReceiver:receiver];
 }
 
-@end
-
-#pragma mark - FWClassWrapper+FWMessage
-
-@implementation FWClassWrapper (FWMessage)
-
-#pragma mark - Subject
-
-- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver
++ (void)fw_sendMessage:(NSNotificationName)name toReceiver:(id)receiver
 {
-    [self sendMessage:name object:nil toReceiver:receiver];
+    [self fw_sendMessage:name object:nil toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
++ (void)fw_sendMessage:(NSNotificationName)name object:(id)object toReceiver:(id)receiver
 {
-    [self sendMessage:name object:object userInfo:nil toReceiver:receiver];
+    [self fw_sendMessage:name object:object userInfo:nil toReceiver:receiver];
 }
 
-- (void)sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
++ (void)fw_sendMessage:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo toReceiver:(id)receiver
 {
     if (!name || !receiver) return;
     
-    NSMutableDictionary *dict = [((NSObject *)receiver).fw innerMessageTargets:NO];
+    NSMutableDictionary *dict = [((NSObject *)receiver) fw_innerMessageTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[name];
@@ -250,20 +242,20 @@
 
 @end
 
-#pragma mark - FWObjectWrapper+FWNotification
+#pragma mark - NSObject+FWNotification
 
-@implementation FWObjectWrapper (FWNotification)
+@implementation NSObject (FWNotification)
 
 #pragma mark - Observer
 
-- (NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block
+- (NSString *)fw_observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block
 {
-    return [self observeNotification:name object:nil block:block];
+    return [self fw_observeNotification:name object:nil block:block];
 }
 
-- (NSString *)observeNotification:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(id)object block:(void (^)(NSNotification *))block
 {
-    NSMutableDictionary *dict = [self innerNotificationTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -279,14 +271,14 @@
     return notificationTarget.identifier;
 }
 
-- (NSString *)observeNotification:(NSNotificationName)name target:(id)target action:(SEL)action
+- (NSString *)fw_observeNotification:(NSNotificationName)name target:(id)target action:(SEL)action
 {
-    return [self observeNotification:name object:nil target:target action:action];
+    return [self fw_observeNotification:name object:nil target:target action:action];
 }
 
-- (NSString *)observeNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
-    NSMutableDictionary *dict = [self innerNotificationTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerNotificationTargets:YES];
     NSMutableArray *arr = dict[name];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -303,16 +295,16 @@
     return notificationTarget.identifier;
 }
 
-- (void)unobserveNotification:(NSNotificationName)name target:(id)target action:(SEL)action
+- (void)fw_unobserveNotification:(NSNotificationName)name target:(id)target action:(SEL)action
 {
-    [self unobserveNotification:name object:nil target:target action:action];
+    [self fw_unobserveNotification:name object:nil target:target action:action];
 }
 
-- (void)unobserveNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
+- (void)fw_unobserveNotification:(NSNotificationName)name object:(id)object target:(id)target action:(SEL)action
 {
     if (!name) return;
     
-    NSMutableDictionary *dict = [self innerNotificationTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerNotificationTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[name];
@@ -341,11 +333,11 @@
     }
 }
 
-- (void)unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier
+- (void)fw_unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier
 {
     if (!name || !identifier) return;
     
-    NSMutableDictionary *dict = [self innerNotificationTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerNotificationTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[name];
@@ -357,19 +349,19 @@
     }];
 }
 
-- (void)unobserveNotification:(NSNotificationName)name
+- (void)fw_unobserveNotification:(NSNotificationName)name
 {
-    [self unobserveNotification:name object:nil];
+    [self fw_unobserveNotification:name object:nil];
 }
 
-- (void)unobserveNotification:(NSNotificationName)name object:(id)object
+- (void)fw_unobserveNotification:(NSNotificationName)name object:(id)object
 {
-    [self unobserveNotification:name object:object target:nil action:NULL];
+    [self fw_unobserveNotification:name object:object target:nil action:NULL];
 }
 
-- (void)unobserveAllNotifications
+- (void)fw_unobserveAllNotifications
 {
-    NSMutableDictionary *dict = [self innerNotificationTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerNotificationTargets:NO];
     if (!dict) return;
     
     [dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *arr, BOOL *stop) {
@@ -380,52 +372,44 @@
     [dict removeAllObjects];
 }
 
-- (NSMutableDictionary *)innerNotificationTargets:(BOOL)lazyload
+- (NSMutableDictionary *)fw_innerNotificationTargets:(BOOL)lazyload
 {
-    NSMutableDictionary *targets = objc_getAssociatedObject(self.base, _cmd);
+    NSMutableDictionary *targets = objc_getAssociatedObject(self, _cmd);
     if (!targets && lazyload) {
         targets = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }
 
 #pragma mark - Subject
 
-- (void)postNotification:(NSNotificationName)name
+- (void)fw_postNotification:(NSNotificationName)name
 {
-    [NSObject.fw postNotification:name];
+    [NSObject fw_postNotification:name];
 }
 
-- (void)postNotification:(NSNotificationName)name object:(id)object
+- (void)fw_postNotification:(NSNotificationName)name object:(id)object
 {
-    [NSObject.fw postNotification:name object:object];
+    [NSObject fw_postNotification:name object:object];
 }
 
-- (void)postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
+- (void)fw_postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
 {
-    [NSObject.fw postNotification:name object:object userInfo:userInfo];
+    [NSObject fw_postNotification:name object:object userInfo:userInfo];
 }
 
-@end
-
-#pragma mark - FWClassWrapper+FWNotification
-
-@implementation FWClassWrapper (FWNotification)
-
-#pragma mark - Subject
-
-- (void)postNotification:(NSNotificationName)name
++ (void)fw_postNotification:(NSNotificationName)name
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil];
 }
 
-- (void)postNotification:(NSNotificationName)name object:(id)object
++ (void)fw_postNotification:(NSNotificationName)name object:(id)object
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:object];
 }
 
-- (void)postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
++ (void)fw_postNotification:(NSNotificationName)name object:(id)object userInfo:(NSDictionary *)userInfo
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:object userInfo:userInfo];
 }
@@ -523,13 +507,13 @@
 
 @end
 
-#pragma mark - FWObjectWrapper+FWKvo
+#pragma mark - NSObject+FWKvo
 
-@implementation FWObjectWrapper (FWKvo)
+@implementation NSObject (FWKvo)
 
-- (NSString *)observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change))block
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change))block
 {
-    NSMutableDictionary *dict = [self innerKvoTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -537,7 +521,7 @@
     }
     
     FWInnerKvoTarget *kvoTarget = [[FWInnerKvoTarget alloc] init];
-    kvoTarget.object = self.base;
+    kvoTarget.object = self;
     kvoTarget.keyPath = property;
     kvoTarget.block = block;
     [arr addObject:kvoTarget];
@@ -545,9 +529,9 @@
     return kvoTarget.identifier;
 }
 
-- (NSString *)observeProperty:(NSString *)property target:(id)target action:(SEL)action
+- (NSString *)fw_observeProperty:(NSString *)property target:(id)target action:(SEL)action
 {
-    NSMutableDictionary *dict = [self innerKvoTargets:YES];
+    NSMutableDictionary *dict = [self fw_innerKvoTargets:YES];
     NSMutableArray *arr = dict[property];
     if (!arr) {
         arr = [NSMutableArray array];
@@ -555,7 +539,7 @@
     }
     
     FWInnerKvoTarget *kvoTarget = [[FWInnerKvoTarget alloc] init];
-    kvoTarget.object = self.base;
+    kvoTarget.object = self;
     kvoTarget.keyPath = property;
     kvoTarget.target = target;
     kvoTarget.action = action;
@@ -564,11 +548,11 @@
     return kvoTarget.identifier;
 }
 
-- (void)unobserveProperty:(NSString *)property target:(id)target action:(SEL)action
+- (void)fw_unobserveProperty:(NSString *)property target:(id)target action:(SEL)action
 {
     if (!property) return;
     
-    NSMutableDictionary *dict = [self innerKvoTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerKvoTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[property];
@@ -589,11 +573,11 @@
     }
 }
 
-- (void)unobserveProperty:(NSString *)property identifier:(NSString *)identifier
+- (void)fw_unobserveProperty:(NSString *)property identifier:(NSString *)identifier
 {
     if (!property || !identifier) return;
     
-    NSMutableDictionary *dict = [self innerKvoTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerKvoTargets:NO];
     if (!dict) return;
     
     NSMutableArray *arr = dict[property];
@@ -605,14 +589,14 @@
     }];
 }
 
-- (void)unobserveProperty:(NSString *)property
+- (void)fw_unobserveProperty:(NSString *)property
 {
-    [self unobserveProperty:property target:nil action:NULL];
+    [self fw_unobserveProperty:property target:nil action:NULL];
 }
 
-- (void)unobserveAllProperties
+- (void)fw_unobserveAllProperties
 {
-    NSMutableDictionary *dict = [self innerKvoTargets:NO];
+    NSMutableDictionary *dict = [self fw_innerKvoTargets:NO];
     if (!dict) return;
     
     [dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *arr, BOOL *stop) {
@@ -623,12 +607,12 @@
     [dict removeAllObjects];
 }
 
-- (NSMutableDictionary *)innerKvoTargets:(BOOL)lazyload
+- (NSMutableDictionary *)fw_innerKvoTargets:(BOOL)lazyload
 {
-    NSMutableDictionary *targets = objc_getAssociatedObject(self.base, _cmd);
+    NSMutableDictionary *targets = objc_getAssociatedObject(self, _cmd);
     if (!targets && lazyload) {
         targets = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }

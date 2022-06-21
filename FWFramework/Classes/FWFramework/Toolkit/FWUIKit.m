@@ -1327,7 +1327,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (!target && lazyload) {
         target = [[FWInnerInputTarget alloc] initWithTextInput:self.base];
         if ([self.base isKindOfClass:[UITextView class]]) {
-            [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:target action:@selector(textChangedAction)];
+            [self.base fw_observeNotification:UITextViewTextDidChangeNotification object:self.base target:target action:@selector(textChangedAction)];
         }
         objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
