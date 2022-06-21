@@ -1129,16 +1129,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
         [self.base insertSubview:label atIndex:0];
         
-        [self.base.fw observeNotification:UITextViewTextDidChangeNotification object:self.base target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self.base fw_observeNotification:UITextViewTextDidChangeNotification object:self.base target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
 
-        [self.base.fw observeProperty:@"attributedText" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
-        [self.base.fw observeProperty:@"text" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
-        [self.base.fw observeProperty:@"bounds" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base.fw observeProperty:@"frame" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base.fw observeProperty:@"textAlignment" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base.fw observeProperty:@"textContainerInset" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self.base fw_observeProperty:@"attributedText" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self.base fw_observeProperty:@"text" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self.base fw_observeProperty:@"bounds" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self.base fw_observeProperty:@"frame" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self.base fw_observeProperty:@"textAlignment" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self.base fw_observeProperty:@"textContainerInset" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
         
-        [self.base.fw observeProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
+        [self.base fw_observeProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
             if (change[NSKeyValueChangeNewKey] != nil) textView.fw.placeholderLabel.font = textView.font;
             [textView.fw.innerPlaceholderTarget setNeedsUpdatePlaceholder];
         }];
