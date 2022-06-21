@@ -230,7 +230,15 @@ static CGFloat fwStaticReferenceHeight = 812;
 
 - (UIEdgeInsets)safeAreaInsets
 {
-    return UIWindow.fw.mainWindow.safeAreaInsets;
+    static UIWindow *window = nil;
+    UIWindow *mainWindow = UIWindow.fw.mainWindow;
+    if (mainWindow) {
+        if (window) window = nil;
+    } else {
+        if (!window) window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+        mainWindow = window;
+    }
+    return mainWindow.safeAreaInsets;
 }
 
 - (CGFloat)statusBarHeight
