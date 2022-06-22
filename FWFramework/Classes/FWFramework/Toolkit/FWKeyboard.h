@@ -42,8 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
 @property (nonatomic, assign) BOOL returnResign UI_APPEARANCE_SELECTOR;
 
-/// 设置点击键盘完成按钮自动切换的下一个输入框，二选一
-@property (nullable, nonatomic, weak) UIResponder *returnResponder;
+/// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
+@property (nonatomic, assign) BOOL returnNext;
 
 /// 设置点击键盘完成按钮的事件句柄
 @property (nullable, nonatomic, copy) void (^returnBlock)(UITextField *textField);
@@ -62,11 +62,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
 @property (nonatomic, strong, nullable) id toolbarDoneButton;
 
-/// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
-@property (nullable, nonatomic, weak) UIResponder *previousResponder;
+/// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
+@property (nullable, nonatomic, copy) UIResponder * _Nullable (^previousResponder)(UITextField *textField);
 
-/// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
-@property (nullable, nonatomic, weak) UIResponder *nextResponder;
+/// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
+@property (nullable, nonatomic, copy) UIResponder * _Nullable (^nextResponder)(UITextField *textField);
+
+/// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
+@property (nonatomic, assign) NSInteger previousResponderTag;
+
+/// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
+@property (nonatomic, assign) NSInteger nextResponderTag;
+
+/// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
+- (void)goPrevious;
+
+/// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
+- (void)goNext;
 
 /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
 - (CGFloat)keyboardHeight:(NSNotification *)notification;
@@ -124,8 +136,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nonatomic, assign) BOOL returnResign UI_APPEARANCE_SELECTOR;
 
-/// 设置点击键盘完成按钮自动切换的下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-@property (nullable, nonatomic, weak) UIResponder *returnResponder;
+/// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
+@property (nonatomic, assign) BOOL returnNext;
 
 /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
 @property (nullable, nonatomic, copy) void (^returnBlock)(UITextView *textView);
@@ -147,11 +159,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
 @property (nonatomic, strong, nullable) id toolbarDoneButton;
 
-/// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
-@property (nullable, nonatomic, weak) UIResponder *previousResponder;
+/// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
+@property (nullable, nonatomic, copy) UIResponder * _Nullable (^previousResponder)(UITextView *textView);
 
-/// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
-@property (nullable, nonatomic, weak) UIResponder *nextResponder;
+/// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
+@property (nullable, nonatomic, copy) UIResponder * _Nullable (^nextResponder)(UITextView *textView);
+
+/// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
+@property (nonatomic, assign) NSInteger previousResponderTag;
+
+/// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
+@property (nonatomic, assign) NSInteger nextResponderTag;
+
+/// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
+- (void)goPrevious;
+
+/// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
+- (void)goNext;
 
 /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
 - (CGFloat)keyboardHeight:(NSNotification *)notification;
