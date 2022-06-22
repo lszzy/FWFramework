@@ -51,7 +51,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
             if (overrideWindow && self.mode != FWThemeModeSystem) {
                 style = self.mode == FWThemeModeDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
             }
-            UIWindow.fw.mainWindow.overrideUserInterfaceStyle = style;
+            UIWindow.fw_mainWindow.overrideUserInterfaceStyle = style;
         }
     }
 }

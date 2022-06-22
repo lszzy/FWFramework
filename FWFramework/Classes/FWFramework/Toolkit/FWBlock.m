@@ -467,7 +467,7 @@
         __weak UIViewController *weakController = self.base;
         self.base.navigationItem.leftBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController.fw closeViewControllerAnimated:YES];
+            [weakController fw_closeViewControllerAnimated:YES];
         }];
     }
 }
@@ -485,7 +485,7 @@
         __weak UIViewController *weakController = self.base;
         self.base.navigationItem.rightBarButtonItem = [UIBarButtonItem.fw itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController.fw closeViewControllerAnimated:YES];
+            [weakController fw_closeViewControllerAnimated:YES];
         }];
     }
 }

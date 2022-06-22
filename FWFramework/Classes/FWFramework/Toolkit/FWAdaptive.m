@@ -231,7 +231,7 @@ static CGFloat fwStaticReferenceHeight = 812;
 - (UIEdgeInsets)safeAreaInsets
 {
     static UIWindow *window = nil;
-    UIWindow *mainWindow = UIWindow.fw.mainWindow;
+    UIWindow *mainWindow = UIWindow.fw_mainWindow;
     if (mainWindow) {
         if (window) window = nil;
     } else {

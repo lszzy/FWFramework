@@ -16,88 +16,88 @@ extension Wrapper where Base: UIWindow {
     // MARK: - Public
     /// 获取最顶部的视图控制器
     public var topViewController: UIViewController? {
-        return base.__fw.topViewController
+        return base.__fw_topViewController
     }
 
     /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
     public var topNavigationController: UINavigationController? {
-        return base.__fw.topNavigationController
+        return base.__fw_topNavigationController
     }
 
     /// 获取最顶部的显示控制器
     public var topPresentedController: UIViewController? {
-        return base.__fw.topPresentedController
+        return base.__fw_topPresentedController
     }
 
     /// 使用最顶部的导航栏控制器打开控制器
     @discardableResult
     public func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
-        return base.__fw.pushViewController(viewController, animated: animated)
+        return base.__fw_push(viewController, animated: animated)
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        base.__fw.presentViewController(viewController, animated: animated, completion: completion)
+        base.__fw_present(viewController, animated: animated, completion: completion)
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
     public func open(_ viewController: UIViewController, animated: Bool = true) {
-        base.__fw.openViewController(viewController, animated: animated)
+        base.__fw_open(viewController, animated: animated)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
     public func close(animated: Bool = true) -> Bool {
-        return base.__fw.closeViewController(animated: true)
+        return base.__fw_closeViewController(animated: true)
     }
     
     // MARK: - Static
     /// 获取当前主window
     public static var main: UIWindow? {
-        return Base.__fw.mainWindow
+        return Base.__fw_main
     }
 
     /// 获取当前主场景
     @available(iOS 13.0, *)
     public static var mainScene: UIWindowScene? {
-        return Base.__fw.mainScene
+        return Base.__fw_mainScene
     }
     
     /// 获取最顶部的视图控制器
     public static var topViewController: UIViewController? {
-        return Base.__fw.topViewController
+        return Base.__fw_topViewController
     }
 
     /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
     public static var topNavigationController: UINavigationController? {
-        return Base.__fw.topNavigationController
+        return Base.__fw_topNavigationController
     }
 
     /// 获取最顶部的显示控制器
     public static var topPresentedController: UIViewController? {
-        return Base.__fw.topPresentedController
+        return Base.__fw_topPresentedController
     }
 
     /// 使用最顶部的导航栏控制器打开控制器
     @discardableResult
     public static func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
-        return Base.__fw.push(viewController, animated: animated)
+        return Base.__fw_push(viewController, animated: animated)
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public static func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        Base.__fw.present(viewController, animated: animated, completion: completion)
+        Base.__fw_present(viewController, animated: animated, completion: completion)
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
     public static func open(_ viewController: UIViewController, animated: Bool = true) {
-        Base.__fw.open(viewController, animated: animated)
+        Base.__fw_open(viewController, animated: animated)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
     public static func close(animated: Bool = true) -> Bool {
-        return Base.__fw.closeViewController(animated: true)
+        return Base.__fw_closeViewController(animated: true)
     }
     
 }
@@ -107,20 +107,20 @@ extension Wrapper where Base: UIViewController {
     
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
     public func open(_ viewController: UIViewController, animated: Bool = true) {
-        base.__fw.open(viewController, animated: animated)
+        base.__fw_open(viewController, animated: animated)
     }
 
     /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
     @discardableResult
     public func close(animated: Bool = true) -> Bool {
-        return base.__fw.closeViewController(animated: true)
+        return base.__fw_close(animated: true)
     }
     
     // MARK: - Workflow
     /// 自定义工作流名称，支持二级("."分隔)；默认返回小写类名(去掉ViewController、Controller)
     public var workflowName: String {
-        get { return base.__fw.workflowName }
-        set { base.__fw.workflowName = newValue }
+        get { return base.__fw_workflowName }
+        set { base.__fw_workflowName = newValue }
     }
     
 }
@@ -131,42 +131,42 @@ extension Wrapper where Base: UINavigationController {
     // MARK: - Workflow
     /// 当前最外层工作流名称，即topViewController的工作流名称
     public var topWorkflowName: String? {
-        return base.__fw.topWorkflowName
+        return base.__fw_topWorkflowName
     }
     
     /// push控制器，并清理最外层工作流（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
     public func push(_ viewController: UIViewController, popTopWorkflowAnimated: Bool) {
-        base.__fw.push(viewController, popTopWorkflowAnimated: popTopWorkflowAnimated)
+        base.__fw_pushViewController(viewController, popTopWorkflowAnimated: popTopWorkflowAnimated)
     }
 
     /// push控制器，并清理非根控制器（只保留根控制器）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
     public func push(_ viewController: UIViewController, popToRootWorkflowAnimated: Bool) {
-        base.__fw.push(viewController, popToRootWorkflowAnimated: popToRootWorkflowAnimated)
+        base.__fw_pushViewController(viewController, popToRootWorkflowAnimated: popToRootWorkflowAnimated)
     }
 
     /// push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
     public func push(_ viewController: UIViewController, popWorkflows: [String]?, animated: Bool = true) {
-        base.__fw.push(viewController, popWorkflows: popWorkflows, animated: animated)
+        base.__fw_pushViewController(viewController, popWorkflows: popWorkflows, animated: animated)
     }
 
     /// pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
     public func popTopWorkflow(animated: Bool = true) {
-        base.__fw.popTopWorkflow(animated: animated)
+        base.__fw_popTopWorkflow(animated: animated)
     }
 
     /// pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
     public func popWorkflows(_ workflows: [String]?, animated: Bool = true) {
-        base.__fw.popWorkflows(workflows, animated: animated)
+        base.__fw_popWorkflows(workflows, animated: animated)
     }
     
 }
