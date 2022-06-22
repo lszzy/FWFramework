@@ -11,34 +11,42 @@
 #import "FWSwizzle.h"
 #import <CommonCrypto/CommonDigest.h>
 
-#pragma mark - FWStringWrapper+FWEncode
+#pragma mark - NSString+FWEncode
 
-@implementation FWStringWrapper (FWEncode)
+@implementation NSString (FWEncode)
 
 #pragma mark - Json
 
-- (id)jsonDecode
++ (NSString *)fw_jsonEncode:(id)object
 {
-    NSData *data = [self.base dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [NSData fw_jsonEncode:object];
     if (!data) return nil;
     
-    return [data.fw jsonDecode];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+- (id)fw_jsonDecode
+{
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    if (!data) return nil;
+    
+    return [data fw_jsonDecode];
 }
 
 #pragma mark - Base64
 
-- (NSString *)base64Encode
+- (NSString *)fw_base64Encode
 {
-    NSData *data = [self.base dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     if (!data) return nil;
     
     data = [data base64EncodedDataWithOptions:0];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)base64Decode
+- (NSString *)fw_base64Decode
 {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
     if (!data) return nil;
     
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -46,12 +54,12 @@
 
 #pragma mark - Unicode
 
-- (NSUInteger)unicodeLength
+- (NSUInteger)fw_unicodeLength
 {
     NSUInteger strLength = 0;
 
-    for (int i = 0; i < self.base.length; i++) {
-        if ([self.base characterAtIndex:i] > 0xff) {
+    for (int i = 0; i < self.length; i++) {
+        if ([self characterAtIndex:i] > 0xff) {
             strLength += 2;
         } else {
             strLength ++;
@@ -61,59 +69,59 @@
     return ceil(strLength / 2.0);
 }
 
-- (NSString *)unicodeSubstring:(NSUInteger)length
+- (NSString *)fw_unicodeSubstring:(NSUInteger)length
 {
     length = length * 2;
     
     int i = 0;
     int len = 0;
-    while (i < self.base.length) {
-        if ([self.base characterAtIndex:i] > 0xff) {
+    while (i < self.length) {
+        if ([self characterAtIndex:i] > 0xff) {
             len += 2;
         } else {
             len++;
         }
         
         i++;
-        if (i >= self.base.length) {
-            return self.base;
+        if (i >= self.length) {
+            return self;
         }
         
         if (len == length) {
-            return [self.base substringToIndex:i];
+            return [self substringToIndex:i];
         } else if (len > length) {
             if (i - 1 <= 0) {
                 return @"";
             }
             
-            return [self.base substringToIndex:i - 1];
+            return [self substringToIndex:i - 1];
         }
     }
     
-    return self.base;
+    return self;
 }
 
-- (NSString *)unicodeEncode
+- (NSString *)fw_unicodeEncode
 {
-    NSUInteger length = [self.base length];
+    NSUInteger length = [self length];
     NSMutableString *retStr = [NSMutableString stringWithCapacity:0];
     for (int i = 0; i < length; i++) {
-        unichar character = [self.base characterAtIndex:i];
+        unichar character = [self characterAtIndex:i];
         // 判断是否为英文或数字
         if ((character <= '9' && character >= '0') ||
             (character >= 'a' && character <= 'z') ||
             (character >= 'A' && character <= 'Z')) {
-            [retStr appendFormat:@"%@", [self.base substringWithRange:NSMakeRange(i, 1)]];
+            [retStr appendFormat:@"%@", [self substringWithRange:NSMakeRange(i, 1)]];
         } else {
-            [retStr appendFormat:@"\\u%.4x", [self.base characterAtIndex:i]];
+            [retStr appendFormat:@"\\u%.4x", [self characterAtIndex:i]];
         }
     }
     return [NSString stringWithString:retStr];
 }
 
-- (NSString *)unicodeDecode
+- (NSString *)fw_unicodeDecode
 {
-    NSString *tempStr = [self.base stringByReplacingOccurrencesOfString:@"\\u" withString:@"\\U"];
+    NSString *tempStr = [self stringByReplacingOccurrencesOfString:@"\\u" withString:@"\\U"];
     tempStr = [tempStr stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     tempStr = [[@"\"" stringByAppendingString:tempStr] stringByAppendingString:@"\""];
     NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -125,33 +133,47 @@
 
 #pragma mark - Url
 
-- (NSString *)urlEncodeComponent
+- (NSString *)fw_urlEncodeComponent
 {
-    return [self.base stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
 }
 
-- (NSString *)urlDecodeComponent
+- (NSString *)fw_urlDecodeComponent
 {
-    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self.base, CFSTR("")));
+    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
 }
 
-- (NSString *)urlEncode
+- (NSString *)fw_urlEncode
 {
-    return [self.base stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
 
-- (NSString *)urlDecode
+- (NSString *)fw_urlDecode
 {
-    return [self.base stringByRemovingPercentEncoding];
+    return [self stringByRemovingPercentEncoding];
 }
 
 #pragma mark - Query
 
-- (NSDictionary<NSString *,NSString *> *)queryDecode
++ (NSString *)fw_queryEncode:(NSDictionary<NSString *,id> *)dictionary
+{
+    NSMutableString *string = [NSMutableString string];
+    for (NSString *key in [dictionary allKeys]) {
+        if ([string length]) {
+            [string appendString:@"&"];
+        }
+        NSString *value = [[dictionary objectForKey:key] description];
+        value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
+        [string appendFormat:@"%@=%@", key, value];
+    }
+    return [NSString stringWithString:string];
+}
+
+- (NSDictionary<NSString *,NSString *> *)fw_queryDecode
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSURL *url = [NSURL.fw urlWithString:self.base];
-    NSString *queryString = url.scheme.length > 0 ? url.query : self.base;
+    NSURL *url = [NSURL fw_urlWithString:self];
+    NSString *queryString = url.scheme.length > 0 ? url.query : self;
     NSArray *parameters = [queryString componentsSeparatedByString:@"&"];
     for (NSString *parameter in parameters) {
         NSArray<NSString *> *contents = [parameter componentsSeparatedByString:@"="];
@@ -166,9 +188,9 @@
 
 #pragma mark - Md5
 
-- (NSString *)md5Encode
+- (NSString *)fw_md5Encode
 {
-    const char *cStr = [self.base UTF8String];
+    const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
     
@@ -179,9 +201,9 @@
     return [NSString stringWithString:output];
 }
 
-- (NSString *)md5EncodeFile
+- (NSString *)fw_md5EncodeFile
 {
-    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self.base];
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self];
     if (!handle) return nil;
     
     CC_MD5_CTX md5;
@@ -211,35 +233,35 @@
 
 #pragma mark - Helper
 
-- (NSString *)trimString
+- (NSString *)fw_trimString
 {
-    return [self.base stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-- (NSString *)ucfirstString
+- (NSString *)fw_ucfirstString
 {
-    if (self.base.length == 0) return self.base;
+    if (self.length == 0) return self;
     NSMutableString *string = [NSMutableString string];
-    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].uppercaseString];
-    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
+    [string appendString:[NSString stringWithFormat:@"%c", [self characterAtIndex:0]].uppercaseString];
+    if (self.length >= 2) [string appendString:[self substringFromIndex:1]];
     return string;
 }
 
-- (NSString *)lcfirstString
+- (NSString *)fw_lcfirstString
 {
-    if (self.base.length == 0) return self.base;
+    if (self.length == 0) return self;
     NSMutableString *string = [NSMutableString string];
-    [string appendString:[NSString stringWithFormat:@"%c", [self.base characterAtIndex:0]].lowercaseString];
-    if (self.base.length >= 2) [string appendString:[self.base substringFromIndex:1]];
+    [string appendString:[NSString stringWithFormat:@"%c", [self characterAtIndex:0]].lowercaseString];
+    if (self.length >= 2) [string appendString:[self substringFromIndex:1]];
     return string;
 }
 
-- (NSString *)underlineString
+- (NSString *)fw_underlineString
 {
-    if (self.base.length == 0) return self.base;
+    if (self.length == 0) return self;
     NSMutableString *string = [NSMutableString string];
-    for (NSUInteger i = 0; i < self.base.length; i++) {
-        unichar c = [self.base characterAtIndex:i];
+    for (NSUInteger i = 0; i < self.length; i++) {
+        unichar c = [self characterAtIndex:i];
         NSString *cString = [NSString stringWithFormat:@"%c", c];
         NSString *cStringLower = [cString lowercaseString];
         if ([cString isEqualToString:cStringLower]) {
@@ -252,11 +274,11 @@
     return string;
 }
 
-- (NSString *)camelString
+- (NSString *)fw_camelString
 {
-    if (self.base.length == 0) return self.base;
+    if (self.length == 0) return self;
     NSMutableString *string = [NSMutableString string];
-    NSArray *cmps = [self.base componentsSeparatedByString:@"_"];
+    NSArray *cmps = [self componentsSeparatedByString:@"_"];
     for (NSUInteger i = 0; i < cmps.count; i++) {
         NSString *cmp = cmps[i];
         if (i && cmp.length) {
@@ -269,17 +291,17 @@
     return string;
 }
 
-- (NSData *)utf8Data
+- (NSData *)fw_utf8Data
 {
-    return [self.base dataUsingEncoding:NSUTF8StringEncoding];
+    return [self dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSURL *)url
+- (NSURL *)fw_url
 {
-    return [NSURL.fw urlWithString:self.base];
+    return [NSURL fw_urlWithString:self];
 }
 
-- (NSNumber *)number
+- (NSNumber *)fw_number
 {
     static NSCharacterSet *dot;
     static NSDictionary *dic;
@@ -312,27 +334,27 @@
                 @"<null>" : (id)kCFNull};
     });
     
-    NSNumber *num = dic[self.base];
+    NSNumber *num = dic[self];
     if (num != nil) {
         if (num == (id)kCFNull) return nil;
         return num;
     }
-    if ([self.base rangeOfCharacterFromSet:dot].location != NSNotFound) {
-        const char *cstring = self.base.UTF8String;
+    if ([self rangeOfCharacterFromSet:dot].location != NSNotFound) {
+        const char *cstring = self.UTF8String;
         if (!cstring) return nil;
         double cnum = atof(cstring);
         if (isnan(cnum) || isinf(cnum)) return nil;
         return @(cnum);
     } else {
-        const char *cstring = self.base.UTF8String;
+        const char *cstring = self.UTF8String;
         if (!cstring) return nil;
         return @(atoll(cstring));
     }
 }
 
-- (NSString *)escapeJson
+- (NSString *)fw_escapeJson
 {
-    NSString *string = self.base;
+    NSString *string = self;
     NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?" options:NSRegularExpressionCaseInsensitive error:nil];
     NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
     int count = (int)matches.count;
@@ -350,53 +372,27 @@
 
 @end
 
-#pragma mark - FWStringClassWrapper+FWEncode
+#pragma mark - NSData+FWEncode
 
-@implementation FWStringClassWrapper (FWEncode)
-
-#pragma mark - Json
-
-- (NSString *)jsonEncode:(id)object
-{
-    NSData *data = [NSData.fw jsonEncode:object];
-    if (!data) return nil;
-    
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-}
-
-#pragma mark - Query
-
-- (NSString *)queryEncode:(NSDictionary<NSString *,id> *)dictionary
-{
-    NSMutableString *string = [NSMutableString string];
-    for (NSString *key in [dictionary allKeys]) {
-        if ([string length]) {
-            [string appendString:@"&"];
-        }
-        NSString *value = [[dictionary objectForKey:key] description];
-        value = [value stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"] invertedSet]];
-        [string appendFormat:@"%@=%@", key, value];
-    }
-    return [NSString stringWithString:string];
-}
-
-@end
-
-#pragma mark - FWDataWrapper+FWEncode
-
-@implementation FWDataWrapper (FWEncode)
+@implementation NSData (FWEncode)
 
 #pragma mark - Json
 
-- (id)jsonDecode
++ (NSData *)fw_jsonEncode:(id)object
+{
+    if (!object || ![NSJSONSerialization isValidJSONObject:object]) return nil;
+    return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
+}
+
+- (id)fw_jsonDecode
 {
     NSError *error = nil;
-    id obj = [NSJSONSerialization JSONObjectWithData:self.base options:NSJSONReadingAllowFragments error:&error];
+    id obj = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:&error];
     if (!error || error.code != 3840) return obj;
     
-    NSString *string = [[NSString alloc] initWithData:self.base encoding:NSUTF8StringEncoding];
-    NSData *data = [[string.fw escapeJson] dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data || data.length == self.base.length) return nil;
+    NSString *string = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+    NSData *data = [[string fw_escapeJson] dataUsingEncoding:NSUTF8StringEncoding];
+    if (!data || data.length == self.length) return nil;
     
     obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
     return obj;
@@ -404,47 +400,33 @@
 
 #pragma mark - Base64
 
-- (NSData *)base64Encode
+- (NSData *)fw_base64Encode
 {
-    return [self.base base64EncodedDataWithOptions:0];
+    return [self base64EncodedDataWithOptions:0];
 }
 
-- (NSData *)base64Decode
+- (NSData *)fw_base64Decode
 {
-    return [[NSData alloc] initWithBase64EncodedData:self.base options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 #pragma mark - Helper
 
-- (NSString *)utf8String
+- (NSString *)fw_utf8String
 {
-    return [[NSString alloc] initWithData:self.base encoding:NSUTF8StringEncoding];
+    return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
 @end
 
-#pragma mark - FWDataClassWrapper+FWEncode
+#pragma mark - NSURL+FWEncode
 
-@implementation FWDataClassWrapper (FWEncode)
+@implementation NSURL (FWEncode)
 
-#pragma mark - Json
-
-- (NSData *)jsonEncode:(id)object
-{
-    if (!object || ![NSJSONSerialization isValidJSONObject:object]) return nil;
-    return [NSJSONSerialization dataWithJSONObject:object options:0 error:NULL];
-}
-
-@end
-
-#pragma mark - FWURLWrapper+FWEncode
-
-@implementation FWURLWrapper (FWEncode)
-
-- (NSDictionary<NSString *,NSString *> *)queryDictionary
+- (NSDictionary<NSString *,NSString *> *)fw_queryDictionary
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    NSString *urlString = self.base.absoluteString ?: @"";
+    NSString *urlString = self.absoluteString ?: @"";
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
     if (!urlComponents) {
         urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -457,9 +439,9 @@
     return [dict copy];
 }
 
-- (NSString *)pathURI
+- (NSString *)fw_pathURI
 {
-    NSString *URLString = self.base.absoluteString ?: @"";
+    NSString *URLString = self.absoluteString ?: @"";
     NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
     if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
         return [URLString substringFromIndex:urlComponents.rangeOfPath.location];
@@ -467,13 +449,7 @@
     return nil;
 }
 
-@end
-
-#pragma mark - FWURLClassWrapper+FWEncode
-
-@implementation FWURLClassWrapper (FWEncode)
-
-- (NSURL *)urlWithString:(NSString *)string
++ (NSURL *)fw_urlWithString:(NSString *)string
 {
     if (!string) return nil;
     
@@ -486,7 +462,7 @@
     return url;
 }
 
-- (NSURL *)urlWithString:(NSString *)string relativeTo:(NSURL *)baseURL
++ (NSURL *)fw_urlWithString:(NSString *)string relativeTo:(NSURL *)baseURL
 {
     if (!string) return nil;
     
@@ -505,7 +481,7 @@
 NSNumber * FWSafeNumber(id value) {
     if (!value) return @(0);
     if ([value isKindOfClass:[NSNumber class]]) return value;
-    NSNumber *num = FWSafeString(value).fw.number;
+    NSNumber *num = FWSafeString(value).fw_number;
     return num ?: @(0);
 }
 
@@ -519,138 +495,138 @@ NSString * FWSafeString(id value) {
 NSURL * FWSafeURL(id value) {
     if (!value) return [NSURL new];
     if ([value isKindOfClass:[NSURL class]]) return value;
-    return [NSURL.fw urlWithString:FWSafeString(value)] ?: [NSURL new];
+    return [NSURL fw_urlWithString:FWSafeString(value)] ?: [NSURL new];
 }
 
-#pragma mark - FWObjectWrapper+FWSafeType
+#pragma mark - NSObject+FWSafeType
 
-@implementation FWObjectWrapper (FWSafeType)
+@implementation NSObject (FWSafeType)
 
-- (BOOL)isNotNull
+- (BOOL)fw_isNotNull
 {
-    return !(self.base == nil ||
-             [self.base isKindOfClass:[NSNull class]]);
+    return !(self == nil ||
+             [self isKindOfClass:[NSNull class]]);
 }
 
-- (BOOL)isNotEmpty
+- (BOOL)fw_isNotEmpty
 {
-    return !(self.base == nil ||
-             [self.base isKindOfClass:[NSNull class]] ||
-             ([self.base respondsToSelector:@selector(length)] && [(NSData *)self.base length] == 0) ||
-             ([self.base respondsToSelector:@selector(count)] && [(NSArray *)self.base count] == 0));
+    return !(self == nil ||
+             [self isKindOfClass:[NSNull class]] ||
+             ([self respondsToSelector:@selector(length)] && [(NSData *)self length] == 0) ||
+             ([self respondsToSelector:@selector(count)] && [(NSArray *)self count] == 0));
 }
 
-- (NSInteger)safeInteger
+- (NSInteger)fw_safeInteger
 {
-    return [[self safeNumber] integerValue];
+    return [[self fw_safeNumber] integerValue];
 }
 
-- (float)safeFloat
+- (float)fw_safeFloat
 {
-    return [[self safeNumber] floatValue];
+    return [[self fw_safeNumber] floatValue];
 }
 
-- (double)safeDouble
+- (double)fw_safeDouble
 {
-    return [[self safeNumber] doubleValue];
+    return [[self fw_safeNumber] doubleValue];
 }
 
-- (BOOL)safeBool
+- (BOOL)fw_safeBool
 {
-    return [[self safeNumber] boolValue];
+    return [[self fw_safeNumber] boolValue];
 }
 
-- (NSNumber *)safeNumber
+- (NSNumber *)fw_safeNumber
 {
-    if ([self.base isKindOfClass:[NSNumber class]]) {
-        return (NSNumber *)self.base;
-    } else if ([self.base isKindOfClass:[NSString class]]) {
-        return [((NSString *)self.base).fw number] ?: @(0);
-    } else if ([self.base isKindOfClass:[NSDate class]]) {
-        return [NSNumber numberWithDouble:[(NSDate *)self.base timeIntervalSince1970]];
+    if ([self isKindOfClass:[NSNumber class]]) {
+        return (NSNumber *)self;
+    } else if ([self isKindOfClass:[NSString class]]) {
+        return [((NSString *)self) fw_number] ?: @(0);
+    } else if ([self isKindOfClass:[NSDate class]]) {
+        return [NSNumber numberWithDouble:[(NSDate *)self timeIntervalSince1970]];
     } else {
         return @(0);
     }
 }
 
-- (NSString *)safeString
+- (NSString *)fw_safeString
 {
-    if ([self.base isKindOfClass:[NSNull class]]) {
+    if ([self isKindOfClass:[NSNull class]]) {
         return @"";
-    } else if ([self.base isKindOfClass:[NSString class]]) {
-        return (NSString *)self.base;
-    } else if ([self.base isKindOfClass:[NSDate class]]) {
+    } else if ([self isKindOfClass:[NSString class]]) {
+        return (NSString *)self;
+    } else if ([self isKindOfClass:[NSDate class]]) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        return [formatter stringFromDate:(NSDate *)self.base];
-    } else if ([self.base isKindOfClass:[NSData class]]) {
-        return [[NSString alloc] initWithData:(NSData *)self.base encoding:NSUTF8StringEncoding] ?: @"";
+        return [formatter stringFromDate:(NSDate *)self];
+    } else if ([self isKindOfClass:[NSData class]]) {
+        return [[NSString alloc] initWithData:(NSData *)self encoding:NSUTF8StringEncoding] ?: @"";
     } else {
-        return [NSString stringWithFormat:@"%@", self.base];
+        return [NSString stringWithFormat:@"%@", self];
     }
 }
 
-- (NSDate *)safeDate
+- (NSDate *)fw_safeDate
 {
-    if ([self.base isKindOfClass:[NSDate class]]) {
-        return (NSDate *)self.base;
-    } else if ([self.base isKindOfClass:[NSString class]]) {
+    if ([self isKindOfClass:[NSDate class]]) {
+        return (NSDate *)self;
+    } else if ([self isKindOfClass:[NSString class]]) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        return [formatter dateFromString:(NSString *)self.base] ?: [NSDate date];
-    } else if ([self.base isKindOfClass:[NSNumber class]]) {
-        return [NSDate dateWithTimeIntervalSince1970:[(NSNumber *)self.base doubleValue]];
+        return [formatter dateFromString:(NSString *)self] ?: [NSDate date];
+    } else if ([self isKindOfClass:[NSNumber class]]) {
+        return [NSDate dateWithTimeIntervalSince1970:[(NSNumber *)self doubleValue]];
     } else {
         return [NSDate date];
     }
 }
 
-- (NSData *)safeData
+- (NSData *)fw_safeData
 {
-    if ([self.base isKindOfClass:[NSString class]]) {
-        return [(NSString *)self.base dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData new];
-    } else if ([self.base isKindOfClass:[NSData class]]) {
-        return (NSData *)self.base;
+    if ([self isKindOfClass:[NSString class]]) {
+        return [(NSString *)self dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData new];
+    } else if ([self isKindOfClass:[NSData class]]) {
+        return (NSData *)self;
     } else {
         return [NSData new];
     }
 }
 
-- (NSArray *)safeArray
+- (NSArray *)fw_safeArray
 {
-    if ([self.base isKindOfClass:[NSArray class]]) {
-        return (NSArray *)self.base;
+    if ([self isKindOfClass:[NSArray class]]) {
+        return (NSArray *)self;
     } else {
         return @[];
     }
 }
 
-- (NSMutableArray *)safeMutableArray
+- (NSMutableArray *)fw_safeMutableArray
 {
-    if ([self.base isKindOfClass:[NSMutableArray class]]) {
-        return (NSMutableArray *)self.base;
-    } else if ([self.base isKindOfClass:[NSArray class]]) {
-        return [NSMutableArray arrayWithArray:(NSArray *)self.base];
+    if ([self isKindOfClass:[NSMutableArray class]]) {
+        return (NSMutableArray *)self;
+    } else if ([self isKindOfClass:[NSArray class]]) {
+        return [NSMutableArray arrayWithArray:(NSArray *)self];
     } else {
         return [NSMutableArray array];
     }
 }
 
-- (NSDictionary *)safeDictionary
+- (NSDictionary *)fw_safeDictionary
 {
-    if ([self.base isKindOfClass:[NSDictionary class]]) {
-        return (NSDictionary *)self.base;
+    if ([self isKindOfClass:[NSDictionary class]]) {
+        return (NSDictionary *)self;
     } else {
         return @{};
     }
 }
 
-- (NSMutableDictionary *)safeMutableDictionary
+- (NSMutableDictionary *)fw_safeMutableDictionary
 {
-    if ([self.base isKindOfClass:[NSMutableDictionary class]]) {
-        return (NSMutableDictionary *)self.base;
-    } else if ([self.base isKindOfClass:[NSDictionary class]]) {
-        return [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)self.base];
+    if ([self isKindOfClass:[NSMutableDictionary class]]) {
+        return (NSMutableDictionary *)self;
+    } else if ([self isKindOfClass:[NSDictionary class]]) {
+        return [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)self];
     } else {
         return [NSMutableDictionary dictionary];
     }
@@ -658,156 +634,156 @@ NSURL * FWSafeURL(id value) {
 
 @end
 
-#pragma mark - FWStringWrapper+FWSafeType
+#pragma mark - NSString+FWSafeType
 
-@implementation FWStringWrapper (FWSafeType)
+@implementation NSString (FWSafeType)
 
-- (NSString *)substringFromIndex:(NSInteger)from
+- (NSString *)fw_substringFromIndex:(NSInteger)from
 {
     if (from < 0) return nil;
-    if (from > self.base.length) return nil;
-    return [self.base substringFromIndex:from];
+    if (from > self.length) return nil;
+    return [self substringFromIndex:from];
 }
 
-- (NSString *)substringToIndex:(NSInteger)to
+- (NSString *)fw_substringToIndex:(NSInteger)to
 {
     if (to < 0) return nil;
-    if (to > self.base.length) return nil;
-    return [self.base substringToIndex:to];
+    if (to > self.length) return nil;
+    return [self substringToIndex:to];
 }
 
-- (NSString *)substringWithRange:(NSRange)range
+- (NSString *)fw_substringWithRange:(NSRange)range
 {
-    if (range.location > self.base.length) return nil;
-    if (range.length > self.base.length) return nil;
-    if (range.location + range.length > self.base.length) return nil;
-    return [self.base substringWithRange:range];
+    if (range.location > self.length) return nil;
+    if (range.length > self.length) return nil;
+    if (range.location + range.length > self.length) return nil;
+    return [self substringWithRange:range];
 }
 
 @end
 
-#pragma mark - FWArrayWrapper+FWSafeType
+#pragma mark - NSArray+FWSafeType
 
-@implementation FWArrayWrapper (FWSafeType)
+@implementation NSArray (FWSafeType)
 
-- (id)objectAtIndex:(NSInteger)index
+- (id)fw_objectAtIndex:(NSInteger)index
 {
     if (index < 0) return nil;
-    if (index >= self.base.count) return nil;
-    return [self.base objectAtIndex:index];
+    if (index >= self.count) return nil;
+    return [self objectAtIndex:index];
 }
 
-- (NSArray *)subarrayWithRange:(NSRange)range
+- (NSArray *)fw_subarrayWithRange:(NSRange)range
 {
-    if (range.location > self.base.count) return nil;
-    if (range.length > self.base.count) return nil;
-    if (range.location + range.length > self.base.count) return nil;
-    return [self.base subarrayWithRange:range];
+    if (range.location > self.count) return nil;
+    if (range.length > self.count) return nil;
+    if (range.location + range.length > self.count) return nil;
+    return [self subarrayWithRange:range];
 }
 
 @end
 
-#pragma mark - FWMutableArrayWrapper+FWSafeType
+#pragma mark - NSMutableArray+FWSafeType
 
-@implementation FWMutableArrayWrapper (FWSafeType)
+@implementation NSMutableArray (FWSafeType)
 
-- (void)addObject:(id)object
+- (void)fw_addObject:(id)object
 {
     if (object == nil) return;
-    [self.base addObject:object];
+    [self addObject:object];
 }
 
-- (void)removeObjectAtIndex:(NSInteger)index
+- (void)fw_removeObjectAtIndex:(NSInteger)index
 {
     if (index < 0) return;
-    if (index >= self.base.count) return;
-    [self.base removeObjectAtIndex:index];
+    if (index >= self.count) return;
+    [self removeObjectAtIndex:index];
 }
 
-- (void)insertObject:(id)object atIndex:(NSInteger)index
-{
-    if (object == nil) return;
-    if (index < 0) return;
-    if (index > self.base.count) return;
-    [self.base insertObject:object atIndex:index];
-}
-
-- (void)replaceObjectAtIndex:(NSInteger)index withObject:(id)object
+- (void)fw_insertObject:(id)object atIndex:(NSInteger)index
 {
     if (object == nil) return;
     if (index < 0) return;
-    if (index >= self.base.count) return;
-    [self.base replaceObjectAtIndex:index withObject:object];
+    if (index > self.count) return;
+    [self insertObject:object atIndex:index];
 }
 
-- (void)removeObjectsInRange:(NSRange)range
+- (void)fw_replaceObjectAtIndex:(NSInteger)index withObject:(id)object
 {
-    if (range.location > self.base.count) return;
-    if (range.length > self.base.count) return;
-    if (range.location + range.length > self.base.count) return;
-    [self.base removeObjectsInRange:range];
+    if (object == nil) return;
+    if (index < 0) return;
+    if (index >= self.count) return;
+    [self replaceObjectAtIndex:index withObject:object];
 }
 
-- (void)insertObjects:(NSArray *)objects atIndex:(NSInteger)index
+- (void)fw_removeObjectsInRange:(NSRange)range
+{
+    if (range.location > self.count) return;
+    if (range.length > self.count) return;
+    if (range.location + range.length > self.count) return;
+    [self removeObjectsInRange:range];
+}
+
+- (void)fw_insertObjects:(NSArray *)objects atIndex:(NSInteger)index
 {
     if (objects.count == 0) return;
     if (index < 0) return;
-    if (index > self.base.count) return;
+    if (index > self.count) return;
     
     for (NSInteger i = objects.count - 1; i >= 0; i--) {
-        [self.base insertObject:objects[i] atIndex:index];
+        [self insertObject:objects[i] atIndex:index];
     }
 }
 
 @end
 
-#pragma mark - FWMutableSetWrapper+FWSafeType
+#pragma mark - NSMutableSet+FWSafeType
 
-@implementation FWMutableSetWrapper (FWSafeType)
+@implementation NSMutableSet (FWSafeType)
 
-- (void)addObject:(id)object
+- (void)fw_addObject:(id)object
 {
     if (object == nil) return;
-    [self.base addObject:object];
+    [self addObject:object];
 }
 
-- (void)removeObject:(id)object
+- (void)fw_removeObject:(id)object
 {
     if (object == nil) return;
-    [self.base removeObject:object];
+    [self removeObject:object];
 }
 
 @end
 
-#pragma mark - FWDictionaryWrapper+FWSafeType
+#pragma mark - NSDictionary+FWSafeType
 
-@implementation FWDictionaryWrapper (FWSafeType)
+@implementation NSDictionary (FWSafeType)
 
-- (id)objectForKey:(id)key
+- (id)fw_objectForKey:(id)key
 {
     if (!key) return nil;
-    id object = [self.base objectForKey:key];
+    id object = [self objectForKey:key];
     if (object == nil || object == [NSNull null]) return nil;
     return object;
 }
 
 @end
 
-#pragma mark - FWMutableDictionaryWrapper+FWSafeType
+#pragma mark - NSMutableDictionary+FWSafeType
 
-@implementation FWMutableDictionaryWrapper (FWSafeType)
+@implementation NSMutableDictionary (FWSafeType)
 
-- (void)removeObjectForKey:(id)key
+- (void)fw_removeObjectForKey:(id)key
 {
     if (!key) return;
-    [self.base removeObjectForKey:key];
+    [self removeObjectForKey:key];
 }
 
-- (void)setObject:(id)object forKey:(id<NSCopying>)key
+- (void)fw_setObject:(id)object forKey:(id<NSCopying>)key
 {
     if (!key) return;
     if (object == nil || object == [NSNull null]) return;
-    [self.base setObject:object forKey:key];
+    [self setObject:object forKey:key];
 }
 
 @end
