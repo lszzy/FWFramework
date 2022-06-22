@@ -544,7 +544,7 @@ static BOOL fwStaticAutoScaleFont = NO;
     if (fontBlock) return fontBlock(size, weight);
     
     if (fwStaticAutoScaleFont) {
-        size = [UIScreen.fw relativeValue:size];
+        size = [UIScreen fw_relativeValue:size];
     }
     return [UIFont systemFontOfSize:size weight:weight];
 }

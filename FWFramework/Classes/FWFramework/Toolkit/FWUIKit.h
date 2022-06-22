@@ -12,24 +12,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWDeviceClassWrapper+FWUIKit
+#pragma mark - UIDevice+FWUIKit
 
-@interface FWDeviceClassWrapper (FWUIKit)
+@interface UIDevice (FWUIKit)
 
 /// 设置设备token原始Data，格式化并保存
-- (void)setDeviceTokenData:(nullable NSData *)tokenData;
++ (void)fw_setDeviceTokenData:(nullable NSData *)tokenData NS_REFINED_FOR_SWIFT;
 
 /// 获取设备Token格式化后的字符串
-@property (nonatomic, copy, readonly, nullable) NSString *deviceToken;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;
 
 /// 获取设备模型，格式："iPhone6,1"
-@property (nonatomic, copy, readonly, nullable) NSString *deviceModel;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceModel NS_REFINED_FOR_SWIFT;
 
 /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-@property (nonatomic, copy, readonly, nullable) NSString *deviceIDFV;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFV NS_REFINED_FOR_SWIFT;
 
 /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
-@property (nonatomic, copy, readonly, nullable) NSString *deviceIDFA;
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFA NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -287,27 +287,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWUIKit
+#pragma mark - UIViewController+FWUIKit
 
-@interface FWViewControllerWrapper (FWUIKit)
+@interface UIViewController (FWUIKit)
 
 /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-@property (nonatomic, assign, readonly) BOOL isRoot;
+@property (nonatomic, assign, readonly) BOOL fw_isRoot NS_REFINED_FOR_SWIFT;
 
 /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-@property (nonatomic, assign, readonly) BOOL isChild;
+@property (nonatomic, assign, readonly) BOOL fw_isChild NS_REFINED_FOR_SWIFT;
 
 /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-@property (nonatomic, assign, readonly) BOOL isPresented;
+@property (nonatomic, assign, readonly) BOOL fw_isPresented NS_REFINED_FOR_SWIFT;
 
 /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-@property (nonatomic, assign, readonly) BOOL isPageSheet;
+@property (nonatomic, assign, readonly) BOOL fw_isPageSheet NS_REFINED_FOR_SWIFT;
 
 /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-@property (nonatomic, assign, readonly) BOOL isViewVisible;
+@property (nonatomic, assign, readonly) BOOL fw_isViewVisible NS_REFINED_FOR_SWIFT;
 
 /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-@property (nonatomic, assign) BOOL isLoaded;
+@property (nonatomic, assign) BOOL fw_isLoaded NS_REFINED_FOR_SWIFT;
 
 @end
 

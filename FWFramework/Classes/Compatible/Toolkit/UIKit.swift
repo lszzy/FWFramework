@@ -18,22 +18,22 @@ extension Wrapper where Base: UIDevice {
     
     /// 设置设备token原始Data，格式化并保存
     public static func setDeviceTokenData(_ tokenData: Data?) {
-        Base.__fw.setDeviceTokenData(tokenData)
+        Base.__fw_setDeviceTokenData(tokenData)
     }
 
     /// 获取设备Token格式化后的字符串
     public static var deviceToken: String? {
-        return Base.__fw.deviceToken
+        return Base.__fw_deviceToken
     }
 
     /// 获取设备模型，格式："iPhone6,1"
     public static var deviceModel: String? {
-        return Base.__fw.deviceModel
+        return Base.__fw_deviceModel
     }
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        return Base.__fw.deviceIDFV
+        return Base.__fw_deviceIDFV
     }
 
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
@@ -429,33 +429,33 @@ extension Wrapper where Base: UIViewController {
     
     /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
     public var isRoot: Bool {
-        return base.__fw.isRoot
+        return base.__fw_isRoot
     }
 
     /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
     public var isChild: Bool {
-        return base.__fw.isChild
+        return base.__fw_isChild
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
     public var isPresented: Bool {
-        return base.__fw.isPresented
+        return base.__fw_isPresented
     }
 
     /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
     public var isPageSheet: Bool {
-        return base.__fw.isPageSheet
+        return base.__fw_isPageSheet
     }
 
     /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
     public var isViewVisible: Bool {
-        return base.__fw.isViewVisible
+        return base.__fw_isViewVisible
     }
 
     /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
     public var isLoaded: Bool {
-        get { return base.__fw.isLoaded }
-        set { base.__fw.isLoaded = newValue }
+        get { return base.__fw_isLoaded }
+        set { base.__fw_isLoaded = newValue }
     }
     
 }
