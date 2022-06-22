@@ -1096,13 +1096,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.maxUnicodeLength > 0) {
         if (self.textInput.markedTextRange) {
             if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
-                if ([self.textField.text.fw unicodeLength] > self.maxUnicodeLength) {
-                    self.textField.text = [self.textField.text.fw unicodeSubstring:self.maxUnicodeLength];
+                if ([self.textField.text fw_unicodeLength] > self.maxUnicodeLength) {
+                    self.textField.text = [self.textField.text fw_unicodeSubstring:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([self.textField.text.fw unicodeLength] > self.maxUnicodeLength) {
-                self.textField.text = [self.textField.text.fw unicodeSubstring:self.maxUnicodeLength];
+            if ([self.textField.text fw_unicodeLength] > self.maxUnicodeLength) {
+                self.textField.text = [self.textField.text fw_unicodeSubstring:self.maxUnicodeLength];
             }
         }
     }
@@ -1137,13 +1137,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (self.maxUnicodeLength > 0) {
         if (self.textInput.markedTextRange) {
             if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
-                if ([filterText.fw unicodeLength] > self.maxUnicodeLength) {
-                    filterText = [filterText.fw unicodeSubstring:self.maxUnicodeLength];
+                if ([filterText fw_unicodeLength] > self.maxUnicodeLength) {
+                    filterText = [filterText fw_unicodeSubstring:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([filterText.fw unicodeLength] > self.maxUnicodeLength) {
-                filterText = [filterText.fw unicodeSubstring:self.maxUnicodeLength];
+            if ([filterText fw_unicodeLength] > self.maxUnicodeLength) {
+                filterText = [filterText fw_unicodeSubstring:self.maxUnicodeLength];
             }
         }
     }
@@ -1156,13 +1156,13 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [self textLengthChanged];
     
     if (self.textChangedBlock) {
-        NSString *inputText = self.textField.text.fw.trimString;
+        NSString *inputText = self.textField.text.fw_trimString;
         self.textChangedBlock(inputText ?: @"");
     }
     
     if (self.autoCompleteBlock) {
         self.autoCompleteTimestamp = [[NSDate date] timeIntervalSince1970];
-        NSString *inputText = self.textField.text.fw.trimString;
+        NSString *inputText = self.textField.text.fw_trimString;
         if (inputText.length < 1) {
             self.autoCompleteBlock(@"");
         } else {
