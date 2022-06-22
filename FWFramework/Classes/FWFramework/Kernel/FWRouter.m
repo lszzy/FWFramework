@@ -187,7 +187,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (!metaClass) return @{};
     
-    NSArray<NSString *> *methods = [NSObject.fw classMethods:metaClass superclass:NO];
+    NSArray<NSString *> *methods = [NSObject fw_classMethods:metaClass superclass:NO];
     if (mapper) {
         return mapper(methods);
     }

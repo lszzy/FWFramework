@@ -14,17 +14,17 @@
 @implementation NSObject (FWDebugger)
 
 - (NSString *)fw_methodList {
-    id methodList = [self.fw invokeGetter:@"_methodDescription"];
+    id methodList = [self fw_invokeGetter:@"_methodDescription"];
     return [methodList isKindOfClass:[NSString class]] ? methodList : @"";
 }
 
 - (NSString *)fw_shortMethodList {
-    id shortMethodList = [self.fw invokeGetter:@"_shortMethodDescription"];
+    id shortMethodList = [self fw_invokeGetter:@"_shortMethodDescription"];
     return [shortMethodList isKindOfClass:[NSString class]] ? shortMethodList : @"";
 }
 
 - (NSString *)fw_ivarList {
-    id ivarList = [self.fw invokeGetter:@"_ivarDescription"];
+    id ivarList = [self fw_invokeGetter:@"_ivarDescription"];
     return [ivarList isKindOfClass:[NSString class]] ? ivarList : @"";
 }
 
@@ -33,7 +33,7 @@
 @implementation UIView (FWDebugger)
 
 - (NSString *)fw_viewInfo {
-    id viewInfo = [self.fw invokeGetter:@"recursiveDescription"];
+    id viewInfo = [self fw_invokeGetter:@"recursiveDescription"];
     return [viewInfo isKindOfClass:[NSString class]] ? viewInfo : @"";
 }
 

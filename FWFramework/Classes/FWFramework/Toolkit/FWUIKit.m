@@ -669,10 +669,10 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // https://github.com/Tencent/QMUI_iOS
-        [UILabel.fw exchangeInstanceMethod:@selector(setText:) swizzleMethod:@selector(innerSetText:)];
-        [UILabel.fw exchangeInstanceMethod:@selector(setAttributedText:) swizzleMethod:@selector(innerSetAttributedText:)];
-        [UILabel.fw exchangeInstanceMethod:@selector(setLineBreakMode:) swizzleMethod:@selector(innerSetLineBreakMode:)];
-        [UILabel.fw exchangeInstanceMethod:@selector(setTextAlignment:) swizzleMethod:@selector(innerSetTextAlignment:)];
+        [UILabel fw_exchangeInstanceMethod:@selector(setText:) swizzleMethod:@selector(innerSetText:)];
+        [UILabel fw_exchangeInstanceMethod:@selector(setAttributedText:) swizzleMethod:@selector(innerSetAttributedText:)];
+        [UILabel fw_exchangeInstanceMethod:@selector(setLineBreakMode:) swizzleMethod:@selector(innerSetLineBreakMode:)];
+        [UILabel fw_exchangeInstanceMethod:@selector(setTextAlignment:) swizzleMethod:@selector(innerSetTextAlignment:)];
     });
 }
 
