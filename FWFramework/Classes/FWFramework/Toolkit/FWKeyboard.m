@@ -31,7 +31,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @property (nonatomic, assign) BOOL touchResign;
 
 @property (nonatomic, assign) BOOL returnResign;
-@property (nonatomic, weak) UIResponder *returnResponder;
+@property (nonatomic, assign) BOOL returnNext;
 @property (nonatomic, copy) void (^returnBlock)(id textInput);
 
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
@@ -41,8 +41,10 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 @property (nonatomic, assign) BOOL previousButtonInitialized;
 @property (nonatomic, assign) BOOL nextButtonInitialized;
 @property (nonatomic, assign) BOOL doneButtonInitialized;
-@property (nonatomic, weak) UIResponder *previousResponder;
-@property (nonatomic, weak) UIResponder *nextResponder;
+@property (nonatomic, copy) UIResponder * (^previousResponder)(id textInput);
+@property (nonatomic, copy) UIResponder * (^nextResponder)(id textInput);
+@property (nonatomic, assign) NSInteger previousResponderTag;
+@property (nonatomic, assign) NSInteger nextResponderTag;
 
 @property (nonatomic, weak, readonly) UIView<UITextInput> *textInput;
 @property (nonatomic, weak) UIScrollView *scrollView;
@@ -181,8 +183,8 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)innerReturnAction
 {
     // 切换到下一个输入框
-    if (self.returnResponder) {
-        [self.returnResponder becomeFirstResponder];
+    if (self.returnNext) {
+        [self goNext];
     // 关闭键盘
     } else if (self.returnResign) {
         [self.textInput resignFirstResponder];
@@ -329,6 +331,36 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     return _toolbarDoneButton;
 }
 
+- (void)goPrevious
+{
+    if (self.previousResponder) {
+        UIResponder *previousInput = self.previousResponder(self.textInput);
+        if (previousInput) [previousInput becomeFirstResponder];
+        return;
+    }
+    
+    if (self.previousResponderTag > 0) {
+        UIView *targetView = self.viewController ? self.viewController.view : self.textInput.window;
+        UIView *previousView = [targetView viewWithTag:self.previousResponderTag];
+        if (previousView) [previousView becomeFirstResponder];
+    }
+}
+
+- (void)goNext
+{
+    if (self.nextResponder) {
+        UIResponder *nextInput = self.nextResponder(self.textInput);
+        if (nextInput) [nextInput becomeFirstResponder];
+        return;
+    }
+    
+    if (self.nextResponderTag > 0) {
+        UIView *targetView = self.viewController ? self.viewController.view : self.textInput.window;
+        UIView *nextView = [targetView viewWithTag:self.nextResponderTag];
+        if (nextView) [nextView becomeFirstResponder];
+    }
+}
+
 - (CGFloat)keyboardHeight:(NSNotification *)notification
 {
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
@@ -351,10 +383,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     UIBarButtonItem *titleItem = title ? [UIBarButtonItem.fw itemWithObject:title block:nil] : nil;
     titleItem.enabled = NO;
-    UIBarButtonItem *previousItem = self.toolbarPreviousButton ? [UIBarButtonItem.fw itemWithObject:self.toolbarPreviousButton target:self.previousResponder action:@selector(becomeFirstResponder)] : nil;
-    previousItem.enabled = self.previousResponder != nil;
-    UIBarButtonItem *nextItem = self.toolbarNextButton ? [UIBarButtonItem.fw itemWithObject:self.toolbarNextButton target:self.nextResponder action:@selector(becomeFirstResponder)] : nil;
-    nextItem.enabled = self.nextResponder != nil;
+    BOOL previousEnabled = self.toolbarPreviousButton && (self.previousResponder != nil || self.previousResponderTag > 0);
+    UIBarButtonItem *previousItem = previousEnabled ? [UIBarButtonItem.fw itemWithObject:self.toolbarPreviousButton target:self action:@selector(goPrevious)] : nil;
+    previousItem.enabled = previousEnabled;
+    BOOL nextEnabled = self.toolbarNextButton && (self.nextResponder != nil || self.nextResponderTag > 0);
+    UIBarButtonItem *nextItem = nextEnabled ? [UIBarButtonItem.fw itemWithObject:self.toolbarNextButton target:self action:@selector(goNext)] : nil;
+    nextItem.enabled = nextEnabled;
     UIBarButtonItem *doneItem = self.toolbarDoneButton ? (doneBlock ? [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton block:doneBlock] : [UIBarButtonItem.fw itemWithObject:self.toolbarDoneButton target:self.textInput action:@selector(resignFirstResponder)]) : nil;
     doneItem.style = UIBarButtonItemStyleDone;
     
@@ -432,12 +466,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     }
     
     // 再执行内部方法
-    if (textView.fw.returnResign || textView.fw.returnResponder || textView.fw.returnBlock) {
+    if (textView.fw.returnResign || textView.fw.returnNext || textView.fw.returnBlock) {
         // 判断是否输入回车
         if ([text isEqualToString:@"\n"]) {
             // 切换到下一个输入框
-            if (textView.fw.returnResponder) {
-                [textView.fw.returnResponder becomeFirstResponder];
+            if (textView.fw.returnNext) {
+                [textView.fw goNext];
             // 关闭键盘
             } else if (textView.fw.returnResign) {
                 [textView resignFirstResponder];
@@ -627,14 +661,14 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.base.innerReturnResign = returnResign;
 }
 
-- (UIResponder *)returnResponder
+- (BOOL)returnNext
 {
-    return self.innerKeyboardTarget.returnResponder;
+    return self.innerKeyboardTarget.returnNext;
 }
 
-- (void)setReturnResponder:(UIResponder *)returnResponder
+- (void)setReturnNext:(BOOL)returnNext
 {
-    self.innerKeyboardTarget.returnResponder = returnResponder;
+    self.innerKeyboardTarget.returnNext = returnNext;
     [self innerReturnEvent];
 }
 
@@ -703,24 +737,54 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 
-- (UIResponder *)previousResponder
+- (UIResponder * (^)(UITextField *))previousResponder
 {
     return self.innerKeyboardTarget.previousResponder;
 }
 
-- (void)setPreviousResponder:(UIResponder *)previousResponder
+- (void)setPreviousResponder:(UIResponder * (^)(UITextField *))previousResponder
 {
     self.innerKeyboardTarget.previousResponder = previousResponder;
 }
 
-- (UIResponder *)nextResponder
+- (UIResponder * (^)(UITextField *))nextResponder
 {
     return self.innerKeyboardTarget.nextResponder;
 }
 
-- (void)setNextResponder:(UIResponder *)nextResponder
+- (void)setNextResponder:(UIResponder * (^)(UITextField *))nextResponder
 {
     self.innerKeyboardTarget.nextResponder = nextResponder;
+}
+
+- (NSInteger)previousResponderTag
+{
+    return self.innerKeyboardTarget.previousResponderTag;
+}
+
+- (void)setPreviousResponderTag:(NSInteger)previousResponderTag
+{
+    self.innerKeyboardTarget.previousResponderTag = previousResponderTag;
+}
+
+- (NSInteger)nextResponderTag
+{
+    return self.innerKeyboardTarget.nextResponderTag;
+}
+
+- (void)setNextResponderTag:(NSInteger)nextResponderTag
+{
+    self.innerKeyboardTarget.nextResponderTag = nextResponderTag;
+}
+
+- (void)goPrevious
+{
+    [self.innerKeyboardTarget goPrevious];
+}
+
+- (void)goNext
+{
+    [self.innerKeyboardTarget goNext];
 }
 
 - (CGFloat)keyboardHeight:(NSNotification *)notification
@@ -924,14 +988,14 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.base.innerReturnResign = returnResign;
 }
 
-- (UIResponder *)returnResponder
+- (BOOL)returnNext
 {
-    return self.innerKeyboardTarget.returnResponder;
+    return self.innerKeyboardTarget.returnNext;
 }
 
-- (void)setReturnResponder:(UIResponder *)returnResponder
+- (void)setReturnNext:(BOOL)returnNext
 {
-    self.innerKeyboardTarget.returnResponder = returnResponder;
+    self.innerKeyboardTarget.returnNext = returnNext;
     self.delegateProxyEnabled = YES;
 }
 
@@ -1039,24 +1103,54 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 
-- (UIResponder *)previousResponder
+- (UIResponder * (^)(UITextView *))previousResponder
 {
     return self.innerKeyboardTarget.previousResponder;
 }
 
-- (void)setPreviousResponder:(UIResponder *)previousResponder
+- (void)setPreviousResponder:(UIResponder * (^)(UITextView *))previousResponder
 {
     self.innerKeyboardTarget.previousResponder = previousResponder;
 }
 
-- (UIResponder *)nextResponder
+- (UIResponder * (^)(UITextView *))nextResponder
 {
     return self.innerKeyboardTarget.nextResponder;
 }
 
-- (void)setNextResponder:(UIResponder *)nextResponder
+- (void)setNextResponder:(UIResponder * (^)(UITextView *))nextResponder
 {
     self.innerKeyboardTarget.nextResponder = nextResponder;
+}
+
+- (NSInteger)previousResponderTag
+{
+    return self.innerKeyboardTarget.previousResponderTag;
+}
+
+- (void)setPreviousResponderTag:(NSInteger)previousResponderTag
+{
+    self.innerKeyboardTarget.previousResponderTag = previousResponderTag;
+}
+
+- (NSInteger)nextResponderTag
+{
+    return self.innerKeyboardTarget.nextResponderTag;
+}
+
+- (void)setNextResponderTag:(NSInteger)nextResponderTag
+{
+    self.innerKeyboardTarget.nextResponderTag = nextResponderTag;
+}
+
+- (void)goPrevious
+{
+    [self.innerKeyboardTarget goPrevious];
+}
+
+- (void)goNext
+{
+    [self.innerKeyboardTarget goNext];
 }
 
 - (CGFloat)keyboardHeight:(NSNotification *)notification

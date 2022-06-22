@@ -57,10 +57,10 @@ extension Wrapper where Base: UITextField {
         set { base.__fw.returnResign = newValue }
     }
 
-    /// 设置点击键盘完成按钮自动切换的下一个输入框，二选一
-    public weak var returnResponder: UIResponder? {
-        get { return base.__fw.returnResponder }
-        set { base.__fw.returnResponder = newValue }
+    /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
+    public var returnNext: Bool {
+        get { return base.__fw.returnNext }
+        set { base.__fw.returnNext = newValue }
     }
 
     /// 设置点击键盘完成按钮的事件句柄
@@ -94,16 +94,28 @@ extension Wrapper where Base: UITextField {
         set { base.__fw.toolbarDoneButton = newValue }
     }
 
-    /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
-    public weak var previousResponder: UIResponder? {
+    /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
+    public var previousResponder: ((UITextField) -> UIResponder?)? {
         get { return base.__fw.previousResponder }
         set { base.__fw.previousResponder = newValue }
     }
 
-    /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
-    public weak var nextResponder: UIResponder? {
+    /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
+    public var nextResponder: ((UITextField) -> UIResponder?)? {
         get { return base.__fw.nextResponder }
         set { base.__fw.nextResponder = newValue }
+    }
+    
+    /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
+    public var previousResponderTag: Int {
+        get { return base.__fw.previousResponderTag }
+        set { base.__fw.previousResponderTag = newValue }
+    }
+
+    /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
+    public var nextResponderTag: Int {
+        get { return base.__fw.nextResponderTag }
+        set { base.__fw.nextResponderTag = newValue }
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
@@ -183,10 +195,10 @@ extension Wrapper where Base: UITextView {
         set { base.__fw.returnResign = newValue }
     }
 
-    /// 设置点击键盘完成按钮自动切换的下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public weak var returnResponder: UIResponder? {
-        get { return base.__fw.returnResponder }
-        set { base.__fw.returnResponder = newValue }
+    /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
+    public var returnNext: Bool {
+        get { return base.__fw.returnNext }
+        set { base.__fw.returnNext = newValue }
     }
 
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
@@ -226,16 +238,28 @@ extension Wrapper where Base: UITextView {
         set { base.__fw.toolbarDoneButton = newValue }
     }
 
-    /// 设置Toolbar点击前一个按钮时聚焦的输入框，默认nil
-    public weak var previousResponder: UIResponder? {
+    /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
+    public var previousResponder: ((UITextView) -> UIResponder?)? {
         get { return base.__fw.previousResponder }
         set { base.__fw.previousResponder = newValue }
     }
 
-    /// 设置Toolbar点击下一个按钮时聚焦的输入框，默认nil
-    public weak var nextResponder: UIResponder? {
+    /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
+    public var nextResponder: ((UITextView) -> UIResponder?)? {
         get { return base.__fw.nextResponder }
         set { base.__fw.nextResponder = newValue }
+    }
+    
+    /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
+    public var previousResponderTag: Int {
+        get { return base.__fw.previousResponderTag }
+        set { base.__fw.previousResponderTag = newValue }
+    }
+
+    /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
+    public var nextResponderTag: Int {
+        get { return base.__fw.nextResponderTag }
+        set { base.__fw.nextResponderTag = newValue }
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
