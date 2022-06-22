@@ -22,11 +22,11 @@
 @import AdSupport;
 #endif
 
-#pragma mark - FWDeviceClassWrapper+FWUIKit
+#pragma mark - UIDevice+FWUIKit
 
-@implementation FWDeviceClassWrapper (FWUIKit)
+@implementation UIDevice (FWUIKit)
 
-- (void)setDeviceTokenData:(NSData *)tokenData
++ (void)fw_setDeviceTokenData:(NSData *)tokenData
 {
     if (tokenData) {
         NSMutableString *deviceToken = [NSMutableString string];
@@ -43,12 +43,12 @@
     }
 }
 
-- (NSString *)deviceToken
++ (NSString *)fw_deviceToken
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
 }
 
-- (NSString *)deviceModel
++ (NSString *)fw_deviceModel
 {
     static NSString *model;
     static dispatch_once_t onceToken;
@@ -63,12 +63,12 @@
     return model;
 }
 
-- (NSString *)deviceIDFV
++ (NSString *)fw_deviceIDFV
 {
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 }
 
-- (NSString *)deviceIDFA
++ (NSString *)fw_deviceIDFA
 {
     #if FWMacroTracking
     return ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString;
@@ -1336,18 +1336,18 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWUIKit
+#pragma mark - UIViewController+FWUIKit
 
-@implementation FWViewControllerWrapper (FWUIKit)
+@implementation UIViewController (FWUIKit)
 
-- (BOOL)isRoot
+- (BOOL)fw_isRoot
 {
-    return !self.base.navigationController || self.base.navigationController.viewControllers.firstObject == self.base;
+    return !self.navigationController || self.navigationController.viewControllers.firstObject == self;
 }
 
-- (BOOL)isChild
+- (BOOL)fw_isChild
 {
-    UIViewController *parentController = self.base.parentViewController;
+    UIViewController *parentController = self.parentViewController;
     if (parentController && ![parentController isKindOfClass:[UINavigationController class]] &&
         ![parentController isKindOfClass:[UITabBarController class]]) {
         return YES;
@@ -1355,20 +1355,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return NO;
 }
 
-- (BOOL)isPresented
+- (BOOL)fw_isPresented
 {
-    UIViewController *viewController = self.base;
-    if (self.base.navigationController) {
-        if (self.base.navigationController.viewControllers.firstObject != self.base) return NO;
-        viewController = self.base.navigationController;
+    UIViewController *viewController = self;
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.firstObject != self) return NO;
+        viewController = self.navigationController;
     }
     return viewController.presentingViewController.presentedViewController == viewController;
 }
 
-- (BOOL)isPageSheet
+- (BOOL)fw_isPageSheet
 {
     if (@available(iOS 13.0, *)) {
-        UIViewController *controller = self.base.navigationController ?: self.base;
+        UIViewController *controller = self.navigationController ?: self;
         if (!controller.presentingViewController) return NO;
         UIModalPresentationStyle style = controller.modalPresentationStyle;
         if (style == UIModalPresentationAutomatic || style == UIModalPresentationPageSheet) return YES;
@@ -1376,19 +1376,19 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return NO;
 }
 
-- (BOOL)isViewVisible
+- (BOOL)fw_isViewVisible
 {
-    return self.base.isViewLoaded && self.base.view.window;
+    return self.isViewLoaded && self.view.window;
 }
 
-- (BOOL)isLoaded
+- (BOOL)fw_isLoaded
 {
-    return [objc_getAssociatedObject(self.base, @selector(isLoaded)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_isLoaded)) boolValue];
 }
 
-- (void)setIsLoaded:(BOOL)isLoaded
+- (void)setFw_isLoaded:(BOOL)isLoaded
 {
-    objc_setAssociatedObject(self.base, @selector(isLoaded), @(isLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isLoaded), @(isLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

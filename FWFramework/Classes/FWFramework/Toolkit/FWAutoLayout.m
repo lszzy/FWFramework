@@ -787,7 +787,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
     NSNumber *scaleValue = objc_getAssociatedObject(self.base, @selector(autoScale));
     BOOL autoScale = scaleValue ? [scaleValue boolValue] : fwStaticAutoScaleLayout;
     if (autoScale) {
-        offset = [UIScreen.fw relativeValue:offset];
+        offset = [UIScreen fw_relativeValue:offset];
     }
     
     if (fwStaticAutoLayoutRTL) {

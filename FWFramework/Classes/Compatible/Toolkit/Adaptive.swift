@@ -15,7 +15,7 @@ import FWFramework
 extension FW {
     // MARK: - UIApplication
     /// 是否是调试模式
-    public static let isDebug: Bool = UIApplication.__fw.isDebug
+    public static let isDebug: Bool = UIApplication.__fw_isDebug
     
     // MARK: - UIDevice
     /// 是否是模拟器
@@ -32,7 +32,7 @@ extension FW {
     /// 是否是iPad设备
     public static var isIpad: Bool { return UI_USER_INTERFACE_IDIOM() == .pad }
     /// 是否是Mac设备
-    public static var isMac: Bool { return UIDevice.__fw.isMac }
+    public static var isMac: Bool { return UIDevice.__fw_isMac }
 
     /// 界面是否横屏
     public static var isLandscape: Bool { return UIApplication.shared.statusBarOrientation.isLandscape }
@@ -40,11 +40,11 @@ extension FW {
     public static var isDeviceLandscape: Bool { return UIDevice.current.orientation.isLandscape }
 
     /// iOS系统版本
-    public static var iosVersion: Double { return UIDevice.__fw.iosVersion }
+    public static var iosVersion: Double { return UIDevice.__fw_iosVersion }
     /// 是否是指定iOS主版本
-    public static func isIos(_ version: Int) -> Bool { return UIDevice.__fw.isIos(version) }
+    public static func isIos(_ version: Int) -> Bool { return UIDevice.__fw_isIos(version) }
     /// 是否是大于等于指定iOS主版本
-    public static func isIosLater(_ version: Int) -> Bool { return UIDevice.__fw.isIosLater(version) }
+    public static func isIosLater(_ version: Int) -> Bool { return UIDevice.__fw_isIosLater(version) }
 
     /// 设备尺寸，跟横竖屏无关
     public static var deviceSize: CGSize { return CGSize(width: deviceWidth, height: deviceHeight) }
@@ -65,45 +65,45 @@ extension FW {
     /// 屏幕像素比例
     public static var screenScale: CGFloat { return UIScreen.main.scale }
     /// 判断屏幕英寸
-    public static func isScreenInch(_ inch: ScreenInch) -> Bool { return UIScreen.__fw.isScreenInch(inch) }
+    public static func isScreenInch(_ inch: ScreenInch) -> Bool { return UIScreen.__fw_isScreenInch(inch) }
     /// 是否是全面屏屏幕
-    public static var isNotchedScreen: Bool { return UIScreen.__fw.isNotchedScreen }
+    public static var isNotchedScreen: Bool { return UIScreen.__fw_isNotchedScreen }
     /// 屏幕一像素的大小
-    public static var pixelOne: CGFloat { return UIScreen.__fw.pixelOne }
+    public static var pixelOne: CGFloat { return UIScreen.__fw_pixelOne }
     /// 屏幕安全区域距离
-    public static var safeAreaInsets: UIEdgeInsets { return UIScreen.__fw.safeAreaInsets }
+    public static var safeAreaInsets: UIEdgeInsets { return UIScreen.__fw_safeAreaInsets }
 
     /// 状态栏高度，与是否隐藏无关
-    public static var statusBarHeight: CGFloat { return UIScreen.__fw.statusBarHeight }
+    public static var statusBarHeight: CGFloat { return UIScreen.__fw_statusBarHeight }
     /// 导航栏高度，与是否隐藏无关
-    public static var navigationBarHeight: CGFloat { return UIScreen.__fw.navigationBarHeight }
+    public static var navigationBarHeight: CGFloat { return UIScreen.__fw_navigationBarHeight }
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    public static var topBarHeight: CGFloat { return UIScreen.__fw.topBarHeight }
+    public static var topBarHeight: CGFloat { return UIScreen.__fw_topBarHeight }
     /// 标签栏高度，与是否隐藏无关
-    public static var tabBarHeight: CGFloat { return UIScreen.__fw.tabBarHeight }
+    public static var tabBarHeight: CGFloat { return UIScreen.__fw_tabBarHeight }
     /// 工具栏高度，与是否隐藏无关
-    public static var toolBarHeight: CGFloat { return UIScreen.__fw.toolBarHeight }
+    public static var toolBarHeight: CGFloat { return UIScreen.__fw_toolBarHeight }
 
     /// 当前屏幕宽度缩放比例
-    public static var relativeScale: CGFloat { return UIScreen.__fw.relativeScale }
+    public static var relativeScale: CGFloat { return UIScreen.__fw_relativeScale }
     /// 当前屏幕高度缩放比例
-    public static var relativeHeightScale: CGFloat { return UIScreen.__fw.relativeHeightScale }
+    public static var relativeHeightScale: CGFloat { return UIScreen.__fw_relativeHeightScale }
 
     /// 获取相对设计图宽度等比例缩放值
     public static func relative(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.relativeValue(value)
+        return UIScreen.__fw_relativeValue(value)
     }
     /// 获取相对设计图高度等比例缩放值
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.relativeHeight(value)
+        return UIScreen.__fw_relativeHeight(value)
     }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public static func fixed(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.fixedValue(value)
+        return UIScreen.__fw_fixedValue(value)
     }
     /// 获取相对设计图高度等比例缩放时的固定高度值
     public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw.fixedHeight(value)
+        return UIScreen.__fw_fixedHeight(value)
     }
     /// 获取相对设计图等比例缩放size
     public static func relative(_ size: CGSize) -> CGSize {
@@ -124,7 +124,7 @@ extension FW {
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flat(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
-        return UIScreen.__fw.flatValue(value, scale: scale)
+        return UIScreen.__fw_flatValue(value, scale: scale)
     }
 }
 
@@ -133,7 +133,7 @@ extension Wrapper where Base: UIApplication {
     
     /// 是否是调试模式
     public static var isDebug: Bool {
-        return Base.__fw.isDebug
+        return Base.__fw_isDebug
     }
     
 }
@@ -162,7 +162,7 @@ extension Wrapper where Base: UIDevice {
     
     /// 是否是Mac
     public static var isMac: Bool {
-        return Base.__fw.isMac
+        return Base.__fw_isMac
     }
 
     /// 界面是否横屏
@@ -178,22 +178,22 @@ extension Wrapper where Base: UIDevice {
     /// 设置界面方向，支持旋转方向时生效
     @discardableResult
     public static func setDeviceOrientation(_ orientation: UIDeviceOrientation) -> Bool {
-        return Base.__fw.setDeviceOrientation(orientation)
+        return Base.__fw_setDeviceOrientation(orientation)
     }
 
     /// iOS系统版本
     public static var iosVersion: Double {
-        return Base.__fw.iosVersion
+        return Base.__fw_iosVersion
     }
     
     /// 是否是指定iOS主版本
     public static func isIos(_ version: Int) -> Bool {
-        return Base.__fw.isIos(version)
+        return Base.__fw_isIos(version)
     }
     
     /// 是否是大于等于指定iOS主版本
     public static func isIosLater(_ version: Int) -> Bool {
-        return Base.__fw.isIosLater(version)
+        return Base.__fw_isIosLater(version)
     }
 
     /// 设备尺寸，跟横竖屏无关
@@ -243,97 +243,97 @@ extension Wrapper where Base: UIScreen {
     
     /// 判断屏幕英寸
     public static func isScreenInch(_ inch: ScreenInch) -> Bool {
-        return Base.__fw.isScreenInch(inch)
+        return Base.__fw_isScreenInch(inch)
     }
     
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool {
-        return Base.__fw.isNotchedScreen
+        return Base.__fw_isNotchedScreen
     }
     
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
-        return Base.__fw.pixelOne
+        return Base.__fw_pixelOne
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
     public static var hasSafeAreaInsets: Bool {
-        return Base.__fw.hasSafeAreaInsets
+        return Base.__fw_hasSafeAreaInsets
     }
     
     /// 屏幕安全区域距离
     public static var safeAreaInsets: UIEdgeInsets {
-        return Base.__fw.safeAreaInsets
+        return Base.__fw_safeAreaInsets
     }
 
     /// 状态栏高度，与是否隐藏无关
     public static var statusBarHeight: CGFloat {
-        return Base.__fw.statusBarHeight
+        return Base.__fw_statusBarHeight
         
     }
     
     /// 导航栏高度，与是否隐藏无关
     public static var navigationBarHeight: CGFloat {
-        return Base.__fw.navigationBarHeight
+        return Base.__fw_navigationBarHeight
         
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
     public static var topBarHeight: CGFloat {
-        return Base.__fw.topBarHeight
+        return Base.__fw_topBarHeight
         
     }
     
     /// 标签栏高度，与是否隐藏无关
     public static var tabBarHeight: CGFloat {
-        return Base.__fw.tabBarHeight
+        return Base.__fw_tabBarHeight
         
     }
     
     /// 工具栏高度，与是否隐藏无关
     public static var toolBarHeight: CGFloat {
-        return Base.__fw.toolBarHeight
+        return Base.__fw_toolBarHeight
     }
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var referenceSize: CGSize {
-        get { return Base.__fw.referenceSize }
-        set { Base.__fw.referenceSize = newValue }
+        get { return Base.__fw_referenceSize }
+        set { Base.__fw_referenceSize = newValue }
     }
     
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
-        return Base.__fw.relativeScale
+        return Base.__fw_relativeScale
     }
     
     /// 获取当前屏幕高度缩放比例，高度不常用
     public static var relativeHeightScale: CGFloat {
-        return Base.__fw.relativeHeightScale
+        return Base.__fw_relativeHeightScale
     }
 
     /// 获取相对设计图宽度等比例缩放值
     public static func relativeValue(_ value: CGFloat) -> CGFloat {
-        return Base.__fw.relativeValue(value)
+        return Base.__fw_relativeValue(value)
     }
 
     /// 获取相对设计图高度等比例缩放值
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return Base.__fw.relativeHeight(value)
+        return Base.__fw_relativeHeight(value)
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public static func fixedValue(_ value: CGFloat) -> CGFloat {
-        return Base.__fw.fixedValue(value)
+        return Base.__fw_fixedValue(value)
     }
 
     /// 获取相对设计图高度等比例缩放时的固定高度值
     public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return Base.__fw.fixedHeight(value)
+        return Base.__fw_fixedHeight(value)
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
-        return Base.__fw.flatValue(value, scale: scale)
+        return Base.__fw_flatValue(value, scale: scale)
     }
     
 }
@@ -343,32 +343,32 @@ extension Wrapper where Base: UIViewController {
     
     /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
     public var statusBarHeight: CGFloat {
-        return base.__fw.statusBarHeight
+        return base.__fw_statusBarHeight
     }
 
     /// 当前导航栏布局高度，隐藏时为0，推荐使用
     public var navigationBarHeight: CGFloat {
-        return base.__fw.navigationBarHeight
+        return base.__fw_navigationBarHeight
     }
 
     /// 当前顶部栏布局高度，导航栏隐藏时为0，推荐使用
     public var topBarHeight: CGFloat {
-        return base.__fw.topBarHeight
+        return base.__fw_topBarHeight
     }
 
     /// 当前标签栏布局高度，隐藏时为0，推荐使用
     public var tabBarHeight: CGFloat {
-        return base.__fw.tabBarHeight
+        return base.__fw_tabBarHeight
     }
 
     /// 当前工具栏布局高度，隐藏时为0，推荐使用
     public var toolBarHeight: CGFloat {
-        return base.__fw.toolBarHeight
+        return base.__fw_toolBarHeight
     }
 
     /// 当前底部栏布局高度，包含标签栏和工具栏，隐藏时为0，推荐使用
     public var bottomBarHeight: CGFloat {
-        return base.__fw.bottomBarHeight
+        return base.__fw_bottomBarHeight
     }
     
 }
