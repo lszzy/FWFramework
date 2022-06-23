@@ -15,20 +15,20 @@ extension Wrapper where Base: UITableViewCell {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.__fw.maxYViewFixed }
-        set { base.__fw.maxYViewFixed = newValue }
+        get { return base.__fw_maxYViewFixed }
+        set { base.__fw_maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.__fw.maxYViewPadding }
-        set { base.__fw.maxYViewPadding = newValue }
+        get { return base.__fw_maxYViewPadding }
+        set { base.__fw_maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.__fw.maxYViewExpanded }
-        set { base.__fw.maxYViewExpanded = newValue }
+        get { return base.__fw_maxYViewExpanded }
+        set { base.__fw_maxYViewExpanded = newValue }
     }
     
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
@@ -37,7 +37,7 @@ extension Wrapper where Base: UITableViewCell {
         style: UITableViewCell.CellStyle = .default,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw.cell(with: tableView, style: style, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_cell(with: tableView, style: style, reuseIdentifier: reuseIdentifier) as! Base
     }
     
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
@@ -45,7 +45,7 @@ extension Wrapper where Base: UITableViewCell {
         tableView: UITableView,
         configuration: @escaping CellConfigurationBlock
     ) -> CGFloat {
-        return Base.__fw.height(with: tableView, configuration: configuration)
+        return Base.__fw_height(with: tableView, configuration: configuration)
     }
     
 }
@@ -55,20 +55,20 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
     
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.__fw.maxYViewFixed }
-        set { base.__fw.maxYViewFixed = newValue }
+        get { return base.__fw_maxYViewFixed }
+        set { base.__fw_maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.__fw.maxYViewPadding }
-        set { base.__fw.maxYViewPadding = newValue }
+        get { return base.__fw_maxYViewPadding }
+        set { base.__fw_maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.__fw.maxYViewExpanded }
-        set { base.__fw.maxYViewExpanded = newValue }
+        get { return base.__fw_maxYViewExpanded }
+        set { base.__fw_maxYViewExpanded = newValue }
     }
     
     /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
@@ -76,7 +76,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         tableView: UITableView,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw.headerFooterView(with: tableView, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_headerFooterView(with: tableView, reuseIdentifier: reuseIdentifier) as! Base
     }
 
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
@@ -85,7 +85,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         type: HeaderFooterViewType,
         configuration: @escaping HeaderFooterViewConfigurationBlock
     ) -> CGFloat {
-        return Base.__fw.height(with: tableView, type: type, configuration: configuration)
+        return Base.__fw_height(with: tableView, type: type, configuration: configuration)
     }
     
 }
@@ -100,47 +100,47 @@ extension Wrapper where Base: UITableView {
     // MARK: - Cache
     /// 手工清空高度缓存，用于高度发生变化的情况
     public func clearHeightCache() {
-        base.__fw.clearHeightCache()
+        base.__fw_clearHeightCache()
     }
     
     /// 指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
     public func setCellHeightCache(_ height: CGFloat, for indexPath: IndexPath) {
-        base.__fw.setCellHeightCache(height, for: indexPath)
+        base.__fw_setCellHeightCache(height, for: indexPath)
     }
 
     /// 指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存
     public func setCellHeightCache(_ height: CGFloat, for key: NSCopying) {
-        base.__fw.setCellHeightCache(height, forKey: key)
+        base.__fw_setCellHeightCache(height, forKey: key)
     }
 
     /// 指定indexPath获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
     public func cellHeightCache(for indexPath: IndexPath) -> CGFloat {
-        return base.__fw.cellHeightCache(for: indexPath)
+        return base.__fw_cellHeightCache(for: indexPath)
     }
 
     /// 指定key获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension
     public func cellHeightCache(for key: NSCopying) -> CGFloat {
-        return base.__fw.cellHeightCache(forKey: key)
+        return base.__fw_cellHeightCache(forKey: key)
     }
 
     /// 指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
     public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for section: Int) {
-        base.__fw.setHeaderFooterHeightCache(height, type: type, forSection: section)
+        base.__fw_setHeaderFooterHeightCache(height, type: type, forSection: section)
     }
 
     /// 指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存
     public func setHeaderFooterHeightCache(_ height: CGFloat, type: HeaderFooterViewType, for key: NSCopying) {
-        base.__fw.setHeaderFooterHeightCache(height, type: type, forKey: key)
+        base.__fw_setHeaderFooterHeightCache(height, type: type, forKey: key)
     }
 
     /// 指定section获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
     public func headerFooterHeightCache(_ type: HeaderFooterViewType, forSection section: Int) -> CGFloat {
-        return base.__fw.headerFooterHeightCache(type, forSection: section)
+        return base.__fw_headerFooterHeightCache(type, forSection: section)
     }
 
     /// 指定key获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension
     public func headerFooterHeightCache(_ type: HeaderFooterViewType, for key: NSCopying) -> CGFloat {
-        return base.__fw.headerFooterHeightCache(type, forKey: key)
+        return base.__fw_headerFooterHeightCache(type, forKey: key)
     }
 
     // MARK: - Cell
@@ -153,7 +153,7 @@ extension Wrapper where Base: UITableView {
         cellClass: AnyClass,
         configuration: @escaping CellConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withCellClass: cellClass, configuration: configuration)
+        return base.__fw_height(withCellClass: cellClass, configuration: configuration)
     }
     
     /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 indexPath
@@ -167,7 +167,7 @@ extension Wrapper where Base: UITableView {
         cacheBy indexPath: IndexPath,
         configuration: @escaping CellConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withCellClass: cellClass, cacheBy: indexPath, configuration: configuration)
+        return base.__fw_height(withCellClass: cellClass, cacheBy: indexPath, configuration: configuration)
     }
 
     /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key
@@ -181,7 +181,7 @@ extension Wrapper where Base: UITableView {
         cacheBy key: NSCopying?,
         configuration: @escaping CellConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withCellClass: cellClass, cacheByKey: key, configuration: configuration)
+        return base.__fw_height(withCellClass: cellClass, cacheByKey: key, configuration: configuration)
     }
 
     // MARK: - HeaderFooterView
@@ -196,7 +196,7 @@ extension Wrapper where Base: UITableView {
         type: HeaderFooterViewType,
         configuration: @escaping HeaderFooterViewConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withHeaderFooterViewClass: headerFooterViewClass, type: type, configuration: configuration)
+        return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type, configuration: configuration)
     }
     
     /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 section
@@ -212,7 +212,7 @@ extension Wrapper where Base: UITableView {
         cacheBy section: Int,
         configuration: @escaping HeaderFooterViewConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheBySection: section, configuration: configuration)
+        return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheBySection: section, configuration: configuration)
     }
 
     /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key
@@ -228,7 +228,7 @@ extension Wrapper where Base: UITableView {
         cacheBy key: NSCopying?,
         configuration: @escaping HeaderFooterViewConfigurationBlock
     ) -> CGFloat {
-        return base.__fw.height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheByKey: key, configuration: configuration)
+        return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheByKey: key, configuration: configuration)
     }
     
 }
@@ -238,20 +238,20 @@ extension Wrapper where Base: UICollectionViewCell {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.__fw.maxYViewFixed }
-        set { base.__fw.maxYViewFixed = newValue }
+        get { return base.__fw_maxYViewFixed }
+        set { base.__fw_maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.__fw.maxYViewPadding }
-        set { base.__fw.maxYViewPadding = newValue }
+        get { return base.__fw_maxYViewPadding }
+        set { base.__fw_maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.__fw.maxYViewExpanded }
-        set { base.__fw.maxYViewExpanded = newValue }
+        get { return base.__fw_maxYViewExpanded }
+        set { base.__fw_maxYViewExpanded = newValue }
     }
 
     /// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
@@ -260,7 +260,7 @@ extension Wrapper where Base: UICollectionViewCell {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw.cell(with: collectionView, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_cell(with: collectionView, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
     }
 
     /// 根据配置自动计算view大小，子类可重写
@@ -268,7 +268,7 @@ extension Wrapper where Base: UICollectionViewCell {
         collectionView: UICollectionView,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, configuration: configuration)
+        return Base.__fw_size(with: collectionView, configuration: configuration)
     }
 
     /// 根据配置自动计算view大小，固定宽度，子类可重写
@@ -277,7 +277,7 @@ extension Wrapper where Base: UICollectionViewCell {
         width: CGFloat,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, width: width, configuration: configuration)
+        return Base.__fw_size(with: collectionView, width: width, configuration: configuration)
     }
 
     /// 根据配置自动计算view大小，固定高度，子类可重写
@@ -286,7 +286,7 @@ extension Wrapper where Base: UICollectionViewCell {
         height: CGFloat,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, height: height, configuration: configuration)
+        return Base.__fw_size(with: collectionView, height: height, configuration: configuration)
     }
     
 }
@@ -296,20 +296,20 @@ extension Wrapper where Base: UICollectionReusableView {
     
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.__fw.maxYViewFixed }
-        set { base.__fw.maxYViewFixed = newValue }
+        get { return base.__fw_maxYViewFixed }
+        set { base.__fw_maxYViewFixed = newValue }
     }
 
     /// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.__fw.maxYViewPadding }
-        set { base.__fw.maxYViewPadding = newValue }
+        get { return base.__fw_maxYViewPadding }
+        set { base.__fw_maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.__fw.maxYViewExpanded }
-        set { base.__fw.maxYViewExpanded = newValue }
+        get { return base.__fw_maxYViewExpanded }
+        set { base.__fw_maxYViewExpanded = newValue }
     }
     
     /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
@@ -319,7 +319,7 @@ extension Wrapper where Base: UICollectionReusableView {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw.reusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_reusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
     }
 
     /// 根据配置自动计算view大小，子类可重写
@@ -328,7 +328,7 @@ extension Wrapper where Base: UICollectionReusableView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, kind: kind, configuration: configuration)
+        return Base.__fw_size(with: collectionView, kind: kind, configuration: configuration)
     }
 
     /// 根据配置自动计算view大小，固定宽度，子类可重写
@@ -338,7 +338,7 @@ extension Wrapper where Base: UICollectionReusableView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, width: width, kind: kind, configuration: configuration)
+        return Base.__fw_size(with: collectionView, width: width, kind: kind, configuration: configuration)
     }
 
     /// 根据配置自动计算view大小，固定高度，子类可重写
@@ -348,7 +348,7 @@ extension Wrapper where Base: UICollectionReusableView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return Base.__fw.size(with: collectionView, height: height, kind: kind, configuration: configuration)
+        return Base.__fw_size(with: collectionView, height: height, kind: kind, configuration: configuration)
     }
     
 }
@@ -362,47 +362,47 @@ extension Wrapper where Base: UICollectionView {
     // MARK: - Cache
     /// 手工清空尺寸缓存，用于尺寸发生变化的情况
     public func clearSizeCache() {
-        base.__fw.clearSizeCache()
+        base.__fw_clearSizeCache()
     }
     
     /// 指定indexPath设置cell尺寸缓存，设置为zero时清除缓存
     public func setCellSizeCache(_ size: CGSize, for indexPath: IndexPath) {
-        base.__fw.setCellSizeCache(size, for: indexPath)
+        base.__fw_setCellSizeCache(size, for: indexPath)
     }
 
     /// 指定key设置cell尺寸缓存，设置为zero时清除缓存
     public func setCellSizeCache(_ size: CGSize, for key: NSCopying) {
-        base.__fw.setCellSizeCache(size, forKey: key)
+        base.__fw_setCellSizeCache(size, forKey: key)
     }
 
     /// 指定indexPath获取cell缓存尺寸，默认值automaticSize
     public func cellSizeCache(for indexPath: IndexPath) -> CGSize {
-        return base.__fw.cellSizeCache(for: indexPath)
+        return base.__fw_cellSizeCache(for: indexPath)
     }
 
     /// 指定key获取cell缓存尺寸，默认值automaticSize
     public func cellSizeCache(for key: NSCopying) -> CGSize {
-        return base.__fw.cellSizeCache(forKey: key)
+        return base.__fw_cellSizeCache(forKey: key)
     }
 
     /// 指定section设置ReusableView尺寸缓存，设置为zero时清除缓存
     public func setReusableViewSizeCache(_ size: CGSize, kind: String, for section: Int) {
-        base.__fw.setReusableViewSizeCache(size, kind: kind, forSection: section)
+        base.__fw_setReusableViewSizeCache(size, kind: kind, forSection: section)
     }
 
     /// 指定key设置ReusableView尺寸缓存，设置为zero时清除缓存
     public func setReusableViewSizeCache(_ size: CGSize, kind: String, for key: NSCopying) {
-        base.__fw.setReusableViewSizeCache(size, kind: kind, forKey: key)
+        base.__fw_setReusableViewSizeCache(size, kind: kind, forKey: key)
     }
 
     /// 指定section获取ReusableView缓存尺寸，默认值automaticSize
     public func reusableViewSizeCache(_ kind: String, forSection section: Int) -> CGSize {
-        return base.__fw.reusableViewSizeCache(kind, forSection: section)
+        return base.__fw_reusableViewSizeCache(kind, forSection: section)
     }
 
     /// 指定key获取ReusableView缓存尺寸，默认值automaticSize
     public func reusableViewSizeCache(_ kind: String, for key: NSCopying) -> CGSize {
-        return base.__fw.reusableViewSizeCache(kind, forKey: key)
+        return base.__fw_reusableViewSizeCache(kind, forKey: key)
     }
 
     // MARK: - Cell
@@ -415,7 +415,7 @@ extension Wrapper where Base: UICollectionView {
         cellClass: AnyClass,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，固定宽度，内部无缓存操作
@@ -429,7 +429,7 @@ extension Wrapper where Base: UICollectionView {
         width: CGFloat,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, width: width, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, width: width, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，固定高度，内部无缓存操作
@@ -443,7 +443,7 @@ extension Wrapper where Base: UICollectionView {
         height: CGFloat,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, height: height, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, height: height, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 indexPath
@@ -457,7 +457,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy indexPath: IndexPath,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, cacheBy: indexPath, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, cacheBy: indexPath, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 indexPath
@@ -473,7 +473,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy indexPath: IndexPath,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, width: width, cacheBy: indexPath, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, width: width, cacheBy: indexPath, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 indexPath
@@ -489,7 +489,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy indexPath: IndexPath,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, height: height, cacheBy: indexPath, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, height: height, cacheBy: indexPath, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 key
@@ -503,7 +503,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, cacheByKey: key, configuration: configuration)
     }
     
     /// 获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key
@@ -519,7 +519,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, width: width, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, width: width, cacheByKey: key, configuration: configuration)
     }
 
     /// 获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key
@@ -535,7 +535,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping CollectionCellConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withCellClass: cellClass, height: height, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withCellClass: cellClass, height: height, cacheByKey: key, configuration: configuration)
     }
 
     // MARK: - ReusableView
@@ -550,7 +550,7 @@ extension Wrapper where Base: UICollectionView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, kind: kind, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定宽度，内部无缓存操作
@@ -566,7 +566,7 @@ extension Wrapper where Base: UICollectionView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, width: width, kind: kind, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定高度，内部无缓存操作
@@ -582,7 +582,7 @@ extension Wrapper where Base: UICollectionView {
         kind: String,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, height: height, kind: kind, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 section
@@ -598,7 +598,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy section: Int,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, kind: kind, cacheBySection: section, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind, cacheBySection: section, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 section
@@ -616,7 +616,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy section: Int,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheBySection: section, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheBySection: section, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 section
@@ -634,7 +634,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy section: Int,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheBySection: section, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheBySection: section, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 key
@@ -650,7 +650,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, kind: kind, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind, cacheByKey: key, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key
@@ -668,7 +668,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheByKey: key, configuration: configuration)
     }
 
     /// 获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key
@@ -686,7 +686,7 @@ extension Wrapper where Base: UICollectionView {
         cacheBy key: NSCopying?,
         configuration: @escaping ReusableViewConfigurationBlock
     ) -> CGSize {
-        return base.__fw.size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheByKey: key, configuration: configuration)
+        return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheByKey: key, configuration: configuration)
     }
     
 }
