@@ -339,7 +339,7 @@
     
     // 自动撑开方式
     if (cell.fw_maxYViewExpanded) {
-        return [cell.fw layoutHeightWithWidth:width];
+        return [cell fw_layoutHeightWithWidth:width];
     }
 
     // 刷新布局
@@ -445,7 +445,7 @@
     
     // 自动撑开方式
     if (headerFooterView.fw_maxYViewExpanded) {
-        return [headerFooterView.fw layoutHeightWithWidth:width];
+        return [headerFooterView fw_layoutHeightWithWidth:width];
     }
     
     // 刷新布局
@@ -890,9 +890,9 @@
     // 自动撑开方式
     if (cell.fw_maxYViewExpanded) {
         if (fixedHeight > 0) {
-            width = [cell.fw layoutWidthWithHeight:height];
+            width = [cell fw_layoutWidthWithHeight:height];
         } else {
-            height = [cell.fw layoutHeightWithWidth:width];
+            height = [cell fw_layoutHeightWithWidth:width];
         }
         return CGSizeMake(width, height);
     }
@@ -1060,9 +1060,9 @@
     // 自动撑开方式
     if (reusableView.fw_maxYViewExpanded) {
         if (fixedHeight > 0) {
-            width = [reusableView.fw layoutWidthWithHeight:height];
+            width = [reusableView fw_layoutWidthWithHeight:height];
         } else {
-            height = [reusableView.fw layoutHeightWithWidth:width];
+            height = [reusableView fw_layoutHeightWithWidth:width];
         }
         return CGSizeMake(width, height);
     }
