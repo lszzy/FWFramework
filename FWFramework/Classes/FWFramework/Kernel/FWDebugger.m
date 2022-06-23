@@ -111,7 +111,7 @@
 
 - (UIColor *)fw_debugColor {
     if (self.fw_randomDebugColor) {
-        return [UIColor.fw.randomColor colorWithAlphaComponent:0.3];
+        return [UIColor.fw_randomColor colorWithAlphaComponent:0.3];
     } else {
         return [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
     }
