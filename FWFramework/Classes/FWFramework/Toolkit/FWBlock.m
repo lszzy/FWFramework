@@ -34,10 +34,10 @@
 
 + (NSTimer *)fw_commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger))block
 {
-    NSTimeInterval startTime = NSDate.fw.currentTime;
+    NSTimeInterval startTime = NSDate.fw_currentTime;
     NSTimer *timer = [self fw_commonTimerWithTimeInterval:1 block:^(NSTimer *timer) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSInteger countDown = seconds - (NSInteger)round(NSDate.fw.currentTime - startTime);
+            NSInteger countDown = seconds - (NSInteger)round(NSDate.fw_currentTime - startTime);
             if (countDown <= 0) {
                 block(0);
                 [timer invalidate];

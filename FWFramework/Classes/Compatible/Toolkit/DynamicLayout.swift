@@ -37,7 +37,7 @@ extension Wrapper where Base: UITableViewCell {
         style: UITableViewCell.CellStyle = .default,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw_cell(with: tableView, style: style, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_cell(with: tableView, style: style, reuseIdentifier: reuseIdentifier)
     }
     
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
@@ -76,7 +76,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         tableView: UITableView,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw_headerFooterView(with: tableView, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_headerFooterView(with: tableView, reuseIdentifier: reuseIdentifier)
     }
 
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
@@ -260,7 +260,7 @@ extension Wrapper where Base: UICollectionViewCell {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw_cell(with: collectionView, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_cell(with: collectionView, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
 
     /// 根据配置自动计算view大小，子类可重写
@@ -319,7 +319,7 @@ extension Wrapper where Base: UICollectionReusableView {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return Base.__fw_reusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier) as! Base
+        return Base.__fw_reusableView(with: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
 
     /// 根据配置自动计算view大小，子类可重写
