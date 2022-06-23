@@ -11,7 +11,6 @@
 #import "FWLoader.h"
 #import "FWPlugin.h"
 #import "FWLogger.h"
-#import "FWWrapper.h"
 #import "FWAutoloader.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
@@ -275,9 +274,9 @@
 
 #pragma mark - FWModuleBundle
 
-@interface FWImageClassWrapper ()
+@interface UIImage ()
 
-- (UIImage *)imageNamed:(NSString *)name bundle:(NSBundle *)bundle;
++ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)bundle;
 
 @end
 
@@ -291,8 +290,8 @@
 + (UIImage *)imageNamed:(NSString *)name
 {
     UIImage *image;
-    if ([UIImage.fw respondsToSelector:@selector(imageNamed:bundle:)]) {
-        image = [UIImage.fw imageNamed:name bundle:[self bundle]];
+    if ([UIImage respondsToSelector:@selector(fw_imageNamed:bundle:)]) {
+        image = [UIImage fw_imageNamed:name bundle:[self bundle]];
     } else {
         image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }
