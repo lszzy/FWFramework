@@ -179,7 +179,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundColor = color;
             self.fw_appearance.backgroundImage = nil;
         } else {
-            UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
+            UIImage *image = [UIImage fw_imageWithColor:color] ?: [UIImage new];
             self.fw_appearance.backgroundColor = nil;
             self.fw_appearance.backgroundImage = image;
         }
@@ -190,7 +190,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         } else {
             self.barTintColor = nil;
-            UIImage *image = [UIImage.fw imageWithColor:color] ?: [UIImage new];
+            UIImage *image = [UIImage fw_imageWithColor:color] ?: [UIImage new];
             [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         }
     }
@@ -251,7 +251,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
     } else {
-        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage fw_imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
@@ -284,7 +284,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)setFw_backImage:(UIImage *)backImage
 {
-    UIImage *image = [backImage.fw imageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
+    UIImage *image = [backImage fw_imageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
     if (@available(iOS 15.0, *)) {
         [self.fw_appearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fw_updateAppearance];
@@ -304,7 +304,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
                 self.fw_appearance.backgroundImage = nil;
             } else {
-                UIImage *image = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
+                UIImage *image = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
                 self.fw_appearance.backgroundColor = nil;
                 self.fw_appearance.backgroundImage = image;
             }
@@ -314,7 +314,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.barTintColor = self.fw_backgroundColor.fw_color;
                 [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
             } else {
-                UIImage *image = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
+                UIImage *image = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color] ?: [UIImage new];
                 self.barTintColor = nil;
                 [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
             }
@@ -339,7 +339,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
         } else {
-            self.shadowImage = [UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
+            self.shadowImage = [UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
@@ -430,7 +430,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundImage = nil;
         } else {
             self.fw_appearance.backgroundColor = nil;
-            self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:color];
         }
         [self fw_updateAppearance];
     } else {
@@ -439,7 +439,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.backgroundImage = nil;
         } else {
             self.barTintColor = nil;
-            self.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.backgroundImage = [UIImage fw_imageWithColor:color];
         }
     }
 }
@@ -498,7 +498,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
     } else {
-        self.shadowImage = [UIImage.fw imageWithColor:shadowColor] ?: [UIImage new];
+        self.shadowImage = [UIImage fw_imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
 
@@ -531,7 +531,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundImage = nil;
             } else {
                 self.fw_appearance.backgroundColor = nil;
-                self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
+                self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color];
             }
             [self fw_updateAppearance];
         } else {
@@ -540,7 +540,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.backgroundImage = nil;
             } else {
                 self.barTintColor = nil;
-                self.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
+                self.backgroundImage = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color];
             }
         }
     }
@@ -562,7 +562,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
         } else {
-            self.shadowImage = [UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
+            self.shadowImage = [UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
@@ -703,7 +703,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundImage = nil;
         } else {
             self.fw_appearance.backgroundColor = nil;
-            self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:color];
+            self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:color];
         }
         [self fw_updateAppearance];
     } else {
@@ -712,7 +712,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         } else {
             self.barTintColor = nil;
-            [self setBackgroundImage:[UIImage.fw imageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            [self setBackgroundImage:[UIImage fw_imageWithColor:color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         }
     }
 }
@@ -771,7 +771,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
     } else {
-        [self setShadowImage:[UIImage.fw imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+        [self setShadowImage:[UIImage fw_imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
 
@@ -804,7 +804,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundImage = nil;
             } else {
                 self.fw_appearance.backgroundColor = nil;
-                self.fw_appearance.backgroundImage = [UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color];
+                self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color];
             }
             [self fw_updateAppearance];
         } else {
@@ -813,7 +813,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             } else {
                 self.barTintColor = nil;
-                [self setBackgroundImage:[UIImage.fw imageWithColor:self.fw_backgroundColor.fw_color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+                [self setBackgroundImage:[UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             }
         }
     }
@@ -835,7 +835,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
         } else {
-            [self setShadowImage:[UIImage.fw imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
+            [self setShadowImage:[UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
     
