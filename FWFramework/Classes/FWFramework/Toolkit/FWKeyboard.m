@@ -466,19 +466,19 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     }
     
     // 再执行内部方法
-    if (textView.fw.returnResign || textView.fw.returnNext || textView.fw.returnBlock) {
+    if (textView.fw_returnResign || textView.fw_returnNext || textView.fw_returnBlock) {
         // 判断是否输入回车
         if ([text isEqualToString:@"\n"]) {
             // 切换到下一个输入框
-            if (textView.fw.returnNext) {
-                [textView.fw goNext];
+            if (textView.fw_returnNext) {
+                [textView fw_goNext];
             // 关闭键盘
-            } else if (textView.fw.returnResign) {
+            } else if (textView.fw_returnResign) {
                 [textView resignFirstResponder];
             }
             // 执行回调
-            if (textView.fw.returnBlock) {
-                textView.fw.returnBlock(textView);
+            if (textView.fw_returnBlock) {
+                textView.fw_returnBlock(textView);
             }
             shouldChange = NO;
         }
@@ -488,700 +488,528 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @end
 
-#pragma mark - FWTextFieldWrapper+FWKeyboard
-
-@interface FWTextFieldWrapper (FWKeyboardInternal)
-
-@property (nonatomic, strong, readonly) FWInnerKeyboardTarget *innerKeyboardTarget;
-
-- (void)innerReturnEvent;
-
-@end
-
-@interface UITextField (FWKeyboard)
-
-@end
+#pragma mark - UITextField+FWKeyboard
 
 @implementation UITextField (FWKeyboard)
 
-- (BOOL)innerKeyboardManager
+- (BOOL)fw_keyboardManager
 {
-    return self.fw.innerKeyboardTarget.keyboardManager;
+    return self.fw_innerKeyboardTarget.keyboardManager;
 }
 
-- (void)setInnerKeyboardManager:(BOOL)keyboardManager
+- (void)setFw_keyboardManager:(BOOL)keyboardManager
 {
-    self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
+    self.fw_innerKeyboardTarget.keyboardManager = keyboardManager;
 }
 
-- (CGFloat)innerKeyboardDistance
+- (CGFloat)fw_keyboardDistance
 {
-    return self.fw.innerKeyboardTarget.keyboardDistance;
+    return self.fw_innerKeyboardTarget.keyboardDistance;
 }
 
-- (void)setInnerKeyboardDistance:(CGFloat)keyboardDistance
+- (void)setFw_keyboardDistance:(CGFloat)keyboardDistance
 {
-    self.fw.innerKeyboardTarget.keyboardDistance = keyboardDistance;
+    self.fw_innerKeyboardTarget.keyboardDistance = keyboardDistance;
 }
 
-- (CGFloat)innerReboundDistance
+- (CGFloat)fw_reboundDistance
 {
-    return self.fw.innerKeyboardTarget.reboundDistance;
+    return self.fw_innerKeyboardTarget.reboundDistance;
 }
 
-- (void)setInnerReboundDistance:(CGFloat)reboundDistance
+- (void)setFw_reboundDistance:(CGFloat)reboundDistance
 {
-    self.fw.innerKeyboardTarget.reboundDistance = reboundDistance;
+    self.fw_innerKeyboardTarget.reboundDistance = reboundDistance;
 }
 
-- (BOOL)innerKeyboardResign
+- (BOOL)fw_keyboardResign
 {
-    return self.fw.innerKeyboardTarget.keyboardResign;
+    return self.fw_innerKeyboardTarget.keyboardResign;
 }
 
-- (void)setInnerKeyboardResign:(BOOL)keyboardResign
+- (void)setFw_keyboardResign:(BOOL)keyboardResign
 {
-    self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
+    self.fw_innerKeyboardTarget.keyboardResign = keyboardResign;
 }
 
-- (UIScrollView *)innerKeyboardScrollView
+- (BOOL)fw_touchResign
 {
-    return self.fw.innerKeyboardTarget.scrollView;
+    return self.fw_innerKeyboardTarget.touchResign;
 }
 
-- (void)setInnerKeyboardScrollView:(UIScrollView *)keyboardScrollView
+- (void)setFw_touchResign:(BOOL)touchResign
 {
-    self.fw.innerKeyboardTarget.scrollView = keyboardScrollView;
+    self.fw_innerKeyboardTarget.touchResign = touchResign;
 }
 
-- (BOOL)innerTouchResign
+- (UIScrollView *)fw_keyboardScrollView
 {
-    return self.fw.innerKeyboardTarget.touchResign;
+    return self.fw_innerKeyboardTarget.scrollView;
 }
 
-- (void)setInnerTouchResign:(BOOL)touchResign
+- (void)setFw_keyboardScrollView:(UIScrollView *)keyboardScrollView
 {
-    self.fw.innerKeyboardTarget.touchResign = touchResign;
+    self.fw_innerKeyboardTarget.scrollView = keyboardScrollView;
 }
 
-- (BOOL)innerReturnResign
+- (FWInnerKeyboardTarget *)fw_innerKeyboardTarget
 {
-    return self.fw.innerKeyboardTarget.returnResign;
-}
-
-- (void)setInnerReturnResign:(BOOL)returnResign
-{
-    self.fw.innerKeyboardTarget.returnResign = returnResign;
-    [self.fw innerReturnEvent];
-}
-
-@end
-
-@implementation FWTextFieldWrapper (FWKeyboard)
-
-- (BOOL)keyboardManager
-{
-    return self.base.innerKeyboardManager;
-}
-
-- (void)setKeyboardManager:(BOOL)keyboardManager
-{
-    self.base.innerKeyboardManager = keyboardManager;
-}
-
-- (CGFloat)keyboardDistance
-{
-    return self.base.innerKeyboardDistance;
-}
-
-- (void)setKeyboardDistance:(CGFloat)keyboardDistance
-{
-    self.base.innerKeyboardDistance = keyboardDistance;
-}
-
-- (CGFloat)reboundDistance
-{
-    return self.base.innerReboundDistance;
-}
-
-- (void)setReboundDistance:(CGFloat)reboundDistance
-{
-    self.base.innerReboundDistance = reboundDistance;
-}
-
-- (BOOL)keyboardResign
-{
-    return self.base.innerKeyboardResign;
-}
-
-- (void)setKeyboardResign:(BOOL)keyboardResign
-{
-    self.base.innerKeyboardResign = keyboardResign;
-}
-
-- (BOOL)touchResign
-{
-    return self.base.innerTouchResign;
-}
-
-- (void)setTouchResign:(BOOL)touchResign
-{
-    self.base.innerTouchResign = touchResign;
-}
-
-- (UIScrollView *)keyboardScrollView
-{
-    return self.base.innerKeyboardScrollView;
-}
-
-- (void)setKeyboardScrollView:(UIScrollView *)keyboardScrollView
-{
-    self.base.innerKeyboardScrollView = keyboardScrollView;
-}
-
-- (FWInnerKeyboardTarget *)innerKeyboardTarget
-{
-    FWInnerKeyboardTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    FWInnerKeyboardTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target) {
-        target = [[FWInnerKeyboardTarget alloc] initWithTextInput:self.base];
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        target = [[FWInnerKeyboardTarget alloc] initWithTextInput:self];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
 #pragma mark - Return
 
-- (BOOL)returnResign
+- (BOOL)fw_returnResign
 {
-    return self.base.innerReturnResign;
+    return self.fw_innerKeyboardTarget.returnResign;
 }
 
-- (void)setReturnResign:(BOOL)returnResign
+- (void)setFw_returnResign:(BOOL)returnResign
 {
-    self.base.innerReturnResign = returnResign;
+    self.fw_innerKeyboardTarget.returnResign = returnResign;
+    [self fw_innerReturnEvent];
 }
 
-- (BOOL)returnNext
+- (BOOL)fw_returnNext
 {
-    return self.innerKeyboardTarget.returnNext;
+    return self.fw_innerKeyboardTarget.returnNext;
 }
 
-- (void)setReturnNext:(BOOL)returnNext
+- (void)setFw_returnNext:(BOOL)returnNext
 {
-    self.innerKeyboardTarget.returnNext = returnNext;
-    [self innerReturnEvent];
+    self.fw_innerKeyboardTarget.returnNext = returnNext;
+    [self fw_innerReturnEvent];
 }
 
-- (void (^)(UITextField *textField))returnBlock
+- (void (^)(UITextField *textField))fw_returnBlock
 {
-    return self.innerKeyboardTarget.returnBlock;
+    return self.fw_innerKeyboardTarget.returnBlock;
 }
 
-- (void)setReturnBlock:(void (^)(UITextField *textField))returnBlock
+- (void)setFw_returnBlock:(void (^)(UITextField *textField))returnBlock
 {
-    self.innerKeyboardTarget.returnBlock = returnBlock;
-    [self innerReturnEvent];
+    self.fw_innerKeyboardTarget.returnBlock = returnBlock;
+    [self fw_innerReturnEvent];
 }
 
-- (void)innerReturnEvent
+- (void)fw_innerReturnEvent
 {
-    id object = objc_getAssociatedObject(self.base, _cmd);
+    id object = objc_getAssociatedObject(self, _cmd);
     if (!object) {
-        [self.base addTarget:self.innerKeyboardTarget action:@selector(innerReturnAction) forControlEvents:UIControlEventEditingDidEndOnExit];
-        objc_setAssociatedObject(self.base, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self addTarget:self.fw_innerKeyboardTarget action:@selector(innerReturnAction) forControlEvents:UIControlEventEditingDidEndOnExit];
+        objc_setAssociatedObject(self, _cmd, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
 #pragma mark - Toolbar
 
-- (UIToolbar *)keyboardToolbar
+- (UIToolbar *)fw_keyboardToolbar
 {
-    return self.innerKeyboardTarget.keyboardToolbar;
+    return self.fw_innerKeyboardTarget.keyboardToolbar;
 }
 
-- (void)setKeyboardToolbar:(UIToolbar *)keyboardToolbar
+- (void)setFw_keyboardToolbar:(UIToolbar *)keyboardToolbar
 {
-    self.innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
+    self.fw_innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
 }
 
-- (id)toolbarPreviousButton
+- (id)fw_toolbarPreviousButton
 {
-    return self.innerKeyboardTarget.toolbarPreviousButton;
+    return self.fw_innerKeyboardTarget.toolbarPreviousButton;
 }
 
-- (void)setToolbarPreviousButton:(id)toolbarPreviousButton
+- (void)setFw_toolbarPreviousButton:(id)toolbarPreviousButton
 {
-    self.innerKeyboardTarget.previousButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
+    self.fw_innerKeyboardTarget.previousButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
 }
 
-- (id)toolbarNextButton
+- (id)fw_toolbarNextButton
 {
-    return self.innerKeyboardTarget.toolbarNextButton;
+    return self.fw_innerKeyboardTarget.toolbarNextButton;
 }
 
-- (void)setToolbarNextButton:(id)toolbarNextButton
+- (void)setFw_toolbarNextButton:(id)toolbarNextButton
 {
-    self.innerKeyboardTarget.nextButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
+    self.fw_innerKeyboardTarget.nextButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
 }
 
-- (id)toolbarDoneButton
+- (id)fw_toolbarDoneButton
 {
-    return self.innerKeyboardTarget.toolbarDoneButton;
+    return self.fw_innerKeyboardTarget.toolbarDoneButton;
 }
 
-- (void)setToolbarDoneButton:(id)toolbarDoneButton
+- (void)setFw_toolbarDoneButton:(id)toolbarDoneButton
 {
-    self.innerKeyboardTarget.doneButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
+    self.fw_innerKeyboardTarget.doneButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 
-- (UIResponder * (^)(UITextField *))previousResponder
+- (UIResponder * (^)(UITextField *))fw_previousResponder
 {
-    return self.innerKeyboardTarget.previousResponder;
+    return self.fw_innerKeyboardTarget.previousResponder;
 }
 
-- (void)setPreviousResponder:(UIResponder * (^)(UITextField *))previousResponder
+- (void)setFw_previousResponder:(UIResponder * (^)(UITextField *))previousResponder
 {
-    self.innerKeyboardTarget.previousResponder = previousResponder;
+    self.fw_innerKeyboardTarget.previousResponder = previousResponder;
 }
 
-- (UIResponder * (^)(UITextField *))nextResponder
+- (UIResponder * (^)(UITextField *))fw_nextResponder
 {
-    return self.innerKeyboardTarget.nextResponder;
+    return self.fw_innerKeyboardTarget.nextResponder;
 }
 
-- (void)setNextResponder:(UIResponder * (^)(UITextField *))nextResponder
+- (void)setFw_nextResponder:(UIResponder * (^)(UITextField *))nextResponder
 {
-    self.innerKeyboardTarget.nextResponder = nextResponder;
+    self.fw_innerKeyboardTarget.nextResponder = nextResponder;
 }
 
-- (NSInteger)previousResponderTag
+- (NSInteger)fw_previousResponderTag
 {
-    return self.innerKeyboardTarget.previousResponderTag;
+    return self.fw_innerKeyboardTarget.previousResponderTag;
 }
 
-- (void)setPreviousResponderTag:(NSInteger)previousResponderTag
+- (void)setFw_previousResponderTag:(NSInteger)previousResponderTag
 {
-    self.innerKeyboardTarget.previousResponderTag = previousResponderTag;
+    self.fw_innerKeyboardTarget.previousResponderTag = previousResponderTag;
 }
 
-- (NSInteger)nextResponderTag
+- (NSInteger)fw_nextResponderTag
 {
-    return self.innerKeyboardTarget.nextResponderTag;
+    return self.fw_innerKeyboardTarget.nextResponderTag;
 }
 
-- (void)setNextResponderTag:(NSInteger)nextResponderTag
+- (void)setFw_nextResponderTag:(NSInteger)nextResponderTag
 {
-    self.innerKeyboardTarget.nextResponderTag = nextResponderTag;
+    self.fw_innerKeyboardTarget.nextResponderTag = nextResponderTag;
 }
 
-- (void)goPrevious
+- (void)fw_goPrevious
 {
-    [self.innerKeyboardTarget goPrevious];
+    [self.fw_innerKeyboardTarget goPrevious];
 }
 
-- (void)goNext
+- (void)fw_goNext
 {
-    [self.innerKeyboardTarget goNext];
+    [self.fw_innerKeyboardTarget goNext];
 }
 
-- (CGFloat)keyboardHeight:(NSNotification *)notification
+- (CGFloat)fw_keyboardHeight:(NSNotification *)notification
 {
-    return [self.innerKeyboardTarget keyboardHeight:notification];
+    return [self.fw_innerKeyboardTarget keyboardHeight:notification];
 }
 
-- (void)keyboardAnimate:(NSNotification *)notification
+- (void)fw_keyboardAnimate:(NSNotification *)notification
              animations:(void (^)(void))animations
              completion:(void (^)(BOOL))completion
 {
-    [self.innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
+    [self.fw_innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
 }
 
-- (void)addToolbarWithTitle:(id)title
+- (void)fw_addToolbarWithTitle:(id)title
                   doneBlock:(void (^)(id sender))doneBlock
 {
-    [self.innerKeyboardTarget addToolbarWithTitle:title doneBlock:doneBlock];
+    [self.fw_innerKeyboardTarget addToolbarWithTitle:title doneBlock:doneBlock];
 }
 
-- (void)addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
+- (void)fw_addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
                    previousItem:(UIBarButtonItem *)previousItem
                        nextItem:(UIBarButtonItem *)nextItem
                        doneItem:(UIBarButtonItem *)doneItem
 {
-    [self.innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];
+    [self.fw_innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];
 }
 
 @end
 
-#pragma mark - FWTextViewWrapper+FWKeyboard
-
-@interface FWTextViewWrapper (FWKeyboardInternal)
-
-@property (nonatomic, strong, readonly) FWInnerKeyboardTarget *innerKeyboardTarget;
-
-@property (nonatomic, assign) BOOL delegateProxyEnabled;
-
-@end
-
-@interface UITextView (FWKeyboard)
-
-@end
+#pragma mark - UITextView+FWKeyboard
 
 @implementation UITextView (FWKeyboard)
 
-- (BOOL)innerKeyboardManager
+- (BOOL)fw_keyboardManager
 {
-    return self.fw.innerKeyboardTarget.keyboardManager;
+    return self.fw_innerKeyboardTarget.keyboardManager;
 }
 
-- (void)setInnerKeyboardManager:(BOOL)keyboardManager
+- (void)setFw_keyboardManager:(BOOL)keyboardManager
 {
-    self.fw.innerKeyboardTarget.keyboardManager = keyboardManager;
+    self.fw_innerKeyboardTarget.keyboardManager = keyboardManager;
 }
 
-- (CGFloat)innerKeyboardDistance
+- (CGFloat)fw_keyboardDistance
 {
-    return self.fw.innerKeyboardTarget.keyboardDistance;
+    return self.fw_innerKeyboardTarget.keyboardDistance;
 }
 
-- (void)setInnerKeyboardDistance:(CGFloat)keyboardDistance
+- (void)setFw_keyboardDistance:(CGFloat)keyboardDistance
 {
-    self.fw.innerKeyboardTarget.keyboardDistance = keyboardDistance;
+    self.fw_innerKeyboardTarget.keyboardDistance = keyboardDistance;
 }
 
-- (CGFloat)innerReboundDistance
+- (CGFloat)fw_reboundDistance
 {
-    return self.fw.innerKeyboardTarget.reboundDistance;
+    return self.fw_innerKeyboardTarget.reboundDistance;
 }
 
-- (void)setInnerReboundDistance:(CGFloat)reboundDistance
+- (void)setFw_reboundDistance:(CGFloat)reboundDistance
 {
-    self.fw.innerKeyboardTarget.reboundDistance = reboundDistance;
+    self.fw_innerKeyboardTarget.reboundDistance = reboundDistance;
 }
 
-- (BOOL)innerKeyboardResign
+- (BOOL)fw_keyboardResign
 {
-    return self.fw.innerKeyboardTarget.keyboardResign;
+    return self.fw_innerKeyboardTarget.keyboardResign;
 }
 
-- (void)setInnerKeyboardResign:(BOOL)keyboardResign
+- (void)setFw_keyboardResign:(BOOL)keyboardResign
 {
-    self.fw.innerKeyboardTarget.keyboardResign = keyboardResign;
+    self.fw_innerKeyboardTarget.keyboardResign = keyboardResign;
 }
 
-- (UIScrollView *)innerKeyboardScrollView
+- (BOOL)fw_touchResign
 {
-    return self.fw.innerKeyboardTarget.scrollView;
+    return self.fw_innerKeyboardTarget.touchResign;
 }
 
-- (void)setInnerKeyboardScrollView:(UIScrollView *)keyboardScrollView
+- (void)setFw_touchResign:(BOOL)touchResign
 {
-    self.fw.innerKeyboardTarget.scrollView = keyboardScrollView;
+    self.fw_innerKeyboardTarget.touchResign = touchResign;
 }
 
-- (BOOL)innerTouchResign
+- (UIScrollView *)fw_keyboardScrollView
 {
-    return self.fw.innerKeyboardTarget.touchResign;
+    return self.fw_innerKeyboardTarget.scrollView;
 }
 
-- (void)setInnerTouchResign:(BOOL)touchResign
+- (void)setFw_keyboardScrollView:(UIScrollView *)keyboardScrollView
 {
-    self.fw.innerKeyboardTarget.touchResign = touchResign;
+    self.fw_innerKeyboardTarget.scrollView = keyboardScrollView;
 }
 
-- (BOOL)innerReturnResign
+- (FWInnerKeyboardTarget *)fw_innerKeyboardTarget
 {
-    return self.fw.innerKeyboardTarget.returnResign;
-}
-
-- (void)setInnerReturnResign:(BOOL)returnResign
-{
-    self.fw.innerKeyboardTarget.returnResign = returnResign;
-    self.fw.delegateProxyEnabled = YES;
-}
-
-@end
-
-@implementation FWTextViewWrapper (FWKeyboard)
-
-- (BOOL)keyboardManager
-{
-    return self.base.innerKeyboardManager;
-}
-
-- (void)setKeyboardManager:(BOOL)keyboardManager
-{
-    self.base.innerKeyboardManager = keyboardManager;
-}
-
-- (CGFloat)keyboardDistance
-{
-    return self.base.innerKeyboardDistance;
-}
-
-- (void)setKeyboardDistance:(CGFloat)keyboardDistance
-{
-    self.base.innerKeyboardDistance = keyboardDistance;
-}
-
-- (CGFloat)reboundDistance
-{
-    return self.base.innerReboundDistance;
-}
-
-- (void)setReboundDistance:(CGFloat)reboundDistance
-{
-    self.base.innerReboundDistance = reboundDistance;
-}
-
-- (BOOL)keyboardResign
-{
-    return self.base.innerKeyboardResign;
-}
-
-- (void)setKeyboardResign:(BOOL)keyboardResign
-{
-    self.base.innerKeyboardResign = keyboardResign;
-}
-
-- (BOOL)touchResign
-{
-    return self.base.innerTouchResign;
-}
-
-- (void)setTouchResign:(BOOL)touchResign
-{
-    self.base.innerTouchResign = touchResign;
-}
-
-- (UIScrollView *)keyboardScrollView
-{
-    return self.base.innerKeyboardScrollView;
-}
-
-- (void)setKeyboardScrollView:(UIScrollView *)keyboardScrollView
-{
-    self.base.innerKeyboardScrollView = keyboardScrollView;
-}
-
-- (FWInnerKeyboardTarget *)innerKeyboardTarget
-{
-    FWInnerKeyboardTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    FWInnerKeyboardTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target) {
-        target = [[FWInnerKeyboardTarget alloc] initWithTextInput:self.base];
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        target = [[FWInnerKeyboardTarget alloc] initWithTextInput:self];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
 #pragma mark - Return
 
-- (BOOL)returnResign
+- (BOOL)fw_returnResign
 {
-    return self.base.innerReturnResign;
+    return self.fw_innerKeyboardTarget.returnResign;
 }
 
-- (void)setReturnResign:(BOOL)returnResign
+- (void)setFw_returnResign:(BOOL)returnResign
 {
-    self.base.innerReturnResign = returnResign;
+    self.fw_innerKeyboardTarget.returnResign = returnResign;
+    self.fw_delegateProxyEnabled = YES;
 }
 
-- (BOOL)returnNext
+- (BOOL)fw_returnNext
 {
-    return self.innerKeyboardTarget.returnNext;
+    return self.fw_innerKeyboardTarget.returnNext;
 }
 
-- (void)setReturnNext:(BOOL)returnNext
+- (void)setFw_returnNext:(BOOL)returnNext
 {
-    self.innerKeyboardTarget.returnNext = returnNext;
-    self.delegateProxyEnabled = YES;
+    self.fw_innerKeyboardTarget.returnNext = returnNext;
+    self.fw_delegateProxyEnabled = YES;
 }
 
-- (void (^)(UITextView *textView))returnBlock
+- (void (^)(UITextView *textView))fw_returnBlock
 {
-    return self.innerKeyboardTarget.returnBlock;
+    return self.fw_innerKeyboardTarget.returnBlock;
 }
 
-- (void)setReturnBlock:(void (^)(UITextView *textView))returnBlock
+- (void)setFw_returnBlock:(void (^)(UITextView *textView))returnBlock
 {
-    self.innerKeyboardTarget.returnBlock = returnBlock;
-    self.delegateProxyEnabled = YES;
+    self.fw_innerKeyboardTarget.returnBlock = returnBlock;
+    self.fw_delegateProxyEnabled = YES;
 }
 
 #pragma mark - Delegate
 
-- (id<UITextViewDelegate>)delegate
+- (id<UITextViewDelegate>)fw_delegate
 {
-    if (!self.delegateProxyEnabled) {
-        return self.base.delegate;
+    if (!self.fw_delegateProxyEnabled) {
+        return self.delegate;
     } else {
-        return self.delegateProxy.delegate;
+        return self.fw_delegateProxy.delegate;
     }
 }
 
-- (void)setDelegate:(id<UITextViewDelegate>)delegate
+- (void)setFw_delegate:(id<UITextViewDelegate>)delegate
 {
-    if (!self.delegateProxyEnabled) {
-        self.base.delegate = delegate;
+    if (!self.fw_delegateProxyEnabled) {
+        self.delegate = delegate;
     } else {
-        self.delegateProxy.delegate = delegate;
+        self.fw_delegateProxy.delegate = delegate;
     }
 }
 
-- (BOOL)delegateProxyEnabled
+- (BOOL)fw_delegateProxyEnabled
 {
-    return self.base.delegate == self.delegateProxy;
+    return self.delegate == self.fw_delegateProxy;
 }
 
-- (void)setDelegateProxyEnabled:(BOOL)enabled
+- (void)setFw_delegateProxyEnabled:(BOOL)enabled
 {
-    if (enabled != self.delegateProxyEnabled) {
+    if (enabled != self.fw_delegateProxyEnabled) {
         if (enabled) {
-            self.delegateProxy.delegate = self.base.delegate;
-            self.base.delegate = self.delegateProxy;
+            self.fw_delegateProxy.delegate = self.delegate;
+            self.delegate = self.fw_delegateProxy;
         } else {
-            self.base.delegate = self.delegateProxy.delegate;
-            self.delegateProxy.delegate = nil;
+            self.delegate = self.fw_delegateProxy.delegate;
+            self.fw_delegateProxy.delegate = nil;
         }
     }
 }
 
-- (__kindof FWDelegateProxy *)delegateProxy
+- (__kindof FWDelegateProxy *)fw_delegateProxy
 {
-    FWDelegateProxy *proxy = objc_getAssociatedObject(self.base, _cmd);
+    FWDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
     if (!proxy) {
         proxy = [[FWTextViewDelegateProxy alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return proxy;
 }
 
 #pragma mark - Toolbar
 
-- (UIToolbar *)keyboardToolbar
+- (UIToolbar *)fw_keyboardToolbar
 {
-    return self.innerKeyboardTarget.keyboardToolbar;
+    return self.fw_innerKeyboardTarget.keyboardToolbar;
 }
 
-- (void)setKeyboardToolbar:(UIToolbar *)keyboardToolbar
+- (void)setFw_keyboardToolbar:(UIToolbar *)keyboardToolbar
 {
-    self.innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
+    self.fw_innerKeyboardTarget.keyboardToolbar = keyboardToolbar;
 }
 
-- (id)toolbarPreviousButton
+- (id)fw_toolbarPreviousButton
 {
-    return self.innerKeyboardTarget.toolbarPreviousButton;
+    return self.fw_innerKeyboardTarget.toolbarPreviousButton;
 }
 
-- (void)setToolbarPreviousButton:(id)toolbarPreviousButton
+- (void)setFw_toolbarPreviousButton:(id)toolbarPreviousButton
 {
-    self.innerKeyboardTarget.previousButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
+    self.fw_innerKeyboardTarget.previousButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarPreviousButton = toolbarPreviousButton;
 }
 
-- (id)toolbarNextButton
+- (id)fw_toolbarNextButton
 {
-    return self.innerKeyboardTarget.toolbarNextButton;
+    return self.fw_innerKeyboardTarget.toolbarNextButton;
 }
 
-- (void)setToolbarNextButton:(id)toolbarNextButton
+- (void)setFw_toolbarNextButton:(id)toolbarNextButton
 {
-    self.innerKeyboardTarget.nextButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
+    self.fw_innerKeyboardTarget.nextButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarNextButton = toolbarNextButton;
 }
 
-- (id)toolbarDoneButton
+- (id)fw_toolbarDoneButton
 {
-    return self.innerKeyboardTarget.toolbarDoneButton;
+    return self.fw_innerKeyboardTarget.toolbarDoneButton;
 }
 
-- (void)setToolbarDoneButton:(id)toolbarDoneButton
+- (void)setFw_toolbarDoneButton:(id)toolbarDoneButton
 {
-    self.innerKeyboardTarget.doneButtonInitialized = YES;
-    self.innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
+    self.fw_innerKeyboardTarget.doneButtonInitialized = YES;
+    self.fw_innerKeyboardTarget.toolbarDoneButton = toolbarDoneButton;
 }
 
-- (UIResponder * (^)(UITextView *))previousResponder
+- (UIResponder * (^)(UITextView *))fw_previousResponder
 {
-    return self.innerKeyboardTarget.previousResponder;
+    return self.fw_innerKeyboardTarget.previousResponder;
 }
 
-- (void)setPreviousResponder:(UIResponder * (^)(UITextView *))previousResponder
+- (void)setFw_previousResponder:(UIResponder * (^)(UITextView *))previousResponder
 {
-    self.innerKeyboardTarget.previousResponder = previousResponder;
+    self.fw_innerKeyboardTarget.previousResponder = previousResponder;
 }
 
-- (UIResponder * (^)(UITextView *))nextResponder
+- (UIResponder * (^)(UITextView *))fw_nextResponder
 {
-    return self.innerKeyboardTarget.nextResponder;
+    return self.fw_innerKeyboardTarget.nextResponder;
 }
 
-- (void)setNextResponder:(UIResponder * (^)(UITextView *))nextResponder
+- (void)setFw_nextResponder:(UIResponder * (^)(UITextView *))nextResponder
 {
-    self.innerKeyboardTarget.nextResponder = nextResponder;
+    self.fw_innerKeyboardTarget.nextResponder = nextResponder;
 }
 
-- (NSInteger)previousResponderTag
+- (NSInteger)fw_previousResponderTag
 {
-    return self.innerKeyboardTarget.previousResponderTag;
+    return self.fw_innerKeyboardTarget.previousResponderTag;
 }
 
-- (void)setPreviousResponderTag:(NSInteger)previousResponderTag
+- (void)setFw_previousResponderTag:(NSInteger)previousResponderTag
 {
-    self.innerKeyboardTarget.previousResponderTag = previousResponderTag;
+    self.fw_innerKeyboardTarget.previousResponderTag = previousResponderTag;
 }
 
-- (NSInteger)nextResponderTag
+- (NSInteger)fw_nextResponderTag
 {
-    return self.innerKeyboardTarget.nextResponderTag;
+    return self.fw_innerKeyboardTarget.nextResponderTag;
 }
 
-- (void)setNextResponderTag:(NSInteger)nextResponderTag
+- (void)setFw_nextResponderTag:(NSInteger)nextResponderTag
 {
-    self.innerKeyboardTarget.nextResponderTag = nextResponderTag;
+    self.fw_innerKeyboardTarget.nextResponderTag = nextResponderTag;
 }
 
-- (void)goPrevious
+- (void)fw_goPrevious
 {
-    [self.innerKeyboardTarget goPrevious];
+    [self.fw_innerKeyboardTarget goPrevious];
 }
 
-- (void)goNext
+- (void)fw_goNext
 {
-    [self.innerKeyboardTarget goNext];
+    [self.fw_innerKeyboardTarget goNext];
 }
 
-- (CGFloat)keyboardHeight:(NSNotification *)notification
+- (CGFloat)fw_keyboardHeight:(NSNotification *)notification
 {
-    return [self.innerKeyboardTarget keyboardHeight:notification];
+    return [self.fw_innerKeyboardTarget keyboardHeight:notification];
 }
 
-- (void)keyboardAnimate:(NSNotification *)notification
+- (void)fw_keyboardAnimate:(NSNotification *)notification
              animations:(void (^)(void))animations
              completion:(void (^)(BOOL))completion
 {
-    [self.innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
+    [self.fw_innerKeyboardTarget keyboardAnimate:notification animations:animations completion:completion];
 }
 
-- (void)addToolbarWithTitle:(id)title
+- (void)fw_addToolbarWithTitle:(id)title
                   doneBlock:(void (^)(id sender))doneBlock
 {
-    [self.innerKeyboardTarget addToolbarWithTitle:title doneBlock:doneBlock];
+    [self.fw_innerKeyboardTarget addToolbarWithTitle:title doneBlock:doneBlock];
 }
 
-- (void)addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
+- (void)fw_addToolbarWithTitleItem:(UIBarButtonItem *)titleItem
                    previousItem:(UIBarButtonItem *)previousItem
                        nextItem:(UIBarButtonItem *)nextItem
                        doneItem:(UIBarButtonItem *)doneItem
 {
-    [self.innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];
+    [self.fw_innerKeyboardTarget addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];
 }
 
 @end
 
-#pragma mark - FWTextViewWrapper+FWPlaceholder
+#pragma mark - UITextView+FWPlaceholder
 
 @interface FWInnerPlaceholderTarget : NSObject
 
@@ -1195,11 +1023,11 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @end
 
-@implementation FWTextViewWrapper (FWPlaceholder)
+@implementation UITextView (FWPlaceholder)
 
-- (UILabel *)placeholderLabel
+- (UILabel *)fw_placeholderLabel
 {
-    UILabel *label = objc_getAssociatedObject(self.base, @selector(placeholderLabel));
+    UILabel *label = objc_getAssociatedObject(self, @selector(fw_placeholderLabel));
     if (!label) {
         static UIColor *defaultPlaceholderColor = nil;
         static dispatch_once_t onceToken;
@@ -1210,151 +1038,151 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
             defaultPlaceholderColor = placeholderLabel.textColor;
         });
         
-        NSAttributedString *originalText = self.base.attributedText;
-        self.base.text = @" ";
-        self.base.attributedText = originalText;
+        NSAttributedString *originalText = self.attributedText;
+        self.text = @" ";
+        self.attributedText = originalText;
         
         label = [[UILabel alloc] init];
         label.textColor = defaultPlaceholderColor;
         label.numberOfLines = 0;
         label.userInteractionEnabled = NO;
-        label.font = self.base.font;
-        objc_setAssociatedObject(self.base, @selector(placeholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
-        [self.base insertSubview:label atIndex:0];
+        label.font = self.font;
+        objc_setAssociatedObject(self, @selector(fw_placeholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
+        [self insertSubview:label atIndex:0];
         
-        [self.base fw_observeNotification:UITextViewTextDidChangeNotification object:self.base target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self fw_observeNotification:UITextViewTextDidChangeNotification object:self target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
 
-        [self.base fw_observeProperty:@"attributedText" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
-        [self.base fw_observeProperty:@"text" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
-        [self.base fw_observeProperty:@"bounds" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base fw_observeProperty:@"frame" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base fw_observeProperty:@"textAlignment" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
-        [self.base fw_observeProperty:@"textContainerInset" target:self.innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self fw_observeProperty:@"attributedText" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self fw_observeProperty:@"text" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdateText)];
+        [self fw_observeProperty:@"bounds" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self fw_observeProperty:@"frame" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self fw_observeProperty:@"textAlignment" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
+        [self fw_observeProperty:@"textContainerInset" target:self.fw_innerPlaceholderTarget action:@selector(setNeedsUpdatePlaceholder)];
         
-        [self.base fw_observeProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
-            if (change[NSKeyValueChangeNewKey] != nil) textView.fw.placeholderLabel.font = textView.font;
-            [textView.fw.innerPlaceholderTarget setNeedsUpdatePlaceholder];
+        [self fw_observeProperty:@"font" block:^(UITextView *textView, NSDictionary *change) {
+            if (change[NSKeyValueChangeNewKey] != nil) textView.fw_placeholderLabel.font = textView.font;
+            [textView.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
         }];
     }
     return label;
 }
 
-- (FWInnerPlaceholderTarget *)innerPlaceholderTarget
+- (FWInnerPlaceholderTarget *)fw_innerPlaceholderTarget
 {
-    FWInnerPlaceholderTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    FWInnerPlaceholderTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target) {
-        target = [[FWInnerPlaceholderTarget alloc] initWithTextView:self.base];
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        target = [[FWInnerPlaceholderTarget alloc] initWithTextView:self];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
-- (NSString *)placeholder
+- (NSString *)fw_placeholder
 {
-    return self.placeholderLabel.text;
+    return self.fw_placeholderLabel.text;
 }
 
-- (void)setPlaceholder:(NSString *)placeholder
+- (void)setFw_placeholder:(NSString *)placeholder
 {
-    self.placeholderLabel.text = placeholder;
-    [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    self.fw_placeholderLabel.text = placeholder;
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
 }
 
-- (NSAttributedString *)attributedPlaceholder
+- (NSAttributedString *)fw_attributedPlaceholder
 {
-    return self.placeholderLabel.attributedText;
+    return self.fw_placeholderLabel.attributedText;
 }
 
-- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder
+- (void)setFw_attributedPlaceholder:(NSAttributedString *)attributedPlaceholder
 {
-    self.placeholderLabel.attributedText = attributedPlaceholder;
-    [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    self.fw_placeholderLabel.attributedText = attributedPlaceholder;
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
 }
 
-- (UIColor *)placeholderColor
+- (UIColor *)fw_placeholderColor
 {
-    return self.placeholderLabel.textColor;
+    return self.fw_placeholderLabel.textColor;
 }
 
-- (void)setPlaceholderColor:(UIColor *)placeholderColor
+- (void)setFw_placeholderColor:(UIColor *)placeholderColor
 {
-    self.placeholderLabel.textColor = placeholderColor;
+    self.fw_placeholderLabel.textColor = placeholderColor;
 }
 
-- (UIEdgeInsets)placeholderInset
+- (UIEdgeInsets)fw_placeholderInset
 {
-    NSValue *value = objc_getAssociatedObject(self.base, @selector(placeholderInset));
+    NSValue *value = objc_getAssociatedObject(self, @selector(fw_placeholderInset));
     return value ? value.UIEdgeInsetsValue : UIEdgeInsetsZero;
 }
 
-- (void)setPlaceholderInset:(UIEdgeInsets)inset
+- (void)setFw_placeholderInset:(UIEdgeInsets)inset
 {
-    objc_setAssociatedObject(self.base, @selector(placeholderInset), [NSValue valueWithUIEdgeInsets:inset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    objc_setAssociatedObject(self, @selector(fw_placeholderInset), [NSValue valueWithUIEdgeInsets:inset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
 }
 
-- (UIControlContentVerticalAlignment)verticalAlignment
+- (UIControlContentVerticalAlignment)fw_verticalAlignment
 {
-    NSNumber *value = objc_getAssociatedObject(self.base, @selector(verticalAlignment));
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_verticalAlignment));
     return value ? value.integerValue : UIControlContentVerticalAlignmentTop;
 }
 
-- (void)setVerticalAlignment:(UIControlContentVerticalAlignment)verticalAlignment
+- (void)setFw_verticalAlignment:(UIControlContentVerticalAlignment)verticalAlignment
 {
-    objc_setAssociatedObject(self.base, @selector(verticalAlignment), @(verticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    objc_setAssociatedObject(self, @selector(fw_verticalAlignment), @(verticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
 }
 
-- (BOOL)autoHeightEnabled
+- (BOOL)fw_autoHeightEnabled
 {
-    return [objc_getAssociatedObject(self.base, @selector(autoHeightEnabled)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_autoHeightEnabled)) boolValue];
 }
 
-- (void)setAutoHeightEnabled:(BOOL)enabled
+- (void)setFw_autoHeightEnabled:(BOOL)enabled
 {
-    objc_setAssociatedObject(self.base, @selector(autoHeightEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPlaceholderTarget setNeedsUpdateText];
+    objc_setAssociatedObject(self, @selector(fw_autoHeightEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw_innerPlaceholderTarget setNeedsUpdateText];
 }
 
-- (CGFloat)maxHeight
+- (CGFloat)fw_maxHeight
 {
-    NSNumber *value = objc_getAssociatedObject(self.base, @selector(maxHeight));
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_maxHeight));
     return value ? value.doubleValue : CGFLOAT_MAX;
 }
 
-- (void)setMaxHeight:(CGFloat)height
+- (void)setFw_maxHeight:(CGFloat)height
 {
-    objc_setAssociatedObject(self.base, @selector(maxHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPlaceholderTarget setNeedsUpdateText];
+    objc_setAssociatedObject(self, @selector(fw_maxHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw_innerPlaceholderTarget setNeedsUpdateText];
 }
 
-- (CGFloat)minHeight
+- (CGFloat)fw_minHeight
 {
-    return [objc_getAssociatedObject(self.base, @selector(minHeight)) doubleValue];
+    return [objc_getAssociatedObject(self, @selector(fw_minHeight)) doubleValue];
 }
 
-- (void)setMinHeight:(CGFloat)height
+- (void)setFw_minHeight:(CGFloat)height
 {
-    objc_setAssociatedObject(self.base, @selector(minHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.innerPlaceholderTarget setNeedsUpdateText];
+    objc_setAssociatedObject(self, @selector(fw_minHeight), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self.fw_innerPlaceholderTarget setNeedsUpdateText];
 }
 
-- (void (^)(CGFloat))heightDidChange
+- (void (^)(CGFloat))fw_heightDidChange
 {
-    return objc_getAssociatedObject(self.base, @selector(heightDidChange));
+    return objc_getAssociatedObject(self, @selector(fw_heightDidChange));
 }
 
-- (void)setHeightDidChange:(void (^)(CGFloat))block
+- (void)setFw_heightDidChange:(void (^)(CGFloat))block
 {
-    objc_setAssociatedObject(self.base, @selector(heightDidChange), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_heightDidChange), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (void)autoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(void (^)(CGFloat))didChange
+- (void)fw_autoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(void (^)(CGFloat))didChange
 {
-    self.maxHeight = maxHeight;
-    if (didChange) self.heightDidChange = didChange;
-    self.autoHeightEnabled = YES;
+    self.fw_maxHeight = maxHeight;
+    if (didChange) self.fw_heightDidChange = didChange;
+    self.fw_autoHeightEnabled = YES;
 }
 
 @end
@@ -1389,7 +1217,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     contentInset.top = 0;
     if (self.textView.contentSize.height < self.textView.bounds.size.height) {
         CGFloat height = ceil([self.textView sizeThatFits:CGSizeMake(self.textView.bounds.size.width, CGFLOAT_MAX)].height);
-        switch (self.textView.fw.verticalAlignment) {
+        switch (self.textView.fw_verticalAlignment) {
             case UIControlContentVerticalAlignmentCenter:
                 contentInset.top = (self.textView.bounds.size.height - height) / 2.0;
                 break;
@@ -1403,20 +1231,20 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.textView.contentInset = contentInset;
     
     if (self.textView.text.length) {
-        self.textView.fw.placeholderLabel.hidden = YES;
+        self.textView.fw_placeholderLabel.hidden = YES;
     } else {
         CGRect targetFrame;
-        UIEdgeInsets inset = [self.textView.fw placeholderInset];
+        UIEdgeInsets inset = [self.textView fw_placeholderInset];
         if (!UIEdgeInsetsEqualToEdgeInsets(inset, UIEdgeInsetsZero)) {
             targetFrame = CGRectMake(inset.left, inset.top, CGRectGetWidth(self.textView.bounds) - inset.left - inset.right, CGRectGetHeight(self.textView.bounds) - inset.top - inset.bottom);
         } else {
             CGFloat x = self.textView.textContainer.lineFragmentPadding + self.textView.textContainerInset.left;
             CGFloat width = CGRectGetWidth(self.textView.bounds) - x - self.textView.textContainer.lineFragmentPadding - self.textView.textContainerInset.right;
-            CGFloat height = ceil([self.textView.fw.placeholderLabel sizeThatFits:CGSizeMake(width, 0)].height);
+            CGFloat height = ceil([self.textView.fw_placeholderLabel sizeThatFits:CGSizeMake(width, 0)].height);
             height = MIN(height, self.textView.bounds.size.height - self.textView.textContainerInset.top - self.textView.textContainerInset.bottom);
             
             CGFloat y = self.textView.textContainerInset.top;
-            switch (self.textView.fw.verticalAlignment) {
+            switch (self.textView.fw_verticalAlignment) {
                 case UIControlContentVerticalAlignmentCenter:
                     y = (self.textView.bounds.size.height - height) / 2.0 - self.textView.contentInset.top;
                     break;
@@ -1429,25 +1257,25 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
             targetFrame = CGRectMake(x, y, width, height);
         }
         
-        self.textView.fw.placeholderLabel.hidden = NO;
-        self.textView.fw.placeholderLabel.textAlignment = self.textView.textAlignment;
-        self.textView.fw.placeholderLabel.frame = targetFrame;
+        self.textView.fw_placeholderLabel.hidden = NO;
+        self.textView.fw_placeholderLabel.textAlignment = self.textView.textAlignment;
+        self.textView.fw_placeholderLabel.frame = targetFrame;
     }
 }
 
 - (void)updateText
 {
     [self updatePlaceholder];
-    if (!self.textView.fw.autoHeightEnabled) return;
+    if (!self.textView.fw_autoHeightEnabled) return;
     
     CGFloat height = ceil([self.textView sizeThatFits:CGSizeMake(self.textView.bounds.size.width, CGFLOAT_MAX)].height);
-    height = MAX(self.textView.fw.minHeight, MIN(height, self.textView.fw.maxHeight));
+    height = MAX(self.textView.fw_minHeight, MIN(height, self.textView.fw_maxHeight));
     if (height == self.lastHeight) return;
     
     CGRect targetFrame = self.textView.frame;
     targetFrame.size.height = height;
     self.textView.frame = targetFrame;
-    if (self.textView.fw.heightDidChange) self.textView.fw.heightDidChange(height);
+    if (self.textView.fw_heightDidChange) self.textView.fw_heightDidChange(height);
     self.lastHeight = height;
 }
 
