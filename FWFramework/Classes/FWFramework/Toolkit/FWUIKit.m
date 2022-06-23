@@ -602,7 +602,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)addLinkGestureWithBlock:(void (^)(id))block
 {
     self.base.userInteractionEnabled = YES;
-    [self addTapGestureWithBlock:^(UITapGestureRecognizer *gesture) {
+    [self.base fw_addTapGestureWithBlock:^(UITapGestureRecognizer *gesture) {
         if (![gesture.view isKindOfClass:[UILabel class]]) return;
         
         UILabel *label = (UILabel *)gesture.view;
