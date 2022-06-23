@@ -8,7 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,257 +32,249 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWViewWrapper+FWUIKit
+#pragma mark - UIView+FWUIKit
 
-@interface FWViewWrapper (FWUIKit)
+@interface UIView (FWUIKit)
 
 /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
-@property (nonatomic, assign, readonly) BOOL isViewVisible;
+@property (nonatomic, assign, readonly) BOOL fw_isViewVisible NS_REFINED_FOR_SWIFT;
 
 /// 获取响应的视图控制器
-@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *viewController;
+@property (nonatomic, strong, readonly, nullable) __kindof UIViewController *fw_viewController NS_REFINED_FOR_SWIFT;
 
 /// 设置额外热区(点击区域)
-@property (nonatomic, assign) UIEdgeInsets touchInsets;
+@property (nonatomic, assign) UIEdgeInsets fw_touchInsets NS_REFINED_FOR_SWIFT;
 
 /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
-@property (nonatomic, assign) CGRect fitFrame;
+@property (nonatomic, assign) CGRect fw_fitFrame NS_REFINED_FOR_SWIFT;
 
 /// 计算当前视图适合大小，需实现sizeThatFits:方法
-@property (nonatomic, assign, readonly) CGSize fitSize;
+@property (nonatomic, assign, readonly) CGSize fw_fitSize NS_REFINED_FOR_SWIFT;
 
 /// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
-- (CGSize)fitSizeWithDrawSize:(CGSize)drawSize;
+- (CGSize)fw_fitSizeWithDrawSize:(CGSize)drawSize NS_REFINED_FOR_SWIFT;
 
 /// 设置阴影颜色、偏移和半径
-- (void)setShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
+- (void)fw_setShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 绘制四边边框
-- (void)setBorderColor:(nullable UIColor *)color width:(CGFloat)width;
+- (void)fw_setBorderColor:(nullable UIColor *)color width:(CGFloat)width NS_REFINED_FOR_SWIFT;
 
 /// 绘制四边边框和四角圆角
-- (void)setBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius;
+- (void)fw_setBorderColor:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 绘制四角圆角
-- (void)setCornerRadius:(CGFloat)radius;
+- (void)fw_setCornerRadius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+- (void)fw_setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width NS_REFINED_FOR_SWIFT;
 
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)fw_setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset NS_REFINED_FOR_SWIFT;
 
 /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius;
+- (void)fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-- (void)setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width;
+- (void)fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius borderColor:(nullable UIColor *)color width:(CGFloat)width NS_REFINED_FOR_SWIFT;
 
 /// 绘制单边或多边边框视图。使用AutoLayout
-- (void)setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width;
+- (void)fw_setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width NS_REFINED_FOR_SWIFT;
 
 /// 绘制单边或多边边框。使用AutoLayout
-- (void)setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset;
+- (void)fw_setBorderView:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset NS_REFINED_FOR_SWIFT;
 
 /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
-- (dispatch_source_t)startCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
+- (dispatch_source_t)fw_startCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWLabelWrapper+FWUIKit
+#pragma mark - UILabel+FWUIKit
 
-@interface FWLabelWrapper (FWUIKit)
+@interface UILabel (FWUIKit)
 
 /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *textAttributes;
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_textAttributes NS_REFINED_FOR_SWIFT;
 
 /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
-@property (nonatomic, assign) CGFloat lineHeight;
+@property (nonatomic, assign) CGFloat fw_lineHeight NS_REFINED_FOR_SWIFT;
 
 /// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
-@property (nonatomic, assign) UIEdgeInsets contentInset;
+@property (nonatomic, assign) UIEdgeInsets fw_contentInset NS_REFINED_FOR_SWIFT;
 
 /// 纵向分布方式，默认居中
-@property (nonatomic, assign) UIControlContentVerticalAlignment verticalAlignment;
+@property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
 
 /// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
-- (void)addLinkGestureWithBlock:(void (^)(id link))block;
+- (void)fw_addLinkGestureWithBlock:(void (^)(id link))block NS_REFINED_FOR_SWIFT;
 
 /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
-- (NSDictionary<NSAttributedStringKey, id> *)attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing;
+- (NSDictionary<NSAttributedStringKey, id> *)fw_attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing NS_REFINED_FOR_SWIFT;
 
 /// 快速设置标签
-- (void)setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
+- (void)fw_setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
 
 /// 快速设置标签并指定文本
-- (void)setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
-
-@end
-
-@interface FWLabelClassWrapper (FWUIKit)
+- (void)fw_setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
 
 /// 快速创建标签
-- (__kindof UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor;
++ (instancetype)fw_labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
 
 /// 快速创建标签并指定文本
-- (__kindof UILabel *)labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text;
++ (instancetype)fw_labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWButtonWrapper+FWUIKit
+#pragma mark - UIButton+FWUIKit
 
-@interface FWButtonWrapper (FWUIKit)
+@interface UIButton (FWUIKit)
 
 /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat disabledAlpha;
+@property (nonatomic, assign) CGFloat fw_disabledAlpha NS_REFINED_FOR_SWIFT;
 
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat highlightedAlpha;
+@property (nonatomic, assign) CGFloat fw_highlightedAlpha NS_REFINED_FOR_SWIFT;
 
 /// 快速设置文本按钮
-- (void)setTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
+- (void)fw_setTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
 
 /// 快速设置文本
-- (void)setTitle:(nullable NSString *)title;
+- (void)fw_setTitle:(nullable NSString *)title NS_REFINED_FOR_SWIFT;
 
 /// 快速设置图片
-- (void)setImage:(nullable UIImage *)image;
+- (void)fw_setImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
 
 /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
 ///
 /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
 /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
-- (void)setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing;
-
-@end
-
-@interface FWButtonClassWrapper (FWUIKit)
+- (void)fw_setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing NS_REFINED_FOR_SWIFT;
 
 /// 快速创建文本按钮
-- (__kindof UIButton *)buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor;
++ (instancetype)fw_buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
 
 /// 快速创建图片按钮
-- (__kindof UIButton *)buttonWithImage:(nullable UIImage *)image;
++ (instancetype)fw_buttonWithImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWScrollViewWrapper+FWUIKit
+#pragma mark - UIScrollView+FWUIKit
 
-@interface FWScrollViewWrapper (FWUIKit)
+@interface UIScrollView (FWUIKit)
 
 /// 判断当前scrollView内容是否足够滚动
-@property (nonatomic, assign, readonly) BOOL canScroll;
+@property (nonatomic, assign, readonly) BOOL fw_canScroll NS_REFINED_FOR_SWIFT;
 
 /// 判断当前的scrollView内容是否足够水平滚动
-@property (nonatomic, assign, readonly) BOOL canScrollHorizontal;
+@property (nonatomic, assign, readonly) BOOL fw_canScrollHorizontal NS_REFINED_FOR_SWIFT;
 
 /// 判断当前的scrollView内容是否足够纵向滚动
-@property (nonatomic, assign, readonly) BOOL canScrollVertical;
+@property (nonatomic, assign, readonly) BOOL fw_canScrollVertical NS_REFINED_FOR_SWIFT;
 
 /// 当前scrollView滚动到指定边
-- (void)scrollToEdge:(UIRectEdge)edge animated:(BOOL)animated;
+- (void)fw_scrollToEdge:(UIRectEdge)edge animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 是否已滚动到指定边
-- (BOOL)isScrollToEdge:(UIRectEdge)edge;
+- (BOOL)fw_isScrollToEdge:(UIRectEdge)edge NS_REFINED_FOR_SWIFT;
 
 /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-- (CGPoint)contentOffsetOfEdge:(UIRectEdge)edge;
+- (CGPoint)fw_contentOffsetOfEdge:(UIRectEdge)edge NS_REFINED_FOR_SWIFT;
 
 /// 总页数，自动识别翻页方向
-@property (nonatomic, assign, readonly) NSInteger totalPage;
+@property (nonatomic, assign, readonly) NSInteger fw_totalPage NS_REFINED_FOR_SWIFT;
 
 /// 当前页数，不支持动画，自动识别翻页方向
-@property (nonatomic, assign) NSInteger currentPage;
+@property (nonatomic, assign) NSInteger fw_currentPage NS_REFINED_FOR_SWIFT;
 
 /// 设置当前页数，支持动画，自动识别翻页方向
-- (void)setCurrentPage:(NSInteger)page animated:(BOOL)animated;
+- (void)fw_setCurrentPage:(NSInteger)page animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 是否是最后一页，自动识别翻页方向
-@property (nonatomic, assign, readonly) BOOL isLastPage;
+@property (nonatomic, assign, readonly) BOOL fw_isLastPage NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWPageControlWrapper+FWUIKit
+#pragma mark - UIPageControl+FWUIKit
 
-@interface FWPageControlWrapper (FWUIKit)
+@interface UIPageControl (FWUIKit)
 
 /// 自定义圆点大小，默认{10, 10}
-@property (nonatomic, assign) CGSize preferredSize;
+@property (nonatomic, assign) CGSize fw_preferredSize NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWSliderWrapper+FWUIKit
+#pragma mark - UISlider+FWUIKit
 
-@interface FWSliderWrapper (FWUIKit)
+@interface UISlider (FWUIKit)
 
 /// 中间圆球的大小，默认zero
-@property (nonatomic, assign) CGSize thumbSize;
+@property (nonatomic, assign) CGSize fw_thumbSize NS_REFINED_FOR_SWIFT;
 
 /// 中间圆球的颜色，默认nil
-@property (nonatomic, strong, nullable) UIColor *thumbColor;
+@property (nonatomic, strong, nullable) UIColor *fw_thumbColor NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWSwitchWrapper+FWUIKit
+#pragma mark - UISwitch+FWUIKit
 
-@interface FWSwitchWrapper (FWUIKit)
+@interface UISwitch (FWUIKit)
 
 /// 自定义尺寸大小，默认{51,31}
-@property (nonatomic, assign) CGSize preferredSize;
+@property (nonatomic, assign) CGSize fw_preferredSize NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWTextFieldWrapper+FWUIKit
+#pragma mark - UITextField+FWUIKit
 
-@interface FWTextFieldWrapper (FWUIKit)
+@interface UITextField (FWUIKit)
 
 /// 最大字数限制，0为无限制，二选一
-@property (nonatomic, assign) NSInteger maxLength;
+@property (nonatomic, assign) NSInteger fw_maxLength NS_REFINED_FOR_SWIFT;
 
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-@property (nonatomic, assign) NSInteger maxUnicodeLength;
+@property (nonatomic, assign) NSInteger fw_maxUnicodeLength NS_REFINED_FOR_SWIFT;
 
 /// 自定义文字改变处理句柄，默认nil
-@property (nonatomic, copy, nullable) void (^textChangedBlock)(NSString *text);
+@property (nonatomic, copy, nullable) void (^fw_textChangedBlock)(NSString *text) NS_REFINED_FOR_SWIFT;
 
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-- (void)textLengthChanged;
+- (void)fw_textLengthChanged NS_REFINED_FOR_SWIFT;
 
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
-- (NSString *)filterText:(NSString *)text;
+- (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
+@property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-@property (nullable, nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
+@property (nullable, nonatomic, copy) void (^fw_autoCompleteBlock)(NSString *text) NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWTextViewWrapper+FWUIKit
+#pragma mark - UITextView+FWUIKit
 
-@interface FWTextViewWrapper (FWUIKit)
+@interface UITextView (FWUIKit)
 
 /// 最大字数限制，0为无限制，二选一
-@property (nonatomic, assign) NSInteger maxLength;
+@property (nonatomic, assign) NSInteger fw_maxLength NS_REFINED_FOR_SWIFT;
 
 /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-@property (nonatomic, assign) NSInteger maxUnicodeLength;
+@property (nonatomic, assign) NSInteger fw_maxUnicodeLength NS_REFINED_FOR_SWIFT;
 
 /// 自定义文字改变处理句柄，自动trimString，默认nil
-@property (nonatomic, copy, nullable) void (^textChangedBlock)(NSString *text);
+@property (nonatomic, copy, nullable) void (^fw_textChangedBlock)(NSString *text) NS_REFINED_FOR_SWIFT;
 
 /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-- (void)textLengthChanged;
+- (void)fw_textLengthChanged NS_REFINED_FOR_SWIFT;
 
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
-- (NSString *)filterText:(NSString *)text;
+- (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
-@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
+@property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
-@property (nullable, nonatomic, copy) void (^autoCompleteBlock)(NSString *text);
+@property (nullable, nonatomic, copy) void (^fw_autoCompleteBlock)(NSString *text) NS_REFINED_FOR_SWIFT;
 
 @end
 
