@@ -62,7 +62,7 @@ NSBundle系统语言分类，处理mainBundle语言。如果需要处理三方SD
 #pragma mark - Localized
 
 /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
-- (NSBundle *)fw_localizedBundle NS_REFINED_FOR_SWIFT NS_SWIFT_NAME(__fw_localizedBundle());
+- (NSBundle *)fw_localizedBundle NS_SWIFT_NAME(__fw_localizedBundle());
 
 /// 加载当前bundle内指定语言文件，加载失败返回nil
 - (nullable NSBundle *)fw_localizedBundleWithLanguage:(nullable NSString *)language NS_REFINED_FOR_SWIFT;
