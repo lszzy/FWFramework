@@ -100,7 +100,7 @@ NS_SWIFT_NAME(ThemeObject)
 + (void)fw_setThemeColors:(NSDictionary<NSString *, UIColor *> *)nameColors NS_REFINED_FOR_SWIFT;
 
 /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
-@property (nonatomic, readonly) UIColor *fw_color NS_SWIFT_NAME(__fw_color);
+@property (nonatomic, readonly) UIColor *fw_color NS_SWIFT_NAME(__fw_color) NS_REFINED_FOR_SWIFT;
 
 /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
 - (UIColor *)fw_colorForStyle:(FWThemeStyle)style NS_REFINED_FOR_SWIFT;
@@ -138,7 +138,7 @@ NS_SWIFT_NAME(ThemeObject)
 + (void)fw_setThemeImages:(NSDictionary<NSString *, UIImage *> *)nameImages NS_REFINED_FOR_SWIFT;
 
 /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
-@property (nullable, nonatomic, readonly) UIImage *fw_image NS_SWIFT_NAME(__fw_image);
+@property (nullable, nonatomic, readonly) UIImage *fw_image NS_SWIFT_NAME(__fw_image) NS_REFINED_FOR_SWIFT;
 
 /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
 - (nullable UIImage *)fw_imageForStyle:(FWThemeStyle)style NS_REFINED_FOR_SWIFT;
@@ -152,7 +152,7 @@ NS_SWIFT_NAME(ThemeObject)
 @property (class, nonatomic, strong) UIColor *fw_themeImageColor NS_REFINED_FOR_SWIFT;
 
 /// 快速生成当前图片对应的默认主题图片
-@property (nonatomic, strong, readonly) UIImage *fw_themeImage NS_SWIFT_NAME(__fw_themeImage);
+@property (nonatomic, strong, readonly) UIImage *fw_themeImage NS_SWIFT_NAME(__fw_themeImage) NS_REFINED_FOR_SWIFT;
 
 /// 指定主题颜色，快速生成当前图片对应的主题图片
 - (UIImage *)fw_themeImageWithColor:(UIColor *)themeColor NS_REFINED_FOR_SWIFT;
