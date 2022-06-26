@@ -1,5 +1,12 @@
 # 更新日志
 
+## [3.4.0] - 2022-06-26
+
+### Changed
+* 重构OC版本分类API，改为fw_前缀，去掉Wrapper
+* 优化键盘管理跳转输入框方案
+* 优化keyWindow不存在时也能获取safeAreaInsets
+
 ## [3.3.1] - 2022-06-15
 
 ### Changed
