@@ -11,199 +11,149 @@
 #import "FWToolkit.h"
 #import <objc/runtime.h>
 
-@implementation FWObjectWrapper (FWDebugger)
+@implementation NSObject (FWDebugger)
 
-- (NSString *)methodList {
-    id methodList = [self invokeGetter:@"_methodDescription"];
+- (NSString *)fw_methodList {
+    id methodList = [self fw_invokeGetter:@"_methodDescription"];
     return [methodList isKindOfClass:[NSString class]] ? methodList : @"";
 }
 
-- (NSString *)shortMethodList {
-    id shortMethodList = [self invokeGetter:@"_shortMethodDescription"];
+- (NSString *)fw_shortMethodList {
+    id shortMethodList = [self fw_invokeGetter:@"_shortMethodDescription"];
     return [shortMethodList isKindOfClass:[NSString class]] ? shortMethodList : @"";
 }
 
-- (NSString *)ivarList {
-    id ivarList = [self invokeGetter:@"_ivarDescription"];
+- (NSString *)fw_ivarList {
+    id ivarList = [self fw_invokeGetter:@"_ivarDescription"];
     return [ivarList isKindOfClass:[NSString class]] ? ivarList : @"";
 }
 
 @end
 
-@interface FWViewWrapper (FWDebuggerInternal)
-
-- (void)updateDebugColor;
-- (void)updateDebugBorder;
-
-@end
-
-@interface UIView (FWDebugger)
-
-@end
-
 @implementation UIView (FWDebugger)
 
-- (BOOL)innerShowDebugColor {
-    return [objc_getAssociatedObject(self, @selector(innerShowDebugColor)) boolValue];
-}
-
-- (void)setInnerShowDebugColor:(BOOL)showDebugColor {
-    objc_setAssociatedObject(self, @selector(innerShowDebugColor), @(showDebugColor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.fw updateDebugColor];
-}
-
-- (BOOL)innerRandomDebugColor {
-    return [objc_getAssociatedObject(self, @selector(innerRandomDebugColor)) boolValue];
-}
-
-- (void)setInnerRandomDebugColor:(BOOL)randomDebugColor {
-    objc_setAssociatedObject(self, @selector(innerRandomDebugColor), @(randomDebugColor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)innerShowDebugBorder {
-    return [objc_getAssociatedObject(self, @selector(innerShowDebugBorder)) boolValue];
-}
-
-- (void)setInnerShowDebugBorder:(BOOL)showDebugBorder {
-    objc_setAssociatedObject(self, @selector(innerShowDebugBorder), @(showDebugBorder), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.fw updateDebugBorder];
-}
-
-- (UIColor *)innerDebugBorderColor {
-    UIColor *color = objc_getAssociatedObject(self, @selector(innerDebugBorderColor));
-    return color ?: [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
-}
-
-- (void)setInnerDebugBorderColor:(UIColor *)color {
-    objc_setAssociatedObject(self, @selector(innerDebugBorderColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-@implementation FWViewWrapper (FWDebugger)
-
-- (NSString *)viewInfo {
-    id viewInfo = [self invokeGetter:@"recursiveDescription"];
+- (NSString *)fw_viewInfo {
+    id viewInfo = [self fw_invokeGetter:@"recursiveDescription"];
     return [viewInfo isKindOfClass:[NSString class]] ? viewInfo : @"";
 }
 
-- (BOOL)showDebugColor {
-    return self.base.innerShowDebugColor;
+- (BOOL)fw_showDebugColor {
+    return self.fw_innerShowDebugColor;
 }
 
-- (void)setShowDebugColor:(BOOL)showDebugColor {
-    self.base.innerShowDebugColor = showDebugColor;
+- (void)setFw_showDebugColor:(BOOL)showDebugColor {
+    self.fw_innerShowDebugColor = showDebugColor;
 }
 
-- (BOOL)randomDebugColor {
-    return self.base.innerRandomDebugColor;
+- (BOOL)fw_randomDebugColor {
+    return self.fw_innerRandomDebugColor;
 }
 
-- (void)setRandomDebugColor:(BOOL)randomDebugColor {
-    self.base.innerRandomDebugColor = randomDebugColor;
+- (void)setFw_randomDebugColor:(BOOL)randomDebugColor {
+    self.fw_innerRandomDebugColor = randomDebugColor;
 }
 
-- (BOOL)showDebugBorder {
-    return self.base.innerShowDebugBorder;
+- (BOOL)fw_showDebugBorder {
+    return self.fw_innerShowDebugBorder;
 }
 
-- (void)setShowDebugBorder:(BOOL)showDebugBorder {
-    self.base.innerShowDebugBorder = showDebugBorder;
+- (void)setFw_showDebugBorder:(BOOL)showDebugBorder {
+    self.fw_innerShowDebugBorder = showDebugBorder;
 }
 
-- (UIColor *)debugBorderColor {
-    return self.base.innerDebugBorderColor;
+- (UIColor *)fw_debugBorderColor {
+    return self.fw_innerDebugBorderColor;
 }
 
-- (void)setDebugBorderColor:(UIColor *)debugBorderColor {
-    self.base.innerDebugBorderColor = debugBorderColor;
+- (void)setFw_debugBorderColor:(UIColor *)debugBorderColor {
+    self.fw_innerDebugBorderColor = debugBorderColor;
 }
 
-+ (void)swizzleDebugColor {
++ (void)fw_swizzleDebugColor {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UIView, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             
-            if (selfObject.innerShowDebugColor) {
-                selfObject.backgroundColor = [selfObject.fw debugColor];
-                [selfObject.fw renderDebugColor:selfObject.subviews];
-            } else if (objc_getAssociatedObject(selfObject, @selector(innerShowDebugColor))) {
+            if (selfObject.fw_innerShowDebugColor) {
+                selfObject.backgroundColor = [selfObject fw_debugColor];
+                [selfObject fw_renderDebugColor:selfObject.subviews];
+            } else if (objc_getAssociatedObject(selfObject, @selector(fw_innerShowDebugColor))) {
                 selfObject.backgroundColor = nil;
-                [selfObject.fw renderDebugColor:selfObject.subviews];
+                [selfObject fw_renderDebugColor:selfObject.subviews];
             }
         }));
     });
 }
 
-- (void)updateDebugColor {
-    if (self.showDebugColor) {
-        [FWViewWrapper swizzleDebugColor];
+- (void)fw_updateDebugColor {
+    if (self.fw_showDebugColor) {
+        [UIView fw_swizzleDebugColor];
     }
-    [self.base setNeedsLayout];
+    [self setNeedsLayout];
 }
 
-- (void)renderDebugColor:(NSArray *)subviews {
+- (void)fw_renderDebugColor:(NSArray *)subviews {
     for (UIView *view in subviews) {
         if ([view isKindOfClass:[UIStackView class]]) {
             UIStackView *stackView = (UIStackView *)view;
-            [self renderDebugColor:stackView.arrangedSubviews];
+            [self fw_renderDebugColor:stackView.arrangedSubviews];
         }
-        view.fw.showDebugColor = self.showDebugColor;
-        view.fw.randomDebugColor = self.randomDebugColor;
-        if (view.fw.showDebugColor) {
-            view.backgroundColor = [view.fw debugColor];
+        view.fw_showDebugColor = self.fw_showDebugColor;
+        view.fw_randomDebugColor = self.fw_randomDebugColor;
+        if (view.fw_showDebugColor) {
+            view.backgroundColor = [view fw_debugColor];
         } else {
             view.backgroundColor = nil;
         }
     }
 }
 
-- (UIColor *)debugColor {
-    if (self.randomDebugColor) {
-        return [UIColor.fw.randomColor colorWithAlphaComponent:0.3];
+- (UIColor *)fw_debugColor {
+    if (self.fw_randomDebugColor) {
+        return [UIColor.fw_randomColor colorWithAlphaComponent:0.3];
     } else {
         return [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
     }
 }
 
-+ (void)swizzleDebugBorder {
++ (void)fw_swizzleDebugBorder {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UIView, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             
-            if (selfObject.innerShowDebugBorder) {
+            if (selfObject.fw_innerShowDebugBorder) {
                 selfObject.layer.borderWidth = FWPixelOne;
-                selfObject.layer.borderColor = selfObject.innerDebugBorderColor.CGColor;
-                [selfObject.fw renderDebugBorder:selfObject.subviews];
-            } else if (objc_getAssociatedObject(selfObject, @selector(innerShowDebugBorder))) {
+                selfObject.layer.borderColor = selfObject.fw_innerDebugBorderColor.CGColor;
+                [selfObject fw_renderDebugBorder:selfObject.subviews];
+            } else if (objc_getAssociatedObject(selfObject, @selector(fw_innerShowDebugBorder))) {
                 selfObject.layer.borderWidth = 0;
                 selfObject.layer.borderColor = nil;
-                [selfObject.fw renderDebugBorder:selfObject.subviews];
+                [selfObject fw_renderDebugBorder:selfObject.subviews];
             }
         }));
     });
 }
 
-- (void)updateDebugBorder {
-    if (self.showDebugBorder) {
-        [FWViewWrapper swizzleDebugBorder];
+- (void)fw_updateDebugBorder {
+    if (self.fw_showDebugBorder) {
+        [UIView fw_swizzleDebugBorder];
     }
-    [self.base setNeedsLayout];
+    [self setNeedsLayout];
 }
 
-- (void)renderDebugBorder:(NSArray *)subviews {
+- (void)fw_renderDebugBorder:(NSArray *)subviews {
     for (UIView *view in subviews) {
         if ([view isKindOfClass:[UIStackView class]]) {
             UIStackView *stackView = (UIStackView *)view;
-            [self renderDebugBorder:stackView.arrangedSubviews];
+            [self fw_renderDebugBorder:stackView.arrangedSubviews];
         }
-        view.fw.showDebugBorder = self.showDebugBorder;
-        view.fw.debugBorderColor = self.debugBorderColor;
-        if (view.fw.showDebugBorder) {
+        view.fw_showDebugBorder = self.fw_showDebugBorder;
+        view.fw_debugBorderColor = self.fw_debugBorderColor;
+        if (view.fw_showDebugBorder) {
             view.layer.borderWidth = FWPixelOne;
-            view.layer.borderColor = view.fw.debugBorderColor.CGColor;
+            view.layer.borderColor = view.fw_debugBorderColor.CGColor;
         } else {
             view.layer.borderWidth = 0;
             view.layer.borderColor = nil;
@@ -211,75 +161,78 @@
     }
 }
 
-@end
+- (BOOL)fw_innerShowDebugColor {
+    return [objc_getAssociatedObject(self, @selector(fw_innerShowDebugColor)) boolValue];
+}
 
-@interface FWLabelWrapper (FWDebuggerInternal)
+- (void)setFw_innerShowDebugColor:(BOOL)showDebugColor {
+    objc_setAssociatedObject(self, @selector(fw_innerShowDebugColor), @(showDebugColor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updateDebugColor];
+}
 
-- (void)updatePrincipalLines;
+- (BOOL)fw_innerRandomDebugColor {
+    return [objc_getAssociatedObject(self, @selector(fw_innerRandomDebugColor)) boolValue];
+}
 
-@end
+- (void)setFw_innerRandomDebugColor:(BOOL)randomDebugColor {
+    objc_setAssociatedObject(self, @selector(fw_innerRandomDebugColor), @(randomDebugColor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
-@interface UILabel (FWDebugger)
+- (BOOL)fw_innerShowDebugBorder {
+    return [objc_getAssociatedObject(self, @selector(fw_innerShowDebugBorder)) boolValue];
+}
+
+- (void)setFw_innerShowDebugBorder:(BOOL)showDebugBorder {
+    objc_setAssociatedObject(self, @selector(fw_innerShowDebugBorder), @(showDebugBorder), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updateDebugBorder];
+}
+
+- (UIColor *)fw_innerDebugBorderColor {
+    UIColor *color = objc_getAssociatedObject(self, @selector(fw_innerDebugBorderColor));
+    return color ?: [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
+}
+
+- (void)setFw_innerDebugBorderColor:(UIColor *)color {
+    objc_setAssociatedObject(self, @selector(fw_innerDebugBorderColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 @end
 
 @implementation UILabel (FWDebugger)
 
-- (BOOL)innerShowPrincipalLines {
-    return [objc_getAssociatedObject(self, @selector(innerShowPrincipalLines)) boolValue];
+- (BOOL)fw_showPrincipalLines {
+    return self.fw_innerShowPrincipalLines;
 }
 
-- (void)setInnerShowPrincipalLines:(BOOL)showPrincipalLines {
-    objc_setAssociatedObject(self, @selector(innerShowPrincipalLines), @(showPrincipalLines), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.fw updatePrincipalLines];
+- (void)setFw_showPrincipalLines:(BOOL)showPrincipalLines {
+    self.fw_innerShowPrincipalLines = showPrincipalLines;
 }
 
-- (UIColor *)innerPrincipalLineColor {
-    UIColor *color = objc_getAssociatedObject(self, @selector(innerPrincipalLineColor));
-    return color ?: [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
+- (UIColor *)fw_principalLineColor {
+    return self.fw_innerPrincipalLineColor;
 }
 
-- (void)setInnerPrincipalLineColor:(UIColor *)color {
-    objc_setAssociatedObject(self, @selector(innerPrincipalLineColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setFw_principalLineColor:(UIColor *)color {
+    self.fw_innerPrincipalLineColor = color;
 }
 
-@end
-
-@implementation FWLabelWrapper (FWDebugger)
-
-- (BOOL)showPrincipalLines {
-    return self.base.innerShowPrincipalLines;
+- (CAShapeLayer *)fw_principalLineLayer {
+    return objc_getAssociatedObject(self, @selector(fw_principalLineLayer));
 }
 
-- (void)setShowPrincipalLines:(BOOL)showPrincipalLines {
-    self.base.innerShowPrincipalLines = showPrincipalLines;
+- (void)setFw_principalLineLayer:(CAShapeLayer *)layer {
+    objc_setAssociatedObject(self, @selector(fw_principalLineLayer), layer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIColor *)principalLineColor {
-    return self.base.innerPrincipalLineColor;
-}
-
-- (void)setPrincipalLineColor:(UIColor *)color {
-    self.base.innerPrincipalLineColor = color;
-}
-
-- (CAShapeLayer *)principalLineLayer {
-    return objc_getAssociatedObject(self.base, @selector(principalLineLayer));
-}
-
-- (void)setPrincipalLineLayer:(CAShapeLayer *)layer {
-    objc_setAssociatedObject(self.base, @selector(principalLineLayer), layer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-+ (void)swizzlePrincipalLines {
++ (void)fw_swizzlePrincipalLines {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UILabel, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             
             UILabel *label = selfObject;
-            if (!label.fw.principalLineLayer || label.fw.principalLineLayer.hidden)  return;
-            label.fw.principalLineLayer.frame = label.bounds;
+            if (!label.fw_principalLineLayer || label.fw_principalLineLayer.hidden)  return;
+            label.fw_principalLineLayer.frame = label.bounds;
             
             NSRange range = NSMakeRange(0, label.attributedText.length);
             CGFloat baselineOffset = [[label.attributedText attribute:NSBaselineOffsetAttributeName atIndex:0 effectiveRange:&range] doubleValue];
@@ -303,22 +256,40 @@
             addLineAtY(path, xHeightY);
             addLineAtY(path, capHeightY);
             addLineAtY(path, lineHeightY);
-            label.fw.principalLineLayer.path = path.CGPath;
+            label.fw_principalLineLayer.path = path.CGPath;
         }));
     });
 }
 
-- (void)updatePrincipalLines {
-    if (self.showPrincipalLines && !self.principalLineLayer) {
+- (void)fw_updatePrincipalLines {
+    if (self.fw_showPrincipalLines && !self.fw_principalLineLayer) {
         CAShapeLayer *layer = [CAShapeLayer layer];
-        self.principalLineLayer = layer;
-        layer.strokeColor = self.principalLineColor.CGColor;
+        self.fw_principalLineLayer = layer;
+        layer.strokeColor = self.fw_principalLineColor.CGColor;
         layer.lineWidth = FWPixelOne;
-        [self.base.layer addSublayer:layer];
+        [self.layer addSublayer:layer];
         
-        [FWLabelWrapper swizzlePrincipalLines];
+        [UILabel fw_swizzlePrincipalLines];
     }
-    self.principalLineLayer.hidden = !self.showPrincipalLines;
+    self.fw_principalLineLayer.hidden = !self.fw_showPrincipalLines;
+}
+
+- (BOOL)fw_innerShowPrincipalLines {
+    return [objc_getAssociatedObject(self, @selector(fw_innerShowPrincipalLines)) boolValue];
+}
+
+- (void)setFw_innerShowPrincipalLines:(BOOL)showPrincipalLines {
+    objc_setAssociatedObject(self, @selector(fw_innerShowPrincipalLines), @(showPrincipalLines), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self fw_updatePrincipalLines];
+}
+
+- (UIColor *)fw_innerPrincipalLineColor {
+    UIColor *color = objc_getAssociatedObject(self, @selector(fw_innerPrincipalLineColor));
+    return color ?: [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.3];
+}
+
+- (void)setFw_innerPrincipalLineColor:(UIColor *)color {
+    objc_setAssociatedObject(self, @selector(fw_innerPrincipalLineColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

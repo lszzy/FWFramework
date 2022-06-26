@@ -11,86 +11,85 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import <MessageUI/MessageUI.h>
-#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWApplicationClassWrapper+FWToolkit
+#pragma mark - UIApplication+FWToolkit
 
 /**
  注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
  */
-@interface FWApplicationClassWrapper (FWToolkit)
+@interface UIApplication (FWToolkit)
 
 /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-- (BOOL)canOpenURL:(id)url;
++ (BOOL)fw_canOpenURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开URL，支持NSString|NSURL，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-- (void)openURL:(id)url;
++ (void)fw_openURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-- (void)openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)fw_openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-- (void)openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)fw_openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-- (BOOL)isSystemURL:(id)url;
++ (BOOL)fw_isSystemURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 判断URL是否HTTP链接，支持NSString|NSURL
-- (BOOL)isHttpURL:(id)url;
++ (BOOL)fw_isHttpURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 判断URL是否是AppStore链接，支持NSString|NSURL
-- (BOOL)isAppStoreURL:(id)url;
++ (BOOL)fw_isAppStoreURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开AppStore下载页
-- (void)openAppStore:(NSString *)appId;
++ (void)fw_openAppStore:(NSString *)appId NS_REFINED_FOR_SWIFT;
 
 /// 打开AppStore评价页
-- (void)openAppStoreReview:(NSString *)appId;
++ (void)fw_openAppStoreReview:(NSString *)appId NS_REFINED_FOR_SWIFT;
 
 /// 打开应用内评价，有次数限制
-- (void)openAppReview;
++ (void)fw_openAppReview NS_REFINED_FOR_SWIFT;
 
 /// 打开系统应用设置页
-- (void)openAppSettings;
++ (void)fw_openAppSettings NS_REFINED_FOR_SWIFT;
 
 /// 打开系统邮件App
-- (void)openMailApp:(NSString *)email;
++ (void)fw_openMailApp:(NSString *)email NS_REFINED_FOR_SWIFT;
 
 /// 打开系统短信App
-- (void)openMessageApp:(NSString *)phone;
++ (void)fw_openMessageApp:(NSString *)phone NS_REFINED_FOR_SWIFT;
 
 /// 打开系统电话App
-- (void)openPhoneApp:(NSString *)phone;
++ (void)fw_openPhoneApp:(NSString *)phone NS_REFINED_FOR_SWIFT;
 
 /// 打开系统分享
-- (void)openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes;
++ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes NS_REFINED_FOR_SWIFT;
 
 /// 打开内部浏览器，支持NSString|NSURL
-- (void)openSafariController:(id)url;
++ (void)fw_openSafariController:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-- (void)openSafariController:(id)url completionHandler:(nullable void (^)(void))completion;
++ (void)fw_openSafariController:(id)url completionHandler:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开短信控制器，完成时回调
-- (void)openMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)fw_openMessageController:(MFMessageComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开邮件控制器，完成时回调
-- (void)openMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)fw_openMailController:(MFMailComposeViewController *)controller completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开Store控制器，完成时回调
-- (void)openStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)fw_openStoreController:(NSDictionary<NSString *, id> *)parameters completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-- (nullable AVPlayerViewController *)openVideoPlayer:(id)url;
++ (nullable AVPlayerViewController *)fw_openVideoPlayer:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开音频播放器，支持NSURL|NSString
-- (nullable AVAudioPlayer *)openAudioPlayer:(id)url;
++ (nullable AVAudioPlayer *)fw_openAudioPlayer:(id)url NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWColorWrapper+FWToolkit
+#pragma mark - UIColor+FWToolkit
 
 /// 从16进制创建UIColor，格式0xFFFFFF，透明度可选，默认1.0
 #define FWColorHex( hex, ... ) \
@@ -100,58 +99,54 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWColorRgb( r, g, b, ... ) \
     [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:fw_macro_default(1.0f, ##__VA_ARGS__)]
 
-@interface FWColorWrapper (FWToolkit)
+@interface UIColor (FWToolkit)
 
 /// 获取当前颜色指定透明度的新颜色
-- (UIColor *)colorWithAlpha:(CGFloat)alpha;
+- (UIColor *)fw_colorWithAlpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
 /// 读取颜色的十六进制值RGB，不含透明度
-@property (nonatomic, assign, readonly) long hexValue;
+@property (nonatomic, assign, readonly) long fw_hexValue NS_REFINED_FOR_SWIFT;
 
 /// 读取颜色的透明度值，范围0~1
-@property (nonatomic, assign, readonly) CGFloat alphaValue;
+@property (nonatomic, assign, readonly) CGFloat fw_alphaValue NS_REFINED_FOR_SWIFT;
 
 /// 读取颜色的十六进制字符串RGB，不含透明度
-@property (nonatomic, copy, readonly) NSString *hexString;
+@property (nonatomic, copy, readonly) NSString *fw_hexString NS_REFINED_FOR_SWIFT;
 
 /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
-@property (nonatomic, copy, readonly) NSString *hexAlphaString;
-
-@end
-
-@interface FWColorClassWrapper (FWToolkit)
+@property (nonatomic, copy, readonly) NSString *fw_hexAlphaString NS_REFINED_FOR_SWIFT;
 
 /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
-@property (nonatomic, assign) BOOL colorStandardARGB;
+@property (class, nonatomic, assign) BOOL fw_colorStandardARGB NS_REFINED_FOR_SWIFT;
 
 /// 获取透明度为1.0的RGB随机颜色
-@property (nonatomic, readonly) UIColor *randomColor;
+@property (class, nonatomic, readonly) UIColor *fw_randomColor NS_REFINED_FOR_SWIFT;
 
 /// 从十六进制值初始化，格式：0x20B2AA，透明度为1.0
-- (UIColor *)colorWithHex:(long)hex;
++ (UIColor *)fw_colorWithHex:(long)hex NS_REFINED_FOR_SWIFT;
 
 /// 从十六进制值初始化，格式：0x20B2AA，自定义透明度
-- (UIColor *)colorWithHex:(long)hex alpha:(CGFloat)alpha;
++ (UIColor *)fw_colorWithHex:(long)hex alpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
 /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度为1.0，失败时返回clear
-- (UIColor *)colorWithHexString:(NSString *)hexString;
++ (UIColor *)fw_colorWithHexString:(NSString *)hexString NS_REFINED_FOR_SWIFT;
 
 /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear
-- (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
++ (UIColor *)fw_colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
 /// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear
-- (UIColor *)colorWithString:(NSString *)string;
++ (UIColor *)fw_colorWithString:(NSString *)string NS_REFINED_FOR_SWIFT;
 
 /// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear
-- (UIColor *)colorWithString:(NSString *)string alpha:(CGFloat)alpha;
++ (UIColor *)fw_colorWithString:(NSString *)string alpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWFontWrapper+FWToolkit
+#pragma mark - UIFont+FWToolkit
 
 /// 快速创建系统字体，字重可选，默认Regular
 #define FWFontSize( size, ... ) \
-    [UIFont.fw fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
+    [UIFont fw_fontOfSize:size weight:fw_macro_default(UIFontWeightRegular, ##__VA_ARGS__)]
 
 /// 快速创建Thin字体
 FOUNDATION_EXPORT UIFont * FWFontThin(CGFloat size) NS_SWIFT_UNAVAILABLE("");
@@ -166,172 +161,168 @@ FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size) NS_SWIFT_UNAVAILABLE("")
 /// 快速创建Bold字体
 FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
-@interface FWFontClassWrapper (FWToolkit)
+@interface UIFont (FWToolkit)
 
 /// 全局自定义字体句柄，优先调用
-@property (nonatomic, copy, nullable) UIFont * (^fontBlock)(CGFloat size, UIFontWeight weight);
+@property (class, nonatomic, copy, nullable) UIFont * (^fw_fontBlock)(CGFloat size, UIFontWeight weight) NS_REFINED_FOR_SWIFT;
 
 /// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
-@property (nonatomic, assign) BOOL autoScale;
+@property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
 /// 返回系统Thin字体
-- (UIFont *)thinFontOfSize:(CGFloat)size;
++ (UIFont *)fw_thinFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 /// 返回系统Light字体
-- (UIFont *)lightFontOfSize:(CGFloat)size;
++ (UIFont *)fw_lightFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 /// 返回系统Regular字体
-- (UIFont *)fontOfSize:(CGFloat)size;
++ (UIFont *)fw_fontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 /// 返回系统Medium字体
-- (UIFont *)mediumFontOfSize:(CGFloat)size;
++ (UIFont *)fw_mediumFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 /// 返回系统Semibold字体
-- (UIFont *)semiboldFontOfSize:(CGFloat)size;
++ (UIFont *)fw_semiboldFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 /// 返回系统Bold字体
-- (UIFont *)boldFontOfSize:(CGFloat)size;
++ (UIFont *)fw_boldFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 
 /// 创建指定尺寸和weight的系统字体
-- (UIFont *)fontOfSize:(CGFloat)size weight:(UIFontWeight)weight;
++ (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWImageWrapper+FWToolkit
+#pragma mark - UIImage+FWToolkit
 
-@interface FWImageWrapper (FWToolkit)
+@interface UIImage (FWToolkit)
 
 /// 从当前图片创建指定透明度的图片
-- (nullable UIImage *)imageWithAlpha:(CGFloat)alpha;
+- (nullable UIImage *)fw_imageWithAlpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
 /// 从当前图片混合颜色创建UIImage，默认kCGBlendModeDestinationIn模式，适合透明图标
-- (nullable UIImage *)imageWithTintColor:(UIColor *)tintColor;
+- (nullable UIImage *)fw_imageWithTintColor:(UIColor *)tintColor NS_REFINED_FOR_SWIFT;
 
 /// 从当前UIImage混合颜色创建UIImage，自定义模式
-- (nullable UIImage *)imageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode;
+- (nullable UIImage *)fw_imageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode NS_REFINED_FOR_SWIFT;
 
 /// 缩放图片到指定大小
-- (nullable UIImage *)imageWithScaleSize:(CGSize)size;
+- (nullable UIImage *)fw_imageWithScaleSize:(CGSize)size NS_REFINED_FOR_SWIFT;
 
 /// 缩放图片到指定大小，指定模式
-- (nullable UIImage *)imageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
+- (nullable UIImage *)fw_imageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode NS_REFINED_FOR_SWIFT;
 
 /// 按指定模式绘制图片
-- (void)drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds;
+- (void)fw_drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds NS_REFINED_FOR_SWIFT;
 
 /// 裁剪指定区域图片
-- (nullable UIImage *)imageWithCropRect:(CGRect)rect;
+- (nullable UIImage *)fw_imageWithCropRect:(CGRect)rect NS_REFINED_FOR_SWIFT;
 
 /// 指定颜色填充图片边缘
-- (nullable UIImage *)imageWithInsets:(UIEdgeInsets)insets color:(nullable UIColor *)color;
+- (nullable UIImage *)fw_imageWithInsets:(UIEdgeInsets)insets color:(nullable UIColor *)color NS_REFINED_FOR_SWIFT;
 
 /// 拉伸图片(平铺模式)，指定端盖区域（不拉伸区域）
-- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets;
+- (UIImage *)fw_imageWithCapInsets:(UIEdgeInsets)insets NS_REFINED_FOR_SWIFT;
 
 /// 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
-- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode;
+- (UIImage *)fw_imageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode NS_REFINED_FOR_SWIFT;
 
 /// 生成圆角图片
-- (nullable UIImage *)imageWithCornerRadius:(CGFloat)radius;
+- (nullable UIImage *)fw_imageWithCornerRadius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 按角度常数(0~360)转动图片，默认图片尺寸适应内容
-- (nullable UIImage *)imageWithRotateDegree:(CGFloat)degree;
+- (nullable UIImage *)fw_imageWithRotateDegree:(CGFloat)degree NS_REFINED_FOR_SWIFT;
 
 /// 按角度常数(0~360)转动图片，指定图片尺寸是否延伸来适应内容，否则图片尺寸不变，内容被裁剪
-- (nullable UIImage *)imageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize;
+- (nullable UIImage *)fw_imageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize NS_REFINED_FOR_SWIFT;
 
 /// 生成mark图片
-- (nullable UIImage *)imageWithMaskImage:(UIImage *)maskImage;
+- (nullable UIImage *)fw_imageWithMaskImage:(UIImage *)maskImage NS_REFINED_FOR_SWIFT;
 
 /// 图片合并，并制定叠加图片的起始位置
-- (nullable UIImage *)imageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point;
+- (nullable UIImage *)fw_imageWithMergeImage:(UIImage *)image atPoint:(CGPoint)point NS_REFINED_FOR_SWIFT;
 
 /// 图片应用CIFilter滤镜处理
-- (nullable UIImage *)imageWithFilter:(CIFilter *)filter;
+- (nullable UIImage *)fw_imageWithFilter:(CIFilter *)filter NS_REFINED_FOR_SWIFT;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-- (nullable UIImage *)compressImageWithMaxLength:(NSInteger)maxLength;
+- (nullable UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength NS_REFINED_FOR_SWIFT;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
-- (nullable NSData *)compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio;
+- (nullable NSData *)fw_compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio NS_REFINED_FOR_SWIFT;
 
 /// 长边压缩图片尺寸，获取等比例的图片
-- (nullable UIImage *)compressImageWithMaxWidth:(NSInteger)maxWidth;
+- (nullable UIImage *)fw_compressImageWithMaxWidth:(NSInteger)maxWidth NS_REFINED_FOR_SWIFT;
 
 /// 通过指定图片最长边，获取等比例的图片size
-- (CGSize)scaleSizeWithMaxWidth:(CGFloat)maxWidth;
+- (CGSize)fw_scaleSizeWithMaxWidth:(CGFloat)maxWidth NS_REFINED_FOR_SWIFT;
 
 /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
-@property (nonatomic, readonly) UIImage *originalImage;
+@property (nonatomic, readonly) UIImage *fw_originalImage NS_REFINED_FOR_SWIFT;
 
 /// 获取模板渲染模式图片，始终显示tintColor，不显示原色。默认自动根据上下文
-@property (nonatomic, readonly) UIImage *templateImage;
+@property (nonatomic, readonly) UIImage *fw_templateImage NS_REFINED_FOR_SWIFT;
 
 /// 判断图片是否有透明通道
-@property (nonatomic, assign, readonly) BOOL hasAlpha;
+@property (nonatomic, assign, readonly) BOOL fw_hasAlpha NS_REFINED_FOR_SWIFT;
 
 /// 获取当前图片的像素大小，多倍图会放大到一倍
-@property (nonatomic, assign, readonly) CGSize pixelSize;
-
-@end
-
-@interface FWImageClassWrapper (FWToolkit)
+@property (nonatomic, assign, readonly) CGSize fw_pixelSize NS_REFINED_FOR_SWIFT;
 
 /// 从视图创建UIImage，生成截图，主线程调用
-- (nullable UIImage *)imageWithView:(UIView *)view;
++ (nullable UIImage *)fw_imageWithView:(UIView *)view NS_REFINED_FOR_SWIFT;
 
 /// 从颜色创建UIImage，默认尺寸1x1
-- (nullable UIImage *)imageWithColor:(UIColor *)color;
++ (nullable UIImage *)fw_imageWithColor:(UIColor *)color NS_REFINED_FOR_SWIFT;
 
 /// 从颜色创建UIImage，指定尺寸
-- (nullable UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
++ (nullable UIImage *)fw_imageWithColor:(UIColor *)color size:(CGSize)size NS_REFINED_FOR_SWIFT;
 
 /// 从颜色创建UIImage，指定尺寸和圆角
-- (nullable UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius;
++ (nullable UIImage *)fw_imageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
 /// 从block创建UIImage，指定尺寸
-- (nullable UIImage *)imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
++ (nullable UIImage *)fw_imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWViewWrapper+FWToolkit
+#pragma mark - UIView+FWToolkit
 
-@interface FWViewWrapper (FWToolkit)
+@interface UIView (FWToolkit)
 
 /// 顶部纵坐标，frame.origin.y
-@property (nonatomic, assign) CGFloat top;
+@property (nonatomic, assign) CGFloat fw_top NS_REFINED_FOR_SWIFT;
 
 /// 底部纵坐标，frame.origin.y + frame.size.height
-@property (nonatomic, assign) CGFloat bottom;
+@property (nonatomic, assign) CGFloat fw_bottom NS_REFINED_FOR_SWIFT;
 
 /// 左边横坐标，frame.origin.x
-@property (nonatomic, assign) CGFloat left;
+@property (nonatomic, assign) CGFloat fw_left NS_REFINED_FOR_SWIFT;
 
 /// 右边横坐标，frame.origin.x + frame.size.width
-@property (nonatomic, assign) CGFloat right;
+@property (nonatomic, assign) CGFloat fw_right NS_REFINED_FOR_SWIFT;
 
 /// 宽度，frame.size.width
-@property (nonatomic, assign) CGFloat width;
+@property (nonatomic, assign) CGFloat fw_width NS_REFINED_FOR_SWIFT;
 
 /// 高度，frame.size.height
-@property (nonatomic, assign) CGFloat height;
+@property (nonatomic, assign) CGFloat fw_height NS_REFINED_FOR_SWIFT;
 
 /// 中心横坐标，center.x
-@property (nonatomic, assign) CGFloat centerX;
+@property (nonatomic, assign) CGFloat fw_centerX NS_REFINED_FOR_SWIFT;
 
 /// 中心纵坐标，center.y
-@property (nonatomic, assign) CGFloat centerY;
+@property (nonatomic, assign) CGFloat fw_centerY NS_REFINED_FOR_SWIFT;
 
 /// 起始横坐标，frame.origin.x
-@property (nonatomic, assign) CGFloat x;
+@property (nonatomic, assign) CGFloat fw_x NS_REFINED_FOR_SWIFT;
 
 /// 起始纵坐标，frame.origin.y
-@property (nonatomic, assign) CGFloat y;
+@property (nonatomic, assign) CGFloat fw_y NS_REFINED_FOR_SWIFT;
 
 /// 起始坐标，frame.origin
-@property (nonatomic, assign) CGPoint origin;
+@property (nonatomic, assign) CGPoint fw_origin NS_REFINED_FOR_SWIFT;
 
 /// 大小，frame.size
-@property (nonatomic, assign) CGSize size;
+@property (nonatomic, assign) CGSize fw_size NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWToolkit
+#pragma mark - UIViewController+FWToolkit
 
 /// 视图控制器生命周期状态枚举
 typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
@@ -349,29 +340,25 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
     FWViewControllerVisibleStateDidDisappear = 1 << 4,
 } NS_SWIFT_NAME(ViewControllerVisibleState);
 
-@interface FWViewControllerWrapper (FWToolkit)
+@interface UIViewController (FWToolkit)
 
 /// 当前生命周期状态，默认Ready
-@property (nonatomic, assign, readonly) FWViewControllerVisibleState visibleState;
+@property (nonatomic, assign, readonly) FWViewControllerVisibleState fw_visibleState NS_REFINED_FOR_SWIFT;
 
 /// 生命周期变化时通知句柄，默认nil
-@property (nonatomic, copy, nullable) void (^visibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState);
+@property (nonatomic, copy, nullable) void (^fw_visibleStateChanged)(__kindof UIViewController *viewController, FWViewControllerVisibleState visibleState) NS_REFINED_FOR_SWIFT;
 
 /// 自定义完成结果对象，默认nil
-@property (nonatomic, strong, nullable) id completionResult;
+@property (nonatomic, strong, nullable) id fw_completionResult NS_REFINED_FOR_SWIFT NS_REFINED_FOR_SWIFT;
 
 /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
-@property (nonatomic, copy, nullable) void (^completionHandler)(id _Nullable result);
+@property (nonatomic, copy, nullable) void (^fw_completionHandler)(id _Nullable result) NS_REFINED_FOR_SWIFT;
 
 /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-@property (nonatomic, copy, nullable) BOOL (^allowsPopGesture)(void);
+@property (nonatomic, copy, nullable) BOOL (^fw_allowsPopGesture)(void) NS_REFINED_FOR_SWIFT;
 
 /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-@property (nonatomic, copy, nullable) BOOL (^shouldPopController)(void);
-
-@end
-
-@interface UIViewController (FWToolkit)
+@property (nonatomic, copy, nullable) BOOL (^fw_shouldPopController)(void) NS_REFINED_FOR_SWIFT;
 
 /// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认YES
 @property (nonatomic, assign, readonly) BOOL allowsPopGesture;
@@ -381,22 +368,18 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 @end
 
-#pragma mark - FWNavigationControllerWrapper+FWToolkit
-
-@interface FWNavigationControllerWrapper (FWToolkit)
-
-/// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-- (void)enablePopProxy;
-
-@end
+#pragma mark - UINavigationController+FWToolkit
 
 /**
  当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
  */
-@interface FWNavigationControllerClassWrapper (FWToolkit)
+@interface UINavigationController (FWToolkit)
 
 /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-- (void)enablePopProxy;
++ (void)fw_enablePopProxy NS_REFINED_FOR_SWIFT;
+
+/// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
+- (void)fw_enablePopProxy NS_REFINED_FOR_SWIFT;
 
 @end
 

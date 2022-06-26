@@ -12,83 +12,83 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#pragma mark - FWObjectWrapper+FWSwizzle
+#pragma mark - NSObject+FWSwizzle
 
-@implementation FWObjectWrapper (FWSwizzle)
+@implementation NSObject (FWSwizzle)
 
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
+- (BOOL)fw_swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
-    NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self.base)), NSStringFromSelector(originalSelector), identifier];
-    objc_setAssociatedObject(self.base, NSSelectorFromString(swizzleIdentifier), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self)), NSStringFromSelector(originalSelector), identifier];
+    objc_setAssociatedObject(self, NSSelectorFromString(swizzleIdentifier), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    return [NSObject.fw swizzleInstanceMethod:object_getClass(self.base) selector:originalSelector identifier:identifier withBlock:block];
+    return [NSObject fw_swizzleInstanceMethod:object_getClass(self) selector:originalSelector identifier:identifier withBlock:block];
 }
 
-- (BOOL)isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier
+- (BOOL)fw_isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier
 {
-    NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self.base)), NSStringFromSelector(originalSelector), identifier];
-    return [objc_getAssociatedObject(self.base, NSSelectorFromString(swizzleIdentifier)) boolValue];
+    NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@_%@_%@", NSStringFromClass(object_getClass(self)), NSStringFromSelector(originalSelector), identifier];
+    return [objc_getAssociatedObject(self, NSSelectorFromString(swizzleIdentifier)) boolValue];
 }
 
 #pragma mark - Runtime
 
-- (id)invokeMethod:(SEL)aSelector
+- (id)fw_invokeMethod:(SEL)aSelector
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self.base respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self.base class], aSelector));
+    if ([self respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
         if (type && *type == 'v') {
             free(type);
-            [self.base performSelector:aSelector];
+            [self performSelector:aSelector];
         } else {
             free(type);
-            return [self.base performSelector:aSelector];
+            return [self performSelector:aSelector];
         }
     }
 #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)invokeMethod:(SEL)aSelector withObject:(id)object
+- (id)fw_invokeMethod:(SEL)aSelector withObject:(id)object
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self.base respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self.base class], aSelector));
+    if ([self respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
         if (type && *type == 'v') {
             free(type);
-            [self.base performSelector:aSelector withObject:object];
+            [self performSelector:aSelector withObject:object];
         } else {
             free(type);
-            return [self.base performSelector:aSelector withObject:object];
+            return [self performSelector:aSelector withObject:object];
         }
     }
 #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)invokeSuperMethod:(SEL)aSelector
+- (id)fw_invokeSuperMethod:(SEL)aSelector
 {
     struct objc_super mySuper;
-    mySuper.receiver = self.base;
-    mySuper.super_class = class_getSuperclass(object_getClass(self.base));
+    mySuper.receiver = self;
+    mySuper.super_class = class_getSuperclass(object_getClass(self));
     
     id (*objc_superAllocTyped)(struct objc_super *, SEL) = (void *)&objc_msgSendSuper;
     return (*objc_superAllocTyped)(&mySuper, aSelector);
 }
 
-- (id)invokeSuperMethod:(SEL)aSelector withObject:(id)object
+- (id)fw_invokeSuperMethod:(SEL)aSelector withObject:(id)object
 {
     struct objc_super mySuper;
-    mySuper.receiver = self.base;
-    mySuper.super_class = class_getSuperclass(object_getClass(self.base));
+    mySuper.receiver = self;
+    mySuper.super_class = class_getSuperclass(object_getClass(self));
     
     id (*objc_superAllocTyped)(struct objc_super *, SEL, ...) = (void *)&objc_msgSendSuper;
     return (*objc_superAllocTyped)(&mySuper, aSelector, object);
 }
 
-- (id)invokeGetter:(NSString *)name
+- (id)fw_invokeGetter:(NSString *)name
 {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
@@ -96,18 +96,18 @@
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector];
     selector = NSSelectorFromString(name);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector];
     #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)invokeSetter:(NSString *)name withObject:(id)object
+- (id)fw_invokeSetter:(NSString *)name withObject:(id)object
 {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
@@ -115,119 +115,119 @@
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector withObject:object];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector withObject:object];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
-    if ([self.base respondsToSelector:selector]) return [self invokeMethod:selector withObject:object];
+    if ([self respondsToSelector:selector]) return [self fw_invokeMethod:selector withObject:object];
     #pragma clang diagnostic pop
     return nil;
 }
 
 #pragma mark - Property
 
-@dynamic tempObject;
+@dynamic fw_tempObject;
 
-- (id)tempObject
+- (id)fw_tempObject
 {
-    return objc_getAssociatedObject(self.base, @selector(tempObject));
+    return objc_getAssociatedObject(self, @selector(fw_tempObject));
 }
 
-- (void)setTempObject:(id)tempObject
+- (void)setFw_tempObject:(id)tempObject
 {
-    if (tempObject != self.tempObject) {
-        objc_setAssociatedObject(self.base, @selector(tempObject), tempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (tempObject != self.fw_tempObject) {
+        objc_setAssociatedObject(self, @selector(fw_tempObject), tempObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
-- (id)propertyForName:(NSString *)name
+- (id)fw_propertyForName:(NSString *)name
 {
-    id object = objc_getAssociatedObject(self.base, NSSelectorFromString(name));
+    id object = objc_getAssociatedObject(self, NSSelectorFromString(name));
     if ([object isKindOfClass:[FWWeakObject class]]) {
         object = [(FWWeakObject *)object object];
     }
     return object;
 }
 
-- (void)setProperty:(id)object forName:(NSString *)name
+- (void)fw_setProperty:(id)object forName:(NSString *)name
 {
-    if (object != [self propertyForName:name]) {
-        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (object != [self fw_propertyForName:name]) {
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
-- (void)setPropertyAssign:(id)object forName:(NSString *)name
+- (void)fw_setPropertyAssign:(id)object forName:(NSString *)name
 {
-    if (object != [self propertyForName:name]) {
-        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
+    if (object != [self fw_propertyForName:name]) {
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
     }
 }
 
-- (void)setPropertyCopy:(id)object forName:(NSString *)name
+- (void)fw_setPropertyCopy:(id)object forName:(NSString *)name
 {
-    if (object != [self propertyForName:name]) {
-        objc_setAssociatedObject(self.base, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (object != [self fw_propertyForName:name]) {
+        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
 }
 
-- (void)setPropertyWeak:(id)object forName:(NSString *)name
+- (void)fw_setPropertyWeak:(id)object forName:(NSString *)name
 {
-    if (object != [self propertyForName:name]) {
-        objc_setAssociatedObject(self.base, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (object != [self fw_propertyForName:name]) {
+        objc_setAssociatedObject(self, NSSelectorFromString(name), [[FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
 #pragma mark - Bind
 
-- (NSMutableDictionary *)allBoundObjects
+- (NSMutableDictionary *)fw_allBoundObjects
 {
-    NSMutableDictionary *dict = objc_getAssociatedObject(self.base, _cmd);
+    NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
     if (!dict) {
         dict = [NSMutableDictionary dictionary];
-        objc_setAssociatedObject(self.base, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, dict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return dict;
 }
 
-- (void)bindObject:(id)object forKey:(NSString *)key
+- (void)fw_bindObject:(id)object forKey:(NSString *)key
 {
     if (!key.length) return;
     
     if (object) {
-        [[self allBoundObjects] setObject:object forKey:key];
+        [[self fw_allBoundObjects] setObject:object forKey:key];
     } else {
-        [[self allBoundObjects] removeObjectForKey:key];
+        [[self fw_allBoundObjects] removeObjectForKey:key];
     }
 }
 
-- (void)bindObjectWeak:(id)object forKey:(NSString *)key
+- (void)fw_bindObjectWeak:(id)object forKey:(NSString *)key
 {
     if (!key.length) return;
     
     if (object) {
-        [[self allBoundObjects] setObject:[[FWWeakObject alloc] initWithObject:object] forKey:key];
+        [[self fw_allBoundObjects] setObject:[[FWWeakObject alloc] initWithObject:object] forKey:key];
     } else {
-        [[self allBoundObjects] removeObjectForKey:key];
+        [[self fw_allBoundObjects] removeObjectForKey:key];
     }
 }
 
-- (id)boundObjectForKey:(NSString *)key
+- (id)fw_boundObjectForKey:(NSString *)key
 {
     if (!key.length) return nil;
     
-    id object = [[self allBoundObjects] objectForKey:key];
+    id object = [[self fw_allBoundObjects] objectForKey:key];
     if ([object isKindOfClass:[FWWeakObject class]]) {
         object = [(FWWeakObject *)object object];
     }
     return object;
 }
 
-- (void)bindDouble:(double)doubleValue forKey:(NSString *)key
+- (void)fw_bindDouble:(double)doubleValue forKey:(NSString *)key
 {
-    [self bindObject:@(doubleValue) forKey:key];
+    [self fw_bindObject:@(doubleValue) forKey:key];
 }
 
-- (double)boundDoubleForKey:(NSString *)key
+- (double)fw_boundDoubleForKey:(NSString *)key
 {
-    id object = [self boundObjectForKey:key];
+    id object = [self fw_boundObjectForKey:key];
     if ([object isKindOfClass:[NSNumber class]]) {
         return [(NSNumber *)object doubleValue];
     } else {
@@ -235,14 +235,14 @@
     }
 }
 
-- (void)bindBool:(BOOL)boolValue forKey:(NSString *)key
+- (void)fw_bindBool:(BOOL)boolValue forKey:(NSString *)key
 {
-    [self bindObject:@(boolValue) forKey:key];
+    [self fw_bindObject:@(boolValue) forKey:key];
 }
 
-- (BOOL)boundBoolForKey:(NSString *)key
+- (BOOL)fw_boundBoolForKey:(NSString *)key
 {
-    id object = [self boundObjectForKey:key];
+    id object = [self fw_boundObjectForKey:key];
     if ([object isKindOfClass:[NSNumber class]]) {
         return [(NSNumber *)object boolValue];
     } else {
@@ -250,14 +250,14 @@
     }
 }
 
-- (void)bindInt:(NSInteger)integerValue forKey:(NSString *)key
+- (void)fw_bindInt:(NSInteger)integerValue forKey:(NSString *)key
 {
-    [self bindObject:@(integerValue) forKey:key];
+    [self fw_bindObject:@(integerValue) forKey:key];
 }
 
-- (NSInteger)boundIntForKey:(NSString *)key
+- (NSInteger)fw_boundIntForKey:(NSString *)key
 {
-    id object = [self boundObjectForKey:key];
+    id object = [self fw_boundObjectForKey:key];
     if ([object isKindOfClass:[NSNumber class]]) {
         return [(NSNumber *)object integerValue];
     } else {
@@ -265,45 +265,37 @@
     }
 }
 
-- (void)removeBindingForKey:(NSString *)key
+- (void)fw_removeBindingForKey:(NSString *)key
 {
-    [self bindObject:nil forKey:key];
+    [self fw_bindObject:nil forKey:key];
 }
 
-- (void)removeAllBindings
+- (void)fw_removeAllBindings
 {
-    [[self allBoundObjects] removeAllObjects];
+    [[self fw_allBoundObjects] removeAllObjects];
 }
 
-- (NSArray<NSString *> *)allBindingKeys
+- (NSArray<NSString *> *)fw_allBindingKeys
 {
-    return [[self allBoundObjects] allKeys];
+    return [[self fw_allBoundObjects] allKeys];
 }
 
-- (BOOL)hasBindingKey:(NSString *)key
+- (BOOL)fw_hasBindingKey:(NSString *)key
 {
-    return [[self allBindingKeys] containsObject:key];
+    return [[self fw_allBindingKeys] containsObject:key];
 }
 
-@end
-
-#pragma mark - FWClassWrapper+FWSwizzle
-
-@implementation FWClassWrapper (FWSwizzle)
-
-#pragma mark - Exchange
-
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
 {
-    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:self.base];
+    return [self fw_exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:self];
 }
 
-- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
++ (BOOL)fw_exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector
 {
-    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:object_getClass((id)self.base)];
+    return [self fw_exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector forClass:object_getClass((id)self)];
 }
 
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector forClass:(Class)clazz
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector forClass:(Class)clazz
 {
     Method originalMethod = class_getInstanceMethod(clazz, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(clazz, swizzleSelector);
@@ -322,17 +314,17 @@
     return YES;
 }
 
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
 {
-    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:self.base];
+    return [self fw_exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:self];
 }
 
-- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
++ (BOOL)fw_exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock
 {
-    return [self exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:object_getClass((id)self.base)];
+    return [self fw_exchangeInstanceMethod:originalSelector swizzleMethod:swizzleSelector withBlock:swizzleBlock forClass:object_getClass((id)self)];
 }
 
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock forClass:(Class)clazz
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock forClass:(Class)clazz
 {
     Method originalMethod = class_getInstanceMethod(clazz, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(clazz, swizzleSelector);
@@ -344,29 +336,29 @@
     return YES;
 }
 
-- (SEL)exchangeSwizzleSelector:(SEL)selector
++ (SEL)fw_exchangeSwizzleSelector:(SEL)selector
 {
     return NSSelectorFromString([NSString stringWithFormat:@"fw_swizzle_%x_%@", arc4random(), NSStringFromSelector(selector)]);
 }
 
 #pragma mark - Swizzle
 
-- (BOOL)swizzleMethod:(id)target selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
++ (BOOL)fw_swizzleMethod:(id)target selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     if (!target) return NO;
     
     if (object_isClass(target)) {
         if (identifier && identifier.length > 0) {
-            return [self swizzleInstanceMethod:target selector:originalSelector identifier:identifier withBlock:block];
+            return [self fw_swizzleInstanceMethod:target selector:originalSelector identifier:identifier withBlock:block];
         } else {
-            return [self swizzleInstanceMethod:target selector:originalSelector withBlock:block];
+            return [self fw_swizzleInstanceMethod:target selector:originalSelector withBlock:block];
         }
     } else {
-        return [((NSObject *)target).fw swizzleInstanceMethod:originalSelector identifier:identifier withBlock:block];
+        return [((NSObject *)target) fw_swizzleInstanceMethod:originalSelector identifier:identifier withBlock:block];
     }
 }
 
-- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
++ (BOOL)fw_swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     if (!originalClass) return NO;
     
@@ -415,12 +407,12 @@
     return YES;
 }
 
-- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
++ (BOOL)fw_swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
-    return [self swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector withBlock:block];
+    return [self fw_swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector withBlock:block];
 }
 
-- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
++ (BOOL)fw_swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
     if (!originalClass) return NO;
     
@@ -434,20 +426,20 @@
         NSString *swizzleIdentifier = [NSString stringWithFormat:@"%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? @"+" : @"-", NSStringFromSelector(originalSelector), identifier];
         if (![swizzleIdentifiers containsObject:swizzleIdentifier]) {
             [swizzleIdentifiers addObject:swizzleIdentifier];
-            return [self swizzleInstanceMethod:originalClass selector:originalSelector withBlock:block];
+            return [self fw_swizzleInstanceMethod:originalClass selector:originalSelector withBlock:block];
         }
         return NO;
     }
 }
 
-- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
++ (BOOL)fw_swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block
 {
-    return [self swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector identifier:identifier withBlock:block];
+    return [self fw_swizzleInstanceMethod:object_getClass((id)originalClass) selector:originalSelector identifier:identifier withBlock:block];
 }
 
 #pragma mark - Class
 
-- (NSArray<NSString *> *)classMethods:(Class)clazz superclass:(BOOL)superclass
++ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass
 {
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {
@@ -467,7 +459,7 @@
     return resultNames;
 }
 
-- (NSArray<NSString *> *)classProperties:(Class)clazz superclass:(BOOL)superclass
++ (NSArray<NSString *> *)fw_classProperties:(Class)clazz superclass:(BOOL)superclass
 {
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {
@@ -487,7 +479,7 @@
     return resultNames;
 }
 
-- (NSArray<NSString *> *)classIvars:(Class)clazz superclass:(BOOL)superclass
++ (NSArray<NSString *> *)fw_classIvars:(Class)clazz superclass:(BOOL)superclass
 {
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {

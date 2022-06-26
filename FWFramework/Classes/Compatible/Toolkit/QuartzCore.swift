@@ -20,14 +20,14 @@ extension Wrapper where Base: CADisplayLink {
     ///   - selector: 方法
     /// - Returns: CADisplayLink
     public static func commonDisplayLink(target: Any, selector: Selector) -> CADisplayLink {
-        return Base.__fw.commonDisplayLink(withTarget: target, selector: selector)
+        return Base.__fw_commonDisplayLink(withTarget: target, selector: selector)
     }
 
     /// 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
     public static func commonDisplayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        return Base.__fw.commonDisplayLink(block)
+        return Base.__fw_commonDisplayLink(block)
     }
 
     /// 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -36,7 +36,7 @@ extension Wrapper where Base: CADisplayLink {
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
     public static func displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        return Base.__fw.displayLink(block)
+        return Base.__fw_displayLink(block)
     }
     
 }
@@ -46,14 +46,14 @@ extension Wrapper where Base: CAAnimation {
     
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
     public var startBlock: ((CAAnimation) -> Void)? {
-        get { return base.__fw.startBlock }
-        set { base.__fw.startBlock = newValue }
+        get { return base.__fw_startBlock }
+        set { base.__fw_startBlock = newValue }
     }
 
     /// 设置动画停止回调
     public var stopBlock: ((CAAnimation, Bool) -> Void)? {
-        get { return base.__fw.stopBlock }
-        set { base.__fw.stopBlock = newValue }
+        get { return base.__fw_stopBlock }
+        set { base.__fw_stopBlock = newValue }
     }
     
 }

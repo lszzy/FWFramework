@@ -8,7 +8,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FWWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,9 +54,9 @@ typedef void (^FWBlockDouble)(double value) NS_SWIFT_UNAVAILABLE("");
  */
 typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVAILABLE("");
 
-#pragma mark - FWTimerClassWrapper+FWBlock
+#pragma mark - NSTimer+FWBlock
 
-@interface FWTimerClassWrapper (FWBlock)
+@interface NSTimer (FWBlock)
 
 /**
  创建NSTimer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -69,7 +68,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  @param repeats 是否重复
  @return 定时器
  */
-- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats;
++ (NSTimer *)fw_commonTimerWithTimeInterval:(NSTimeInterval)seconds target:(id)target selector:(SEL)selector userInfo:(nullable id)userInfo repeats:(BOOL)repeats NS_REFINED_FOR_SWIFT;
 
 /**
  创建NSTimer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
@@ -79,7 +78,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  @param repeats 是否重复
  @return 定时器
  */
-- (NSTimer *)commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
++ (NSTimer *)fw_commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats NS_REFINED_FOR_SWIFT;
 
 /**
  创建倒计时定时器
@@ -88,7 +87,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  @param block 每秒执行block，为0时自动停止
  @return 定时器，可手工停止
  */
-- (NSTimer *)commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block;
++ (NSTimer *)fw_commonTimerWithCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block NS_REFINED_FOR_SWIFT;
 
 /**
  创建NSTimer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -99,7 +98,7 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  @param repeats 是否重复
  @return 定时器
  */
-- (NSTimer *)timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
++ (NSTimer *)fw_timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats NS_REFINED_FOR_SWIFT;
 
 /**
  创建NSTimer，使用block，默认模式安排到当前的运行循环中
@@ -109,158 +108,140 @@ typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVA
  @param repeats 是否重复
  @return 定时器
  */
-- (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
-
-@end
-
-#pragma mark - FWTimerWrapper+FWFoundation
-
-@interface FWTimerWrapper (FWFoundation)
++ (NSTimer *)fw_scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats NS_REFINED_FOR_SWIFT;
 
 /// 暂停NSTimer
-- (void)pauseTimer;
+- (void)fw_pauseTimer NS_REFINED_FOR_SWIFT;
 
 /// 开始NSTimer
-- (void)resumeTimer;
+- (void)fw_resumeTimer NS_REFINED_FOR_SWIFT;
 
 /// 延迟delay秒后开始NSTimer
-- (void)resumeTimerAfterDelay:(NSTimeInterval)delay;
+- (void)fw_resumeTimerAfterDelay:(NSTimeInterval)delay NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWGestureRecognizerWrapper+FWBlock
+#pragma mark - UIGestureRecognizer+FWBlock
 
-@interface FWGestureRecognizerWrapper (FWBlock)
+@interface UIGestureRecognizer (FWBlock)
 
 /// 添加事件句柄，返回唯一标志
-- (NSString *)addBlock:(void (^)(id sender))block;
+- (NSString *)fw_addBlock:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 根据唯一标志移除事件句柄
-- (void)removeBlock:(nullable NSString *)identifier;
+- (void)fw_removeBlock:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 /// 移除所有事件句柄
-- (void)removeAllBlocks;
-
-@end
-
-#pragma mark - FWGestureRecognizerClassWrapper+FWBlock
-
-@interface FWGestureRecognizerClassWrapper (FWBlock)
+- (void)fw_removeAllBlocks NS_REFINED_FOR_SWIFT;
 
 /// 从事件句柄初始化
-- (__kindof UIGestureRecognizer *)gestureRecognizerWithBlock:(void (^)(id sender))block;
++ (instancetype)fw_gestureRecognizerWithBlock:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWViewWrapper+FWBlock
+#pragma mark - UIView+FWBlock
 
-@interface FWViewWrapper (FWBlock)
+@interface UIView (FWBlock)
 
 /// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
-- (void)addTapGestureWithTarget:(id)target action:(SEL)action;
+- (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 添加点击手势句柄，同上
-- (NSString *)addTapGestureWithBlock:(void (^)(id sender))block;
+- (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 根据唯一标志移除点击手势句柄
-- (void)removeTapGesture:(nullable NSString *)identifier;
+- (void)fw_removeTapGesture:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 /// 移除所有点击手势
-- (void)removeAllTapGestures;
+- (void)fw_removeAllTapGestures NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWControlWrapper+FWBlock
+#pragma mark - UIControl+FWBlock
 
-@interface FWControlWrapper (FWBlock)
+@interface UIControl (FWBlock)
 
 /// 添加事件句柄
-- (NSString *)addBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents;
+- (NSString *)fw_addBlock:(void (^)(id sender))block forControlEvents:(UIControlEvents)controlEvents NS_REFINED_FOR_SWIFT;
 
 /// 根据唯一标志移除事件句柄
-- (void)removeBlock:(nullable NSString *)identifier forControlEvents:(UIControlEvents)controlEvents;
+- (void)fw_removeBlock:(nullable NSString *)identifier forControlEvents:(UIControlEvents)controlEvents NS_REFINED_FOR_SWIFT;
 
 /// 移除所有事件句柄
-- (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents;
+- (void)fw_removeAllBlocksForControlEvents:(UIControlEvents)controlEvents NS_REFINED_FOR_SWIFT;
 
 /// 添加点击事件
-- (void)addTouchTarget:(id)target action:(SEL)action;
+- (void)fw_addTouchTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 添加点击句柄
-- (NSString *)addTouchBlock:(void (^)(id sender))block;
+- (NSString *)fw_addTouchBlock:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 根据唯一标志移除点击句柄
-- (void)removeTouchBlock:(nullable NSString *)identifier;
+- (void)fw_removeTouchBlock:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWBarButtonItemWrapper+FWBlock
+#pragma mark - UIBarButtonItem+FWBlock
 
 /**
  iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可
  */
-@interface FWBarButtonItemWrapper (FWBlock)
+@interface UIBarButtonItem (FWBlock)
 
 /// 自定义标题样式属性，兼容appearance，默认nil同系统
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *titleAttributes;
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_titleAttributes NS_REFINED_FOR_SWIFT;
 
 /// 设置当前Item触发句柄，nil时清空句柄
-- (void)setBlock:(nullable void (^)(id sender))block;
-
-@end
-
-#pragma mark - FWBarButtonItemClassWrapper+FWBlock
-
-@interface FWBarButtonItemClassWrapper (FWBlock)
+- (void)fw_setBlock:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-- (UIBarButtonItem *)itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
++ (instancetype)fw_itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-- (UIBarButtonItem *)itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
++ (instancetype)fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWBlock
+#pragma mark - UIViewController+FWBlock
 
 /// iOS13+支持针对VC.navigationItem单独设置导航栏样式，如最低兼容iOS13时可使用
-@interface FWViewControllerWrapper (FWBlock)
+@interface UIViewController (FWBlock)
 
 /// 快捷设置导航栏标题
-@property (nonatomic, copy, nullable) NSString *title;
+@property (nonatomic, copy, nullable) NSString *fw_title NS_REFINED_FOR_SWIFT;
 
 /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
-@property (nonatomic, strong, nullable) id backBarItem;
+@property (nonatomic, strong, nullable) id fw_backBarItem NS_REFINED_FOR_SWIFT;
 
 /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
-@property (nonatomic, strong, nullable) id leftBarItem;
+@property (nonatomic, strong, nullable) id fw_leftBarItem NS_REFINED_FOR_SWIFT;
 
 /// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
-@property (nonatomic, strong, nullable) id rightBarItem;
+@property (nonatomic, strong, nullable) id fw_rightBarItem NS_REFINED_FOR_SWIFT;
 
 /// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
-- (void)setLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+- (void)fw_setLeftBarItem:(nullable id)object target:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-- (void)setLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+- (void)fw_setLeftBarItem:(nullable id)object block:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 快捷设置导航栏右侧按钮
-- (void)setRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+- (void)fw_setRightBarItem:(nullable id)object target:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 快捷设置导航栏右侧按钮，block事件
-- (void)setRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+- (void)fw_setRightBarItem:(nullable id)object block:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
-- (void)addLeftBarItem:(nullable id)object target:(id)target action:(SEL)action;
+- (void)fw_addLeftBarItem:(nullable id)object target:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-- (void)addLeftBarItem:(nullable id)object block:(void (^)(id sender))block;
+- (void)fw_addLeftBarItem:(nullable id)object block:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 /// 快捷添加导航栏右侧按钮
-- (void)addRightBarItem:(nullable id)object target:(id)target action:(SEL)action;
+- (void)fw_addRightBarItem:(nullable id)object target:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /// 快捷添加导航栏右侧按钮，block事件
-- (void)addRightBarItem:(nullable id)object block:(void (^)(id sender))block;
+- (void)fw_addRightBarItem:(nullable id)object block:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
 
 @end
 

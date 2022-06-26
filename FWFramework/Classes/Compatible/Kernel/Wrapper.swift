@@ -91,6 +91,7 @@ extension String: WrapperCompatible {}
 extension Data: WrapperCompatible {}
 extension Date: WrapperCompatible {}
 extension URL: WrapperCompatible {}
+extension URLRequest: WrapperCompatible {}
 extension Array: WrapperCompatible {}
 extension Set: WrapperCompatible {}
 extension Dictionary: WrapperCompatible {}

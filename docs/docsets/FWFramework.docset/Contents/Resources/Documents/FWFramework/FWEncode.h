@@ -7,22 +7,30 @@
  @updated    2020/9/19
  */
 
-#import "FWWrapper.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWStringWrapper+FWEncode
+#pragma mark - NSString+FWEncode
 
-@interface FWStringWrapper (FWEncode)
+@interface NSString (FWEncode)
 
 #pragma mark - Json
+
+/**
+ Foundation对象编码为json字符串
+ 
+ @param object 编码对象
+ @return json字符串
+ */
++ (nullable NSString *)fw_jsonEncode:(id)object NS_REFINED_FOR_SWIFT;
 
 /**
  *  json字符串解码为Foundation对象
  *
  *  @return Foundation对象
  */
-- (nullable id)jsonDecode;
+- (nullable id)fw_jsonDecode NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Base64
 
@@ -31,42 +39,42 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return base64字符串
  */
-- (nullable NSString *)base64Encode;
+- (nullable NSString *)fw_base64Encode NS_REFINED_FOR_SWIFT;
 
 /**
  *  base64解码
  *
  *  @return 原字符串
  */
-- (nullable NSString *)base64Decode;
+- (nullable NSString *)fw_base64Decode NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Unicode
 
 /**
  *  计算长度，中文为1，英文为0.5
  */
-- (NSUInteger)unicodeLength;
+- (NSUInteger)fw_unicodeLength NS_REFINED_FOR_SWIFT;
 
 /**
  *  截取字符串，中文为1，英文为0.5
  *
  *  @param length 截取长度
  */
-- (NSString *)unicodeSubstring:(NSUInteger)length;
+- (NSString *)fw_unicodeSubstring:(NSUInteger)length NS_REFINED_FOR_SWIFT;
 
 /**
  *  Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
  *
  *  @return Unicode字符串
  */
-- (NSString *)unicodeEncode;
+- (NSString *)fw_unicodeEncode NS_REFINED_FOR_SWIFT;
 
 /**
  *  Unicode中文解码，将Unicode字符串(如\u7E8C)转换成中文
  *
  *  @return 中文字符串
  */
-- (NSString *)unicodeDecode;
+- (NSString *)fw_unicodeDecode NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Url
 
@@ -77,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return url编码字符串
  */
-- (nullable NSString *)urlEncodeComponent;
+- (nullable NSString *)fw_urlEncodeComponent NS_REFINED_FOR_SWIFT;
 
 /**
  *  url参数解码，适用于query参数解码
@@ -86,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 原字符串
  */
-- (nullable NSString *)urlDecodeComponent;
+- (nullable NSString *)fw_urlDecodeComponent NS_REFINED_FOR_SWIFT;
 
 /**
  *  url编码，适用于整个url编码
@@ -95,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return url编码地址
  */
-- (nullable NSString *)urlEncode;
+- (nullable NSString *)fw_urlEncode NS_REFINED_FOR_SWIFT;
 
 /**
  *  url解码，适用于整个url解码
@@ -104,14 +112,19 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 原url地址
  */
-- (nullable NSString *)urlDecode;
+- (nullable NSString *)fw_urlDecode NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Query
 
 /**
+ * 字典编码为URL参数字符串
+ */
++ (NSString *)fw_queryEncode:(NSDictionary<NSString *, id> *)dictionary NS_REFINED_FOR_SWIFT;
+
+/**
  * URL参数字符串解码为字典，支持完整URL
  */
-- (NSDictionary<NSString *, NSString *> *)queryDecode;
+- (NSDictionary<NSString *, NSString *> *)fw_queryDecode NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Md5
 
@@ -120,41 +133,41 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return md5字符串
  */
-- (NSString *)md5Encode;
+- (NSString *)fw_md5Encode NS_REFINED_FOR_SWIFT;
 
 /**
  *  文件md5编码
  *
  *  @return md5字符串
  */
-- (nullable NSString *)md5EncodeFile;
+- (nullable NSString *)fw_md5EncodeFile NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Helper
 
 /**
  去掉空白字符
  */
-@property (nonatomic, copy, readonly) NSString *trimString;
+@property (nonatomic, copy, readonly) NSString *fw_trimString NS_REFINED_FOR_SWIFT;
 
 /**
  首字母大写
  */
-@property (nonatomic, copy, readonly) NSString *ucfirstString;
+@property (nonatomic, copy, readonly) NSString *fw_ucfirstString NS_REFINED_FOR_SWIFT;
 
 /**
  首字母小写
  */
-@property (nonatomic, copy, readonly) NSString *lcfirstString;
+@property (nonatomic, copy, readonly) NSString *fw_lcfirstString NS_REFINED_FOR_SWIFT;
 
 /**
  驼峰转下划线
  */
-@property (nonatomic, copy, readonly) NSString *underlineString;
+@property (nonatomic, copy, readonly) NSString *fw_underlineString NS_REFINED_FOR_SWIFT;
 
 /**
  下划线转驼峰
  */
-@property (nonatomic, copy, readonly) NSString *camelString;
+@property (nonatomic, copy, readonly) NSString *fw_camelString NS_REFINED_FOR_SWIFT;
 
 /**
  过滤JSON解码特殊字符
@@ -163,91 +176,28 @@ NS_ASSUME_NONNULL_BEGIN
  规则：只允许以\uD800-\uDBFF高位开头，紧跟\uDC00-\uDFFF低位；其他全不允许
  参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
  */
-@property (nonatomic, copy, readonly) NSString *escapeJson;
+@property (nonatomic, copy, readonly) NSString *fw_escapeJson NS_REFINED_FOR_SWIFT;
 
 /**
  转换为UTF8编码数据
  */
-@property (nonatomic, strong, readonly, nullable) NSData *utf8Data;
+@property (nonatomic, strong, readonly, nullable) NSData *fw_utf8Data NS_REFINED_FOR_SWIFT;
 
 /**
  转换为NSURL
  */
-@property (nonatomic, copy, readonly, nullable) NSURL *url;
+@property (nonatomic, copy, readonly, nullable) NSURL *fw_url NS_REFINED_FOR_SWIFT;
 
 /**
  转换为NSNumber
  */
-@property (nonatomic, readonly, nullable) NSNumber *number;
+@property (nonatomic, readonly, nullable) NSNumber *fw_number NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWStringClassWrapper+FWEncode
+#pragma mark - NSData+FWEncode
 
-@interface FWStringClassWrapper (FWEncode)
-
-#pragma mark - Json
-
-/**
- Foundation对象编码为json字符串
- 
- @param object 编码对象
- @return json字符串
- */
-- (nullable NSString *)jsonEncode:(id)object;
-
-#pragma mark - Query
-
-/**
- * 字典编码为URL参数字符串
- */
-- (NSString *)queryEncode:(NSDictionary<NSString *, id> *)dictionary;
-
-@end
-
-#pragma mark - FWDataWrapper+FWEncode
-
-@interface FWDataWrapper (FWEncode)
-
-#pragma mark - Json
-
-/**
- json数据解码为Foundation对象
-
- @return Foundation对象
- */
-- (nullable id)jsonDecode;
-
-#pragma mark - Base64
-
-/**
- *  base64编码
- *
- *  @return base64数据
- */
-- (NSData *)base64Encode;
-
-/**
- *  base64解码
- *
- *  @return 原数据
- */
-- (nullable NSData *)base64Decode;
-
-#pragma mark - Helper
-
-/**
- 转换为UTF8编码字符串
- 
- @return UTF8编码字符串
- */
-@property (nonatomic, copy, readonly, nullable) NSString *utf8String;
-
-@end
-
-#pragma mark - FWDataClassWrapper+FWEncode
-
-@interface FWDataClassWrapper (FWEncode)
+@interface NSData (FWEncode)
 
 #pragma mark - Json
 
@@ -257,31 +207,57 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 编码对象
  @return json数据
  */
-- (nullable NSData *)jsonEncode:(id)object;
++ (nullable NSData *)fw_jsonEncode:(id)object NS_REFINED_FOR_SWIFT;
+
+/**
+ json数据解码为Foundation对象
+
+ @return Foundation对象
+ */
+- (nullable id)fw_jsonDecode NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Base64
+
+/**
+ *  base64编码
+ *
+ *  @return base64数据
+ */
+- (NSData *)fw_base64Encode NS_REFINED_FOR_SWIFT;
+
+/**
+ *  base64解码
+ *
+ *  @return 原数据
+ */
+- (nullable NSData *)fw_base64Decode NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Helper
+
+/**
+ 转换为UTF8编码字符串
+ 
+ @return UTF8编码字符串
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *fw_utf8String NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWURLWrapper+FWEncode
+#pragma mark - NSURL+FWEncode
 
-@interface FWURLWrapper (FWEncode)
+@interface NSURL (FWEncode)
 
 /// 获取当前query的参数字典，不含空值
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *queryDictionary;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fw_queryDictionary NS_REFINED_FOR_SWIFT;
 
 /// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
-@property (nonatomic, copy, readonly, nullable) NSString *pathURI;
-
-@end
-
-#pragma mark - FWURLClassWrapper+FWEncode
-
-@interface FWURLClassWrapper (FWEncode)
+@property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI NS_REFINED_FOR_SWIFT;
 
 /// 生成URL，中文自动URL编码
-- (nullable NSURL *)urlWithString:(nullable NSString *)string;
++ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string NS_REFINED_FOR_SWIFT;
 
 /// 生成URL，中文自动URL编码
-- (nullable NSURL *)urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL;
++ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -311,113 +287,113 @@ FOUNDATION_EXPORT NSString * FWSafeString(id _Nullable value) NS_SWIFT_UNAVAILAB
  */
 FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("");
 
-#pragma mark - FWObjectWrapper+FWSafeType
+#pragma mark - NSObject+FWSafeType
 
-@interface FWObjectWrapper (FWSafeType)
+@interface NSObject (FWSafeType)
 
 /**
  是否是非Null(nil, NSNull)
  
  @return 如果为非Null返回YES，为Null返回NO
  */
-@property (nonatomic, assign, readonly) BOOL isNotNull;
+@property (nonatomic, assign, readonly) BOOL fw_isNotNull NS_REFINED_FOR_SWIFT;
 
 /**
  是否是非空对象(nil, NSNull, count为0, length为0)
  
  @return 如果是非空对象返回YES，为空对象返回NO
  */
-@property (nonatomic, assign, readonly) BOOL isNotEmpty;
+@property (nonatomic, assign, readonly) BOOL fw_isNotEmpty NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSInteger
  
  @return NSInteger
  */
-@property (nonatomic, assign, readonly) NSInteger safeInteger;
+@property (nonatomic, assign, readonly) NSInteger fw_safeInteger NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为Float
  
  @return Float
  */
-@property (nonatomic, assign, readonly) float safeFloat;
+@property (nonatomic, assign, readonly) float fw_safeFloat NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为Double
  
  @return Double
  */
-@property (nonatomic, assign, readonly) double safeDouble;
+@property (nonatomic, assign, readonly) double fw_safeDouble NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为Bool
  
  @return Bool
  */
-@property (nonatomic, assign, readonly) BOOL safeBool;
+@property (nonatomic, assign, readonly) BOOL fw_safeBool NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSNumber
  
  @return NSNumber
  */
-@property (nonatomic, strong, readonly) NSNumber *safeNumber;
+@property (nonatomic, strong, readonly) NSNumber *fw_safeNumber NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSString
  
  @return NSString
  */
-@property (nonatomic, copy, readonly) NSString *safeString;
+@property (nonatomic, copy, readonly) NSString *fw_safeString NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSDate
  
  @return NSDate
  */
-@property (nonatomic, strong, readonly) NSDate *safeDate;
+@property (nonatomic, strong, readonly) NSDate *fw_safeDate NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSData
  
  @return NSData
  */
-@property (nonatomic, strong, readonly) NSData *safeData;
+@property (nonatomic, strong, readonly) NSData *fw_safeData NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSArray
  
  @return NSArray
  */
-@property (nonatomic, strong, readonly) NSArray *safeArray;
+@property (nonatomic, strong, readonly) NSArray *fw_safeArray NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSMutableArray
  
  @return NSMutableArray
  */
-@property (nonatomic, strong, readonly) NSMutableArray *safeMutableArray;
+@property (nonatomic, strong, readonly) NSMutableArray *fw_safeMutableArray NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSDictionary
  
  @return NSDictionary
  */
-@property (nonatomic, strong, readonly) NSDictionary *safeDictionary;
+@property (nonatomic, strong, readonly) NSDictionary *fw_safeDictionary NS_REFINED_FOR_SWIFT;
 
 /**
  检测并安全转换为NSMutableDictionary
  
  @return NSMutableDictionary
  */
-@property (nonatomic, strong, readonly) NSMutableDictionary *safeMutableDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary *fw_safeMutableDictionary NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWStringWrapper+FWSafeType
+#pragma mark - NSString+FWSafeType
 
-@interface FWStringWrapper (FWSafeType)
+@interface NSString (FWSafeType)
 
 /**
  从指定位置截取子串
@@ -425,7 +401,7 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param from 起始位置
  @return 子串
  */
-- (nullable NSString *)substringFromIndex:(NSInteger)from;
+- (nullable NSString *)fw_substringFromIndex:(NSInteger)from NS_REFINED_FOR_SWIFT;
 
 /**
  截取子串到指定位置
@@ -433,7 +409,7 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param to 结束位置
  @return 子串
  */
-- (nullable NSString *)substringToIndex:(NSInteger)to;
+- (nullable NSString *)fw_substringToIndex:(NSInteger)to NS_REFINED_FOR_SWIFT;
 
 /**
  截取指定范围的子串
@@ -441,13 +417,13 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param range 指定范围
  @return 子串
  */
-- (nullable NSString *)substringWithRange:(NSRange)range;
+- (nullable NSString *)fw_substringWithRange:(NSRange)range NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWArrayWrapper+FWSafeType
+#pragma mark - NSArray+FWSafeType
 
-@interface FWArrayWrapper<__covariant ObjectType> (FWSafeType)
+@interface NSArray<__covariant ObjectType> (FWSafeType)
 
 /**
  安全获取对象
@@ -455,7 +431,7 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param index 索引
  @return 对象
  */
-- (nullable ObjectType)objectAtIndex:(NSInteger)index;
+- (nullable ObjectType)fw_objectAtIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
 /**
  安全获取子数组
@@ -463,27 +439,27 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param range 范围
  @return 对象数组
  */
-- (nullable NSArray<ObjectType> *)subarrayWithRange:(NSRange)range;
+- (nullable NSArray<ObjectType> *)fw_subarrayWithRange:(NSRange)range NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWMutableArrayWrapper+FWSafeType
+#pragma mark - NSMutableArray+FWSafeType
 
-@interface FWMutableArrayWrapper<ObjectType> (FWSafeType)
+@interface NSMutableArray<ObjectType> (FWSafeType)
 
 /**
  安全添加对象
  
  @param object 对象
  */
-- (void)addObject:(nullable ObjectType)object;
+- (void)fw_addObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;
 
 /**
  安全移除指定索引对象
  
  @param index 索引
  */
-- (void)removeObjectAtIndex:(NSInteger)index;
+- (void)fw_removeObjectAtIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
 /**
  安全插入对象到指定位置
@@ -491,7 +467,7 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param object 对象
  @param index 索引
  */
-- (void)insertObject:(nullable ObjectType)object atIndex:(NSInteger)index;
+- (void)fw_insertObject:(nullable ObjectType)object atIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
 /**
  安全替换对象到指定位置
@@ -499,14 +475,14 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param index 索引
  @param object 对象
  */
-- (void)replaceObjectAtIndex:(NSInteger)index withObject:(nullable ObjectType)object;
+- (void)fw_replaceObjectAtIndex:(NSInteger)index withObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;
 
 /**
  安全移除子数组
  
  @param range 范围
  */
-- (void)removeObjectsInRange:(NSRange)range;
+- (void)fw_removeObjectsInRange:(NSRange)range NS_REFINED_FOR_SWIFT;
 
 /**
  安全插入数组到指定位置
@@ -514,33 +490,33 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param objects 要插入的数组
  @param index 索引
  */
-- (void)insertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index;
+- (void)fw_insertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWMutableSetWrapper+FWSafeType
+#pragma mark - NSMutableSet+FWSafeType
 
-@interface FWMutableSetWrapper<__covariant ObjectType> (FWSafeType)
+@interface NSMutableSet<ObjectType> (FWSafeType)
 
 /**
  安全添加对象
  
  @param object 对象
  */
-- (void)addObject:(nullable ObjectType)object;
+- (void)fw_addObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;
 
 /**
  安全移除对象
  
  @param object 对象
  */
-- (void)removeObject:(nullable ObjectType)object;
+- (void)fw_removeObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWDictionaryWrapper+FWSafeType
+#pragma mark - NSDictionary+FWSafeType
 
-@interface FWDictionaryWrapper<__covariant KeyType, __covariant ObjectType> (FWSafeType)
+@interface NSDictionary<__covariant KeyType, __covariant ObjectType> (FWSafeType)
 
 /**
  安全读取对象（过滤NSNull）
@@ -548,20 +524,20 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param key 键名
  @return 键值
  */
-- (nullable ObjectType)objectForKey:(nullable KeyType)key;
+- (nullable ObjectType)fw_objectForKey:(nullable KeyType)key NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWMutableDictionaryWrapper+FWSafeType
+#pragma mark - NSMutableDictionary+FWSafeType
 
-@interface FWMutableDictionaryWrapper<KeyType, ObjectType> (FWSafeType)
+@interface NSMutableDictionary<KeyType, ObjectType> (FWSafeType)
 
 /**
  安全移除指定键名
  
  @param key 键名
  */
-- (void)removeObjectForKey:(nullable KeyType)key;
+- (void)fw_removeObjectForKey:(nullable KeyType)key NS_REFINED_FOR_SWIFT;
 
 /**
  安全设置对象（过滤NSNull）
@@ -569,7 +545,7 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @param object 键值
  @param key 键名
  */
-- (void)setObject:(nullable ObjectType)object forKey:(nullable KeyType <NSCopying>)key;
+- (void)fw_setObject:(nullable ObjectType)object forKey:(nullable KeyType <NSCopying>)key NS_REFINED_FOR_SWIFT;
 
 @end
 

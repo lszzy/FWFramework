@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0] - 2022-06-26
+
+### Changed
+* Refactored OC version classification API, changed to fw_ prefix, removed Wrapper
+* Optimize the keyboard management jump input box scheme
+* Optimized to get safeAreaInsets even when keyWindow does not exist
+
 ## [3.3.1] - 2022-06-15
 
 ### Changed

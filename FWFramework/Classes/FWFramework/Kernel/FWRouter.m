@@ -187,7 +187,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (!metaClass) return @{};
     
-    NSArray<NSString *> *methods = [NSObject.fw classMethods:metaClass superclass:NO];
+    NSArray<NSString *> *methods = [NSObject fw_classMethods:metaClass superclass:NO];
     if (mapper) {
         return mapper(methods);
     }
@@ -798,22 +798,22 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 
 + (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [UIWindow.fw pushViewController:viewController animated:animated];
+    [UIWindow fw_pushViewController:viewController animated:animated];
 }
 
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [UIWindow.fw presentViewController:viewController animated:animated completion:completion];
+    [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [UIWindow.fw openViewController:viewController animated:animated];
+    [UIWindow fw_openViewController:viewController animated:animated];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated
 {
-    return [UIWindow.fw closeViewControllerAnimated:animated];
+    return [UIWindow fw_closeViewControllerAnimated:animated];
 }
 
 @end

@@ -1927,1219 +1927,1100 @@
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 49,
+      "line": 48,
       "symbol": "FWFrameworkVersionNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 50,
+      "line": 49,
       "symbol": "FWFrameworkVersionString",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 24,
-      "symbol": "FWApplicationClassWrapper(FWAdaptive)",
+      "line": 23,
+      "symbol": "UIApplication(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 68,
-      "symbol": "FWDeviceClassWrapper(FWAdaptive)",
+      "line": 67,
+      "symbol": "UIDevice(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 109,
+      "line": 108,
       "symbol": "FWScreenInch35",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 110,
+      "line": 109,
       "symbol": "FWScreenInch40",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 111,
+      "line": 110,
       "symbol": "FWScreenInch47",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 112,
+      "line": 111,
       "symbol": "FWScreenInch54",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 113,
+      "line": 112,
       "symbol": "FWScreenInch55",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 114,
+      "line": 113,
       "symbol": "FWScreenInch58",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 115,
+      "line": 114,
       "symbol": "FWScreenInch61",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 116,
+      "line": 115,
       "symbol": "FWScreenInch65",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 117,
+      "line": 116,
       "symbol": "FWScreenInch67",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 174,
-      "symbol": "FWScreenClassWrapper(FWAdaptive)",
+      "line": 173,
+      "symbol": "UIScreen(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 236,
-      "symbol": "FWViewControllerWrapper(FWAdaptive)",
+      "line": 235,
+      "symbol": "UIViewController(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAppearance.h",
       "line": 31,
-      "symbol": "FWObjectWrapper(FWAppearance)",
+      "symbol": "NSObject(FWAppearance)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 15,
-      "symbol": "FWViewClassWrapper(FWAutoLayout)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 717,
+      "line": 712,
       "symbol": "FWLayoutChain.view",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 719,
+      "line": 714,
       "symbol": "FWLayoutChain.-initWithView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 723,
+      "line": 718,
       "symbol": "FWLayoutChain.remake",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 727,
+      "line": 722,
       "symbol": "FWLayoutChain.compressionHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 728,
+      "line": 723,
       "symbol": "FWLayoutChain.compressionVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 729,
+      "line": 724,
       "symbol": "FWLayoutChain.huggingHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 730,
+      "line": 725,
       "symbol": "FWLayoutChain.huggingVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 734,
+      "line": 729,
       "symbol": "FWLayoutChain.collapsed",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 735,
+      "line": 730,
       "symbol": "FWLayoutChain.autoCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 736,
+      "line": 731,
       "symbol": "FWLayoutChain.hiddenCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 740,
+      "line": 735,
       "symbol": "FWLayoutChain.center",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 741,
+      "line": 736,
       "symbol": "FWLayoutChain.centerX",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 742,
+      "line": 737,
       "symbol": "FWLayoutChain.centerY",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 743,
+      "line": 738,
       "symbol": "FWLayoutChain.centerWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 744,
+      "line": 739,
       "symbol": "FWLayoutChain.centerXWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 745,
+      "line": 740,
       "symbol": "FWLayoutChain.centerYWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 746,
+      "line": 741,
       "symbol": "FWLayoutChain.centerToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 747,
+      "line": 742,
       "symbol": "FWLayoutChain.centerXToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 748,
+      "line": 743,
       "symbol": "FWLayoutChain.centerYToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 749,
+      "line": 744,
       "symbol": "FWLayoutChain.centerXToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 750,
+      "line": 745,
       "symbol": "FWLayoutChain.centerYToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 751,
+      "line": 746,
       "symbol": "FWLayoutChain.centerXToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 752,
+      "line": 747,
       "symbol": "FWLayoutChain.centerYToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 756,
+      "line": 751,
       "symbol": "FWLayoutChain.edges",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 757,
+      "line": 752,
       "symbol": "FWLayoutChain.edgesWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 758,
+      "line": 753,
       "symbol": "FWLayoutChain.edgesWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 759,
+      "line": 754,
       "symbol": "FWLayoutChain.horizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 760,
+      "line": 755,
       "symbol": "FWLayoutChain.vertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 761,
+      "line": 756,
       "symbol": "FWLayoutChain.top",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 762,
+      "line": 757,
       "symbol": "FWLayoutChain.bottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 763,
+      "line": 758,
       "symbol": "FWLayoutChain.left",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 764,
+      "line": 759,
       "symbol": "FWLayoutChain.right",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 765,
+      "line": 760,
       "symbol": "FWLayoutChain.topWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 766,
+      "line": 761,
       "symbol": "FWLayoutChain.bottomWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 767,
+      "line": 762,
       "symbol": "FWLayoutChain.leftWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 768,
+      "line": 763,
       "symbol": "FWLayoutChain.rightWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 769,
+      "line": 764,
       "symbol": "FWLayoutChain.topToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 770,
+      "line": 765,
       "symbol": "FWLayoutChain.bottomToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 771,
+      "line": 766,
       "symbol": "FWLayoutChain.leftToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 772,
+      "line": 767,
       "symbol": "FWLayoutChain.rightToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 773,
+      "line": 768,
       "symbol": "FWLayoutChain.topToViewBottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 774,
+      "line": 769,
       "symbol": "FWLayoutChain.bottomToViewTop",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 775,
+      "line": 770,
       "symbol": "FWLayoutChain.leftToViewRight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 776,
+      "line": 771,
       "symbol": "FWLayoutChain.rightToViewLeft",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 777,
+      "line": 772,
       "symbol": "FWLayoutChain.topToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 778,
+      "line": 773,
       "symbol": "FWLayoutChain.bottomToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 779,
+      "line": 774,
       "symbol": "FWLayoutChain.leftToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 780,
+      "line": 775,
       "symbol": "FWLayoutChain.rightToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 781,
+      "line": 776,
       "symbol": "FWLayoutChain.topToViewBottomWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 782,
+      "line": 777,
       "symbol": "FWLayoutChain.bottomToViewTopWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 783,
+      "line": 778,
       "symbol": "FWLayoutChain.leftToViewRightWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 784,
+      "line": 779,
       "symbol": "FWLayoutChain.rightToViewLeftWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 788,
+      "line": 783,
       "symbol": "FWLayoutChain.centerToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 789,
+      "line": 784,
       "symbol": "FWLayoutChain.centerXToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 790,
+      "line": 785,
       "symbol": "FWLayoutChain.centerYToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 791,
+      "line": 786,
       "symbol": "FWLayoutChain.centerToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 792,
+      "line": 787,
       "symbol": "FWLayoutChain.centerXToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 793,
+      "line": 788,
       "symbol": "FWLayoutChain.centerYToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 794,
+      "line": 789,
       "symbol": "FWLayoutChain.edgesToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 795,
+      "line": 790,
       "symbol": "FWLayoutChain.edgesToSafeAreaWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 796,
+      "line": 791,
       "symbol": "FWLayoutChain.edgesToSafeAreaWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 797,
+      "line": 792,
       "symbol": "FWLayoutChain.horizontalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 798,
+      "line": 793,
       "symbol": "FWLayoutChain.verticalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 799,
+      "line": 794,
       "symbol": "FWLayoutChain.topToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 800,
+      "line": 795,
       "symbol": "FWLayoutChain.bottomToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 801,
+      "line": 796,
       "symbol": "FWLayoutChain.leftToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 802,
+      "line": 797,
       "symbol": "FWLayoutChain.rightToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 803,
+      "line": 798,
       "symbol": "FWLayoutChain.topToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 804,
+      "line": 799,
       "symbol": "FWLayoutChain.bottomToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 805,
+      "line": 800,
       "symbol": "FWLayoutChain.leftToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 806,
+      "line": 801,
       "symbol": "FWLayoutChain.rightToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 810,
+      "line": 805,
       "symbol": "FWLayoutChain.size",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 811,
+      "line": 806,
       "symbol": "FWLayoutChain.width",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 812,
+      "line": 807,
       "symbol": "FWLayoutChain.height",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 813,
+      "line": 808,
       "symbol": "FWLayoutChain.widthToHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 814,
+      "line": 809,
       "symbol": "FWLayoutChain.heightToWidth",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 815,
+      "line": 810,
       "symbol": "FWLayoutChain.sizeToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 816,
+      "line": 811,
       "symbol": "FWLayoutChain.widthToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 817,
+      "line": 812,
       "symbol": "FWLayoutChain.heightToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 818,
+      "line": 813,
       "symbol": "FWLayoutChain.widthToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 819,
+      "line": 814,
       "symbol": "FWLayoutChain.heightToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 820,
+      "line": 815,
       "symbol": "FWLayoutChain.widthToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 821,
+      "line": 816,
       "symbol": "FWLayoutChain.heightToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 825,
+      "line": 820,
       "symbol": "FWLayoutChain.attribute",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 826,
+      "line": 821,
       "symbol": "FWLayoutChain.attributeWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 827,
+      "line": 822,
       "symbol": "FWLayoutChain.attributeWithOffsetAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 828,
+      "line": 823,
       "symbol": "FWLayoutChain.attributeWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 829,
+      "line": 824,
       "symbol": "FWLayoutChain.attributeWithMultiplierAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 833,
+      "line": 828,
       "symbol": "FWLayoutChain.offset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 834,
+      "line": 829,
       "symbol": "FWLayoutChain.inset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 835,
+      "line": 830,
       "symbol": "FWLayoutChain.priority",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 837,
+      "line": 832,
       "symbol": "FWLayoutChain.constraints",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 838,
+      "line": 833,
       "symbol": "FWLayoutChain.constraint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 839,
+      "line": 834,
       "symbol": "FWLayoutChain.constraintToSuperview",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 840,
+      "line": 835,
       "symbol": "FWLayoutChain.constraintToSuperviewWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 841,
+      "line": 836,
       "symbol": "FWLayoutChain.constraintToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 842,
+      "line": 837,
       "symbol": "FWLayoutChain.constraintToSafeAreaWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 843,
+      "line": 838,
       "symbol": "FWLayoutChain.constraintToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 844,
+      "line": 839,
       "symbol": "FWLayoutChain.constraintToViewWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 845,
+      "line": 840,
       "symbol": "FWLayoutChain.constraintToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 846,
+      "line": 841,
       "symbol": "FWLayoutChain.constraintToViewWithMultiplierAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 60,
-      "symbol": "FWTimerClassWrapper(FWBlock)",
+      "line": 59,
+      "symbol": "NSTimer(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 118,
-      "symbol": "FWTimerWrapper(FWFoundation)",
+      "line": 126,
+      "symbol": "UIGestureRecognizer(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 133,
-      "symbol": "FWGestureRecognizerWrapper(FWBlock)",
+      "line": 144,
+      "symbol": "UIView(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 148,
-      "symbol": "FWGestureRecognizerClassWrapper(FWBlock)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWBlock.h",
-      "line": 157,
-      "symbol": "FWViewWrapper(FWBlock)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWBlock.h",
-      "line": 175,
-      "symbol": "FWControlWrapper(FWBlock)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWBlock.h",
-      "line": 214,
-      "symbol": "FWBarButtonItemClassWrapper(FWBlock)",
+      "line": 162,
+      "symbol": "UIControl(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDebugger.h",
       "line": 26,
-      "symbol": "FWViewWrapper(FWDebugger)",
+      "symbol": "UIView(FWDebugger)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDebugger.h",
       "line": 45,
-      "symbol": "FWLabelWrapper(FWDebugger)",
+      "symbol": "UILabel(FWDebugger)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 17,
+      "line": 16,
       "symbol": "FWCellConfigurationBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 18,
+      "line": 17,
       "symbol": "FWCellIndexPathBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 20,
-      "symbol": "FWTableViewCellWrapper(FWDynamicLayout)",
+      "line": 19,
+      "symbol": "UITableViewCell(FWDynamicLayout)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 33,
-      "symbol": "FWTableViewCellClassWrapper(FWDynamicLayout)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 55,
+      "line": 50,
       "symbol": "FWHeaderFooterViewType",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 55,
+      "line": 50,
       "symbol": "FWHeaderFooterViewType",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 56,
+      "line": 51,
       "symbol": "FWHeaderFooterViewType.FWHeaderFooterViewTypeHeader",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 57,
+      "line": 52,
       "symbol": "FWHeaderFooterViewType.FWHeaderFooterViewTypeFooter",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 60,
+      "line": 55,
       "symbol": "FWHeaderFooterViewConfigurationBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 61,
+      "line": 56,
       "symbol": "FWHeaderFooterViewSectionBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 63,
-      "symbol": "FWTableViewHeaderFooterViewWrapper(FWDynamicLayout)",
+      "line": 58,
+      "symbol": "UITableViewHeaderFooterView(FWDynamicLayout)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 76,
-      "symbol": "FWTableViewHeaderFooterViewClassWrapper(FWDynamicLayout)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 189,
+      "line": 180,
       "symbol": "FWCollectionCellConfigurationBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 190,
+      "line": 181,
       "symbol": "FWCollectionCellIndexPathBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 192,
-      "symbol": "FWCollectionViewCellWrapper(FWDynamicLayout)",
+      "line": 183,
+      "symbol": "UICollectionViewCell(FWDynamicLayout)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 205,
-      "symbol": "FWCollectionViewCellClassWrapper(FWDynamicLayout)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 234,
+      "line": 221,
       "symbol": "FWReusableViewConfigurationBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 235,
+      "line": 222,
       "symbol": "FWReusableViewIndexPathBlock",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 237,
-      "symbol": "FWCollectionReusableViewWrapper(FWDynamicLayout)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDynamicLayout.h",
-      "line": 250,
-      "symbol": "FWCollectionReusableViewClassWrapper(FWDynamicLayout)",
+      "line": 224,
+      "symbol": "UICollectionReusableView(FWDynamicLayout)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
       "line": 16,
-      "symbol": "FWStringWrapper(FWEncode)",
+      "symbol": "NSString(FWEncode)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 187,
-      "symbol": "FWStringClassWrapper(FWEncode)",
+      "line": 200,
+      "symbol": "NSData(FWEncode)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 210,
-      "symbol": "FWDataWrapper(FWEncode)",
+      "line": 248,
+      "symbol": "NSURL(FWEncode)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 250,
-      "symbol": "FWDataClassWrapper(FWEncode)",
+      "line": 292,
+      "symbol": "NSObject(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 266,
-      "symbol": "FWURLWrapper(FWEncode)",
+      "line": 396,
+      "symbol": "NSString(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 278,
-      "symbol": "FWURLClassWrapper(FWEncode)",
+      "line": 426,
+      "symbol": "NSArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 316,
-      "symbol": "FWObjectWrapper(FWSafeType)",
+      "line": 448,
+      "symbol": "NSMutableArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 420,
-      "symbol": "FWStringWrapper(FWSafeType)",
+      "line": 499,
+      "symbol": "NSMutableSet(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 450,
-      "symbol": "FWArrayWrapper(FWSafeType)",
+      "line": 519,
+      "symbol": "NSDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 472,
-      "symbol": "FWMutableArrayWrapper(FWSafeType)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWEncode.h",
-      "line": 523,
-      "symbol": "FWMutableSetWrapper(FWSafeType)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWEncode.h",
-      "line": 543,
-      "symbol": "FWDictionaryWrapper(FWSafeType)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWEncode.h",
-      "line": 557,
-      "symbol": "FWMutableDictionaryWrapper(FWSafeType)",
+      "line": 533,
+      "symbol": "NSMutableDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 19,
-      "symbol": "FWArrayWrapper(FWFoundation)",
+      "line": 18,
+      "symbol": "NSArray(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 37,
-      "symbol": "FWAttributedStringWrapper(FWFoundation)",
+      "line": 60,
+      "symbol": "NSData(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 67,
-      "symbol": "FWDataWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 76,
-      "symbol": "FWDataClassWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 91,
-      "symbol": "FWDateWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 106,
-      "symbol": "FWDateClassWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 130,
-      "symbol": "FWDictionaryWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 145,
-      "symbol": "FWObjectWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 157,
-      "symbol": "FWStringWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 175,
-      "symbol": "FWStringClassWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 184,
-      "symbol": "FWUserDefaultsWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWFoundation.h",
-      "line": 196,
-      "symbol": "FWUserDefaultsClassWrapper(FWFoundation)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWLanguage.h",
-      "line": 23,
-      "symbol": "FWBundleWrapper(FWLanguage)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWLanguage.h",
       "line": 78,
-      "symbol": "FWStringWrapper(FWLanguage)",
+      "symbol": "NSDate(FWFoundation)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWFoundation.h",
+      "line": 111,
+      "symbol": "NSDictionary(FWFoundation)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWFoundation.h",
+      "line": 126,
+      "symbol": "NSObject(FWFoundation)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWFoundation.h",
+      "line": 138,
+      "symbol": "NSString(FWFoundation)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWFoundation.h",
+      "line": 159,
+      "symbol": "NSUserDefaults(FWFoundation)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWLanguage.h",
+      "line": 74,
+      "symbol": "NSString(FWLanguage)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
@@ -3251,77 +3132,56 @@
     {
       "file": "docs/FWFramework/FWMessage.h",
       "line": 58,
-      "symbol": "FWObjectWrapper(FWMessage)",
+      "symbol": "NSObject(FWMessage)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWMessage.h",
-      "line": 182,
-      "symbol": "FWClassWrapper(FWMessage)",
+      "line": 209,
+      "symbol": "NSObject(FWNotification)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWMessage.h",
-      "line": 217,
-      "symbol": "FWObjectWrapper(FWNotification)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWMessage.h",
-      "line": 338,
-      "symbol": "FWClassWrapper(FWNotification)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWMessage.h",
-      "line": 370,
-      "symbol": "FWObjectWrapper(FWKvo)",
+      "line": 354,
+      "symbol": "NSObject(FWKvo)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
       "line": 16,
-      "symbol": "FWWindowWrapper(FWNavigation)",
+      "symbol": "UIWindow(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 43,
-      "symbol": "FWWindowClassWrapper(FWNavigation)",
+      "line": 70,
+      "symbol": "UIViewController(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 76,
-      "symbol": "FWViewControllerWrapper(FWNavigation)",
+      "line": 82,
+      "symbol": "UIViewController(FWWorkflow)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 88,
-      "symbol": "FWViewControllerWrapper(FWWorkflow)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 97,
-      "symbol": "FWNavigationControllerWrapper(FWWorkflow)",
+      "line": 91,
+      "symbol": "UINavigationController(FWWorkflow)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
       "line": 51,
-      "symbol": "FWAnimationWrapper(FWQuartzCore)",
+      "symbol": "CAAnimation(FWQuartzCore)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
@@ -3347,13 +3207,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "docs/FWFramework/FWSwizzle.h",
-      "line": 60,
-      "symbol": "FWObjectWrapper(FWSwizzle)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
       "file": "docs/FWFramework/FWTheme.h",
       "line": 82,
       "symbol": "UIColor(FWTheme)",
@@ -3376,2557 +3229,114 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 103,
-      "symbol": "FWColorWrapper(FWToolkit)",
+      "line": 102,
+      "symbol": "UIColor(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 122,
-      "symbol": "FWColorClassWrapper(FWToolkit)",
+      "line": 164,
+      "symbol": "UIFont(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 169,
-      "symbol": "FWFontClassWrapper(FWToolkit)",
+      "line": 192,
+      "symbol": "UIImage(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 197,
-      "symbol": "FWImageWrapper(FWToolkit)",
+      "line": 285,
+      "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 273,
-      "symbol": "FWImageClassWrapper(FWToolkit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWToolkit.h",
-      "line": 294,
-      "symbol": "FWViewWrapper(FWToolkit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWToolkit.h",
-      "line": 352,
-      "symbol": "FWViewControllerWrapper(FWToolkit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWToolkit.h",
-      "line": 374,
+      "line": 343,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
-      "file": "docs/FWFramework/FWToolkit.h",
-      "line": 386,
-      "symbol": "FWNavigationControllerWrapper(FWToolkit)",
+      "file": "docs/FWFramework/FWUIKit.h",
+      "line": 16,
+      "symbol": "UIDevice(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 17,
-      "symbol": "FWDeviceClassWrapper(FWUIKit)",
+      "line": 37,
+      "symbol": "UIView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 38,
-      "symbol": "FWViewWrapper(FWUIKit)",
+      "line": 94,
+      "symbol": "UILabel(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 95,
-      "symbol": "FWLabelWrapper(FWUIKit)",
+      "line": 130,
+      "symbol": "UIButton(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 123,
-      "symbol": "FWLabelClassWrapper(FWUIKit)",
+      "line": 163,
+      "symbol": "UIScrollView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 135,
-      "symbol": "FWButtonWrapper(FWUIKit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWUIKit.h",
-      "line": 160,
-      "symbol": "FWButtonClassWrapper(FWUIKit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWUIKit.h",
-      "line": 172,
-      "symbol": "FWScrollViewWrapper(FWUIKit)",
+      "line": 199,
+      "symbol": "UIPageControl(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
       "line": 208,
-      "symbol": "FWPageControlWrapper(FWUIKit)",
+      "symbol": "UISlider(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 217,
-      "symbol": "FWSliderWrapper(FWUIKit)",
+      "line": 220,
+      "symbol": "UISwitch(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
       "line": 229,
-      "symbol": "FWSwitchWrapper(FWUIKit)",
+      "symbol": "UITextField(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 238,
-      "symbol": "FWTextFieldWrapper(FWUIKit)",
+      "line": 256,
+      "symbol": "UITextView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 265,
-      "symbol": "FWTextViewWrapper(FWUIKit)",
+      "line": 283,
+      "symbol": "UIViewController(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWUIKit.h",
-      "line": 292,
-      "symbol": "FWViewControllerWrapper(FWUIKit)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.unexposed",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAAnimation(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAAnimation(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAAnimation(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CADisplayLink(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CADisplayLink(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CADisplayLink(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAGradientLayer(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAGradientLayer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CAGradientLayer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CALayer(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CALayer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "CALayer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAnimationClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAnimationWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAnimationWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWApplicationClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWApplicationWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWApplicationWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWArrayClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWArrayWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWArrayWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAttributedStringClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAttributedStringWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWAttributedStringWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarButtonItemClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarButtonItemWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarButtonItemWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarItemClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarItemWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBarItemWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBezierPathClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBezierPathWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBezierPathWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBundleClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBundleWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWBundleWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWButtonClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWButtonWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWButtonWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionReusableViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionReusableViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionReusableViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewCellClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewCellWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewCellWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWCollectionViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWColorClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWColorWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWColorWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWControlClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWControlWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWControlWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDataClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDataWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDataWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDateClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDateWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDateWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDeviceClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDeviceWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDeviceWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDictionaryClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDictionaryWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDictionaryWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDisplayLinkClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDisplayLinkWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWDisplayLinkWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFileManagerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFileManagerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFileManagerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFontClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFontWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWFontWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGestureRecognizerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGestureRecognizerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGestureRecognizerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGradientLayerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGradientLayerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWGradientLayerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageAssetClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageAssetWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageAssetWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWImageWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLabelClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLabelWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLabelWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLayerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLayerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWLayerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableArrayClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableArrayWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableArrayWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableDictionaryClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableDictionaryWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableDictionaryWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableSetClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableSetWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWMutableSetWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationBarClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationBarWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationBarWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationControllerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationControllerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNavigationControllerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNumberClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNumberWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWNumberWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWPageControlClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWPageControlWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWPageControlWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScreenClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScreenWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScreenWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScrollViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScrollViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWScrollViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSearchBarClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSearchBarWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSearchBarWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSetClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSetWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSetWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSliderClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSliderWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSliderWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWStringClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWStringWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWStringWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSwitchClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSwitchWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWSwitchWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarControllerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarControllerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarControllerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTabBarWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewCellClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewCellWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewCellWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewHeaderFooterViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewHeaderFooterViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewHeaderFooterViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTableViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextFieldClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextFieldWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextFieldWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTextViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTimerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTimerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWTimerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWToolbarClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWToolbarWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWToolbarWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLRequestClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLRequestWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLRequestWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWURLWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWUserDefaultsClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWUserDefaultsWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWUserDefaultsWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewControllerClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewControllerWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewControllerWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWViewWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWWindowClassWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWWindowWrapper",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "FWWindowWrapper.base",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSArray(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSArray(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSArray(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSAttributedString(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSAttributedString(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSAttributedString(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSBundle(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSBundle(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSBundle(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSData(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSData(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSData(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDate(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDate(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDate(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDictionary(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDictionary(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSDictionary(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSFileManager(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSFileManager(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSFileManager(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableArray(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableArray(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableArray(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableDictionary(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableDictionary(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableDictionary(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableSet(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableSet(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSMutableSet(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSNumber(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSNumber(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSNumber(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSSet(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSSet(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSSet(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSString(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSString(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSString(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSTimer(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSTimer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSTimer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURL(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURL(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURL(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURLRequest(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURLRequest(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSURLRequest(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSUserDefaults(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSUserDefaults(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "NSUserDefaults(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIApplication(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIApplication(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIApplication(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarButtonItem(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarButtonItem(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarButtonItem(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarItem(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarItem(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBarItem(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBezierPath(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBezierPath(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIBezierPath(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIButton(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIButton(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIButton(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionReusableView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionReusableView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionReusableView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionViewCell(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionViewCell(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UICollectionViewCell(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIColor(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIColor(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIColor(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIControl(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIControl(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIControl(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIDevice(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIDevice(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIDevice(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIFont(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIFont(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIFont(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIGestureRecognizer(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIGestureRecognizer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIGestureRecognizer(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImage(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImage(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImage(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageAsset(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageAsset(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageAsset(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIImageView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UILabel(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UILabel(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UILabel(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationBar(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationController(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UINavigationController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIPageControl(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIPageControl(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIPageControl(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScreen(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScreen(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScreen(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScrollView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScrollView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIScrollView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISearchBar(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISearchBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISearchBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISlider(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISlider(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISlider(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISwitch(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISwitch(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UISwitch(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBar(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBarController(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBarController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITabBarController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewCell(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewCell(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewCell(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewHeaderFooterView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewHeaderFooterView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITableViewHeaderFooterView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextField(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextField(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextField(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UITextView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIToolbar(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIToolbar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIToolbar(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIView(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIView(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIViewController(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIViewController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIViewController(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIWindow(FWWrapper)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIWindow(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWWrapper.h",
-      "line": 383,
-      "symbol": "UIWindow(FWWrapper).fw",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     }
   ],

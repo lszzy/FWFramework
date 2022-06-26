@@ -7,7 +7,7 @@
  @updated    2018-05-16
  */
 
-#import "FWWrapper.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -53,9 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
     - (NSNotificationName)name { return [[self class] name]; } \
     + (NSNotificationName)name { return [NSString stringWithFormat:@"%@.%@.%s", @"notification", NSStringFromClass([self class]), #name]; }
 
-#pragma mark - FWObjectWrapper+FWMessage
+#pragma mark - NSObject+FWMessage
 
-@interface FWObjectWrapper (FWMessage)
+@interface NSObject (FWMessage)
 
 #pragma mark - Observer
 
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 消息句柄
  @return 监听唯一标志
  */
-- (NSString *)observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
+- (NSString *)fw_observeMessage:(NSNotificationName)name block:(void (^)(NSNotification *notification))block NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  消息句柄
  @return 监听唯一标志
  */
-- (NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (NSString *)fw_observeMessage:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (NSString *)observeMessage:(NSNotificationName)name target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeMessage:(NSNotificationName)name target:(nullable id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (NSString *)observeMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个点对点消息指定监听
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 消息目标
  @param action 目标动作
  */
-- (void)unobserveMessage:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action;
+- (void)fw_unobserveMessage:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象点对点消息指定监听
@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 消息目标
  @param action 目标动作
  */
-- (void)unobserveMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+- (void)fw_unobserveMessage:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象点对点消息指定监听
@@ -124,14 +124,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       消息名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier;
+- (void)fw_unobserveMessage:(NSNotificationName)name identifier:(NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个点对点消息所有监听
  
  @param name 消息名称
  */
-- (void)unobserveMessage:(NSNotificationName)name;
+- (void)fw_unobserveMessage:(NSNotificationName)name NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象点对点消息所有监听
@@ -139,12 +139,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   消息名称
  @param object 消息对象，值为nil时表示所有
  */
-- (void)unobserveMessage:(NSNotificationName)name object:(nullable id)object;
+- (void)fw_unobserveMessage:(NSNotificationName)name object:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除所有点对点消息监听
  */
-- (void)unobserveAllMessages;
+- (void)fw_unobserveAllMessages NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Subject
 
@@ -154,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 消息名称
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver;
+- (void)fw_sendMessage:(NSNotificationName)name toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 /**
  发送点对点消息，附带对象
@@ -163,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 消息对象
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver;
+- (void)fw_sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 /**
  发送点对点消息，附带对象和用户信息
@@ -173,15 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
-
-@end
-
-#pragma mark - FWClassWrapper+FWMessage
-
-@interface FWClassWrapper (FWMessage)
-
-#pragma mark - Subject
+- (void)fw_sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 /**
  发送类点对点消息
@@ -189,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 消息名称
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name toReceiver:(id)receiver;
++ (void)fw_sendMessage:(NSNotificationName)name toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 /**
  发送类点对点消息，附带对象
@@ -198,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 消息对象
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver;
++ (void)fw_sendMessage:(NSNotificationName)name object:(nullable id)object toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 /**
  发送类点对点消息，附带对象和用户信息
@@ -208,13 +200,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param userInfo 用户信息
  @param receiver 消息接收者
  */
-- (void)sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver;
++ (void)fw_sendMessage:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo toReceiver:(id)receiver NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWObjectWrapper+FWNotification
+#pragma mark - NSObject+FWNotification
 
-@interface FWObjectWrapper (FWNotification)
+@interface NSObject (FWNotification)
 
 #pragma mark - Observer
 
@@ -225,7 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 通知句柄
  @return 监听唯一标志
  */
-- (NSString *)observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block;
+- (NSString *)fw_observeNotification:(NSNotificationName)name block:(void (^)(NSNotification *notification))block NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -235,7 +227,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block  通知句柄
  @return 监听唯一标志
  */
-- (NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block;
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(nullable id)object block:(void (^)(NSNotification *notification))block NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -245,7 +237,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (NSString *)observeNotification:(NSNotificationName)name target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeNotification:(NSNotificationName)name target:(nullable id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -256,7 +248,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action 目标动作，参数为通知对象
  @return 监听唯一标志
  */
-- (NSString *)observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个广播通知指定监听
@@ -265,7 +257,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 通知目标
  @param action 目标动作
  */
-- (void)unobserveNotification:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action;
+- (void)fw_unobserveNotification:(NSNotificationName)name target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象广播通知指定监听
@@ -275,7 +267,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target 通知目标
  @param action 目标动作
  */
-- (void)unobserveNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
+- (void)fw_unobserveNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象广播通知指定监听
@@ -283,14 +275,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param name       通知名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier;
+- (void)fw_unobserveNotification:(NSNotificationName)name identifier:(NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个广播通知所有监听
  
  @param name 通知名称
  */
-- (void)unobserveNotification:(NSNotificationName)name;
+- (void)fw_unobserveNotification:(NSNotificationName)name NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个指定对象广播通知所有监听
@@ -298,12 +290,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象，值为nil时表示所有
  */
-- (void)unobserveNotification:(NSNotificationName)name object:(nullable id)object;
+- (void)fw_unobserveNotification:(NSNotificationName)name object:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除所有广播通知监听
  */
-- (void)unobserveAllNotifications;
+- (void)fw_unobserveAllNotifications NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Subject
 
@@ -312,7 +304,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name 通知名称
  */
-- (void)postNotification:(NSNotificationName)name;
+- (void)fw_postNotification:(NSNotificationName)name NS_REFINED_FOR_SWIFT;
 
 /**
  发送广播通知，附带对象
@@ -320,7 +312,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象
  */
-- (void)postNotification:(NSNotificationName)name object:(nullable id)object;
+- (void)fw_postNotification:(NSNotificationName)name object:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  发送广播通知，附带对象和用户信息
@@ -329,22 +321,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param object   通知对象
  @param userInfo 用户信息
  */
-- (void)postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
-
-@end
-
-#pragma mark - FWClassWrapper+FWNotification
-
-@interface FWClassWrapper (FWNotification)
-
-#pragma mark - Subject
+- (void)fw_postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo NS_REFINED_FOR_SWIFT;
 
 /**
  发送广播通知
  
  @param name 通知名称
  */
-- (void)postNotification:(NSNotificationName)name;
++ (void)fw_postNotification:(NSNotificationName)name NS_REFINED_FOR_SWIFT;
 
 /**
  发送广播通知，附带对象
@@ -352,7 +336,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name   通知名称
  @param object 通知对象
  */
-- (void)postNotification:(NSNotificationName)name object:(nullable id)object;
++ (void)fw_postNotification:(NSNotificationName)name object:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  发送广播通知，附带对象和用户信息
@@ -361,13 +345,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param object   通知对象
  @param userInfo 用户信息
  */
-- (void)postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
++ (void)fw_postNotification:(NSNotificationName)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - FWObjectWrapper+FWKvo
+#pragma mark - NSObject+FWKvo
 
-@interface FWObjectWrapper (FWKvo)
+@interface NSObject (FWKvo)
 
 /**
  监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -376,7 +360,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block    目标句柄，block参数依次为object、优化的change字典(不含NSNull)
  @return 监听唯一标志
  */
-- (NSString *)observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block NS_REFINED_FOR_SWIFT;
 
 /**
  监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -386,7 +370,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param action   目标动作，action参数依次为object、优化的change字典(不含NSNull)
  @return 监听唯一标志
  */
-- (NSString *)observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个属性指定监听
@@ -395,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param target   目标对象，值为nil时移除所有对象(同UIControl)
  @param action   目标动作，值为nil时移除所有动作(同UIControl)
  */
-- (void)unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
+- (void)fw_unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个属性指定监听
@@ -403,19 +387,19 @@ NS_ASSUME_NONNULL_BEGIN
  @param property   属性名称
  @param identifier 监听唯一标志
  */
-- (void)unobserveProperty:(NSString *)property identifier:(NSString *)identifier;
+- (void)fw_unobserveProperty:(NSString *)property identifier:(NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除某个属性所有监听
  
  @param property 属性名称
  */
-- (void)unobserveProperty:(NSString *)property;
+- (void)fw_unobserveProperty:(NSString *)property NS_REFINED_FOR_SWIFT;
 
 /**
  手工移除所有属性所有监听
  */
-- (void)unobserveAllProperties;
+- (void)fw_unobserveAllProperties NS_REFINED_FOR_SWIFT;
 
 @end
 

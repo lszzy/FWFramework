@@ -83,7 +83,7 @@ public protocol AutoloadProtocol {
     /// 使用方法：新增Autoloader扩展objc方法，以load开头即会自动调用，建议load+类名+扩展名
     public static func autoload() {
         // 获取Autoloader自动加载方法列表
-        autoloadMethods = NSObject.__fw
+        autoloadMethods = NSObject.fw
             .classMethods(Autoloader.self, superclass: false)
             .filter({ methodName in
                 return methodName.hasPrefix("load") && !methodName.contains(":")

@@ -10,38 +10,38 @@
 #import "FWNavigation.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWWindowWrapper+FWNavigation
+#pragma mark - UIWindow+FWNavigation
 
-@implementation FWWindowWrapper (FWNavigation)
+@implementation UIWindow (FWNavigation)
 
-- (UIViewController *)topViewController
+- (UIViewController *)fw_topViewController
 {
-    return [self topViewController:[self topPresentedController]];
+    return [self fw_topViewController:[self fw_topPresentedController]];
 }
 
-- (UIViewController *)topViewController:(UIViewController *)viewController
+- (UIViewController *)fw_topViewController:(UIViewController *)viewController
 {
     if ([viewController isKindOfClass:[UITabBarController class]]) {
         UIViewController *topController = [(UITabBarController *)viewController selectedViewController];
-        if (topController) return [self topViewController:topController];
+        if (topController) return [self fw_topViewController:topController];
     }
     
     if ([viewController isKindOfClass:[UINavigationController class]]) {
         UIViewController *topController = [(UINavigationController *)viewController topViewController];
-        if (topController) return [self topViewController:topController];
+        if (topController) return [self fw_topViewController:topController];
     }
     
     return viewController;
 }
 
-- (UINavigationController *)topNavigationController
+- (UINavigationController *)fw_topNavigationController
 {
-    return [self topViewController].navigationController;
+    return [self fw_topViewController].navigationController;
 }
 
-- (UIViewController *)topPresentedController
+- (UIViewController *)fw_topPresentedController
 {
-    UIViewController *presentedController = self.base.rootViewController;
+    UIViewController *presentedController = self.rootViewController;
     
     while ([presentedController presentedViewController]) {
         presentedController = [presentedController presentedViewController];
@@ -50,9 +50,9 @@
     return presentedController;
 }
 
-- (BOOL)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    UINavigationController *navigationController = [self topNavigationController];
+    UINavigationController *navigationController = [self fw_topNavigationController];
     if (navigationController) {
         [navigationController pushViewController:viewController animated:animated];
         return YES;
@@ -60,28 +60,22 @@
     return NO;
 }
 
-- (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+- (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [[self topPresentedController] presentViewController:viewController animated:animated completion:completion];
+    [[self fw_topPresentedController] presentViewController:viewController animated:animated completion:completion];
 }
 
-- (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[self topViewController].fw openViewController:viewController animated:animated];
+    [[self fw_topViewController] fw_openViewController:viewController animated:animated];
 }
 
-- (BOOL)closeViewControllerAnimated:(BOOL)animated
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [[self topViewController].fw closeViewControllerAnimated:animated];
+    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated];
 }
 
-@end
-
-#pragma mark - FWWindowClassWrapper+FWNavigation
-
-@implementation FWWindowClassWrapper (FWNavigation)
-
-- (UIWindow *)mainWindow
++ (UIWindow *)fw_mainWindow
 {
     UIWindow *mainWindow = UIApplication.sharedApplication.keyWindow;
     if (!mainWindow) {
@@ -103,7 +97,7 @@
     return mainWindow;
 }
 
-- (UIWindowScene *)mainScene
++ (UIWindowScene *)fw_mainScene
 {
     for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
         if (scene.activationState == UISceneActivationStateForegroundActive &&
@@ -114,63 +108,63 @@
     return nil;
 }
 
-- (UIViewController *)topViewController
++ (UIViewController *)fw_topViewController
 {
-    return [self.mainWindow.fw topViewController];
+    return [self.fw_mainWindow fw_topViewController];
 }
 
-- (UINavigationController *)topNavigationController
++ (UINavigationController *)fw_topNavigationController
 {
-    return [self.mainWindow.fw topNavigationController];
+    return [self.fw_mainWindow fw_topNavigationController];
 }
 
-- (UIViewController *)topPresentedController
++ (UIViewController *)fw_topPresentedController
 {
-    return [self.mainWindow.fw topPresentedController];
+    return [self.fw_mainWindow fw_topPresentedController];
 }
 
-- (BOOL)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
++ (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    return [self.mainWindow.fw pushViewController:viewController animated:animated];
+    return [self.fw_mainWindow fw_pushViewController:viewController animated:animated];
 }
 
-- (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
++ (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [self.mainWindow.fw presentViewController:viewController animated:animated completion:completion];
+    [self.fw_mainWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-- (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
++ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [self.mainWindow.fw openViewController:viewController animated:animated];
+    [self.fw_mainWindow fw_openViewController:viewController animated:animated];
 }
 
-- (BOOL)closeViewControllerAnimated:(BOOL)animated
++ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [self.mainWindow.fw closeViewControllerAnimated:animated];
+    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated];
 }
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWNavigation
+#pragma mark - UIViewController+FWNavigation
 
-@implementation FWViewControllerWrapper (FWNavigation)
+@implementation UIViewController (FWNavigation)
 
-- (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    if (!self.base.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self.base presentViewController:viewController animated:animated completion:nil];
+    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
+        [self presentViewController:viewController animated:animated completion:nil];
     } else {
-        [self.base.navigationController pushViewController:viewController animated:animated];
+        [self.navigationController pushViewController:viewController animated:animated];
     }
 }
 
-- (BOOL)closeViewControllerAnimated:(BOOL)animated
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    if (self.base.navigationController) {
-        if ([self.base.navigationController popViewControllerAnimated:animated]) return YES;
+    if (self.navigationController) {
+        if ([self.navigationController popViewControllerAnimated:animated]) return YES;
     }
-    if (self.base.presentingViewController) {
-        [self.base dismissViewControllerAnimated:animated completion:nil];
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
         return YES;
     }
     return NO;
@@ -178,71 +172,71 @@
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWWorkflow
+#pragma mark - UIViewController+FWWorkflow
 
-@implementation FWViewControllerWrapper (FWWorkflow)
+@implementation UIViewController (FWWorkflow)
 
-@dynamic workflowName;
+@dynamic fw_workflowName;
 
-- (NSString *)workflowName
+- (NSString *)fw_workflowName
 {
-    NSString *workflowName = objc_getAssociatedObject(self.base, @selector(workflowName));
+    NSString *workflowName = objc_getAssociatedObject(self, @selector(fw_workflowName));
     if (!workflowName) {
-        workflowName = [[[NSStringFromClass([self.base class]) stringByReplacingOccurrencesOfString:@"ViewController" withString:@""] stringByReplacingOccurrencesOfString:@"Controller" withString:@""] lowercaseString];
-        objc_setAssociatedObject(self.base, @selector(workflowName), workflowName, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        workflowName = [[[NSStringFromClass([self class]) stringByReplacingOccurrencesOfString:@"ViewController" withString:@""] stringByReplacingOccurrencesOfString:@"Controller" withString:@""] lowercaseString];
+        objc_setAssociatedObject(self, @selector(fw_workflowName), workflowName, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     return workflowName;
 }
 
-- (void)setWorkflowName:(NSString *)workflowName
+- (void)setFw_workflowName:(NSString *)workflowName
 {
-    if (workflowName != self.workflowName) {
-        objc_setAssociatedObject(self.base, @selector(workflowName), workflowName, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (workflowName != self.fw_workflowName) {
+        objc_setAssociatedObject(self, @selector(fw_workflowName), workflowName, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
 }
 
 @end
 
-#pragma mark - FWNavigationControllerWrapper+FWWorkflow
+#pragma mark - UINavigationController+FWWorkflow
 
-@implementation FWNavigationControllerWrapper (FWWorkflow)
+@implementation UINavigationController (FWWorkflow)
 
-- (NSString *)topWorkflowName
+- (NSString *)fw_topWorkflowName
 {
-    return [self.base.topViewController.fw workflowName];
+    return [self.topViewController fw_workflowName];
 }
 
-- (void)pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated
+- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated
 {
-    NSArray *workflows = [NSArray arrayWithObjects:self.topWorkflowName, nil];
-    [self pushViewController:viewController popWorkflows:workflows animated:animated];
+    NSArray *workflows = [NSArray arrayWithObjects:self.fw_topWorkflowName, nil];
+    [self fw_pushViewController:viewController popWorkflows:workflows animated:animated];
 }
 
-- (void)pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated
+- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated
 {
-    if (self.base.viewControllers.count < 2) {
-        [self.base pushViewController:viewController animated:animated];
+    if (self.viewControllers.count < 2) {
+        [self pushViewController:viewController animated:animated];
         return;
     }
     
-    NSMutableArray *viewControllers = [NSMutableArray arrayWithObject:self.base.viewControllers.firstObject];
+    NSMutableArray *viewControllers = [NSMutableArray arrayWithObject:self.viewControllers.firstObject];
     [viewControllers addObject:viewController];
-    [self.base setViewControllers:viewControllers animated:animated];
+    [self setViewControllers:viewControllers animated:animated];
 }
 
-- (void)pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
+- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
 {
     if (workflows.count < 1) {
-        [self.base pushViewController:viewController animated:animated];
+        [self pushViewController:viewController animated:animated];
         return;
     }
     
     // 从外到内查找移除的控制器列表
     NSMutableArray *popControllers = [NSMutableArray array];
-    [self.base.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
+    [self.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
         BOOL isStop = YES;
         
-        NSString *workflow = [controller.fw workflowName];
+        NSString *workflow = [controller fw_workflowName];
         if (workflow.length > 0) {
             for (NSString *prefix in workflows) {
                 if ([workflow hasPrefix:prefix]) {
@@ -260,22 +254,22 @@
     }];
     
     if (popControllers.count < 1) {
-        [self.base pushViewController:viewController animated:animated];
+        [self pushViewController:viewController animated:animated];
     } else {
-        NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.base.viewControllers];
+        NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.viewControllers];
         [viewControllers removeObjectsInArray:popControllers];
         [viewControllers addObject:viewController];
-        [self.base setViewControllers:viewControllers animated:animated];
+        [self setViewControllers:viewControllers animated:animated];
     }
 }
 
-- (void)popTopWorkflowAnimated:(BOOL)animated
+- (void)fw_popTopWorkflowAnimated:(BOOL)animated
 {
-    NSArray *workflows = [NSArray arrayWithObjects:self.topWorkflowName, nil];
-    [self popWorkflows:workflows animated:animated];
+    NSArray *workflows = [NSArray arrayWithObjects:self.fw_topWorkflowName, nil];
+    [self fw_popWorkflows:workflows animated:animated];
 }
 
-- (void)popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
+- (void)fw_popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
 {
     if (workflows.count < 1) {
         return;
@@ -283,10 +277,10 @@
     
     // 从外到内查找停止目标控制器
     __block UIViewController *toController = nil;
-    [self.base.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
+    [self.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
         BOOL isStop = YES;
         
-        NSString *workflow = [controller.fw workflowName];
+        NSString *workflow = [controller fw_workflowName];
         if (workflow.length > 0) {
             for (NSString *prefix in workflows) {
                 if ([workflow hasPrefix:prefix]) {
@@ -303,10 +297,10 @@
     }];
     
     if (toController) {
-        [self.base popToViewController:toController animated:animated];
+        [self popToViewController:toController animated:animated];
     } else {
         // 至少保留一个根控制器
-        [self.base popToRootViewControllerAnimated:animated];
+        [self popToRootViewControllerAnimated:animated];
     }
 }
 
