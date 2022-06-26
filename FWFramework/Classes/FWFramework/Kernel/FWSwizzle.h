@@ -7,7 +7,7 @@
  @updated    2020/6/5
  */
 
-#import "FWWrapper.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWSwizzleMethod( target, selector, identifier, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
     FWSwizzleMethod_( target, selector, identifier, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgsWrap_(FWSwizzleArgs), FWSwizzleArgsWrap_(FWSwizzleCode) )
 #define FWSwizzleMethod_( target, sel, identity, FWSwizzleType, FWSwizzleReturn, FWSwizzleArgs, FWSwizzleCode ) \
-    [NSObject.fw swizzleMethod:target selector:sel identifier:identity withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
+    [NSObject fw_swizzleMethod:target selector:sel identifier:identity withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
         return ^FWSwizzleReturn (FWSwizzleArgsDel2_(__unsafe_unretained FWSwizzleType selfObject, FWSwizzleArgs)) \
         { \
             FWSwizzleReturn (*originalMSG)(FWSwizzleArgsDel3_(id, SEL, FWSwizzleArgs)); \
@@ -55,9 +55,12 @@ NS_ASSUME_NONNULL_BEGIN
 #define FWSwizzleArgsDel2_( a1, a2, args... ) a1, ##args
 #define FWSwizzleArgsDel3_( a1, a2, a3, args... ) a1, a2, ##args
 
-#pragma mark - FWObjectWrapper+FWSwizzle
+#pragma mark - NSObject+FWSwizzle
 
-@interface FWObjectWrapper (FWSwizzle)
+/// 框架NSObject类包装器
+///
+/// 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
+@interface NSObject (FWSwizzle)
 
 /**
  使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合fwIsSwizzleMethod使用
@@ -67,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (BOOL)fw_swizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 /**
  判断对象是否使用swizzle替换过指定identifier实例方法。结合fwSwizzleMethod使用
@@ -77,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param identifier 唯一标识
  @return 是否替换
 */
-- (BOOL)isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier;
+- (BOOL)fw_isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Runtime
 
@@ -87,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param aSelector 要执行的方法
  @return id 方法执行后返回的值。如果无返回值，则为nil
  */
-- (nullable id)invokeMethod:(SEL)aSelector;
+- (nullable id)fw_invokeMethod:(SEL)aSelector NS_REFINED_FOR_SWIFT;
 
 /**
  安全调用方法，如果不能响应，则忽略之
@@ -96,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
  @return id 方法执行后返回的值。如果无返回值，则为nil
  */
-- (nullable id)invokeMethod:(SEL)aSelector withObject:(nullable id)object;
+- (nullable id)fw_invokeMethod:(SEL)aSelector withObject:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  对super发送消息
@@ -104,7 +107,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param aSelector 要执行的方法，需返回id类型
  @return id 方法执行后返回的值
  */
-- (nullable id)invokeSuperMethod:(SEL)aSelector;
+- (nullable id)fw_invokeSuperMethod:(SEL)aSelector NS_REFINED_FOR_SWIFT;
 
 /**
  对super发送消息，可传递参数
@@ -113,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 传递的方法参数
  @return id 方法执行后返回的值
  */
-- (nullable id)invokeSuperMethod:(SEL)aSelector withObject:(nullable id)object;
+- (nullable id)fw_invokeSuperMethod:(SEL)aSelector withObject:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
  安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -122,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 内部属性名称
  @return 属性值
  */
-- (nullable id)invokeGetter:(NSString *)name;
+- (nullable id)fw_invokeGetter:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 /**
  安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -132,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 传递的方法参数
  @return 方法执行后返回的值
  */
-- (nullable id)invokeSetter:(NSString *)name withObject:(nullable id)object;
+- (nullable id)fw_invokeSetter:(NSString *)name withObject:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Property
 
@@ -144,7 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
     3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd
     4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
  */
-@property (nullable, nonatomic, strong) id tempObject;
+@property (nullable, nonatomic, strong) id fw_tempObject NS_REFINED_FOR_SWIFT;
 
 /**
  读取关联属性
@@ -152,7 +155,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param name 属性名称
  @return 属性值
  */
-- (nullable id)propertyForName:(NSString *)name;
+- (nullable id)fw_propertyForName:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 /**
  设置强关联属性，支持KVO
@@ -160,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 属性值
  @param name   属性名称
  */
-- (void)setProperty:(nullable id)object forName:(NSString *)name;
+- (void)fw_setProperty:(nullable id)object forName:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 /**
  设置赋值关联属性，支持KVO，注意可能会产生野指针
@@ -168,7 +171,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 属性值
  @param name   属性名称
  */
-- (void)setPropertyAssign:(nullable id)object forName:(NSString *)name;
+- (void)fw_setPropertyAssign:(nullable id)object forName:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 /**
  设置拷贝关联属性，支持KVO
@@ -176,7 +179,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 属性值
  @param name   属性名称
  */
-- (void)setPropertyCopy:(nullable id)object forName:(NSString *)name;
+- (void)fw_setPropertyCopy:(nullable id)object forName:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 /**
  设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -184,7 +187,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 属性值
  @param name   属性名称
  */
-- (void)setPropertyWeak:(nullable id)object forName:(NSString *)name;
+- (void)fw_setPropertyWeak:(nullable id)object forName:(NSString *)name NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Bind
 
@@ -194,7 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 对象，会被 strong 强引用
  @param key 键名
  */
-- (void)bindObject:(nullable id)object forKey:(NSString *)key;
+- (void)fw_bindObject:(nullable id)object forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
@@ -202,14 +205,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 对象，不会被 strong 强引用
  @param key 键名
  */
-- (void)bindObjectWeak:(nullable id)object forKey:(NSString *)key;
+- (void)fw_bindObjectWeak:(nullable id)object forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  取出之前使用 bind 方法绑定的对象
  
  @param key 键名
  */
-- (nullable id)boundObjectForKey:(NSString *)key;
+- (nullable id)fw_boundObjectForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  给对象绑定上一个 double 值以供后续取出使用
@@ -217,14 +220,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param doubleValue double值
  @param key 键名
  */
-- (void)bindDouble:(double)doubleValue forKey:(NSString *)key;
+- (void)fw_bindDouble:(double)doubleValue forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  取出之前用 bindDouble:forKey: 绑定的值
  
  @param key 键名
  */
-- (double)boundDoubleForKey:(NSString *)key;
+- (double)fw_boundDoubleForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  给对象绑定上一个 BOOL 值以供后续取出使用
@@ -232,14 +235,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param boolValue 布尔值
  @param key 键名
  */
-- (void)bindBool:(BOOL)boolValue forKey:(NSString *)key;
+- (void)fw_bindBool:(BOOL)boolValue forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  取出之前用 bindBool:forKey: 绑定的值
  
  @param key 键名
  */
-- (BOOL)boundBoolForKey:(NSString *)key;
+- (BOOL)fw_boundBoolForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  给对象绑定上一个 NSInteger 值以供后续取出使用
@@ -248,47 +251,38 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param key 键名
  */
-- (void)bindInt:(NSInteger)integerValue forKey:(NSString *)key;
+- (void)fw_bindInt:(NSInteger)integerValue forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  取出之前用 bindInt:forKey: 绑定的值
  
  @param key 键名
  */
-- (NSInteger)boundIntForKey:(NSString *)key;
+- (NSInteger)fw_boundIntForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  移除之前使用 bind 方法绑定的对象
  
  @param key 键名
  */
-- (void)removeBindingForKey:(NSString *)key;
+- (void)fw_removeBindingForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 /**
  移除之前使用 bind 方法绑定的所有对象
  */
-- (void)removeAllBindings;
+- (void)fw_removeAllBindings NS_REFINED_FOR_SWIFT;
 
 /**
  返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
  */
-- (NSArray<NSString *> *)allBindingKeys;
+- (NSArray<NSString *> *)fw_allBindingKeys NS_REFINED_FOR_SWIFT;
 
 /**
  返回是否设置了某个 key
  
  @param key 键名
  */
-- (BOOL)hasBindingKey:(NSString *)key;
-
-@end
-
-#pragma mark - FWClassWrapper+FWSwizzle
-
-/// 框架NSObject类包装器
-///
-/// 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
-@interface FWClassWrapper (FWSwizzle)
+- (BOOL)fw_hasBindingKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Exchange
 
@@ -299,7 +293,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleSelector  交换方法
  @return 是否成功
  */
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector;
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector NS_REFINED_FOR_SWIFT;
 
 /**
  交换类静态方法。复杂情况可能会冲突
@@ -308,7 +302,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleSelector  交换方法
  @return 是否成功
  */
-- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector;
++ (BOOL)fw_exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector NS_REFINED_FOR_SWIFT;
 
 /**
  交换类实例方法为block实现。复杂情况可能会冲突
@@ -319,7 +313,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleBlock 实现block
  @return 是否成功
  */
-- (BOOL)exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock NS_REFINED_FOR_SWIFT;
 
 /**
  交换类静态方法为block实现。复杂情况可能会冲突
@@ -330,7 +324,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param swizzleBlock 实现block
  @return 是否成功
  */
-- (BOOL)exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
++ (BOOL)fw_exchangeClassMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector withBlock:(id)swizzleBlock NS_REFINED_FOR_SWIFT;
 
 /**
  生成原始方法对应的随机交换方法
@@ -338,7 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param selector 原始方法
  @return 交换方法
  */
-- (SEL)exchangeSwizzleSelector:(SEL)selector;
++ (SEL)fw_exchangeSwizzleSelector:(SEL)selector NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Swizzle
 
@@ -351,7 +345,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 /**
  使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用
@@ -372,7 +366,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 /**
  使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用
@@ -382,7 +376,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 /**
  使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -393,7 +387,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 /**
  使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -404,7 +398,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 实现句柄
  @return 是否成功
  */
-- (BOOL)swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_swizzleClassMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Class
 
@@ -415,7 +409,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param superclass 是否包含父类，包含则递归到NSObject
  @return 方法列表
  */
-- (NSArray<NSString *> *)classMethods:(Class)clazz superclass:(BOOL)superclass;
++ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass NS_REFINED_FOR_SWIFT;
 
 /**
  获取类属性列表，支持meta类(objc_getMetaClass)
@@ -424,7 +418,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param superclass 是否包含父类，包含则递归到NSObject
  @return 属性列表
  */
-- (NSArray<NSString *> *)classProperties:(Class)clazz superclass:(BOOL)superclass;
++ (NSArray<NSString *> *)fw_classProperties:(Class)clazz superclass:(BOOL)superclass NS_REFINED_FOR_SWIFT;
 
 /**
  获取类Ivar列表，支持meta类(objc_getMetaClass)
@@ -433,7 +427,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param superclass 是否包含父类，包含则递归到NSObject
  @return Ivar列表
  */
-- (NSArray<NSString *> *)classIvars:(Class)clazz superclass:(BOOL)superclass;
++ (NSArray<NSString *> *)fw_classIvars:(Class)clazz superclass:(BOOL)superclass NS_REFINED_FOR_SWIFT;
 
 @end
 

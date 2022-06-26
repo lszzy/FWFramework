@@ -21,7 +21,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public func swizzleInstanceMethod(_ originalSelector: Selector, identifier: String, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return base.__fw.swizzleInstanceMethod(originalSelector, identifier: identifier, with: block)
+        return base.__fw_swizzleInstanceMethod(originalSelector, identifier: identifier, with: block)
     }
     
     /// 判断对象是否使用swizzle替换过指定identifier实例方法。结合swizzleInstanceMethod使用
@@ -32,7 +32,7 @@ extension Wrapper where Base: NSObject {
     ///   - identifier: 唯一标识
     /// - Returns: 是否替换
     public func isSwizzleInstanceMethod(_ originalSelector: Selector, identifier: String) -> Bool {
-        return base.__fw.isSwizzleInstanceMethod(originalSelector, identifier: identifier)
+        return base.__fw_isSwizzleInstanceMethod(originalSelector, identifier: identifier)
     }
     
     // MARK: - Runtime
@@ -41,7 +41,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func invokeMethod(_ selector: Selector) -> Any? {
-        return base.__fw.invokeMethod(selector)
+        return base.__fw_invokeMethod(selector)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -51,7 +51,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return base.__fw.invokeMethod(selector, with: object)
+        return base.__fw_invokeMethod(selector, with: object)
     }
     
     /// 对super发送消息
@@ -59,7 +59,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func invokeSuperMethod(_ selector: Selector) -> Any? {
-        return base.__fw.invokeSuperMethod(selector)
+        return base.__fw_invokeSuperMethod(selector)
     }
     
     /// 对super发送消息，可传递参数
@@ -69,7 +69,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func invokeSuperMethod(_ selector: Selector, object: Any?) -> Any? {
-        return base.__fw.invokeSuperMethod(selector, with: object)
+        return base.__fw_invokeSuperMethod(selector, with: object)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -78,7 +78,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func invokeGetter(_ name: String) -> Any? {
-        return base.__fw.invokeGetter(name)
+        return base.__fw_invokeGetter(name)
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -90,7 +90,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func invokeSetter(_ name: String, object: Any?) -> Any? {
-        return base.__fw.invokeSetter(name, with: object)
+        return base.__fw_invokeSetter(name, with: object)
     }
     
     // MARK: - Property
@@ -102,15 +102,15 @@ extension Wrapper where Base: NSObject {
     /// 3. 声明和使用直接用getter方法的selector，如\@selector(xxx)、_cmd
     /// 4. 声明和使用直接用c字符串，如"kAssociatedObjectKey"
     public var tempObject: Any? {
-        get { return base.__fw.tempObject }
-        set { base.__fw.tempObject = newValue }
+        get { return base.__fw_tempObject }
+        set { base.__fw_tempObject = newValue }
     }
     
     /// 读取关联属性
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func property(forName: String) -> Any? {
-        return base.__fw.property(forName: forName)
+        return base.__fw_property(forName: forName)
     }
     
     /// 设置强关联属性，支持KVO
@@ -118,7 +118,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setProperty(_ object: Any?, forName: String) {
-        base.__fw.setProperty(object, forName: forName)
+        base.__fw_setProperty(object, forName: forName)
     }
     
     /// 设置赋值关联属性，支持KVO，注意可能会产生野指针
@@ -126,7 +126,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyAssign(_ object: Any?, forName: String) {
-        base.__fw.setPropertyAssign(object, forName: forName)
+        base.__fw_setPropertyAssign(object, forName: forName)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -134,7 +134,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyCopy(_ object: Any?, forName: String) {
-        base.__fw.setPropertyCopy(object, forName: forName)
+        base.__fw_setPropertyCopy(object, forName: forName)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -142,7 +142,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyWeak(_ object: Any?, forName: String) {
-        base.__fw.setPropertyWeak(object, forName: forName)
+        base.__fw_setPropertyWeak(object, forName: forName)
     }
     
     // MARK: - Bind
@@ -152,7 +152,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 对象，会被 strong 强引用
     ///   - forKey: 键名
     public func bindObject(_ object: Any?, forKey: String) {
-        base.__fw.bindObject(object, forKey: forKey)
+        base.__fw_bindObject(object, forKey: forKey)
     }
     
     /// 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
@@ -160,14 +160,14 @@ extension Wrapper where Base: NSObject {
     ///   - object: 对象，不会被 strong 强引用
     ///   - forKey: 键名
     public func bindObjectWeak(_ object: Any?, forKey: String) {
-        base.__fw.bindObjectWeak(object, forKey: forKey)
+        base.__fw_bindObjectWeak(object, forKey: forKey)
     }
     
     /// 取出之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的对象
     public func boundObject(forKey: String) -> Any? {
-        return base.__fw.boundObject(forKey: forKey)
+        return base.__fw_boundObject(forKey: forKey)
     }
     
     /// 给对象绑定上一个 double 值以供后续取出使用
@@ -175,14 +175,14 @@ extension Wrapper where Base: NSObject {
     ///   - value: double值
     ///   - forKey: 键名
     public func bindDouble(_ value: Double, forKey: String) {
-        base.__fw.bindDouble(value, forKey: forKey)
+        base.__fw_bindDouble(value, forKey: forKey)
     }
     
     /// 取出之前用 bindDouble:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func boundDouble(forKey: String) -> Double {
-        return base.__fw.boundDouble(forKey: forKey)
+        return base.__fw_boundDouble(forKey: forKey)
     }
 
     /// 给对象绑定上一个 BOOL 值以供后续取出使用
@@ -190,14 +190,14 @@ extension Wrapper where Base: NSObject {
     ///   - value: 布尔值
     ///   - forKey: 键名
     public func bindBool(_ value: Bool, forKey: String) {
-        base.__fw.bindBool(value, forKey: forKey)
+        base.__fw_bindBool(value, forKey: forKey)
     }
     
     /// 取出之前用 bindBool:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func boundBool(forKey: String) -> Bool {
-        return base.__fw.boundBool(forKey: forKey)
+        return base.__fw_boundBool(forKey: forKey)
     }
 
     /// 给对象绑定上一个 NSInteger 值以供后续取出使用
@@ -205,37 +205,37 @@ extension Wrapper where Base: NSObject {
     ///   - value: 整数值
     ///   - forKey: 键名
     public func bindInt(_ value: Int, forKey: String) {
-        base.__fw.bindInt(value, forKey: forKey)
+        base.__fw_bindInt(value, forKey: forKey)
     }
     
     /// 取出之前用 bindInt:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func boundInt(forKey: String) -> Int {
-        return base.__fw.boundInt(forKey: forKey)
+        return base.__fw_boundInt(forKey: forKey)
     }
     
     /// 移除之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
     public func removeBinding(forKey: String) {
-        base.__fw.removeBinding(forKey: forKey)
+        base.__fw_removeBinding(forKey: forKey)
     }
     
     /// 移除之前使用 bind 方法绑定的所有对象
     public func removeAllBindings() {
-        base.__fw.removeAllBindings()
+        base.__fw_removeAllBindings()
     }
 
     /// 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
     public func allBindingKeys() -> [String] {
-        return base.__fw.allBindingKeys()
+        return base.__fw_allBindingKeys()
     }
     
     /// 返回是否设置了某个 key
     /// - Parameter key: 键名
     /// - Returns: 是否绑定
     public func hasBindingKey(_ key: String) -> Bool {
-        return base.__fw.hasBindingKey(key)
+        return base.__fw_hasBindingKey(key)
     }
     
 }
@@ -252,7 +252,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func exchangeInstanceMethod(_ originalSelector: Selector, swizzleMethod: Selector) -> Bool {
-        return Base.__fw.exchangeInstanceMethod(originalSelector, swizzleMethod: swizzleMethod)
+        return Base.__fw_exchangeInstanceMethod(originalSelector, swizzleMethod: swizzleMethod)
     }
     
     /// 交换类静态方法。复杂情况可能会冲突
@@ -262,7 +262,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func exchangeClassMethod(_ originalSelector: Selector, swizzleMethod: Selector) -> Bool {
-        return Base.__fw.exchangeClassMethod(originalSelector, swizzleMethod: swizzleMethod)
+        return Base.__fw_exchangeClassMethod(originalSelector, swizzleMethod: swizzleMethod)
     }
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
@@ -275,7 +275,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func exchangeInstanceMethod(_ originalSelector: Selector, swizzleMethod: Selector, block: Any) -> Bool {
-        return Base.__fw.exchangeInstanceMethod(originalSelector, swizzleMethod: swizzleMethod, withBlock: block)
+        return Base.__fw_exchangeInstanceMethod(originalSelector, swizzleMethod: swizzleMethod, withBlock: block)
     }
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
@@ -288,14 +288,14 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func exchangeClassMethod(_ originalSelector: Selector, swizzleMethod: Selector, block: Any) -> Bool {
-        return Base.__fw.exchangeClassMethod(originalSelector, swizzleMethod: swizzleMethod, withBlock: block)
+        return Base.__fw_exchangeClassMethod(originalSelector, swizzleMethod: swizzleMethod, withBlock: block)
     }
     
     /// 生成原始方法对应的随机交换方法
     /// - Parameter selector: 原始方法
     /// - Returns: 交换方法
     public static func exchangeSwizzleSelector(_ selector: Selector) -> Selector {
-        return Base.__fw.exchangeSwizzleSelector(selector)
+        return Base.__fw_exchangeSwizzleSelector(selector)
     }
 
     // MARK: - Swizzle
@@ -308,7 +308,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func swizzleMethod(_ target: Any?, selector: Selector, identifier: String?, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return Base.__fw.swizzleMethod(target, selector: selector, identifier: identifier, with: block)
+        return Base.__fw_swizzleMethod(target, selector: selector, identifier: identifier, with: block)
     }
     
     /// 使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用
@@ -331,7 +331,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func swizzleInstanceMethod(_ originalClass: AnyClass, selector: Selector, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return Base.__fw.swizzleInstanceMethod(originalClass, selector: selector, with: block)
+        return Base.__fw_swizzleInstanceMethod(originalClass, selector: selector, with: block)
     }
     
     /// 使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用
@@ -342,7 +342,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func swizzleClassMethod(_ originalClass: AnyClass, selector: Selector, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return Base.__fw.swizzleClassMethod(originalClass, selector: selector, with: block)
+        return Base.__fw_swizzleClassMethod(originalClass, selector: selector, with: block)
     }
     
     /// 使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -354,7 +354,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func swizzleInstanceMethod(_ originalClass: AnyClass, selector: Selector, identifier: String, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return Base.__fw.swizzleInstanceMethod(originalClass, selector: selector, with: block)
+        return Base.__fw_swizzleInstanceMethod(originalClass, selector: selector, with: block)
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -366,7 +366,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否成功
     @discardableResult
     public static func swizzleClassMethod(_ originalClass: AnyClass, selector: Selector, identifier: String, block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any) -> Bool {
-        return Base.__fw.swizzleClassMethod(originalClass, selector: selector, with: block)
+        return Base.__fw_swizzleClassMethod(originalClass, selector: selector, with: block)
     }
 
     // MARK: - Class
@@ -376,7 +376,7 @@ extension Wrapper where Base: NSObject {
     ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 方法列表
     public static func classMethods(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.__fw.classMethods(clazz, superclass: superclass)
+        return Base.__fw_classMethods(clazz, superclass: superclass)
     }
     
     /// 获取类属性列表，支持meta类(objc_getMetaClass)
@@ -385,7 +385,7 @@ extension Wrapper where Base: NSObject {
     ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 属性列表
     public static func classProperties(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.__fw.classProperties(clazz, superclass: superclass)
+        return Base.__fw_classProperties(clazz, superclass: superclass)
     }
     
     /// 获取类Ivar列表，支持meta类(objc_getMetaClass)
@@ -394,7 +394,7 @@ extension Wrapper where Base: NSObject {
     ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.__fw.classIvars(clazz, superclass: superclass)
+        return Base.__fw_classIvars(clazz, superclass: superclass)
     }
     
 }

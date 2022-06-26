@@ -16,7 +16,7 @@
 #import <StoreKit/StoreKit.h>
 #import <objc/runtime.h>
 
-#pragma mark - FWApplicationClassWrapper+FWToolkit
+#pragma mark - UIApplication+FWToolkit
 
 @interface FWSafariViewControllerDelegate : NSObject <SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate>
 
@@ -68,38 +68,38 @@
 
 @end
 
-@implementation FWApplicationClassWrapper (FWToolkit)
+@implementation UIApplication (FWToolkit)
 
-- (BOOL)canOpenURL:(id)url
++ (BOOL)fw_canOpenURL:(id)url
 {
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     return [[UIApplication sharedApplication] canOpenURL:nsurl];
 }
 
-- (void)openURL:(id)url
++ (void)fw_openURL:(id)url
 {
-    [self openURL:url completionHandler:nil];
+    [self fw_openURL:url completionHandler:nil];
 }
 
-- (void)openURL:(id)url completionHandler:(void (^)(BOOL success))completion
++ (void)fw_openURL:(id)url completionHandler:(void (^)(BOOL success))completion
 {
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     [[UIApplication sharedApplication] openURL:nsurl options:@{} completionHandler:completion];
 }
 
-- (void)openUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
++ (void)fw_openUniversalLinks:(id)url completionHandler:(void (^)(BOOL))completion
 {
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     [[UIApplication sharedApplication] openURL:nsurl options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @YES} completionHandler:completion];
 }
 
-- (BOOL)isSystemURL:(id)url
++ (BOOL)fw_isSystemURL:(id)url
 {
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     if (nsurl.scheme.lowercaseString && [@[@"tel", @"telprompt", @"sms", @"mailto"] containsObject:nsurl.scheme.lowercaseString]) {
         return YES;
     }
-    if ([self isAppStoreURL:nsurl]) {
+    if ([self fw_isAppStoreURL:nsurl]) {
         return YES;
     }
     if (nsurl.absoluteString && [nsurl.absoluteString isEqualToString:UIApplicationOpenSettingsURLString]) {
@@ -108,16 +108,16 @@
     return NO;
 }
 
-- (BOOL)isHttpURL:(id)url
++ (BOOL)fw_isHttpURL:(id)url
 {
     NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;
     return [urlString.lowercaseString hasPrefix:@"http://"] || [urlString.lowercaseString hasPrefix:@"https://"];
 }
 
-- (BOOL)isAppStoreURL:(id)url
++ (BOOL)fw_isAppStoreURL:(id)url
 {
     // itms-apps等
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     if ([nsurl.scheme.lowercaseString hasPrefix:@"itms"]) {
         return YES;
     // https://apps.apple.com/等
@@ -128,69 +128,69 @@
     return NO;
 }
 
-- (void)openAppStore:(NSString *)appId
++ (void)fw_openAppStore:(NSString *)appId
 {
     // SKStoreProductViewController可以内部打开
-    [self openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
+    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
 }
 
-- (void)openAppStoreReview:(NSString *)appId
++ (void)fw_openAppStoreReview:(NSString *)appId
 {
-    [self openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
+    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
 }
 
-- (void)openAppReview
++ (void)fw_openAppReview
 {
     [SKStoreReviewController requestReview];
 }
 
-- (void)openAppSettings
++ (void)fw_openAppSettings
 {
-    [self openURL:UIApplicationOpenSettingsURLString];
+    [self fw_openURL:UIApplicationOpenSettingsURLString];
 }
 
-- (void)openMailApp:(NSString *)email
++ (void)fw_openMailApp:(NSString *)email
 {
-    [self openURL:[NSString stringWithFormat:@"mailto://%@", email]];
+    [self fw_openURL:[NSString stringWithFormat:@"mailto://%@", email]];
 }
 
-- (void)openMessageApp:(NSString *)phone
++ (void)fw_openMessageApp:(NSString *)phone
 {
-    [self openURL:[NSString stringWithFormat:@"sms://%@", phone]];
+    [self fw_openURL:[NSString stringWithFormat:@"sms://%@", phone]];
 }
 
-- (void)openPhoneApp:(NSString *)phone
++ (void)fw_openPhoneApp:(NSString *)phone
 {
     // tel:为直接拨打电话
-    [self openURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
+    [self fw_openURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
 }
 
-- (void)openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
++ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
 {
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     activityController.excludedActivityTypes = excludedTypes;
-    [UIWindow.fw presentViewController:activityController animated:YES completion:nil];
+    [UIWindow fw_presentViewController:activityController animated:YES completion:nil];
 }
 
-- (void)openSafariController:(id)url
++ (void)fw_openSafariController:(id)url
 {
-    [self openSafariController:url completionHandler:nil];
+    [self fw_openSafariController:url completionHandler:nil];
 }
 
-- (void)openSafariController:(id)url completionHandler:(nullable void (^)(void))completion
++ (void)fw_openSafariController:(id)url completionHandler:(nullable void (^)(void))completion
 {
-    if (![self isHttpURL:url]) return;
+    if (![self fw_isHttpURL:url]) return;
     
-    NSURL *nsurl = [self urlWithString:url];
+    NSURL *nsurl = [self fw_urlWithString:url];
     SFSafariViewController *safariController = [[SFSafariViewController alloc] initWithURL:nsurl];
     if (completion) {
         objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
         safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
     }
-    [UIWindow.fw presentViewController:safariController animated:YES completion:nil];
+    [UIWindow fw_presentViewController:safariController animated:YES completion:nil];
 }
 
-- (void)openMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
++ (void)fw_openMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
 {
     if (!controller || ![MFMessageComposeViewController canSendText]) {
         if (completion) completion(NO);
@@ -201,10 +201,10 @@
         objc_setAssociatedObject(controller, @selector(messageComposeViewController:didFinishWithResult:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.messageComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [UIWindow.fw presentViewController:controller animated:YES completion:nil];
+    [UIWindow fw_presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)openMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
++ (void)fw_openMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
 {
     if (!controller || ![MFMailComposeViewController canSendMail]) {
         if (completion) completion(NO);
@@ -215,10 +215,10 @@
         objc_setAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.mailComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [UIWindow.fw presentViewController:controller animated:YES completion:nil];
+    [UIWindow fw_presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)openStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
++ (void)fw_openStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
 {
     SKStoreProductViewController *viewController = [[SKStoreProductViewController alloc] init];
     viewController.delegate = [FWSafariViewControllerDelegate sharedInstance];
@@ -229,11 +229,11 @@
         }
         
         objc_setAssociatedObject(viewController, @selector(productViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        [UIWindow.fw presentViewController:viewController animated:YES completion:nil];
+        [UIWindow fw_presentViewController:viewController animated:YES completion:nil];
     }];
 }
 
-- (AVPlayerViewController *)openVideoPlayer:(id)url
++ (AVPlayerViewController *)fw_openVideoPlayer:(id)url
 {
     AVPlayer *player = nil;
     if ([url isKindOfClass:[AVPlayerItem class]]) {
@@ -241,7 +241,7 @@
     } else if ([url isKindOfClass:[NSURL class]]) {
         player = [AVPlayer playerWithURL:(NSURL *)url];
     } else if ([url isKindOfClass:[NSString class]]) {
-        NSURL *videoURL = [self urlWithString:url];
+        NSURL *videoURL = [self fw_urlWithString:url];
         if (videoURL) player = [AVPlayer playerWithURL:videoURL];
     }
     if (!player) return nil;
@@ -251,7 +251,7 @@
     return viewController;
 }
 
-- (AVAudioPlayer *)openAudioPlayer:(id)url
++ (AVAudioPlayer *)fw_openAudioPlayer:(id)url
 {
     // 设置播放模式示例
     // [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
@@ -275,7 +275,7 @@
     return audioPlayer;
 }
 
-- (NSURL *)urlWithString:(id)url
++ (NSURL *)fw_urlWithString:(id)url
 {
     if (![url isKindOfClass:[NSString class]]) return url;
     
@@ -288,22 +288,22 @@
 
 @end
 
-#pragma mark - FWColorWrapper+FWToolkit
+#pragma mark - UIColor+FWToolkit
 
 static BOOL fwStaticColorARGB = NO;
 
-@implementation FWColorWrapper (FWToolkit)
+@implementation UIColor (FWToolkit)
 
-- (UIColor *)colorWithAlpha:(CGFloat)alpha
+- (UIColor *)fw_colorWithAlpha:(CGFloat)alpha
 {
-    return [self.base colorWithAlphaComponent:alpha];
+    return [self colorWithAlphaComponent:alpha];
 }
 
-- (long)hexValue
+- (long)fw_hexValue
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
-    if (![self.base getRed:&r green:&g blue:&b alpha:&a]) {
-        if ([self.base getWhite:&r alpha:&a]) { g = r; b = r; }
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
     }
     
     int8_t red = r * 255;
@@ -312,26 +312,26 @@ static BOOL fwStaticColorARGB = NO;
     return (red << 16) + (green << 8) + blue;
 }
 
-- (CGFloat)alphaValue
+- (CGFloat)fw_alphaValue
 {
-    return CGColorGetAlpha(self.base.CGColor);
+    return CGColorGetAlpha(self.CGColor);
 }
 
-- (NSString *)hexString
+- (NSString *)fw_hexString
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
-    if (![self.base getRed:&r green:&g blue:&b alpha:&a]) {
-        if ([self.base getWhite:&r alpha:&a]) { g = r; b = r; }
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
     }
     
     return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
 }
 
-- (NSString *)hexAlphaString
+- (NSString *)fw_hexAlphaString
 {
     CGFloat r = 0, g = 0, b = 0, a = 0;
-    if (![self.base getRed:&r green:&g blue:&b alpha:&a]) {
-        if ([self.base getWhite:&r alpha:&a]) { g = r; b = r; }
+    if (![self getRed:&r green:&g blue:&b alpha:&a]) {
+        if ([self getWhite:&r alpha:&a]) { g = r; b = r; }
     }
     
     if (a >= 1.0) {
@@ -343,21 +343,17 @@ static BOOL fwStaticColorARGB = NO;
     }
 }
 
-@end
-
-@implementation FWColorClassWrapper (FWToolkit)
-
-- (BOOL)colorStandardARGB
++ (BOOL)fw_colorStandardARGB
 {
     return fwStaticColorARGB;
 }
 
-- (void)setColorStandardARGB:(BOOL)enabled
++ (void)setFw_colorStandardARGB:(BOOL)enabled
 {
     fwStaticColorARGB = enabled;
 }
 
-- (UIColor *)randomColor
++ (UIColor *)fw_randomColor
 {
     NSInteger red = arc4random() % 255;
     NSInteger green = arc4random() % 255;
@@ -365,12 +361,12 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:red / 255.0 green:green / 255.0 blue:blue / 255.0 alpha:1.0f];
 }
 
-- (UIColor *)colorWithHex:(long)hex
++ (UIColor *)fw_colorWithHex:(long)hex
 {
-    return [self colorWithHex:hex alpha:1.0f];
+    return [self fw_colorWithHex:hex alpha:1.0f];
 }
 
-- (UIColor *)colorWithHex:(long)hex alpha:(CGFloat)alpha
++ (UIColor *)fw_colorWithHex:(long)hex alpha:(CGFloat)alpha
 {
     float red = ((float)((hex & 0xFF0000) >> 16)) / 255.0;
     float green = ((float)((hex & 0xFF00) >> 8)) / 255.0;
@@ -378,12 +374,12 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-- (UIColor *)colorWithHexString:(NSString *)hexString
++ (UIColor *)fw_colorWithHexString:(NSString *)hexString
 {
-    return [self colorWithHexString:hexString alpha:1.0f];
+    return [self fw_colorWithHexString:hexString alpha:1.0f];
 }
 
-- (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha
++ (UIColor *)fw_colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha
 {
     // 处理参数
     NSString *string = hexString ? hexString.uppercaseString : @"";
@@ -452,12 +448,12 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:fr green:fg blue:fb alpha:alpha];
 }
 
-- (UIColor *)colorWithString:(NSString *)string
++ (UIColor *)fw_colorWithString:(NSString *)string
 {
-    return [self colorWithString:string alpha:1.0f];
+    return [self fw_colorWithString:string alpha:1.0f];
 }
 
-- (UIColor *)colorWithString:(NSString *)string alpha:(CGFloat)alpha
++ (UIColor *)fw_colorWithString:(NSString *)string alpha:(CGFloat)alpha
 {
     // 颜色值
     SEL colorSelector = NSSelectorFromString([NSString stringWithFormat:@"%@Color", string]);
@@ -470,140 +466,140 @@ static BOOL fwStaticColorARGB = NO;
     }
     
     // 十六进制
-    return [self colorWithHexString:string alpha:alpha];
+    return [self fw_colorWithHexString:string alpha:alpha];
 }
 
 @end
 
-#pragma mark - FWFontClassWrapper+FWToolkit
+#pragma mark - UIFont+FWToolkit
 
-UIFont * FWFontThin(CGFloat size) { return [UIFont.fw thinFontOfSize:size]; }
-UIFont * FWFontLight(CGFloat size) { return [UIFont.fw lightFontOfSize:size]; }
-UIFont * FWFontRegular(CGFloat size) { return [UIFont.fw fontOfSize:size]; }
-UIFont * FWFontMedium(CGFloat size) { return [UIFont.fw mediumFontOfSize:size]; }
-UIFont * FWFontSemibold(CGFloat size) { return [UIFont.fw semiboldFontOfSize:size]; }
-UIFont * FWFontBold(CGFloat size) { return [UIFont.fw boldFontOfSize:size]; }
+UIFont * FWFontThin(CGFloat size) { return [UIFont fw_thinFontOfSize:size]; }
+UIFont * FWFontLight(CGFloat size) { return [UIFont fw_lightFontOfSize:size]; }
+UIFont * FWFontRegular(CGFloat size) { return [UIFont fw_fontOfSize:size]; }
+UIFont * FWFontMedium(CGFloat size) { return [UIFont fw_mediumFontOfSize:size]; }
+UIFont * FWFontSemibold(CGFloat size) { return [UIFont fw_semiboldFontOfSize:size]; }
+UIFont * FWFontBold(CGFloat size) { return [UIFont fw_boldFontOfSize:size]; }
 
 static BOOL fwStaticAutoScaleFont = NO;
 
-@implementation FWFontClassWrapper (FWToolkit)
+@implementation UIFont (FWToolkit)
 
-- (BOOL)autoScale
++ (BOOL)fw_autoScale
 {
     return fwStaticAutoScaleFont;
 }
 
-- (void)setAutoScale:(BOOL)autoScale
++ (void)setFw_autoScale:(BOOL)autoScale
 {
     fwStaticAutoScaleFont = autoScale;
 }
 
-- (UIFont *)thinFontOfSize:(CGFloat)size
++ (UIFont *)fw_thinFontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightThin];
+    return [self fw_fontOfSize:size weight:UIFontWeightThin];
 }
 
-- (UIFont *)lightFontOfSize:(CGFloat)size
++ (UIFont *)fw_lightFontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightLight];
+    return [self fw_fontOfSize:size weight:UIFontWeightLight];
 }
 
-- (UIFont *)fontOfSize:(CGFloat)size
++ (UIFont *)fw_fontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightRegular];
+    return [self fw_fontOfSize:size weight:UIFontWeightRegular];
 }
 
-- (UIFont *)mediumFontOfSize:(CGFloat)size
++ (UIFont *)fw_mediumFontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightMedium];
+    return [self fw_fontOfSize:size weight:UIFontWeightMedium];
 }
 
-- (UIFont *)semiboldFontOfSize:(CGFloat)size
++ (UIFont *)fw_semiboldFontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightSemibold];
+    return [self fw_fontOfSize:size weight:UIFontWeightSemibold];
 }
 
-- (UIFont *)boldFontOfSize:(CGFloat)size
++ (UIFont *)fw_boldFontOfSize:(CGFloat)size
 {
-    return [self fontOfSize:size weight:UIFontWeightBold];
+    return [self fw_fontOfSize:size weight:UIFontWeightBold];
 }
 
-- (UIFont * (^)(CGFloat, UIFontWeight))fontBlock
++ (UIFont * (^)(CGFloat, UIFontWeight))fw_fontBlock
 {
-    return objc_getAssociatedObject([UIFont class], @selector(fontBlock));
+    return objc_getAssociatedObject([UIFont class], @selector(fw_fontBlock));
 }
 
-- (void)setFontBlock:(UIFont * (^)(CGFloat, UIFontWeight))fontBlock
++ (void)setFw_fontBlock:(UIFont * (^)(CGFloat, UIFontWeight))fontBlock
 {
-    objc_setAssociatedObject([UIFont class], @selector(fontBlock), fontBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject([UIFont class], @selector(fw_fontBlock), fontBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (UIFont *)fontOfSize:(CGFloat)size weight:(UIFontWeight)weight
++ (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight
 {
-    UIFont * (^fontBlock)(CGFloat, UIFontWeight) = self.fontBlock;
+    UIFont * (^fontBlock)(CGFloat, UIFontWeight) = self.fw_fontBlock;
     if (fontBlock) return fontBlock(size, weight);
     
     if (fwStaticAutoScaleFont) {
-        size = [UIScreen.fw relativeValue:size];
+        size = [UIScreen fw_relativeValue:size];
     }
     return [UIFont systemFontOfSize:size weight:weight];
 }
 
 @end
 
-#pragma mark - FWImageWrapper+FWToolkit
+#pragma mark - UIImage+FWToolkit
 
-@implementation FWImageWrapper (FWToolkit)
+@implementation UIImage (FWToolkit)
 
-- (UIImage *)imageWithAlpha:(CGFloat)alpha
+- (UIImage *)fw_imageWithAlpha:(CGFloat)alpha
 {
-    UIGraphicsBeginImageContextWithOptions(self.base.size, NO, self.base.scale);
-    [self.base drawInRect:CGRectMake(0, 0, self.base.size.width, self.base.size.height) blendMode:kCGBlendModeNormal alpha:alpha];
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:alpha];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (UIImage *)imageWithTintColor:(UIColor *)tintColor
+- (UIImage *)fw_imageWithTintColor:(UIColor *)tintColor
 {
-    return [self imageWithTintColor:tintColor blendMode:kCGBlendModeDestinationIn];
+    return [self fw_imageWithTintColor:tintColor blendMode:kCGBlendModeDestinationIn];
 }
 
-- (UIImage *)imageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode
+- (UIImage *)fw_imageWithTintColor:(UIColor *)tintColor blendMode:(CGBlendMode)blendMode
 {
-    UIGraphicsBeginImageContextWithOptions(self.base.size, NO, 0.0f);
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
     [tintColor setFill];
-    CGRect bounds = CGRectMake(0, 0, self.base.size.width, self.base.size.height);
+    CGRect bounds = CGRectMake(0, 0, self.size.width, self.size.height);
     UIRectFill(bounds);
-    [self.base drawInRect:bounds blendMode:blendMode alpha:1.0f];
+    [self drawInRect:bounds blendMode:blendMode alpha:1.0f];
     UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return tintedImage;
 }
 
-- (UIImage *)imageWithScaleSize:(CGSize)size
+- (UIImage *)fw_imageWithScaleSize:(CGSize)size
 {
     if (size.width <= 0 || size.height <= 0) return nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    [self.base drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (UIImage *)imageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode
+- (UIImage *)fw_imageWithScaleSize:(CGSize)size contentMode:(UIViewContentMode)contentMode
 {
     if (size.width <= 0 || size.height <= 0) return nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    [self drawInRect:CGRectMake(0, 0, size.width, size.height) withContentMode:contentMode clipsToBounds:NO];
+    [self fw_drawInRect:CGRectMake(0, 0, size.width, size.height) withContentMode:contentMode clipsToBounds:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (void)drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds
+- (void)fw_drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clipsToBounds
 {
-    CGRect drawRect = [self innerRectWithContentMode:contentMode rect:rect size:self.base.size];
+    CGRect drawRect = [self fw_innerRectWithContentMode:contentMode rect:rect size:self.size];
     if (drawRect.size.width == 0 || drawRect.size.height == 0) return;
     if (clipsToBounds) {
         CGContextRef context = UIGraphicsGetCurrentContext();
@@ -611,15 +607,15 @@ static BOOL fwStaticAutoScaleFont = NO;
             CGContextSaveGState(context);
             CGContextAddRect(context, rect);
             CGContextClip(context);
-            [self.base drawInRect:drawRect];
+            [self drawInRect:drawRect];
             CGContextRestoreGState(context);
         }
     } else {
-        [self.base drawInRect:drawRect];
+        [self drawInRect:drawRect];
     }
 }
 
-- (CGRect)innerRectWithContentMode:(UIViewContentMode)mode rect:(CGRect)rect size:(CGSize)size
+- (CGRect)fw_innerRectWithContentMode:(UIViewContentMode)mode rect:(CGRect)rect size:(CGSize)size
 {
     rect = CGRectStandardize(rect);
     size.width = size.width < 0 ? -size.width : size.width;
@@ -700,26 +696,26 @@ static BOOL fwStaticAutoScaleFont = NO;
     return rect;
 }
 
-- (UIImage *)imageWithCropRect:(CGRect)rect
+- (UIImage *)fw_imageWithCropRect:(CGRect)rect
 {
-    rect.origin.x *= self.base.scale;
-    rect.origin.y *= self.base.scale;
-    rect.size.width *= self.base.scale;
-    rect.size.height *= self.base.scale;
+    rect.origin.x *= self.scale;
+    rect.origin.y *= self.scale;
+    rect.size.width *= self.scale;
+    rect.size.height *= self.scale;
     if (rect.size.width <= 0 || rect.size.height <= 0) return nil;
-    CGImageRef imageRef = CGImageCreateWithImageInRect(self.base.CGImage, rect);
-    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.base.scale orientation:self.base.imageOrientation];
+    CGImageRef imageRef = CGImageCreateWithImageInRect(self.CGImage, rect);
+    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
 }
 
-- (UIImage *)imageWithInsets:(UIEdgeInsets)insets color:(UIColor *)color
+- (UIImage *)fw_imageWithInsets:(UIEdgeInsets)insets color:(UIColor *)color
 {
-    CGSize size = self.base.size;
+    CGSize size = self.size;
     size.width -= insets.left + insets.right;
     size.height -= insets.top + insets.bottom;
     if (size.width <= 0 || size.height <= 0) return nil;
-    CGRect rect = CGRectMake(-insets.left, -insets.top, self.base.size.width, self.base.size.height);
+    CGRect rect = CGRectMake(-insets.left, -insets.top, self.size.width, self.size.height);
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (color) {
@@ -731,44 +727,44 @@ static BOOL fwStaticAutoScaleFont = NO;
         CGContextEOFillPath(context);
         CGPathRelease(path);
     }
-    [self.base drawInRect:rect];
+    [self drawInRect:rect];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets
+- (UIImage *)fw_imageWithCapInsets:(UIEdgeInsets)insets
 {
-    return [self.base resizableImageWithCapInsets:insets];
+    return [self resizableImageWithCapInsets:insets];
 }
 
-- (UIImage *)imageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode
+- (UIImage *)fw_imageWithCapInsets:(UIEdgeInsets)insets resizingMode:(UIImageResizingMode)resizingMode
 {
-    return [self.base resizableImageWithCapInsets:insets resizingMode:resizingMode];
+    return [self resizableImageWithCapInsets:insets resizingMode:resizingMode];
 }
 
-- (UIImage *)imageWithCornerRadius:(CGFloat)radius
+- (UIImage *)fw_imageWithCornerRadius:(CGFloat)radius
 {
-    UIGraphicsBeginImageContextWithOptions(self.base.size, NO, 0.0f);
-    CGRect rect = CGRectMake(0, 0, self.base.size.width, self.base.size.height);
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
+    CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
     [[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius] addClip];
     
-    [self.base drawInRect:rect];
+    [self drawInRect:rect];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (UIImage *)imageWithRotateDegree:(CGFloat)degree
+- (UIImage *)fw_imageWithRotateDegree:(CGFloat)degree
 {
-    return [self imageWithRotateDegree:degree fitSize:YES];
+    return [self fw_imageWithRotateDegree:degree fitSize:YES];
 }
 
-- (UIImage *)imageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize
+- (UIImage *)fw_imageWithRotateDegree:(CGFloat)degree fitSize:(BOOL)fitSize
 {
     CGFloat radians = degree * M_PI / 180.0;
-    size_t width = (size_t)CGImageGetWidth(self.base.CGImage);
-    size_t height = (size_t)CGImageGetHeight(self.base.CGImage);
+    size_t width = (size_t)CGImageGetWidth(self.CGImage);
+    size_t height = (size_t)CGImageGetHeight(self.CGImage);
     CGRect newRect = CGRectApplyAffineTransform(CGRectMake(0., 0., width, height),
                                                 fitSize ? CGAffineTransformMakeRotation(radians) : CGAffineTransformIdentity);
     
@@ -789,30 +785,30 @@ static BOOL fwStaticAutoScaleFont = NO;
     CGContextTranslateCTM(context, +(newRect.size.width * 0.5), +(newRect.size.height * 0.5));
     CGContextRotateCTM(context, radians);
     
-    CGContextDrawImage(context, CGRectMake(-(width * 0.5), -(height * 0.5), width, height), self.base.CGImage);
+    CGContextDrawImage(context, CGRectMake(-(width * 0.5), -(height * 0.5), width, height), self.CGImage);
     CGImageRef imgRef = CGBitmapContextCreateImage(context);
-    UIImage *img = [UIImage imageWithCGImage:imgRef scale:self.base.scale orientation:self.base.imageOrientation];
+    UIImage *img = [UIImage imageWithCGImage:imgRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imgRef);
     CGContextRelease(context);
     return img;
 }
 
-- (UIImage *)imageWithMaskImage:(UIImage *)maskImage
+- (UIImage *)fw_imageWithMaskImage:(UIImage *)maskImage
 {
-    UIGraphicsBeginImageContextWithOptions(self.base.size, NO, 0.0f);
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextClipToMask(context, CGRectMake(0.0f, 0.0f, self.base.size.width, self.base.size.height), maskImage.CGImage);
+    CGContextClipToMask(context, CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), maskImage.CGImage);
     
-    [self.base drawAtPoint:CGPointZero];
+    [self drawAtPoint:CGPointZero];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
-- (UIImage *)imageWithMergeImage:(UIImage *)mergeImage atPoint:(CGPoint)point
+- (UIImage *)fw_imageWithMergeImage:(UIImage *)mergeImage atPoint:(CGPoint)point
 {
-    UIGraphicsBeginImageContextWithOptions(self.base.size, NO, 0);
-    [self.base drawInRect:CGRectMake(0, 0, self.base.size.width, self.base.size.height)];
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0);
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
     [mergeImage drawAtPoint:point];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -820,13 +816,13 @@ static BOOL fwStaticAutoScaleFont = NO;
     return image;
 }
 
-- (UIImage *)imageWithFilter:(CIFilter *)filter
+- (UIImage *)fw_imageWithFilter:(CIFilter *)filter
 {
     CIImage *inputImage;
-    if (self.base.CIImage) {
-        inputImage = self.base.CIImage;
+    if (self.CIImage) {
+        inputImage = self.CIImage;
     } else {
-        CGImageRef imageRef = self.base.CGImage;
+        CGImageRef imageRef = self.CGImage;
         if (!imageRef) return nil;
         inputImage = [CIImage imageWithCGImage:imageRef];
     }
@@ -839,49 +835,49 @@ static BOOL fwStaticAutoScaleFont = NO;
     
     CGImageRef imageRef = [context createCGImage:outputImage fromRect:outputImage.extent];
     if (!imageRef) return nil;
-    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.base.scale orientation:self.base.imageOrientation];
+    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
 }
 
-- (UIImage *)compressImageWithMaxLength:(NSInteger)maxLength
+- (UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength
 {
-    NSData *data = [self compressDataWithMaxLength:maxLength compressRatio:0];
+    NSData *data = [self fw_compressDataWithMaxLength:maxLength compressRatio:0];
     return [[UIImage alloc] initWithData:data];
 }
 
-- (NSData *)compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
+- (NSData *)fw_compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
 {
     CGFloat compress = 1.f;
     CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.1f;
-    NSData *data = self.hasAlpha
-        ? UIImagePNGRepresentation(self.base)
-        : UIImageJPEGRepresentation(self.base, compress);
+    NSData *data = self.fw_hasAlpha
+        ? UIImagePNGRepresentation(self)
+        : UIImageJPEGRepresentation(self, compress);
     while (data.length > maxLength && compress > stepCompress) {
         compress -= stepCompress;
-        data = UIImageJPEGRepresentation(self.base, compress);
+        data = UIImageJPEGRepresentation(self, compress);
     }
     return data;
 }
 
-- (UIImage *)compressImageWithMaxWidth:(NSInteger)maxWidth
+- (UIImage *)fw_compressImageWithMaxWidth:(NSInteger)maxWidth
 {
-    CGSize newSize = [self scaleSizeWithMaxWidth:maxWidth];
+    CGSize newSize = [self fw_scaleSizeWithMaxWidth:maxWidth];
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
-    [self.base drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
 }
 
-- (CGSize)scaleSizeWithMaxWidth:(CGFloat)maxWidth
+- (CGSize)fw_scaleSizeWithMaxWidth:(CGFloat)maxWidth
 {
     if (maxWidth <= 0) {
-        return self.base.size;
+        return self.size;
     }
     
-    CGFloat width = self.base.size.width;
-    CGFloat height = self.base.size.height;
+    CGFloat width = self.size.width;
+    CGFloat height = self.size.height;
     if (width > maxWidth || height > maxWidth) {
         CGFloat newWidth = 0.0f;
         CGFloat newHeight = 0.0f;
@@ -901,36 +897,32 @@ static BOOL fwStaticAutoScaleFont = NO;
     }
 }
 
-- (UIImage *)originalImage
+- (UIImage *)fw_originalImage
 {
-    return [self.base imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-- (UIImage *)templateImage
+- (UIImage *)fw_templateImage
 {
-    return [self.base imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    return [self imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
-- (BOOL)hasAlpha
+- (BOOL)fw_hasAlpha
 {
-    if (self.base.CGImage == NULL) return NO;
-    CGImageAlphaInfo alpha = CGImageGetAlphaInfo(self.base.CGImage) & kCGBitmapAlphaInfoMask;
+    if (self.CGImage == NULL) return NO;
+    CGImageAlphaInfo alpha = CGImageGetAlphaInfo(self.CGImage) & kCGBitmapAlphaInfoMask;
     return (alpha == kCGImageAlphaFirst ||
             alpha == kCGImageAlphaLast ||
             alpha == kCGImageAlphaPremultipliedFirst ||
             alpha == kCGImageAlphaPremultipliedLast);
 }
 
-- (CGSize)pixelSize
+- (CGSize)fw_pixelSize
 {
-    return CGSizeMake(self.base.size.width * self.base.scale, self.base.size.height * self.base.scale);
+    return CGSizeMake(self.size.width * self.scale, self.size.height * self.scale);
 }
 
-@end
-
-@implementation FWImageClassWrapper (FWToolkit)
-
-- (UIImage *)imageWithView:(UIView *)view
++ (UIImage *)fw_imageWithView:(UIView *)view
 {
     if (!view) return nil;
     
@@ -945,17 +937,17 @@ static BOOL fwStaticAutoScaleFont = NO;
     return image;
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color
++ (UIImage *)fw_imageWithColor:(UIColor *)color
 {
-    return [self imageWithColor:color size:CGSizeMake(1.0f, 1.0f)];
+    return [self fw_imageWithColor:color size:CGSizeMake(1.0f, 1.0f)];
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size
++ (UIImage *)fw_imageWithColor:(UIColor *)color size:(CGSize)size
 {
-    return [self imageWithColor:color size:size cornerRadius:0];
+    return [self fw_imageWithColor:color size:size cornerRadius:0];
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius
++ (UIImage *)fw_imageWithColor:(UIColor *)color size:(CGSize)size cornerRadius:(CGFloat)radius
 {
     if (!color || size.width <= 0 || size.height <= 0) return nil;
     
@@ -975,7 +967,7 @@ static BOOL fwStaticAutoScaleFont = NO;
     return image;
 }
 
-- (UIImage *)imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef))block
++ (UIImage *)fw_imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef))block
 {
     if (!block) return nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
@@ -989,151 +981,151 @@ static BOOL fwStaticAutoScaleFont = NO;
 
 @end
 
-#pragma mark - FWViewWrapper+FWToolkit
+#pragma mark - UIView+FWToolkit
 
-@implementation FWViewWrapper (FWToolkit)
+@implementation UIView (FWToolkit)
 
-- (CGFloat)top
+- (CGFloat)fw_top
 {
-    return self.base.frame.origin.y;
+    return self.frame.origin.y;
 }
 
-- (void)setTop:(CGFloat)top
+- (void)setFw_top:(CGFloat)top
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.origin.y = top;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGFloat)bottom
+- (CGFloat)fw_bottom
 {
-    return self.top + self.height;
+    return self.fw_top + self.fw_height;
 }
 
-- (void)setBottom:(CGFloat)bottom
+- (void)setFw_bottom:(CGFloat)bottom
 {
-    self.top = bottom - self.height;
+    self.fw_top = bottom - self.fw_height;
 }
 
-- (CGFloat)left
+- (CGFloat)fw_left
 {
-    return self.base.frame.origin.x;
+    return self.frame.origin.x;
 }
 
-- (void)setLeft:(CGFloat)left
+- (void)setFw_left:(CGFloat)left
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.origin.x = left;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGFloat)right
+- (CGFloat)fw_right
 {
-    return self.left + self.width;
+    return self.fw_left + self.fw_width;
 }
 
-- (void)setRight:(CGFloat)right
+- (void)setFw_right:(CGFloat)right
 {
-    self.left = right - self.width;
+    self.fw_left = right - self.fw_width;
 }
 
-- (CGFloat)width
+- (CGFloat)fw_width
 {
-    return self.base.frame.size.width;
+    return self.frame.size.width;
 }
 
-- (void)setWidth:(CGFloat)width
+- (void)setFw_width:(CGFloat)width
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.size.width = width;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGFloat)height
+- (CGFloat)fw_height
 {
-    return self.base.frame.size.height;
+    return self.frame.size.height;
 }
 
-- (void)setHeight:(CGFloat)height
+- (void)setFw_height:(CGFloat)height
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.size.height = height;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGFloat)centerX
+- (CGFloat)fw_centerX
 {
-    return self.base.center.x;
+    return self.center.x;
 }
 
-- (void)setCenterX:(CGFloat)centerX
+- (void)setFw_centerX:(CGFloat)centerX
 {
-    self.base.center = CGPointMake(centerX, self.centerY);
+    self.center = CGPointMake(centerX, self.fw_centerY);
 }
 
-- (CGFloat)centerY
+- (CGFloat)fw_centerY
 {
-    return self.base.center.y;
+    return self.center.y;
 }
 
-- (void)setCenterY:(CGFloat)centerY
+- (void)setFw_centerY:(CGFloat)centerY
 {
-    self.base.center = CGPointMake(self.centerX, centerY);
+    self.center = CGPointMake(self.fw_centerX, centerY);
 }
 
-- (CGFloat)x
+- (CGFloat)fw_x
 {
-    return self.base.frame.origin.x;
+    return self.frame.origin.x;
 }
 
-- (void)setX:(CGFloat)x
+- (void)setFw_x:(CGFloat)x
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.origin.x = x;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGFloat)y
+- (CGFloat)fw_y
 {
-    return self.base.frame.origin.y;
+    return self.frame.origin.y;
 }
 
-- (void)setY:(CGFloat)y
+- (void)setFw_y:(CGFloat)y
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.origin.y = y;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGPoint)origin
+- (CGPoint)fw_origin
 {
-    return self.base.frame.origin;
+    return self.frame.origin;
 }
 
-- (void)setOrigin:(CGPoint)origin
+- (void)setFw_origin:(CGPoint)origin
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.origin = origin;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
-- (CGSize)size
+- (CGSize)fw_size
 {
-    return self.base.frame.size;
+    return self.frame.size;
 }
 
-- (void)setSize:(CGSize)size
+- (void)setFw_size:(CGSize)size
 {
-    CGRect frame = self.base.frame;
+    CGRect frame = self.frame;
     frame.size = size;
-    self.base.frame = frame;
+    self.frame = frame;
 }
 
 @end
 
-#pragma mark - FWViewControllerWrapper+FWToolkit
+#pragma mark - UIViewController+FWToolkit
 
-@implementation FWViewControllerWrapper (FWToolkit)
+@implementation UIViewController (FWToolkit)
 
 + (void)load
 {
@@ -1141,34 +1133,34 @@ static BOOL fwStaticAutoScaleFont = NO;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
-            selfObject.fw.visibleState = FWViewControllerVisibleStateDidLoad;
+            selfObject.fw_visibleState = FWViewControllerVisibleStateDidLoad;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            selfObject.fw.visibleState = FWViewControllerVisibleStateWillAppear;
+            selfObject.fw_visibleState = FWViewControllerVisibleStateWillAppear;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            selfObject.fw.visibleState = FWViewControllerVisibleStateDidAppear;
+            selfObject.fw_visibleState = FWViewControllerVisibleStateDidAppear;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewWillDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            selfObject.fw.visibleState = FWViewControllerVisibleStateWillDisappear;
+            selfObject.fw_visibleState = FWViewControllerVisibleStateWillDisappear;
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidDisappear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            selfObject.fw.visibleState = FWViewControllerVisibleStateDidDisappear;
+            selfObject.fw_visibleState = FWViewControllerVisibleStateDidDisappear;
         }));
         
         FWSwizzleClass(UIViewController, NSSelectorFromString(@"dealloc"), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             // dealloc时不调用fw，防止释放时动态创建包装器对象
-            void (^completionHandler)(id) = objc_getAssociatedObject(selfObject, @selector(completionHandler));
+            void (^completionHandler)(id) = objc_getAssociatedObject(selfObject, @selector(fw_completionHandler));
             if (completionHandler != nil) {
-                id completionResult = objc_getAssociatedObject(selfObject, @selector(completionResult));
+                id completionResult = objc_getAssociatedObject(selfObject, @selector(fw_completionResult));
                 completionHandler(completionResult);
             }
             
@@ -1177,91 +1169,87 @@ static BOOL fwStaticAutoScaleFont = NO;
     });
 }
 
-- (FWViewControllerVisibleState)visibleState
+- (FWViewControllerVisibleState)fw_visibleState
 {
-    return [objc_getAssociatedObject(self.base, @selector(visibleState)) unsignedIntegerValue];
+    return [objc_getAssociatedObject(self, @selector(fw_visibleState)) unsignedIntegerValue];
 }
 
-- (void)setVisibleState:(FWViewControllerVisibleState)visibleState
+- (void)setFw_visibleState:(FWViewControllerVisibleState)visibleState
 {
-    BOOL valueChanged = self.visibleState != visibleState;
-    objc_setAssociatedObject(self.base, @selector(visibleState), @(visibleState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (valueChanged && self.visibleStateChanged) {
-        self.visibleStateChanged(self.base, visibleState);
+    BOOL valueChanged = self.fw_visibleState != visibleState;
+    objc_setAssociatedObject(self, @selector(fw_visibleState), @(visibleState), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (valueChanged && self.fw_visibleStateChanged) {
+        self.fw_visibleStateChanged(self, visibleState);
     }
 }
 
-- (void (^)(__kindof UIViewController *, FWViewControllerVisibleState))visibleStateChanged
+- (void (^)(__kindof UIViewController *, FWViewControllerVisibleState))fw_visibleStateChanged
 {
-    return objc_getAssociatedObject(self.base, @selector(visibleStateChanged));
+    return objc_getAssociatedObject(self, @selector(fw_visibleStateChanged));
 }
 
-- (void)setVisibleStateChanged:(void (^)(__kindof UIViewController *, FWViewControllerVisibleState))visibleStateChanged
+- (void)setFw_visibleStateChanged:(void (^)(__kindof UIViewController *, FWViewControllerVisibleState))visibleStateChanged
 {
-    objc_setAssociatedObject(self.base, @selector(visibleStateChanged), visibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_visibleStateChanged), visibleStateChanged, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (id)completionResult
+- (id)fw_completionResult
 {
-    return objc_getAssociatedObject(self.base, @selector(completionResult));
+    return objc_getAssociatedObject(self, @selector(fw_completionResult));
 }
 
-- (void)setCompletionResult:(id)completionResult
+- (void)setFw_completionResult:(id)completionResult
 {
-    objc_setAssociatedObject(self.base, @selector(completionResult), completionResult, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_completionResult), completionResult, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void (^)(id _Nullable))completionHandler
+- (void (^)(id _Nullable))fw_completionHandler
 {
-    return objc_getAssociatedObject(self.base, @selector(completionHandler));
+    return objc_getAssociatedObject(self, @selector(fw_completionHandler));
 }
 
-- (void)setCompletionHandler:(void (^)(id _Nullable))completionHandler
+- (void)setFw_completionHandler:(void (^)(id _Nullable))completionHandler
 {
-    objc_setAssociatedObject(self.base, @selector(completionHandler), completionHandler, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_completionHandler), completionHandler, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL (^)(void))allowsPopGesture
+- (BOOL (^)(void))fw_allowsPopGesture
 {
-    return objc_getAssociatedObject(self.base, @selector(allowsPopGesture));
+    return objc_getAssociatedObject(self, @selector(fw_allowsPopGesture));
 }
 
-- (void)setAllowsPopGesture:(BOOL (^)(void))allowsPopGesture
+- (void)setFw_allowsPopGesture:(BOOL (^)(void))allowsPopGesture
 {
-    objc_setAssociatedObject(self.base, @selector(allowsPopGesture), allowsPopGesture, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_allowsPopGesture), allowsPopGesture, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BOOL (^)(void))shouldPopController
+- (BOOL (^)(void))fw_shouldPopController
 {
-    return objc_getAssociatedObject(self.base, @selector(shouldPopController));
+    return objc_getAssociatedObject(self, @selector(fw_shouldPopController));
 }
 
-- (void)setShouldPopController:(BOOL (^)(void))shouldPopController
+- (void)setFw_shouldPopController:(BOOL (^)(void))shouldPopController
 {
-    objc_setAssociatedObject(self.base, @selector(shouldPopController), shouldPopController, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_shouldPopController), shouldPopController, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
-
-@end
-
-@implementation UIViewController (FWToolkit)
 
 - (BOOL)allowsPopGesture
 {
-    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(allowsPopGesture));
+    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(fw_allowsPopGesture));
     if (block) return block();
     return YES;
 }
 
 - (BOOL)shouldPopController
 {
-    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(shouldPopController));
+    BOOL (^block)(void) = objc_getAssociatedObject(self, @selector(fw_shouldPopController));
     if (block) return block();
     return YES;
 }
 
 @end
 
-#pragma mark - FWNavigationControllerWrapper+FWToolkit
+#pragma mark - UINavigationController+FWToolkit
 
 @interface FWInnerPopProxyTarget : NSObject <UIGestureRecognizerDelegate>
 
@@ -1361,14 +1349,14 @@ static BOOL fwStaticAutoScaleFont = NO;
 
 static BOOL fwStaticPopProxyEnabled = NO;
 
-@implementation FWNavigationControllerWrapper (FWToolkit)
+@implementation UINavigationController (FWToolkit)
 
-+ (void)swizzlePopProxy
++ (void)fw_swizzlePopProxy
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         FWSwizzleClass(UINavigationController, @selector(navigationBar:shouldPopItem:), FWSwizzleReturn(BOOL), FWSwizzleArgs(UINavigationBar *navigationBar, UINavigationItem *item), FWSwizzleCode({
-            if (fwStaticPopProxyEnabled || [selfObject.fw popProxyEnabled]) {
+            if (fwStaticPopProxyEnabled || [selfObject fw_popProxyEnabled]) {
                 // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
                 if (selfObject.viewControllers.count >= navigationBar.items.count &&
                     !selfObject.topViewController.shouldPopController) {
@@ -1381,13 +1369,13 @@ static BOOL fwStaticPopProxyEnabled = NO;
         
         FWSwizzleClass(UINavigationController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
-            if (!fwStaticPopProxyEnabled || [selfObject.fw popProxyEnabled]) return;
+            if (!fwStaticPopProxyEnabled || [selfObject fw_popProxyEnabled]) return;
             
             // 拦截系统返回手势事件代理，加载自定义代理方法
-            if (selfObject.interactivePopGestureRecognizer.delegate != selfObject.fw.delegateProxy) {
-                selfObject.fw.delegateProxy.delegate = selfObject.interactivePopGestureRecognizer.delegate;
-                selfObject.fw.delegateProxy.navigationController = selfObject;
-                selfObject.interactivePopGestureRecognizer.delegate = selfObject.fw.delegateProxy;
+            if (selfObject.interactivePopGestureRecognizer.delegate != selfObject.fw_delegateProxy) {
+                selfObject.fw_delegateProxy.delegate = selfObject.interactivePopGestureRecognizer.delegate;
+                selfObject.fw_delegateProxy.navigationController = selfObject;
+                selfObject.interactivePopGestureRecognizer.delegate = selfObject.fw_delegateProxy;
             }
         }));
         
@@ -1408,46 +1396,42 @@ static BOOL fwStaticPopProxyEnabled = NO;
     });
 }
 
-- (BOOL)popProxyEnabled
+- (BOOL)fw_popProxyEnabled
 {
-    return [objc_getAssociatedObject(self.base, _cmd) boolValue];
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)enablePopProxy
+- (void)fw_enablePopProxy
 {
-    self.base.interactivePopGestureRecognizer.delegate = self.innerPopProxyTarget;
-    objc_setAssociatedObject(self.base, @selector(popProxyEnabled), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [FWNavigationControllerWrapper swizzlePopProxy];
+    self.interactivePopGestureRecognizer.delegate = self.fw_innerPopProxyTarget;
+    objc_setAssociatedObject(self, @selector(fw_popProxyEnabled), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [UINavigationController fw_swizzlePopProxy];
 }
 
-- (FWInnerPopProxyTarget *)innerPopProxyTarget
+- (FWInnerPopProxyTarget *)fw_innerPopProxyTarget
 {
-    FWInnerPopProxyTarget *target = objc_getAssociatedObject(self.base, _cmd);
+    FWInnerPopProxyTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target) {
-        target = [[FWInnerPopProxyTarget alloc] initWithNavigationController:self.base];
-        objc_setAssociatedObject(self.base, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        target = [[FWInnerPopProxyTarget alloc] initWithNavigationController:self];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
 }
 
-- (FWGestureRecognizerDelegateProxy *)delegateProxy
+- (FWGestureRecognizerDelegateProxy *)fw_delegateProxy
 {
-    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self.base, _cmd);
+    FWGestureRecognizerDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
     if (!proxy) {
         proxy = [[FWGestureRecognizerDelegateProxy alloc] init];
-        objc_setAssociatedObject(self.base, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return proxy;
 }
 
-@end
-
-@implementation FWNavigationControllerClassWrapper (FWToolkit)
-
-- (void)enablePopProxy
++ (void)fw_enablePopProxy
 {
     fwStaticPopProxyEnabled = YES;
-    [FWNavigationControllerWrapper swizzlePopProxy];
+    [UINavigationController fw_swizzlePopProxy];
 }
 
 @end

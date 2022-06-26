@@ -22,7 +22,6 @@
 #import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
-#import "FWWrapper.h"
 
 #import "FWEncode.h"
 #import "FWException.h"

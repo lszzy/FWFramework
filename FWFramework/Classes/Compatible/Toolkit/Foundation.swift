@@ -47,8 +47,8 @@ extension Wrapper where Base == Data {
 extension Wrapper where Base == Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
     public static var currentTime: TimeInterval {
-        get { return NSDate.__fw.currentTime }
-        set { NSDate.__fw.currentTime = newValue }
+        get { return NSDate.__fw_currentTime }
+        set { NSDate.__fw_currentTime = newValue }
     }
     
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
@@ -96,7 +96,7 @@ extension Wrapper where Base == Date {
     
     /// 格式化16位、13位时间戳为10位(秒)
     public static func formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
-        return NSDate.__fw.formatTimestamp(timestamp)
+        return NSDate.__fw_formatTimestamp(timestamp)
     }
 }
 
@@ -145,27 +145,27 @@ extension Wrapper where Base: NSAttributedString {
     
     /// NSAttributedString对象转换为html字符串
     public func htmlString() -> String? {
-        return base.__fw.htmlString()
+        return base.__fw_htmlString()
     }
 
     /// 计算所占尺寸，需设置Font等
     public var textSize: CGSize {
-        return base.__fw.textSize
+        return base.__fw_textSize
     }
 
     /// 计算在指定绘制区域内所占尺寸，需设置Font等
     public func textSize(drawSize: CGSize) -> CGSize {
-        return base.__fw.textSize(withDraw: drawSize)
+        return base.__fw_textSize(withDraw: drawSize)
     }
     
     /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
     public static func attributedString(htmlString: String) -> Base? {
-        return Base.__fw.attributedString(withHtmlString: htmlString) as? Base
+        return Base.__fw_attributedString(withHtmlString: htmlString)
     }
 
     /// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
     public static func attributedString(image: UIImage?, bounds: CGRect) -> NSAttributedString {
-        return Base.__fw.attributedString(with: image, bounds: bounds)
+        return Base.__fw_attributedString(with: image, bounds: bounds)
     }
     
 }
@@ -175,12 +175,12 @@ extension Wrapper where Base: NSObject {
     
     /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
     public func lock() {
-        base.__fw.lock()
+        base.__fw_lock()
     }
 
     /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
     public func unlock() {
-        base.__fw.unlock()
+        base.__fw_unlock()
     }
     
 }
@@ -190,22 +190,22 @@ extension Wrapper where Base: UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象
     public static func object(forKey: String) -> Any? {
-        return Base.__fw.object(forKey: forKey)
+        return Base.__fw_object(forKey: forKey)
     }
 
     /// 保存对象到standard，支持archive对象
     public static func setObject(_ object: Any?, forKey: String) {
-        Base.__fw.setObject(object, forKey: forKey)
+        Base.__fw_setObject(object, forKey: forKey)
     }
     
     /// 读取对象，支持unarchive对象
     public func object(forKey: String) -> Any? {
-        return base.__fw.object(forKey: forKey)
+        return base.__fw_object(forKey: forKey)
     }
 
     /// 保存对象，支持archive对象
     public func setObject(_ object: Any?, forKey: String) {
-        base.__fw.setObject(object, forKey: forKey)
+        base.__fw_setObject(object, forKey: forKey)
     }
     
 }
