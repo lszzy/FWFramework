@@ -118,6 +118,16 @@ extension Wrapper where Base: UITextField {
         set { base.__fw_nextResponderTag = newValue }
     }
     
+    /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
+    public func goPrevious() {
+        base.__fw_goPrevious()
+    }
+
+    /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
+    public func goNext() {
+        base.__fw_goNext()
+    }
+    
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
     public func keyboardHeight(_ notification: Notification) -> CGFloat {
         return base.__fw_keyboardHeight(notification)
@@ -260,6 +270,16 @@ extension Wrapper where Base: UITextView {
     public var nextResponderTag: Int {
         get { return base.__fw_nextResponderTag }
         set { base.__fw_nextResponderTag = newValue }
+    }
+    
+    /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
+    public func goPrevious() {
+        base.__fw_goPrevious()
+    }
+
+    /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
+    public func goNext() {
+        base.__fw_goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
