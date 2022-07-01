@@ -149,6 +149,8 @@
 
 @implementation UIViewController (FWNavigation)
 
+#pragma mark - Navigation
+
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
@@ -170,11 +172,7 @@
     return NO;
 }
 
-@end
-
-#pragma mark - UIViewController+FWWorkflow
-
-@implementation UIViewController (FWWorkflow)
+#pragma mark - Workflow
 
 @dynamic fw_workflowName;
 
@@ -197,9 +195,59 @@
 
 @end
 
-#pragma mark - UINavigationController+FWWorkflow
+#pragma mark - UINavigationController+FWNavigation
 
-@implementation UINavigationController (FWWorkflow)
+@implementation UINavigationController (FWNavigation)
+
+#pragma mark - Navigation
+
+- (void)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [CATransaction setCompletionBlock:completion];
+    [CATransaction begin];
+    [self pushViewController:viewController animated:animated];
+    [CATransaction commit];
+}
+
+- (UIViewController *)fw_popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    UIViewController *viewController;
+    [CATransaction setCompletionBlock:completion];
+    [CATransaction begin];
+    viewController = [self popViewControllerAnimated:animated];
+    [CATransaction commit];
+    return viewController;
+}
+
+- (NSArray<__kindof UIViewController *> *)fw_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray<UIViewController *> *viewControllers;
+    [CATransaction setCompletionBlock:completion];
+    [CATransaction begin];
+    viewControllers = [self popToViewController:viewController animated:animated];
+    [CATransaction commit];
+    return viewControllers;
+}
+
+- (NSArray<__kindof UIViewController *> *)fw_popToRootViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray<UIViewController *> *viewControllers;
+    [CATransaction setCompletionBlock:completion];
+    [CATransaction begin];
+    viewControllers = [self popToRootViewControllerAnimated:animated];
+    [CATransaction commit];
+    return viewControllers;
+}
+
+- (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [CATransaction setCompletionBlock:completion];
+    [CATransaction begin];
+    [self setViewControllers:viewControllers animated:animated];
+    [CATransaction commit];
+}
+
+#pragma mark - Workflow
 
 - (NSString *)fw_topWorkflowName
 {
