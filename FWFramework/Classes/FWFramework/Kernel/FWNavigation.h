@@ -12,28 +12,18 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 控制器导航选项定义
-///
-/// FWNavigationOptionAutomatic: 自动判断push还是present，默认
-/// FWNavigationOptionPush: push方式
-/// FWNavigationOptionPresent: present方式
-/// FWNavigationOptionPresentNavigation: present导航栏方式
-///
-/// FWNavigationOptionPopTop: pop顶部控制器后再打开
-/// FWNavigationOptionPopToRoot: pop到根控制器再打开
-///
-/// FWNavigationOptionPageSheet: present样式为pageSheet
-/// FWNavigationOptionFullScreen: present样式为fullScreen
 typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
-    FWNavigationOptionAutomatic         = 0,
-    FWNavigationOptionPush              = 1 << 0,
-    FWNavigationOptionPresent           = 1 << 1,
-    FWNavigationOptionPresentNavigation = 1 << 2,
+    FWNavigationOptionAutomatic  = 0,
+    FWNavigationOptionPush       = 1 << 0,
+    FWNavigationOptionPresent    = 1 << 1,
     
-    FWNavigationOptionPopTop            = 1 << 3,
-    FWNavigationOptionPopToRoot         = 1 << 4,
+    FWNavigationOptionNavigation = 1 << 2,
     
-    FWNavigationOptionPageSheet         = 1 << 5,
-    FWNavigationOptionFullScreen        = 1 << 6,
+    FWNavigationOptionPopTop     = 1 << 3,
+    FWNavigationOptionPopToRoot  = 1 << 4,
+    
+    FWNavigationOptionPageSheet  = 1 << 5,
+    FWNavigationOptionFullScreen = 1 << 6,
 } NS_SWIFT_NAME(NavigationOptions);
 
 #pragma mark - UIWindow+FWNavigation
