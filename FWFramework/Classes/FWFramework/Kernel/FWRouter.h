@@ -21,6 +21,13 @@ typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context) NS_SWIFT_NAME(
 /** 路由完成句柄，openURL时可设置完成回调 */
 typedef void (^FWRouterCompletion)(id _Nullable result) NS_SWIFT_NAME(RouterCompletion);
 
+/** 路由用户信息Key定义 */
+typedef NSString *FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
+/** 路由信息来源Key */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
+/** 路由信息导航选项Key */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterNavigationOptionsKey NS_SWIFT_NAME(RouterNavigationOptionsKey);
+
 /** URL路由上下文 */
 NS_SWIFT_NAME(RouterContext)
 @interface FWRouterContext : NSObject <NSCopying>

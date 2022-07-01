@@ -11,6 +11,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 控制器导航选项定义
+///
+/// FWNavigationOptionAutomatic: 自动判断push还是present，默认
+/// FWNavigationOptionPush: push方式
+/// FWNavigationOptionPresent: present方式
+///
+/// FWNavigationOptionPopNone: 不执行pop操作，默认
+/// FWNavigationOptionPopTop: pop顶部控制器
+/// FWNavigationOptionPopToRoot: pop到根控制器
+typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
+    FWNavigationOptionAutomatic         = 0,
+    FWNavigationOptionPush              = 1 << 0,
+    FWNavigationOptionPresent           = 1 << 1,
+    
+    FWNavigationOptionPopNone           = 0 << 16,
+    FWNavigationOptionPopTop            = 1 << 16,
+    FWNavigationOptionPopToRoot         = 2 << 16,
+} NS_SWIFT_NAME(NavigationOptions);
+
 #pragma mark - UIWindow+FWNavigation
 
 @interface UIWindow (FWNavigation)
@@ -82,6 +101,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIViewController (FWNavigation)
 
 #pragma mark - Navigation
+
+/// 自定义open|close导航样式，默认automatic自动判断
+@property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;
 
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;

@@ -13,6 +13,9 @@
 #import "FWNavigation.h"
 #import <objc/runtime.h>
 
+FWRouterUserInfoKey const FWRouterSourceKey = @"source";
+FWRouterUserInfoKey const FWRouterNavigationOptionsKey = @"navigationOptions";
+
 #pragma mark - FWRouterContext
 
 @interface FWRouterContext ()
@@ -300,8 +303,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if ([self sharedInstance].routeHandler) return;
     
     [self sharedInstance].routeHandler = handler ?: ^id(FWRouterContext *context, id object) {
-        if (!context.isOpening) return object;
         if (![object isKindOfClass:[UIViewController class]]) return object;
+        
+        UIViewController *viewController = (UIViewController *)object;
+        NSNumber *navigationOptions = context.userInfo[FWRouterNavigationOptionsKey];
+        if (navigationOptions) viewController.fw_navigationOptions = [navigationOptions unsignedIntegerValue];
+        if (!context.isOpening) return object;
         
         [FWRouter openViewController:(UIViewController *)object animated:YES];
         return nil;
