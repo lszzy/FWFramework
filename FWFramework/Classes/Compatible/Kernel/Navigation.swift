@@ -106,6 +106,12 @@ extension Wrapper where Base: UIWindow {
 extension Wrapper where Base: UIViewController {
     
     // MARK: - Navigation
+    /// 自定义open|close导航样式，默认automatic自动判断
+    public var navigationOptions: NavigationOptions {
+        get { return base.__fw_navigationOptions }
+        set { base.__fw_navigationOptions = newValue }
+    }
+    
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
     public func open(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
         base.__fw_open(viewController, animated: animated, completion: completion)
