@@ -188,10 +188,46 @@
 
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self presentViewController:viewController animated:animated completion:completion];
+    FWNavigationOptions options = self.fw_navigationOptions;
+    BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
+    if ((options & FWNavigationOptionNavigation) == FWNavigationOptionNavigation) {
+        if (!isNavigation) {
+            viewController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            isNavigation = YES;
+        }
+    }
+    
+    if ((options & FWNavigationOptionFullScreen) == FWNavigationOptionFullScreen) {
+        viewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    } else if ((options & FWNavigationOptionPageSheet) == FWNavigationOptionPageSheet) {
+        viewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    }
+    
+    BOOL isPush = NO;
+    if ((options & FWNavigationOptionPush) == FWNavigationOptionPush) {
+        isPush = YES;
+    } else if ((options & FWNavigationOptionPresent) == FWNavigationOptionPresent) {
+        isPush = NO;
     } else {
-        [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
+        isPush = self.navigationController ? YES : NO;
+    }
+    if (isNavigation) isPush = NO;
+    
+    if (isPush) {
+        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+            NSMutableArray *viewControllers = [NSMutableArray arrayWithObjects:self.navigationController.viewControllers.firstObject, nil];
+            [viewControllers addObject:viewController];
+            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
+        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+            NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [viewControllers removeLastObject];
+            [viewControllers addObject:viewController];
+            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
+        } else {
+            [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
+        }
+    } else {
+        [self presentViewController:viewController animated:animated completion:completion];
     }
 }
 
