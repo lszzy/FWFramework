@@ -16,18 +16,24 @@ NS_ASSUME_NONNULL_BEGIN
 /// FWNavigationOptionAutomatic: 自动判断push还是present，默认
 /// FWNavigationOptionPush: push方式
 /// FWNavigationOptionPresent: present方式
+/// FWNavigationOptionPresentNavigation: present导航栏方式
 ///
-/// FWNavigationOptionPopNone: 不执行pop操作，默认
-/// FWNavigationOptionPopTop: pop顶部控制器
-/// FWNavigationOptionPopToRoot: pop到根控制器
+/// FWNavigationOptionPopTop: pop顶部控制器后再打开
+/// FWNavigationOptionPopToRoot: pop到根控制器再打开
+///
+/// FWNavigationOptionPageSheet: present样式为pageSheet
+/// FWNavigationOptionFullScreen: present样式为fullScreen
 typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
     FWNavigationOptionAutomatic         = 0,
     FWNavigationOptionPush              = 1 << 0,
     FWNavigationOptionPresent           = 1 << 1,
+    FWNavigationOptionPresentNavigation = 1 << 2,
     
-    FWNavigationOptionPopNone           = 0 << 16,
-    FWNavigationOptionPopTop            = 1 << 16,
-    FWNavigationOptionPopToRoot         = 2 << 16,
+    FWNavigationOptionPopTop            = 1 << 3,
+    FWNavigationOptionPopToRoot         = 1 << 4,
+    
+    FWNavigationOptionPageSheet         = 1 << 5,
+    FWNavigationOptionFullScreen        = 1 << 6,
 } NS_SWIFT_NAME(NavigationOptions);
 
 #pragma mark - UIWindow+FWNavigation
@@ -164,6 +170,15 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /**
+ push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */
+- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/**
  push控制器，并清理非根控制器（只保留根控制器）
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
  
@@ -171,6 +186,15 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
  @param animated 是否执行动画
  */
 - (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
+
+/**
+ push控制器，并清理非根控制器（只保留根控制器），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */
+- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
  push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
@@ -183,12 +207,30 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /**
+ push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
+ 
+ @param viewController push的控制器
+ @param workflows 指定工作流
+ @param animated 是否执行动画
+ */
+- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/**
  pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
  
  @param animated 是否执行动画
  */
 - (void)fw_popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
+
+/**
+ pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
+ 
+ @param animated 是否执行动画
+ */
+- (void)fw_popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
  pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
@@ -198,6 +240,15 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
  @param animated  是否执行动画
  */
 - (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
+
+/**
+ pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
+ 
+ @param workflows 指定工作流
+ @param animated  是否执行动画
+ */
+- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 @end
 

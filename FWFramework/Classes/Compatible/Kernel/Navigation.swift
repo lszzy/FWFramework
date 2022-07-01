@@ -173,36 +173,36 @@ extension Wrapper where Base: UINavigationController {
     /// push控制器，并清理最外层工作流（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
-    public func push(_ viewController: UIViewController, popTopWorkflowAnimated: Bool) {
-        base.__fw_pushViewController(viewController, popTopWorkflowAnimated: popTopWorkflowAnimated)
+    public func push(_ viewController: UIViewController, popTopWorkflowAnimated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, popTopWorkflowAnimated: popTopWorkflowAnimated, completion: completion)
     }
 
     /// push控制器，并清理非根控制器（只保留根控制器）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
-    public func push(_ viewController: UIViewController, popToRootWorkflowAnimated: Bool) {
-        base.__fw_pushViewController(viewController, popToRootWorkflowAnimated: popToRootWorkflowAnimated)
+    public func push(_ viewController: UIViewController, popToRootWorkflowAnimated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, popToRootWorkflowAnimated: popToRootWorkflowAnimated, completion: completion)
     }
 
     /// push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
-    public func push(_ viewController: UIViewController, popWorkflows: [String]?, animated: Bool = true) {
-        base.__fw_pushViewController(viewController, popWorkflows: popWorkflows, animated: animated)
+    public func push(_ viewController: UIViewController, popWorkflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, popWorkflows: popWorkflows, animated: animated, completion: completion)
     }
 
     /// pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
-    public func popTopWorkflow(animated: Bool = true) {
-        base.__fw_popTopWorkflow(animated: animated)
+    public func popTopWorkflow(animated: Bool = true, completion: (() -> Void)? = nil) {
+        base.__fw_popTopWorkflow(animated: animated, completion: completion)
     }
 
     /// pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
-    public func popWorkflows(_ workflows: [String]?, animated: Bool = true) {
-        base.__fw_popWorkflows(workflows, animated: animated)
+    public func popWorkflows(_ workflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
+        base.__fw_popWorkflows(workflows, animated: animated, completion: completion)
     }
     
 }
