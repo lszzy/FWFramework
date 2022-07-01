@@ -67,12 +67,22 @@
 
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[self fw_topViewController] fw_openViewController:viewController animated:animated];
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [[self fw_topViewController] fw_openViewController:viewController animated:animated completion:completion];
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated];
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated completion:completion];
 }
 
 + (UIWindow *)fw_mainWindow
@@ -135,12 +145,22 @@
 
 + (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [self.fw_mainWindow fw_openViewController:viewController animated:animated];
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
++ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [self.fw_mainWindow fw_openViewController:viewController animated:animated completion:completion];
 }
 
 + (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated];
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
++ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated completion:completion];
 }
 
 @end
@@ -153,20 +173,30 @@
 
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self presentViewController:viewController animated:animated completion:nil];
+        [self presentViewController:viewController animated:animated completion:completion];
     } else {
-        [self.navigationController pushViewController:viewController animated:animated];
+        [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
     }
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (self.navigationController) {
-        if ([self.navigationController popViewControllerAnimated:animated]) return YES;
+        if ([self.navigationController fw_popViewControllerAnimated:animated completion:completion]) return YES;
     }
     if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:animated completion:nil];
+        [self dismissViewControllerAnimated:animated completion:completion];
         return YES;
     }
     return NO;
@@ -203,48 +233,68 @@
 
 - (void)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [CATransaction setCompletionBlock:completion];
-    [CATransaction begin];
-    [self pushViewController:viewController animated:animated];
-    [CATransaction commit];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        [self pushViewController:viewController animated:animated];
+        [CATransaction commit];
+    } else {
+        [self pushViewController:viewController animated:animated];
+    }
 }
 
 - (UIViewController *)fw_popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     UIViewController *viewController;
-    [CATransaction setCompletionBlock:completion];
-    [CATransaction begin];
-    viewController = [self popViewControllerAnimated:animated];
-    [CATransaction commit];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewController = [self popViewControllerAnimated:animated];
+        [CATransaction commit];
+    } else {
+        viewController = [self popViewControllerAnimated:animated];
+    }
     return viewController;
 }
 
 - (NSArray<__kindof UIViewController *> *)fw_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     NSArray<UIViewController *> *viewControllers;
-    [CATransaction setCompletionBlock:completion];
-    [CATransaction begin];
-    viewControllers = [self popToViewController:viewController animated:animated];
-    [CATransaction commit];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewControllers = [self popToViewController:viewController animated:animated];
+        [CATransaction commit];
+    } else {
+        viewControllers = [self popToViewController:viewController animated:animated];
+    }
     return viewControllers;
 }
 
 - (NSArray<__kindof UIViewController *> *)fw_popToRootViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     NSArray<UIViewController *> *viewControllers;
-    [CATransaction setCompletionBlock:completion];
-    [CATransaction begin];
-    viewControllers = [self popToRootViewControllerAnimated:animated];
-    [CATransaction commit];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewControllers = [self popToRootViewControllerAnimated:animated];
+        [CATransaction commit];
+    } else {
+        viewControllers = [self popToRootViewControllerAnimated:animated];
+    }
     return viewControllers;
 }
 
 - (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [CATransaction setCompletionBlock:completion];
-    [CATransaction begin];
-    [self setViewControllers:viewControllers animated:animated];
-    [CATransaction commit];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        [self setViewControllers:viewControllers animated:animated];
+        [CATransaction commit];
+    } else {
+        [self setViewControllers:viewControllers animated:animated];
+    }
 }
 
 #pragma mark - Workflow
