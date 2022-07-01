@@ -105,6 +105,7 @@ extension Wrapper where Base: UIWindow {
 // MARK: - UIViewController+Navigation
 extension Wrapper where Base: UIViewController {
     
+    // MARK: - Navigation
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
     public func open(_ viewController: UIViewController, animated: Bool = true) {
         base.__fw_open(viewController, animated: animated)
@@ -127,6 +128,35 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - UINavigationController+Navigation
 extension Wrapper where Base: UINavigationController {
+    
+    // MARK: - Navigation
+    /// push新界面，完成时回调
+    public func pushViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, animated: animated, completion: completion)
+    }
+
+    /// pop当前界面，完成时回调
+    @discardableResult
+    public func popViewController(animated: Bool, completion: (() -> Void)? = nil) -> UIViewController? {
+        return base.__fw_popViewController(animated: animated, completion: completion)
+    }
+
+    /// pop到指定界面，完成时回调
+    @discardableResult
+    public func popToViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+        return base.__fw_pop(to: viewController, animated: animated, completion: completion)
+    }
+
+    /// pop到根界面，完成时回调
+    @discardableResult
+    public func popToRootViewController(animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+        return base.__fw_popToRootViewController(animated: animated, completion: completion)
+    }
+
+    /// 设置界面数组，完成时回调
+    public func setViewControllers(_ viewControllers: [UIViewController], animated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_setViewControllers(viewControllers, animated: animated, completion: completion)
+    }
     
     // MARK: - Workflow
     /// 当前最外层工作流名称，即topViewController的工作流名称

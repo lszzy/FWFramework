@@ -69,26 +69,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (FWNavigation)
 
+#pragma mark - Navigation
+
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
-@end
-
-#pragma mark - UIViewController+FWWorkflow
-
-@interface UIViewController (FWWorkflow)
+#pragma mark - Workflow
 
 /** 自定义工作流名称，支持二级("."分隔)；默认返回小写类名(去掉ViewController、Controller) */
 @property (nonatomic, copy) NSString *fw_workflowName NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - UINavigationController+FWWorkflow
+#pragma mark - UINavigationController+FWNavigation
 
-@interface UINavigationController (FWWorkflow)
+@interface UINavigationController (FWNavigation)
+
+#pragma mark - Navigation
+
+/// push新界面，完成时回调
+- (void)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/// pop当前界面，完成时回调
+- (nullable UIViewController *)fw_popViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/// pop到指定界面，完成时回调
+- (nullable NSArray<__kindof UIViewController *> *)fw_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/// pop到根界面，完成时回调
+- (nullable NSArray<__kindof UIViewController *> *)fw_popToRootViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/// 设置界面数组，完成时回调
+- (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Workflow
 
 /**
  当前最外层工作流名称，即topViewController的工作流名称
