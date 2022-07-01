@@ -307,7 +307,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         
         UIViewController *viewController = (UIViewController *)object;
         NSNumber *navigationOptions = context.userInfo[FWRouterNavigationOptionsKey];
-        if (navigationOptions) viewController.fw_navigationOptions = [navigationOptions unsignedIntegerValue];
+        if (navigationOptions && [navigationOptions isKindOfClass:[NSNumber class]]) {
+            viewController.fw_navigationOptions = [navigationOptions unsignedIntegerValue];
+        }
         if (!context.isOpening) return object;
         
         [FWRouter openViewController:(UIViewController *)object animated:YES];

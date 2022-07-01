@@ -188,7 +188,7 @@
 
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    FWNavigationOptions options = self.fw_navigationOptions;
+    FWNavigationOptions options = viewController.fw_navigationOptions;
     BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
     if ((options & FWNavigationOptionNavigation) == FWNavigationOptionNavigation) {
         if (!isNavigation) {
@@ -227,7 +227,21 @@
             [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
         }
     } else {
-        [self presentViewController:viewController animated:animated completion:completion];
+        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+            __weak UINavigationController *weakNav = self.navigationController;
+            [self presentViewController:viewController animated:animated completion:^{
+                [weakNav popToRootViewControllerAnimated:NO];
+                if (completion) completion();
+            }];
+        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+            __weak UINavigationController *weakNav = self.navigationController;
+            [self presentViewController:viewController animated:animated completion:^{
+                [weakNav popViewControllerAnimated:NO];
+                if (completion) completion();
+            }];
+        } else {
+            [self presentViewController:viewController animated:animated completion:completion];
+        }
     }
 }
 
