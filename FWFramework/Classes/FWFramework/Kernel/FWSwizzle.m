@@ -441,6 +441,9 @@
 
 + (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass
 {
+    NSArray<NSString *> *cacheNames = [self fw_classCaches:clazz superclass:superclass type:@"M" values:nil];
+    if (cacheNames) return cacheNames;
+    
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {
         unsigned int resultCount = 0;
@@ -456,11 +459,16 @@
         clazz = superclass ? class_getSuperclass(clazz) : NULL;
         if (clazz == NULL || clazz == [NSObject class]) break;
     }
+    
+    [self fw_classCaches:clazz superclass:superclass type:@"M" values:resultNames];
     return resultNames;
 }
 
 + (NSArray<NSString *> *)fw_classProperties:(Class)clazz superclass:(BOOL)superclass
 {
+    NSArray<NSString *> *cacheNames = [self fw_classCaches:clazz superclass:superclass type:@"P" values:nil];
+    if (cacheNames) return cacheNames;
+    
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {
         unsigned int resultCount = 0;
@@ -476,11 +484,16 @@
         clazz = superclass ? class_getSuperclass(clazz) : NULL;
         if (clazz == NULL || clazz == [NSObject class]) break;
     }
+    
+    [self fw_classCaches:clazz superclass:superclass type:@"P" values:resultNames];
     return resultNames;
 }
 
 + (NSArray<NSString *> *)fw_classIvars:(Class)clazz superclass:(BOOL)superclass
 {
+    NSArray<NSString *> *cacheNames = [self fw_classCaches:clazz superclass:superclass type:@"V" values:nil];
+    if (cacheNames) return cacheNames;
+    
     NSMutableArray *resultNames = [NSMutableArray array];
     while (clazz != NULL) {
         unsigned int resultCount = 0;
@@ -496,7 +509,30 @@
         clazz = superclass ? class_getSuperclass(clazz) : NULL;
         if (clazz == NULL || clazz == [NSObject class]) break;
     }
+    
+    [self fw_classCaches:clazz superclass:superclass type:@"V" values:resultNames];
     return resultNames;
+}
+
++ (NSArray<NSString *> *)fw_classCaches:(Class)clazz
+                             superclass:(BOOL)superclass
+                                   type:(NSString *)type
+                                 values:(NSArray<NSString *> *)values
+{
+    static NSMutableDictionary *caches = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        caches = [[NSMutableDictionary alloc] init];
+    });
+    
+    if (!clazz) return nil;
+    NSString *identifier = [NSString stringWithFormat:@"%@.%@%@%@",
+                            NSStringFromClass(clazz),
+                            class_isMetaClass(clazz) ? @"M" : @"C",
+                            superclass ? @"S" : @"C",
+                            type];
+    if (values) [caches setObject:values forKey:identifier];
+    return [caches objectForKey:identifier];
 }
 
 @end
