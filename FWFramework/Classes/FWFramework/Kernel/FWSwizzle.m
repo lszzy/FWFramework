@@ -445,9 +445,10 @@
     if (cacheNames) return cacheNames;
     
     NSMutableArray *resultNames = [NSMutableArray array];
-    while (clazz != NULL) {
+    Class targetClass = clazz;
+    while (targetClass != NULL) {
         unsigned int resultCount = 0;
-        Method *methods = class_copyMethodList(clazz, &resultCount);
+        Method *methods = class_copyMethodList(targetClass, &resultCount);
         for (unsigned int i = 0; i < resultCount; i++) {
             NSString *resultName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i])) ?: ""];
             if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
@@ -456,8 +457,8 @@
         }
         free(methods);
         
-        clazz = superclass ? class_getSuperclass(clazz) : NULL;
-        if (clazz == NULL || clazz == [NSObject class]) break;
+        targetClass = superclass ? class_getSuperclass(targetClass) : NULL;
+        if (targetClass == NULL || targetClass == [NSObject class]) break;
     }
     
     [self fw_classCaches:clazz superclass:superclass type:@"M" values:resultNames];
@@ -470,9 +471,10 @@
     if (cacheNames) return cacheNames;
     
     NSMutableArray *resultNames = [NSMutableArray array];
-    while (clazz != NULL) {
+    Class targetClass = clazz;
+    while (targetClass != NULL) {
         unsigned int resultCount = 0;
-        objc_property_t *properties = class_copyPropertyList(clazz, &resultCount);
+        objc_property_t *properties = class_copyPropertyList(targetClass, &resultCount);
         for (unsigned int i = 0; i < resultCount; i++) {
             NSString *resultName = [NSString stringWithUTF8String:property_getName(properties[i]) ?: ""];
             if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
@@ -481,8 +483,8 @@
         }
         free(properties);
         
-        clazz = superclass ? class_getSuperclass(clazz) : NULL;
-        if (clazz == NULL || clazz == [NSObject class]) break;
+        targetClass = superclass ? class_getSuperclass(targetClass) : NULL;
+        if (targetClass == NULL || targetClass == [NSObject class]) break;
     }
     
     [self fw_classCaches:clazz superclass:superclass type:@"P" values:resultNames];
@@ -495,9 +497,10 @@
     if (cacheNames) return cacheNames;
     
     NSMutableArray *resultNames = [NSMutableArray array];
-    while (clazz != NULL) {
+    Class targetClass = clazz;
+    while (targetClass != NULL) {
         unsigned int resultCount = 0;
-        Ivar *ivars = class_copyIvarList(clazz, &resultCount);
+        Ivar *ivars = class_copyIvarList(targetClass, &resultCount);
         for (unsigned int i = 0; i < resultCount; i++) {
             NSString *resultName = [NSString stringWithUTF8String:ivar_getName(ivars[i]) ?: ""];
             if (resultName.length > 0 && ![resultNames containsObject:resultName]) {
@@ -506,8 +509,8 @@
         }
         free(ivars);
         
-        clazz = superclass ? class_getSuperclass(clazz) : NULL;
-        if (clazz == NULL || clazz == [NSObject class]) break;
+        targetClass = superclass ? class_getSuperclass(targetClass) : NULL;
+        if (targetClass == NULL || targetClass == [NSObject class]) break;
     }
     
     [self fw_classCaches:clazz superclass:superclass type:@"V" values:resultNames];
@@ -525,7 +528,6 @@
         caches = [[NSMutableDictionary alloc] init];
     });
     
-    if (!clazz) return nil;
     NSString *identifier = [NSString stringWithFormat:@"%@.%@%@%@",
                             NSStringFromClass(clazz),
                             class_isMetaClass(clazz) ? @"M" : @"C",
