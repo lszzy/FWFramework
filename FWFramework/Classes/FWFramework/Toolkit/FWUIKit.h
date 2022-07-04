@@ -281,6 +281,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UITableViewCell+FWUIKit
+
+@interface UITableViewCell (FWUIKit)
+
+/// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
+@property (nonatomic, assign) UIEdgeInsets fw_separatorInset NS_REFINED_FOR_SWIFT;
+
+/// 获取当前所属tableView
+@property (nonatomic, weak, readonly, nullable) UITableView *fw_tableView NS_REFINED_FOR_SWIFT;
+
+/// 获取当前显示indexPath
+@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UICollectionViewCell+FWUIKit
+
+@interface UICollectionViewCell (FWUIKit)
+
+/// 获取当前所属collectionView
+@property (nonatomic, weak, readonly, nullable) UICollectionView *fw_collectionView NS_REFINED_FOR_SWIFT;
+
+/// 获取当前显示indexPath
+@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
+
+@end
+
 #pragma mark - UIViewController+FWUIKit
 
 @interface UIViewController (FWUIKit)

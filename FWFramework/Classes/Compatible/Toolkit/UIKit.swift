@@ -429,6 +429,42 @@ extension Wrapper where Base: UITextView {
     
 }
 
+// MARK: - UITableViewCell+UIKit
+extension Wrapper where Base: UITableViewCell {
+    
+    /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
+    public var separatorInset: UIEdgeInsets {
+        get { return base.__fw_separatorInset }
+        set { base.__fw_separatorInset = newValue }
+    }
+
+    /// 获取当前所属tableView
+    public weak var tableView: UITableView? {
+        return base.__fw_tableView
+    }
+
+    /// 获取当前显示indexPath
+    public var indexPath: IndexPath? {
+        return base.__fw_indexPath
+    }
+    
+}
+
+// MARK: - UICollectionViewCell+UIKit
+extension Wrapper where Base: UICollectionViewCell {
+    
+    /// 获取当前所属collectionView
+    public weak var collectionView: UICollectionView? {
+        return base.__fw_collectionView
+    }
+
+    /// 获取当前显示indexPath
+    public var indexPath: IndexPath? {
+        return base.__fw_indexPath
+    }
+    
+}
+
 // MARK: - UIViewController+UIKit
 extension Wrapper where Base: UIViewController {
     
