@@ -45,6 +45,42 @@ extension Wrapper where Base: UIDevice {
         #endif
     }
     
+    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+    public static var deviceUUID: String {
+        get { return Base.__fw_deviceUUID }
+        set { Base.__fw_deviceUUID = newValue }
+    }
+    
+}
+
+@objc extension UIDevice {
+    
+    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+    @objc(fw_deviceUUID)
+    public static var __fw_deviceUUID: String {
+        get {
+            if let deviceUUID = fw_innerDeviceUUID {
+                return deviceUUID
+            }
+            
+            if let deviceUUID = KeychainManager.sharedInstance.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
+                fw_innerDeviceUUID = deviceUUID
+                return deviceUUID
+            }
+            
+            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+            fw_innerDeviceUUID = deviceUUID
+            KeychainManager.sharedInstance.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            return deviceUUID
+        }
+        set {
+            fw_innerDeviceUUID = newValue
+            KeychainManager.sharedInstance.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+        }
+    }
+    
+    private static var fw_innerDeviceUUID: String?
+    
 }
 
 // MARK: - UIView+UIKit
