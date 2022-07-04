@@ -102,6 +102,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id)fw_invokeMethod:(SEL)aSelector withObject:(nullable id)object NS_REFINED_FOR_SWIFT;
 
 /**
+ 安全调用方法，支持多个参数
+ 
+ @param aSelector 要执行的方法
+ @param objects 传递的参数数组
+ @return id 方法执行后返回的值。如果无返回值，则为nil
+ */
+- (nullable id)fw_invokeMethod:(SEL)aSelector withObjects:(NSArray *)objects NS_SWIFT_NAME(__fw_invokeMethod(_:objects:)) NS_REFINED_FOR_SWIFT;
+
+/**
  对super发送消息
  
  @param aSelector 要执行的方法，需返回id类型
