@@ -45,6 +45,42 @@ extension Wrapper where Base: UIDevice {
         #endif
     }
     
+    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+    public static var deviceUUID: String {
+        get { return Base.__fw_deviceUUID }
+        set { Base.__fw_deviceUUID = newValue }
+    }
+    
+}
+
+@objc extension UIDevice {
+    
+    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
+    @objc(fw_deviceUUID)
+    public static var __fw_deviceUUID: String {
+        get {
+            if let deviceUUID = fw_innerDeviceUUID {
+                return deviceUUID
+            }
+            
+            if let deviceUUID = KeychainManager.sharedInstance.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
+                fw_innerDeviceUUID = deviceUUID
+                return deviceUUID
+            }
+            
+            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+            fw_innerDeviceUUID = deviceUUID
+            KeychainManager.sharedInstance.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            return deviceUUID
+        }
+        set {
+            fw_innerDeviceUUID = newValue
+            KeychainManager.sharedInstance.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+        }
+    }
+    
+    private static var fw_innerDeviceUUID: String?
+    
 }
 
 // MARK: - UIView+UIKit
@@ -225,6 +261,11 @@ extension Wrapper where Base: UIButton {
     /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
     public func setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
         base.__fw_setImageEdge(edge, spacing: spacing)
+    }
+    
+    /// 设置状态背景色
+    public func setBackgroundColor(_ backgroundColor: UIColor?, for state: UIControl.State) {
+        base.__fw_setBackgroundColor(backgroundColor, for: state)
     }
     
     /// 快速创建文本按钮
@@ -420,6 +461,42 @@ extension Wrapper where Base: UITextView {
     public var autoCompleteBlock: ((String) -> Void)? {
         get { return base.__fw_autoCompleteBlock }
         set { base.__fw_autoCompleteBlock = newValue }
+    }
+    
+}
+
+// MARK: - UITableViewCell+UIKit
+extension Wrapper where Base: UITableViewCell {
+    
+    /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
+    public var separatorInset: UIEdgeInsets {
+        get { return base.__fw_separatorInset }
+        set { base.__fw_separatorInset = newValue }
+    }
+
+    /// 获取当前所属tableView
+    public weak var tableView: UITableView? {
+        return base.__fw_tableView
+    }
+
+    /// 获取当前显示indexPath
+    public var indexPath: IndexPath? {
+        return base.__fw_indexPath
+    }
+    
+}
+
+// MARK: - UICollectionViewCell+UIKit
+extension Wrapper where Base: UICollectionViewCell {
+    
+    /// 获取当前所属collectionView
+    public weak var collectionView: UICollectionView? {
+        return base.__fw_collectionView
+    }
+
+    /// 获取当前显示indexPath
+    public var indexPath: IndexPath? {
+        return base.__fw_indexPath
     }
     
 }

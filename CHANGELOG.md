@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0] - 2022-07-04
+
+### Added
+* Open controller, workflow and other methods support completion callback
+* Added FW.synchronized to add mutex lock method
+* Migrate some common tools and methods to FWFramework
+
 ## [3.4.0] - 2022-06-26
 
 ### Changed

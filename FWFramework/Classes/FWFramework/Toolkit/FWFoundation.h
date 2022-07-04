@@ -53,6 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
 + (NSAttributedString *)fw_attributedStringWithImage:(nullable UIImage *)image bounds:(CGRect)bounds NS_REFINED_FOR_SWIFT;
 
+/// 快速创建NSAttributedString，自定义字体
++ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font NS_REFINED_FOR_SWIFT;
+
+/// 快速创建NSAttributedString，自定义字体和颜色
++ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSData+FWFoundation

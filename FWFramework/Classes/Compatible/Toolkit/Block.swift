@@ -11,6 +11,25 @@ import UIKit
 import FWFramework
 #endif
 
+// MARK: - FW+Block
+extension FW {
+
+    /// 通用互斥锁方法
+    public static func synchronized(_ object: AnyObject, closure: () -> Void) {
+        __FWSynchronized(object, closure)
+    }
+    
+    /// 通用互斥锁泛型方法
+    public func synchronized<T>(_ object: AnyObject, closure: () -> T) -> T {
+        var result: T? = nil
+        __FWSynchronized(object) {
+            result = closure()
+        }
+        return result!
+    }
+    
+}
+
 // MARK: - Block
 /// 通用无参数block
 public typealias BlockVoid = () -> ()
@@ -29,6 +48,9 @@ public typealias BlockDouble = (Double) -> ()
 
 /// 通用(Bool, Any)参数block
 public typealias BlockBoolParam = (Bool, Any?) -> ()
+
+/// 通用(Int, Any)参数block
+public typealias BlockIntParam = (Int, Any?) -> ()
 
 // MARK: Timer+Block
 extension Wrapper where Base: Timer {

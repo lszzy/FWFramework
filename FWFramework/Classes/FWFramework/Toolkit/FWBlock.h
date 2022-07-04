@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWBlock
 
 /**
+ 通用互斥锁方法
+ */
+void FWSynchronized(id object, __attribute__((noescape)) void (^closure)(void)) NS_REFINED_FOR_SWIFT;
+
+/**
  通用不带参数block
  */
 typedef void (^FWBlockVoid)(void) NS_SWIFT_UNAVAILABLE("");
@@ -53,6 +58,14 @@ typedef void (^FWBlockDouble)(double value) NS_SWIFT_UNAVAILABLE("");
  @param param id参数
  */
 typedef void (^FWBlockBoolParam)(BOOL isTrue, id _Nullable param) NS_SWIFT_UNAVAILABLE("");
+
+/**
+ 通用(NSInteger,id)参数block
+ 
+ @param index NSInteger参数
+ @param param id参数
+ */
+typedef void (^FWBlockIntParam)(NSInteger index, id _Nullable param) NS_SWIFT_UNAVAILABLE("");
 
 #pragma mark - NSTimer+FWBlock
 
