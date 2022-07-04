@@ -68,6 +68,29 @@
     return nil;
 }
 
+- (id)fw_invokeMethod:(SEL)aSelector withObjects:(NSArray *)objects
+{
+    NSMethodSignature *signature = [[self class] instanceMethodSignatureForSelector:aSelector];
+    if (!signature) return nil;
+    
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    invocation.target = self;
+    invocation.selector = aSelector;
+    NSInteger paramsCount = MIN(signature.numberOfArguments - 2, objects.count);
+    for (NSInteger i = 0; i < paramsCount; i++) {
+        id object = objects[i];
+        if ([object isKindOfClass:[NSNull class]]) continue;
+        [invocation setArgument:&object atIndex:i + 2];
+    }
+    [invocation invoke];
+    
+    id returnValue = nil;
+    if (signature.methodReturnLength) {
+        [invocation getReturnValue:&returnValue];
+    }
+    return returnValue;
+}
+
 - (id)fw_invokeSuperMethod:(SEL)aSelector
 {
     struct objc_super mySuper;
