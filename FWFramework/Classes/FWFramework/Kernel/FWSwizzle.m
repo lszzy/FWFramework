@@ -70,7 +70,7 @@
 
 - (id)fw_invokeMethod:(SEL)aSelector withObjects:(NSArray *)objects
 {
-    NSMethodSignature *signature = [[self class] instanceMethodSignatureForSelector:aSelector];
+    NSMethodSignature *signature = [object_getClass(self) instanceMethodSignatureForSelector:aSelector];
     if (!signature) return nil;
     
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -82,7 +82,11 @@
         if ([object isKindOfClass:[NSNull class]]) continue;
         [invocation setArgument:&object atIndex:i + 2];
     }
-    [invocation invoke];
+    @try {
+        [invocation invoke];
+    } @catch (NSException *exception) {
+        return nil;
+    }
     
     id returnValue = nil;
     if (signature.methodReturnLength) {
