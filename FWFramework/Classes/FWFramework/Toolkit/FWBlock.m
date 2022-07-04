@@ -14,6 +14,14 @@
 #import "FWFoundation.h"
 #import <objc/runtime.h>
 
+#pragma mark - FWBlock
+
+void FWSynchronized(id object, void (^closure)(void)) {
+    @synchronized(object) {
+        closure();
+    }
+}
+
 #pragma mark - NSTimer+FWBlock
 
 @implementation NSTimer (FWBlock)
