@@ -8,7 +8,6 @@
 
 #import "FWAutoloader.h"
 #import "FWConfiguration.h"
-#import "FWDebugger.h"
 #import "FWLoader.h"
 #import "FWLogger.h"
 #import "FWMacro.h"
