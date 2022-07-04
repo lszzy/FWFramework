@@ -4240,6 +4240,69 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)NSObject(im)fw_invokeMethod:withObjects:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_invokeMethod:withObjects:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSObject(im)fw_invokeMethod:withObjects:">-fw_invokeMethod:<wbr>withObjects:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全调用方法，支持多个参数</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nf">fw_invokeMethod</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span>
+                   <span class="nf">withObjects</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">objects</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>aSelector</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>要执行的方法</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>objects</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>传递的参数数组</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>id 方法执行后返回的值。如果无返回值，则为nil</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)NSObject(im)fw_invokeSuperMethod:"></a>
                     <a name="//apple_ref/swift/Method/-fw_invokeSuperMethod:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)NSObject(im)fw_invokeSuperMethod:">-fw_invokeSuperMethod:<wbr></a>

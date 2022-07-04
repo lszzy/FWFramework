@@ -54,6 +54,16 @@ extension Wrapper where Base: NSObject {
         return base.__fw_invokeMethod(selector, with: object)
     }
     
+    /// 安全调用方法，支持多个参数
+    /// - Parameters:
+    ///   - selector: 要执行的方法
+    ///   - objects: 传递的参数数组
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    public func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+        return base.__fw_invokeMethod(selector, objects: objects)
+    }
+    
     /// 对super发送消息
     /// - Parameter selector: 要执行的方法，需返回id类型
     /// - Returns: 方法执行后返回的值

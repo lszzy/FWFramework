@@ -25225,7 +25225,7 @@
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSObject(FWSwizzle)",
           "key.parsed_declaration" : "@interface NSObject (FWSwizzle)",
-          "key.parsed_scope.end" : 432,
+          "key.parsed_scope.end" : 441,
           "key.parsed_scope.start" : 63,
           "key.substructure" : [
             {
@@ -25419,10 +25419,54 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 16,
+              "key.doc.comment" : "安全调用方法，支持多个参数\n\n- parameter: aSelector 要执行的方法\n- parameter: objects 传递的参数数组\n- returns: id 方法执行后返回的值。如果无返回值，则为nil",
+              "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 111,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "要执行的方法\n"
+                    }
+                  ],
+                  "name" : "aSelector"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "传递的参数数组\n"
+                    }
+                  ],
+                  "name" : "objects"
+                }
+              ],
+              "key.doc.result_discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "id 方法执行后返回的值。如果无返回值，则为nil"
+                }
+              ],
+              "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
+              "key.name" : "-fw_invokeMethod:withObjects:",
+              "key.parsed_declaration" : "- (nullable id)fw_invokeMethod:(nonnull SEL)aSelector\n                   withObjects:(nonnull NSArray *)objects;",
+              "key.parsed_scope.end" : 111,
+              "key.parsed_scope.start" : 111,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)NSObject(im)fw_invokeMethod:withObjects:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 16,
               "key.doc.comment" : "对super发送消息\n\n- parameter: aSelector 要执行的方法，需返回id类型\n- returns: id 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 110,
+              "key.doc.line" : 119,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25444,8 +25488,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_invokeSuperMethod:",
               "key.parsed_declaration" : "- (nullable id)fw_invokeSuperMethod:(nonnull SEL)aSelector;",
-              "key.parsed_scope.end" : 110,
-              "key.parsed_scope.start" : 110,
+              "key.parsed_scope.end" : 119,
+              "key.parsed_scope.start" : 119,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_invokeSuperMethod:"
             },
@@ -25457,7 +25501,7 @@
               "key.doc.comment" : "对super发送消息，可传递参数\n\n- parameter: aSelector 要执行的方法，需返回id类型\n- parameter: object 传递的方法参数\n- returns: id 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 119,
+              "key.doc.line" : 128,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25488,8 +25532,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_invokeSuperMethod:withObject:",
               "key.parsed_declaration" : "- (nullable id)fw_invokeSuperMethod:(nonnull SEL)aSelector\n                         withObject:(nullable id)object;",
-              "key.parsed_scope.end" : 119,
-              "key.parsed_scope.start" : 119,
+              "key.parsed_scope.end" : 128,
+              "key.parsed_scope.start" : 128,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_invokeSuperMethod:withObject:"
             },
@@ -25501,7 +25545,7 @@
               "key.doc.comment" : "安全调用内部属性获取方法，如果属性不存在，则忽略之\n- note: 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法\n\n- parameter: name 内部属性名称\n- returns: 属性值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 128,
+              "key.doc.line" : 137,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25523,8 +25567,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_invokeGetter:",
               "key.parsed_declaration" : "- (nullable id)fw_invokeGetter:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 128,
-              "key.parsed_scope.start" : 128,
+              "key.parsed_scope.end" : 137,
+              "key.parsed_scope.start" : 137,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_invokeGetter:"
             },
@@ -25536,7 +25580,7 @@
               "key.doc.comment" : "安全调用内部属性设置方法，如果属性不存在，则忽略之\n- note: 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法\n\n- parameter: name 内部属性名称\n- parameter: object 传递的方法参数\n- returns: 方法执行后返回的值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 138,
+              "key.doc.line" : 147,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25567,20 +25611,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_invokeSetter:withObject:",
               "key.parsed_declaration" : "- (nullable id)fw_invokeSetter:(nonnull NSString *)name\n                    withObject:(nullable id)object;",
-              "key.parsed_scope.end" : 138,
-              "key.parsed_scope.start" : 138,
+              "key.parsed_scope.end" : 147,
+              "key.parsed_scope.start" : 147,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_invokeSetter:withObject:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.line" : 140,
+              "key.doc.line" : 149,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Property",
-              "key.parsed_scope.end" : 140,
-              "key.parsed_scope.start" : 140
+              "key.parsed_scope.end" : 149,
+              "key.parsed_scope.start" : 149
             },
             {
               "key.always_deprecated" : false,
@@ -25590,13 +25634,13 @@
               "key.doc.comment" : "临时对象，强引用，支持KVO\n- note: 备注：key的几种形式的声明和使用，下同\n   1. 声明：static char kAssociatedObjectKey; 使用：&kAssociatedObjectKey\n   2. 声明：static void *kAssociatedObjectKey = &kAssociatedObjectKey; 使用：kAssociatedObjectKey\n   3. 声明和使用直接用getter方法的selector，如@selector(xxx)、_cmd\n   4. 声明和使用直接用c字符串，如\"kAssociatedObjectKey\"",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 150,
+              "key.doc.line" : 159,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_tempObject",
               "key.parsed_declaration" : "@property (nonatomic, strong, readwrite, nullable) id fw_tempObject;",
-              "key.parsed_scope.end" : 150,
-              "key.parsed_scope.start" : 150,
+              "key.parsed_scope.end" : 159,
+              "key.parsed_scope.start" : 159,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_tempObject"
             },
@@ -25608,7 +25652,7 @@
               "key.doc.comment" : "读取关联属性\n\n- parameter: name 属性名称\n- returns: 属性值",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 158,
+              "key.doc.line" : 167,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25630,8 +25674,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_propertyForName:",
               "key.parsed_declaration" : "- (nullable id)fw_propertyForName:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 158,
-              "key.parsed_scope.start" : 158,
+              "key.parsed_scope.end" : 167,
+              "key.parsed_scope.start" : 167,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_propertyForName:"
             },
@@ -25643,7 +25687,7 @@
               "key.doc.comment" : "设置强关联属性，支持KVO\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 166,
+              "key.doc.line" : 175,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25668,8 +25712,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setProperty:forName:",
               "key.parsed_declaration" : "- (void)fw_setProperty:(nullable id)object forName:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 166,
-              "key.parsed_scope.start" : 166,
+              "key.parsed_scope.end" : 175,
+              "key.parsed_scope.start" : 175,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_setProperty:forName:"
             },
@@ -25681,7 +25725,7 @@
               "key.doc.comment" : "设置赋值关联属性，支持KVO，注意可能会产生野指针\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 174,
+              "key.doc.line" : 183,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25706,8 +25750,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setPropertyAssign:forName:",
               "key.parsed_declaration" : "- (void)fw_setPropertyAssign:(nullable id)object\n                     forName:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 174,
-              "key.parsed_scope.start" : 174,
+              "key.parsed_scope.end" : 183,
+              "key.parsed_scope.start" : 183,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_setPropertyAssign:forName:"
             },
@@ -25719,7 +25763,7 @@
               "key.doc.comment" : "设置拷贝关联属性，支持KVO\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 182,
+              "key.doc.line" : 191,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25744,8 +25788,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setPropertyCopy:forName:",
               "key.parsed_declaration" : "- (void)fw_setPropertyCopy:(nullable id)object forName:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 182,
-              "key.parsed_scope.start" : 182,
+              "key.parsed_scope.end" : 191,
+              "key.parsed_scope.start" : 191,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_setPropertyCopy:forName:"
             },
@@ -25757,7 +25801,7 @@
               "key.doc.comment" : "设置弱引用关联属性，支持KVO，OC不支持weak关联属性\n\n- parameter: object 属性值\n- parameter: name   属性名称",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 190,
+              "key.doc.line" : 199,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25782,20 +25826,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setPropertyWeak:forName:",
               "key.parsed_declaration" : "- (void)fw_setPropertyWeak:(nullable id)object forName:(nonnull NSString *)name;",
-              "key.parsed_scope.end" : 190,
-              "key.parsed_scope.start" : 190,
+              "key.parsed_scope.end" : 199,
+              "key.parsed_scope.start" : 199,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_setPropertyWeak:forName:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.line" : 192,
+              "key.doc.line" : 201,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Bind",
-              "key.parsed_scope.end" : 192,
-              "key.parsed_scope.start" : 192
+              "key.parsed_scope.end" : 201,
+              "key.parsed_scope.start" : 201
             },
             {
               "key.always_deprecated" : false,
@@ -25805,7 +25849,7 @@
               "key.doc.comment" : "给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象\n\n- parameter: object 对象，会被 strong 强引用\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 200,
+              "key.doc.line" : 209,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25830,8 +25874,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_bindObject:forKey:",
               "key.parsed_declaration" : "- (void)fw_bindObject:(nullable id)object forKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 200,
-              "key.parsed_scope.start" : 200,
+              "key.parsed_scope.end" : 209,
+              "key.parsed_scope.start" : 209,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_bindObject:forKey:"
             },
@@ -25843,7 +25887,7 @@
               "key.doc.comment" : "给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象\n\n- parameter: object 对象，不会被 strong 强引用\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 208,
+              "key.doc.line" : 217,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25868,8 +25912,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_bindObjectWeak:forKey:",
               "key.parsed_declaration" : "- (void)fw_bindObjectWeak:(nullable id)object forKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 208,
-              "key.parsed_scope.start" : 208,
+              "key.parsed_scope.end" : 217,
+              "key.parsed_scope.start" : 217,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_bindObjectWeak:forKey:"
             },
@@ -25881,7 +25925,7 @@
               "key.doc.comment" : "取出之前使用 bind 方法绑定的对象\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 215,
+              "key.doc.line" : 224,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25897,8 +25941,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_boundObjectForKey:",
               "key.parsed_declaration" : "- (nullable id)fw_boundObjectForKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 215,
-              "key.parsed_scope.start" : 215,
+              "key.parsed_scope.end" : 224,
+              "key.parsed_scope.start" : 224,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_boundObjectForKey:"
             },
@@ -25910,7 +25954,7 @@
               "key.doc.comment" : "给对象绑定上一个 double 值以供后续取出使用\n\n- parameter: doubleValue double值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 223,
+              "key.doc.line" : 232,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25935,8 +25979,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_bindDouble:forKey:",
               "key.parsed_declaration" : "- (void)fw_bindDouble:(double)doubleValue forKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 223,
-              "key.parsed_scope.start" : 223,
+              "key.parsed_scope.end" : 232,
+              "key.parsed_scope.start" : 232,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_bindDouble:forKey:"
             },
@@ -25948,7 +25992,7 @@
               "key.doc.comment" : "取出之前用 bindDouble:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 230,
+              "key.doc.line" : 239,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -25964,8 +26008,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_boundDoubleForKey:",
               "key.parsed_declaration" : "- (double)fw_boundDoubleForKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 230,
-              "key.parsed_scope.start" : 230,
+              "key.parsed_scope.end" : 239,
+              "key.parsed_scope.start" : 239,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_boundDoubleForKey:"
             },
@@ -25977,7 +26021,7 @@
               "key.doc.comment" : "给对象绑定上一个 BOOL 值以供后续取出使用\n\n- parameter: boolValue 布尔值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 238,
+              "key.doc.line" : 247,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26002,8 +26046,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_bindBool:forKey:",
               "key.parsed_declaration" : "- (void)fw_bindBool:(BOOL)boolValue forKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 238,
-              "key.parsed_scope.start" : 238,
+              "key.parsed_scope.end" : 247,
+              "key.parsed_scope.start" : 247,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_bindBool:forKey:"
             },
@@ -26015,7 +26059,7 @@
               "key.doc.comment" : "取出之前用 bindBool:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 245,
+              "key.doc.line" : 254,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26031,8 +26075,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_boundBoolForKey:",
               "key.parsed_declaration" : "- (BOOL)fw_boundBoolForKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 245,
-              "key.parsed_scope.start" : 245,
+              "key.parsed_scope.end" : 254,
+              "key.parsed_scope.start" : 254,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_boundBoolForKey:"
             },
@@ -26044,7 +26088,7 @@
               "key.doc.comment" : "给对象绑定上一个 NSInteger 值以供后续取出使用\n\n- parameter: integerValue 整数值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 254,
+              "key.doc.line" : 263,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26069,8 +26113,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_bindInt:forKey:",
               "key.parsed_declaration" : "- (void)fw_bindInt:(NSInteger)integerValue forKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 254,
-              "key.parsed_scope.start" : 254,
+              "key.parsed_scope.end" : 263,
+              "key.parsed_scope.start" : 263,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_bindInt:forKey:"
             },
@@ -26082,7 +26126,7 @@
               "key.doc.comment" : "取出之前用 bindInt:forKey: 绑定的值\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 261,
+              "key.doc.line" : 270,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26098,8 +26142,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_boundIntForKey:",
               "key.parsed_declaration" : "- (NSInteger)fw_boundIntForKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 261,
-              "key.parsed_scope.start" : 261,
+              "key.parsed_scope.end" : 270,
+              "key.parsed_scope.start" : 270,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_boundIntForKey:"
             },
@@ -26111,7 +26155,7 @@
               "key.doc.comment" : "移除之前使用 bind 方法绑定的对象\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 268,
+              "key.doc.line" : 277,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26127,8 +26171,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeBindingForKey:",
               "key.parsed_declaration" : "- (void)fw_removeBindingForKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 268,
-              "key.parsed_scope.start" : 268,
+              "key.parsed_scope.end" : 277,
+              "key.parsed_scope.start" : 277,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_removeBindingForKey:"
             },
@@ -26140,13 +26184,13 @@
               "key.doc.comment" : "移除之前使用 bind 方法绑定的所有对象",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 273,
+              "key.doc.line" : 282,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeAllBindings",
               "key.parsed_declaration" : "- (void)fw_removeAllBindings;",
-              "key.parsed_scope.end" : 273,
-              "key.parsed_scope.start" : 273,
+              "key.parsed_scope.end" : 282,
+              "key.parsed_scope.start" : 282,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_removeAllBindings"
             },
@@ -26158,13 +26202,13 @@
               "key.doc.comment" : "返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 278,
+              "key.doc.line" : 287,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_allBindingKeys",
               "key.parsed_declaration" : "- (nonnull NSArray<NSString *> *)fw_allBindingKeys;",
-              "key.parsed_scope.end" : 278,
-              "key.parsed_scope.start" : 278,
+              "key.parsed_scope.end" : 287,
+              "key.parsed_scope.start" : 287,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_allBindingKeys"
             },
@@ -26176,7 +26220,7 @@
               "key.doc.comment" : "返回是否设置了某个 key\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 285,
+              "key.doc.line" : 294,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26192,20 +26236,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_hasBindingKey:",
               "key.parsed_declaration" : "- (BOOL)fw_hasBindingKey:(nonnull NSString *)key;",
-              "key.parsed_scope.end" : 285,
-              "key.parsed_scope.start" : 285,
+              "key.parsed_scope.end" : 294,
+              "key.parsed_scope.start" : 294,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(im)fw_hasBindingKey:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.line" : 287,
+              "key.doc.line" : 296,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Exchange",
-              "key.parsed_scope.end" : 287,
-              "key.parsed_scope.start" : 287
+              "key.parsed_scope.end" : 296,
+              "key.parsed_scope.start" : 296
             },
             {
               "key.always_deprecated" : false,
@@ -26213,50 +26257,6 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
               "key.doc.comment" : "交换类实例方法。复杂情况可能会冲突\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  交换方法\n- returns: 是否成功",
-              "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.full_as_xml" : "",
-              "key.doc.line" : 296,
-              "key.doc.parameters" : [
-                {
-                  "discussion" : [
-                    {
-                      "kind" : "",
-                      "Para" : "原始方法\n"
-                    }
-                  ],
-                  "name" : "originalSelector"
-                },
-                {
-                  "discussion" : [
-                    {
-                      "kind" : "",
-                      "Para" : "交换方法\n "
-                    }
-                  ],
-                  "name" : "swizzleSelector"
-                }
-              ],
-              "key.doc.result_discussion" : [
-                {
-                  "kind" : "",
-                  "Para" : "是否成功"
-                }
-              ],
-              "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_exchangeInstanceMethod:swizzleMethod:",
-              "key.parsed_declaration" : "+ (BOOL)fw_exchangeInstanceMethod:(nonnull SEL)originalSelector\n                    swizzleMethod:(nonnull SEL)swizzleSelector;",
-              "key.parsed_scope.end" : 296,
-              "key.parsed_scope.start" : 296,
-              "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeInstanceMethod:swizzleMethod:"
-            },
-            {
-              "key.always_deprecated" : false,
-              "key.always_unavailable" : false,
-              "key.deprecation_message" : "",
-              "key.doc.column" : 9,
-              "key.doc.comment" : "交换类静态方法。复杂情况可能会冲突\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  交换方法\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 305,
@@ -26288,10 +26288,54 @@
               ],
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_exchangeClassMethod:swizzleMethod:",
-              "key.parsed_declaration" : "+ (BOOL)fw_exchangeClassMethod:(nonnull SEL)originalSelector\n                 swizzleMethod:(nonnull SEL)swizzleSelector;",
+              "key.name" : "+fw_exchangeInstanceMethod:swizzleMethod:",
+              "key.parsed_declaration" : "+ (BOOL)fw_exchangeInstanceMethod:(nonnull SEL)originalSelector\n                    swizzleMethod:(nonnull SEL)swizzleSelector;",
               "key.parsed_scope.end" : 305,
               "key.parsed_scope.start" : 305,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeInstanceMethod:swizzleMethod:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 9,
+              "key.doc.comment" : "交换类静态方法。复杂情况可能会冲突\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  交换方法\n- returns: 是否成功",
+              "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 314,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "原始方法\n"
+                    }
+                  ],
+                  "name" : "originalSelector"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "交换方法\n "
+                    }
+                  ],
+                  "name" : "swizzleSelector"
+                }
+              ],
+              "key.doc.result_discussion" : [
+                {
+                  "kind" : "",
+                  "Para" : "是否成功"
+                }
+              ],
+              "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
+              "key.name" : "+fw_exchangeClassMethod:swizzleMethod:",
+              "key.parsed_declaration" : "+ (BOOL)fw_exchangeClassMethod:(nonnull SEL)originalSelector\n                 swizzleMethod:(nonnull SEL)swizzleSelector;",
+              "key.parsed_scope.end" : 314,
+              "key.parsed_scope.start" : 314,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeClassMethod:swizzleMethod:"
             },
@@ -26303,7 +26347,7 @@
               "key.doc.comment" : "交换类实例方法为block实现。复杂情况可能会冲突\n- note: swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  交换方法\n- parameter: swizzleBlock 实现block\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 316,
+              "key.doc.line" : 325,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26343,8 +26387,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_exchangeInstanceMethod:swizzleMethod:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_exchangeInstanceMethod:(nonnull SEL)originalSelector\n                    swizzleMethod:(nonnull SEL)swizzleSelector\n                        withBlock:(nonnull id)swizzleBlock;",
-              "key.parsed_scope.end" : 316,
-              "key.parsed_scope.start" : 316,
+              "key.parsed_scope.end" : 325,
+              "key.parsed_scope.start" : 325,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeInstanceMethod:swizzleMethod:withBlock:"
             },
@@ -26356,7 +26400,7 @@
               "key.doc.comment" : "交换类静态方法为block实现。复杂情况可能会冲突\n- note: swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }\n\n- parameter: originalSelector 原始方法\n- parameter: swizzleSelector  交换方法\n- parameter: swizzleBlock 实现block\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 327,
+              "key.doc.line" : 336,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26396,8 +26440,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_exchangeClassMethod:swizzleMethod:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_exchangeClassMethod:(nonnull SEL)originalSelector\n                 swizzleMethod:(nonnull SEL)swizzleSelector\n                     withBlock:(nonnull id)swizzleBlock;",
-              "key.parsed_scope.end" : 327,
-              "key.parsed_scope.start" : 327,
+              "key.parsed_scope.end" : 336,
+              "key.parsed_scope.start" : 336,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeClassMethod:swizzleMethod:withBlock:"
             },
@@ -26409,7 +26453,7 @@
               "key.doc.comment" : "生成原始方法对应的随机交换方法\n\n- parameter: selector 原始方法\n- returns: 交换方法",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 335,
+              "key.doc.line" : 344,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26431,20 +26475,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_exchangeSwizzleSelector:",
               "key.parsed_declaration" : "+ (nonnull SEL)fw_exchangeSwizzleSelector:(nonnull SEL)selector;",
-              "key.parsed_scope.end" : 335,
-              "key.parsed_scope.start" : 335,
+              "key.parsed_scope.end" : 344,
+              "key.parsed_scope.start" : 344,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_exchangeSwizzleSelector:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.line" : 337,
+              "key.doc.line" : 346,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Swizzle",
-              "key.parsed_scope.end" : 337,
-              "key.parsed_scope.start" : 337
+              "key.parsed_scope.end" : 346,
+              "key.parsed_scope.start" : 346
             },
             {
               "key.always_deprecated" : false,
@@ -26454,7 +26498,7 @@
               "key.doc.comment" : "通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用\n\n- parameter: target 目标类或对象\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识，有值且相同时仅执行一次\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 348,
+              "key.doc.line" : 357,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26503,8 +26547,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_swizzleMethod:selector:identifier:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_swizzleMethod:(nullable id)target\n                selector:(nonnull SEL)originalSelector\n              identifier:(nullable NSString *)identifier\n               withBlock:(nonnull id _Nonnull (^)(\n                             Class _Nonnull, SEL _Nonnull,\n                             IMP _Nonnull (^_Nonnull)(void)))block;",
-              "key.parsed_scope.end" : 348,
-              "key.parsed_scope.start" : 348,
+              "key.parsed_scope.end" : 357,
+              "key.parsed_scope.start" : 357,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_swizzleMethod:selector:identifier:withBlock:"
             },
@@ -26516,7 +26560,7 @@
               "key.doc.comment" : "使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用\n- note: Swift实现代码示例：\n    NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString(\"viewDidLoad\")) { targetClass, originalCMD, originalIMP in\n        let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in\n            typealias originalMSGType = @convention(c)(UIViewController, Selector) -> Void\n            let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)\n            originalMSG(selfObject, originalCMD)\n\n            \/\/ ...\n        }\n        return unsafeBitCast(swizzleIMP, to: AnyObject.self)\n    }\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 369,
+              "key.doc.line" : 378,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26556,8 +26600,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_swizzleInstanceMethod:selector:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_swizzleInstanceMethod:(nonnull Class)originalClass\n                        selector:(nonnull SEL)originalSelector\n                       withBlock:(nonnull id _Nonnull (^)(\n                                     Class _Nonnull, SEL _Nonnull,\n                                     IMP _Nonnull (^_Nonnull)(void)))block;",
-              "key.parsed_scope.end" : 369,
-              "key.parsed_scope.start" : 369,
+              "key.parsed_scope.end" : 378,
+              "key.parsed_scope.start" : 378,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_swizzleInstanceMethod:selector:withBlock:"
             },
@@ -26569,7 +26613,7 @@
               "key.doc.comment" : "使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 379,
+              "key.doc.line" : 388,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26609,8 +26653,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_swizzleClassMethod:selector:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_swizzleClassMethod:(nonnull Class)originalClass\n                     selector:(nonnull SEL)originalSelector\n                    withBlock:(nonnull id _Nonnull (^)(\n                                  Class _Nonnull, SEL _Nonnull,\n                                  IMP _Nonnull (^_Nonnull)(void)))block;",
-              "key.parsed_scope.end" : 379,
-              "key.parsed_scope.start" : 379,
+              "key.parsed_scope.end" : 388,
+              "key.parsed_scope.start" : 388,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_swizzleClassMethod:selector:withBlock:"
             },
@@ -26622,7 +26666,7 @@
               "key.doc.comment" : "使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 390,
+              "key.doc.line" : 399,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26671,8 +26715,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_swizzleInstanceMethod:selector:identifier:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_swizzleInstanceMethod:(nonnull Class)originalClass\n                        selector:(nonnull SEL)originalSelector\n                      identifier:(nonnull NSString *)identifier\n                       withBlock:(nonnull id _Nonnull (^)(\n                                     Class _Nonnull, SEL _Nonnull,\n                                     IMP _Nonnull (^_Nonnull)(void)))block;",
-              "key.parsed_scope.end" : 390,
-              "key.parsed_scope.start" : 390,
+              "key.parsed_scope.end" : 399,
+              "key.parsed_scope.start" : 399,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_swizzleInstanceMethod:selector:identifier:withBlock:"
             },
@@ -26684,7 +26728,7 @@
               "key.doc.comment" : "使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用\n\n- parameter: originalClass 原始类\n- parameter: originalSelector 原始方法\n- parameter: identifier 唯一标识\n- parameter: block 实现句柄\n- returns: 是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 401,
+              "key.doc.line" : 410,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26733,20 +26777,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_swizzleClassMethod:selector:identifier:withBlock:",
               "key.parsed_declaration" : "+ (BOOL)fw_swizzleClassMethod:(nonnull Class)originalClass\n                     selector:(nonnull SEL)originalSelector\n                   identifier:(nonnull NSString *)identifier\n                    withBlock:(nonnull id _Nonnull (^)(\n                                  Class _Nonnull, SEL _Nonnull,\n                                  IMP _Nonnull (^_Nonnull)(void)))block;",
-              "key.parsed_scope.end" : 401,
-              "key.parsed_scope.start" : 401,
+              "key.parsed_scope.end" : 410,
+              "key.parsed_scope.start" : 410,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_swizzleClassMethod:selector:identifier:withBlock:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
-              "key.doc.line" : 403,
+              "key.doc.line" : 412,
               "key.filepath" : "docs\/FWFramework\/FWSwizzle.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Class",
-              "key.parsed_scope.end" : 403,
-              "key.parsed_scope.start" : 403
+              "key.parsed_scope.end" : 412,
+              "key.parsed_scope.start" : 412
             },
             {
               "key.always_deprecated" : false,
@@ -26756,7 +26800,7 @@
               "key.doc.comment" : "获取类方法列表，自动缓存，支持meta类(objc_getMetaClass)\n\n- parameter: clazz 指定类\n- parameter: superclass 是否包含父类，包含则递归到NSObject\n- returns: 方法列表",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 412,
+              "key.doc.line" : 421,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26787,8 +26831,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_classMethods:superclass:",
               "key.parsed_declaration" : "+ (nonnull NSArray<NSString *> *)fw_classMethods:(nonnull Class)clazz\n                                      superclass:(BOOL)superclass;",
-              "key.parsed_scope.end" : 412,
-              "key.parsed_scope.start" : 412,
+              "key.parsed_scope.end" : 421,
+              "key.parsed_scope.start" : 421,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_classMethods:superclass:"
             },
@@ -26800,7 +26844,7 @@
               "key.doc.comment" : "获取类属性列表，自动缓存，支持meta类(objc_getMetaClass)\n\n- parameter: clazz 指定类\n- parameter: superclass 是否包含父类，包含则递归到NSObject\n- returns: 属性列表",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 421,
+              "key.doc.line" : 430,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26831,8 +26875,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_classProperties:superclass:",
               "key.parsed_declaration" : "+ (nonnull NSArray<NSString *> *)fw_classProperties:(nonnull Class)clazz\n                                         superclass:(BOOL)superclass;",
-              "key.parsed_scope.end" : 421,
-              "key.parsed_scope.start" : 421,
+              "key.parsed_scope.end" : 430,
+              "key.parsed_scope.start" : 430,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_classProperties:superclass:"
             },
@@ -26844,7 +26888,7 @@
               "key.doc.comment" : "获取类Ivar列表，自动缓存，支持meta类(objc_getMetaClass)\n\n- parameter: clazz 指定类\n- parameter: superclass 是否包含父类，包含则递归到NSObject\n- returns: Ivar列表",
               "key.doc.file" : "docs\/FWFramework\/FWSwizzle.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 430,
+              "key.doc.line" : 439,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -26875,8 +26919,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_classIvars:superclass:",
               "key.parsed_declaration" : "+ (nonnull NSArray<NSString *> *)fw_classIvars:(nonnull Class)clazz\n                                    superclass:(BOOL)superclass;",
-              "key.parsed_scope.end" : 430,
-              "key.parsed_scope.start" : 430,
+              "key.parsed_scope.end" : 439,
+              "key.parsed_scope.start" : 439,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(cm)fw_classIvars:superclass:"
             }
