@@ -21,6 +21,13 @@ typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context) NS_SWIFT_NAME(
 /** 路由完成句柄，openURL时可设置完成回调 */
 typedef void (^FWRouterCompletion)(id _Nullable result) NS_SWIFT_NAME(RouterCompletion);
 
+/** 路由用户信息Key定义 */
+typedef NSString *FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
+/** 路由信息来源Key */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
+/** 路由信息导航选项Key */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterNavigationOptionsKey NS_SWIFT_NAME(RouterNavigationOptionsKey);
+
 /** URL路由上下文 */
 NS_SWIFT_NAME(RouterContext)
 @interface FWRouterContext : NSObject <NSCopying>
@@ -293,8 +300,14 @@ NS_SWIFT_NAME(Router)
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
+/// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
++ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
+
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
 + (BOOL)closeViewControllerAnimated:(BOOL)animated;
+
+/// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
++ (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 @end
 

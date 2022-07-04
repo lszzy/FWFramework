@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>FWStateMachine Class Reference</title>
+    <title>UINavigationController(FWNavigation) Category Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/FWStateMachine" class="dashAnchor"></a>
-    <a title="FWStateMachine Class Reference"></a>
+    <a name="//apple_ref/swift/Extension/UINavigationController(FWNavigation)" class="dashAnchor"></a>
+    <a title="UINavigationController(FWNavigation) Category Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">FWFramework 3.5.0 Docs</a> (82% documented)</p>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">FWFramework Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        FWStateMachine Class Reference
+        UINavigationController(FWNavigation) Category Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -885,32 +885,153 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>FWStateMachine</h1>
+            <h1>UINavigationController(FWNavigation)</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight objective_c"><code>
-<span class="k">@interface</span> <span class="nc">FWStateMachine</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UINavigationController</span> <span class="p">(</span><span class="nl">FWNavigation</span><span class="p">)</span>
+
+<span class="cp">#pragma mark - Navigation
+</span>
+<span class="c1">/// push新界面，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// pop当前界面，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_popViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// pop到指定界面，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_popToViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// pop到根界面，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_popToRootViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 设置界面数组，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_setViewControllers</span><span class="p">:(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewControllers</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cp">#pragma mark - Workflow
+</span>
+<span class="cm">/**
+ 当前最外层工作流名称，即topViewController的工作流名称
+ 
+ @return 工作流名称
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_topWorkflowName</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并清理最外层工作流（不属于工作流则不清理）
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并清理非根控制器（只保留根控制器）
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并清理非根控制器（只保留根控制器），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
+ 
+ @param viewController push的控制器
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
+ 
+ @param viewController push的控制器
+ @param workflows 指定工作流
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
+ 
+ @param viewController push的控制器
+ @param workflows 指定工作流
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
+ 
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
+ 
+ @param animated 是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
+ 
+ @param workflows 指定工作流
+ @param animated  是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="cm">/**
+ pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
+ 
+ @param workflows 指定工作流
+ @param animated  是否执行动画
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="k">@end</span></code></pre>
 
                 </div>
               </div>
-            <p>有限状态机</p>
-<div class="aside aside-see">
-    <p class="aside-title">See</p>
-    <a href="https://github.com/blakewatters/TransitionKit">https://github.com/blakewatters/TransitionKit</a>
-
-</div>
+            <p>Undocumented</p>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Navigation"></a>
+                <a name="//apple_ref/swift/Section/Navigation" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Navigation"></a>
+                  <h3 class="section-name"><span>Navigation</span>
+</h3>
+                </div>
+              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(py)states"></a>
-                    <a name="//apple_ref/swift/Property/states" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(py)states">states</a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:animated:completion:">-fw_pushViewController:<wbr>animated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -918,14 +1039,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>状态列表，只读</p>
+                        <p>push新界面，完成时回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSSet</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">states</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -935,9 +1058,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(py)events"></a>
-                    <a name="//apple_ref/swift/Property/events" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(py)events">events</a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popViewControllerAnimated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popViewControllerAnimated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popViewControllerAnimated:completion:">-fw_popViewControllerAnimated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -945,14 +1068,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>事件列表，只读</p>
+                        <p>pop当前界面，完成时回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSSet</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">events</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span>
+    <span class="nf">fw_popViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                      <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -962,9 +1087,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(py)state"></a>
-                    <a name="//apple_ref/swift/Property/state" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(py)state">state</a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popToViewController:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popToViewController:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popToViewController:animated:completion:">-fw_popToViewController:<wbr>animated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -972,14 +1097,17 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>当前状态，只读</p>
+                        <p>pop到指定界面，完成时回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n"><a href="../Classes/FWState.html">FWState</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">state</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span>
+    <span class="nf">fw_popToViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                  <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -989,9 +1117,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(py)initialState"></a>
-                    <a name="//apple_ref/swift/Property/initialState" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(py)initialState">initialState</a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popToRootViewControllerAnimated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popToRootViewControllerAnimated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popToRootViewControllerAnimated:completion:">-fw_popToRootViewControllerAnimated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -999,14 +1127,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>初始化状态，可写</p>
+                        <p>pop到根界面，完成时回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/FWState.html">FWState</a></span> <span class="o">*</span><span class="n">initialState</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span>
+    <span class="nf">fw_popToRootViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                            <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1016,9 +1146,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)addState:"></a>
-                    <a name="//apple_ref/swift/Method/-addState:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)addState:">-addState:<wbr></a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_setViewControllers:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_setViewControllers:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_setViewControllers:animated:completion:">-fw_setViewControllers:<wbr>animated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1026,360 +1156,42 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>添加状态</p>
+                        <p>设置界面数组，完成时回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addState</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWState.html">FWState</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">state</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>state</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>状态对象</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)addStates:"></a>
-                    <a name="//apple_ref/swift/Method/-addStates:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)addStates:">-addStates:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>批量添加状态</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addStates</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n"><a href="../Classes/FWState.html">FWState</a></span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">states</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>states</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>状态数组</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)stateNamed:"></a>
-                    <a name="//apple_ref/swift/Method/-stateNamed:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)stateNamed:">-stateNamed:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从名称获取状态</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWState.html">FWState</a></span> <span class="o">*</span><span class="p">)</span><span class="nf">stateNamed</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>状态名称</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>状态对象</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)isState:"></a>
-                    <a name="//apple_ref/swift/Method/-isState:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)isState:">-isState:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>当前状态判断</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isState</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">state</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>state</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>状态名称或对象</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>判断结果</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)addEvent:"></a>
-                    <a name="//apple_ref/swift/Method/-addEvent:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)addEvent:">-addEvent:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>添加事件</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWStateEvent.html">FWStateEvent</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>event</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>事件对象</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)addEvents:"></a>
-                    <a name="//apple_ref/swift/Method/-addEvents:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)addEvents:">-addEvents:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>批量添加事件</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addEvents</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n"><a href="../Classes/FWStateEvent.html">FWStateEvent</a></span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">events</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>events</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>事件数组</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)eventNamed:"></a>
-                    <a name="//apple_ref/swift/Method/-eventNamed:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)eventNamed:">-eventNamed:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从名称获取事件</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWStateEvent.html">FWStateEvent</a></span> <span class="o">*</span><span class="p">)</span><span class="nf">eventNamed</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>事件名称</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>事件对象</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)activate"></a>
-                    <a name="//apple_ref/swift/Method/-activate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)activate">-activate</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>激活并锁定状态机</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">activate</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_setViewControllers</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewControllers</span>
+                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Workflow"></a>
+                <a name="//apple_ref/swift/Section/Workflow" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Workflow"></a>
+                  <h3 class="section-name"><span>Workflow</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)isActive"></a>
-                    <a name="//apple_ref/swift/Method/-isActive" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)isActive">-isActive</a>
+                    <a name="/c:objc(cs)UINavigationController(py)fw_topWorkflowName"></a>
+                    <a name="//apple_ref/swift/Property/fw_topWorkflowName" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(py)fw_topWorkflowName">fw_topWorkflowName</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1387,20 +1199,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否已激活</p>
+                        <p>当前最外层工作流名称，即topViewController的工作流名称</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isActive</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_topWorkflowName</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>激活状态</p>
+                        <p>工作流名称</p>
                       </div>
                     </section>
                   </div>
@@ -1408,9 +1220,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)canFireEvent:"></a>
-                    <a name="//apple_ref/swift/Method/-canFireEvent:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)canFireEvent:">-canFireEvent:<wbr></a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popTopWorkflowAnimated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:">-fw_pushViewController:<wbr>popTopWorkflowAnimated:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1418,14 +1230,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>事件是否可触发</p>
+                        <p>push控制器，并清理最外层工作流（不属于工作流则不清理）</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">canFireEvent</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+       <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1436,21 +1254,29 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>event</em>
+                                <em>viewController</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>事件名称或对象</p>
+                                  <p>push的控制器</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>是否可触发</p>
                       </div>
                     </section>
                   </div>
@@ -1458,9 +1284,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)fireEvent:"></a>
-                    <a name="//apple_ref/swift/Method/-fireEvent:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)fireEvent:">-fireEvent:<wbr></a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popTopWorkflowAnimated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:completion:">-fw_pushViewController:<wbr>popTopWorkflowAnimated:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1468,14 +1294,21 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>触发事件</p>
+                        <p>push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fireEvent</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+       <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1486,21 +1319,29 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>event</em>
+                                <em>viewController</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>事件名称或对象</p>
+                                  <p>push的控制器</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>触发状态</p>
                       </div>
                     </section>
                   </div>
@@ -1508,9 +1349,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWStateMachine(im)fireEvent:withObject:"></a>
-                    <a name="//apple_ref/swift/Method/-fireEvent:withObject:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWStateMachine(im)fireEvent:withObject:">-fireEvent:<wbr>withObject:<wbr></a>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popToRootWorkflowAnimated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:">-fw_pushViewController:<wbr>popToRootWorkflowAnimated:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1518,14 +1359,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>触发事件</p>
+                        <p>push控制器，并清理非根控制器（只保留根控制器）</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fireEvent</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">event</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">object</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+    <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1536,33 +1383,481 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>event</em>
+                                <em>viewController</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>事件名称或对象</p>
+                                  <p>push的控制器</p>
                                 </div>
                               </td>
                             </tr>
                             <tr>
                               <td>
                                 <code>
-                                <em>object</em>
+                                <em>animated</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>附加参数</p>
+                                  <p>是否执行动画</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popToRootWorkflowAnimated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:completion:">-fw_pushViewController:<wbr>popToRootWorkflowAnimated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push控制器，并清理非根控制器（只保留根控制器），完成时回调</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+    <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
                       <div>
-                        <h4>Return Value</h4>
-                        <p>触发状态</p>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>push的控制器</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popWorkflows:animated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:">-fw_pushViewController:<wbr>popWorkflows:<wbr>animated:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                 <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
+                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>push的控制器</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>workflows</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定工作流</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popWorkflows:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:completion:">-fw_pushViewController:<wbr>popWorkflows:<wbr>animated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                 <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
+                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>viewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>push的控制器</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>workflows</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定工作流</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popTopWorkflowAnimated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:">-fw_popTopWorkflowAnimated:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popTopWorkflowAnimated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:completion:">-fw_popTopWorkflowAnimated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                       <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popWorkflows:animated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:">-fw_popWorkflows:<wbr>animated:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
+               <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>workflows</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定工作流</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popWorkflows:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:completion:">-fw_popWorkflows:<wbr>animated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
+               <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+             <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>workflows</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定工作流</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>animated</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否执行动画</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>

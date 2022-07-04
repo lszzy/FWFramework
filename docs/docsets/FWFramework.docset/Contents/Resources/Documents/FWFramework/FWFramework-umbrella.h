@@ -12,7 +12,6 @@
 
 #import "FWAutoloader.h"
 #import "FWConfiguration.h"
-#import "FWDebugger.h"
 #import "FWFramework.h"
 #import "FWLoader.h"
 #import "FWLogger.h"
