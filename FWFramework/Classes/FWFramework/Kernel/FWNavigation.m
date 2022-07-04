@@ -67,12 +67,22 @@
 
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [[self fw_topViewController] fw_openViewController:viewController animated:animated];
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [[self fw_topViewController] fw_openViewController:viewController animated:animated completion:completion];
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated];
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated completion:completion];
 }
 
 + (UIWindow *)fw_mainWindow
@@ -135,12 +145,22 @@
 
 + (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [self.fw_mainWindow fw_openViewController:viewController animated:animated];
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
++ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [self.fw_mainWindow fw_openViewController:viewController animated:animated completion:completion];
 }
 
 + (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
-    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated];
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
++ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated completion:completion];
 }
 
 @end
@@ -149,32 +169,100 @@
 
 @implementation UIViewController (FWNavigation)
 
+#pragma mark - Navigation
+
+- (FWNavigationOptions)fw_navigationOptions
+{
+    return [objc_getAssociatedObject(self, @selector(fw_navigationOptions)) unsignedIntegerValue];
+}
+
+- (void)setFw_navigationOptions:(FWNavigationOptions)navigationOptions
+{
+    objc_setAssociatedObject(self, @selector(fw_navigationOptions), @(navigationOptions), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    if (!self.navigationController || [viewController isKindOfClass:[UINavigationController class]]) {
-        [self presentViewController:viewController animated:animated completion:nil];
+    [self fw_openViewController:viewController animated:animated completion:nil];
+}
+
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    FWNavigationOptions options = viewController.fw_navigationOptions;
+    BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
+    if ((options & FWNavigationOptionNavigation) == FWNavigationOptionNavigation) {
+        if (!isNavigation) {
+            viewController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            isNavigation = YES;
+        }
+    }
+    
+    if ((options & FWNavigationOptionFullScreen) == FWNavigationOptionFullScreen) {
+        viewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    } else if ((options & FWNavigationOptionPageSheet) == FWNavigationOptionPageSheet) {
+        viewController.modalPresentationStyle = UIModalPresentationPageSheet;
+    }
+    
+    BOOL isPush = NO;
+    if ((options & FWNavigationOptionPush) == FWNavigationOptionPush) {
+        isPush = YES;
+    } else if ((options & FWNavigationOptionPresent) == FWNavigationOptionPresent) {
+        isPush = NO;
     } else {
-        [self.navigationController pushViewController:viewController animated:animated];
+        isPush = self.navigationController ? YES : NO;
+    }
+    if (isNavigation) isPush = NO;
+    
+    if (isPush) {
+        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+            NSMutableArray *viewControllers = [NSMutableArray arrayWithObjects:self.navigationController.viewControllers.firstObject, nil];
+            [viewControllers addObject:viewController];
+            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
+        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+            NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [viewControllers removeLastObject];
+            [viewControllers addObject:viewController];
+            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
+        } else {
+            [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
+        }
+    } else {
+        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+            __weak UINavigationController *weakNav = self.navigationController;
+            [self presentViewController:viewController animated:animated completion:^{
+                [weakNav popToRootViewControllerAnimated:NO];
+                if (completion) completion();
+            }];
+        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+            __weak UINavigationController *weakNav = self.navigationController;
+            [self presentViewController:viewController animated:animated completion:^{
+                [weakNav popViewControllerAnimated:NO];
+                if (completion) completion();
+            }];
+        } else {
+            [self presentViewController:viewController animated:animated completion:completion];
+        }
     }
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
 {
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (self.navigationController) {
-        if ([self.navigationController popViewControllerAnimated:animated]) return YES;
+        if ([self.navigationController fw_popViewControllerAnimated:animated completion:completion]) return YES;
     }
     if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:animated completion:nil];
+        [self dismissViewControllerAnimated:animated completion:completion];
         return YES;
     }
     return NO;
 }
 
-@end
-
-#pragma mark - UIViewController+FWWorkflow
-
-@implementation UIViewController (FWWorkflow)
+#pragma mark - Workflow
 
 @dynamic fw_workflowName;
 
@@ -197,9 +285,79 @@
 
 @end
 
-#pragma mark - UINavigationController+FWWorkflow
+#pragma mark - UINavigationController+FWNavigation
 
-@implementation UINavigationController (FWWorkflow)
+@implementation UINavigationController (FWNavigation)
+
+#pragma mark - Navigation
+
+- (void)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        [self pushViewController:viewController animated:animated];
+        [CATransaction commit];
+    } else {
+        [self pushViewController:viewController animated:animated];
+    }
+}
+
+- (UIViewController *)fw_popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    UIViewController *viewController;
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewController = [self popViewControllerAnimated:animated];
+        [CATransaction commit];
+    } else {
+        viewController = [self popViewControllerAnimated:animated];
+    }
+    return viewController;
+}
+
+- (NSArray<__kindof UIViewController *> *)fw_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray<UIViewController *> *viewControllers;
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewControllers = [self popToViewController:viewController animated:animated];
+        [CATransaction commit];
+    } else {
+        viewControllers = [self popToViewController:viewController animated:animated];
+    }
+    return viewControllers;
+}
+
+- (NSArray<__kindof UIViewController *> *)fw_popToRootViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray<UIViewController *> *viewControllers;
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        viewControllers = [self popToRootViewControllerAnimated:animated];
+        [CATransaction commit];
+    } else {
+        viewControllers = [self popToRootViewControllerAnimated:animated];
+    }
+    return viewControllers;
+}
+
+- (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+        [CATransaction begin];
+        [self setViewControllers:viewControllers animated:animated];
+        [CATransaction commit];
+    } else {
+        [self setViewControllers:viewControllers animated:animated];
+    }
+}
+
+#pragma mark - Workflow
 
 - (NSString *)fw_topWorkflowName
 {
@@ -208,26 +366,41 @@
 
 - (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated
 {
+    [self fw_pushViewController:viewController popTopWorkflowAnimated:animated completion:nil];
+}
+
+- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
     NSArray *workflows = [NSArray arrayWithObjects:self.fw_topWorkflowName, nil];
     [self fw_pushViewController:viewController popWorkflows:workflows animated:animated];
 }
 
 - (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated
 {
+    [self fw_pushViewController:viewController popToRootWorkflowAnimated:animated completion:nil];
+}
+
+- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (self.viewControllers.count < 2) {
-        [self pushViewController:viewController animated:animated];
+        [self fw_pushViewController:viewController animated:animated completion:completion];
         return;
     }
     
     NSMutableArray *viewControllers = [NSMutableArray arrayWithObject:self.viewControllers.firstObject];
     [viewControllers addObject:viewController];
-    [self setViewControllers:viewControllers animated:animated];
+    [self fw_setViewControllers:viewControllers animated:animated completion:completion];
 }
 
 - (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
 {
+    [self fw_pushViewController:viewController popWorkflows:workflows animated:animated completion:nil];
+}
+
+- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (workflows.count < 1) {
-        [self pushViewController:viewController animated:animated];
+        [self fw_pushViewController:viewController animated:animated completion:completion];
         return;
     }
     
@@ -254,22 +427,32 @@
     }];
     
     if (popControllers.count < 1) {
-        [self pushViewController:viewController animated:animated];
+        [self fw_pushViewController:viewController animated:animated completion:completion];
     } else {
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.viewControllers];
         [viewControllers removeObjectsInArray:popControllers];
         [viewControllers addObject:viewController];
-        [self setViewControllers:viewControllers animated:animated];
+        [self fw_setViewControllers:viewControllers animated:animated completion:completion];
     }
 }
 
 - (void)fw_popTopWorkflowAnimated:(BOOL)animated
+{
+    [self fw_popTopWorkflowAnimated:animated completion:nil];
+}
+
+- (void)fw_popTopWorkflowAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     NSArray *workflows = [NSArray arrayWithObjects:self.fw_topWorkflowName, nil];
     [self fw_popWorkflows:workflows animated:animated];
 }
 
 - (void)fw_popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated
+{
+    [self fw_popWorkflows:workflows animated:animated completion:nil];
+}
+
+- (void)fw_popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (workflows.count < 1) {
         return;
@@ -297,10 +480,10 @@
     }];
     
     if (toController) {
-        [self popToViewController:toController animated:animated];
+        [self fw_popToViewController:toController animated:animated completion:completion];
     } else {
         // 至少保留一个根控制器
-        [self popToRootViewControllerAnimated:animated];
+        [self fw_popToRootViewControllerAnimated:animated completion:completion];
     }
 }
 

@@ -70,6 +70,48 @@
 
 @implementation UIApplication (FWToolkit)
 
++ (NSString *)fw_appName
+{
+    NSString *appName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
+    return [appName isKindOfClass:[NSString class]] ? appName : @"";
+}
+
++ (NSString *)fw_appDisplayName
+{
+    NSString *displayName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    if (![displayName isKindOfClass:[NSString class]]) {
+        displayName = [self fw_appName];
+    }
+    return displayName;
+}
+
++ (NSString *)fw_appVersion
+{
+    NSString *appVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [appVersion isKindOfClass:[NSString class]] ? appVersion : @"";
+}
+
++ (NSString *)fw_appBuildVersion
+{
+    NSString *buildVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+    return [buildVersion isKindOfClass:[NSString class]] ? buildVersion : @"";
+}
+
++ (NSString *)fw_appIdentifier
+{
+    NSString *appIdentifier = [NSBundle.mainBundle objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleIdentifierKey];
+    return [appIdentifier isKindOfClass:[NSString class]] ? appIdentifier : @"";
+}
+
++ (NSString *)fw_appExecutable
+{
+    NSString *appExecutable = [NSBundle.mainBundle objectForInfoDictionaryKey:(__bridge NSString *)kCFBundleExecutableKey];
+    if (![appExecutable isKindOfClass:[NSString class]]) {
+        appExecutable = [self fw_appIdentifier];
+    }
+    return appExecutable;
+}
+
 + (BOOL)fw_canOpenURL:(id)url
 {
     NSURL *nsurl = [self fw_urlWithString:url];
@@ -977,6 +1019,38 @@ static BOOL fwStaticAutoScaleFont = NO;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
+- (void)fw_saveImageWithCompletion:(void (^)(NSError * _Nullable))completion
+{
+    objc_setAssociatedObject(self, @selector(fw_saveImageWithCompletion:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    UIImageWriteToSavedPhotosAlbum(self, self, @selector(fw_innerImage:didFinishSavingWithError:contextInfo:), NULL);
+}
+
++ (void)fw_saveVideo:(NSString *)videoPath withCompletion:(nullable void (^)(NSError * _Nullable))completion
+{
+    objc_setAssociatedObject(self, @selector(fw_saveVideo:withCompletion:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath)) {
+        UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, @selector(fw_innerVideo:didFinishSavingWithError:contextInfo:), NULL);
+    }
+}
+
+- (void)fw_innerImage:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    void (^block)(NSError *error) = objc_getAssociatedObject(self, @selector(fw_saveImageWithCompletion:));
+    objc_setAssociatedObject(self, @selector(fw_saveImageWithCompletion:), nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (block) {
+        block(error);
+    }
+}
+
++ (void)fw_innerVideo:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    void (^block)(NSError *error) = objc_getAssociatedObject(self, @selector(fw_saveVideo:withCompletion:));
+    objc_setAssociatedObject(self, @selector(fw_saveVideo:withCompletion:), nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (block) {
+        block(error);
+    }
 }
 
 @end

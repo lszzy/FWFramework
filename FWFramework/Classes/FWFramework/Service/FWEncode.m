@@ -291,6 +291,15 @@
     return string;
 }
 
+- (NSString *)fw_pinyinString
+{
+    if (self.length == 0) return self;
+    NSMutableString *mutableString = [NSMutableString stringWithString:self];
+    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
+    NSString *pinyinStr = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
+    return [pinyinStr lowercaseString];
+}
+
 - (NSData *)fw_utf8Data
 {
     return [self dataUsingEncoding:NSUTF8StringEncoding];

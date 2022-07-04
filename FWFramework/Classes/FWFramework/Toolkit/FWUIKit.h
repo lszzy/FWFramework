@@ -150,6 +150,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
 - (void)fw_setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing NS_REFINED_FOR_SWIFT;
 
+/// 设置状态背景色
+- (void)fw_setBackgroundColor:(nullable UIColor *)backgroundColor forState:(UIControlState)state NS_REFINED_FOR_SWIFT;
+
 /// 快速创建文本按钮
 + (instancetype)fw_buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
 
@@ -275,6 +278,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
 @property (nullable, nonatomic, copy) void (^fw_autoCompleteBlock)(NSString *text) NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UITableViewCell+FWUIKit
+
+@interface UITableViewCell (FWUIKit)
+
+/// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
+@property (nonatomic, assign) UIEdgeInsets fw_separatorInset NS_REFINED_FOR_SWIFT;
+
+/// 获取当前所属tableView
+@property (nonatomic, weak, readonly, nullable) UITableView *fw_tableView NS_REFINED_FOR_SWIFT;
+
+/// 获取当前显示indexPath
+@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UICollectionViewCell+FWUIKit
+
+@interface UICollectionViewCell (FWUIKit)
+
+/// 获取当前所属collectionView
+@property (nonatomic, weak, readonly, nullable) UICollectionView *fw_collectionView NS_REFINED_FOR_SWIFT;
+
+/// 获取当前显示indexPath
+@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
 
 @end
 

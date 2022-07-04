@@ -787,6 +787,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
+- (void)fw_setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state
+{
+    UIImage *image = nil;
+    if (backgroundColor) {
+        CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetFillColorWithColor(context, [backgroundColor CGColor]);
+        CGContextFillRect(context, rect);
+        
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    
+    [self setBackgroundImage:image forState:state];
+}
+
 + (instancetype)fw_buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
 {
     UIButton *button = [self buttonWithType:UIButtonTypeCustom];
@@ -1308,6 +1326,64 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
+}
+
+@end
+
+#pragma mark - UITableViewCell+FWUIKit
+
+@implementation UITableViewCell (FWUIKit)
+
+- (UIEdgeInsets)fw_separatorInset
+{
+    return self.separatorInset;
+}
+
+- (void)setFw_separatorInset:(UIEdgeInsets)separatorInset
+{
+    self.separatorInset = separatorInset;
+    self.preservesSuperviewLayoutMargins = NO;
+    self.layoutMargins = separatorInset;
+}
+
+- (UITableView *)fw_tableView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UITableView class]]) {
+            return (UITableView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fw_indexPath
+{
+    return [[self fw_tableView] indexPathForCell:self];
+}
+
+@end
+
+#pragma mark - UICollectionViewCell+FWUIKit
+
+@implementation UICollectionViewCell (FWUIKit)
+
+- (UICollectionView *)fw_collectionView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UICollectionView class]]) {
+            return (UICollectionView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fw_indexPath
+{
+    return [[self fw_collectionView] indexPathForCell:self];
 }
 
 @end

@@ -403,7 +403,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Class
 
 /**
- 获取类方法列表，支持meta类(objc_getMetaClass)
+ 获取类方法列表，自动缓存，支持meta类(objc_getMetaClass)
  
  @param clazz 指定类
  @param superclass 是否包含父类，包含则递归到NSObject
@@ -412,7 +412,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass NS_REFINED_FOR_SWIFT;
 
 /**
- 获取类属性列表，支持meta类(objc_getMetaClass)
+ 获取类属性列表，自动缓存，支持meta类(objc_getMetaClass)
  
  @param clazz 指定类
  @param superclass 是否包含父类，包含则递归到NSObject
@@ -421,7 +421,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<NSString *> *)fw_classProperties:(Class)clazz superclass:(BOOL)superclass NS_REFINED_FOR_SWIFT;
 
 /**
- 获取类Ivar列表，支持meta类(objc_getMetaClass)
+ 获取类Ivar列表，自动缓存，支持meta类(objc_getMetaClass)
  
  @param clazz 指定类
  @param superclass 是否包含父类，包含则递归到NSObject

@@ -212,392 +212,392 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 469,
+      "line": 474,
       "symbol": "Wrapper.safeInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 470,
+      "line": 475,
       "symbol": "Wrapper.safeBool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 471,
+      "line": 476,
       "symbol": "Wrapper.safeFloat",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 472,
+      "line": 477,
       "symbol": "Wrapper.safeDouble",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 473,
+      "line": 478,
       "symbol": "Wrapper.safeString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 474,
+      "line": 479,
       "symbol": "Wrapper.safeNumber",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 475,
+      "line": 480,
       "symbol": "Wrapper.safeArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 476,
+      "line": 481,
       "symbol": "Wrapper.safeDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 481,
+      "line": 486,
       "symbol": "Optional.safeInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 482,
+      "line": 487,
       "symbol": "Optional.safeBool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 483,
+      "line": 488,
       "symbol": "Optional.safeFloat",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 484,
+      "line": 489,
       "symbol": "Optional.safeDouble",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 485,
+      "line": 490,
       "symbol": "Optional.safeString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 486,
+      "line": 491,
       "symbol": "Optional.safeNumber",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 487,
+      "line": 492,
       "symbol": "Optional.safeArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 488,
+      "line": 493,
       "symbol": "Optional.safeDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 504,
+      "line": 509,
       "symbol": "SafeType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 505,
+      "line": 510,
       "symbol": "SafeType.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 506,
+      "line": 511,
       "symbol": "SafeType.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 510,
+      "line": 515,
       "symbol": "Optional.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 511,
+      "line": 516,
       "symbol": "Optional.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 512,
+      "line": 517,
       "symbol": "Optional.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 516,
+      "line": 521,
       "symbol": "Int.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 517,
+      "line": 522,
       "symbol": "Int.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 520,
+      "line": 525,
       "symbol": "Int8.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 521,
+      "line": 526,
       "symbol": "Int8.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 524,
+      "line": 529,
       "symbol": "Int16.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 525,
+      "line": 530,
       "symbol": "Int16.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 528,
+      "line": 533,
       "symbol": "Int32.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 529,
+      "line": 534,
       "symbol": "Int32.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 532,
+      "line": 537,
       "symbol": "Int64.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 533,
+      "line": 538,
       "symbol": "Int64.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 536,
+      "line": 541,
       "symbol": "UInt.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 537,
+      "line": 542,
       "symbol": "UInt.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 540,
+      "line": 545,
       "symbol": "UInt8.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 541,
+      "line": 546,
       "symbol": "UInt8.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 544,
+      "line": 549,
       "symbol": "UInt16.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 545,
+      "line": 550,
       "symbol": "UInt16.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 548,
+      "line": 553,
       "symbol": "UInt32.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 549,
+      "line": 554,
       "symbol": "UInt32.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 552,
+      "line": 557,
       "symbol": "UInt64.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 553,
+      "line": 558,
       "symbol": "UInt64.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 556,
+      "line": 561,
       "symbol": "Float.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 557,
+      "line": 562,
       "symbol": "Float.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 560,
+      "line": 565,
       "symbol": "Double.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 561,
+      "line": 566,
       "symbol": "Double.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 564,
+      "line": 569,
       "symbol": "Bool.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 565,
+      "line": 570,
       "symbol": "Bool.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 568,
+      "line": 573,
       "symbol": "URL.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 569,
+      "line": 574,
       "symbol": "URL.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 572,
+      "line": 577,
       "symbol": "Data.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 575,
+      "line": 580,
       "symbol": "String.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 578,
+      "line": 583,
       "symbol": "Array.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 579,
+      "line": 584,
       "symbol": "Array.safeElement(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 584,
+      "line": 589,
       "symbol": "Set.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 587,
+      "line": 592,
       "symbol": "Dictionary.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
@@ -1927,14 +1927,14 @@
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 48,
+      "line": 47,
       "symbol": "FWFrameworkVersionNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework//FWFramework-umbrella.h",
-      "line": 49,
+      "line": 48,
       "symbol": "FWFrameworkVersionString",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
@@ -2746,43 +2746,29 @@
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 59,
+      "line": 72,
       "symbol": "NSTimer(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 126,
+      "line": 139,
       "symbol": "UIGestureRecognizer(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 144,
+      "line": 157,
       "symbol": "UIView(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 162,
+      "line": 175,
       "symbol": "UIControl(FWBlock)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDebugger.h",
-      "line": 26,
-      "symbol": "UIView(FWDebugger)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDebugger.h",
-      "line": 45,
-      "symbol": "UILabel(FWDebugger)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
@@ -2907,63 +2893,63 @@
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 200,
+      "line": 205,
       "symbol": "NSData(FWEncode)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 248,
+      "line": 253,
       "symbol": "NSURL(FWEncode)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 292,
+      "line": 297,
       "symbol": "NSObject(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 396,
+      "line": 401,
       "symbol": "NSString(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 426,
+      "line": 431,
       "symbol": "NSArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 448,
+      "line": 453,
       "symbol": "NSMutableArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 499,
+      "line": 504,
       "symbol": "NSMutableSet(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 519,
+      "line": 524,
       "symbol": "NSDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 533,
+      "line": 538,
       "symbol": "NSMutableDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -2977,42 +2963,42 @@
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 60,
+      "line": 66,
       "symbol": "NSData(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 78,
+      "line": 84,
       "symbol": "NSDate(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 111,
+      "line": 117,
       "symbol": "NSDictionary(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 126,
+      "line": 132,
       "symbol": "NSObject(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 138,
+      "line": 144,
       "symbol": "NSString(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 159,
+      "line": 165,
       "symbol": "NSUserDefaults(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -3153,28 +3139,77 @@
     {
       "file": "docs/FWFramework/FWNavigation.h",
       "line": 16,
+      "symbol": "FWNavigationOptions.FWNavigationOptionAutomatic",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 17,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPush",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 18,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPresent",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 20,
+      "symbol": "FWNavigationOptions.FWNavigationOptionNavigation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 22,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 23,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopToRoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 25,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPageSheet",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 26,
+      "symbol": "FWNavigationOptions.FWNavigationOptionFullScreen",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 31,
       "symbol": "UIWindow(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 70,
+      "line": 97,
       "symbol": "UIViewController(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 82,
-      "symbol": "UIViewController(FWWorkflow)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 91,
-      "symbol": "UINavigationController(FWWorkflow)",
+      "line": 125,
+      "symbol": "UINavigationController(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
@@ -3201,7 +3236,7 @@
     },
     {
       "file": "docs/FWFramework/FWRouter.h",
-      "line": 40,
+      "line": 47,
       "symbol": "FWRouterContext.isOpening",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
@@ -3229,35 +3264,42 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 102,
+      "line": 120,
       "symbol": "UIColor(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 164,
+      "line": 182,
       "symbol": "UIFont(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 192,
+      "line": 210,
       "symbol": "UIImage(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 285,
+      "line": 303,
+      "symbol": "UIImage(FWToolkit).+fw_saveVideo:withCompletion:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWToolkit.h",
+      "line": 309,
       "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 343,
+      "line": 367,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -3292,49 +3334,63 @@
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 163,
+      "line": 166,
       "symbol": "UIScrollView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 199,
+      "line": 202,
       "symbol": "UIPageControl(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 208,
+      "line": 211,
       "symbol": "UISlider(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 220,
+      "line": 223,
       "symbol": "UISwitch(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 229,
+      "line": 232,
       "symbol": "UITextField(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 256,
+      "line": 259,
       "symbol": "UITextView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 283,
+      "line": 286,
+      "symbol": "UITableViewCell(FWUIKit)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWUIKit.h",
+      "line": 301,
+      "symbol": "UICollectionViewCell(FWUIKit)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWUIKit.h",
+      "line": 313,
       "symbol": "UIViewController(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
