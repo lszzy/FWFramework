@@ -227,6 +227,11 @@ extension Wrapper where Base: UIButton {
         base.__fw_setImageEdge(edge, spacing: spacing)
     }
     
+    /// 设置状态背景色
+    public func setBackgroundColor(_ backgroundColor: UIColor?, for state: UIControl.State) {
+        base.__fw_setBackgroundColor(backgroundColor, for: state)
+    }
+    
     /// 快速创建文本按钮
     public static func button(title: String?, font: UIFont?, titleColor: UIColor?) -> Base {
         return Base.__fw_button(withTitle: title, font: font, titleColor: titleColor)

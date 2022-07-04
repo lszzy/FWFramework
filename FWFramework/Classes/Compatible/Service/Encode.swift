@@ -294,6 +294,11 @@ extension Wrapper where Base == String {
         return result
     }
     
+    /// 中文转拼音
+    public var pinyinString: String {
+        return (base as NSString).__fw_pinyin
+    }
+    
     /// 是否包含Emoji表情
     public var containsEmoji: Bool {
         for scalar in base.unicodeScalars {
