@@ -70,6 +70,36 @@ extension FW {
 /// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
 extension Wrapper where Base: UIApplication {
     
+    /// 读取应用名称
+    public static var appName: String {
+        return Base.__fw_appName
+    }
+
+    /// 读取应用显示名称，未配置时读取名称
+    public static var appDisplayName: String {
+        return Base.__fw_appDisplayName
+    }
+
+    /// 读取应用主版本号，示例：1.0.0
+    public static var appVersion: String {
+        return Base.__fw_appVersion
+    }
+
+    /// 读取应用构建版本号，示例：1.0.0.1
+    public static var appBuildVersion: String {
+        return Base.__fw_appBuildVersion
+    }
+
+    /// 读取应用唯一标识
+    public static var appIdentifier: String {
+        return Base.__fw_appIdentifier
+    }
+    
+    /// 读取应用可执行程序名称
+    public static var appExecutable: String {
+        return Base.__fw_appExecutable
+    }
+    
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
     public static func canOpenURL(_ url: Any) -> Bool {
         return Base.__fw_canOpenURL(url)
@@ -406,6 +436,16 @@ extension Wrapper where Base: UIImage {
     /// 从block创建UIImage，指定尺寸
     public static func image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
         return Base.__fw_image(with: size, block: block)
+    }
+    
+    /// 保存图片到相册，保存成功时error为nil
+    public func saveImage(completion: ((Error?) -> Void)? = nil) {
+        base.__fw_saveImage(completion: completion)
+    }
+    
+    /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
+    public static func saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
+        Base.__fw_saveVideo(videoPath, withCompletion: completion)
     }
     
 }

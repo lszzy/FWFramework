@@ -1330,6 +1330,64 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
+#pragma mark - UITableViewCell+FWUIKit
+
+@implementation UITableViewCell (FWUIKit)
+
+- (UIEdgeInsets)fw_separatorInset
+{
+    return self.separatorInset;
+}
+
+- (void)setFw_separatorInset:(UIEdgeInsets)separatorInset
+{
+    self.separatorInset = separatorInset;
+    self.preservesSuperviewLayoutMargins = NO;
+    self.layoutMargins = separatorInset;
+}
+
+- (UITableView *)fw_tableView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UITableView class]]) {
+            return (UITableView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fw_indexPath
+{
+    return [[self fw_tableView] indexPathForCell:self];
+}
+
+@end
+
+#pragma mark - UICollectionViewCell+FWUIKit
+
+@implementation UICollectionViewCell (FWUIKit)
+
+- (UICollectionView *)fw_collectionView
+{
+    UIView *superview = self.superview;
+    while (superview) {
+        if ([superview isKindOfClass:[UICollectionView class]]) {
+            return (UICollectionView *)superview;
+        }
+        superview = superview.superview;
+    }
+    return nil;
+}
+
+- (NSIndexPath *)fw_indexPath
+{
+    return [[self fw_collectionView] indexPathForCell:self];
+}
+
+@end
+
 #pragma mark - UIViewController+FWUIKit
 
 @implementation UIViewController (FWUIKit)
