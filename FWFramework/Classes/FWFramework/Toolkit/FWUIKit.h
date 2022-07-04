@@ -150,6 +150,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
 - (void)fw_setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing NS_REFINED_FOR_SWIFT;
 
+/// 设置状态背景色
+- (void)fw_setBackgroundColor:(nullable UIColor *)backgroundColor forState:(UIControlState)state NS_REFINED_FOR_SWIFT;
+
 /// 快速创建文本按钮
 + (instancetype)fw_buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
 

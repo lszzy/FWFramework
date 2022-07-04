@@ -120,6 +120,19 @@
     return attributedString;
 }
 
++ (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font
+{
+    return [self fw_attributedString:string withFont:font textColor:nil];
+}
+
++ (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor
+{
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    if (font) attr[NSFontAttributeName] = font;
+    if (textColor) attr[NSForegroundColorAttributeName] = textColor;
+    return [[self alloc] initWithString:string attributes:attr];
+}
+
 @end
 
 #pragma mark - NSData+FWFoundation

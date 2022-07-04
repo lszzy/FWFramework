@@ -787,6 +787,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
+- (void)fw_setBackgroundColor:(UIColor *)backgroundColor forState:(UIControlState)state
+{
+    UIImage *image = nil;
+    if (backgroundColor) {
+        CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetFillColorWithColor(context, [backgroundColor CGColor]);
+        CGContextFillRect(context, rect);
+        
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    
+    [self setBackgroundImage:image forState:state];
+}
+
 + (instancetype)fw_buttonWithTitle:(NSString *)title font:(UIFont *)font titleColor:(UIColor *)titleColor
 {
     UIButton *button = [self buttonWithType:UIButtonTypeCustom];
