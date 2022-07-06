@@ -4,7 +4,7 @@
 
 ### Added
 * 快捷打开URL方法新增完成回调
-* 路由userInfo支持自定义routeHandler
+* 路由userInfo支持自定义routerHandler
 
 ## [3.5.0] - 2022-07-04
 
