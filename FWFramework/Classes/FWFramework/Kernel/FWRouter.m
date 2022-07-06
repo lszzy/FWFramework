@@ -13,8 +13,9 @@
 #import "FWNavigation.h"
 #import <objc/runtime.h>
 
-FWRouterUserInfoKey const FWRouterSourceKey = @"source";
-FWRouterUserInfoKey const FWRouterNavigationOptionsKey = @"navigationOptions";
+FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
+FWRouterUserInfoKey const FWRouterOptionsKey = @"routerOptions";
+FWRouterUserInfoKey const FWRouterHandlerKey = @"routerHandler";
 
 #pragma mark - FWRouterContext
 
@@ -306,9 +307,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         if (![object isKindOfClass:[UIViewController class]]) return object;
         
         UIViewController *viewController = (UIViewController *)object;
-        NSNumber *navigationOptions = context.userInfo[FWRouterNavigationOptionsKey];
-        if (navigationOptions && [navigationOptions isKindOfClass:[NSNumber class]]) {
-            viewController.fw_navigationOptions = [navigationOptions unsignedIntegerValue];
+        NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
+        if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
+            viewController.fw_navigationOptions = [routerOptions unsignedIntegerValue];
         }
         if (!context.isOpening) return object;
         
@@ -366,9 +367,11 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (handler) {
         id object = handler(context);
-        if (object && [self sharedInstance].routeHandler) {
-            [self sharedInstance].routeHandler(context, object);
-        }
+        if (!object) return;
+        
+        id (^routeHandler)(FWRouterContext *context, id object) = context.userInfo[FWRouterHandlerKey];
+        if (!routeHandler) routeHandler = [self sharedInstance].routeHandler;
+        if (routeHandler) routeHandler(context, object);
         return;
     }
     if ([self sharedInstance].errorHandler) {
@@ -408,9 +411,11 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (handler) {
         id object = handler(context);
-        if (object && [self sharedInstance].routeHandler) {
-            return [self sharedInstance].routeHandler(context, object);
-        }
+        if (!object) return object;
+        
+        id (^routeHandler)(FWRouterContext *context, id object) = context.userInfo[FWRouterHandlerKey];
+        if (!routeHandler) routeHandler = [self sharedInstance].routeHandler;
+        if (routeHandler) return routeHandler(context, object);
         return object;
     }
     if ([self sharedInstance].errorHandler) {

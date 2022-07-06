@@ -12,8 +12,18 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 控制器导航选项定义
+///
+/// @const FWNavigationOptionPush 使用push方式打开
+/// @const FWNavigationOptionPresent 使用present方式打开
+///
+/// @const FWNavigationOptionNavigation 附加导航控制器并使用present方式打开
+///
+/// @const FWNavigationOptionPopTop 同时pop顶部控制器
+/// @const FWNavigationOptionPopToRoot 使用pop到根控制器
+///
+/// @const FWNavigationOptionPageSheet 指定present样式为pageSheet
+/// @const FWNavigationOptionFullScreen 指定present样式为ullScreen
 typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
-    FWNavigationOptionAutomatic  = 0,
     FWNavigationOptionPush       = 1 << 0,
     FWNavigationOptionPresent    = 1 << 1,
     
@@ -98,7 +108,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 
 #pragma mark - Navigation
 
-/// 自定义open|close导航样式，默认automatic自动判断
+/// 自定义open|close导航选项，默认自动判断
 @property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;
 
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
