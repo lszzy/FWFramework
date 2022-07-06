@@ -13,8 +13,9 @@
 #import "FWNavigation.h"
 #import <objc/runtime.h>
 
-FWRouterUserInfoKey const FWRouterSourceKey = @"source";
-FWRouterUserInfoKey const FWRouterNavigationOptionsKey = @"navigationOptions";
+FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
+FWRouterUserInfoKey const FWRouterOptionsKey = @"routerOptions";
+FWRouterUserInfoKey const FWRouterHandlerKey = @"routerHandler";
 
 #pragma mark - FWRouterContext
 
@@ -306,13 +307,18 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         if (![object isKindOfClass:[UIViewController class]]) return object;
         
         UIViewController *viewController = (UIViewController *)object;
-        NSNumber *navigationOptions = context.userInfo[FWRouterNavigationOptionsKey];
-        if (navigationOptions && [navigationOptions isKindOfClass:[NSNumber class]]) {
-            viewController.fw_navigationOptions = [navigationOptions unsignedIntegerValue];
+        NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
+        if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
+            viewController.fw_navigationOptions = [routerOptions unsignedIntegerValue];
         }
         if (!context.isOpening) return object;
         
-        [FWRouter openViewController:(UIViewController *)object animated:YES];
+        void (^routerHandler)(FWRouterContext *context, UIViewController *viewController) = context.userInfo[FWRouterHandlerKey];
+        if (routerHandler != nil) {
+            routerHandler(context, viewController);
+        } else {
+            [FWRouter openViewController:viewController animated:YES];
+        }
         return nil;
     };
 }

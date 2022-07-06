@@ -61,25 +61,25 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)fw_isAppStoreURL:(id)url NS_REFINED_FOR_SWIFT;
 
 /// 打开AppStore下载页
-+ (void)fw_openAppStore:(NSString *)appId NS_REFINED_FOR_SWIFT;
++ (void)fw_openAppStore:(NSString *)appId completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开AppStore评价页
-+ (void)fw_openAppStoreReview:(NSString *)appId NS_REFINED_FOR_SWIFT;
++ (void)fw_openAppStoreReview:(NSString *)appId completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开应用内评价，有次数限制
 + (void)fw_openAppReview NS_REFINED_FOR_SWIFT;
 
 /// 打开系统应用设置页
-+ (void)fw_openAppSettings NS_REFINED_FOR_SWIFT;
++ (void)fw_openAppSettings:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开系统邮件App
-+ (void)fw_openMailApp:(NSString *)email NS_REFINED_FOR_SWIFT;
++ (void)fw_openMailApp:(NSString *)email completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开系统短信App
-+ (void)fw_openMessageApp:(NSString *)phone NS_REFINED_FOR_SWIFT;
++ (void)fw_openMessageApp:(NSString *)phone completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开系统电话App
-+ (void)fw_openPhoneApp:(NSString *)phone NS_REFINED_FOR_SWIFT;
++ (void)fw_openPhoneApp:(NSString *)phone completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开系统分享
 + (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes NS_REFINED_FOR_SWIFT;

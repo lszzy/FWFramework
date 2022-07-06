@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.0 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -421,7 +421,10 @@
                 <a href="../Constants.html#/c:FWMediator.h@FWModulePriorityLow">FWModulePriorityLow</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Constants.html#/c:@FWRouterNavigationOptionsKey">FWRouterNavigationOptionsKey</a>
+                <a href="../Constants.html#/c:@FWRouterHandlerKey">FWRouterHandlerKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWRouterOptionsKey">FWRouterOptionsKey</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Constants.html#/c:@FWRouterSourceKey">FWRouterSourceKey</a>
@@ -3917,7 +3920,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义open|close导航样式，默认automatic自动判断</p>
+                        <p>自定义open|close导航选项，默认自动判断</p>
 
                       </div>
                       <div class="declaration">
@@ -22738,9 +22741,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStoreyySSFZ"></a>
-                    <a name="//apple_ref/swift/Method/openAppStore(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStoreyySSFZ">openAppStore(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStore_17completionHandlerySS_ySbcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppStore(_:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStore_17completionHandlerySS_ySbcSgtFZ">openAppStore(_:<wbr>completionHandler:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22755,7 +22758,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStore</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStore</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -22765,9 +22768,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReviewyySSFZ"></a>
-                    <a name="//apple_ref/swift/Method/openAppStoreReview(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReviewyySSFZ">openAppStoreReview(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReview_17completionHandlerySS_ySbcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppStoreReview(_:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReview_17completionHandlerySS_ySbcSgtFZ">openAppStoreReview(_:<wbr>completionHandler:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22782,7 +22785,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStoreReview</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStoreReview</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -22819,9 +22822,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsyyFZ"></a>
-                    <a name="//apple_ref/swift/Method/openAppSettings()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsyyFZ">openAppSettings()</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsyyySbcSgFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppSettings(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsyyySbcSgFZ">openAppSettings(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22836,7 +22839,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppSettings</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppSettings</span><span class="p">(</span><span class="n">_</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -22846,9 +22849,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailAppyySSFZ"></a>
-                    <a name="//apple_ref/swift/Method/openMailApp(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailAppyySSFZ">openMailApp(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailApp_17completionHandlerySS_ySbcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/openMailApp(_:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailApp_17completionHandlerySS_ySbcSgtFZ">openMailApp(_:<wbr>completionHandler:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22863,7 +22866,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMailApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMailApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -22873,9 +22876,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageAppyySSFZ"></a>
-                    <a name="//apple_ref/swift/Method/openMessageApp(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageAppyySSFZ">openMessageApp(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageApp_17completionHandlerySS_ySbcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/openMessageApp(_:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageApp_17completionHandlerySS_ySbcSgtFZ">openMessageApp(_:<wbr>completionHandler:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22890,7 +22893,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMessageApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMessageApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -22900,9 +22903,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneAppyySSFZ"></a>
-                    <a name="//apple_ref/swift/Method/openPhoneApp(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneAppyySSFZ">openPhoneApp(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneApp_17completionHandlerySS_ySbcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/openPhoneApp(_:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneApp_17completionHandlerySS_ySbcSgtFZ">openPhoneApp(_:<wbr>completionHandler:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22917,7 +22920,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openPhoneApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openPhoneApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -27311,7 +27314,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-04)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
