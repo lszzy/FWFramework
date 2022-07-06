@@ -20180,16 +20180,16 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 32,
-          "key.doc.comment" : "控制器导航选项定义",
+          "key.doc.comment" : "控制器导航选项定义\n\n@const FWNavigationOptionPush 使用push方式打开\n@const FWNavigationOptionPresent 使用present方式打开\n\n@const FWNavigationOptionNavigation 附加导航控制器并使用present方式打开\n\n@const FWNavigationOptionPopTop 同时pop顶部控制器\n@const FWNavigationOptionPopToRoot 使用pop到根控制器\n\n@const FWNavigationOptionPageSheet 指定present样式为pageSheet\n@const FWNavigationOptionFullScreen 指定present样式为ullScreen",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 15,
+          "key.doc.line" : 26,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.typedef",
           "key.name" : "FWNavigationOptions",
           "key.parsed_declaration" : "typedef enum FWNavigationOptions FWNavigationOptions",
-          "key.parsed_scope.end" : 15,
-          "key.parsed_scope.start" : 15,
+          "key.parsed_scope.end" : 26,
+          "key.parsed_scope.start" : 26,
           "key.unavailable_message" : "",
           "key.usr" : "c:FWNavigation.h@T@FWNavigationOptions"
         },
@@ -20198,16 +20198,16 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 32,
-          "key.doc.comment" : "控制器导航选项定义",
+          "key.doc.comment" : "控制器导航选项定义\n\n@const FWNavigationOptionPush 使用push方式打开\n@const FWNavigationOptionPresent 使用present方式打开\n\n@const FWNavigationOptionNavigation 附加导航控制器并使用present方式打开\n\n@const FWNavigationOptionPopTop 同时pop顶部控制器\n@const FWNavigationOptionPopToRoot 使用pop到根控制器\n\n@const FWNavigationOptionPageSheet 指定present样式为pageSheet\n@const FWNavigationOptionFullScreen 指定present样式为ullScreen",
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 15,
+          "key.doc.line" : 26,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.enum",
           "key.name" : "FWNavigationOptions",
           "key.parsed_declaration" : "enum FWNavigationOptions : NSUInteger {}",
-          "key.parsed_scope.end" : 27,
-          "key.parsed_scope.start" : 15,
+          "key.parsed_scope.end" : 37,
+          "key.parsed_scope.start" : 26,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -20215,29 +20215,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 16,
-              "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
-              "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
-              "key.name" : "FWNavigationOptionAutomatic",
-              "key.parsed_declaration" : "FWNavigationOptionAutomatic  = 0",
-              "key.parsed_scope.end" : 16,
-              "key.parsed_scope.start" : 16,
-              "key.unavailable_message" : "",
-              "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionAutomatic"
-            },
-            {
-              "key.always_deprecated" : false,
-              "key.always_unavailable" : false,
-              "key.deprecation_message" : "",
-              "key.doc.column" : 5,
-              "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 17,
+              "key.doc.line" : 27,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionPush",
               "key.parsed_declaration" : "FWNavigationOptionPush       = 1 << 0",
-              "key.parsed_scope.end" : 17,
-              "key.parsed_scope.start" : 17,
+              "key.parsed_scope.end" : 27,
+              "key.parsed_scope.start" : 27,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionPush"
             },
@@ -20247,13 +20231,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 18,
+              "key.doc.line" : 28,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionPresent",
               "key.parsed_declaration" : "FWNavigationOptionPresent    = 1 << 1",
-              "key.parsed_scope.end" : 18,
-              "key.parsed_scope.start" : 18,
+              "key.parsed_scope.end" : 28,
+              "key.parsed_scope.start" : 28,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionPresent"
             },
@@ -20263,13 +20247,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 20,
+              "key.doc.line" : 30,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionNavigation",
               "key.parsed_declaration" : "FWNavigationOptionNavigation = 1 << 2",
-              "key.parsed_scope.end" : 20,
-              "key.parsed_scope.start" : 20,
+              "key.parsed_scope.end" : 30,
+              "key.parsed_scope.start" : 30,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionNavigation"
             },
@@ -20279,13 +20263,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 22,
+              "key.doc.line" : 32,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionPopTop",
               "key.parsed_declaration" : "FWNavigationOptionPopTop     = 1 << 3",
-              "key.parsed_scope.end" : 22,
-              "key.parsed_scope.start" : 22,
+              "key.parsed_scope.end" : 32,
+              "key.parsed_scope.start" : 32,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionPopTop"
             },
@@ -20295,13 +20279,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 23,
+              "key.doc.line" : 33,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionPopToRoot",
               "key.parsed_declaration" : "FWNavigationOptionPopToRoot  = 1 << 4",
-              "key.parsed_scope.end" : 23,
-              "key.parsed_scope.start" : 23,
+              "key.parsed_scope.end" : 33,
+              "key.parsed_scope.start" : 33,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionPopToRoot"
             },
@@ -20311,13 +20295,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 25,
+              "key.doc.line" : 35,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionPageSheet",
               "key.parsed_declaration" : "FWNavigationOptionPageSheet  = 1 << 5",
-              "key.parsed_scope.end" : 25,
-              "key.parsed_scope.start" : 25,
+              "key.parsed_scope.end" : 35,
+              "key.parsed_scope.start" : 35,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionPageSheet"
             },
@@ -20327,13 +20311,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 5,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 26,
+              "key.doc.line" : 36,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.enumcase",
               "key.name" : "FWNavigationOptionFullScreen",
               "key.parsed_declaration" : "FWNavigationOptionFullScreen = 1 << 6",
-              "key.parsed_scope.end" : 26,
-              "key.parsed_scope.start" : 26,
+              "key.parsed_scope.end" : 36,
+              "key.parsed_scope.start" : 36,
               "key.unavailable_message" : "",
               "key.usr" : "c:@E@FWNavigationOptions@FWNavigationOptionFullScreen"
             }
@@ -20344,12 +20328,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 29,
+          "key.doc.line" : 39,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIWindow+FWNavigation",
-          "key.parsed_scope.end" : 29,
-          "key.parsed_scope.start" : 29
+          "key.parsed_scope.end" : 39,
+          "key.parsed_scope.start" : 39
         },
         {
           "key.always_deprecated" : false,
@@ -20357,13 +20341,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 31,
+          "key.doc.line" : 41,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIWindow(FWNavigation)",
           "key.parsed_declaration" : "@interface UIWindow (FWNavigation)\n\n\/\/\/ 获取最顶部的视图控制器\n@property (nonatomic, readonly, nullable) UIViewController *fw_topViewController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil\n@property (nonatomic, readonly, nullable) UINavigationController *fw_topNavigationController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取最顶部的显示控制器\n@property (nonatomic, readonly, nullable) UIViewController *fw_topPresentedController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的导航栏控制器打开控制器\n- (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)\n- (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的视图控制器打开控制器，自动判断push|present\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取当前主window\n@property (class, nonatomic, readonly, nullable) UIWindow *fw_mainWindow NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取当前主场景\n@property (class, nonatomic, readonly, nullable) UIWindowScene *fw_mainScene API_AVAILABLE(ios(13.0)) NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取最顶部的视图控制器\n@property (class, nonatomic, readonly, nullable) UIViewController *fw_topViewController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil\n@property (class, nonatomic, readonly, nullable) UINavigationController *fw_topNavigationController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取最顶部的显示控制器\n@property (class, nonatomic, readonly, nullable) UIViewController *fw_topPresentedController NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的导航栏控制器打开控制器\n+ (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)\n+ (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的视图控制器打开控制器，自动判断push|present\n+ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调\n+ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功\n+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调\n+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 93,
-          "key.parsed_scope.start" : 31,
+          "key.parsed_scope.end" : 103,
+          "key.parsed_scope.start" : 41,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -20373,13 +20357,13 @@
               "key.doc.comment" : "获取最顶部的视图控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 34,
+              "key.doc.line" : 44,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topViewController",
               "key.parsed_declaration" : "@property (nonatomic, readonly, nullable) UIViewController *fw_topViewController;",
-              "key.parsed_scope.end" : 34,
-              "key.parsed_scope.start" : 34,
+              "key.parsed_scope.end" : 44,
+              "key.parsed_scope.start" : 44,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(py)fw_topViewController"
             },
@@ -20391,13 +20375,13 @@
               "key.doc.comment" : "获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 37,
+              "key.doc.line" : 47,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topNavigationController",
               "key.parsed_declaration" : "@property (nonatomic, readonly, nullable)\n    UINavigationController *fw_topNavigationController;",
-              "key.parsed_scope.end" : 37,
-              "key.parsed_scope.start" : 37,
+              "key.parsed_scope.end" : 47,
+              "key.parsed_scope.start" : 47,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(py)fw_topNavigationController"
             },
@@ -20409,13 +20393,13 @@
               "key.doc.comment" : "获取最顶部的显示控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 40,
+              "key.doc.line" : 50,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topPresentedController",
               "key.parsed_declaration" : "@property (nonatomic, readonly, nullable)\n    UIViewController *fw_topPresentedController;",
-              "key.parsed_scope.end" : 40,
-              "key.parsed_scope.start" : 40,
+              "key.parsed_scope.end" : 50,
+              "key.parsed_scope.start" : 50,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(py)fw_topPresentedController"
             },
@@ -20427,13 +20411,13 @@
               "key.doc.comment" : "使用最顶部的导航栏控制器打开控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 43,
+              "key.doc.line" : 53,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:animated:",
               "key.parsed_declaration" : "- (BOOL)fw_pushViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 43,
-              "key.parsed_scope.start" : 43,
+              "key.parsed_scope.end" : 53,
+              "key.parsed_scope.start" : 53,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_pushViewController:animated:"
             },
@@ -20445,13 +20429,13 @@
               "key.doc.comment" : "使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 46,
+              "key.doc.line" : 56,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_presentViewController:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_presentViewController:(nonnull UIViewController *)viewController\n                        animated:(BOOL)animated\n                      completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 46,
-              "key.parsed_scope.start" : 46,
+              "key.parsed_scope.end" : 56,
+              "key.parsed_scope.start" : 56,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_presentViewController:animated:completion:"
             },
@@ -20463,13 +20447,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 49,
+              "key.doc.line" : 59,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_openViewController:animated:",
               "key.parsed_declaration" : "- (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 49,
-              "key.parsed_scope.start" : 49,
+              "key.parsed_scope.end" : 59,
+              "key.parsed_scope.start" : 59,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_openViewController:animated:"
             },
@@ -20481,13 +20465,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 52,
+              "key.doc.line" : 62,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_openViewController:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 52,
-              "key.parsed_scope.start" : 52,
+              "key.parsed_scope.end" : 62,
+              "key.parsed_scope.start" : 62,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_openViewController:animated:completion:"
             },
@@ -20499,13 +20483,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 55,
+              "key.doc.line" : 65,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_closeViewControllerAnimated:",
               "key.parsed_declaration" : "- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 55,
-              "key.parsed_scope.start" : 55,
+              "key.parsed_scope.end" : 65,
+              "key.parsed_scope.start" : 65,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_closeViewControllerAnimated:"
             },
@@ -20517,13 +20501,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 58,
+              "key.doc.line" : 68,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_closeViewControllerAnimated:completion:",
               "key.parsed_declaration" : "- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated\n                            completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 58,
-              "key.parsed_scope.start" : 58,
+              "key.parsed_scope.end" : 68,
+              "key.parsed_scope.start" : 68,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(im)fw_closeViewControllerAnimated:completion:"
             },
@@ -20535,13 +20519,13 @@
               "key.doc.comment" : "获取当前主window",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 61,
+              "key.doc.line" : 71,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_mainWindow",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly, nullable) UIWindow *fw_mainWindow;",
-              "key.parsed_scope.end" : 61,
-              "key.parsed_scope.start" : 61,
+              "key.parsed_scope.end" : 71,
+              "key.parsed_scope.start" : 71,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cpy)fw_mainWindow"
             },
@@ -20553,13 +20537,13 @@
               "key.doc.comment" : "获取当前主场景",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 64,
+              "key.doc.line" : 74,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_mainScene",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly, nullable) UIWindowScene *fw_mainScene;",
-              "key.parsed_scope.end" : 64,
-              "key.parsed_scope.start" : 64,
+              "key.parsed_scope.end" : 74,
+              "key.parsed_scope.start" : 74,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cpy)fw_mainScene"
             },
@@ -20571,13 +20555,13 @@
               "key.doc.comment" : "获取最顶部的视图控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 67,
+              "key.doc.line" : 77,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topViewController",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly, nullable)\n    UIViewController *fw_topViewController;",
-              "key.parsed_scope.end" : 67,
-              "key.parsed_scope.start" : 67,
+              "key.parsed_scope.end" : 77,
+              "key.parsed_scope.start" : 77,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cpy)fw_topViewController"
             },
@@ -20589,13 +20573,13 @@
               "key.doc.comment" : "获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 70,
+              "key.doc.line" : 80,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topNavigationController",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly, nullable)\n    UINavigationController *fw_topNavigationController;",
-              "key.parsed_scope.end" : 70,
-              "key.parsed_scope.start" : 70,
+              "key.parsed_scope.end" : 80,
+              "key.parsed_scope.start" : 80,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cpy)fw_topNavigationController"
             },
@@ -20607,13 +20591,13 @@
               "key.doc.comment" : "获取最顶部的显示控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 73,
+              "key.doc.line" : 83,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topPresentedController",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly, nullable)\n    UIViewController *fw_topPresentedController;",
-              "key.parsed_scope.end" : 73,
-              "key.parsed_scope.start" : 73,
+              "key.parsed_scope.end" : 83,
+              "key.parsed_scope.start" : 83,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cpy)fw_topPresentedController"
             },
@@ -20625,13 +20609,13 @@
               "key.doc.comment" : "使用最顶部的导航栏控制器打开控制器",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 76,
+              "key.doc.line" : 86,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_pushViewController:animated:",
               "key.parsed_declaration" : "+ (BOOL)fw_pushViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 76,
-              "key.parsed_scope.start" : 76,
+              "key.parsed_scope.end" : 86,
+              "key.parsed_scope.start" : 86,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_pushViewController:animated:"
             },
@@ -20643,13 +20627,13 @@
               "key.doc.comment" : "使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 79,
+              "key.doc.line" : 89,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_presentViewController:animated:completion:",
               "key.parsed_declaration" : "+ (void)fw_presentViewController:(nonnull UIViewController *)viewController\n                        animated:(BOOL)animated\n                      completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 79,
-              "key.parsed_scope.start" : 79,
+              "key.parsed_scope.end" : 89,
+              "key.parsed_scope.start" : 89,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_presentViewController:animated:completion:"
             },
@@ -20661,13 +20645,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 82,
+              "key.doc.line" : 92,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_openViewController:animated:",
               "key.parsed_declaration" : "+ (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 82,
-              "key.parsed_scope.start" : 82,
+              "key.parsed_scope.end" : 92,
+              "key.parsed_scope.start" : 92,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_openViewController:animated:"
             },
@@ -20679,13 +20663,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 85,
+              "key.doc.line" : 95,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_openViewController:animated:completion:",
               "key.parsed_declaration" : "+ (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 85,
-              "key.parsed_scope.start" : 85,
+              "key.parsed_scope.end" : 95,
+              "key.parsed_scope.start" : 95,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_openViewController:animated:completion:"
             },
@@ -20697,13 +20681,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 88,
+              "key.doc.line" : 98,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_closeViewControllerAnimated:",
               "key.parsed_declaration" : "+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 88,
-              "key.parsed_scope.start" : 88,
+              "key.parsed_scope.end" : 98,
+              "key.parsed_scope.start" : 98,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_closeViewControllerAnimated:"
             },
@@ -20715,13 +20699,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 91,
+              "key.doc.line" : 101,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+fw_closeViewControllerAnimated:completion:",
               "key.parsed_declaration" : "+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated\n                            completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 91,
-              "key.parsed_scope.start" : 91,
+              "key.parsed_scope.end" : 101,
+              "key.parsed_scope.start" : 101,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIWindow(cm)fw_closeViewControllerAnimated:completion:"
             }
@@ -20732,12 +20716,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 95,
+          "key.doc.line" : 105,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UIViewController+FWNavigation",
-          "key.parsed_scope.end" : 95,
-          "key.parsed_scope.start" : 95
+          "key.parsed_scope.end" : 105,
+          "key.parsed_scope.start" : 105
         },
         {
           "key.always_deprecated" : false,
@@ -20745,39 +20729,39 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 97,
+          "key.doc.line" : 107,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIViewController(FWNavigation)",
-          "key.parsed_declaration" : "@interface UIViewController (FWNavigation)\n\n#pragma mark - Navigation\n\n\/\/\/ 自定义open|close导航样式，默认automatic自动判断\n@property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n#pragma mark - Workflow\n\n\/** 自定义工作流名称，支持二级(\".\"分隔)；默认返回小写类名(去掉ViewController、Controller) *\/\n@property (nonatomic, copy) NSString *fw_workflowName NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 121,
-          "key.parsed_scope.start" : 97,
+          "key.parsed_declaration" : "@interface UIViewController (FWNavigation)\n\n#pragma mark - Navigation\n\n\/\/\/ 自定义open|close导航选项，默认自动判断\n@property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调\n- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调\n- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n#pragma mark - Workflow\n\n\/** 自定义工作流名称，支持二级(\".\"分隔)；默认返回小写类名(去掉ViewController、Controller) *\/\n@property (nonatomic, copy) NSString *fw_workflowName NS_REFINED_FOR_SWIFT;\n\n@end",
+          "key.parsed_scope.end" : 131,
+          "key.parsed_scope.start" : 107,
           "key.substructure" : [
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 99,
+              "key.doc.line" : 109,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Navigation",
-              "key.parsed_scope.end" : 99,
-              "key.parsed_scope.start" : 99
+              "key.parsed_scope.end" : 109,
+              "key.parsed_scope.start" : 109
             },
             {
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 51,
-              "key.doc.comment" : "自定义open|close导航样式，默认automatic自动判断",
+              "key.doc.comment" : "自定义open|close导航选项，默认自动判断",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 102,
+              "key.doc.line" : 112,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_navigationOptions",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readwrite)\n    FWNavigationOptions fw_navigationOptions;",
-              "key.parsed_scope.end" : 102,
-              "key.parsed_scope.start" : 102,
+              "key.parsed_scope.end" : 112,
+              "key.parsed_scope.start" : 112,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(py)fw_navigationOptions"
             },
@@ -20789,13 +20773,13 @@
               "key.doc.comment" : "打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 105,
+              "key.doc.line" : 115,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_openViewController:animated:",
               "key.parsed_declaration" : "- (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 105,
-              "key.parsed_scope.start" : 105,
+              "key.parsed_scope.end" : 115,
+              "key.parsed_scope.start" : 115,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(im)fw_openViewController:animated:"
             },
@@ -20807,13 +20791,13 @@
               "key.doc.comment" : "打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 108,
+              "key.doc.line" : 118,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_openViewController:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_openViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 108,
-              "key.parsed_scope.start" : 108,
+              "key.parsed_scope.end" : 118,
+              "key.parsed_scope.start" : 118,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(im)fw_openViewController:animated:completion:"
             },
@@ -20825,13 +20809,13 @@
               "key.doc.comment" : "关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 111,
+              "key.doc.line" : 121,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_closeViewControllerAnimated:",
               "key.parsed_declaration" : "- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 111,
-              "key.parsed_scope.start" : 111,
+              "key.parsed_scope.end" : 121,
+              "key.parsed_scope.start" : 121,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:"
             },
@@ -20843,25 +20827,25 @@
               "key.doc.comment" : "关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 114,
+              "key.doc.line" : 124,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_closeViewControllerAnimated:completion:",
               "key.parsed_declaration" : "- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated\n                            completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 114,
-              "key.parsed_scope.start" : 114,
+              "key.parsed_scope.end" : 124,
+              "key.parsed_scope.start" : 124,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:completion:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 116,
+              "key.doc.line" : 126,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Workflow",
-              "key.parsed_scope.end" : 116,
-              "key.parsed_scope.start" : 116
+              "key.parsed_scope.end" : 126,
+              "key.parsed_scope.start" : 126
             },
             {
               "key.always_deprecated" : false,
@@ -20871,13 +20855,13 @@
               "key.doc.comment" : "自定义工作流名称，支持二级(\".\"分隔)；默认返回小写类名(去掉ViewController、Controller)",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 119,
+              "key.doc.line" : 129,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_workflowName",
               "key.parsed_declaration" : "@property (nonatomic, copy, readwrite)\n    NS_REFINED_FOR_SWIFT NSString *fw_workflowName;",
-              "key.parsed_scope.end" : 119,
-              "key.parsed_scope.start" : 119,
+              "key.parsed_scope.end" : 129,
+              "key.parsed_scope.start" : 129,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UIViewController(py)fw_workflowName"
             }
@@ -20888,12 +20872,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 123,
+          "key.doc.line" : 133,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "UINavigationController+FWNavigation",
-          "key.parsed_scope.end" : 123,
-          "key.parsed_scope.start" : 123
+          "key.parsed_scope.end" : 133,
+          "key.parsed_scope.start" : 133
         },
         {
           "key.always_deprecated" : false,
@@ -20901,23 +20885,23 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-          "key.doc.line" : 125,
+          "key.doc.line" : 135,
           "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UINavigationController(FWNavigation)",
           "key.parsed_declaration" : "@interface UINavigationController (FWNavigation)\n\n#pragma mark - Navigation\n\n\/\/\/ push新界面，完成时回调\n- (void)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ pop当前界面，完成时回调\n- (nullable UIViewController *)fw_popViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ pop到指定界面，完成时回调\n- (nullable NSArray<__kindof UIViewController *> *)fw_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ pop到根界面，完成时回调\n- (nullable NSArray<__kindof UIViewController *> *)fw_popToRootViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 设置界面数组，完成时回调\n- (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n#pragma mark - Workflow\n\n\/**\n 当前最外层工作流名称，即topViewController的工作流名称\n \n @return 工作流名称\n *\/\n@property (nonatomic, copy, readonly, nullable) NSString *fw_topWorkflowName NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并清理最外层工作流（不属于工作流则不清理）\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9\n \n @param viewController push的控制器\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9\n \n @param viewController push的控制器\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并清理非根控制器（只保留根控制器）\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9\n \n @param viewController push的控制器\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并清理非根控制器（只保留根控制器），完成时回调\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9\n \n @param viewController push的控制器\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n \n @param viewController push的控制器\n @param workflows 指定工作流\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/**\n push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n \n @param viewController push的控制器\n @param workflows 指定工作流\n @param animated 是否执行动画\n *\/\n- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/**\n pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）\n \n @param animated 是否执行动画\n *\/\n- (void)fw_popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/**\n pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）\n \n @param animated 是否执行动画\n *\/\n- (void)fw_popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n\/**\n pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4\n \n @param workflows 指定工作流\n @param animated  是否执行动画\n *\/\n- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;\n\n\/**\n pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调\n @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4\n \n @param workflows 指定工作流\n @param animated  是否执行动画\n *\/\n- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 243,
-          "key.parsed_scope.start" : 125,
+          "key.parsed_scope.end" : 253,
+          "key.parsed_scope.start" : 135,
           "key.substructure" : [
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 127,
+              "key.doc.line" : 137,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Navigation",
-              "key.parsed_scope.end" : 127,
-              "key.parsed_scope.start" : 127
+              "key.parsed_scope.end" : 137,
+              "key.parsed_scope.start" : 137
             },
             {
               "key.always_deprecated" : false,
@@ -20927,13 +20911,13 @@
               "key.doc.comment" : "push新界面，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 130,
+              "key.doc.line" : 140,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 130,
-              "key.parsed_scope.start" : 130,
+              "key.parsed_scope.end" : 140,
+              "key.parsed_scope.start" : 140,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:animated:completion:"
             },
@@ -20945,13 +20929,13 @@
               "key.doc.comment" : "pop当前界面，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 133,
+              "key.doc.line" : 143,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popViewControllerAnimated:completion:",
               "key.parsed_declaration" : "- (nullable UIViewController *)\n    fw_popViewControllerAnimated:(BOOL)animated\n                      completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 133,
-              "key.parsed_scope.start" : 133,
+              "key.parsed_scope.end" : 143,
+              "key.parsed_scope.start" : 143,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popViewControllerAnimated:completion:"
             },
@@ -20963,13 +20947,13 @@
               "key.doc.comment" : "pop到指定界面，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 136,
+              "key.doc.line" : 146,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popToViewController:animated:completion:",
               "key.parsed_declaration" : "- (nullable NSArray<__kindof UIViewController *> *)\n    fw_popToViewController:(nonnull UIViewController *)viewController\n                  animated:(BOOL)animated\n                completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 136,
-              "key.parsed_scope.start" : 136,
+              "key.parsed_scope.end" : 146,
+              "key.parsed_scope.start" : 146,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popToViewController:animated:completion:"
             },
@@ -20981,13 +20965,13 @@
               "key.doc.comment" : "pop到根界面，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 139,
+              "key.doc.line" : 149,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popToRootViewControllerAnimated:completion:",
               "key.parsed_declaration" : "- (nullable NSArray<__kindof UIViewController *> *)\n    fw_popToRootViewControllerAnimated:(BOOL)animated\n                            completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 139,
-              "key.parsed_scope.start" : 139,
+              "key.parsed_scope.end" : 149,
+              "key.parsed_scope.start" : 149,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popToRootViewControllerAnimated:completion:"
             },
@@ -20999,25 +20983,25 @@
               "key.doc.comment" : "设置界面数组，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 142,
+              "key.doc.line" : 152,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setViewControllers:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_setViewControllers:\n            (nonnull NSArray<UIViewController *> *)viewControllers\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 142,
-              "key.parsed_scope.start" : 142,
+              "key.parsed_scope.end" : 152,
+              "key.parsed_scope.start" : 152,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_setViewControllers:animated:completion:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.line" : 144,
+              "key.doc.line" : 154,
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Workflow",
-              "key.parsed_scope.end" : 144,
-              "key.parsed_scope.start" : 144
+              "key.parsed_scope.end" : 154,
+              "key.parsed_scope.start" : 154
             },
             {
               "key.always_deprecated" : false,
@@ -21027,7 +21011,7 @@
               "key.doc.comment" : "当前最外层工作流名称，即topViewController的工作流名称\n\n- returns: 工作流名称",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 151,
+              "key.doc.line" : 161,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -21038,8 +21022,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_topWorkflowName",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) NSString *fw_topWorkflowName;",
-              "key.parsed_scope.end" : 151,
-              "key.parsed_scope.start" : 151,
+              "key.parsed_scope.end" : 161,
+              "key.parsed_scope.start" : 161,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(py)fw_topWorkflowName"
             },
@@ -21051,7 +21035,7 @@
               "key.doc.comment" : "push控制器，并清理最外层工作流（不属于工作流则不清理）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 160,
+              "key.doc.line" : 170,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21076,8 +21060,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:popTopWorkflowAnimated:",
               "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n       popTopWorkflowAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 160,
-              "key.parsed_scope.start" : 160,
+              "key.parsed_scope.end" : 170,
+              "key.parsed_scope.start" : 170,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:"
             },
@@ -21089,7 +21073,7 @@
               "key.doc.comment" : "push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 169,
+              "key.doc.line" : 179,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21114,8 +21098,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:popTopWorkflowAnimated:completion:",
               "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n       popTopWorkflowAnimated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 169,
-              "key.parsed_scope.start" : 169,
+              "key.parsed_scope.end" : 179,
+              "key.parsed_scope.start" : 179,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:completion:"
             },
@@ -21127,7 +21111,7 @@
               "key.doc.comment" : "push控制器，并清理非根控制器（只保留根控制器）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 178,
+              "key.doc.line" : 188,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21152,8 +21136,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:popToRootWorkflowAnimated:",
               "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n    popToRootWorkflowAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 178,
-              "key.parsed_scope.start" : 178,
+              "key.parsed_scope.end" : 188,
+              "key.parsed_scope.start" : 188,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:"
             },
@@ -21165,7 +21149,7 @@
               "key.doc.comment" : "push控制器，并清理非根控制器（只保留根控制器），完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9\n\n- parameter: viewController push的控制器\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 187,
+              "key.doc.line" : 197,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21190,8 +21174,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_pushViewController:popToRootWorkflowAnimated:completion:",
               "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n    popToRootWorkflowAnimated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 187,
-              "key.parsed_scope.start" : 187,
+              "key.parsed_scope.end" : 197,
+              "key.parsed_scope.start" : 197,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:completion:"
             },
@@ -21201,53 +21185,6 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 9,
               "key.doc.comment" : "push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n\n- parameter: viewController push的控制器\n- parameter: workflows 指定工作流\n- parameter: animated 是否执行动画",
-              "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
-              "key.doc.full_as_xml" : "",
-              "key.doc.line" : 197,
-              "key.doc.parameters" : [
-                {
-                  "discussion" : [
-                    {
-                      "kind" : "",
-                      "Para" : "push的控制器\n"
-                    }
-                  ],
-                  "name" : "viewController"
-                },
-                {
-                  "discussion" : [
-                    {
-                      "kind" : "",
-                      "Para" : "指定工作流\n"
-                    }
-                  ],
-                  "name" : "workflows"
-                },
-                {
-                  "discussion" : [
-                    {
-                      "kind" : "",
-                      "Para" : "是否执行动画"
-                    }
-                  ],
-                  "name" : "animated"
-                }
-              ],
-              "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
-              "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
-              "key.name" : "-fw_pushViewController:popWorkflows:animated:",
-              "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n                 popWorkflows:(nullable NSArray<NSString *> *)workflows\n                     animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 197,
-              "key.parsed_scope.start" : 197,
-              "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:"
-            },
-            {
-              "key.always_deprecated" : false,
-              "key.always_unavailable" : false,
-              "key.deprecation_message" : "",
-              "key.doc.column" : 9,
-              "key.doc.comment" : "push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n\n- parameter: viewController push的控制器\n- parameter: workflows 指定工作流\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 207,
@@ -21282,10 +21219,57 @@
               ],
               "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
-              "key.name" : "-fw_pushViewController:popWorkflows:animated:completion:",
-              "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n                 popWorkflows:(nullable NSArray<NSString *> *)workflows\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
+              "key.name" : "-fw_pushViewController:popWorkflows:animated:",
+              "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n                 popWorkflows:(nullable NSArray<NSString *> *)workflows\n                     animated:(BOOL)animated;",
               "key.parsed_scope.end" : 207,
               "key.parsed_scope.start" : 207,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 9,
+              "key.doc.comment" : "push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9\n\n- parameter: viewController push的控制器\n- parameter: workflows 指定工作流\n- parameter: animated 是否执行动画",
+              "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 217,
+              "key.doc.parameters" : [
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "push的控制器\n"
+                    }
+                  ],
+                  "name" : "viewController"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "指定工作流\n"
+                    }
+                  ],
+                  "name" : "workflows"
+                },
+                {
+                  "discussion" : [
+                    {
+                      "kind" : "",
+                      "Para" : "是否执行动画"
+                    }
+                  ],
+                  "name" : "animated"
+                }
+              ],
+              "key.filepath" : "docs\/FWFramework\/FWNavigation.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
+              "key.name" : "-fw_pushViewController:popWorkflows:animated:completion:",
+              "key.parsed_declaration" : "- (void)fw_pushViewController:(nonnull UIViewController *)viewController\n                 popWorkflows:(nullable NSArray<NSString *> *)workflows\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
+              "key.parsed_scope.end" : 217,
+              "key.parsed_scope.start" : 217,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:completion:"
             },
@@ -21297,7 +21281,7 @@
               "key.doc.comment" : "pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）\n\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 215,
+              "key.doc.line" : 225,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21313,8 +21297,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popTopWorkflowAnimated:",
               "key.parsed_declaration" : "- (void)fw_popTopWorkflowAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 215,
-              "key.parsed_scope.start" : 215,
+              "key.parsed_scope.end" : 225,
+              "key.parsed_scope.start" : 225,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:"
             },
@@ -21326,7 +21310,7 @@
               "key.doc.comment" : "pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）\n\n- parameter: animated 是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 223,
+              "key.doc.line" : 233,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21342,8 +21326,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popTopWorkflowAnimated:completion:",
               "key.parsed_declaration" : "- (void)fw_popTopWorkflowAnimated:(BOOL)animated\n                       completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 223,
-              "key.parsed_scope.start" : 223,
+              "key.parsed_scope.end" : 233,
+              "key.parsed_scope.start" : 233,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:completion:"
             },
@@ -21355,7 +21339,7 @@
               "key.doc.comment" : "pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4\n\n- parameter: workflows 指定工作流\n- parameter: animated  是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 232,
+              "key.doc.line" : 242,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21380,8 +21364,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popWorkflows:animated:",
               "key.parsed_declaration" : "- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows\n               animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 232,
-              "key.parsed_scope.start" : 232,
+              "key.parsed_scope.end" : 242,
+              "key.parsed_scope.start" : 242,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:"
             },
@@ -21393,7 +21377,7 @@
               "key.doc.comment" : "pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调\n- note: 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4\n\n- parameter: workflows 指定工作流\n- parameter: animated  是否执行动画",
               "key.doc.file" : "docs\/FWFramework\/FWNavigation.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 241,
+              "key.doc.line" : 251,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -21418,8 +21402,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_popWorkflows:animated:completion:",
               "key.parsed_declaration" : "- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows\n               animated:(BOOL)animated\n             completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 241,
-              "key.parsed_scope.start" : 241,
+              "key.parsed_scope.end" : 251,
+              "key.parsed_scope.start" : 251,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:completion:"
             }
@@ -22957,7 +22941,7 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 45,
-          "key.doc.comment" : "路由信息来源Key",
+          "key.doc.comment" : "路由信息来源Key，默认未处理",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
           "key.doc.line" : 27,
@@ -22975,18 +22959,36 @@
           "key.always_unavailable" : false,
           "key.deprecation_message" : "",
           "key.doc.column" : 45,
-          "key.doc.comment" : "路由信息导航选项Key",
+          "key.doc.comment" : "路由信息选项Key，默认支持NavigationOptions",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
           "key.doc.line" : 29,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.constant",
-          "key.name" : "FWRouterNavigationOptionsKey",
-          "key.parsed_declaration" : "extern NS_SWIFT_NAME(RouterNavigationOptionsKey) const FWRouterUserInfoKey\n    FWRouterNavigationOptionsKey",
+          "key.name" : "FWRouterOptionsKey",
+          "key.parsed_declaration" : "extern NS_SWIFT_NAME(RouterOptionsKey) const FWRouterUserInfoKey\n    FWRouterOptionsKey",
           "key.parsed_scope.end" : 29,
           "key.parsed_scope.start" : 29,
           "key.unavailable_message" : "",
-          "key.usr" : "c:@FWRouterNavigationOptionsKey"
+          "key.usr" : "c:@FWRouterOptionsKey"
+        },
+        {
+          "key.always_deprecated" : false,
+          "key.always_unavailable" : false,
+          "key.deprecation_message" : "",
+          "key.doc.column" : 45,
+          "key.doc.comment" : "路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效",
+          "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
+          "key.doc.full_as_xml" : "",
+          "key.doc.line" : 31,
+          "key.filepath" : "docs\/FWFramework\/FWRouter.h",
+          "key.kind" : "sourcekitten.source.lang.objc.decl.constant",
+          "key.name" : "FWRouterHandlerKey",
+          "key.parsed_declaration" : "extern NS_SWIFT_NAME(RouterHandlerKey) const FWRouterUserInfoKey\n    FWRouterHandlerKey",
+          "key.parsed_scope.end" : 31,
+          "key.parsed_scope.start" : 31,
+          "key.unavailable_message" : "",
+          "key.usr" : "c:@FWRouterHandlerKey"
         },
         {
           "key.always_deprecated" : false,
@@ -22996,13 +22998,13 @@
           "key.doc.comment" : "URL路由上下文",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 33,
+          "key.doc.line" : 35,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWRouterContext",
           "key.parsed_declaration" : "\n@interface FWRouterContext : NSObject <NSCopying>",
-          "key.parsed_scope.end" : 52,
-          "key.parsed_scope.start" : 33,
+          "key.parsed_scope.end" : 54,
+          "key.parsed_scope.start" : 35,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -23012,13 +23014,13 @@
               "key.doc.comment" : "路由URL",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 36,
+              "key.doc.line" : 38,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "URL",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly) NSString *_Nonnull URL;",
-              "key.parsed_scope.end" : 36,
-              "key.parsed_scope.start" : 36,
+              "key.parsed_scope.end" : 38,
+              "key.parsed_scope.start" : 38,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)URL"
             },
@@ -23030,13 +23032,13 @@
               "key.doc.comment" : "路由用户信息",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 38,
+              "key.doc.line" : 40,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "userInfo",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;",
-              "key.parsed_scope.end" : 38,
-              "key.parsed_scope.start" : 38,
+              "key.parsed_scope.end" : 40,
+              "key.parsed_scope.start" : 40,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)userInfo"
             },
@@ -23048,13 +23050,13 @@
               "key.doc.comment" : "路由完成回调",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 40,
+              "key.doc.line" : 42,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "completion",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;",
-              "key.parsed_scope.end" : 40,
-              "key.parsed_scope.start" : 40,
+              "key.parsed_scope.end" : 42,
+              "key.parsed_scope.start" : 42,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)completion"
             },
@@ -23066,13 +23068,13 @@
               "key.doc.comment" : "路由URL解析参数字典",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 43,
+              "key.doc.line" : 45,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "URLParameters",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly)\n    NSDictionary<NSString *, NSString *> *_Nonnull URLParameters;",
-              "key.parsed_scope.end" : 43,
-              "key.parsed_scope.start" : 43,
+              "key.parsed_scope.end" : 45,
+              "key.parsed_scope.start" : 45,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)URLParameters"
             },
@@ -23084,13 +23086,13 @@
               "key.doc.comment" : "路由userInfo和URLParameters合并参数，URL参数优先级高",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 45,
+              "key.doc.line" : 47,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "parameters",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly) NSDictionary *_Nonnull parameters;",
-              "key.parsed_scope.end" : 45,
-              "key.parsed_scope.start" : 45,
+              "key.parsed_scope.end" : 47,
+              "key.parsed_scope.start" : 47,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)parameters"
             },
@@ -23100,13 +23102,13 @@
               "key.deprecation_message" : "",
               "key.doc.column" : 46,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 47,
+              "key.doc.line" : 49,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "isOpening",
               "key.parsed_declaration" : "@property (nonatomic, assign, readonly) BOOL isOpening",
-              "key.parsed_scope.end" : 47,
-              "key.parsed_scope.start" : 47,
+              "key.parsed_scope.end" : 49,
+              "key.parsed_scope.start" : 49,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(py)isOpening"
             },
@@ -23118,13 +23120,13 @@
               "key.doc.comment" : "创建路由参数对象",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 50,
+              "key.doc.line" : 52,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-initWithURL:userInfo:completion:",
               "key.parsed_declaration" : "- (nonnull instancetype)initWithURL:(nonnull NSString *)URL\n                           userInfo:(nullable NSDictionary *)userInfo\n                         completion:(nullable FWRouterCompletion)completion;",
-              "key.parsed_scope.end" : 50,
-              "key.parsed_scope.start" : 50,
+              "key.parsed_scope.end" : 52,
+              "key.parsed_scope.start" : 52,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouterContext(im)initWithURL:userInfo:completion:"
             }
@@ -23135,12 +23137,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-          "key.doc.line" : 54,
+          "key.doc.line" : 56,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWRouter",
-          "key.parsed_scope.end" : 54,
-          "key.parsed_scope.start" : 54
+          "key.parsed_scope.end" : 56,
+          "key.parsed_scope.start" : 56
         },
         {
           "key.always_deprecated" : false,
@@ -23150,13 +23152,13 @@
           "key.doc.comment" : "URL路由器\n\n- see: https:\/\/github.com\/meili\/MGJRouter",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 62,
+          "key.doc.line" : 64,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.class",
           "key.name" : "FWRouter",
           "key.parsed_declaration" : "\n@interface FWRouter : NSObject",
-          "key.parsed_scope.end" : 232,
-          "key.parsed_scope.start" : 62,
+          "key.parsed_scope.end" : 234,
+          "key.parsed_scope.start" : 64,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -23166,25 +23168,25 @@
               "key.doc.comment" : "路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 65,
+              "key.doc.line" : 67,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "sharedLoader",
               "key.parsed_declaration" : "@property (class, nonatomic, readonly)\n    FWLoader<NSString *, id> *_Nonnull sharedLoader;",
-              "key.parsed_scope.end" : 65,
-              "key.parsed_scope.start" : 65,
+              "key.parsed_scope.end" : 67,
+              "key.parsed_scope.start" : 67,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cpy)sharedLoader"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 67,
+              "key.doc.line" : 69,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Class",
-              "key.parsed_scope.end" : 67,
-              "key.parsed_scope.start" : 67
+              "key.parsed_scope.end" : 69,
+              "key.parsed_scope.start" : 69
             },
             {
               "key.always_deprecated" : false,
@@ -23194,7 +23196,7 @@
               "key.doc.comment" : "  注册路由类或对象，批量注册路由规则\n\n  - parameter: clazz    路由类或对象，不遍历父类\n  - parameter: mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 75,
+              "key.doc.line" : 77,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23219,8 +23221,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+registerClass:withMapper:",
               "key.parsed_declaration" : "+ (BOOL)registerClass:(nonnull id)clazz\n           withMapper:(nullable NSDictionary<NSString *, NSString *> *_Nonnull (\n                          ^)(NSArray<NSString *> *_Nonnull))mapper;",
-              "key.parsed_scope.end" : 75,
-              "key.parsed_scope.start" : 75,
+              "key.parsed_scope.end" : 77,
+              "key.parsed_scope.start" : 77,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)registerClass:withMapper:"
             },
@@ -23232,7 +23234,7 @@
               "key.doc.comment" : "  预置路由类或对象，批量注册路由规则，仅当路由未被注册时生效\n\n  - parameter: clazz    路由类或对象，不遍历父类\n  - parameter: mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 83,
+              "key.doc.line" : 85,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23257,8 +23259,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+presetClass:withMapper:",
               "key.parsed_declaration" : "+ (BOOL)presetClass:(nonnull id)clazz\n         withMapper:(nullable NSDictionary<NSString *, NSString *> *_Nonnull (\n                        ^)(NSArray<NSString *> *_Nonnull))mapper;",
-              "key.parsed_scope.end" : 83,
-              "key.parsed_scope.start" : 83,
+              "key.parsed_scope.end" : 85,
+              "key.parsed_scope.start" : 85,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)presetClass:withMapper:"
             },
@@ -23270,7 +23272,7 @@
               "key.doc.comment" : "  取消注册某个路由类或对象\n\n  - parameter: clazz    路由类或对象，不遍历父类\n  - parameter: mapper 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 91,
+              "key.doc.line" : 93,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23295,20 +23297,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+unregisterClass:withMapper:",
               "key.parsed_declaration" : "+ (void)unregisterClass:(nonnull id)clazz\n             withMapper:\n                 (nullable NSDictionary<NSString *, NSString *> *_Nonnull (^)(\n                     NSArray<NSString *> *_Nonnull))mapper;",
-              "key.parsed_scope.end" : 91,
-              "key.parsed_scope.start" : 91,
+              "key.parsed_scope.end" : 93,
+              "key.parsed_scope.start" : 93,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)unregisterClass:withMapper:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 93,
+              "key.doc.line" : 95,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "URL",
-              "key.parsed_scope.end" : 93,
-              "key.parsed_scope.start" : 93
+              "key.parsed_scope.end" : 95,
+              "key.parsed_scope.start" : 95
             },
             {
               "key.always_deprecated" : false,
@@ -23318,7 +23320,7 @@
               "key.doc.comment" : "  注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil\n\n  - parameter: pattern    字符串或字符串数组(批量)，带上 scheme，如 app:\/\/beauty\/:id\n  - parameter: handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。\n                    假如注册的 URL 为 app:\/\/beauty\/:id 那么，就会传一个 @{@\"id\": 4} 这样的字典过来",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 102,
+              "key.doc.line" : 104,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23343,8 +23345,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+registerURL:withHandler:",
               "key.parsed_declaration" : "+ (BOOL)registerURL:(nonnull id)pattern\n        withHandler:(nonnull FWRouterHandler)handler;",
-              "key.parsed_scope.end" : 102,
-              "key.parsed_scope.start" : 102,
+              "key.parsed_scope.end" : 104,
+              "key.parsed_scope.start" : 104,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)registerURL:withHandler:"
             },
@@ -23356,7 +23358,7 @@
               "key.doc.comment" : "  预置 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil，仅当路由未被注册时生效\n\n  - parameter: pattern    字符串或字符串数组(批量)，带上 scheme，如 app:\/\/beauty\/:id\n  - parameter: handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。\n                    假如注册的 URL 为 app:\/\/beauty\/:id 那么，就会传一个 @{@\"id\": 4} 这样的字典过来",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 111,
+              "key.doc.line" : 113,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23381,8 +23383,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+presetURL:withHandler:",
               "key.parsed_declaration" : "+ (BOOL)presetURL:(nonnull id)pattern\n      withHandler:(nonnull FWRouterHandler)handler;",
-              "key.parsed_scope.end" : 111,
-              "key.parsed_scope.start" : 111,
+              "key.parsed_scope.end" : 113,
+              "key.parsed_scope.start" : 113,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)presetURL:withHandler:"
             },
@@ -23394,7 +23396,7 @@
               "key.doc.comment" : "  取消注册某个 pattern\n\n  - parameter: pattern    字符串或字符串数组(批量)",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 118,
+              "key.doc.line" : 120,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23410,8 +23412,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+unregisterURL:",
               "key.parsed_declaration" : "+ (void)unregisterURL:(nonnull id)pattern;",
-              "key.parsed_scope.end" : 118,
-              "key.parsed_scope.start" : 118,
+              "key.parsed_scope.end" : 120,
+              "key.parsed_scope.start" : 120,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)unregisterURL:"
             },
@@ -23423,25 +23425,25 @@
               "key.doc.comment" : "取消注册所有 pattern",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 123,
+              "key.doc.line" : 125,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+unregisterAllURLs",
               "key.parsed_declaration" : "+ (void)unregisterAllURLs;",
-              "key.parsed_scope.end" : 123,
-              "key.parsed_scope.start" : 123,
+              "key.parsed_scope.end" : 125,
+              "key.parsed_scope.start" : 125,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)unregisterAllURLs"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 125,
+              "key.doc.line" : 127,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Handler",
-              "key.parsed_scope.end" : 125,
-              "key.parsed_scope.start" : 125
+              "key.parsed_scope.end" : 127,
+              "key.parsed_scope.start" : 127
             },
             {
               "key.always_deprecated" : false,
@@ -23451,13 +23453,13 @@
               "key.doc.comment" : "设置全局路由过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 130,
+              "key.doc.line" : 132,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+setRouteFilter:",
               "key.parsed_declaration" : "+ (void)setRouteFilter:(nullable BOOL (^)(FWRouterContext *_Nonnull))filter;",
-              "key.parsed_scope.end" : 130,
-              "key.parsed_scope.start" : 130,
+              "key.parsed_scope.end" : 132,
+              "key.parsed_scope.start" : 132,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)setRouteFilter:"
             },
@@ -23469,13 +23471,13 @@
               "key.doc.comment" : "设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 135,
+              "key.doc.line" : 137,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+setRouteHandler:",
               "key.parsed_declaration" : "+ (void)setRouteHandler:(nullable id _Nullable (^)(FWRouterContext *_Nonnull,\n                                                   id _Nonnull))handler;",
-              "key.parsed_scope.end" : 135,
-              "key.parsed_scope.start" : 135,
+              "key.parsed_scope.end" : 137,
+              "key.parsed_scope.start" : 137,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)setRouteHandler:"
             },
@@ -23487,13 +23489,13 @@
               "key.doc.comment" : "预置全局路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 140,
+              "key.doc.line" : 142,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+presetRouteHandler:",
               "key.parsed_declaration" : "+ (void)presetRouteHandler:(nullable id _Nullable (^)(FWRouterContext *_Nonnull,\n                                                      id _Nonnull))handler;",
-              "key.parsed_scope.end" : 140,
-              "key.parsed_scope.start" : 140,
+              "key.parsed_scope.end" : 142,
+              "key.parsed_scope.start" : 142,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)presetRouteHandler:"
             },
@@ -23505,25 +23507,25 @@
               "key.doc.comment" : "设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 145,
+              "key.doc.line" : 147,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+setErrorHandler:",
               "key.parsed_declaration" : "+ (void)setErrorHandler:(nullable void (^)(FWRouterContext *_Nonnull))handler;",
-              "key.parsed_scope.end" : 145,
-              "key.parsed_scope.start" : 145,
+              "key.parsed_scope.end" : 147,
+              "key.parsed_scope.start" : 147,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)setErrorHandler:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 147,
+              "key.doc.line" : 149,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Open",
-              "key.parsed_scope.end" : 147,
-              "key.parsed_scope.start" : 147
+              "key.parsed_scope.end" : 149,
+              "key.parsed_scope.start" : 149
             },
             {
               "key.always_deprecated" : false,
@@ -23533,7 +23535,7 @@
               "key.doc.comment" : "  是否可以打开URL，不含object\n\n  - parameter: URL 带 Scheme，如 app:\/\/beauty\/3，支持NSURL和NSString\n\n  - returns: 返回BOOL值",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 156,
+              "key.doc.line" : 158,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23555,8 +23557,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+canOpenURL:",
               "key.parsed_declaration" : "+ (BOOL)canOpenURL:(nonnull id)URL;",
-              "key.parsed_scope.end" : 156,
-              "key.parsed_scope.start" : 156,
+              "key.parsed_scope.end" : 158,
+              "key.parsed_scope.start" : 158,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)canOpenURL:"
             },
@@ -23568,7 +23570,7 @@
               "key.doc.comment" : "  打开此 URL\n  会在已注册的 URL -> Handler 中寻找，如果找到，则执行 Handler\n\n  - parameter: URL 带 Scheme，如 app:\/\/beauty\/3，支持NSURL和NSString",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 164,
+              "key.doc.line" : 166,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23584,8 +23586,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openURL:",
               "key.parsed_declaration" : "+ (void)openURL:(nonnull id)URL;",
-              "key.parsed_scope.end" : 164,
-              "key.parsed_scope.start" : 164,
+              "key.parsed_scope.end" : 166,
+              "key.parsed_scope.start" : 166,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openURL:"
             },
@@ -23597,7 +23599,7 @@
               "key.doc.comment" : "  打开此 URL，同时当操作完成时，执行额外的代码\n\n  - parameter: URL        带 Scheme 的 URL，如 app:\/\/beauty\/4，支持NSURL和NSString\n  - parameter: userInfo   附加参数",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 172,
+              "key.doc.line" : 174,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23622,8 +23624,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openURL:userInfo:",
               "key.parsed_declaration" : "+ (void)openURL:(nonnull id)URL userInfo:(nullable NSDictionary *)userInfo;",
-              "key.parsed_scope.end" : 172,
-              "key.parsed_scope.start" : 172,
+              "key.parsed_scope.end" : 174,
+              "key.parsed_scope.start" : 174,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openURL:userInfo:"
             },
@@ -23635,7 +23637,7 @@
               "key.doc.comment" : "  打开此 URL，同时当操作完成时，执行额外的代码\n\n  - parameter: URL        带 Scheme 的 URL，如 app:\/\/beauty\/4，支持NSURL和NSString\n  - parameter: completion URL 处理完成后的 callback，完成的判定跟具体的业务相关",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 180,
+              "key.doc.line" : 182,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23660,8 +23662,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openURL:completion:",
               "key.parsed_declaration" : "+ (void)openURL:(nonnull id)URL\n     completion:(nullable FWRouterCompletion)completion;",
-              "key.parsed_scope.end" : 180,
-              "key.parsed_scope.start" : 180,
+              "key.parsed_scope.end" : 182,
+              "key.parsed_scope.start" : 182,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openURL:completion:"
             },
@@ -23673,7 +23675,7 @@
               "key.doc.comment" : "  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码\n\n  - parameter: URL        带 Scheme 的 URL，如 app:\/\/beauty\/4，支持NSURL和NSString\n  - parameter: userInfo   附加参数\n  - parameter: completion URL 处理完成后的 callback，完成的判定跟具体的业务相关",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 189,
+              "key.doc.line" : 191,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23707,8 +23709,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openURL:userInfo:completion:",
               "key.parsed_declaration" : "+ (void)openURL:(nonnull id)URL\n       userInfo:(nullable NSDictionary *)userInfo\n     completion:(nullable FWRouterCompletion)completion;",
-              "key.parsed_scope.end" : 189,
-              "key.parsed_scope.start" : 189,
+              "key.parsed_scope.end" : 191,
+              "key.parsed_scope.start" : 191,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openURL:userInfo:completion:"
             },
@@ -23720,7 +23722,7 @@
               "key.doc.comment" : "  快速调用FWRouterHandler参数中的回调句柄，指定回调结果\n\n  - parameter: context FWRouterHandler中的模型参数\n  - parameter: result URL处理完成后的回调结果",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 197,
+              "key.doc.line" : 199,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23745,20 +23747,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+completeURL:result:",
               "key.parsed_declaration" : "+ (void)completeURL:(nonnull FWRouterContext *)context\n             result:(nullable id)result;",
-              "key.parsed_scope.end" : 197,
-              "key.parsed_scope.start" : 197,
+              "key.parsed_scope.end" : 199,
+              "key.parsed_scope.start" : 199,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)completeURL:result:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 199,
+              "key.doc.line" : 201,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Object",
-              "key.parsed_scope.end" : 199,
-              "key.parsed_scope.start" : 199
+              "key.parsed_scope.end" : 201,
+              "key.parsed_scope.start" : 201
             },
             {
               "key.always_deprecated" : false,
@@ -23768,7 +23770,7 @@
               "key.doc.comment" : " 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil\n\n  - parameter: URL 带 Scheme，如 app:\/\/beauty\/3，支持NSURL和NSString",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 206,
+              "key.doc.line" : 208,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23784,8 +23786,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+objectForURL:",
               "key.parsed_declaration" : "+ (nullable id)objectForURL:(nonnull id)URL;",
-              "key.parsed_scope.end" : 206,
-              "key.parsed_scope.start" : 206,
+              "key.parsed_scope.end" : 208,
+              "key.parsed_scope.start" : 208,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)objectForURL:"
             },
@@ -23797,7 +23799,7 @@
               "key.doc.comment" : " 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil\n\n  - parameter: URL 带 Scheme，如 app:\/\/beauty\/3，支持NSURL和NSString\n  - parameter: userInfo 附加参数",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 214,
+              "key.doc.line" : 216,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23822,20 +23824,20 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+objectForURL:userInfo:",
               "key.parsed_declaration" : "+ (nullable id)objectForURL:(nonnull id)URL\n                   userInfo:(nullable NSDictionary *)userInfo;",
-              "key.parsed_scope.end" : 214,
-              "key.parsed_scope.start" : 214,
+              "key.parsed_scope.end" : 216,
+              "key.parsed_scope.start" : 216,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)objectForURL:userInfo:"
             },
             {
               "key.doc.column" : 1,
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-              "key.doc.line" : 216,
+              "key.doc.line" : 218,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.mark",
               "key.name" : "Generator",
-              "key.parsed_scope.end" : 216,
-              "key.parsed_scope.start" : 216
+              "key.parsed_scope.end" : 218,
+              "key.parsed_scope.start" : 218
             },
             {
               "key.always_deprecated" : false,
@@ -23845,7 +23847,7 @@
               "key.doc.comment" : "  调用此方法来拼接 pattern 和 parameters\n\n  #define APP_ROUTE_BEAUTY @\"beauty\/:id\"\n  [FWRouter generateURL:APP_ROUTE_BEAUTY, @[@13]];\n  [FWRouter generateURL:APP_ROUTE_BEAUTY, @{@\"id\":@13}];\n\n  - parameter: pattern    url pattern 比如 @\"beauty\/:id\"\n  - parameter: parameters 一个数组(数量和变量一致)或一个字典(key为变量名称)或单个值(替换所有参数)\n\n  - returns: 返回生成的URL String",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 230,
+              "key.doc.line" : 232,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23876,8 +23878,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+generateURL:parameters:",
               "key.parsed_declaration" : "+ (nonnull NSString *)generateURL:(nonnull NSString *)pattern\n                       parameters:(nullable id)parameters;",
-              "key.parsed_scope.end" : 230,
-              "key.parsed_scope.start" : 230,
+              "key.parsed_scope.end" : 232,
+              "key.parsed_scope.start" : 232,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)generateURL:parameters:"
             }
@@ -23888,12 +23890,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-          "key.doc.line" : 234,
+          "key.doc.line" : 236,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWRouter+Rewrite",
-          "key.parsed_scope.end" : 234,
-          "key.parsed_scope.start" : 234
+          "key.parsed_scope.end" : 236,
+          "key.parsed_scope.start" : 236
         },
         {
           "key.always_deprecated" : false,
@@ -23903,13 +23905,13 @@
           "key.doc.comment" : "URL路由Rewrite\n\n- see: https:\/\/github.com\/imlifengfeng\/FFRouter",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 241,
+          "key.doc.line" : 243,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "FWRouter(Rewrite)",
           "key.parsed_declaration" : "@interface FWRouter (Rewrite)",
-          "key.parsed_scope.end" : 285,
-          "key.parsed_scope.start" : 241,
+          "key.parsed_scope.end" : 287,
+          "key.parsed_scope.start" : 243,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -23919,7 +23921,7 @@
               "key.doc.comment" : "According to the set of Rules, go to rewrite URL.\n\n- parameter: URL URL to be rewritten\n- returns: URL after being rewritten",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 249,
+              "key.doc.line" : 251,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23941,8 +23943,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+rewriteURL:",
               "key.parsed_declaration" : "+ (nullable NSString *)rewriteURL:(nonnull id)URL;",
-              "key.parsed_scope.end" : 249,
-              "key.parsed_scope.start" : 249,
+              "key.parsed_scope.end" : 251,
+              "key.parsed_scope.start" : 251,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)rewriteURL:"
             },
@@ -23954,7 +23956,7 @@
               "key.doc.comment" : "Set custom rewrite filter block\n\n- parameter: filter Custom filter block",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 256,
+              "key.doc.line" : 258,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -23970,8 +23972,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+setRewriteFilter:",
               "key.parsed_declaration" : "+ (void)setRewriteFilter:\n    (nullable NSString *_Nonnull (^)(NSString *_Nonnull))filter;",
-              "key.parsed_scope.end" : 256,
-              "key.parsed_scope.start" : 256,
+              "key.parsed_scope.end" : 258,
+              "key.parsed_scope.start" : 258,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)setRewriteFilter:"
             },
@@ -23983,7 +23985,7 @@
               "key.doc.comment" : "Add a RewriteRule\n\n- parameter: matchRule Regular matching rule\n- parameter: targetRule Conversion rules",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 264,
+              "key.doc.line" : 266,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -24008,8 +24010,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+addRewriteRule:targetRule:",
               "key.parsed_declaration" : "+ (void)addRewriteRule:(nonnull NSString *)matchRule\n            targetRule:(nonnull NSString *)targetRule;",
-              "key.parsed_scope.end" : 264,
-              "key.parsed_scope.start" : 264,
+              "key.parsed_scope.end" : 266,
+              "key.parsed_scope.start" : 266,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)addRewriteRule:targetRule:"
             },
@@ -24021,7 +24023,7 @@
               "key.doc.comment" : "Add multiple RewriteRule at the same time, the format must be：@[@{@\"matchRule\":@\"YourMatchRule\",@\"targetRule\":@\"YourTargetRule\"},...]\n\n- parameter: rules RewriteRules",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 271,
+              "key.doc.line" : 273,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -24037,8 +24039,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+addRewriteRules:",
               "key.parsed_declaration" : "+ (void)addRewriteRules:(nonnull NSArray<NSDictionary *> *)rules;",
-              "key.parsed_scope.end" : 271,
-              "key.parsed_scope.start" : 271,
+              "key.parsed_scope.end" : 273,
+              "key.parsed_scope.start" : 273,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)addRewriteRules:"
             },
@@ -24050,7 +24052,7 @@
               "key.doc.comment" : "Remove a RewriteRule\n\n- parameter: matchRule MatchRule to be removed",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 278,
+              "key.doc.line" : 280,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -24066,8 +24068,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+removeRewriteRule:",
               "key.parsed_declaration" : "+ (void)removeRewriteRule:(nonnull NSString *)matchRule;",
-              "key.parsed_scope.end" : 278,
-              "key.parsed_scope.start" : 278,
+              "key.parsed_scope.end" : 280,
+              "key.parsed_scope.start" : 280,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)removeRewriteRule:"
             },
@@ -24079,13 +24081,13 @@
               "key.doc.comment" : "Remove all RewriteRule",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 283,
+              "key.doc.line" : 285,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+removeAllRewriteRules",
               "key.parsed_declaration" : "+ (void)removeAllRewriteRules;",
-              "key.parsed_scope.end" : 283,
-              "key.parsed_scope.start" : 283,
+              "key.parsed_scope.end" : 285,
+              "key.parsed_scope.start" : 285,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)removeAllRewriteRules"
             }
@@ -24096,12 +24098,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
-          "key.doc.line" : 287,
+          "key.doc.line" : 289,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWRouter+Navigation",
-          "key.parsed_scope.end" : 287,
-          "key.parsed_scope.start" : 287
+          "key.parsed_scope.end" : 289,
+          "key.parsed_scope.start" : 289
         },
         {
           "key.always_deprecated" : false,
@@ -24111,13 +24113,13 @@
           "key.doc.comment" : "URL路由导航",
           "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 292,
+          "key.doc.line" : 294,
           "key.filepath" : "docs\/FWFramework\/FWRouter.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "FWRouter(Navigation)",
           "key.parsed_declaration" : "@interface FWRouter (Navigation)",
-          "key.parsed_scope.end" : 312,
-          "key.parsed_scope.start" : 292,
+          "key.parsed_scope.end" : 314,
+          "key.parsed_scope.start" : 294,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -24127,13 +24129,13 @@
               "key.doc.comment" : "使用最顶部的导航栏控制器打开控制器",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 295,
+              "key.doc.line" : 297,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+pushViewController:animated:",
               "key.parsed_declaration" : "+ (void)pushViewController:(nonnull UIViewController *)viewController\n                  animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 295,
-              "key.parsed_scope.start" : 295,
+              "key.parsed_scope.end" : 297,
+              "key.parsed_scope.start" : 297,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)pushViewController:animated:"
             },
@@ -24145,13 +24147,13 @@
               "key.doc.comment" : "使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 298,
+              "key.doc.line" : 300,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+presentViewController:animated:completion:",
               "key.parsed_declaration" : "+ (void)presentViewController:(nonnull UIViewController *)viewController\n                     animated:(BOOL)animated\n                   completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 298,
-              "key.parsed_scope.start" : 298,
+              "key.parsed_scope.end" : 300,
+              "key.parsed_scope.start" : 300,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)presentViewController:animated:completion:"
             },
@@ -24163,13 +24165,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 301,
+              "key.doc.line" : 303,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openViewController:animated:",
               "key.parsed_declaration" : "+ (void)openViewController:(nonnull UIViewController *)viewController\n                  animated:(BOOL)animated;",
-              "key.parsed_scope.end" : 301,
-              "key.parsed_scope.start" : 301,
+              "key.parsed_scope.end" : 303,
+              "key.parsed_scope.start" : 303,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openViewController:animated:"
             },
@@ -24181,13 +24183,13 @@
               "key.doc.comment" : "使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 304,
+              "key.doc.line" : 306,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+openViewController:animated:completion:",
               "key.parsed_declaration" : "+ (void)openViewController:(nonnull UIViewController *)viewController\n                  animated:(BOOL)animated\n                completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 304,
-              "key.parsed_scope.start" : 304,
+              "key.parsed_scope.end" : 306,
+              "key.parsed_scope.start" : 306,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)openViewController:animated:completion:"
             },
@@ -24199,13 +24201,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 307,
+              "key.doc.line" : 309,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+closeViewControllerAnimated:",
               "key.parsed_declaration" : "+ (BOOL)closeViewControllerAnimated:(BOOL)animated;",
-              "key.parsed_scope.end" : 307,
-              "key.parsed_scope.start" : 307,
+              "key.parsed_scope.end" : 309,
+              "key.parsed_scope.start" : 309,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)closeViewControllerAnimated:"
             },
@@ -24217,13 +24219,13 @@
               "key.doc.comment" : "关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调",
               "key.doc.file" : "docs\/FWFramework\/FWRouter.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 310,
+              "key.doc.line" : 312,
               "key.filepath" : "docs\/FWFramework\/FWRouter.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
               "key.name" : "+closeViewControllerAnimated:completion:",
               "key.parsed_declaration" : "+ (BOOL)closeViewControllerAnimated:(BOOL)animated\n                         completion:(nullable void (^)(void))completion;",
-              "key.parsed_scope.end" : 310,
-              "key.parsed_scope.start" : 310,
+              "key.parsed_scope.end" : 312,
+              "key.parsed_scope.start" : 312,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)FWRouter(cm)closeViewControllerAnimated:completion:"
             }
@@ -28628,12 +28630,12 @@
               "key.doc.line" : 64,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openAppStore:",
-              "key.parsed_declaration" : "+ (void)fw_openAppStore:(nonnull NSString *)appId;",
+              "key.name" : "+fw_openAppStore:completionHandler:",
+              "key.parsed_declaration" : "+ (void)fw_openAppStore:(nonnull NSString *)appId\n      completionHandler:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 64,
               "key.parsed_scope.start" : 64,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppStore:"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppStore:completionHandler:"
             },
             {
               "key.always_deprecated" : false,
@@ -28646,12 +28648,12 @@
               "key.doc.line" : 67,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openAppStoreReview:",
-              "key.parsed_declaration" : "+ (void)fw_openAppStoreReview:(nonnull NSString *)appId;",
+              "key.name" : "+fw_openAppStoreReview:completionHandler:",
+              "key.parsed_declaration" : "+ (void)fw_openAppStoreReview:(nonnull NSString *)appId\n            completionHandler:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 67,
               "key.parsed_scope.start" : 67,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppStoreReview:"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppStoreReview:completionHandler:"
             },
             {
               "key.always_deprecated" : false,
@@ -28682,12 +28684,12 @@
               "key.doc.line" : 73,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openAppSettings",
-              "key.parsed_declaration" : "+ (void)fw_openAppSettings;",
+              "key.name" : "+fw_openAppSettings:",
+              "key.parsed_declaration" : "+ (void)fw_openAppSettings:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 73,
               "key.parsed_scope.start" : 73,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppSettings"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openAppSettings:"
             },
             {
               "key.always_deprecated" : false,
@@ -28700,12 +28702,12 @@
               "key.doc.line" : 76,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openMailApp:",
-              "key.parsed_declaration" : "+ (void)fw_openMailApp:(nonnull NSString *)email;",
+              "key.name" : "+fw_openMailApp:completionHandler:",
+              "key.parsed_declaration" : "+ (void)fw_openMailApp:(nonnull NSString *)email\n     completionHandler:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 76,
               "key.parsed_scope.start" : 76,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openMailApp:"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openMailApp:completionHandler:"
             },
             {
               "key.always_deprecated" : false,
@@ -28718,12 +28720,12 @@
               "key.doc.line" : 79,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openMessageApp:",
-              "key.parsed_declaration" : "+ (void)fw_openMessageApp:(nonnull NSString *)phone;",
+              "key.name" : "+fw_openMessageApp:completionHandler:",
+              "key.parsed_declaration" : "+ (void)fw_openMessageApp:(nonnull NSString *)phone\n        completionHandler:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 79,
               "key.parsed_scope.start" : 79,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openMessageApp:"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openMessageApp:completionHandler:"
             },
             {
               "key.always_deprecated" : false,
@@ -28736,12 +28738,12 @@
               "key.doc.line" : 82,
               "key.filepath" : "docs\/FWFramework\/FWToolkit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_openPhoneApp:",
-              "key.parsed_declaration" : "+ (void)fw_openPhoneApp:(nonnull NSString *)phone;",
+              "key.name" : "+fw_openPhoneApp:completionHandler:",
+              "key.parsed_declaration" : "+ (void)fw_openPhoneApp:(nonnull NSString *)phone\n      completionHandler:(nullable void (^)(BOOL))completion;",
               "key.parsed_scope.end" : 82,
               "key.parsed_scope.start" : 82,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openPhoneApp:"
+              "key.usr" : "c:objc(cs)UIApplication(cm)fw_openPhoneApp:completionHandler:"
             },
             {
               "key.always_deprecated" : false,

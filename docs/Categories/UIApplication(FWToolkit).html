@@ -17,7 +17,7 @@
     <a title="UIApplication(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.0 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -421,7 +421,10 @@
                 <a href="../Constants.html#/c:FWMediator.h@FWModulePriorityLow">FWModulePriorityLow</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Constants.html#/c:@FWRouterNavigationOptionsKey">FWRouterNavigationOptionsKey</a>
+                <a href="../Constants.html#/c:@FWRouterHandlerKey">FWRouterHandlerKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:@FWRouterOptionsKey">FWRouterOptionsKey</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Constants.html#/c:@FWRouterSourceKey">FWRouterSourceKey</a>
@@ -1255,9 +1258,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppStore:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openAppStore:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppStore:">+fw_openAppStore:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppStore:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openAppStore:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppStore:completionHandler:">+fw_openAppStore:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1272,7 +1275,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openAppStore</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">appId</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openAppStore</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">appId</span>
+      <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1282,9 +1286,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppStoreReview:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openAppStoreReview:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppStoreReview:">+fw_openAppStoreReview:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppStoreReview:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openAppStoreReview:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppStoreReview:completionHandler:">+fw_openAppStoreReview:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1299,7 +1303,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openAppStoreReview</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">appId</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openAppStoreReview</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">appId</span>
+            <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1336,9 +1341,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppSettings"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openAppSettings" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppSettings">+fw_openAppSettings</a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openAppSettings:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openAppSettings:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openAppSettings:">+fw_openAppSettings:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1353,7 +1358,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">fw_openAppSettings</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openAppSettings</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1363,9 +1368,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openMailApp:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openMailApp:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openMailApp:">+fw_openMailApp:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openMailApp:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openMailApp:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openMailApp:completionHandler:">+fw_openMailApp:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1380,7 +1385,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openMailApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">email</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openMailApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">email</span>
+     <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1390,9 +1396,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openMessageApp:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openMessageApp:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openMessageApp:">+fw_openMessageApp:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openMessageApp:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openMessageApp:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openMessageApp:completionHandler:">+fw_openMessageApp:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1407,7 +1413,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openMessageApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">phone</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openMessageApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">phone</span>
+        <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1417,9 +1424,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_openPhoneApp:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_openPhoneApp:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openPhoneApp:">+fw_openPhoneApp:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_openPhoneApp:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_openPhoneApp:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_openPhoneApp:completionHandler:">+fw_openPhoneApp:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1434,7 +1441,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openPhoneApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">phone</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openPhoneApp</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">phone</span>
+      <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1669,7 +1677,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-04)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

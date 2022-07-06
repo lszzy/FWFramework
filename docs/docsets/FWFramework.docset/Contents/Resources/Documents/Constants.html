@@ -17,7 +17,7 @@
     <a title="Constants  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 3.5.0 Docs</a> (82% documented)</p>
+        <p><a href="index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -421,7 +421,10 @@
                 <a href="Constants.html#/c:FWMediator.h@FWModulePriorityLow">FWModulePriorityLow</a>
               </li>
               <li class="nav-group-task">
-                <a href="Constants.html#/c:@FWRouterNavigationOptionsKey">FWRouterNavigationOptionsKey</a>
+                <a href="Constants.html#/c:@FWRouterHandlerKey">FWRouterHandlerKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Constants.html#/c:@FWRouterOptionsKey">FWRouterOptionsKey</a>
               </li>
               <li class="nav-group-task">
                 <a href="Constants.html#/c:@FWRouterSourceKey">FWRouterSourceKey</a>
@@ -1475,7 +1478,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>路由信息来源Key</p>
+                        <p>路由信息来源Key，默认未处理</p>
 
                       </div>
                       <div class="declaration">
@@ -1493,9 +1496,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@FWRouterNavigationOptionsKey"></a>
-                    <a name="//apple_ref/swift/Constant/FWRouterNavigationOptionsKey" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@FWRouterNavigationOptionsKey">FWRouterNavigationOptionsKey</a>
+                    <a name="/c:@FWRouterOptionsKey"></a>
+                    <a name="//apple_ref/swift/Constant/FWRouterOptionsKey" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@FWRouterOptionsKey">FWRouterOptionsKey</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1503,15 +1506,43 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>路由信息导航选项Key</p>
+                        <p>路由信息选项Key，默认支持NavigationOptions</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">NS_SWIFT_NAME</span><span class="p">(</span><span class="n">RouterNavigationOptionsKey</span><span class="p">)</span> <span class="k">const</span> <span class="n"><a href="Type%20Definitions.html#/c:FWRouter.h@T@FWRouterUserInfoKey">FWRouterUserInfoKey</a></span>
-    <span class="n">FWRouterNavigationOptionsKey</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">NS_SWIFT_NAME</span><span class="p">(</span><span class="n">RouterOptionsKey</span><span class="p">)</span> <span class="k">const</span> <span class="n"><a href="Type%20Definitions.html#/c:FWRouter.h@T@FWRouterUserInfoKey">FWRouterUserInfoKey</a></span>
+    <span class="n">FWRouterOptionsKey</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@FWRouterHandlerKey"></a>
+                    <a name="//apple_ref/swift/Constant/FWRouterHandlerKey" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@FWRouterHandlerKey">FWRouterHandlerKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">extern</span> <span class="n">NS_SWIFT_NAME</span><span class="p">(</span><span class="n">RouterHandlerKey</span><span class="p">)</span> <span class="k">const</span> <span class="n"><a href="Type%20Definitions.html#/c:FWRouter.h@T@FWRouterUserInfoKey">FWRouterUserInfoKey</a></span>
+    <span class="n">FWRouterHandlerKey</span></code></pre>
 
                         </div>
                       </div>
@@ -1740,7 +1771,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-04)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
