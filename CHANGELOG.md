@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.1] - 2022-07-06
+
+### Added
+* Added completion callback for quick open URL method
+* Route userInfo supports custom routeHandler
+
 ## [3.5.0] - 2022-07-04
 
 ### Added
