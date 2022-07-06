@@ -313,7 +313,12 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         }
         if (!context.isOpening) return object;
         
-        [FWRouter openViewController:(UIViewController *)object animated:YES];
+        void (^routerHandler)(FWRouterContext *context, UIViewController *viewController) = context.userInfo[FWRouterHandlerKey];
+        if (routerHandler != nil) {
+            routerHandler(context, viewController);
+        } else {
+            [FWRouter openViewController:viewController animated:YES];
+        }
         return nil;
     };
 }
@@ -367,11 +372,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (handler) {
         id object = handler(context);
-        if (!object) return;
-        
-        id (^routeHandler)(FWRouterContext *context, id object) = context.userInfo[FWRouterHandlerKey];
-        if (!routeHandler) routeHandler = [self sharedInstance].routeHandler;
-        if (routeHandler) routeHandler(context, object);
+        if (object && [self sharedInstance].routeHandler) {
+            [self sharedInstance].routeHandler(context, object);
+        }
         return;
     }
     if ([self sharedInstance].errorHandler) {
@@ -411,11 +414,9 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     }
     if (handler) {
         id object = handler(context);
-        if (!object) return object;
-        
-        id (^routeHandler)(FWRouterContext *context, id object) = context.userInfo[FWRouterHandlerKey];
-        if (!routeHandler) routeHandler = [self sharedInstance].routeHandler;
-        if (routeHandler) return routeHandler(context, object);
+        if (object && [self sharedInstance].routeHandler) {
+            return [self sharedInstance].routeHandler(context, object);
+        }
         return object;
     }
     if ([self sharedInstance].errorHandler) {
