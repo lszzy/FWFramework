@@ -23,10 +23,12 @@ typedef void (^FWRouterCompletion)(id _Nullable result) NS_SWIFT_NAME(RouterComp
 
 /** 路由用户信息Key定义 */
 typedef NSString *FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
-/** 路由信息来源Key */
+/** 路由信息来源Key，默认未处理 */
 FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
-/** 路由信息导航选项Key */
-FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterNavigationOptionsKey NS_SWIFT_NAME(RouterNavigationOptionsKey);
+/** 路由信息选项Key，默认支持NavigationOptions */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterOptionsKey NS_SWIFT_NAME(RouterOptionsKey);
+/** 路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效 */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterHandlerKey NS_SWIFT_NAME(RouterHandlerKey);
 
 /** URL路由上下文 */
 NS_SWIFT_NAME(RouterContext)

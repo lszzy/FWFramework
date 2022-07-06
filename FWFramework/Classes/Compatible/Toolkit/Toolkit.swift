@@ -131,13 +131,13 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开AppStore下载页
-    public static func openAppStore(_ appId: String) {
-        Base.__fw_openAppStore(appId)
+    public static func openAppStore(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openAppStore(appId, completionHandler: completionHandler)
     }
 
     /// 打开AppStore评价页
-    public static func openAppStoreReview(_ appId: String) {
-        Base.__fw_openAppStore(appId)
+    public static func openAppStoreReview(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openAppStore(appId, completionHandler: completionHandler)
     }
 
     /// 打开应用内评价，有次数限制
@@ -146,23 +146,23 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统应用设置页
-    public static func openAppSettings() {
-        Base.__fw_openAppSettings()
+    public static func openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openAppSettings(completionHandler)
     }
 
     /// 打开系统邮件App
-    public static func openMailApp(_ email: String) {
-        Base.__fw_openMailApp(email)
+    public static func openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openMailApp(email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
-    public static func openMessageApp(_ phone: String) {
-        Base.__fw_openMessageApp(phone)
+    public static func openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openMessageApp(phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
-    public static func openPhoneApp(_ phone: String) {
-        Base.__fw_openPhoneApp(phone)
+    public static func openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+        Base.__fw_openPhoneApp(phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享

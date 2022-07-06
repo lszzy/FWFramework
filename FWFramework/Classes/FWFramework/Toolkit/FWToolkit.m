@@ -170,15 +170,15 @@
     return NO;
 }
 
-+ (void)fw_openAppStore:(NSString *)appId
++ (void)fw_openAppStore:(NSString *)appId completionHandler:(void (^)(BOOL))completion
 {
     // SKStoreProductViewController可以内部打开
-    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId]];
+    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId] completionHandler:completion];
 }
 
-+ (void)fw_openAppStoreReview:(NSString *)appId
++ (void)fw_openAppStoreReview:(NSString *)appId completionHandler:(void (^)(BOOL))completion
 {
-    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId]];
+    [self fw_openURL:[NSString stringWithFormat:@"https://apps.apple.com/app/id%@?action=write-review", appId] completionHandler:completion];
 }
 
 + (void)fw_openAppReview
@@ -186,25 +186,25 @@
     [SKStoreReviewController requestReview];
 }
 
-+ (void)fw_openAppSettings
++ (void)fw_openAppSettings:(void (^)(BOOL))completion
 {
-    [self fw_openURL:UIApplicationOpenSettingsURLString];
+    [self fw_openURL:UIApplicationOpenSettingsURLString completionHandler:completion];
 }
 
-+ (void)fw_openMailApp:(NSString *)email
++ (void)fw_openMailApp:(NSString *)email completionHandler:(void (^)(BOOL))completion
 {
-    [self fw_openURL:[NSString stringWithFormat:@"mailto://%@", email]];
+    [self fw_openURL:[NSString stringWithFormat:@"mailto://%@", email] completionHandler:completion];
 }
 
-+ (void)fw_openMessageApp:(NSString *)phone
++ (void)fw_openMessageApp:(NSString *)phone completionHandler:(void (^)(BOOL))completion
 {
-    [self fw_openURL:[NSString stringWithFormat:@"sms://%@", phone]];
+    [self fw_openURL:[NSString stringWithFormat:@"sms://%@", phone] completionHandler:completion];
 }
 
-+ (void)fw_openPhoneApp:(NSString *)phone
++ (void)fw_openPhoneApp:(NSString *)phone completionHandler:(void (^)(BOOL))completion
 {
     // tel:为直接拨打电话
-    [self fw_openURL:[NSString stringWithFormat:@"telprompt://%@", phone]];
+    [self fw_openURL:[NSString stringWithFormat:@"telprompt://%@", phone] completionHandler:completion];
 }
 
 + (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
