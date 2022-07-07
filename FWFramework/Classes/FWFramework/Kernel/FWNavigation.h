@@ -52,6 +52,9 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// 使用最顶部的导航栏控制器打开控制器
 - (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
+/// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
+- (BOOL)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
+
 /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
 - (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
@@ -78,6 +81,9 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 
 /// 使用最顶部的导航栏控制器打开控制器
 + (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
+
+/// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
++ (BOOL)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
 + (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -134,7 +140,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
-- (void)fw_pushViewController:(UIViewController *)viewController popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+- (void)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// pop指定数量界面，至少保留一个根控制器，完成时回调
 - (void)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;

@@ -34,6 +34,12 @@ extension Wrapper where Base: UIWindow {
     public func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
         return base.__fw_push(viewController, animated: animated)
     }
+    
+    /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
+    @discardableResult
+    public func push(_ viewController: UIViewController, pop count: UInt, animated: Bool = true) -> Bool {
+        return base.__fw_push(viewController, pop: count, animated: animated)
+    }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
@@ -82,6 +88,12 @@ extension Wrapper where Base: UIWindow {
     @discardableResult
     public static func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
         return Base.__fw_push(viewController, animated: animated)
+    }
+    
+    /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
+    @discardableResult
+    public static func push(_ viewController: UIViewController, pop count: UInt, animated: Bool = true) -> Bool {
+        return Base.__fw_push(viewController, pop: count, animated: animated)
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
@@ -166,7 +178,7 @@ extension Wrapper where Base: UINavigationController {
     
     /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
     public func pushViewController(_ viewController: UIViewController, pop count: UInt, animated: Bool, completion: (() -> Void)? = nil) {
-        base.__fw_pushViewController(viewController, popViewControllers: count, animated: animated, completion: completion)
+        base.__fw_pushViewController(viewController, pop: count, animated: animated, completion: completion)
     }
 
     /// pop指定数量界面，至少保留一个根控制器，完成时回调
