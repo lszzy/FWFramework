@@ -164,6 +164,16 @@ extension Wrapper where Base: UINavigationController {
         base.__fw_setViewControllers(viewControllers, animated: animated, completion: completion)
     }
     
+    /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
+    public func pushViewController(_ viewController: UIViewController, pop count: UInt, animated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, popViewControllers: count, animated: animated, completion: completion)
+    }
+
+    /// pop指定数量界面，至少保留一个根控制器，完成时回调
+    public func popViewControllers(_ count: UInt, animated: Bool, completion: (() -> Void)? = nil) {
+        return base.__fw_popViewControllers(count, animated: animated, completion: completion)
+    }
+    
     // MARK: - Workflow
     /// 当前最外层工作流名称，即topViewController的工作流名称
     public var topWorkflowName: String? {
