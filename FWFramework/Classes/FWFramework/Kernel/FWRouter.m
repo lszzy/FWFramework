@@ -311,7 +311,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         if (routerHandler != nil) {
             routerHandler(context, viewController);
         } else {
-            FWNavigationOptions options = FWNavigationOptionTransitionAutomatic;
+            FWNavigationOptions options = 0;
             NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
             if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
                 options = [routerOptions unsignedIntegerValue];
