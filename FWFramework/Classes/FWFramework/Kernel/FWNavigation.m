@@ -180,53 +180,65 @@
 {
     FWNavigationOptions options = viewController.fw_navigationOptions;
     BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
-    if ((options & FWNavigationOptionNavigation) == FWNavigationOptionNavigation) {
+    if ((options & FWNavigationOptionEmbedInNavigation) == FWNavigationOptionEmbedInNavigation) {
         if (!isNavigation) {
             viewController = [[UINavigationController alloc] initWithRootViewController:viewController];
             isNavigation = YES;
         }
     }
     
-    if ((options & FWNavigationOptionFullScreen) == FWNavigationOptionFullScreen) {
+    if ((FWNavigationOptionStyleFullScreen & options) == options) {
         viewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    } else if ((options & FWNavigationOptionPageSheet) == FWNavigationOptionPageSheet) {
+    } else if ((FWNavigationOptionStylePageSheet & options) == options) {
         viewController.modalPresentationStyle = UIModalPresentationPageSheet;
     }
     
     BOOL isPush = NO;
-    if ((options & FWNavigationOptionPush) == FWNavigationOptionPush) {
+    if ((FWNavigationOptionTransitionPush & options) == options) {
         isPush = YES;
-    } else if ((options & FWNavigationOptionPresent) == FWNavigationOptionPresent) {
+    } else if ((FWNavigationOptionTransitionPresent & options) == options) {
         isPush = NO;
     } else {
         isPush = self.navigationController ? YES : NO;
     }
     if (isNavigation) isPush = NO;
     
+    NSUInteger popCount = 0;
+    if ((FWNavigationOptionPopTop & options) == options) {
+        popCount = 1;
+    } else if ((FWNavigationOptionPopTop2 & options) == options) {
+        popCount = 2;
+    } else if ((FWNavigationOptionPopTop3 & options) == options) {
+        popCount = 3;
+    } else if ((FWNavigationOptionPopTop4 & options) == options) {
+        popCount = 4;
+    } else if ((FWNavigationOptionPopTop5 & options) == options) {
+        popCount = 5;
+    } else if ((FWNavigationOptionPopTop6 & options) == options) {
+        popCount = 6;
+    }
+    
     if (isPush) {
-        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+        if ((FWNavigationOptionPopToRoot & options) == options) {
             NSMutableArray *viewControllers = [NSMutableArray arrayWithObjects:self.navigationController.viewControllers.firstObject, nil];
             [viewControllers addObject:viewController];
             [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
-        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
-            NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-            [viewControllers removeLastObject];
-            [viewControllers addObject:viewController];
-            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
+        } else if (popCount > 0) {
+            [self.navigationController fw_pushViewController:viewController pop:popCount animated:animated completion:completion];
         } else {
             [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
         }
     } else {
-        if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+        if ((FWNavigationOptionPopToRoot & options) == options) {
             __weak UINavigationController *weakNav = self.navigationController;
             [self presentViewController:viewController animated:animated completion:^{
                 [weakNav popToRootViewControllerAnimated:NO];
                 if (completion) completion();
             }];
-        } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+        } else if (popCount > 0) {
             __weak UINavigationController *weakNav = self.navigationController;
             [self presentViewController:viewController animated:animated completion:^{
-                [weakNav popViewControllerAnimated:NO];
+                [weakNav fw_popViewControllers:popCount animated:NO completion:nil];
                 if (completion) completion();
             }];
         } else {

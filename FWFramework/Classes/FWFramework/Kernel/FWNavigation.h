@@ -13,27 +13,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 控制器导航选项定义
 ///
-/// @const FWNavigationOptionPush 使用push方式打开
-/// @const FWNavigationOptionPresent 使用present方式打开
+/// @const FWNavigationOptionEmbedInNavigation 嵌入导航控制器并使用present转场方式
 ///
-/// @const FWNavigationOptionNavigation 附加导航控制器并使用present方式打开
+/// @const FWNavigationOptionTransitionAutomatic 自动判断转场方式，默认
+/// @const FWNavigationOptionTransitionPush 指定push转场方式
+/// @const FWNavigationOptionTransitionPresent 指定present转场方式
 ///
+/// @const FWNavigationOptionPopNone 不pop控制器，默认
+/// @const FWNavigationOptionPopToRoot 同时pop到根控制器
 /// @const FWNavigationOptionPopTop 同时pop顶部控制器
-/// @const FWNavigationOptionPopToRoot 使用pop到根控制器
+/// @const FWNavigationOptionPopTop2 同时pop顶部2个控制器
+/// @const FWNavigationOptionPopTop3 同时pop顶部3个控制器
+/// @const FWNavigationOptionPopTop4 同时pop顶部4个控制器
+/// @const FWNavigationOptionPopTop5 同时pop顶部5个控制器
+/// @const FWNavigationOptionPopTop6 同时pop顶部6个控制器
 ///
-/// @const FWNavigationOptionPageSheet 指定present样式为pageSheet
-/// @const FWNavigationOptionFullScreen 指定present样式为ullScreen
+/// @const FWNavigationOptionStyleAutomatic 自动使用系统present样式，默认
+/// @const FWNavigationOptionStyleFullScreen 指定present样式为ullScreen
+/// @const FWNavigationOptionStylePageSheet 指定present样式为pageSheet
 typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
-    FWNavigationOptionPush       = 1 << 0,
-    FWNavigationOptionPresent    = 1 << 1,
+    FWNavigationOptionEmbedInNavigation   = 1 << 0,
     
-    FWNavigationOptionNavigation = 1 << 2,
+    FWNavigationOptionTransitionAutomatic = 0 << 16, // default
+    FWNavigationOptionTransitionPush      = 1 << 16,
+    FWNavigationOptionTransitionPresent   = 2 << 16,
     
-    FWNavigationOptionPopTop     = 1 << 3,
-    FWNavigationOptionPopToRoot  = 1 << 4,
+    FWNavigationOptionPopNone             = 0 << 20, // default
+    FWNavigationOptionPopToRoot           = 1 << 20,
+    FWNavigationOptionPopTop              = 2 << 20,
+    FWNavigationOptionPopTop2             = 3 << 20,
+    FWNavigationOptionPopTop3             = 4 << 20,
+    FWNavigationOptionPopTop4             = 5 << 20,
+    FWNavigationOptionPopTop5             = 6 << 20,
+    FWNavigationOptionPopTop6             = 7 << 20,
     
-    FWNavigationOptionPageSheet  = 1 << 5,
-    FWNavigationOptionFullScreen = 1 << 6,
+    FWNavigationOptionStyleAutomatic      = 0 << 24, // default
+    FWNavigationOptionStyleFullScreen     = 3 << 24,
+    FWNavigationOptionStylePageSheet      = 7 << 24,
 } NS_SWIFT_NAME(NavigationOptions);
 
 #pragma mark - UIWindow+FWNavigation
