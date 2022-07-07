@@ -317,7 +317,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
         if (routerHandler != nil) {
             routerHandler(context, viewController);
         } else {
-            [FWRouter openViewController:viewController animated:YES];
+            [FWRouter openViewController:viewController animated:YES completion:nil];
         }
         return nil;
     };
@@ -821,19 +821,9 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-+ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    [self openViewController:viewController animated:animated completion:nil];
-}
-
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [UIWindow fw_openViewController:viewController animated:animated completion:completion];
-}
-
-+ (BOOL)closeViewControllerAnimated:(BOOL)animated
-{
-    return [self closeViewControllerAnimated:animated completion:nil];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
