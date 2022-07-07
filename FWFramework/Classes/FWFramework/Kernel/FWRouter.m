@@ -10,7 +10,6 @@
 #import "FWRouter.h"
 #import "FWLoader.h"
 #import "FWSwizzle.h"
-#import "FWNavigation.h"
 #import <objc/runtime.h>
 
 FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
@@ -304,20 +303,20 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if ([self sharedInstance].routeHandler) return;
     
     [self sharedInstance].routeHandler = handler ?: ^id(FWRouterContext *context, id object) {
+        if (!context.isOpening) return object;
         if (![object isKindOfClass:[UIViewController class]]) return object;
         
         UIViewController *viewController = (UIViewController *)object;
-        NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
-        if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
-            viewController.fw_navigationOptions = [routerOptions unsignedIntegerValue];
-        }
-        if (!context.isOpening) return object;
-        
         void (^routerHandler)(FWRouterContext *context, UIViewController *viewController) = context.userInfo[FWRouterHandlerKey];
         if (routerHandler != nil) {
             routerHandler(context, viewController);
         } else {
-            [FWRouter openViewController:viewController animated:YES completion:nil];
+            FWNavigationOptions options = FWNavigationOptionTransitionAutomatic;
+            NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
+            if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
+                options = [routerOptions unsignedIntegerValue];
+            }
+            [FWRouter openViewController:viewController options:options animated:YES completion:nil];
         }
         return nil;
     };
@@ -826,9 +825,9 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-+ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
++ (void)openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [UIWindow fw_openViewController:viewController animated:animated completion:completion];
+    [UIWindow fw_openViewController:viewController options:options animated:animated completion:completion];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion

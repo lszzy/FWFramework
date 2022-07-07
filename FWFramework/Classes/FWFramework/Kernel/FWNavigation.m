@@ -75,9 +75,9 @@
     [[self fw_topPresentedController] presentViewController:viewController animated:animated completion:completion];
 }
 
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+- (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [[self fw_topViewController] fw_openViewController:viewController animated:animated completion:completion];
+    [[self fw_topViewController] fw_openViewController:viewController options:options animated:animated completion:completion];
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
@@ -148,9 +148,9 @@
     [self.fw_mainWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-+ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
++ (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    [self.fw_mainWindow fw_openViewController:viewController animated:animated completion:completion];
+    [self.fw_mainWindow fw_openViewController:viewController options:options animated:animated completion:completion];
 }
 
 + (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
@@ -166,19 +166,8 @@
 
 #pragma mark - Navigation
 
-- (FWNavigationOptions)fw_navigationOptions
+- (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
 {
-    return [objc_getAssociatedObject(self, @selector(fw_navigationOptions)) unsignedIntegerValue];
-}
-
-- (void)setFw_navigationOptions:(FWNavigationOptions)navigationOptions
-{
-    objc_setAssociatedObject(self, @selector(fw_navigationOptions), @(navigationOptions), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
-{
-    FWNavigationOptions options = viewController.fw_navigationOptions;
     BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
     if ((options & FWNavigationOptionEmbedInNavigation) == FWNavigationOptionEmbedInNavigation) {
         if (!isNavigation) {
