@@ -60,6 +60,16 @@
     return NO;
 }
 
+- (BOOL)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated
+{
+    UINavigationController *navigationController = [self fw_topNavigationController];
+    if (navigationController) {
+        [navigationController fw_pushViewController:viewController pop:count animated:animated completion:nil];
+        return YES;
+    }
+    return NO;
+}
+
 - (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [[self fw_topPresentedController] presentViewController:viewController animated:animated completion:completion];
@@ -126,6 +136,11 @@
 + (BOOL)fw_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     return [self.fw_mainWindow fw_pushViewController:viewController animated:animated];
+}
+
++ (BOOL)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated
+{
+    return [self.fw_mainWindow fw_pushViewController:viewController pop:count animated:animated];
 }
 
 + (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
@@ -327,7 +342,7 @@
     }
 }
 
-- (void)fw_pushViewController:(UIViewController *)viewController popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
+- (void)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (count < 1 || self.viewControllers.count < 2) {
         [self fw_pushViewController:viewController animated:animated completion:completion];

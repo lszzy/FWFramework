@@ -816,6 +816,11 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_pushViewController:viewController animated:animated];
 }
 
++ (void)pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated
+{
+    [UIWindow fw_pushViewController:viewController pop:count animated:animated];
+}
+
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
