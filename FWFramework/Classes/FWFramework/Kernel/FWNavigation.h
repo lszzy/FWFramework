@@ -55,14 +55,8 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
 - (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
-/// 使用最顶部的视图控制器打开控制器，自动判断push|present
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -88,14 +82,8 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
 + (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
-/// 使用最顶部的视图控制器打开控制器，自动判断push|present
-+ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
 + (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
-+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
 + (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -111,14 +99,8 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// 自定义open|close导航选项，默认自动判断
 @property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;
 
-/// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -161,15 +143,6 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 @property (nonatomic, copy, readonly, nullable) NSString *fw_topWorkflowName NS_REFINED_FOR_SWIFT;
 
 /**
- push控制器，并清理最外层工作流（不属于工作流则不清理）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
- 
- @param viewController push的控制器
- @param animated 是否执行动画
- */
-- (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
-/**
  push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
  
@@ -179,15 +152,6 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
- push控制器，并清理非根控制器（只保留根控制器）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
- 
- @param viewController push的控制器
- @param animated 是否执行动画
- */
-- (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
-/**
  push控制器，并清理非根控制器（只保留根控制器），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
  
@@ -195,16 +159,6 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
  @param animated 是否执行动画
  */
 - (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/**
- push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
- 
- @param viewController push的控制器
- @param workflows 指定工作流
- @param animated 是否执行动画
- */
-- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /**
  push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调
@@ -217,29 +171,12 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
- pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
- 
- @param animated 是否执行动画
- */
-- (void)fw_popTopWorkflowAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
-/**
  pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
  
  @param animated 是否执行动画
  */
 - (void)fw_popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/**
- pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
- 
- @param workflows 指定工作流
- @param animated  是否执行动画
- */
-- (void)fw_popWorkflows:(nullable NSArray<NSString *> *)workflows animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
 /**
  pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调
