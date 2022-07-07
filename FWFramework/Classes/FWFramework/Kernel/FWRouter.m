@@ -462,7 +462,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if ([parameters isKindOfClass:[NSArray class]]) {
         [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (idx < [parameters count]) {
-                id value = [parameters objectAtIndex:[parameters count] - 1];
+                id value = [parameters objectAtIndex:idx];
                 parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", value]];
             }
         }];
