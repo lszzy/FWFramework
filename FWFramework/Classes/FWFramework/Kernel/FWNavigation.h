@@ -75,7 +75,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+- (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -105,7 +105,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 + (void)fw_presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
-+ (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
++ (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
 + (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
@@ -118,11 +118,8 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 
 #pragma mark - Navigation
 
-/// 自定义open|close导航选项，默认自动判断
-@property (nonatomic, assign) FWNavigationOptions fw_navigationOptions NS_REFINED_FOR_SWIFT;
-
 /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调
-- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+- (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;

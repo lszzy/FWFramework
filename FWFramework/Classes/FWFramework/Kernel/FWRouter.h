@@ -7,7 +7,7 @@
  @updated    2018/11/29
  */
 
-#import <UIKit/UIKit.h>
+#import "FWNavigation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -303,7 +303,7 @@ NS_SWIFT_NAME(Router)
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 /// 使用最顶部的视图控制器打开控制器，自动判断push|present，完成时回调
-+ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
++ (void)openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
 + (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion;
