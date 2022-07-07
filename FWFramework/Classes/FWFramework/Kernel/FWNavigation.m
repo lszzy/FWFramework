@@ -166,6 +166,11 @@
 
 #pragma mark - Navigation
 
+- (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [self fw_openViewController:viewController options:0 animated:animated completion:nil];
+}
+
 - (void)fw_openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
 {
     BOOL isNavigation = [viewController isKindOfClass:[UINavigationController class]];
@@ -234,6 +239,11 @@
             [self presentViewController:viewController animated:animated completion:completion];
         }
     }
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
+{
+    return [self fw_closeViewControllerAnimated:animated completion:nil];
 }
 
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
