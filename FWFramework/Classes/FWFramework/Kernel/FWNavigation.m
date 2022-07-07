@@ -327,6 +327,31 @@
     }
 }
 
+- (void)fw_pushViewController:(UIViewController *)viewController popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (count < 1 || self.viewControllers.count < 2) {
+        [self fw_pushViewController:viewController animated:animated completion:completion];
+        return;
+    }
+    
+    NSUInteger remainCount = MAX(1, self.viewControllers.count - count);
+    NSMutableArray *viewControllers = [self.viewControllers subarrayWithRange:NSMakeRange(0, remainCount)].mutableCopy;
+    [viewControllers addObject:viewController];
+    [self fw_setViewControllers:viewControllers animated:animated completion:completion];
+}
+
+- (void)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (count < 1 || self.viewControllers.count < 2) {
+        if (completion) completion();
+        return;
+    }
+    
+    NSUInteger remainCount = MAX(1, self.viewControllers.count - count);
+    NSArray *viewControllers = [self.viewControllers subarrayWithRange:NSMakeRange(0, remainCount)];
+    [self fw_setViewControllers:viewControllers animated:animated completion:completion];
+}
+
 #pragma mark - Workflow
 
 - (NSString *)fw_topWorkflowName
@@ -400,6 +425,7 @@
 - (void)fw_popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (workflows.count < 1) {
+        if (completion) completion();
         return;
     }
     

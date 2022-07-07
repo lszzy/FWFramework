@@ -133,6 +133,12 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// 设置界面数组，完成时回调
 - (void)fw_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
+/// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
+- (void)fw_pushViewController:(UIViewController *)viewController popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/// pop指定数量界面，至少保留一个根控制器，完成时回调
+- (void)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
 #pragma mark - Workflow
 
 /**
