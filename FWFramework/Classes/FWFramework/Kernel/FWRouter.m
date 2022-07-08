@@ -830,9 +830,9 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_openViewController:viewController animated:animated options:options completion:completion];
 }
 
-+ (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
++ (BOOL)closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    return [UIWindow fw_closeViewControllerAnimated:animated completion:completion];
+    return [UIWindow fw_closeViewControllerAnimated:animated options:options completion:completion];
 }
 
 @end

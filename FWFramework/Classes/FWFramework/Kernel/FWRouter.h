@@ -306,7 +306,7 @@ NS_SWIFT_NAME(Router)
 + (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
-+ (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion;
++ (BOOL)closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion;
 
 @end
 

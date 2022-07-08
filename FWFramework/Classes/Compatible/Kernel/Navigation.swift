@@ -53,8 +53,8 @@ extension Wrapper where Base: UIWindow {
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return base.__fw_closeViewController(animated: true, completion: completion)
+    public func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return base.__fw_closeViewController(animated: true, options: options, completion: completion)
     }
     
     // MARK: - Static
@@ -108,8 +108,8 @@ extension Wrapper where Base: UIWindow {
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public static func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return Base.__fw_closeViewController(animated: true, completion: completion)
+    public static func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return Base.__fw_closeViewController(animated: true, options: options, completion: completion)
     }
     
 }
@@ -125,8 +125,8 @@ extension Wrapper where Base: UIViewController {
 
     /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
     @discardableResult
-    public func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return base.__fw_close(animated: true, completion: completion)
+    public func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return base.__fw_close(animated: true, options: options, completion: completion)
     }
     
     // MARK: - Workflow
@@ -175,8 +175,9 @@ extension Wrapper where Base: UINavigationController {
         base.__fw_pushViewController(viewController, pop: count, animated: animated, completion: completion)
     }
 
-    /// pop指定数量界面，至少保留一个根控制器，完成时回调
-    public func popViewControllers(_ count: UInt, animated: Bool, completion: (() -> Void)? = nil) {
+    /// pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调
+    @discardableResult
+    public func popViewControllers(_ count: UInt, animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
         return base.__fw_popViewControllers(count, animated: animated, completion: completion)
     }
     

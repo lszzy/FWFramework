@@ -80,9 +80,9 @@
     [[self fw_topViewController] fw_openViewController:viewController animated:animated options:options completion:completion];
 }
 
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated completion:completion];
+    return [[self fw_topViewController] fw_closeViewControllerAnimated:animated options:options completion:completion];
 }
 
 + (UIWindow *)fw_mainWindow
@@ -153,9 +153,9 @@
     [self.fw_mainWindow fw_openViewController:viewController animated:animated options:options completion:completion];
 }
 
-+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
++ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated completion:completion];
+    return [self.fw_mainWindow fw_closeViewControllerAnimated:animated options:options completion:completion];
 }
 
 @end
@@ -197,6 +197,46 @@
     }
     if (isNavigation) isPush = NO;
     
+    if (isPush) {
+        NSUInteger popCount = [self fw_popCountForOptions:options];
+        [self.navigationController fw_pushViewController:viewController pop:popCount animated:animated completion:completion];
+    } else {
+        [self presentViewController:viewController animated:animated completion:completion];
+    }
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
+{
+    return [self fw_closeViewControllerAnimated:animated options:0 completion:nil];
+}
+
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
+{
+    BOOL isPop = NO;
+    BOOL isDismiss = NO;
+    if ((options & FWNavigationOptionTransitionPop) == FWNavigationOptionTransitionPop) {
+        isPop = YES;
+    } else if ((options & FWNavigationOptionTransitionDismiss) == FWNavigationOptionTransitionDismiss) {
+        isDismiss = YES;
+    } else {
+        if (self.navigationController.viewControllers.count > 1) {
+            isPop = YES;
+        } else if (self.presentingViewController) {
+            isDismiss = YES;
+        }
+    }
+    
+    if (isPop) {
+        NSUInteger popCount = MAX(1, [self fw_popCountForOptions:options]);
+        if ([self.navigationController fw_popViewControllers:popCount animated:animated completion:completion]) return YES;
+    } else if (isDismiss) {
+        [self dismissViewControllerAnimated:animated completion:completion];
+        return YES;
+    }
+    return NO;
+}
+
+- (NSUInteger)fw_popCountForOptions:(FWNavigationOptions)options {
     NSUInteger popCount = 0;
     // 优先级：7 > 6、5、3 > 4、2、1
     if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
@@ -214,51 +254,7 @@
     } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
         popCount = 1;
     }
-    
-    if (isPush) {
-        if (popCount == NSUIntegerMax) {
-            NSMutableArray *viewControllers = [NSMutableArray arrayWithObjects:self.navigationController.viewControllers.firstObject, nil];
-            [viewControllers addObject:viewController];
-            [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
-        } else if (popCount > 0) {
-            [self.navigationController fw_pushViewController:viewController pop:popCount animated:animated completion:completion];
-        } else {
-            [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
-        }
-    } else {
-        if (popCount == NSUIntegerMax) {
-            __weak UINavigationController *weakNav = self.navigationController;
-            [self presentViewController:viewController animated:animated completion:^{
-                [weakNav popToRootViewControllerAnimated:NO];
-                if (completion) completion();
-            }];
-        } else if (popCount > 0) {
-            __weak UINavigationController *weakNav = self.navigationController;
-            [self presentViewController:viewController animated:animated completion:^{
-                [weakNav fw_popViewControllers:popCount animated:NO completion:nil];
-                if (completion) completion();
-            }];
-        } else {
-            [self presentViewController:viewController animated:animated completion:completion];
-        }
-    }
-}
-
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated
-{
-    return [self fw_closeViewControllerAnimated:animated completion:nil];
-}
-
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
-{
-    if (self.navigationController) {
-        if ([self.navigationController fw_popViewControllerAnimated:animated completion:completion]) return YES;
-    }
-    if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:animated completion:completion];
-        return YES;
-    }
-    return NO;
+    return popCount;
 }
 
 #pragma mark - Workflow
@@ -369,16 +365,19 @@
     [self fw_setViewControllers:viewControllers animated:animated completion:completion];
 }
 
-- (void)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
+- (NSArray<__kindof UIViewController *> *)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (count < 1 || self.viewControllers.count < 2) {
         if (completion) completion();
-        return;
+        return nil;
     }
     
     NSUInteger remainCount = MAX(1, self.viewControllers.count - count);
-    NSArray *viewControllers = [self.viewControllers subarrayWithRange:NSMakeRange(0, remainCount)];
+    NSMutableArray *currentControllers = [self.viewControllers mutableCopy];
+    NSArray *viewControllers = [currentControllers subarrayWithRange:NSMakeRange(0, remainCount)];
+    [currentControllers removeObjectsInRange:NSMakeRange(0, remainCount)];
     [self fw_setViewControllers:viewControllers animated:animated completion:completion];
+    return currentControllers;
 }
 
 #pragma mark - Workflow
