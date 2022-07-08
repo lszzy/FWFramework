@@ -39,17 +39,17 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
     FWNavigationOptionTransitionPresent   = 2 << 16,
     
     FWNavigationOptionPopNone             = 0 << 20, // default
-    FWNavigationOptionPopToRoot           = 1 << 20,
-    FWNavigationOptionPopTop              = 2 << 20,
-    FWNavigationOptionPopTop2             = 3 << 20,
-    FWNavigationOptionPopTop3             = 4 << 20,
-    FWNavigationOptionPopTop4             = 5 << 20,
-    FWNavigationOptionPopTop5             = 6 << 20,
-    FWNavigationOptionPopTop6             = 7 << 20,
+    FWNavigationOptionPopTop              = 1 << 20,
+    FWNavigationOptionPopTop2             = 2 << 20,
+    FWNavigationOptionPopTop3             = 3 << 20,
+    FWNavigationOptionPopTop4             = 4 << 20,
+    FWNavigationOptionPopTop5             = 5 << 20,
+    FWNavigationOptionPopTop6             = 6 << 20,
+    FWNavigationOptionPopToRoot           = 7 << 20,
     
     FWNavigationOptionStyleAutomatic      = 0 << 24, // default
-    FWNavigationOptionStyleFullScreen     = 3 << 24,
-    FWNavigationOptionStylePageSheet      = 7 << 24,
+    FWNavigationOptionStyleFullScreen     = 1 << 24,
+    FWNavigationOptionStylePageSheet      = 2 << 24,
 } NS_SWIFT_NAME(NavigationOptions);
 
 #pragma mark - UIWindow+FWNavigation
