@@ -18,11 +18,11 @@ class AppConfig {
     }
     
     static let environment: Environment = {
-        #if APP_PRODUCTION
+        #if RELEASE
         .production
-        #elseif APP_STAGING
+        #elseif STAGING
         .staging
-        #elseif APP_TESTING
+        #elseif TESTING
         .testing
         #else
         .development
