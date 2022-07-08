@@ -16,27 +16,31 @@ NS_ASSUME_NONNULL_BEGIN
 /// @const FWNavigationOptionEmbedInNavigation 嵌入导航控制器并使用present转场方式
 ///
 /// @const FWNavigationOptionTransitionAutomatic 自动判断转场方式，默认
-/// @const FWNavigationOptionTransitionPush 指定push转场方式
-/// @const FWNavigationOptionTransitionPresent 指定present转场方式
+/// @const FWNavigationOptionTransitionPush 指定push转场方式，仅open生效
+/// @const FWNavigationOptionTransitionPresent 指定present转场方式，仅open生效
+/// @const FWNavigationOptionTransitionPop 指定pop转场方式，仅close生效
+/// @const FWNavigationOptionTransitionDismiss 指定dismiss转场方式，仅close生效
 ///
 /// @const FWNavigationOptionPopNone 不pop控制器，默认
-/// @const FWNavigationOptionPopToRoot 同时pop到根控制器
-/// @const FWNavigationOptionPopTop 同时pop顶部控制器
-/// @const FWNavigationOptionPopTop2 同时pop顶部2个控制器
-/// @const FWNavigationOptionPopTop3 同时pop顶部3个控制器
-/// @const FWNavigationOptionPopTop4 同时pop顶部4个控制器
-/// @const FWNavigationOptionPopTop5 同时pop顶部5个控制器
-/// @const FWNavigationOptionPopTop6 同时pop顶部6个控制器
+/// @const FWNavigationOptionPopToRoot 同时pop到根控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop 同时pop顶部控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop2 同时pop顶部2个控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop3 同时pop顶部3个控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop4 同时pop顶部4个控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop5 同时pop顶部5个控制器，仅push|pop生效
+/// @const FWNavigationOptionPopTop6 同时pop顶部6个控制器，仅push|pop生效
 ///
 /// @const FWNavigationOptionStyleAutomatic 自动使用系统present样式，默认
-/// @const FWNavigationOptionStyleFullScreen 指定present样式为ullScreen
-/// @const FWNavigationOptionStylePageSheet 指定present样式为pageSheet
+/// @const FWNavigationOptionStyleFullScreen 指定present样式为ullScreen，仅present生效
+/// @const FWNavigationOptionStylePageSheet 指定present样式为pageSheet，仅present生效
 typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
     FWNavigationOptionEmbedInNavigation   = 1 << 0,
     
     FWNavigationOptionTransitionAutomatic = 0 << 16, // default
     FWNavigationOptionTransitionPush      = 1 << 16,
     FWNavigationOptionTransitionPresent   = 2 << 16,
+    FWNavigationOptionTransitionPop       = 3 << 16,
+    FWNavigationOptionTransitionDismiss   = 4 << 16,
     
     FWNavigationOptionPopNone             = 0 << 20, // default
     FWNavigationOptionPopTop              = 1 << 20,
@@ -78,7 +82,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 获取当前主window
 @property (class, nonatomic, readonly, nullable) UIWindow *fw_mainWindow NS_REFINED_FOR_SWIFT;
@@ -108,7 +112,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 + (void)fw_openViewController:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功，完成时回调
-+ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
++ (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -128,7 +132,7 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 - (BOOL)fw_closeViewControllerAnimated:(BOOL)animated NS_SWIFT_UNAVAILABLE("");
 
 /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调
-- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+- (BOOL)fw_closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Workflow
 
@@ -161,8 +165,8 @@ typedef NS_OPTIONS(NSUInteger, FWNavigationOptions) {
 /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
 - (void)fw_pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
-/// pop指定数量界面，至少保留一个根控制器，完成时回调
-- (void)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+/// pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调
+- (nullable NSArray<__kindof UIViewController *> *)fw_popViewControllers:(NSUInteger)count animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Workflow
 
