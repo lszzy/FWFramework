@@ -181,16 +181,16 @@
         }
     }
     
-    if ((FWNavigationOptionStyleFullScreen & options) == options) {
+    if ((options & FWNavigationOptionStyleFullScreen) == FWNavigationOptionStyleFullScreen) {
         viewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    } else if ((FWNavigationOptionStylePageSheet & options) == options) {
+    } else if ((options & FWNavigationOptionStylePageSheet) == FWNavigationOptionStylePageSheet) {
         viewController.modalPresentationStyle = UIModalPresentationPageSheet;
     }
     
     BOOL isPush = NO;
-    if ((FWNavigationOptionTransitionPush & options) == options) {
+    if ((options & FWNavigationOptionTransitionPush) == FWNavigationOptionTransitionPush) {
         isPush = YES;
-    } else if ((FWNavigationOptionTransitionPresent & options) == options) {
+    } else if ((options & FWNavigationOptionTransitionPresent) == FWNavigationOptionTransitionPresent) {
         isPush = NO;
     } else {
         isPush = self.navigationController ? YES : NO;
@@ -198,22 +198,25 @@
     if (isNavigation) isPush = NO;
     
     NSUInteger popCount = 0;
-    if ((FWNavigationOptionPopTop & options) == options) {
-        popCount = 1;
-    } else if ((FWNavigationOptionPopTop2 & options) == options) {
-        popCount = 2;
-    } else if ((FWNavigationOptionPopTop3 & options) == options) {
-        popCount = 3;
-    } else if ((FWNavigationOptionPopTop4 & options) == options) {
-        popCount = 4;
-    } else if ((FWNavigationOptionPopTop5 & options) == options) {
-        popCount = 5;
-    } else if ((FWNavigationOptionPopTop6 & options) == options) {
+    // 优先级：7 > 6、5、3 > 4、2、1
+    if ((options & FWNavigationOptionPopToRoot) == FWNavigationOptionPopToRoot) {
+        popCount = NSUIntegerMax;
+    } else if ((options & FWNavigationOptionPopTop6) == FWNavigationOptionPopTop6) {
         popCount = 6;
+    } else if ((options & FWNavigationOptionPopTop5) == FWNavigationOptionPopTop5) {
+        popCount = 5;
+    } else if ((options & FWNavigationOptionPopTop3) == FWNavigationOptionPopTop3) {
+        popCount = 3;
+    } else if ((options & FWNavigationOptionPopTop4) == FWNavigationOptionPopTop4) {
+        popCount = 4;
+    } else if ((options & FWNavigationOptionPopTop2) == FWNavigationOptionPopTop2) {
+        popCount = 2;
+    } else if ((options & FWNavigationOptionPopTop) == FWNavigationOptionPopTop) {
+        popCount = 1;
     }
     
     if (isPush) {
-        if ((FWNavigationOptionPopToRoot & options) == options) {
+        if (popCount == NSUIntegerMax) {
             NSMutableArray *viewControllers = [NSMutableArray arrayWithObjects:self.navigationController.viewControllers.firstObject, nil];
             [viewControllers addObject:viewController];
             [self.navigationController fw_setViewControllers:viewControllers animated:animated completion:completion];
@@ -223,7 +226,7 @@
             [self.navigationController fw_pushViewController:viewController animated:animated completion:completion];
         }
     } else {
-        if ((FWNavigationOptionPopToRoot & options) == options) {
+        if (popCount == NSUIntegerMax) {
             __weak UINavigationController *weakNav = self.navigationController;
             [self presentViewController:viewController animated:animated completion:^{
                 [weakNav popToRootViewControllerAnimated:NO];
