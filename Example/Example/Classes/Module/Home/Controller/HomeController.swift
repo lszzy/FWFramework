@@ -114,11 +114,11 @@ extension HomeController {
 private extension HomeController {
     
     func renderData() {
-        #if APP_PRODUCTION
+        #if RELEASE
         let envTitle = "home.envProduction".fw.localized
-        #elseif APP_STAGING
+        #elseif STAGING
         let envTitle = "home.envStaging".fw.localized
-        #elseif APP_TESTING
+        #elseif TESTING
         let envTitle = "home.envTesting".fw.localized
         #else
         let envTitle = "home.envDevelopment".fw.localized
