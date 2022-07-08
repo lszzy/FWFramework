@@ -449,7 +449,7 @@ void FWSynchronized(id object, void (^closure)(void)) {
         __weak UIViewController *weakController = self;
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem fw_itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController fw_closeViewControllerAnimated:YES completion:nil];
+            [weakController fw_closeViewControllerAnimated:YES];
         }];
     }
 }
@@ -467,7 +467,7 @@ void FWSynchronized(id object, void (^closure)(void)) {
         __weak UIViewController *weakController = self;
         self.navigationItem.rightBarButtonItem = [UIBarButtonItem fw_itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController fw_closeViewControllerAnimated:YES completion:nil];
+            [weakController fw_closeViewControllerAnimated:YES];
         }];
     }
 }

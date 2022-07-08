@@ -316,7 +316,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
             if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
                 options = [routerOptions unsignedIntegerValue];
             }
-            [FWRouter openViewController:viewController options:options animated:YES completion:nil];
+            [FWRouter openViewController:viewController animated:YES options:options completion:nil];
         }
         return nil;
     };
@@ -825,9 +825,9 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-+ (void)openViewController:(UIViewController *)viewController options:(FWNavigationOptions)options animated:(BOOL)animated completion:(void (^)(void))completion
++ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    [UIWindow fw_openViewController:viewController options:options animated:animated completion:completion];
+    [UIWindow fw_openViewController:viewController animated:animated options:options completion:completion];
 }
 
 + (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
