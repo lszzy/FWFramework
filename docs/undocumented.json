@@ -3138,70 +3138,140 @@
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 27,
-      "symbol": "FWNavigationOptions.FWNavigationOptionPush",
+      "line": 37,
+      "symbol": "FWNavigationOptions.FWNavigationOptionEmbedInNavigation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 28,
-      "symbol": "FWNavigationOptions.FWNavigationOptionPresent",
+      "line": 39,
+      "symbol": "FWNavigationOptions.FWNavigationOptionTransitionAutomatic",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 30,
-      "symbol": "FWNavigationOptions.FWNavigationOptionNavigation",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 32,
-      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 33,
-      "symbol": "FWNavigationOptions.FWNavigationOptionPopToRoot",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 35,
-      "symbol": "FWNavigationOptions.FWNavigationOptionPageSheet",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWNavigation.h",
-      "line": 36,
-      "symbol": "FWNavigationOptions.FWNavigationOptionFullScreen",
+      "line": 40,
+      "symbol": "FWNavigationOptions.FWNavigationOptionTransitionPush",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
       "line": 41,
+      "symbol": "FWNavigationOptions.FWNavigationOptionTransitionPresent",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 42,
+      "symbol": "FWNavigationOptions.FWNavigationOptionTransitionPop",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 43,
+      "symbol": "FWNavigationOptions.FWNavigationOptionTransitionDismiss",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 45,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopNone",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 46,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 47,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop2",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 48,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop3",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 49,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop4",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 50,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop5",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 51,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopTop6",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 52,
+      "symbol": "FWNavigationOptions.FWNavigationOptionPopToRoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 54,
+      "symbol": "FWNavigationOptions.FWNavigationOptionStyleAutomatic",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 55,
+      "symbol": "FWNavigationOptions.FWNavigationOptionStyleFullScreen",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 56,
+      "symbol": "FWNavigationOptions.FWNavigationOptionStylePageSheet",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNavigation.h",
+      "line": 61,
       "symbol": "UIWindow(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 107,
+      "line": 121,
       "symbol": "UIViewController(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNavigation.h",
-      "line": 135,
+      "line": 146,
       "symbol": "UINavigationController(FWNavigation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

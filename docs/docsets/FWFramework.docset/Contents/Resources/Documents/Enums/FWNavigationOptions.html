@@ -17,7 +17,7 @@
     <a title="FWNavigationOptions Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -898,16 +898,26 @@
               </div>
             <p>控制器导航选项定义</p>
 
-<p>@const FWNavigationOptionPush 使用push方式打开
-@const FWNavigationOptionPresent 使用present方式打开</p>
+<p>@const FWNavigationOptionEmbedInNavigation 嵌入导航控制器并使用present转场方式</p>
 
-<p>@const FWNavigationOptionNavigation 附加导航控制器并使用present方式打开</p>
+<p>@const FWNavigationOptionTransitionAutomatic 自动判断转场方式，默认
+@const FWNavigationOptionTransitionPush 指定push转场方式，仅open生效
+@const FWNavigationOptionTransitionPresent 指定present转场方式，仅open生效
+@const FWNavigationOptionTransitionPop 指定pop转场方式，仅close生效
+@const FWNavigationOptionTransitionDismiss 指定dismiss转场方式，仅close生效</p>
 
-<p>@const FWNavigationOptionPopTop 同时pop顶部控制器
-@const FWNavigationOptionPopToRoot 使用pop到根控制器</p>
+<p>@const FWNavigationOptionPopNone 不pop控制器，默认
+@const FWNavigationOptionPopToRoot 同时pop到根控制器，仅push|pop生效
+@const FWNavigationOptionPopTop 同时pop顶部控制器，仅push|pop生效
+@const FWNavigationOptionPopTop2 同时pop顶部2个控制器，仅push|pop生效
+@const FWNavigationOptionPopTop3 同时pop顶部3个控制器，仅push|pop生效
+@const FWNavigationOptionPopTop4 同时pop顶部4个控制器，仅push|pop生效
+@const FWNavigationOptionPopTop5 同时pop顶部5个控制器，仅push|pop生效
+@const FWNavigationOptionPopTop6 同时pop顶部6个控制器，仅push|pop生效</p>
 
-<p>@const FWNavigationOptionPageSheet 指定present样式为pageSheet
-@const FWNavigationOptionFullScreen 指定present样式为ullScreen</p>
+<p>@const FWNavigationOptionStyleAutomatic 自动使用系统present样式，默认
+@const FWNavigationOptionStyleFullScreen 指定present样式为ullScreen，仅present生效
+@const FWNavigationOptionStylePageSheet 指定present样式为pageSheet，仅present生效</p>
 
           </section>
           <section class="section task-group-section">
@@ -916,9 +926,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPush"></a>
-                    <a name="//apple_ref/swift/Case/FWNavigationOptionPush" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPush">FWNavigationOptionPush</a>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionEmbedInNavigation"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionEmbedInNavigation" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionEmbedInNavigation">FWNavigationOptionEmbedInNavigation</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -933,7 +943,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPush</span>       <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionEmbedInNavigation</span>   <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span></code></pre>
 
                         </div>
                       </div>
@@ -943,9 +953,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPresent"></a>
-                    <a name="//apple_ref/swift/Case/FWNavigationOptionPresent" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPresent">FWNavigationOptionPresent</a>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionTransitionAutomatic"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionTransitionAutomatic" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionTransitionAutomatic">FWNavigationOptionTransitionAutomatic</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -960,7 +970,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPresent</span>    <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionTransitionAutomatic</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span></code></pre>
 
                         </div>
                       </div>
@@ -970,9 +980,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionNavigation"></a>
-                    <a name="//apple_ref/swift/Case/FWNavigationOptionNavigation" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionNavigation">FWNavigationOptionNavigation</a>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPush"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionTransitionPush" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPush">FWNavigationOptionTransitionPush</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -987,7 +997,115 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionNavigation</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionTransitionPush</span>      <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPresent"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionTransitionPresent" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPresent">FWNavigationOptionTransitionPresent</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionTransitionPresent</span>   <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPop"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionTransitionPop" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionTransitionPop">FWNavigationOptionTransitionPop</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionTransitionPop</span>       <span class="o">=</span> <span class="mi">3</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionTransitionDismiss"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionTransitionDismiss" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionTransitionDismiss">FWNavigationOptionTransitionDismiss</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionTransitionDismiss</span>   <span class="o">=</span> <span class="mi">4</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopNone"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopNone" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopNone">FWNavigationOptionPopNone</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopNone</span>             <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
 
                         </div>
                       </div>
@@ -1014,7 +1132,142 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop</span>     <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop</span>              <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopTop2"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopTop2" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopTop2">FWNavigationOptionPopTop2</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop2</span>             <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopTop3"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopTop3" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopTop3">FWNavigationOptionPopTop3</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop3</span>             <span class="o">=</span> <span class="mi">3</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopTop4"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopTop4" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopTop4">FWNavigationOptionPopTop4</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop4</span>             <span class="o">=</span> <span class="mi">4</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopTop5"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopTop5" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopTop5">FWNavigationOptionPopTop5</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop5</span>             <span class="o">=</span> <span class="mi">5</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPopTop6"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionPopTop6" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPopTop6">FWNavigationOptionPopTop6</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopTop6</span>             <span class="o">=</span> <span class="mi">6</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
 
                         </div>
                       </div>
@@ -1041,7 +1294,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopToRoot</span>  <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPopToRoot</span>           <span class="o">=</span> <span class="mi">7</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span></code></pre>
 
                         </div>
                       </div>
@@ -1051,9 +1304,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionPageSheet"></a>
-                    <a name="//apple_ref/swift/Case/FWNavigationOptionPageSheet" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionPageSheet">FWNavigationOptionPageSheet</a>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionStyleAutomatic"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionStyleAutomatic" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionStyleAutomatic">FWNavigationOptionStyleAutomatic</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1068,7 +1321,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionPageSheet</span>  <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionStyleAutomatic</span>      <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span></code></pre>
 
                         </div>
                       </div>
@@ -1078,9 +1331,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionFullScreen"></a>
-                    <a name="//apple_ref/swift/Case/FWNavigationOptionFullScreen" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionFullScreen">FWNavigationOptionFullScreen</a>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionStyleFullScreen"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionStyleFullScreen" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionStyleFullScreen">FWNavigationOptionStyleFullScreen</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1095,7 +1348,34 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionFullScreen</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionStyleFullScreen</span>     <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWNavigationOptions@FWNavigationOptionStylePageSheet"></a>
+                    <a name="//apple_ref/swift/Case/FWNavigationOptionStylePageSheet" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWNavigationOptions@FWNavigationOptionStylePageSheet">FWNavigationOptionStylePageSheet</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">FWNavigationOptionStylePageSheet</span>      <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span></code></pre>
 
                         </div>
                       </div>
@@ -1107,7 +1387,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

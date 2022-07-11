@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0] - 2022-07-11
+
+### Changed
+* Refactoring the NavigationOptions routing solution
+* Controller close method supports options parameter
+* Refactor the Navigation navigation tool method
+
 ## [3.5.1] - 2022-07-06
 
 ### Added

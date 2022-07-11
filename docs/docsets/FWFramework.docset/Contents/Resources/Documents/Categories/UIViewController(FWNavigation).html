@@ -17,7 +17,7 @@
     <a title="UIViewController(FWNavigation) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -896,20 +896,17 @@
 
 <span class="cp">#pragma mark - Navigation
 </span>
-<span class="c1">/// 自定义open|close导航选项，默认自动判断</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span> <span class="n">fw_navigationOptions</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
 <span class="c1">/// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_SWIFT_UNAVAILABLE</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
 
 <span class="c1">/// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present，完成时回调</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fw_closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fw_closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_SWIFT_UNAVAILABLE</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
 
 <span class="c1">/// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop，完成时回调</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fw_closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fw_closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cp">#pragma mark - Workflow
 </span>
@@ -935,33 +932,6 @@
                 </div>
               </div>
               <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIViewController(py)fw_navigationOptions"></a>
-                    <a name="//apple_ref/swift/Property/fw_navigationOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIViewController(py)fw_navigationOptions">fw_navigationOptions</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义open|close导航选项，默认自动判断</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span> <span class="n">fw_navigationOptions</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -993,9 +963,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIViewController(im)fw_openViewController:animated:completion:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_openViewController:animated:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIViewController(im)fw_openViewController:animated:completion:">-fw_openViewController:<wbr>animated:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(cs)UIViewController(im)fw_openViewController:animated:options:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_openViewController:animated:options:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIViewController(im)fw_openViewController:animated:options:completion:">-fw_openViewController:<wbr>animated:<wbr>options:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1012,6 +982,7 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_openViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
                      <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                      <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span>
                    <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -1049,9 +1020,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:completion:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_closeViewControllerAnimated:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:completion:">-fw_closeViewControllerAnimated:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:options:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_closeViewControllerAnimated:options:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIViewController(im)fw_closeViewControllerAnimated:options:completion:">-fw_closeViewControllerAnimated:<wbr>options:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1067,6 +1038,7 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">fw_closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                               <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span>
                             <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -1119,7 +1091,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

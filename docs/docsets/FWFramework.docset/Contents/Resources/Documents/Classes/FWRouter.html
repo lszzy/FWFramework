@@ -17,7 +17,7 @@
     <a title="FWRouter Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2346,6 +2346,35 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)FWRouter(cm)pushViewController:pop:animated:"></a>
+                    <a name="//apple_ref/swift/Method/+pushViewController:pop:animated:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWRouter(cm)pushViewController:pop:animated:">+pushViewController:<wbr>pop:<wbr>animated:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                       <span class="nf">pop</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">count</span>
+                  <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)FWRouter(cm)presentViewController:animated:completion:"></a>
                     <a name="//apple_ref/swift/Method/+presentViewController:animated:completion:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)FWRouter(cm)presentViewController:animated:completion:">+presentViewController:<wbr>animated:<wbr>completion:<wbr></a>
@@ -2375,37 +2404,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWRouter(cm)openViewController:animated:"></a>
-                    <a name="//apple_ref/swift/Method/+openViewController:animated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWRouter(cm)openViewController:animated:">+openViewController:<wbr>animated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>使用最顶部的视图控制器打开控制器，自动判断push|present</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">openViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
-                  <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWRouter(cm)openViewController:animated:completion:"></a>
-                    <a name="//apple_ref/swift/Method/+openViewController:animated:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWRouter(cm)openViewController:animated:completion:">+openViewController:<wbr>animated:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(cs)FWRouter(cm)openViewController:animated:options:completion:"></a>
+                    <a name="//apple_ref/swift/Method/+openViewController:animated:options:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWRouter(cm)openViewController:animated:options:completion:">+openViewController:<wbr>animated:<wbr>options:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2422,6 +2423,7 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">openViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
                   <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span>
                 <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -2432,36 +2434,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:"></a>
-                    <a name="//apple_ref/swift/Method/+closeViewControllerAnimated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:">+closeViewControllerAnimated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:completion:"></a>
-                    <a name="//apple_ref/swift/Method/+closeViewControllerAnimated:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:completion:">+closeViewControllerAnimated:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:options:completion:"></a>
+                    <a name="//apple_ref/swift/Method/+closeViewControllerAnimated:options:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWRouter(cm)closeViewControllerAnimated:options:completion:">+closeViewControllerAnimated:<wbr>options:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2477,6 +2452,7 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">closeViewControllerAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                            <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWNavigationOptions.html">FWNavigationOptions</a></span><span class="p">)</span><span class="nv">options</span>
                          <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -2489,7 +2465,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

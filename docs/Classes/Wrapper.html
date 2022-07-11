@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -3556,6 +3556,34 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4push_3pop8animatedSbSo16UIViewControllerC_SuSbtF"></a>
+                    <a name="//apple_ref/swift/Method/push(_:pop:animated:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4push_3pop8animatedSbSo16UIViewControllerC_SuSbtF">push(_:<wbr>pop:<wbr>animated:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">push</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">pop</span> <span class="nv">count</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE7present_8animated10completionySo16UIViewControllerC_SbyycSgtF"></a>
                     <a name="//apple_ref/swift/Method/present(_:animated:completion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE7present_8animated10completionySo16UIViewControllerC_SbyycSgtF">present(_:<wbr>animated:<wbr>completion:<wbr>)</a>
@@ -3583,9 +3611,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated10completionySo16UIViewControllerC_SbyycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/open(_:animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated10completionySo16UIViewControllerC_SbyycSgtF">open(_:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated7options10completionySo16UIViewControllerC_SbSo19FWNavigationOptionsVyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/open(_:animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated7options10completionySo16UIViewControllerC_SbSo19FWNavigationOptionsVyycSgtF">open(_:<wbr>animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3600,7 +3628,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3610,9 +3638,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated10completionS2b_yycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/close(animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated10completionS2b_yycSgtF">close(animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/close(animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtF">close(animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3628,7 +3656,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -3815,6 +3843,34 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4push_3pop8animatedSbSo16UIViewControllerC_SuSbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/push(_:pop:animated:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4push_3pop8animatedSbSo16UIViewControllerC_SuSbtFZ">push(_:<wbr>pop:<wbr>animated:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">push</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">pop</span> <span class="nv">count</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE7present_8animated10completionySo16UIViewControllerC_SbyycSgtFZ"></a>
                     <a name="//apple_ref/swift/Method/present(_:animated:completion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE7present_8animated10completionySo16UIViewControllerC_SbyycSgtFZ">present(_:<wbr>animated:<wbr>completion:<wbr>)</a>
@@ -3842,9 +3898,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated10completionySo16UIViewControllerC_SbyycSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/open(_:animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated10completionySo16UIViewControllerC_SbyycSgtFZ">open(_:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated7options10completionySo16UIViewControllerC_SbSo19FWNavigationOptionsVyycSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/open(_:animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE4open_8animated7options10completionySo16UIViewControllerC_SbSo19FWNavigationOptionsVyycSgtFZ">open(_:<wbr>animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3859,7 +3915,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3869,9 +3925,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated10completionS2b_yycSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/close(animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated10completionS2b_yycSgtFZ">close(animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/close(animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtFZ">close(animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3887,7 +3943,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -3910,36 +3966,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE17navigationOptionsSo012FWNavigationF0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/navigationOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE17navigationOptionsSo012FWNavigationF0Vvp">navigationOptions</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义open|close导航选项，默认自动判断</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">navigationOptions</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE4open_8animated10completionyAE_SbyycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/open(_:animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE4open_8animated10completionyAE_SbyycSgtF">open(_:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE4open_8animated7options10completionyAE_SbSo19FWNavigationOptionsVyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/open(_:animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE4open_8animated7options10completionyAE_SbSo19FWNavigationOptionsVyycSgtF">open(_:<wbr>animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3954,7 +3983,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3964,9 +3993,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5close8animated10completionS2b_yycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/close(animated:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5close8animated10completionS2b_yycSgtF">close(animated:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/close(animated:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE5close8animated7options10completionS2b_So19FWNavigationOptionsVyycSgtF">close(animated:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3982,7 +4011,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NavigationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -4174,6 +4203,61 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setViewControllers</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewControllers</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIViewController</span><span class="p">],</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE08pushViewD0_3pop8animated10completionySo06UIViewD0C_SuSbyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pushViewController(_:pop:animated:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE08pushViewD0_3pop8animated10completionySo06UIViewD0C_SuSbyycSgtF">pushViewController(_:<wbr>pop:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">pushViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">pop</span> <span class="nv">count</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE18popViewControllers_8animated10completionSaySo06UIViewD0CGSgSu_SbyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/popViewControllers(_:animated:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE18popViewControllers_8animated10completionSaySo06UIViewD0CGSgSu_SbyycSgtF">popViewControllers(_:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">popViewControllers</span><span class="p">(</span><span class="n">_</span> <span class="nv">count</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UIViewController</span><span class="p">]?</span></code></pre>
 
                         </div>
                       </div>
@@ -27314,7 +27398,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

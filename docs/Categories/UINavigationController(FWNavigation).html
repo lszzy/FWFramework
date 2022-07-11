@@ -17,7 +17,7 @@
     <a title="UINavigationController(FWNavigation) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.5.1 Docs</a> (82% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -911,6 +911,12 @@
 <span class="c1">/// 设置界面数组，完成时回调</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_setViewControllers</span><span class="p">:(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewControllers</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
+<span class="c1">/// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">pop</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">count</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_popViewControllers</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">count</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
 <span class="cp">#pragma mark - Workflow
 </span>
 <span class="cm">/**
@@ -919,15 +925,6 @@
  @return 工作流名称
  */</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_topWorkflowName</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="cm">/**
- push控制器，并清理最外层工作流（不属于工作流则不清理）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
- 
- @param viewController push的控制器
- @param animated 是否执行动画
- */</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
  push控制器，并清理最外层工作流（不属于工作流则不清理），完成时回调
@@ -939,15 +936,6 @@
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
- push控制器，并清理非根控制器（只保留根控制器）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
- 
- @param viewController push的控制器
- @param animated 是否执行动画
- */</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="cm">/**
  push控制器，并清理非根控制器（只保留根控制器），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
  
@@ -955,16 +943,6 @@
  @param animated 是否执行动画
  */</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="cm">/**
- push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
- 
- @param viewController push的控制器
- @param workflows 指定工作流
- @param animated 是否执行动画
- */</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
  push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，完成时回调
@@ -977,29 +955,12 @@
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span> <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
- pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
- 
- @param animated 是否执行动画
- */</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="cm">/**
  pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
  
  @param animated 是否执行动画
  */</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="cm">/**
- pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
- @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
- 
- @param workflows 指定工作流
- @param animated  是否执行动画
- */</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span> <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
  pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调
@@ -1176,6 +1137,66 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:pop:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pushViewController:pop:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:pop:animated:completion:">-fw_pushViewController:<wbr>pop:<wbr>animated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
+                          <span class="nf">pop</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">count</span>
+                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UINavigationController(im)fw_popViewControllers:animated:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_popViewControllers:animated:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popViewControllers:animated:completion:">-fw_popViewControllers:<wbr>animated:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span>
+    <span class="nf">fw_popViewControllers</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">count</span>
+                 <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+               <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -1223,70 +1244,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popTopWorkflowAnimated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:">-fw_pushViewController:<wbr>popTopWorkflowAnimated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>push控制器，并清理最外层工作流（不属于工作流则不清理）</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9</p>
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
-       <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>viewController</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>push的控制器</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>是否执行动画</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:completion:"></a>
                     <a name="//apple_ref/swift/Method/-fw_pushViewController:popTopWorkflowAnimated:completion:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popTopWorkflowAnimated:completion:">-fw_pushViewController:<wbr>popTopWorkflowAnimated:<wbr>completion:<wbr></a>
@@ -1312,70 +1269,6 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
        <span class="nf">popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span>
                    <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>viewController</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>push的控制器</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>是否执行动画</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popToRootWorkflowAnimated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popToRootWorkflowAnimated:">-fw_pushViewController:<wbr>popToRootWorkflowAnimated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>push控制器，并清理非根控制器（只保留根控制器）</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9</p>
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
-    <span class="nf">popToRootWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1481,83 +1374,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pushViewController:popWorkflows:animated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:">-fw_pushViewController:<wbr>popWorkflows:<wbr>animated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9</p>
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_pushViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span>
-                 <span class="nf">popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
-                     <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>viewController</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>push的控制器</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>workflows</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>指定工作流</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>是否执行动画</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:completion:"></a>
                     <a name="//apple_ref/swift/Method/-fw_pushViewController:popWorkflows:animated:completion:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_pushViewController:popWorkflows:animated:completion:">-fw_pushViewController:<wbr>popWorkflows:<wbr>animated:<wbr>completion:<wbr></a>
@@ -1636,57 +1452,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_popTopWorkflowAnimated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:">-fw_popTopWorkflowAnimated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）</p>
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popTopWorkflowAnimated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>是否执行动画</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:completion:"></a>
                     <a name="//apple_ref/swift/Method/-fw_popTopWorkflowAnimated:completion:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popTopWorkflowAnimated:completion:">-fw_popTopWorkflowAnimated:<wbr>completion:<wbr></a>
@@ -1718,70 +1483,6 @@
                         <h4>Parameters</h4>
                         <table class="graybox">
                           <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>是否执行动画</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_popWorkflows:animated:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UINavigationController(im)fw_popWorkflows:animated:">-fw_popWorkflows:<wbr>animated:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4</p>
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_popWorkflows</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">workflows</span>
-               <span class="nf">animated</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>workflows</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>指定工作流</p>
-                                </div>
-                              </td>
-                            </tr>
                             <tr>
                               <td>
                                 <code>
@@ -1870,7 +1571,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
