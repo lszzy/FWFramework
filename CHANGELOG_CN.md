@@ -1,5 +1,12 @@
 # 更新日志
 
+## [3.6.0] - 2022-07-11
+
+### Changed
+* 重构NavigationOptions路由处理方案
+* 控制器close方法支持options参数
+* 重构Navigation导航工具方法
+
 ## [3.5.1] - 2022-07-06
 
 ### Added

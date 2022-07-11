@@ -3,8 +3,8 @@ platform :ios, '11.0'
 use_frameworks!
 
 target "Example" do
-  project 'FWFramework', 'Release-Testing' => :release, 'Release-Staging' => :release, 'Release-Production' => :release, 'Debug-Testing' => :debug, 'Debug-Staging' => :debug, 'Debug-Production' => :debug
+  project 'FWFramework', 'Testing' => :release, 'Staging' => :release
 
   pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'Compatible', 'Contacts', 'Microphone', 'Calendar', 'AppleMusic', 'Tracking']
-  pod 'FWDebug', :configurations => ['Debug', 'Debug-Testing', 'Debug-Staging', 'Debug-Production']
+  pod 'FWDebug', :configurations => ['Debug', 'Testing']
 end
