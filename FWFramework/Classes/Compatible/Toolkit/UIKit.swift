@@ -23,7 +23,8 @@ extension Wrapper where Base: UIDevice {
 
     /// 获取设备Token格式化后的字符串
     public static var deviceToken: String? {
-        return Base.__fw_deviceToken
+        get { return Base.__fw_deviceToken }
+        set { Base.__fw_deviceToken = newValue }
     }
 
     /// 获取设备模型，格式："iPhone6,1"
