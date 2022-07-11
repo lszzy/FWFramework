@@ -10,7 +10,6 @@
 #import "FWRouter.h"
 #import "FWLoader.h"
 #import "FWSwizzle.h"
-#import "FWNavigation.h"
 #import <objc/runtime.h>
 
 FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
@@ -304,20 +303,20 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if ([self sharedInstance].routeHandler) return;
     
     [self sharedInstance].routeHandler = handler ?: ^id(FWRouterContext *context, id object) {
+        if (!context.isOpening) return object;
         if (![object isKindOfClass:[UIViewController class]]) return object;
         
         UIViewController *viewController = (UIViewController *)object;
-        NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
-        if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
-            viewController.fw_navigationOptions = [routerOptions unsignedIntegerValue];
-        }
-        if (!context.isOpening) return object;
-        
         void (^routerHandler)(FWRouterContext *context, UIViewController *viewController) = context.userInfo[FWRouterHandlerKey];
         if (routerHandler != nil) {
             routerHandler(context, viewController);
         } else {
-            [FWRouter openViewController:viewController animated:YES];
+            FWNavigationOptions options = 0;
+            NSNumber *routerOptions = context.userInfo[FWRouterOptionsKey];
+            if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
+                options = [routerOptions unsignedIntegerValue];
+            }
+            [FWRouter openViewController:viewController animated:YES options:options completion:nil];
         }
         return nil;
     };
@@ -462,7 +461,7 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if ([parameters isKindOfClass:[NSArray class]]) {
         [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (idx < [parameters count]) {
-                id value = [parameters objectAtIndex:[parameters count] - 1];
+                id value = [parameters objectAtIndex:idx];
                 parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", value]];
             }
         }];
@@ -816,29 +815,24 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     [UIWindow fw_pushViewController:viewController animated:animated];
 }
 
++ (void)pushViewController:(UIViewController *)viewController pop:(NSUInteger)count animated:(BOOL)animated
+{
+    [UIWindow fw_pushViewController:viewController pop:count animated:animated];
+}
+
 + (void)presentViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [UIWindow fw_presentViewController:viewController animated:animated completion:completion];
 }
 
-+ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated
++ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    [self openViewController:viewController animated:animated completion:nil];
+    [UIWindow fw_openViewController:viewController animated:animated options:options completion:completion];
 }
 
-+ (void)openViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
++ (BOOL)closeViewControllerAnimated:(BOOL)animated options:(FWNavigationOptions)options completion:(void (^)(void))completion
 {
-    [UIWindow fw_openViewController:viewController animated:animated completion:completion];
-}
-
-+ (BOOL)closeViewControllerAnimated:(BOOL)animated
-{
-    return [self closeViewControllerAnimated:animated completion:nil];
-}
-
-+ (BOOL)closeViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
-{
-    return [UIWindow fw_closeViewControllerAnimated:animated completion:completion];
+    return [UIWindow fw_closeViewControllerAnimated:animated options:options completion:completion];
 }
 
 @end

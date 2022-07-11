@@ -34,6 +34,12 @@ extension Wrapper where Base: UIWindow {
     public func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
         return base.__fw_push(viewController, animated: animated)
     }
+    
+    /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
+    @discardableResult
+    public func push(_ viewController: UIViewController, pop count: UInt, animated: Bool = true) -> Bool {
+        return base.__fw_push(viewController, pop: count, animated: animated)
+    }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
@@ -41,14 +47,14 @@ extension Wrapper where Base: UIWindow {
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    public func open(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        base.__fw_open(viewController, animated: animated, completion: completion)
+    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) {
+        base.__fw_open(viewController, animated: animated, options: options, completion: completion)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return base.__fw_closeViewController(animated: true, completion: completion)
+    public func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return base.__fw_closeViewController(animated: true, options: options, completion: completion)
     }
     
     // MARK: - Static
@@ -83,6 +89,12 @@ extension Wrapper where Base: UIWindow {
     public static func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
         return Base.__fw_push(viewController, animated: animated)
     }
+    
+    /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
+    @discardableResult
+    public static func push(_ viewController: UIViewController, pop count: UInt, animated: Bool = true) -> Bool {
+        return Base.__fw_push(viewController, pop: count, animated: animated)
+    }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
     public static func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
@@ -90,14 +102,14 @@ extension Wrapper where Base: UIWindow {
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    public static func open(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        Base.__fw_open(viewController, animated: animated, completion: completion)
+    public static func open(_ viewController: UIViewController, animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) {
+        Base.__fw_open(viewController, animated: animated, options: options, completion: completion)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public static func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return Base.__fw_closeViewController(animated: true, completion: completion)
+    public static func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return Base.__fw_closeViewController(animated: true, options: options, completion: completion)
     }
     
 }
@@ -106,21 +118,15 @@ extension Wrapper where Base: UIWindow {
 extension Wrapper where Base: UIViewController {
     
     // MARK: - Navigation
-    /// 自定义open|close导航选项，默认自动判断
-    public var navigationOptions: NavigationOptions {
-        get { return base.__fw_navigationOptions }
-        set { base.__fw_navigationOptions = newValue }
-    }
-    
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
-    public func open(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
-        base.__fw_open(viewController, animated: animated, completion: completion)
+    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) {
+        base.__fw_open(viewController, animated: animated, options: options, completion: completion)
     }
 
     /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
     @discardableResult
-    public func close(animated: Bool = true, completion: (() -> Void)? = nil) -> Bool {
-        return base.__fw_close(animated: true, completion: completion)
+    public func close(animated: Bool = true, options: NavigationOptions = [], completion: (() -> Void)? = nil) -> Bool {
+        return base.__fw_close(animated: true, options: options, completion: completion)
     }
     
     // MARK: - Workflow
@@ -162,6 +168,17 @@ extension Wrapper where Base: UINavigationController {
     /// 设置界面数组，完成时回调
     public func setViewControllers(_ viewControllers: [UIViewController], animated: Bool, completion: (() -> Void)? = nil) {
         base.__fw_setViewControllers(viewControllers, animated: animated, completion: completion)
+    }
+    
+    /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
+    public func pushViewController(_ viewController: UIViewController, pop count: UInt, animated: Bool, completion: (() -> Void)? = nil) {
+        base.__fw_pushViewController(viewController, pop: count, animated: animated, completion: completion)
+    }
+
+    /// pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调
+    @discardableResult
+    public func popViewControllers(_ count: UInt, animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+        return base.__fw_popViewControllers(count, animated: animated, completion: completion)
     }
     
     // MARK: - Workflow

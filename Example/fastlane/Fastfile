@@ -69,8 +69,8 @@ platform :ios do
   lane :pgyer_testing do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Testing",
-      configuration: "Release-Testing",
+      scheme: "Example",
+      configuration: "Testing",
       export_method: "ad-hoc",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
@@ -93,8 +93,8 @@ platform :ios do
   lane :pgyer_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Production",
-      configuration: "Release-Production",
+      scheme: "Example",
+      configuration: "Release",
       export_method: "ad-hoc",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
@@ -117,8 +117,8 @@ platform :ios do
   lane :testflight_testing do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Testing",
-      configuration: "Release-Testing",
+      scheme: "Example",
+      configuration: "Staging",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
@@ -145,8 +145,8 @@ platform :ios do
   lane :testflight_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Production",
-      configuration: "Release-Production",
+      scheme: "Example",
+      configuration: "Release",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
@@ -173,8 +173,8 @@ platform :ios do
   lane :appstore_production do |options|
     build_app(
       workspace: "Example.xcworkspace",
-      scheme: "Example-Production",
-      configuration: "Release-Production",
+      scheme: "Example",
+      configuration: "Release",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
       output_directory: "fastlane/build/",
