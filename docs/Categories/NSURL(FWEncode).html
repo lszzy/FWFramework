@@ -17,7 +17,7 @@
     <a title="NSURL(FWEncode) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.6.0 Docs</a> (81% documented)</p>
+        <p><a href="../index.html">FWFramework 3.6.1 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -897,7 +897,10 @@
 <span class="c1">/// 获取当前query的参数字典，不含空值</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">fw_queryDictionary</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等</span>
+<span class="c1">/// 获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_baseURI</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 获取路径URI字符串，不含scheme|host|port等，包含path|query|fragment等</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_pathURI</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 生成URL，中文自动URL编码</span>
@@ -946,6 +949,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)NSURL(py)fw_baseURI"></a>
+                    <a name="//apple_ref/swift/Property/fw_baseURI" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSURL(py)fw_baseURI">fw_baseURI</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fw_baseURI</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)NSURL(py)fw_pathURI"></a>
                     <a name="//apple_ref/swift/Property/fw_pathURI" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)NSURL(py)fw_pathURI">fw_pathURI</a>
@@ -956,7 +986,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取路径URI字符串，不含host|port等，包含path|query|fragment等</p>
+                        <p>获取路径URI字符串，不含scheme|host|port等，包含path|query|fragment等</p>
 
                       </div>
                       <div class="declaration">
@@ -1030,7 +1060,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-11)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

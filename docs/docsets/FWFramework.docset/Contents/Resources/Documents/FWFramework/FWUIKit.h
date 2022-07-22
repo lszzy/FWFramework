@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置设备token原始Data，格式化并保存
 + (void)fw_setDeviceTokenData:(nullable NSData *)tokenData NS_REFINED_FOR_SWIFT;
 
-/// 获取设备Token格式化后的字符串
-@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;
+/// 获取或设置设备Token格式化后的字符串
+@property (class, nonatomic, copy, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;
 
 /// 获取设备模型，格式："iPhone6,1"
 @property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceModel NS_REFINED_FOR_SWIFT;
