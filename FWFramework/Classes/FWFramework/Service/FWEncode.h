@@ -255,7 +255,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取当前query的参数字典，不含空值
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fw_queryDictionary NS_REFINED_FOR_SWIFT;
 
-/// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
+/// 获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等
+@property (nonatomic, copy, readonly, nullable) NSString *fw_baseURI NS_REFINED_FOR_SWIFT;
+
+/// 获取路径URI字符串，不含scheme|host|port等，包含path|query|fragment等
 @property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI NS_REFINED_FOR_SWIFT;
 
 /// 生成URL，中文自动URL编码

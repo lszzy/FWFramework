@@ -212,392 +212,392 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 474,
+      "line": 482,
       "symbol": "Wrapper.safeInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 475,
+      "line": 483,
       "symbol": "Wrapper.safeBool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 476,
+      "line": 484,
       "symbol": "Wrapper.safeFloat",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 477,
+      "line": 485,
       "symbol": "Wrapper.safeDouble",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 478,
+      "line": 486,
       "symbol": "Wrapper.safeString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 479,
+      "line": 487,
       "symbol": "Wrapper.safeNumber",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 480,
+      "line": 488,
       "symbol": "Wrapper.safeArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 481,
+      "line": 489,
       "symbol": "Wrapper.safeDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 486,
+      "line": 494,
       "symbol": "Optional.safeInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 487,
+      "line": 495,
       "symbol": "Optional.safeBool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 488,
+      "line": 496,
       "symbol": "Optional.safeFloat",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 489,
+      "line": 497,
       "symbol": "Optional.safeDouble",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 490,
+      "line": 498,
       "symbol": "Optional.safeString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 491,
+      "line": 499,
       "symbol": "Optional.safeNumber",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 492,
+      "line": 500,
       "symbol": "Optional.safeArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 493,
+      "line": 501,
       "symbol": "Optional.safeDictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 509,
+      "line": 517,
       "symbol": "SafeType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 510,
+      "line": 518,
       "symbol": "SafeType.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 511,
+      "line": 519,
       "symbol": "SafeType.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 515,
+      "line": 523,
       "symbol": "Optional.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 516,
+      "line": 524,
       "symbol": "Optional.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 517,
+      "line": 525,
       "symbol": "Optional.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 521,
+      "line": 529,
       "symbol": "Int.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 522,
+      "line": 530,
       "symbol": "Int.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 525,
+      "line": 533,
       "symbol": "Int8.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 526,
+      "line": 534,
       "symbol": "Int8.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 529,
+      "line": 537,
       "symbol": "Int16.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 530,
+      "line": 538,
       "symbol": "Int16.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 533,
+      "line": 541,
       "symbol": "Int32.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 534,
+      "line": 542,
       "symbol": "Int32.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 537,
+      "line": 545,
       "symbol": "Int64.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 538,
+      "line": 546,
       "symbol": "Int64.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 541,
+      "line": 549,
       "symbol": "UInt.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 542,
+      "line": 550,
       "symbol": "UInt.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 545,
+      "line": 553,
       "symbol": "UInt8.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 546,
+      "line": 554,
       "symbol": "UInt8.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 549,
+      "line": 557,
       "symbol": "UInt16.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 550,
+      "line": 558,
       "symbol": "UInt16.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 553,
+      "line": 561,
       "symbol": "UInt32.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 554,
+      "line": 562,
       "symbol": "UInt32.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 557,
+      "line": 565,
       "symbol": "UInt64.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 558,
+      "line": 566,
       "symbol": "UInt64.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 561,
+      "line": 569,
       "symbol": "Float.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 562,
+      "line": 570,
       "symbol": "Float.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 565,
+      "line": 573,
       "symbol": "Double.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 566,
+      "line": 574,
       "symbol": "Double.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 569,
+      "line": 577,
       "symbol": "Bool.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 570,
+      "line": 578,
       "symbol": "Bool.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 573,
+      "line": 581,
       "symbol": "URL.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 574,
+      "line": 582,
       "symbol": "URL.isEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 577,
+      "line": 585,
       "symbol": "Data.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 580,
+      "line": 588,
       "symbol": "String.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 583,
+      "line": 591,
       "symbol": "Array.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 584,
+      "line": 592,
       "symbol": "Array.safeElement(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 589,
+      "line": 597,
       "symbol": "Set.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/FWFramework/Classes/Compatible/Service/Encode.swift",
-      "line": 592,
+      "line": 600,
       "symbol": "Dictionary.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
@@ -2907,49 +2907,49 @@
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 297,
+      "line": 300,
       "symbol": "NSObject(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 401,
+      "line": 404,
       "symbol": "NSString(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 431,
+      "line": 434,
       "symbol": "NSArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 453,
+      "line": 456,
       "symbol": "NSMutableArray(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 504,
+      "line": 507,
       "symbol": "NSMutableSet(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 524,
+      "line": 527,
       "symbol": "NSDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWEncode.h",
-      "line": 538,
+      "line": 541,
       "symbol": "NSMutableDictionary(FWSafeType)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

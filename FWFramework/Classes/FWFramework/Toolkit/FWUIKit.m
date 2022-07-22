@@ -35,17 +35,26 @@
         for (int i = 0; i < count; i++) {
             [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
         }
-        [[NSUserDefaults standardUserDefaults] setObject:[deviceToken copy] forKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.fw_deviceToken = [deviceToken copy];
     } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.fw_deviceToken = nil;
     }
 }
 
 + (NSString *)fw_deviceToken
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
+}
+
++ (void)setFw_deviceToken:(NSString *)deviceToken
+{
+    if (deviceToken) {
+        [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 + (NSString *)fw_deviceModel

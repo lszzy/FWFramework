@@ -433,6 +433,14 @@ extension Wrapper where Base == URL {
         return result
     }
     
+    /// 获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等
+    public var baseURI: String? {
+        let string = base.absoluteString
+        guard let components = URLComponents(string: string),
+              let range = components.rangeOfPath else { return nil }
+        return String(string.prefix(upTo: range.lowerBound))
+    }
+    
     /// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
     public var pathURI: String? {
         let string = base.absoluteString

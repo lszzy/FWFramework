@@ -448,6 +448,16 @@
     return [dict copy];
 }
 
+- (NSString *)fw_baseURI
+{
+    NSString *URLString = self.absoluteString ?: @"";
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
+    if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
+        return [URLString substringToIndex:urlComponents.rangeOfPath.location];
+    }
+    return nil;
+}
+
 - (NSString *)fw_pathURI
 {
     NSString *URLString = self.absoluteString ?: @"";

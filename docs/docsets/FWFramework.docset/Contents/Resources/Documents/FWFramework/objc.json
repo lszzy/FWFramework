@@ -12105,8 +12105,8 @@
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSURL(FWEncode)",
-          "key.parsed_declaration" : "@interface NSURL (FWEncode)\n\n\/\/\/ 获取当前query的参数字典，不含空值\n@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fw_queryDictionary NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取路径URI字符串，不含host|port等，包含path|query|fragment等\n@property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 生成URL，中文自动URL编码\n+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 生成URL，中文自动URL编码\n+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 267,
+          "key.parsed_declaration" : "@interface NSURL (FWEncode)\n\n\/\/\/ 获取当前query的参数字典，不含空值\n@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *fw_queryDictionary NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等\n@property (nonatomic, copy, readonly, nullable) NSString *fw_baseURI NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取路径URI字符串，不含scheme|host|port等，包含path|query|fragment等\n@property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 生成URL，中文自动URL编码\n+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 生成URL，中文自动URL编码\n+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string relativeTo:(nullable NSURL *)baseURL NS_REFINED_FOR_SWIFT;\n\n@end",
+          "key.parsed_scope.end" : 270,
           "key.parsed_scope.start" : 253,
           "key.substructure" : [
             {
@@ -12132,36 +12132,36 @@
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
               "key.doc.column" : 59,
-              "key.doc.comment" : "获取路径URI字符串，不含host|port等，包含path|query|fragment等",
+              "key.doc.comment" : "获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 259,
               "key.filepath" : "docs\/FWFramework\/FWEncode.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
-              "key.name" : "fw_pathURI",
-              "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI;",
+              "key.name" : "fw_baseURI",
+              "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) NSString *fw_baseURI;",
               "key.parsed_scope.end" : 259,
               "key.parsed_scope.start" : 259,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)NSURL(py)fw_pathURI"
+              "key.usr" : "c:objc(cs)NSURL(py)fw_baseURI"
             },
             {
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
-              "key.doc.column" : 21,
-              "key.doc.comment" : "生成URL，中文自动URL编码",
+              "key.doc.column" : 59,
+              "key.doc.comment" : "获取路径URI字符串，不含scheme|host|port等，包含path|query|fragment等",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 262,
               "key.filepath" : "docs\/FWFramework\/FWEncode.h",
-              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_urlWithString:",
-              "key.parsed_declaration" : "+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string;",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.property",
+              "key.name" : "fw_pathURI",
+              "key.parsed_declaration" : "@property (nonatomic, copy, readonly, nullable) NSString *fw_pathURI;",
               "key.parsed_scope.end" : 262,
               "key.parsed_scope.start" : 262,
               "key.unavailable_message" : "",
-              "key.usr" : "c:objc(cs)NSURL(cm)fw_urlWithString:"
+              "key.usr" : "c:objc(cs)NSURL(py)fw_pathURI"
             },
             {
               "key.always_deprecated" : false,
@@ -12174,10 +12174,28 @@
               "key.doc.line" : 265,
               "key.filepath" : "docs\/FWFramework\/FWEncode.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
-              "key.name" : "+fw_urlWithString:relativeTo:",
-              "key.parsed_declaration" : "+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string\n                          relativeTo:(nullable NSURL *)baseURL;",
+              "key.name" : "+fw_urlWithString:",
+              "key.parsed_declaration" : "+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string;",
               "key.parsed_scope.end" : 265,
               "key.parsed_scope.start" : 265,
+              "key.unavailable_message" : "",
+              "key.usr" : "c:objc(cs)NSURL(cm)fw_urlWithString:"
+            },
+            {
+              "key.always_deprecated" : false,
+              "key.always_unavailable" : false,
+              "key.deprecation_message" : "",
+              "key.doc.column" : 21,
+              "key.doc.comment" : "生成URL，中文自动URL编码",
+              "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
+              "key.doc.full_as_xml" : "",
+              "key.doc.line" : 268,
+              "key.filepath" : "docs\/FWFramework\/FWEncode.h",
+              "key.kind" : "sourcekitten.source.lang.objc.decl.method.class",
+              "key.name" : "+fw_urlWithString:relativeTo:",
+              "key.parsed_declaration" : "+ (nullable NSURL *)fw_urlWithString:(nullable NSString *)string\n                          relativeTo:(nullable NSURL *)baseURL;",
+              "key.parsed_scope.end" : 268,
+              "key.parsed_scope.start" : 268,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSURL(cm)fw_urlWithString:relativeTo:"
             }
@@ -12188,12 +12206,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 269,
+          "key.doc.line" : 272,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "FWSafeValue",
-          "key.parsed_scope.end" : 269,
-          "key.parsed_scope.start" : 269
+          "key.parsed_scope.end" : 272,
+          "key.parsed_scope.start" : 272
         },
         {
           "key.always_deprecated" : false,
@@ -12203,7 +12221,7 @@
           "key.doc.comment" : "安全数字，不为nil\n\n- parameter: value 参数\n- returns: 数字",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 277,
+          "key.doc.line" : 280,
           "key.doc.parameters" : [
             {
               "discussion" : [
@@ -12225,8 +12243,8 @@
           "key.kind" : "sourcekitten.source.lang.objc.decl.function",
           "key.name" : "FWSafeNumber",
           "key.parsed_declaration" : "extern NSNumber *_Nonnull FWSafeNumber(id _Nullable value)",
-          "key.parsed_scope.end" : 277,
-          "key.parsed_scope.start" : 277,
+          "key.parsed_scope.end" : 280,
+          "key.parsed_scope.start" : 280,
           "key.unavailable_message" : "",
           "key.usr" : "c:@F@FWSafeNumber"
         },
@@ -12238,7 +12256,7 @@
           "key.doc.comment" : "安全字符串，不为nil\n\n- parameter: value 参数\n- returns: 字符串",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 285,
+          "key.doc.line" : 288,
           "key.doc.parameters" : [
             {
               "discussion" : [
@@ -12260,8 +12278,8 @@
           "key.kind" : "sourcekitten.source.lang.objc.decl.function",
           "key.name" : "FWSafeString",
           "key.parsed_declaration" : "extern NSString *_Nonnull FWSafeString(id _Nullable value)",
-          "key.parsed_scope.end" : 285,
-          "key.parsed_scope.start" : 285,
+          "key.parsed_scope.end" : 288,
+          "key.parsed_scope.start" : 288,
           "key.unavailable_message" : "",
           "key.usr" : "c:@F@FWSafeString"
         },
@@ -12273,7 +12291,7 @@
           "key.doc.comment" : "安全URL，不为nil\n\n- parameter: value 参数\n- returns: URL",
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
           "key.doc.full_as_xml" : "",
-          "key.doc.line" : 293,
+          "key.doc.line" : 296,
           "key.doc.parameters" : [
             {
               "discussion" : [
@@ -12295,20 +12313,20 @@
           "key.kind" : "sourcekitten.source.lang.objc.decl.function",
           "key.name" : "FWSafeURL",
           "key.parsed_declaration" : "extern NSURL *_Nonnull FWSafeURL(id _Nullable value)",
-          "key.parsed_scope.end" : 293,
-          "key.parsed_scope.start" : 293,
+          "key.parsed_scope.end" : 296,
+          "key.parsed_scope.start" : 296,
           "key.unavailable_message" : "",
           "key.usr" : "c:@F@FWSafeURL"
         },
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 295,
+          "key.doc.line" : 298,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSObject+FWSafeType",
-          "key.parsed_scope.end" : 295,
-          "key.parsed_scope.start" : 295
+          "key.parsed_scope.end" : 298,
+          "key.parsed_scope.start" : 298
         },
         {
           "key.always_deprecated" : false,
@@ -12316,13 +12334,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 297,
+          "key.doc.line" : 300,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSObject(FWSafeType)",
           "key.parsed_declaration" : "@interface NSObject (FWSafeType)\n\n\/**\n 是否是非Null(nil, NSNull)\n \n @return 如果为非Null返回YES，为Null返回NO\n *\/\n@property (nonatomic, assign, readonly) BOOL fw_isNotNull NS_REFINED_FOR_SWIFT;\n\n\/**\n 是否是非空对象(nil, NSNull, count为0, length为0)\n \n @return 如果是非空对象返回YES，为空对象返回NO\n *\/\n@property (nonatomic, assign, readonly) BOOL fw_isNotEmpty NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSInteger\n \n @return NSInteger\n *\/\n@property (nonatomic, assign, readonly) NSInteger fw_safeInteger NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为Float\n \n @return Float\n *\/\n@property (nonatomic, assign, readonly) float fw_safeFloat NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为Double\n \n @return Double\n *\/\n@property (nonatomic, assign, readonly) double fw_safeDouble NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为Bool\n \n @return Bool\n *\/\n@property (nonatomic, assign, readonly) BOOL fw_safeBool NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSNumber\n \n @return NSNumber\n *\/\n@property (nonatomic, strong, readonly) NSNumber *fw_safeNumber NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSString\n \n @return NSString\n *\/\n@property (nonatomic, copy, readonly) NSString *fw_safeString NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSDate\n \n @return NSDate\n *\/\n@property (nonatomic, strong, readonly) NSDate *fw_safeDate NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSData\n \n @return NSData\n *\/\n@property (nonatomic, strong, readonly) NSData *fw_safeData NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSArray\n \n @return NSArray\n *\/\n@property (nonatomic, strong, readonly) NSArray *fw_safeArray NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSMutableArray\n \n @return NSMutableArray\n *\/\n@property (nonatomic, strong, readonly) NSMutableArray *fw_safeMutableArray NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSDictionary\n \n @return NSDictionary\n *\/\n@property (nonatomic, strong, readonly) NSDictionary *fw_safeDictionary NS_REFINED_FOR_SWIFT;\n\n\/**\n 检测并安全转换为NSMutableDictionary\n \n @return NSMutableDictionary\n *\/\n@property (nonatomic, strong, readonly) NSMutableDictionary *fw_safeMutableDictionary NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 397,
-          "key.parsed_scope.start" : 297,
+          "key.parsed_scope.end" : 400,
+          "key.parsed_scope.start" : 300,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -12332,7 +12350,7 @@
               "key.doc.comment" : "是否是非Null(nil, NSNull)\n\n- returns: 如果为非Null返回YES，为Null返回NO",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 304,
+              "key.doc.line" : 307,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12343,8 +12361,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_isNotNull",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly) BOOL fw_isNotNull;",
-              "key.parsed_scope.end" : 304,
-              "key.parsed_scope.start" : 304,
+              "key.parsed_scope.end" : 307,
+              "key.parsed_scope.start" : 307,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_isNotNull"
             },
@@ -12356,7 +12374,7 @@
               "key.doc.comment" : "是否是非空对象(nil, NSNull, count为0, length为0)\n\n- returns: 如果是非空对象返回YES，为空对象返回NO",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 311,
+              "key.doc.line" : 314,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12367,8 +12385,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_isNotEmpty",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly) BOOL fw_isNotEmpty;",
-              "key.parsed_scope.end" : 311,
-              "key.parsed_scope.start" : 311,
+              "key.parsed_scope.end" : 314,
+              "key.parsed_scope.start" : 314,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_isNotEmpty"
             },
@@ -12380,7 +12398,7 @@
               "key.doc.comment" : "检测并安全转换为NSInteger\n\n- returns: NSInteger",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 318,
+              "key.doc.line" : 321,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12391,8 +12409,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeInteger",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly)\n    NSInteger fw_safeInteger;",
-              "key.parsed_scope.end" : 318,
-              "key.parsed_scope.start" : 318,
+              "key.parsed_scope.end" : 321,
+              "key.parsed_scope.start" : 321,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeInteger"
             },
@@ -12404,7 +12422,7 @@
               "key.doc.comment" : "检测并安全转换为Float\n\n- returns: Float",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 325,
+              "key.doc.line" : 328,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12415,8 +12433,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeFloat",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly) float fw_safeFloat;",
-              "key.parsed_scope.end" : 325,
-              "key.parsed_scope.start" : 325,
+              "key.parsed_scope.end" : 328,
+              "key.parsed_scope.start" : 328,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeFloat"
             },
@@ -12428,7 +12446,7 @@
               "key.doc.comment" : "检测并安全转换为Double\n\n- returns: Double",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 332,
+              "key.doc.line" : 335,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12439,8 +12457,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeDouble",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly) double fw_safeDouble;",
-              "key.parsed_scope.end" : 332,
-              "key.parsed_scope.start" : 332,
+              "key.parsed_scope.end" : 335,
+              "key.parsed_scope.start" : 335,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeDouble"
             },
@@ -12452,7 +12470,7 @@
               "key.doc.comment" : "检测并安全转换为Bool\n\n- returns: Bool",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 339,
+              "key.doc.line" : 342,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12463,8 +12481,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeBool",
               "key.parsed_declaration" : "@property (nonatomic, assign, unsafe_unretained, readonly) BOOL fw_safeBool;",
-              "key.parsed_scope.end" : 339,
-              "key.parsed_scope.start" : 339,
+              "key.parsed_scope.end" : 342,
+              "key.parsed_scope.start" : 342,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeBool"
             },
@@ -12476,7 +12494,7 @@
               "key.doc.comment" : "检测并安全转换为NSNumber\n\n- returns: NSNumber",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 346,
+              "key.doc.line" : 349,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12487,8 +12505,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeNumber",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly)\n    NS_REFINED_FOR_SWIFT NSNumber *fw_safeNumber;",
-              "key.parsed_scope.end" : 346,
-              "key.parsed_scope.start" : 346,
+              "key.parsed_scope.end" : 349,
+              "key.parsed_scope.start" : 349,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeNumber"
             },
@@ -12500,7 +12518,7 @@
               "key.doc.comment" : "检测并安全转换为NSString\n\n- returns: NSString",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 353,
+              "key.doc.line" : 356,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12511,8 +12529,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeString",
               "key.parsed_declaration" : "@property (nonatomic, copy, readonly)\n    NS_REFINED_FOR_SWIFT NSString *fw_safeString;",
-              "key.parsed_scope.end" : 353,
-              "key.parsed_scope.start" : 353,
+              "key.parsed_scope.end" : 356,
+              "key.parsed_scope.start" : 356,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeString"
             },
@@ -12524,7 +12542,7 @@
               "key.doc.comment" : "检测并安全转换为NSDate\n\n- returns: NSDate",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 360,
+              "key.doc.line" : 363,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12535,8 +12553,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeDate",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly) NS_REFINED_FOR_SWIFT NSDate *fw_safeDate;",
-              "key.parsed_scope.end" : 360,
-              "key.parsed_scope.start" : 360,
+              "key.parsed_scope.end" : 363,
+              "key.parsed_scope.start" : 363,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeDate"
             },
@@ -12548,7 +12566,7 @@
               "key.doc.comment" : "检测并安全转换为NSData\n\n- returns: NSData",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 367,
+              "key.doc.line" : 370,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12559,8 +12577,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeData",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly) NS_REFINED_FOR_SWIFT NSData *fw_safeData;",
-              "key.parsed_scope.end" : 367,
-              "key.parsed_scope.start" : 367,
+              "key.parsed_scope.end" : 370,
+              "key.parsed_scope.start" : 370,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeData"
             },
@@ -12572,7 +12590,7 @@
               "key.doc.comment" : "检测并安全转换为NSArray\n\n- returns: NSArray",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 374,
+              "key.doc.line" : 377,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12583,8 +12601,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeArray",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly)\n    NS_REFINED_FOR_SWIFT NSArray *fw_safeArray;",
-              "key.parsed_scope.end" : 374,
-              "key.parsed_scope.start" : 374,
+              "key.parsed_scope.end" : 377,
+              "key.parsed_scope.start" : 377,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeArray"
             },
@@ -12596,7 +12614,7 @@
               "key.doc.comment" : "检测并安全转换为NSMutableArray\n\n- returns: NSMutableArray",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 381,
+              "key.doc.line" : 384,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12607,8 +12625,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeMutableArray",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly)\n    NS_REFINED_FOR_SWIFT NSMutableArray *fw_safeMutableArray;",
-              "key.parsed_scope.end" : 381,
-              "key.parsed_scope.start" : 381,
+              "key.parsed_scope.end" : 384,
+              "key.parsed_scope.start" : 384,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeMutableArray"
             },
@@ -12620,7 +12638,7 @@
               "key.doc.comment" : "检测并安全转换为NSDictionary\n\n- returns: NSDictionary",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 388,
+              "key.doc.line" : 391,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12631,8 +12649,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeDictionary",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly)\n    NS_REFINED_FOR_SWIFT NSDictionary *fw_safeDictionary;",
-              "key.parsed_scope.end" : 388,
-              "key.parsed_scope.start" : 388,
+              "key.parsed_scope.end" : 391,
+              "key.parsed_scope.start" : 391,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeDictionary"
             },
@@ -12644,7 +12662,7 @@
               "key.doc.comment" : "检测并安全转换为NSMutableDictionary\n\n- returns: NSMutableDictionary",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 395,
+              "key.doc.line" : 398,
               "key.doc.result_discussion" : [
                 {
                   "kind" : "",
@@ -12655,8 +12673,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_safeMutableDictionary",
               "key.parsed_declaration" : "@property (nonatomic, strong, readonly)\n    NS_REFINED_FOR_SWIFT NSMutableDictionary *fw_safeMutableDictionary;",
-              "key.parsed_scope.end" : 395,
-              "key.parsed_scope.start" : 395,
+              "key.parsed_scope.end" : 398,
+              "key.parsed_scope.start" : 398,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSObject(py)fw_safeMutableDictionary"
             }
@@ -12667,12 +12685,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 399,
+          "key.doc.line" : 402,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSString+FWSafeType",
-          "key.parsed_scope.end" : 399,
-          "key.parsed_scope.start" : 399
+          "key.parsed_scope.end" : 402,
+          "key.parsed_scope.start" : 402
         },
         {
           "key.always_deprecated" : false,
@@ -12680,13 +12698,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 401,
+          "key.doc.line" : 404,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSString(FWSafeType)",
           "key.parsed_declaration" : "@interface NSString (FWSafeType)\n\n\/**\n 从指定位置截取子串\n \n @param from 起始位置\n @return 子串\n *\/\n- (nullable NSString *)fw_substringFromIndex:(NSInteger)from NS_REFINED_FOR_SWIFT;\n\n\/**\n 截取子串到指定位置\n \n @param to 结束位置\n @return 子串\n *\/\n- (nullable NSString *)fw_substringToIndex:(NSInteger)to NS_REFINED_FOR_SWIFT;\n\n\/**\n 截取指定范围的子串\n \n @param range 指定范围\n @return 子串\n *\/\n- (nullable NSString *)fw_substringWithRange:(NSRange)range NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 427,
-          "key.parsed_scope.start" : 401,
+          "key.parsed_scope.end" : 430,
+          "key.parsed_scope.start" : 404,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -12696,7 +12714,7 @@
               "key.doc.comment" : "从指定位置截取子串\n\n- parameter: from 起始位置\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 409,
+              "key.doc.line" : 412,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12718,8 +12736,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_substringFromIndex:",
               "key.parsed_declaration" : "- (nullable NSString *)fw_substringFromIndex:(NSInteger)from;",
-              "key.parsed_scope.end" : 409,
-              "key.parsed_scope.start" : 409,
+              "key.parsed_scope.end" : 412,
+              "key.parsed_scope.start" : 412,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSString(im)fw_substringFromIndex:"
             },
@@ -12731,7 +12749,7 @@
               "key.doc.comment" : "截取子串到指定位置\n\n- parameter: to 结束位置\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 417,
+              "key.doc.line" : 420,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12753,8 +12771,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_substringToIndex:",
               "key.parsed_declaration" : "- (nullable NSString *)fw_substringToIndex:(NSInteger)to;",
-              "key.parsed_scope.end" : 417,
-              "key.parsed_scope.start" : 417,
+              "key.parsed_scope.end" : 420,
+              "key.parsed_scope.start" : 420,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSString(im)fw_substringToIndex:"
             },
@@ -12766,7 +12784,7 @@
               "key.doc.comment" : "截取指定范围的子串\n\n- parameter: range 指定范围\n- returns: 子串",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 425,
+              "key.doc.line" : 428,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12788,8 +12806,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_substringWithRange:",
               "key.parsed_declaration" : "- (nullable NSString *)fw_substringWithRange:(NSRange)range;",
-              "key.parsed_scope.end" : 425,
-              "key.parsed_scope.start" : 425,
+              "key.parsed_scope.end" : 428,
+              "key.parsed_scope.start" : 428,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSString(im)fw_substringWithRange:"
             }
@@ -12800,12 +12818,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 429,
+          "key.doc.line" : 432,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSArray+FWSafeType",
-          "key.parsed_scope.end" : 429,
-          "key.parsed_scope.start" : 429
+          "key.parsed_scope.end" : 432,
+          "key.parsed_scope.start" : 432
         },
         {
           "key.always_deprecated" : false,
@@ -12813,13 +12831,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 431,
+          "key.doc.line" : 434,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSArray(FWSafeType)",
           "key.parsed_declaration" : "@interface NSArray<__covariant ObjectType> (FWSafeType)\n\n\/**\n 安全获取对象\n \n @param index 索引\n @return 对象\n *\/\n- (nullable ObjectType)fw_objectAtIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全获取子数组\n \n @param range 范围\n @return 对象数组\n *\/\n- (nullable NSArray<ObjectType> *)fw_subarrayWithRange:(NSRange)range NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 449,
-          "key.parsed_scope.start" : 431,
+          "key.parsed_scope.end" : 452,
+          "key.parsed_scope.start" : 434,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -12829,7 +12847,7 @@
               "key.doc.comment" : "安全获取对象\n\n- parameter: index 索引\n- returns: 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 439,
+              "key.doc.line" : 442,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12851,8 +12869,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_objectAtIndex:",
               "key.parsed_declaration" : "- (nullable ObjectType)fw_objectAtIndex:(NSInteger)index;",
-              "key.parsed_scope.end" : 439,
-              "key.parsed_scope.start" : 439,
+              "key.parsed_scope.end" : 442,
+              "key.parsed_scope.start" : 442,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSArray(im)fw_objectAtIndex:"
             },
@@ -12864,7 +12882,7 @@
               "key.doc.comment" : "安全获取子数组\n\n- parameter: range 范围\n- returns: 对象数组",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 447,
+              "key.doc.line" : 450,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12886,8 +12904,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_subarrayWithRange:",
               "key.parsed_declaration" : "- (nullable NSArray<ObjectType> *)fw_subarrayWithRange:(NSRange)range;",
-              "key.parsed_scope.end" : 447,
-              "key.parsed_scope.start" : 447,
+              "key.parsed_scope.end" : 450,
+              "key.parsed_scope.start" : 450,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSArray(im)fw_subarrayWithRange:"
             }
@@ -12898,12 +12916,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 451,
+          "key.doc.line" : 454,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSMutableArray+FWSafeType",
-          "key.parsed_scope.end" : 451,
-          "key.parsed_scope.start" : 451
+          "key.parsed_scope.end" : 454,
+          "key.parsed_scope.start" : 454
         },
         {
           "key.always_deprecated" : false,
@@ -12911,13 +12929,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 453,
+          "key.doc.line" : 456,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSMutableArray(FWSafeType)",
           "key.parsed_declaration" : "@interface NSMutableArray<ObjectType> (FWSafeType)\n\n\/**\n 安全添加对象\n \n @param object 对象\n *\/\n- (void)fw_addObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全移除指定索引对象\n \n @param index 索引\n *\/\n- (void)fw_removeObjectAtIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全插入对象到指定位置\n \n @param object 对象\n @param index 索引\n *\/\n- (void)fw_insertObject:(nullable ObjectType)object atIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全替换对象到指定位置\n \n @param index 索引\n @param object 对象\n *\/\n- (void)fw_replaceObjectAtIndex:(NSInteger)index withObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全移除子数组\n \n @param range 范围\n *\/\n- (void)fw_removeObjectsInRange:(NSRange)range NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全插入数组到指定位置\n \n @param objects 要插入的数组\n @param index 索引\n *\/\n- (void)fw_insertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 500,
-          "key.parsed_scope.start" : 453,
+          "key.parsed_scope.end" : 503,
+          "key.parsed_scope.start" : 456,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -12927,7 +12945,7 @@
               "key.doc.comment" : "安全添加对象\n\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 460,
+              "key.doc.line" : 463,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12943,8 +12961,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_addObject:",
               "key.parsed_declaration" : "- (void)fw_addObject:(nullable ObjectType)object;",
-              "key.parsed_scope.end" : 460,
-              "key.parsed_scope.start" : 460,
+              "key.parsed_scope.end" : 463,
+              "key.parsed_scope.start" : 463,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_addObject:"
             },
@@ -12956,7 +12974,7 @@
               "key.doc.comment" : "安全移除指定索引对象\n\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 467,
+              "key.doc.line" : 470,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -12972,8 +12990,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeObjectAtIndex:",
               "key.parsed_declaration" : "- (void)fw_removeObjectAtIndex:(NSInteger)index;",
-              "key.parsed_scope.end" : 467,
-              "key.parsed_scope.start" : 467,
+              "key.parsed_scope.end" : 470,
+              "key.parsed_scope.start" : 470,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_removeObjectAtIndex:"
             },
@@ -12985,7 +13003,7 @@
               "key.doc.comment" : "安全插入对象到指定位置\n\n- parameter: object 对象\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 475,
+              "key.doc.line" : 478,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13010,8 +13028,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_insertObject:atIndex:",
               "key.parsed_declaration" : "- (void)fw_insertObject:(nullable ObjectType)object atIndex:(NSInteger)index;",
-              "key.parsed_scope.end" : 475,
-              "key.parsed_scope.start" : 475,
+              "key.parsed_scope.end" : 478,
+              "key.parsed_scope.start" : 478,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_insertObject:atIndex:"
             },
@@ -13023,7 +13041,7 @@
               "key.doc.comment" : "安全替换对象到指定位置\n\n- parameter: index 索引\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 483,
+              "key.doc.line" : 486,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13048,8 +13066,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_replaceObjectAtIndex:withObject:",
               "key.parsed_declaration" : "- (void)fw_replaceObjectAtIndex:(NSInteger)index\n                     withObject:(nullable ObjectType)object;",
-              "key.parsed_scope.end" : 483,
-              "key.parsed_scope.start" : 483,
+              "key.parsed_scope.end" : 486,
+              "key.parsed_scope.start" : 486,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_replaceObjectAtIndex:withObject:"
             },
@@ -13061,7 +13079,7 @@
               "key.doc.comment" : "安全移除子数组\n\n- parameter: range 范围",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 490,
+              "key.doc.line" : 493,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13077,8 +13095,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeObjectsInRange:",
               "key.parsed_declaration" : "- (void)fw_removeObjectsInRange:(NSRange)range;",
-              "key.parsed_scope.end" : 490,
-              "key.parsed_scope.start" : 490,
+              "key.parsed_scope.end" : 493,
+              "key.parsed_scope.start" : 493,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_removeObjectsInRange:"
             },
@@ -13090,7 +13108,7 @@
               "key.doc.comment" : "安全插入数组到指定位置\n\n- parameter: objects 要插入的数组\n- parameter: index 索引",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 498,
+              "key.doc.line" : 501,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13115,8 +13133,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_insertObjects:atIndex:",
               "key.parsed_declaration" : "- (void)fw_insertObjects:(nullable NSArray *)objects atIndex:(NSInteger)index;",
-              "key.parsed_scope.end" : 498,
-              "key.parsed_scope.start" : 498,
+              "key.parsed_scope.end" : 501,
+              "key.parsed_scope.start" : 501,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableArray(im)fw_insertObjects:atIndex:"
             }
@@ -13127,12 +13145,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 502,
+          "key.doc.line" : 505,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSMutableSet+FWSafeType",
-          "key.parsed_scope.end" : 502,
-          "key.parsed_scope.start" : 502
+          "key.parsed_scope.end" : 505,
+          "key.parsed_scope.start" : 505
         },
         {
           "key.always_deprecated" : false,
@@ -13140,13 +13158,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 504,
+          "key.doc.line" : 507,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSMutableSet(FWSafeType)",
           "key.parsed_declaration" : "@interface NSMutableSet<ObjectType> (FWSafeType)\n\n\/**\n 安全添加对象\n \n @param object 对象\n *\/\n- (void)fw_addObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全移除对象\n \n @param object 对象\n *\/\n- (void)fw_removeObject:(nullable ObjectType)object NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 520,
-          "key.parsed_scope.start" : 504,
+          "key.parsed_scope.end" : 523,
+          "key.parsed_scope.start" : 507,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -13156,7 +13174,7 @@
               "key.doc.comment" : "安全添加对象\n\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 511,
+              "key.doc.line" : 514,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13172,8 +13190,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_addObject:",
               "key.parsed_declaration" : "- (void)fw_addObject:(nullable ObjectType)object;",
-              "key.parsed_scope.end" : 511,
-              "key.parsed_scope.start" : 511,
+              "key.parsed_scope.end" : 514,
+              "key.parsed_scope.start" : 514,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableSet(im)fw_addObject:"
             },
@@ -13185,7 +13203,7 @@
               "key.doc.comment" : "安全移除对象\n\n- parameter: object 对象",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 518,
+              "key.doc.line" : 521,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13201,8 +13219,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeObject:",
               "key.parsed_declaration" : "- (void)fw_removeObject:(nullable ObjectType)object;",
-              "key.parsed_scope.end" : 518,
-              "key.parsed_scope.start" : 518,
+              "key.parsed_scope.end" : 521,
+              "key.parsed_scope.start" : 521,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableSet(im)fw_removeObject:"
             }
@@ -13213,12 +13231,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 522,
+          "key.doc.line" : 525,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSDictionary+FWSafeType",
-          "key.parsed_scope.end" : 522,
-          "key.parsed_scope.start" : 522
+          "key.parsed_scope.end" : 525,
+          "key.parsed_scope.start" : 525
         },
         {
           "key.always_deprecated" : false,
@@ -13226,13 +13244,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 524,
+          "key.doc.line" : 527,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSDictionary(FWSafeType)",
           "key.parsed_declaration" : "@interface NSDictionary<__covariant KeyType, __covariant ObjectType> (FWSafeType)\n\n\/**\n 安全读取对象（过滤NSNull）\n \n @param key 键名\n @return 键值\n *\/\n- (nullable ObjectType)fw_objectForKey:(nullable KeyType)key NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 534,
-          "key.parsed_scope.start" : 524,
+          "key.parsed_scope.end" : 537,
+          "key.parsed_scope.start" : 527,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -13242,7 +13260,7 @@
               "key.doc.comment" : "安全读取对象（过滤NSNull）\n\n- parameter: key 键名\n- returns: 键值",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 532,
+              "key.doc.line" : 535,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13264,8 +13282,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_objectForKey:",
               "key.parsed_declaration" : "- (nullable ObjectType)fw_objectForKey:(nullable KeyType)key;",
-              "key.parsed_scope.end" : 532,
-              "key.parsed_scope.start" : 532,
+              "key.parsed_scope.end" : 535,
+              "key.parsed_scope.start" : 535,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSDictionary(im)fw_objectForKey:"
             }
@@ -13276,12 +13294,12 @@
         {
           "key.doc.column" : 1,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 536,
+          "key.doc.line" : 539,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.mark",
           "key.name" : "NSMutableDictionary+FWSafeType",
-          "key.parsed_scope.end" : 536,
-          "key.parsed_scope.start" : 536
+          "key.parsed_scope.end" : 539,
+          "key.parsed_scope.start" : 539
         },
         {
           "key.always_deprecated" : false,
@@ -13289,13 +13307,13 @@
           "key.deprecation_message" : "",
           "key.doc.column" : 12,
           "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
-          "key.doc.line" : 538,
+          "key.doc.line" : 541,
           "key.filepath" : "docs\/FWFramework\/FWEncode.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "NSMutableDictionary(FWSafeType)",
           "key.parsed_declaration" : "@interface NSMutableDictionary<KeyType, ObjectType> (FWSafeType)\n\n\/**\n 安全移除指定键名\n \n @param key 键名\n *\/\n- (void)fw_removeObjectForKey:(nullable KeyType)key NS_REFINED_FOR_SWIFT;\n\n\/**\n 安全设置对象（过滤NSNull）\n\n @param object 键值\n @param key 键名\n *\/\n- (void)fw_setObject:(nullable ObjectType)object forKey:(nullable KeyType <NSCopying>)key NS_REFINED_FOR_SWIFT;\n\n@end",
-          "key.parsed_scope.end" : 555,
-          "key.parsed_scope.start" : 538,
+          "key.parsed_scope.end" : 558,
+          "key.parsed_scope.start" : 541,
           "key.substructure" : [
             {
               "key.always_deprecated" : false,
@@ -13305,7 +13323,7 @@
               "key.doc.comment" : "安全移除指定键名\n\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 545,
+              "key.doc.line" : 548,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13321,8 +13339,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_removeObjectForKey:",
               "key.parsed_declaration" : "- (void)fw_removeObjectForKey:(nullable KeyType)key;",
-              "key.parsed_scope.end" : 545,
-              "key.parsed_scope.start" : 545,
+              "key.parsed_scope.end" : 548,
+              "key.parsed_scope.start" : 548,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableDictionary(im)fw_removeObjectForKey:"
             },
@@ -13334,7 +13352,7 @@
               "key.doc.comment" : "安全设置对象（过滤NSNull）\n\n- parameter: object 键值\n- parameter: key 键名",
               "key.doc.file" : "docs\/FWFramework\/FWEncode.h",
               "key.doc.full_as_xml" : "",
-              "key.doc.line" : 553,
+              "key.doc.line" : 556,
               "key.doc.parameters" : [
                 {
                   "discussion" : [
@@ -13359,8 +13377,8 @@
               "key.kind" : "sourcekitten.source.lang.objc.decl.method.instance",
               "key.name" : "-fw_setObject:forKey:",
               "key.parsed_declaration" : "- (void)fw_setObject:(nullable ObjectType)object\n              forKey:(nullable id<NSCopying>)key;",
-              "key.parsed_scope.end" : 553,
-              "key.parsed_scope.start" : 553,
+              "key.parsed_scope.end" : 556,
+              "key.parsed_scope.start" : 556,
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)NSMutableDictionary(im)fw_setObject:forKey:"
             }
@@ -30626,7 +30644,7 @@
           "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
           "key.kind" : "sourcekitten.source.lang.objc.decl.category",
           "key.name" : "UIDevice(FWUIKit)",
-          "key.parsed_declaration" : "@interface UIDevice (FWUIKit)\n\n\/\/\/ 设置设备token原始Data，格式化并保存\n+ (void)fw_setDeviceTokenData:(nullable NSData *)tokenData NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备Token格式化后的字符串\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备模型，格式：\"iPhone6,1\"\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceModel NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFV NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFA NS_REFINED_FOR_SWIFT;\n\n@end",
+          "key.parsed_declaration" : "@interface UIDevice (FWUIKit)\n\n\/\/\/ 设置设备token原始Data，格式化并保存\n+ (void)fw_setDeviceTokenData:(nullable NSData *)tokenData NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取或设置设备Token格式化后的字符串\n@property (class, nonatomic, copy, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备模型，格式：\"iPhone6,1\"\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceModel NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFV NS_REFINED_FOR_SWIFT;\n\n\/\/\/ 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效\n@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFA NS_REFINED_FOR_SWIFT;\n\n@end",
           "key.parsed_scope.end" : 33,
           "key.parsed_scope.start" : 16,
           "key.substructure" : [
@@ -30652,15 +30670,15 @@
               "key.always_deprecated" : false,
               "key.always_unavailable" : false,
               "key.deprecation_message" : "",
-              "key.doc.column" : 66,
-              "key.doc.comment" : "获取设备Token格式化后的字符串",
+              "key.doc.column" : 56,
+              "key.doc.comment" : "获取或设置设备Token格式化后的字符串",
               "key.doc.file" : "docs\/FWFramework\/FWUIKit.h",
               "key.doc.full_as_xml" : "",
               "key.doc.line" : 22,
               "key.filepath" : "docs\/FWFramework\/FWUIKit.h",
               "key.kind" : "sourcekitten.source.lang.objc.decl.property",
               "key.name" : "fw_deviceToken",
-              "key.parsed_declaration" : "@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceToken;",
+              "key.parsed_declaration" : "@property (class, nonatomic, copy, readwrite, nullable) NSString *fw_deviceToken;",
               "key.parsed_scope.end" : 22,
               "key.parsed_scope.start" : 22,
               "key.unavailable_message" : "",

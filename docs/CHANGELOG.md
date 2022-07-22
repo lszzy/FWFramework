@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.6.1] - 2022-07-22
+
+### Fixed
+* Fixed the problem of opening failure when route parsing URL with port
+* Support saving custom deviceToken strings
+
 ## [3.6.0] - 2022-07-11
 
 ### Changed

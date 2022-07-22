@@ -503,9 +503,10 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     NSMutableArray *pathComponents = [NSMutableArray array];
     // 解析scheme://path格式
     NSRange urlRange = [URL rangeOfString:@"://"];
+    NSURL *fullUrl = [FWRouterContext URLWithString:URL];
     if (urlRange.location == NSNotFound) {
         // 解析scheme:path格式
-        NSString *urlScheme = [[FWRouterContext URLWithString:URL].scheme stringByAppendingString:@":"];
+        NSString *urlScheme = [fullUrl.scheme stringByAppendingString:@":"];
         if (urlScheme.length > 1 && [URL hasPrefix:urlScheme]) {
             urlRange = NSMakeRange(urlScheme.length - 1, 1);
         }
@@ -514,20 +515,25 @@ static NSString * const FWRouterBlockKey = @"FWRouterBlock";
     if (urlRange.location != NSNotFound) {
         // 如果 URL 包含协议，那么把协议作为第一个元素放进去
         NSString *pathScheme = [URL substringToIndex:urlRange.location];
-        if (pathScheme.length > 0) {
-            [pathComponents addObject:pathScheme];
-        }
+        if (pathScheme.length > 0) [pathComponents addObject:pathScheme];
         
         // 如果只有协议，那么放一个占位符
         URL = [URL substringFromIndex:urlRange.location + urlRange.length];
-        if (!URL.length) {
-            [pathComponents addObject:FWRouterWildcardCharacter];
-        }
+        if (!URL.length) [pathComponents addObject:FWRouterWildcardCharacter];
     }
     
-    NSURL *nsurl = [FWRouterContext URLWithString:URL];
-    for (NSString *pathComponent in [nsurl pathComponents]) {
-        if ([pathComponent isEqualToString:@"/"]) continue;
+    NSURL *pathUrl = [FWRouterContext URLWithString:URL];
+    NSArray<NSString *> *components = [pathUrl pathComponents];
+    if (!components && urlRange.location != NSNotFound && URL.length > 0 && fullUrl) {
+        NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:fullUrl resolvingAgainstBaseURL:NO];
+        if (urlComponents && urlComponents.rangeOfPath.location != NSNotFound) {
+            NSString *pathDomain = [URL substringToIndex:urlComponents.rangeOfPath.location - (urlRange.location + urlRange.length)];
+            if (pathDomain.length > 0) [pathComponents addObject:pathDomain];
+        }
+        components = [fullUrl pathComponents];
+    }
+    for (NSString *pathComponent in components) {
+        if (pathComponent.length < 1 || [pathComponent isEqualToString:@"/"]) continue;
         if ([[pathComponent substringToIndex:1] isEqualToString:@"?"]) break;
         [pathComponents addObject:pathComponent];
     }
