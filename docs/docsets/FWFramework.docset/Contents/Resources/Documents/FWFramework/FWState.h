@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWStateTransition;
 
 /// 状态类
-NS_SWIFT_NAME(State)
+NS_SWIFT_NAME(StateObject)
 @interface FWState : NSObject
 
 /// 状态名称，只读
