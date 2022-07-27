@@ -1,5 +1,10 @@
 # 更新日志
 
+## [3.7.0] - 2022-07-27
+
+### Changed
+* 修改Swift版本State为StateObject
+
 ## [3.6.1] - 2022-07-22
 
 ### Fixed

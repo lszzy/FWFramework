@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.7.0] - 2022-07-27
+
+### Changed
+* Modify the Swift version State to StateObject
+
 ## [3.6.1] - 2022-07-22
 
 ### Fixed
