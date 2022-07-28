@@ -15,8 +15,24 @@
 #pragma mark - UINavigationBar+FWBarAppearance
 
 static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
+static BOOL fwStaticAppearanceEnabled = NO;
 
 @implementation UINavigationBar (FWBarAppearance)
+
++ (BOOL)fw_appearanceEnabled
+{
+    if (@available(iOS 15.0, *)) {
+        return YES;
+    } else if (@available(iOS 13.0, *)) {
+        return fwStaticAppearanceEnabled;
+    }
+    return NO;
+}
+
++ (void)setFw_appearanceEnabled:(BOOL)appearanceEnabled
+{
+    fwStaticAppearanceEnabled = appearanceEnabled;
+}
 
 + (NSDictionary<NSAttributedStringKey,id> *)fw_buttonAttributes
 {
@@ -28,7 +44,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     fwStaticButtonAttributes = buttonAttributes;
     if (!fwStaticButtonAttributes) return;
     
-    if (@available(iOS 15.0, *)) {} else {
+    if (!UINavigationBar.fw_appearanceEnabled) {
         UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UINavigationBar.class, nil]];
         NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
         for (NSNumber *state in states) {
@@ -70,14 +86,14 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 - (void)setFw_isTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (translucent) {
             [self.fw_appearance configureWithDefaultBackground];
         } else {
             [self.fw_appearance configureWithTransparentBackground];
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (translucent) {
             [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         } else {
@@ -122,7 +138,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)fw_updateTitleAttributes
 {
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         NSMutableDictionary *attributes = self.fw_appearance.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.tintColor;
         if (self.fw_titleAttributes) [attributes addEntriesFromDictionary:self.fw_titleAttributes];
@@ -133,7 +149,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
         if (self.fw_titleAttributes) [largeAttributes addEntriesFromDictionary:self.fw_titleAttributes];
         self.fw_appearance.largeTitleTextAttributes = [largeAttributes copy];
         [self fw_updateAppearance];
-    } else {
+    }} else {
         NSMutableDictionary *attributes = self.titleTextAttributes.mutableCopy ?: [NSMutableDictionary new];
         attributes[NSForegroundColorAttributeName] = self.tintColor;
         if (self.fw_titleAttributes) [attributes addEntriesFromDictionary:self.fw_titleAttributes];
@@ -148,7 +164,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)fw_updateButtonAttributes
 {
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         NSDictionary *buttonAttributes = self.fw_buttonAttributes ?: fwStaticButtonAttributes;
         if (!buttonAttributes) return;
         
@@ -162,7 +178,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             }
         }
         [self fw_updateAppearance];
-    }
+    }}
 }
 
 - (UIColor *)fw_backgroundColor
@@ -174,7 +190,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (self.fw_isTranslucent) {
             self.fw_appearance.backgroundColor = color;
             self.fw_appearance.backgroundImage = nil;
@@ -184,7 +200,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundImage = image;
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (self.fw_isTranslucent) {
             self.barTintColor = color;
             [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
@@ -206,11 +222,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), backgroundImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = backgroundImage.fw_image ?: [UIImage new];
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     }
@@ -227,11 +243,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
     }
@@ -246,11 +262,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = shadowColor;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.shadowImage = [UIImage fw_imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
@@ -264,31 +280,30 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = nil;
         self.fw_appearance.shadowImage = shadowImage.fw_image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.shadowImage = shadowImage.fw_image ?: [UIImage new];
     }
 }
 
 - (UIImage *)fw_backImage
 {
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         return self.fw_appearance.backIndicatorImage;
-    } else {
-        return self.backIndicatorImage;
-    }
+    }}
+    return self.backIndicatorImage;
 }
 
 - (void)setFw_backImage:(UIImage *)backImage
 {
     UIImage *image = [backImage fw_imageWithInsets:UIEdgeInsetsMake(0, -8, 0, 0) color:nil];
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         [self.fw_appearance setBackIndicatorImage:image transitionMaskImage:image];
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.backIndicatorImage = image;
         self.backIndicatorTransitionMaskImage = image;
     }
@@ -299,7 +314,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     [super fw_themeChanged:style];
     
     if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             if (self.fw_isTranslucent) {
                 self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
                 self.fw_appearance.backgroundImage = nil;
@@ -309,7 +324,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundImage = image;
             }
             [self fw_updateAppearance];
-        } else {
+        }} else {
             if (self.fw_isTranslucent) {
                 self.barTintColor = self.fw_backgroundColor.fw_color;
                 [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
@@ -323,32 +338,32 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     
     if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
         UIImage *image = self.fw_backgroundImage.fw_image ?: [UIImage new];
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.backgroundColor = nil;
             self.fw_appearance.backgroundImage = image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.barTintColor = nil;
             [self setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
         }
     }
     
     if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.shadowImage = [UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
     if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = nil;
             self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.shadowImage = self.fw_shadowImage.fw_image ?: [UIImage new];
         }
     }
@@ -389,14 +404,14 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 - (void)setFw_isTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (translucent) {
             [self.fw_appearance configureWithDefaultBackground];
         } else {
             [self.fw_appearance configureWithTransparentBackground];
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (translucent) {
             self.backgroundImage = nil;
         } else {
@@ -424,7 +439,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (self.fw_isTranslucent) {
             self.fw_appearance.backgroundColor = color;
             self.fw_appearance.backgroundImage = nil;
@@ -433,7 +448,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:color];
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (self.fw_isTranslucent) {
             self.barTintColor = color;
             self.backgroundImage = nil;
@@ -453,11 +468,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image.fw_image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         self.backgroundImage = image.fw_image;
     }
@@ -474,11 +489,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         self.backgroundImage = image;
     }
@@ -493,11 +508,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = shadowColor;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.shadowImage = [UIImage fw_imageWithColor:shadowColor] ?: [UIImage new];
     }
 }
@@ -511,11 +526,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = nil;
         self.fw_appearance.shadowImage = image.fw_image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.shadowImage = image.fw_image ?: [UIImage new];
     }
 }
@@ -525,7 +540,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     [super fw_themeChanged:style];
     
     if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             if (self.fw_isTranslucent) {
                 self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
                 self.fw_appearance.backgroundImage = nil;
@@ -534,7 +549,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color];
             }
             [self fw_updateAppearance];
-        } else {
+        }} else {
             if (self.fw_isTranslucent) {
                 self.barTintColor = self.fw_backgroundColor.fw_color;
                 self.backgroundImage = nil;
@@ -546,32 +561,32 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     }
     
     if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.backgroundColor = nil;
             self.fw_appearance.backgroundImage = self.fw_backgroundImage.fw_image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.barTintColor = nil;
             self.backgroundImage = self.fw_backgroundImage.fw_image;
         }
     }
     
     if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.shadowImage = [UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new];
         }
     }
     
     if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = nil;
             self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.shadowImage = self.fw_shadowImage.fw_image ?: [UIImage new];
         }
     }
@@ -629,14 +644,14 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 - (void)setFw_isTranslucent:(BOOL)translucent
 {
     objc_setAssociatedObject(self, @selector(fw_isTranslucent), @(translucent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (translucent) {
             [self.fw_appearance configureWithDefaultBackground];
         } else {
             [self.fw_appearance configureWithTransparentBackground];
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (translucent) {
             [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         } else {
@@ -653,9 +668,9 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 - (void)setFw_foregroundColor:(UIColor *)color
 {
     self.tintColor = color;
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         [self fw_updateAppearance];
-    }
+    }}
 }
 
 - (NSDictionary<NSAttributedStringKey,id> *)fw_buttonAttributes
@@ -671,7 +686,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 
 - (void)fw_updateButtonAttributes
 {
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         NSDictionary *buttonAttributes = self.fw_buttonAttributes;
         if (!buttonAttributes) return;
         
@@ -685,7 +700,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             }
         }
         [self fw_updateAppearance];
-    }
+    }}
 }
 
 - (UIColor *)fw_backgroundColor
@@ -697,7 +712,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         if (self.fw_isTranslucent) {
             self.fw_appearance.backgroundColor = color;
             self.fw_appearance.backgroundImage = nil;
@@ -706,7 +721,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
             self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:color];
         }
         [self fw_updateAppearance];
-    } else {
+    }} else {
         if (self.fw_isTranslucent) {
             self.barTintColor = color;
             [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
@@ -726,11 +741,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image.fw_image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         [self setBackgroundImage:image.fw_image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     }
@@ -747,11 +762,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     objc_setAssociatedObject(self, @selector(fw_backgroundColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_backgroundImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     UIImage *image = transparent ? [UIImage new] : nil;
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.backgroundColor = nil;
         self.fw_appearance.backgroundImage = image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         self.barTintColor = nil;
         [self setBackgroundImage:image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     }
@@ -766,11 +781,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), shadowColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = shadowColor;
         self.fw_appearance.shadowImage = nil;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         [self setShadowImage:[UIImage fw_imageWithColor:shadowColor] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
@@ -784,11 +799,11 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_shadowColor), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(self, @selector(fw_shadowImage), shadowImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (@available(iOS 15.0, *)) {
+    if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
         self.fw_appearance.shadowColor = nil;
         self.fw_appearance.shadowImage = shadowImage.fw_image;
         [self fw_updateAppearance];
-    } else {
+    }} else {
         [self setShadowImage:shadowImage.fw_image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
     }
 }
@@ -798,7 +813,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     [super fw_themeChanged:style];
     
     if (self.fw_backgroundColor && self.fw_backgroundColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             if (self.fw_isTranslucent) {
                 self.fw_appearance.backgroundColor = self.fw_backgroundColor.fw_color;
                 self.fw_appearance.backgroundImage = nil;
@@ -807,7 +822,7 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
                 self.fw_appearance.backgroundImage = [UIImage fw_imageWithColor:self.fw_backgroundColor.fw_color];
             }
             [self fw_updateAppearance];
-        } else {
+        }} else {
             if (self.fw_isTranslucent) {
                 self.barTintColor = self.fw_backgroundColor.fw_color;
                 [self setBackgroundImage:nil forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
@@ -819,32 +834,32 @@ static NSDictionary<NSAttributedStringKey, id> *fwStaticButtonAttributes = nil;
     }
     
     if (self.fw_backgroundImage && self.fw_backgroundImage.fw_isThemeImage) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.backgroundColor = nil;
             self.fw_appearance.backgroundImage = self.fw_backgroundImage.fw_image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             self.barTintColor = nil;
             [self setBackgroundImage:self.fw_backgroundImage.fw_image forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         }
     }
     
     if (self.fw_shadowColor && self.fw_shadowColor.fw_isThemeColor) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = self.fw_shadowColor.fw_color;
             self.fw_appearance.shadowImage = nil;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             [self setShadowImage:[UIImage fw_imageWithColor:self.fw_shadowColor.fw_color] ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
     
     if (self.fw_shadowImage && self.fw_shadowImage.fw_isThemeImage) {
-        if (@available(iOS 15.0, *)) {
+        if (UINavigationBar.fw_appearanceEnabled) { if (@available(iOS 13.0, *)) {
             self.fw_appearance.shadowColor = nil;
             self.fw_appearance.shadowImage = self.fw_shadowImage.fw_image;
             [self fw_updateAppearance];
-        } else {
+        }} else {
             [self setShadowImage:self.fw_shadowImage.fw_image ?: [UIImage new] forToolbarPosition:UIBarPositionAny];
         }
     }
