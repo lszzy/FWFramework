@@ -250,11 +250,6 @@ extension Wrapper where Base: UIColor {
     public static func color(hexString: String, alpha: CGFloat = 1.0) -> UIColor {
         return Base.__fw_color(withHexString: hexString, alpha: alpha)
     }
-
-    /// 从颜色字符串初始化，支持十六进制和颜色值，透明度默认1.0，失败时返回clear
-    public static func color(string: String, alpha: CGFloat = 1.0) -> UIColor {
-        return Base.__fw_color(with: string, alpha: alpha)
-    }
     
 }
 
