@@ -192,6 +192,9 @@ typedef void (^FWBlockIntParam)(NSInteger index, id _Nullable param) NS_SWIFT_UN
 /// 根据唯一标志移除点击句柄
 - (void)fw_removeTouchBlock:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;
 
+/// 移除所有点击句柄
+- (void)fw_removeAllTouchBlocks NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIBarButtonItem+FWBlock
