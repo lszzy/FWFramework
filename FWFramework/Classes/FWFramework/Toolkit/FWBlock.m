@@ -303,6 +303,11 @@ void FWSynchronized(id object, void (^closure)(void)) {
     [self fw_removeBlock:identifier forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)fw_removeAllTouchBlocks
+{
+    [self fw_removeAllBlocksForControlEvents:UIControlEventTouchUpInside];
+}
+
 @end
 
 #pragma mark - UIBarButtonItem+FWBlock
