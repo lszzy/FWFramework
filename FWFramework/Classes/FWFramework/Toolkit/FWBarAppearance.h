@@ -14,9 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UINavigationBar+FWBarAppearance
 
 /**
- 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+ 导航栏视图分类，全局设置用[UINavigationBar appearance]。默认iOS15+启用appearance，iOS14及以下使用旧版本api
  */
 @interface UINavigationBar (FWBarAppearance)
+
+/// 是否强制iOS13+启用新版样式，默认NO，仅iOS15+才启用
+@property (class, nonatomic, assign) BOOL fw_appearanceEnabled NS_REFINED_FOR_SWIFT;
 
 /// 设置全局按钮样式属性，nil时系统默认
 @property (class, nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_buttonAttributes UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
