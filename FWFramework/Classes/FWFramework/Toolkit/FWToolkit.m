@@ -490,27 +490,6 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:fr green:fg blue:fb alpha:alpha];
 }
 
-+ (UIColor *)fw_colorWithString:(NSString *)string
-{
-    return [self fw_colorWithString:string alpha:1.0f];
-}
-
-+ (UIColor *)fw_colorWithString:(NSString *)string alpha:(CGFloat)alpha
-{
-    // 颜色值
-    SEL colorSelector = NSSelectorFromString([NSString stringWithFormat:@"%@Color", string]);
-    if ([[UIColor class] respondsToSelector:colorSelector]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        UIColor *color = [[UIColor class] performSelector:colorSelector];
-#pragma clang diagnostic pop
-        return alpha < 1.0f ? [color colorWithAlphaComponent:alpha] : color;
-    }
-    
-    // 十六进制
-    return [self fw_colorWithHexString:string alpha:alpha];
-}
-
 @end
 
 #pragma mark - UIFont+FWToolkit

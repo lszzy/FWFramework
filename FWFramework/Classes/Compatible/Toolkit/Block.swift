@@ -212,6 +212,11 @@ extension Wrapper where Base: UIControl {
         base.__fw_removeTouchBlock(identifier)
     }
     
+    /// 移除所有点击句柄
+    public func removeAllTouchBlocks() {
+        base.__fw_removeAllTouchBlocks()
+    }
+    
 }
 
 // MARK: UIBarButtonItem+Block

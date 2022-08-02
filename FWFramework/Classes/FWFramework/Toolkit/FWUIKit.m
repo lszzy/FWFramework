@@ -241,6 +241,18 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
 }
 
+- (__kindof UIView *)fw_subviewWithTag:(NSInteger)tag
+{
+    __block UIView *subview = nil;
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.tag == tag) {
+            subview = obj;
+            *stop = YES;
+        }
+    }];
+    return subview;
+}
+
 - (void)fw_setShadowColor:(UIColor *)color
                   offset:(CGSize)offset
                   radius:(CGFloat)radius

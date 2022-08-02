@@ -118,6 +118,11 @@ extension Wrapper where Base: UIView {
     public func fitSize(drawSize: CGSize) -> CGSize {
         return base.__fw_fitSize(withDraw: drawSize)
     }
+    
+    /// 根据tag查找subview，仅从subviews中查找
+    public func subview(tag: Int) -> UIView? {
+        return base.__fw_subview(withTag: tag)
+    }
 
     /// 设置阴影颜色、偏移和半径
     public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {

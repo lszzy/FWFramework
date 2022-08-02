@@ -590,7 +590,10 @@ extension String: SafeType {
 extension Array: SafeType {
     public static var safeValue: Array<Element> { return [] }
     public func safeElement(_ index: Int) -> Element? {
-        return index >= 0 && index < count ? self[index] : nil
+        return index >= 0 && index < endIndex ? self[index] : nil
+    }
+    public subscript(safe index: Int) -> Element? {
+        return safeElement(index)
     }
 }
 extension Set: SafeType {

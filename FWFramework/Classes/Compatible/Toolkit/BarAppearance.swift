@@ -11,8 +11,14 @@ import FWFramework
 #endif
 
 // MARK: - UINavigationBar+BarAppearance
-/// 导航栏视图分类，全局设置用[UINavigationBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+/// 导航栏视图分类，全局设置用[UINavigationBar appearance]。默认iOS15+启用appearance，iOS14及以下使用旧版本api
 extension Wrapper where Base: UINavigationBar {
+    
+    /// 是否强制iOS13+启用新版样式，默认false，仅iOS15+才启用
+    public static var appearanceEnabled: Bool {
+        get { return Base.__fw_appearanceEnabled }
+        set { Base.__fw_appearanceEnabled = newValue }
+    }
     
     /// 设置全局按钮样式属性，nil时系统默认
     public static var buttonAttributes: [NSAttributedString.Key: Any]? {

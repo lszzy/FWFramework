@@ -54,6 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
 - (CGSize)fw_fitSizeWithDrawSize:(CGSize)drawSize NS_REFINED_FOR_SWIFT;
 
+/// 根据tag查找subview，仅从subviews中查找
+- (nullable __kindof UIView *)fw_subviewWithTag:(NSInteger)tag NS_REFINED_FOR_SWIFT;
+
 /// 设置阴影颜色、偏移和半径
 - (void)fw_setShadowColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
