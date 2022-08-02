@@ -17,7 +17,7 @@
     <a title="UIColor(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 3.7.0 Docs</a> (81% documented)</p>
+        <p><a href="../index.html">FWFramework 3.8.0 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -927,12 +927,6 @@
 <span class="c1">/// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_colorWithHexString</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">hexString</span> <span class="nf">alpha</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">alpha</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear</span>
-<span class="k">+</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_colorWithString</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="c1">/// 从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear</span>
-<span class="k">+</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_colorWithString</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="nf">alpha</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">alpha</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
 <span class="k">@end</span></code></pre>
 
                 </div>
@@ -1241,67 +1235,12 @@
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIColor(cm)fw_colorWithString:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_colorWithString:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIColor(cm)fw_colorWithString:">+fw_colorWithString:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从颜色字符串初始化，支持十六进制和颜色值，透明度为1.0，失败时返回clear</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_colorWithString</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIColor(cm)fw_colorWithString:alpha:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_colorWithString:alpha:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIColor(cm)fw_colorWithString:alpha:">+fw_colorWithString:<wbr>alpha:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从颜色字符串初始化，支持十六进制和颜色值，自定义透明度，失败时返回clear</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_colorWithString</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span>
-                                  <span class="nf">alpha</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">alpha</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-07-27)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-08-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

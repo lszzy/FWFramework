@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.8.0] - 2022-08-02
+
+### Added
+* Added iOS13+ to enable new navigation bar style global switch
+* Added method to find subviews subviews according to tag
+* Added the safe reading method of array safe subscript
+* Added method to remove all click block events
+* Removed colorWithString from color name init method
+
 ## [3.7.0] - 2022-07-27
 
 ### Changed
