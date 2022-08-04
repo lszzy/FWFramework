@@ -209,8 +209,8 @@ extension Wrapper where Base: UILabel {
         set { base.__fw_verticalAlignment = newValue }
     }
     
-    /// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
-    public func addLinkGesture(block: @escaping (Any) -> Void) {
+    /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
+    public func addLinkGesture(block: @escaping (Any?) -> Void) {
         base.__fw_addLinkGesture(block)
     }
     

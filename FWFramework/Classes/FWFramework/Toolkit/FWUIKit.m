@@ -682,10 +682,8 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         
         UILabel *label = (UILabel *)gesture.view;
         NSDictionary *attributes = [label fw_attributesWithGesture:gesture allowsSpacing:NO];
-        id link = attributes[NSLinkAttributeName];
-        if (!link) return;
-        
-        block(link);
+        id link = attributes[NSLinkAttributeName] ?: attributes[@"URL"];
+        if (block) block(link);
     }];
 }
 

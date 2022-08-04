@@ -108,8 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
 
-/// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
-- (void)fw_addLinkGestureWithBlock:(void (^)(id link))block NS_REFINED_FOR_SWIFT;
+/// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
+- (void)fw_addLinkGestureWithBlock:(void (^)(id _Nullable link))block NS_REFINED_FOR_SWIFT;
 
 /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
 - (NSDictionary<NSAttributedStringKey, id> *)fw_attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing NS_REFINED_FOR_SWIFT;
