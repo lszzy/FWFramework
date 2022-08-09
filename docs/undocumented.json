@@ -2970,42 +2970,42 @@
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 66,
+      "line": 69,
       "symbol": "NSData(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 84,
+      "line": 87,
       "symbol": "NSDate(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 117,
+      "line": 120,
       "symbol": "NSDictionary(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 132,
+      "line": 135,
       "symbol": "NSObject(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 144,
+      "line": 147,
       "symbol": "NSString(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 165,
+      "line": 168,
       "symbol": "NSUserDefaults(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

@@ -108,8 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 纵向分布方式，默认居中
 @property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
 
-/// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
-- (void)fw_addLinkGestureWithBlock:(void (^)(id link))block NS_REFINED_FOR_SWIFT;
+/// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
+- (void)fw_addLinkGestureWithBlock:(void (^)(id _Nullable link))block NS_REFINED_FOR_SWIFT;
 
 /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
 - (NSDictionary<NSAttributedStringKey, id> *)fw_attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing NS_REFINED_FOR_SWIFT;
@@ -249,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
-/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
@@ -276,7 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
-/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
