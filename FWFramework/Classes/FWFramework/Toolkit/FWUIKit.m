@@ -1067,7 +1067,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     self = [super init];
     if (self) {
         _textInput = textInput;
-        _autoCompleteInterval = 1.0;
+        _autoCompleteInterval = 0.5;
     }
     return self;
 }
@@ -1079,7 +1079,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (void)setAutoCompleteInterval:(NSTimeInterval)interval
 {
-    _autoCompleteInterval = interval > 0 ? interval : 1.0;
+    _autoCompleteInterval = interval > 0 ? interval : 0.5;
 }
 
 - (void)textLengthChanged

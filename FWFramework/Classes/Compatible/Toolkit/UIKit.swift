@@ -412,7 +412,7 @@ extension Wrapper where Base: UITextField {
         return base.__fw_filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw_autoCompleteInterval }
         set { base.__fw_autoCompleteInterval = newValue }
@@ -457,7 +457,7 @@ extension Wrapper where Base: UITextView {
         return base.__fw_filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw_autoCompleteInterval }
         set { base.__fw_autoCompleteInterval = newValue }
