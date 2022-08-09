@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.8.1] - 2022-08-10
+
+### Changed
+* NSAttributedString supports click to highlight URL
+* The default waiting time for the automatic completion of the modified input box is 0.5 seconds
+
 ## [3.8.0] - 2022-08-02
 
 ### Added

@@ -168,6 +168,11 @@ extension Wrapper where Base: NSAttributedString {
         return Base.__fw_attributedString(with: image, bounds: bounds)
     }
     
+    /// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
+    public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
+        return Base.__fw_attributedString(with: string, attributes: attributes, highlight: highlight, highlightAttributes: highlightAttributes)
+    }
+    
     /// 快速创建NSAttributedString，自定义字体和颜色
     public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Base {
         return Base.__fw_attributedString(string, with: font, textColor: textColor)

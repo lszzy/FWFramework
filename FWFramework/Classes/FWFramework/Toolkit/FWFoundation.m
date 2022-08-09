@@ -120,6 +120,16 @@
     return attributedString;
 }
 
++ (NSAttributedString *)fw_attributedStringWithString:(NSString *)string attributes:(NSDictionary<NSAttributedStringKey, id> *)attributes highlight:(NSString *)highlight highlightAttributes:(NSDictionary<NSAttributedStringKey, id> *)highlightAttributes
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
+    NSRange range = [string rangeOfString:highlight];
+    if (range.location != NSNotFound && highlightAttributes) {
+        [attributedString addAttributes:highlightAttributes range:range];
+    }
+    return attributedString;
+}
+
 + (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font
 {
     return [self fw_attributedString:string withFont:font textColor:nil];

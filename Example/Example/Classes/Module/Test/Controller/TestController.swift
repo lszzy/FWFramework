@@ -42,7 +42,11 @@ class TestController: UIViewController {
         label.textColor = UIColor.fw.themeLight(.black, dark: .white)
         label.numberOfLines = 0
         label.fw.addLinkGesture { [weak self] link in
-            self?.helpIconClicked(link)
+            if let link = link {
+                self?.helpIconClicked(link)
+            } else {
+                APP.debug("点击了文字")
+            }
         }
         return label
     }()
@@ -120,9 +124,10 @@ private extension TestController {
     }
     
     private func renderData() {
-        let attributedText = NSMutableAttributedString(string: "我是超过一行的文本，我可以显示图片，还可以点击图片，不信你看嘛", attributes: [.font: UIFont.systemFont(ofSize: 16)])
+        let attributedText = NSMutableAttributedString()
+        attributedText.append(NSAttributedString.fw.attributedString(string: "我是超过一行的文本，我可以显示图片，还可以点击链接，不信你看嘛", attributes: [.font: UIFont.systemFont(ofSize: 16)], highlight: "链接", highlightAttributes: [.foregroundColor: UIColor.blue, .init(rawValue: "URL"): AppRouter.testUrl]))
         let imageAttachment = NSMutableAttributedString(attributedString: NSAttributedString.fw.attributedString(image: UIImage(named: "iconHelp"), bounds: CGRect(x: 5, y: (UIFont.systemFont(ofSize: 16).capHeight - 16) / 2.0, width: 16, height: 16)))
-        imageAttachment.addAttribute(.link, value: "app://test", range: NSMakeRange(0, imageAttachment.length))
+        imageAttachment.addAttribute(.link, value: AppRouter.testUrl, range: NSMakeRange(0, imageAttachment.length))
         attributedText.append(imageAttachment)
         textFieldLabel.attributedText = attributedText
     }

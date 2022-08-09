@@ -209,8 +209,8 @@ extension Wrapper where Base: UILabel {
         set { base.__fw_verticalAlignment = newValue }
     }
     
-    /// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block
-    public func addLinkGesture(block: @escaping (Any) -> Void) {
+    /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
+    public func addLinkGesture(block: @escaping (Any?) -> Void) {
         base.__fw_addLinkGesture(block)
     }
     
@@ -412,7 +412,7 @@ extension Wrapper where Base: UITextField {
         return base.__fw_filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw_autoCompleteInterval }
         set { base.__fw_autoCompleteInterval = newValue }
@@ -457,7 +457,7 @@ extension Wrapper where Base: UITextView {
         return base.__fw_filterText(text)
     }
 
-    /// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
         get { return base.__fw_autoCompleteInterval }
         set { base.__fw_autoCompleteInterval = newValue }
