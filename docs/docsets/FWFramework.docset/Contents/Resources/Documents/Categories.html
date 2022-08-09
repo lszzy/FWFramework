@@ -17,7 +17,7 @@
     <a title="Categories  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 3.8.0 Docs</a> (81% documented)</p>
+        <p><a href="index.html">FWFramework 3.8.1 Docs</a> (81% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -4839,8 +4839,8 @@
 <span class="c1">/// 纵向分布方式，默认居中</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">UIControlContentVerticalAlignment</span> <span class="n">fw_verticalAlignment</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 添加点击手势并自动识别NSLinkAttributeName属性点击时触发回调block</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_addLinkGestureWithBlock</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">id</span> <span class="n">link</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_addLinkGestureWithBlock</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">id</span> <span class="n">_Nullable</span> <span class="n">link</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSAttributedStringKey</span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_attributesWithGesture</span><span class="p">:(</span><span class="n">UIGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="nv">gesture</span> <span class="nf">allowsSpacing</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">allowsSpacing</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -5202,7 +5202,7 @@
 <span class="c1">/// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_filterText</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">text</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用</span>
+<span class="c1">/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSTimeInterval</span> <span class="n">fw_autoCompleteInterval</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发</span>
@@ -5266,7 +5266,7 @@
 <span class="c1">/// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_filterText</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">text</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用</span>
+<span class="c1">/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSTimeInterval</span> <span class="n">fw_autoCompleteInterval</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发</span>
@@ -5446,7 +5446,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-08-02)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-08-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
