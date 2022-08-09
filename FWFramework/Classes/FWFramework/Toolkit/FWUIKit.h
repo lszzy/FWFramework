@@ -249,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
-/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
@@ -276,7 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
 - (NSString *)fw_filterText:(NSString *)text NS_REFINED_FOR_SWIFT;
 
-/// 设置自动完成时间间隔，默认1秒，和autoCompleteBlock配套使用
+/// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
 @property (nonatomic, assign) NSTimeInterval fw_autoCompleteInterval NS_REFINED_FOR_SWIFT;
 
 /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
