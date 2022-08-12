@@ -185,7 +185,7 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 /// 是否是全面屏屏幕
 @property (class, nonatomic, assign, readonly) BOOL fw_isNotchedScreen NS_REFINED_FOR_SWIFT;
 
-/// 获取一像素的大小
+/// 获取一像素的大小，分割线常用算法：UIScreen.main.scale > 2 ? 0.75 : 0.5
 @property (class, nonatomic, assign, readonly) CGFloat fw_pixelOne NS_REFINED_FOR_SWIFT;
 /// 检查是否含有安全区域，可用来判断iPhoneX
 @property (class, nonatomic, assign, readonly) BOOL fw_hasSafeAreaInsets NS_REFINED_FOR_SWIFT;
