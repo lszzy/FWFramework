@@ -8,8 +8,7 @@
 import Foundation
 
 /// 运行时类
-@objcMembers
-public class Runtime: NSObject {
+public class Runtime {
     
     private static var classCaches: [String: [String]] = [:]
     
