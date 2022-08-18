@@ -39,12 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 安全调用方法，支持多个参数
 - (nullable id)__invokeMethod:(SEL)aSelector withObjects:(NSArray *)objects NS_SWIFT_NAME(__invokeMethod(_:objects:));
 
-/// 对super发送消息
-- (nullable id)__invokeSuperMethod:(SEL)aSelector;
-
-/// 对super发送消息，可传递参数
-- (nullable id)__invokeSuperMethod:(SEL)aSelector withObject:(nullable id)object;
-
 /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
 - (nullable id)__invokeGetter:(NSString *)name;
 

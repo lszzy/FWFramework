@@ -7,7 +7,6 @@
 
 #import "Runtime.h"
 #import <objc/runtime.h>
-#import <objc/message.h>
 
 @interface __WeakObject : NSObject
 
@@ -123,24 +122,6 @@
         [invocation getReturnValue:&returnValue];
     }
     return returnValue;
-}
-
-- (id)__invokeSuperMethod:(SEL)aSelector {
-    struct objc_super mySuper;
-    mySuper.receiver = self;
-    mySuper.super_class = class_getSuperclass(object_getClass(self));
-    
-    id (*objc_superAllocTyped)(struct objc_super *, SEL) = (void *)&objc_msgSendSuper;
-    return (*objc_superAllocTyped)(&mySuper, aSelector);
-}
-
-- (id)__invokeSuperMethod:(SEL)aSelector withObject:(id)object {
-    struct objc_super mySuper;
-    mySuper.receiver = self;
-    mySuper.super_class = class_getSuperclass(object_getClass(self));
-    
-    id (*objc_superAllocTyped)(struct objc_super *, SEL, ...) = (void *)&objc_msgSendSuper;
-    return (*objc_superAllocTyped)(&mySuper, aSelector, object);
 }
 
 - (id)__invokeGetter:(NSString *)name {
