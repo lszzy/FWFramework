@@ -23,14 +23,9 @@ let package = Package(
     targets: [
         .target(
             name: "FWObjC",
-            path: "Sources",
-            sources: [
-                "FWObjC/Kernel"
-            ],
-            publicHeadersPath: "include",
+            path: "Sources/FWObjC",
+            publicHeadersPath: "",
             cSettings: [
-                .headerSearchPath("FWObjC/Kernel"),
-                .headerSearchPath("include"),
                 .define("FWMacroSPM", to: "1")
             ],
             swiftSettings: [
@@ -41,9 +36,6 @@ let package = Package(
             name: "FWFramework",
             dependencies: ["FWObjC"],
             path: "Sources/FWFramework",
-            sources: [
-                "Kernel"
-            ],
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],
@@ -55,9 +47,6 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
-            sources: [
-                "Toolkit"
-            ],
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],
