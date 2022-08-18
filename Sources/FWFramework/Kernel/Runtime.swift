@@ -6,12 +6,20 @@
 //
 
 import Foundation
+#if FWMacroSPM
+import FWObjC
+#endif
 
 // MARK: - Runtime
 /// 运行时类
 public class Runtime {
     
     private static var classCaches: [String: [String]] = [:]
+    
+    fileprivate struct AssociatedKeys {
+        static var tempObject = "tempObject"
+        static var boundObjects = "boundObjects"
+    }
     
     // MARK: - Public
     /// 获取类方法列表，支持meta类(objc_getMetaClass)
@@ -228,6 +236,135 @@ extension Wrapper where Base: NSObject {
     @discardableResult
     public func invokeSetter(_ name: String, object: Any?) -> Any? {
         return base.__invokeSetter(name, with: object)
+    }
+    
+    // MARK: - Bind
+    /// 临时对象，强引用，支持KVO
+    public var tempObject: Any? {
+        get { return objc_getAssociatedObject(base, &Runtime.AssociatedKeys.tempObject) }
+        set { objc_setAssociatedObject(base, &Runtime.AssociatedKeys.tempObject, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+    
+    /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+    /// - Parameters:
+    ///   - object: 对象，会被 strong 强引用
+    ///   - forKey: 键名
+    public func bindObject(_ object: Any?, forKey: String) {
+        if let object = object {
+            allBoundObjects.setObject(object, forKey: forKey as NSString)
+        } else {
+            allBoundObjects.removeObject(forKey: forKey)
+        }
+    }
+    
+    /// 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
+    /// - Parameters:
+    ///   - object: 对象，不会被 strong 强引用
+    ///   - forKey: 键名
+    public func bindObjectWeak(_ object: Any?, forKey: String) {
+        if let object = object {
+            allBoundObjects.setObject(__WeakObject(object: object), forKey: forKey as NSString)
+        } else {
+            allBoundObjects.removeObject(forKey: forKey)
+        }
+    }
+    
+    /// 取出之前使用 bind 方法绑定的对象
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的对象
+    public func boundObject(forKey: String) -> Any? {
+        let object = allBoundObjects.object(forKey: forKey)
+        if let weakObject = object as? __WeakObject {
+            return weakObject.object
+        }
+        return object
+    }
+    
+    /// 给对象绑定上一个 double 值以供后续取出使用
+    /// - Parameters:
+    ///   - value: double值
+    ///   - forKey: 键名
+    public func bindDouble(_ value: Double, forKey: String) {
+        bindObject(NSNumber(value: value), forKey: forKey)
+    }
+    
+    /// 取出之前用 bindDouble:forKey: 绑定的值
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的值
+    public func boundDouble(forKey: String) -> Double {
+        if let number = boundObject(forKey: forKey) as? NSNumber {
+            return number.doubleValue
+        }
+        return .zero
+    }
+
+    /// 给对象绑定上一个 BOOL 值以供后续取出使用
+    /// - Parameters:
+    ///   - value: 布尔值
+    ///   - forKey: 键名
+    public func bindBool(_ value: Bool, forKey: String) {
+        bindObject(NSNumber(value: value), forKey: forKey)
+    }
+    
+    /// 取出之前用 bindBool:forKey: 绑定的值
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的值
+    public func boundBool(forKey: String) -> Bool {
+        if let number = boundObject(forKey: forKey) as? NSNumber {
+            return number.boolValue
+        }
+        return false
+    }
+
+    /// 给对象绑定上一个 NSInteger 值以供后续取出使用
+    /// - Parameters:
+    ///   - value: 整数值
+    ///   - forKey: 键名
+    public func bindInt(_ value: Int, forKey: String) {
+        bindObject(NSNumber(value: value), forKey: forKey)
+    }
+    
+    /// 取出之前用 bindInt:forKey: 绑定的值
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的值
+    public func boundInt(forKey: String) -> Int {
+        if let number = boundObject(forKey: forKey) as? NSNumber {
+            return number.intValue
+        }
+        return .zero
+    }
+    
+    /// 移除之前使用 bind 方法绑定的对象
+    /// - Parameter forKey: 键名
+    public func removeBinding(forKey: String) {
+        allBoundObjects.removeObject(forKey: forKey)
+    }
+    
+    /// 移除之前使用 bind 方法绑定的所有对象
+    public func removeAllBindings() {
+        allBoundObjects.removeAllObjects()
+    }
+
+    /// 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
+    public func allBindingKeys() -> [String] {
+        return allBoundObjects.allKeys as? [String] ?? []
+    }
+    
+    /// 返回是否设置了某个 key
+    /// - Parameter key: 键名
+    /// - Returns: 是否绑定
+    public func hasBindingKey(_ key: String) -> Bool {
+        return allBindingKeys().contains(key)
+    }
+    
+    private var allBoundObjects: NSMutableDictionary {
+        if let boundObjects = objc_getAssociatedObject(base, &Runtime.AssociatedKeys.boundObjects) as? NSMutableDictionary {
+            return boundObjects
+        }
+        
+        let boundObjects = NSMutableDictionary()
+        objc_setAssociatedObject(base, &Runtime.AssociatedKeys.boundObjects, boundObjects, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return boundObjects
     }
     
 }
