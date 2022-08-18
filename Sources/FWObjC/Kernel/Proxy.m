@@ -114,3 +114,17 @@
 }
 
 @end
+
+#pragma mark - __WeakObject
+
+@implementation __WeakObject
+
+- (instancetype)initWithObject:(id)object {
+    self = [super init];
+    if (self) {
+        _object = object;
+    }
+    return self;
+}
+
+@end
