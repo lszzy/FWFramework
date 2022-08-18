@@ -6,3 +6,4 @@
 //
 
 #import "Autoloader.h"
+#import "Proxy.h"
