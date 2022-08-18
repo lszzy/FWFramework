@@ -1,0 +1,6 @@
+
+module FWObjC {
+    umbrella header "FWObjC/FWFramework.h"
+    export *
+    module * { export * }
+}

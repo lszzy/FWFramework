@@ -1,0 +1,9 @@
+/*
+  InfoPlist.strings
+  FWFramework
+
+  Created by wuyong on 2022/8/18.
+  Copyright © 2022 CocoaPods. All rights reserved.
+*/
+
+CFBundleDisplayName = "FWFramework";

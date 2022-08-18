@@ -9,28 +9,27 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "FWObjC",
+            targets: ["FWObjC"]),
+        .library(
             name: "FWFramework",
             targets: ["FWFramework"]),
         .library(
-            name: "FWFrameworkCompatible",
-            targets: ["FWFrameworkCompatible"]),
+            name: "FWSwiftUI",
+            targets: ["FWSwiftUI"]),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "FWFramework",
-            path: "FWFramework/Classes",
+            name: "FWObjC",
+            path: "Sources",
             sources: [
-                "FWFramework/Kernel",
-                "FWFramework/Service",
-                "FWFramework/Toolkit"
+                "FWObjC/Kernel"
             ],
             publicHeadersPath: "include",
             cSettings: [
-                .headerSearchPath("FWFramework/Kernel"),
-                .headerSearchPath("FWFramework/Service"),
-                .headerSearchPath("FWFramework/Toolkit"),
+                .headerSearchPath("FWObjC/Kernel"),
                 .headerSearchPath("include"),
                 .define("FWMacroSPM", to: "1")
             ],
@@ -39,9 +38,40 @@ let package = Package(
                 .define("FWMacroSPM")
             ]),
         .target(
-            name: "FWFrameworkCompatible",
+            name: "FWFramework",
+            dependencies: ["FWObjC"],
+            path: "Sources/FWFramework",
+            sources: [
+                "Kernel"
+            ],
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .target(
+            name: "FWSwiftUI",
             dependencies: ["FWFramework"],
-            path: "FWFramework/Classes/Compatible",
+            path: "Sources/FWSwiftUI",
+            sources: [
+                "Toolkit"
+            ],
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .testTarget(
+            name: "FWFrameworkTests",
+            dependencies: ["FWFramework"],
+            path: "Example/Tests",
+            exclude: [
+                "Info.plist"
+            ],
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],
