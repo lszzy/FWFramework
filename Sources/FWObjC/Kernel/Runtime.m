@@ -6,25 +6,8 @@
 //
 
 #import "Runtime.h"
+#import "Proxy.h"
 #import <objc/runtime.h>
-
-@interface __WeakObject : NSObject
-
-@property (nonatomic, weak, readonly, nullable) id object;
-
-@end
-
-@implementation __WeakObject
-
-- (instancetype)initWithObject:(id)object {
-    self = [super init];
-    if (self) {
-        _object = object;
-    }
-    return self;
-}
-
-@end
 
 @implementation NSObject (FWRuntime)
 
