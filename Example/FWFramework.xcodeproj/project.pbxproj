@@ -65,7 +65,7 @@
 		D478E69E86FD0C491E56F20A /* Pods-FWFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		DB4F8143AC722F33288C9812 /* Pods-FWFramework_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Tests.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Tests/Pods-FWFramework_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		E91AE76AA686014704EDE554 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FWFramework.podspec; path = ../FWFramework.podspec; sourceTree = "<group>"; };
+		EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FWFramework.podspec; path = ../FWFramework.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 

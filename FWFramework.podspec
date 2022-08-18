@@ -26,6 +26,7 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWSwiftUI' do |ss|
+    ss.weak_frameworks = 'SwiftUI', 'Combine'
     ss.source_files = 'Sources/FWSwiftUI/**/*.swift'
     ss.dependency 'FWFramework/FWFramework'
   end
