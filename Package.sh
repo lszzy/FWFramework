@@ -1,11 +1,8 @@
 #! /bin/bash
 
-cd FWFramework/Classes/include
-rm -rf FWFramework
-mkdir FWFramework
-cd FWFramework
+cd Sources/include
+rm -rf FWObjC
+mkdir FWObjC
+cd FWObjC
 
-ln -s ../../FWFramework/Kernel/*.h ./
-ln -s ../../FWFramework/Service/*.h ./
-ln -s ../../FWFramework/Toolkit/*.h ./
-
+ln -s ../../FWObjC/Kernel/*.h ./
