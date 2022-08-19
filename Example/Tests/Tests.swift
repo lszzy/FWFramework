@@ -3,6 +3,10 @@ import FWFramework
 
 class Tests: XCTestCase {
     
+    // MARK: - Accessor
+    dynamic var observeValue: Int = 0
+    
+    // MARK: - Test
     func testLoader() {
         let loader = Loader<String, String>()
         let identifier = loader.add { value in
@@ -77,6 +81,39 @@ class Tests: XCTestCase {
         
         XCTAssertEqual(exchangeAction(), "Exchange1Exchange2")
         XCTAssertEqual(Tests.exchangeClassAction(), "Exchange3Exchange4")
+    }
+    
+    func testMessage() {
+        var messageValue: Int = 0
+        let messageName = Notification.Name.init(rawValue: "Test")
+        let observeId = fw.observeMessage(messageName) { _ in
+            messageValue += 1
+        }
+        fw.sendMessage(messageName, toReceiver: self)
+        fw.unobserveMessage(messageName, identifier: observeId)
+        fw.sendMessage(messageName, toReceiver: self)
+        XCTAssertEqual(messageValue, 1)
+        
+        var notificationValue: Int = 0
+        let notificationName = Notification.Name.init(rawValue: "Test2")
+        fw.observeNotification(notificationName, object: self) { _ in
+            notificationValue += 2
+        }
+        fw.postNotification(notificationName, object: self, userInfo: nil)
+        fw.postNotification(notificationName)
+        fw.unobserveNotification(notificationName, object: self)
+        fw.postNotification(notificationName, object: self, userInfo: nil)
+        XCTAssertEqual(notificationValue, 2)
+        
+        var propertyValue: Int = 0
+        fw.observeProperty("observeValue") { _, change in
+            propertyValue += change[.newKey] as? Int ?? 0
+        }
+        observeValue = 1
+        observeValue = 2
+        fw.unobserveAllProperties()
+        observeValue = 4
+        XCTAssertEqual(propertyValue, 3)
     }
     
 }
