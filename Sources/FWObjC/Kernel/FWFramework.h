@@ -8,3 +8,4 @@
 #import "Autoloader.h"
 #import "Proxy.h"
 #import "Runtime.h"
+#import "Swizzle.h"

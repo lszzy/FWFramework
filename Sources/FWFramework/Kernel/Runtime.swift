@@ -153,7 +153,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func property(forName: String) -> Any? {
-        return base.__property(forName: forName)
+        return __Runtime.getProperty(base, forName: forName)
     }
     
     /// 设置强关联属性，支持KVO
@@ -161,7 +161,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setProperty(_ object: Any?, forName: String) {
-        base.__setProperty(object, forName: forName)
+        __Runtime.setPropertyPolicy(base, with: object, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     /// 设置赋值关联属性，支持KVO，注意可能会产生野指针
@@ -169,7 +169,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyAssign(_ object: Any?, forName: String) {
-        base.__setPropertyAssign(object, forName: forName)
+        __Runtime.setPropertyPolicy(base, with: object, policy: .OBJC_ASSOCIATION_ASSIGN, forName: forName)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -177,7 +177,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyCopy(_ object: Any?, forName: String) {
-        base.__setPropertyCopy(object, forName: forName)
+        __Runtime.setPropertyPolicy(base, with: object, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -185,7 +185,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func setPropertyWeak(_ object: Any?, forName: String) {
-        base.__setPropertyWeak(object, forName: forName)
+        __Runtime.setPropertyWeak(base, with: object, forName: forName)
     }
     
     // MARK: - Method
@@ -194,7 +194,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func invokeMethod(_ selector: Selector) -> Any? {
-        return base.__invokeMethod(selector)
+        return __Runtime.invokeMethod(base, selector: selector)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -204,7 +204,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return base.__invokeMethod(selector, with: object)
+        return __Runtime.invokeMethod(base, selector: selector, object: object)
     }
     
     /// 安全调用方法，支持多个参数
@@ -214,7 +214,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return base.__invokeMethod(selector, objects: objects)
+        return __Runtime.invokeMethod(base, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -223,7 +223,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func invokeGetter(_ name: String) -> Any? {
-        return base.__invokeGetter(name)
+        return __Runtime.invokeGetter(base, name: name)
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -235,7 +235,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func invokeSetter(_ name: String, object: Any?) -> Any? {
-        return base.__invokeSetter(name, with: object)
+        return __Runtime.invokeSetter(base, name: name, object: object)
     }
     
     // MARK: - Bind
