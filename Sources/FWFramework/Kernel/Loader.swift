@@ -26,8 +26,7 @@ public class Loader<Input, Output> {
             
             if let target = target, let action = action,
                target.responds(to: action) {
-                // return target.perform(action, with: input)?.takeUnretainedValue() as? Output
-                return __Runtime.invokeMethod(target, selector: action, object: input) as? Output
+                return target.perform(action, with: input)?.takeUnretainedValue() as? Output
             }
             
             return nil
@@ -36,12 +35,15 @@ public class Loader<Input, Output> {
     
     private var allLoaders: [Target] = []
     
+    public init() {}
+    
 }
 
 // MARK: - Public
 extension Loader {
     
     /// 添加block加载器，返回标志id
+    @discardableResult
     public func add(block: @escaping (Input) -> Output?) -> String {
         let loader = Target()
         loader.block = block
@@ -50,6 +52,7 @@ extension Loader {
     }
     
     /// 添加target和action加载器，返回标志id
+    @discardableResult
     public func add(target: AnyObject?, action: Selector) -> String {
         let loader = Target()
         loader.target = target
