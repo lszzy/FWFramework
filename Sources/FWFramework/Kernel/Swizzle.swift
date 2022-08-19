@@ -109,6 +109,66 @@ public class Swizzle {
         return classIdentifier + "_" + NSStringFromSelector(selector) + "_" + identifier
     }
     
+    // MARK: - Exchange
+    /// 交换类实例方法。复杂情况可能会冲突
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeInstanceMethod(_ originalClass: AnyClass, originalSelector: Selector, swizzleSelector: Selector) -> Bool {
+        return __Swizzle.exchangeInstanceMethod(originalClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector)
+    }
+    
+    /// 交换类静态方法。复杂情况可能会冲突
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeClassMethod(_ originalClass: AnyClass, originalSelector: Selector, swizzleSelector: Selector) -> Bool {
+        guard let metaClass = object_getClass(originalClass) else { return false }
+        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector)
+    }
+    
+    /// 交换类实例方法为block实现。复杂情况可能会冲突
+    ///
+    /// swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    ///   - block: 实现block
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeInstanceMethod(_ originalClass: AnyClass, originalSelector: Selector, swizzleSelector: Selector, block: Any) -> Bool {
+        return __Swizzle.exchangeInstanceMethod(originalClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector, withBlock: block)
+    }
+
+    /// 交换类静态方法为block实现。复杂情况可能会冲突
+    ///
+    /// swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    ///   - block: 实现block
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeClassMethod(_ originalClass: AnyClass, originalSelector: Selector, swizzleSelector: Selector, block: Any) -> Bool {
+        guard let metaClass = object_getClass(originalClass) else { return false }
+        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector, withBlock: block)
+    }
+    
+    /// 生成原始方法对应的随机交换方法
+    /// - Parameter selector: 原始方法
+    /// - Returns: 交换方法
+    public static func exchangeSwizzleSelector(_ selector: Selector) -> Selector {
+        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
+    }
+    
 }
 
 // MARK: - NSObject+Swizzle
@@ -138,62 +198,6 @@ extension Wrapper where Base: NSObject {
     public func isSwizzleInstanceMethod(_ originalSelector: Selector, identifier: String) -> Bool {
         let swizzleIdentifier = Swizzle.swizzleIdentifier(base, selector: originalSelector, identifier: identifier)
         return __Runtime.getProperty(base, forName: swizzleIdentifier) != nil
-    }
-    
-    // MARK: - Exchange
-    /// 交换类实例方法。复杂情况可能会冲突
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeInstanceMethod(_ originalSelector: Selector, swizzleMethod: Selector) -> Bool {
-        return __Swizzle.exchangeInstanceMethod(Base.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod)
-    }
-    
-    /// 交换类静态方法。复杂情况可能会冲突
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeClassMethod(_ originalSelector: Selector, swizzleMethod: Selector) -> Bool {
-        guard let metaClass = object_getClass(Base.classForCoder()) else { return false }
-        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
-    }
-    
-    /// 交换类实例方法为block实现。复杂情况可能会冲突
-    ///
-    /// swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    ///   - block: 实现block
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeInstanceMethod(_ originalSelector: Selector, swizzleMethod: Selector, block: Any) -> Bool {
-        return __Swizzle.exchangeInstanceMethod(Base.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
-    }
-
-    /// 交换类静态方法为block实现。复杂情况可能会冲突
-    ///
-    /// swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    ///   - block: 实现block
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeClassMethod(_ originalSelector: Selector, swizzleMethod: Selector, block: Any) -> Bool {
-        guard let metaClass = object_getClass(Base.classForCoder()) else { return false }
-        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
-    }
-    
-    /// 生成原始方法对应的随机交换方法
-    /// - Parameter selector: 原始方法
-    /// - Returns: 交换方法
-    public static func exchangeSwizzleSelector(_ selector: Selector) -> Selector {
-        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
     }
     
 }
