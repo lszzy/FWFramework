@@ -10,16 +10,22 @@ import Foundation
 import FWObjC
 #endif
 
+// MARK: - AssociatedKeys
+/// 内部关联Key
+internal struct AssociatedKeys {
+    static var tempObject = "tempObject"
+    static var boundObjects = "boundObjects"
+    
+    static var messageTargets = "messageTargets"
+    static var notificationTargets = "notificationTargets"
+    static var kvoTargets = "kvoTargets"
+}
+
 // MARK: - Runtime
 /// 运行时类
 public class Runtime {
     
     private static var classCaches: [String: [String]] = [:]
-    
-    fileprivate struct AssociatedKeys {
-        static var tempObject = "tempObject"
-        static var boundObjects = "boundObjects"
-    }
     
     // MARK: - Public
     /// 获取类方法列表，支持meta类(objc_getMetaClass)
@@ -241,8 +247,8 @@ extension Wrapper where Base: NSObject {
     // MARK: - Bind
     /// 临时对象，强引用，支持KVO
     public var tempObject: Any? {
-        get { return objc_getAssociatedObject(base, &Runtime.AssociatedKeys.tempObject) }
-        set { objc_setAssociatedObject(base, &Runtime.AssociatedKeys.tempObject, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get { return objc_getAssociatedObject(base, &AssociatedKeys.tempObject) }
+        set { objc_setAssociatedObject(base, &AssociatedKeys.tempObject, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
     
     /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
@@ -358,12 +364,12 @@ extension Wrapper where Base: NSObject {
     }
     
     private var allBoundObjects: NSMutableDictionary {
-        if let boundObjects = objc_getAssociatedObject(base, &Runtime.AssociatedKeys.boundObjects) as? NSMutableDictionary {
+        if let boundObjects = objc_getAssociatedObject(base, &AssociatedKeys.boundObjects) as? NSMutableDictionary {
             return boundObjects
         }
         
         let boundObjects = NSMutableDictionary()
-        objc_setAssociatedObject(base, &Runtime.AssociatedKeys.boundObjects, boundObjects, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(base, &AssociatedKeys.boundObjects, boundObjects, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return boundObjects
     }
     
