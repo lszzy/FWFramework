@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if FWMacroSPM
+import FWObjC
+#endif
 
 /// 通用加载器，添加处理句柄后指定输入即可加载输出结果
 public class Loader<Input, Output> {
@@ -23,7 +26,8 @@ public class Loader<Input, Output> {
             
             if let target = target, let action = action,
                target.responds(to: action) {
-                return target.perform(action, with: input)?.takeUnretainedValue() as? Output
+                // return target.perform(action, with: input)?.takeUnretainedValue() as? Output
+                return __Runtime.invokeMethod(target, selector: action, object: input) as? Output
             }
             
             return nil

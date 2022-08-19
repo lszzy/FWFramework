@@ -7,86 +7,72 @@
 
 #import "Runtime.h"
 #import "Proxy.h"
-#import <objc/runtime.h>
 
-@implementation NSObject (FWRuntime)
+@implementation __Runtime
 
 #pragma mark - Property
 
-- (id)__propertyForName:(NSString *)name {
-    id object = objc_getAssociatedObject(self, NSSelectorFromString(name));
++ (id)getProperty:(id)target forName:(NSString *)name {
+    if (!target) return nil;
+    id object = objc_getAssociatedObject(target, NSSelectorFromString(name));
     if ([object isKindOfClass:[__WeakObject class]]) {
         object = [(__WeakObject *)object object];
     }
     return object;
 }
 
-- (void)__setProperty:(id)object forName:(NSString *)name {
-    if (object != [self __propertyForName:name]) {
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
++ (void)setPropertyPolicy:(id)target withObject:(id)object policy:(objc_AssociationPolicy)policy forName:(NSString *)name {
+    if (!target || [self getProperty:target forName:name] == object) return;
+    objc_setAssociatedObject(target, NSSelectorFromString(name), object, policy);
 }
 
-- (void)__setPropertyAssign:(id)object forName:(NSString *)name {
-    if (object != [self __propertyForName:name]) {
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_ASSIGN);
-    }
-}
-
-- (void)__setPropertyCopy:(id)object forName:(NSString *)name {
-    if (object != [self __propertyForName:name]) {
-        objc_setAssociatedObject(self, NSSelectorFromString(name), object, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    }
-}
-
-- (void)__setPropertyWeak:(id)object forName:(NSString *)name {
-    if (object != [self __propertyForName:name]) {
-        objc_setAssociatedObject(self, NSSelectorFromString(name), [[__WeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
++ (void)setPropertyWeak:(id)target withObject:(id)object forName:(NSString *)name {
+    if (!target || [self getProperty:target forName:name] == object) return;
+    objc_setAssociatedObject(target, NSSelectorFromString(name), [[__WeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Method
 
-- (id)__invokeMethod:(SEL)aSelector {
++ (id)invokeMethod:(id)target selector:(SEL)aSelector {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
+    if ([target respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
         if (type && *type == 'v') {
             free(type);
-            [self performSelector:aSelector];
+            [target performSelector:aSelector];
         } else {
             free(type);
-            return [self performSelector:aSelector];
+            return [target performSelector:aSelector];
         }
     }
 #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)__invokeMethod:(SEL)aSelector withObject:(id)object {
++ (id)invokeMethod:(id)target selector:(SEL)aSelector object:(id)object {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([self class], aSelector));
+    if ([target respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
         if (type && *type == 'v') {
             free(type);
-            [self performSelector:aSelector withObject:object];
+            [target performSelector:aSelector withObject:object];
         } else {
             free(type);
-            return [self performSelector:aSelector withObject:object];
+            return [target performSelector:aSelector withObject:object];
         }
     }
 #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)__invokeMethod:(SEL)aSelector withObjects:(NSArray *)objects {
-    NSMethodSignature *signature = [object_getClass(self) instanceMethodSignatureForSelector:aSelector];
++ (id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects {
+    NSMethodSignature *signature = [object_getClass(target) instanceMethodSignatureForSelector:aSelector];
     if (!signature) return nil;
     
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-    invocation.target = self;
+    invocation.target = target;
     invocation.selector = aSelector;
     NSInteger paramsCount = MIN(signature.numberOfArguments - 2, objects.count);
     for (NSInteger i = 0; i < paramsCount; i++) {
@@ -107,34 +93,34 @@
     return returnValue;
 }
 
-- (id)__invokeGetter:(NSString *)name {
++ (id)invokeGetter:(id)target name:(NSString *)name {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
     
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
     selector = NSSelectorFromString(name);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
     #pragma clang diagnostic pop
     return nil;
 }
 
-- (id)__invokeSetter:(NSString *)name withObject:(id)object {
++ (id)invokeSetter:(id)target name:(NSString *)name object:(id)object {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
     
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector withObject:object];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector object:object];
     selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
-    if ([self respondsToSelector:selector]) return [self __invokeMethod:selector withObject:object];
+    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector object:object];
     #pragma clang diagnostic pop
     return nil;
 }
