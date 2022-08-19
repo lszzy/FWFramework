@@ -33,6 +33,52 @@ class Tests: XCTestCase {
         XCTAssertEqual(fw.invokeMethod(#selector(loaderAction(_:)), object: "Hello ") as? String, "Hello Target")
     }
     
+    func testSwizzle() {
+        Swizzle.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction)) { targetClass, originalCMD, originalIMP in
+            let swizzleIMP: @convention(block)(Tests) -> String = { selfObject in
+                typealias originalMSGType = @convention(c)(Tests, Selector) -> String
+                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+                let value = originalMSG(selfObject, originalCMD)
+                
+                return value + " Action"
+            }
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
+        
+        Swizzle.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { targetClass, originalCMD, originalIMP in
+            let swizzleIMP: @convention(block)(Tests.Type) -> String = { selfObject in
+                typealias originalMSGType = @convention(c)(Tests.Type, Selector) -> String
+                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+                let value = originalMSG(selfObject, originalCMD)
+                
+                return value + " Action"
+            }
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
+        
+        fw.swizzleInstanceMethod(#selector(objectAction), identifier: "object") { targetClass, originalCMD, originalIMP in
+            let swizzleIMP: @convention(block)(Tests) -> String = { selfObject in
+                typealias originalMSGType = @convention(c)(Tests, Selector) -> String
+                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+                let value = originalMSG(selfObject, originalCMD)
+                
+                return value + " Action"
+            }
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
+        
+        XCTAssertEqual(originalAction(), "Original Action")
+        XCTAssertEqual(Tests.classAction(), "Class Action")
+        XCTAssertEqual(objectAction(), "Object Action")
+        XCTAssertTrue(fw.isSwizzleInstanceMethod(#selector(objectAction), identifier: "object"))
+        
+        Swizzle.exchangeInstanceMethod(classForCoder, originalSelector: #selector(exchangeAction), swizzleSelector: #selector(exchange2Action))
+        Swizzle.exchangeClassMethod(classForCoder, originalSelector: #selector(Tests.exchangeClassAction), swizzleSelector: #selector(Tests.exchange2ClassAction))
+        
+        XCTAssertEqual(exchangeAction(), "Exchange1Exchange2")
+        XCTAssertEqual(Tests.exchangeClassAction(), "Exchange3Exchange4")
+    }
+    
 }
 
 // MARK: - Private
@@ -40,6 +86,34 @@ extension Tests {
     
     @objc func loaderAction(_ input: String) -> String {
         return input + "Target"
+    }
+    
+    @objc func originalAction() -> String {
+        return "Original"
+    }
+    
+    @objc class func classAction() -> String {
+        return "Class"
+    }
+    
+    @objc func objectAction() -> String {
+        return "Object"
+    }
+    
+    @objc func exchangeAction() -> String {
+        return "Exchange1"
+    }
+    
+    @objc func exchange2Action() -> String {
+        return exchange2Action() + "Exchange2"
+    }
+    
+    @objc class func exchangeClassAction() -> String {
+        return "Exchange3"
+    }
+    
+    @objc class func exchange2ClassAction() -> String {
+        return exchange2ClassAction() + "Exchange4"
     }
     
 }
