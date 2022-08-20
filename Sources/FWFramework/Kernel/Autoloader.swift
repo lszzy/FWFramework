@@ -31,13 +31,11 @@ public protocol AutoloadProtocol {
 }
 
 // MARK: - Autoloader
-/// 自动加载器，处理swift不支持load方法问题
-///
-/// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高，使用简单，使用方法：
-/// 新增Autoloader扩展objc类方法，以load开头即会自动调用，注意方法名不要重复，建议load+类名+扩展名
-@objcMembers
-public class Autoloader: NSObject, AutoloadProtocol {
+/// 兼容OC调用自动加载Swift类
+@objc extension Autoloader {
     
+    // MARK: - Accessor
+    /// 内部自动加载列表
     private static var autoloadMethods: [String] = []
     
     // MARK: - Public
@@ -61,7 +59,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         return false
     }
     
-    /// 自动加载器调试描述
+    /// 插件调试描述
     public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
@@ -72,32 +70,32 @@ public class Autoloader: NSObject, AutoloadProtocol {
         return String(format: "\n========== AUTOLOADER ==========\n%@========== AUTOLOADER ==========", debugDescription)
     }
     
-    // MARK: - AutoloadProtocol
+}
+
+// MARK: - Autoloader+AutoloadProtocol
+/// Swift自动加载扩展，配合autoload(_:)方法使用
+@objc extension Autoloader: AutoloadProtocol {
+    
     /// 自动加载load开头objc扩展方法
+    ///
+    /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高(1/200)，使用简单。
+    /// 使用方法：新增Autoloader扩展objc方法，以load开头即会自动调用，建议load+类名+扩展名
     public static func autoload() {
-        autoloadMethods = Runtime
+        // 获取Autoloader自动加载方法列表
+        autoloadMethods = NSObject.fw
             .classMethods(Autoloader.self, superclass: false)
             .filter({ methodName in
                 return methodName.hasPrefix("load") && !methodName.contains(":")
             })
             .sorted()
         
+        // 调用Autoloader所有自动加载方法
         if autoloadMethods.count > 0 {
             let autoloader = Autoloader()
             for methodName in autoloadMethods {
                 autoloader.perform(NSSelectorFromString(methodName))
             }
         }
-    }
-    
-}
-
-// MARK: - __Autoloader
-@objc extension __Autoloader: AutoloadProtocol {
-    
-    /// 自动加载Autoloader
-    public static func autoload() {
-        Autoloader.autoload()
     }
     
 }
