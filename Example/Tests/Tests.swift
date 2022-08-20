@@ -1,5 +1,8 @@
 import XCTest
 import FWFramework
+#if FWMacroSPM
+import FWObjC
+#endif
 
 class Tests: XCTestCase {
     
@@ -8,14 +11,14 @@ class Tests: XCTestCase {
     
     // MARK: - Test
     func testLoader() {
-        let loader = Loader<String, String>()
+        let loader = Loader<NSString, NSString>()
         let identifier = loader.add { value in
-            return value + "Block"
+            return value.appending("Block") as NSString
         }
         XCTAssertEqual(loader.load("Hello "), "Hello Block")
         
         loader.remove(identifier)
-        loader.add(target: self, action: #selector(loaderAction(_:)))
+        loader.addTarget(self, action: #selector(loaderAction(_:)))
         XCTAssertEqual(loader.load("Hello "), "Hello Target")
     }
     
@@ -38,7 +41,7 @@ class Tests: XCTestCase {
     }
     
     func testSwizzle() {
-        Swizzle.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction)) { targetClass, originalCMD, originalIMP in
+        NSObject.fw.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction)) { targetClass, originalCMD, originalIMP in
             let swizzleIMP: @convention(block)(Tests) -> String = { selfObject in
                 typealias originalMSGType = @convention(c)(Tests, Selector) -> String
                 let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
@@ -49,7 +52,7 @@ class Tests: XCTestCase {
             return unsafeBitCast(swizzleIMP, to: AnyObject.self)
         }
         
-        Swizzle.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { targetClass, originalCMD, originalIMP in
+        NSObject.fw.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { targetClass, originalCMD, originalIMP in
             let swizzleIMP: @convention(block)(Tests.Type) -> String = { selfObject in
                 typealias originalMSGType = @convention(c)(Tests.Type, Selector) -> String
                 let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
@@ -76,8 +79,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(objectAction(), "Object Action")
         XCTAssertTrue(fw.isSwizzleInstanceMethod(#selector(objectAction), identifier: "object"))
         
-        Swizzle.exchangeInstanceMethod(classForCoder, originalSelector: #selector(exchangeAction), swizzleSelector: #selector(exchange2Action))
-        Swizzle.exchangeClassMethod(classForCoder, originalSelector: #selector(Tests.exchangeClassAction), swizzleSelector: #selector(Tests.exchange2ClassAction))
+        Tests.fw.exchangeInstanceMethod(#selector(exchangeAction), swizzleMethod: #selector(exchange2Action))
+        Tests.fw.exchangeClassMethod(#selector(Tests.exchangeClassAction), swizzleMethod: #selector(Tests.exchange2ClassAction))
         
         XCTAssertEqual(exchangeAction(), "Exchange1Exchange2")
         XCTAssertEqual(Tests.exchangeClassAction(), "Exchange3Exchange4")
@@ -121,8 +124,8 @@ class Tests: XCTestCase {
 // MARK: - Private
 extension Tests {
     
-    @objc func loaderAction(_ input: String) -> String {
-        return input + "Target"
+    @objc func loaderAction(_ input: NSString) -> NSString? {
+        return input.appending("Target") as NSString
     }
     
     @objc func originalAction() -> String {
