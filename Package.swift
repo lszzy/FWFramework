@@ -27,11 +27,7 @@ let package = Package(
             sources: ["FWObjC"],
             publicHeadersPath: "include",
             cSettings: [
-                .headerSearchPath("FWObjC/Kernel"),
-                .headerSearchPath("FWObjC/Toolkit"),
-                .headerSearchPath("FWObjC/Service/Basic"),
-                .headerSearchPath("FWObjC/Service/Coding"),
-                .headerSearchPath("include"),
+                .headerSearchPath("include/FWObjC"),
                 .define("FWMacroSPM", to: "1")
             ],
             swiftSettings: [

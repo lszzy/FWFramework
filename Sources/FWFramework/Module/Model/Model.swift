@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWObjC
+#endif
 
 extension Wrapper where Base: NSObject {
     
