@@ -15,8 +15,12 @@
 #import "FWNavigator.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
+#import "FWRouter.h"
 #import "FWRuntime.h"
 #import "FWState.h"
 #import "FWSwizzle.h"
 #import "FWTask.h"
 #import "FWTest.h"
+
+#import "FWLanguage.h"
+#import "FWLocation.h"
