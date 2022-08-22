@@ -25,3 +25,5 @@
 #import "FWLanguage.h"
 #import "FWLocation.h"
 #import "FWTheme.h"
+#import "FWEncode.h"
+#import "FWException.h"
