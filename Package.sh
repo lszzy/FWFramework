@@ -13,3 +13,4 @@ ln -s ../../FWObjC/Module/App/*.h ./
 ln -s ../../FWObjC/Module/Model/*.h ./
 ln -s ../../FWObjC/Module/View/*.h ./
 ln -s ../../FWObjC/Plugin/View/*.h ./
+ln -s ../../FWObjC/Plugin/Toast/*.h ./
