@@ -27,6 +27,7 @@ let package = Package(
             sources: ["FWObjC"],
             publicHeadersPath: "include",
             cSettings: [
+                .headerSearchPath("FWObjC/Kernel"),
                 .headerSearchPath("include"),
                 .define("FWMacroSPM", to: "1")
             ],
