@@ -30,4 +30,42 @@ Pod::Spec.new do |s|
     ss.source_files = 'Sources/FWSwiftUI/**/*.swift'
     ss.dependency 'FWFramework/FWFramework'
   end
+  
+  s.subspec 'FWVendor' do |ss|
+    ss.subspec 'Contacts' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroContacts'
+      }
+    end
+
+    ss.subspec 'Microphone' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroMicrophone'
+      }
+    end
+
+    ss.subspec 'Calendar' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroCalendar'
+      }
+    end
+
+    ss.subspec 'AppleMusic' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroAppleMusic'
+      }
+    end
+
+    ss.subspec 'Tracking' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking',
+        'GCC_PREPROCESSOR_DEFINITIONS' => 'FWMacroTracking=1'
+      }
+    end
+  end
 end
