@@ -11,3 +11,5 @@ ln -s ../../FWObjC/Service/Basic/*.h ./
 ln -s ../../FWObjC/Service/Coding/*.h ./
 ln -s ../../FWObjC/Module/App/*.h ./
 ln -s ../../FWObjC/Module/Model/*.h ./
+ln -s ../../FWObjC/Module/View/*.h ./
+ln -s ../../FWObjC/Plugin/View/*.h ./
