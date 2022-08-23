@@ -899,6 +899,113 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
     }
 }
 
+- (BOOL)fw_isLeapYear
+{
+    NSInteger year = [[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:self];
+    if (year % 400 == 0) {
+        return YES;
+    } else if (year % 100 == 0) {
+        return NO;
+    } else if (year % 4 == 0) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fw_isSameDay:(NSDate *)date
+{
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:date];
+    NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    components = [[NSCalendar currentCalendar] components:(NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:self];
+    NSDate *dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    return [dateOne isEqualToDate:dateTwo];
+}
+
+- (NSDate *)fw_dateByAdding:(NSDateComponents *)components
+{
+    return [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:self options:0];
+}
+
+- (NSInteger)fw_daysFrom:(NSDate *)date
+{
+    NSDate *earliest = [self earlierDate:date];
+    NSDate *latest = (earliest == self) ? date : self;
+    NSInteger multipier = (earliest == self) ? -1 : 1;
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:earliest toDate:latest options:0];
+    return multipier * components.day;
+}
+
+@end
+
+#pragma mark - NSNumber+FWFoundation
+
+@implementation NSNumber (FWFoundation)
+
+- (CGFloat)fw_CGFloatValue
+{
+#if CGFLOAT_IS_DOUBLE
+    return [self doubleValue];
+#else
+    return [self floatValue];
+#endif
+}
+
+- (NSString *)fw_roundString:(NSInteger)digit
+{
+    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundHalfUp];
+}
+
+- (NSString *)fw_ceilString:(NSInteger)digit
+{
+    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundCeiling];
+}
+
+- (NSString *)fw_floorString:(NSInteger)digit
+{
+    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundFloor];
+}
+
+- (NSString *)fw_formatString:(NSInteger)digit
+              roundingMode:(NSNumberFormatterRoundingMode)roundingMode
+{
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterNoStyle;
+    formatter.roundingMode = roundingMode;
+    formatter.minimumIntegerDigits = 1;
+    formatter.maximumFractionDigits = digit;
+    formatter.decimalSeparator = @".";
+    formatter.groupingSeparator = @"";
+    formatter.usesGroupingSeparator = NO;
+    formatter.currencyDecimalSeparator = @".";
+    formatter.currencyGroupingSeparator = @"";
+    NSString *result = [formatter stringFromNumber:self];
+    return result ?: @"";
+}
+
+- (NSNumber *)fw_roundNumber:(NSUInteger)digit
+{
+    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundHalfUp];
+}
+
+- (NSNumber *)fw_ceilNumber:(NSUInteger)digit
+{
+    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundCeiling];
+}
+
+- (NSNumber *)fw_floorNumber:(NSUInteger)digit
+{
+    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundFloor];
+}
+
+- (NSNumber *)fw_formatNumber:(NSUInteger)digit
+              roundingMode:(NSNumberFormatterRoundingMode)roundingMode
+{
+    NSString *string = [self fw_formatString:digit roundingMode:roundingMode];
+    return [NSNumber numberWithDouble:[string doubleValue]];
+}
+
 @end
 
 #pragma mark - NSDictionary+FWFoundation
@@ -1402,6 +1509,73 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 - (BOOL)fw_isFormatCoordinate
 {
     return [self fw_isFormatRegex:@"^\\-?\\d+\\.?\\d*,\\-?\\d+\\.?\\d*$"];
+}
+
+@end
+
+#pragma mark - NSFileManager+FWFoundation
+
+@implementation NSFileManager (FWFoundation)
+
++ (NSString *)fw_pathSearch:(NSSearchPathDirectory)directory
+{
+    NSArray *directories = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, YES);
+    return directories.count > 0 ? [directories objectAtIndex:0] : @"";
+}
+
++ (NSString *)fw_pathHome
+{
+    return NSHomeDirectory();
+}
+
++ (NSString *)fw_pathDocument
+{
+    return [self fw_pathSearch:NSDocumentDirectory];
+}
+
++ (NSString *)fw_pathCaches
+{
+    return [self fw_pathSearch:NSCachesDirectory];
+}
+
++ (NSString *)fw_pathLibrary
+{
+    return [self fw_pathSearch:NSLibraryDirectory];
+}
+
++ (NSString *)fw_pathPreference
+{
+    return [[self fw_pathLibrary] stringByAppendingPathComponent:@"Preference"];
+}
+
++ (NSString *)fw_pathTmp
+{
+    return NSTemporaryDirectory();
+}
+
++ (NSString *)fw_pathBundle
+{
+    return [[NSBundle mainBundle] bundlePath];
+}
+
++ (NSString *)fw_pathResource
+{
+    return [[NSBundle mainBundle] resourcePath] ?: @"";
+}
+
++ (unsigned long long)fw_folderSize:(NSString *)folderPath
+{
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:folderPath error:nil];
+    NSEnumerator *contentsEnumurator = [contents objectEnumerator];
+    
+    NSString *file;
+    unsigned long long folderSize = 0;
+    
+    while (file = [contentsEnumurator nextObject]) {
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[folderPath stringByAppendingPathComponent:file] error:nil];
+        folderSize += [[fileAttributes objectForKey:NSFileSize] intValue];
+    }
+    return folderSize;
 }
 
 @end

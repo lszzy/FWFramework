@@ -169,6 +169,45 @@ NS_ASSUME_NONNULL_BEGIN
 /// 格式化16位、13位时间戳为10位(秒)
 + (NSTimeInterval)fw_formatTimestamp:(NSTimeInterval)timestamp NS_REFINED_FOR_SWIFT;
 
+/// 是否是闰年
+@property (nonatomic, assign, readonly) BOOL fw_isLeapYear NS_REFINED_FOR_SWIFT;
+
+/// 是否是同一天
+- (BOOL)fw_isSameDay:(NSDate *)date NS_REFINED_FOR_SWIFT;
+
+/// 添加指定日期，如year:1|month:-1|day:1等
+- (nullable NSDate *)fw_dateByAdding:(NSDateComponents *)components NS_REFINED_FOR_SWIFT;
+
+/// 与指定日期相隔天数
+- (NSInteger)fw_daysFrom:(NSDate *)date NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - NSNumber+FWFoundation
+
+@interface NSNumber (FWFoundation)
+
+/// 转换为CGFloat
+@property (nonatomic, assign, readonly) CGFloat fw_CGFloatValue NS_REFINED_FOR_SWIFT;
+
+/// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
+- (NSString *)fw_roundString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+
+/// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
+- (NSString *)fw_ceilString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+
+/// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
+- (NSString *)fw_floorString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+
+/// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
+- (NSNumber *)fw_roundNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
+
+/// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
+- (NSNumber *)fw_ceilNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
+
+/// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
+- (NSNumber *)fw_floorNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSDictionary+FWFoundation
@@ -348,6 +387,42 @@ NS_ASSUME_NONNULL_BEGIN
  *  是否是坐标点字符串，格式：latitude,longitude
  */
 - (BOOL)fw_isFormatCoordinate NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - NSFileManager+FWFoundation
+
+@interface NSFileManager (FWFoundation)
+
+/// 搜索路径，参数为NSSearchPathDirectory
++ (NSString *)fw_pathSearch:(NSSearchPathDirectory)directory NS_REFINED_FOR_SWIFT;
+
+/// 沙盒路径
+@property (class, nonatomic, copy, readonly) NSString *fw_pathHome NS_REFINED_FOR_SWIFT;
+
+/// 文档路径，iTunes会同步备份
+@property (class, nonatomic, copy, readonly) NSString *fw_pathDocument NS_REFINED_FOR_SWIFT;
+
+/// 缓存路径，系统不会删除，iTunes会删除
+@property (class, nonatomic, copy, readonly) NSString *fw_pathCaches NS_REFINED_FOR_SWIFT;
+
+/// Library路径
+@property (class, nonatomic, copy, readonly) NSString *fw_pathLibrary NS_REFINED_FOR_SWIFT;
+
+/// 配置路径，配置文件保存位置
+@property (class, nonatomic, copy, readonly) NSString *fw_pathPreference NS_REFINED_FOR_SWIFT;
+
+/// 临时路径，App退出后可能会删除
+@property (class, nonatomic, copy, readonly) NSString *fw_pathTmp NS_REFINED_FOR_SWIFT;
+
+/// bundle路径，不可写
+@property (class, nonatomic, copy, readonly) NSString *fw_pathBundle NS_REFINED_FOR_SWIFT;
+
+/// 资源路径，不可写
+@property (class, nonatomic, copy, readonly) NSString *fw_pathResource NS_REFINED_FOR_SWIFT;
+
+/// 获取目录大小，单位：B
++ (unsigned long long)fw_folderSize:(NSString *)folderPath NS_REFINED_FOR_SWIFT;
 
 @end
 

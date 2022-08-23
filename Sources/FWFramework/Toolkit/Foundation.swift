@@ -159,6 +159,66 @@ extension Wrapper where Base == Date {
     public static func formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
         return NSDate.__fw_formatTimestamp(timestamp)
     }
+    
+    /// 是否是闰年
+    public var isLeapYear: Bool {
+        return (base as NSDate).__fw_isLeapYear
+    }
+
+    /// 是否是同一天
+    public func isSameDay(_ date: Date) -> Bool {
+        return (base as NSDate).__fw_isSameDay(date)
+    }
+
+    /// 添加指定日期，如year:1|month:-1|day:1等
+    public func date(byAdding: DateComponents) -> Date? {
+        return (base as NSDate).__fw_date(byAdding: byAdding)
+    }
+
+    /// 与指定日期相隔天数
+    public func days(from date: Date) -> Int {
+        return (base as NSDate).__fw_days(from: date)
+    }
+}
+
+// MARK: - NSNumber+Foundation
+extension Wrapper where Base: NSNumber {
+    
+    /// 转换为CGFloat
+    public var CGFloatValue: CGFloat {
+        return base.__fw_CGFloatValue
+    }
+
+    /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
+    public func roundString(_ digit: Int) -> String {
+        return base.__fw_roundString(digit)
+    }
+
+    /// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
+    public func ceilString(_ digit: Int) -> String {
+        return base.__fw_ceilString(digit)
+    }
+
+    /// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
+    public func floorString(_ digit: Int) -> String {
+        return base.__fw_floorString(digit)
+    }
+
+    /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
+    public func roundNumber(_ digit: UInt) -> NSNumber {
+        return base.__fw_roundNumber(digit)
+    }
+
+    /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
+    public func ceilNumber(_ digit: UInt) -> NSNumber {
+        return base.__fw_ceilNumber(digit)
+    }
+
+    /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
+    public func floorNumber(_ digit: UInt) -> NSNumber {
+        return base.__fw_floorNumber(digit)
+    }
+    
 }
 
 // MARK: - String+Foundation
@@ -339,6 +399,64 @@ extension Wrapper where Base == String {
     /// 是否是坐标点字符串，格式：latitude,longitude
     public func isFormatCoordinate() -> Bool {
         return (base as NSString).__fw_isFormatCoordinate()
+    }
+    
+}
+
+// MARK: - FileManager+Foundation
+extension Wrapper where Base: FileManager {
+    
+    /// 搜索路径
+    ///
+    /// - Parameter directory: 搜索目录
+    /// - Returns: 目标路径
+    public static func pathSearch(_ directory: FileManager.SearchPathDirectory) -> String {
+        return NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true)[0]
+    }
+
+    /// 沙盒路径，常量
+    public static var pathHome: String {
+        return NSHomeDirectory()
+    }
+
+    /// 文档路径，iTunes会同步备份
+    public static var pathDocument: String {
+        return pathSearch(.documentDirectory)
+    }
+
+    /// 缓存路径，系统不会删除，iTunes会删除
+    public static var pathCaches: String {
+        return pathSearch(.cachesDirectory)
+    }
+
+    /// Library路径
+    public static var pathLibrary: String {
+        return pathSearch(.libraryDirectory)
+    }
+
+    /// 配置路径，配置文件保存位置
+    public static var pathPreference: String {
+        return (pathLibrary as NSString).appendingPathComponent("Preference")
+    }
+
+    /// 临时路径，App退出后可能会删除
+    public static var pathTmp: String {
+        return NSTemporaryDirectory()
+    }
+
+    /// bundle路径，不可写
+    public static var pathBundle: String {
+        return Bundle.main.bundlePath
+    }
+
+    /// 资源路径，不可写
+    public static var pathResource: String {
+        return Bundle.main.resourcePath ?? ""
+    }
+
+    /// 获取目录大小，单位：B
+    public static func folderSize(_ folderPath: String) -> UInt64 {
+        return Base.__fw_folderSize(folderPath)
     }
     
 }
