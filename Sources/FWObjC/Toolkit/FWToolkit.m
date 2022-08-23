@@ -6,6 +6,7 @@
 //
 
 #import "FWToolkit.h"
+#import "FWUIKit.h"
 #import "FWAdaptive.h"
 #import "FWNavigator.h"
 #import "FWProxy.h"
@@ -493,6 +494,51 @@ static BOOL fwStaticColorARGB = NO;
     CGFloat h, s, b, a;
     [self getHue:&h saturation:&s brightness:&b alpha:&a];
     return [UIColor colorWithHue:h saturation:s brightness:b * ratio alpha:a];
+}
+
+- (BOOL)fw_isDarkColor
+{
+    CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
+    if (![self getRed:&red green:&green blue:&blue alpha:&alpha]) {
+        if ([self getWhite:&red alpha:&alpha]) { green = red; blue = red; }
+    }
+    
+    float referenceValue = 0.411;
+    float colorDelta = ((red * 0.299) + (green * 0.587) + (blue * 0.114));
+    
+    return 1.0 - colorDelta > referenceValue;
+}
+
++ (UIColor *)fw_gradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                           direction:(UISwipeGestureRecognizerDirection)direction
+{
+    NSArray<NSValue *> *linePoints = [UIBezierPath fw_linePointsWithRect:CGRectMake(0, 0, size.width, size.height) direction:direction];
+    CGPoint startPoint = [linePoints.firstObject CGPointValue];
+    CGPoint endPoint = [linePoints.lastObject CGPointValue];
+    return [self fw_gradientColorWithSize:size colors:colors locations:locations startPoint:startPoint endPoint:endPoint];
+}
+
++ (UIColor *)fw_gradientColorWithSize:(CGSize)size
+                              colors:(NSArray *)colors
+                           locations:(const CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint
+{
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    
+    CGGradientRef gradient = CGGradientCreateWithColors(colorspace, (__bridge CFArrayRef)colors, locations);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorspace);
+    UIGraphicsEndImageContext();
+    
+    return [UIColor colorWithPatternImage:image];
 }
 
 @end

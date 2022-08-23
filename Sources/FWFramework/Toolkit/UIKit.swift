@@ -13,6 +13,56 @@ import FWObjC
 import AdSupport
 #endif
 
+// MARK: - UIBezierPath+UIKit
+extension Wrapper where Base: UIBezierPath {
+    
+    /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
+    public func shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
+        return base.__fw_shapeImage(size, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+    }
+
+    /// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
+    public func shapeLayer(_ rect: CGRect, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> CAShapeLayer {
+        return base.__fw_shapeLayer(rect, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+    }
+
+    /// 根据点计算折线路径(NSValue点)
+    public static func lines(points: [NSValue]) -> UIBezierPath {
+        return Base.__fw_lines(withPoints: points)
+    }
+
+    /// 根据点计算贝塞尔曲线路径
+    public static func quadCurvedPath(points: [NSValue]) -> UIBezierPath {
+        return Base.__fw_quadCurvedPath(withPoints: points)
+    }
+    
+    /// 计算两点的中心点
+    public static func middlePoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
+        return Base.__fw_middlePoint(p1, with: p2)
+    }
+
+    /// 计算两点的贝塞尔曲线控制点
+    public static func controlPoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
+        return Base.__fw_controlPoint(p1, with: p2)
+    }
+    
+    /// 将角度(0~360)转换为弧度，周长为2*M_PI*r
+    public static func radian(degree: CGFloat) -> CGFloat {
+        return Base.__fw_radian(withDegree: degree)
+    }
+    
+    /// 将弧度转换为角度(0~360)
+    public static func degree(radian: CGFloat) -> CGFloat {
+        return Base.__fw_degree(withRadian: radian)
+    }
+    
+    /// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
+    public static func linePoints(rect: CGRect, direction: UISwipeGestureRecognizer.Direction) -> [NSValue] {
+        return Base.__fw_linePoints(with: rect, direction: direction)
+    }
+    
+}
+
 // MARK: - UIDevice+UIKit
 extension Wrapper where Base: UIDevice {
     

@@ -9,6 +9,45 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - UIBezierPath+FWUIKit
+
+@interface UIBezierPath (FWUIKit)
+
+/// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
+- (nullable UIImage *)fw_shapeImage:(CGSize)size
+                     strokeWidth:(CGFloat)strokeWidth
+                     strokeColor:(UIColor *)strokeColor
+                       fillColor:(nullable UIColor *)fillColor NS_REFINED_FOR_SWIFT;
+
+/// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
+- (CAShapeLayer *)fw_shapeLayer:(CGRect)rect
+                 strokeWidth:(CGFloat)strokeWidth
+                 strokeColor:(UIColor *)strokeColor
+                   fillColor:(nullable UIColor *)fillColor NS_REFINED_FOR_SWIFT;
+
+/// 根据点计算折线路径(NSValue点)
++ (UIBezierPath *)fw_linesWithPoints:(NSArray *)points NS_REFINED_FOR_SWIFT;
+
+/// 根据点计算贝塞尔曲线路径
++ (UIBezierPath *)fw_quadCurvedPathWithPoints:(NSArray *)points NS_REFINED_FOR_SWIFT;
+
+/// 计算两点的中心点
++ (CGPoint)fw_middlePoint:(CGPoint)p1 withPoint:(CGPoint)p2 NS_REFINED_FOR_SWIFT;
+
+/// 计算两点的贝塞尔曲线控制点
++ (CGPoint)fw_controlPoint:(CGPoint)p1 withPoint:(CGPoint)p2 NS_REFINED_FOR_SWIFT;
+
+/// 将角度(0~360)转换为弧度，周长为2*M_PI*r
++ (CGFloat)fw_radianWithDegree:(CGFloat)degree NS_REFINED_FOR_SWIFT;
+
+/// 将弧度转换为角度(0~360)
++ (CGFloat)fw_degreeWithRadian:(CGFloat)radian NS_REFINED_FOR_SWIFT;
+
+/// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
++ (NSArray<NSValue *> *)fw_linePointsWithRect:(CGRect)rect direction:(UISwipeGestureRecognizerDirection)direction NS_REFINED_FOR_SWIFT;
+
+@end
+
 #pragma mark - UIDevice+FWUIKit
 
 @interface UIDevice (FWUIKit)
