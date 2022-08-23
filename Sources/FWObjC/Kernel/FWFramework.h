@@ -46,6 +46,9 @@
 #import "FWModel.h"
 #import "FWAttributedLabel.h"
 #import "FWBadgeView.h"
+#import "FWBannerView.h"
+#import "FWPageControl.h"
+#import "FWStatisticalManager.h"
 #import "FWToolbarView.h"
 
 #import "FWViewPluginImpl.h"
