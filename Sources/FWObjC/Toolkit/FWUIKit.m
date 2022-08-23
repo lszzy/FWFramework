@@ -1552,16 +1552,6 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     objc_setAssociatedObject(self, @selector(fw_menuDisabled), @(menuDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIColor *)fw_cursorColor
-{
-    return self.tintColor;
-}
-
-- (void)setFw_cursorColor:(UIColor *)cursorColor
-{
-    self.tintColor = cursorColor;
-}
-
 - (CGRect)fw_cursorRect
 {
     NSValue *value = objc_getAssociatedObject(self, @selector(fw_cursorRect));
@@ -1725,16 +1715,6 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)setFw_menuDisabled:(BOOL)menuDisabled
 {
     objc_setAssociatedObject(self, @selector(fw_menuDisabled), @(menuDisabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UIColor *)fw_cursorColor
-{
-    return self.tintColor;
-}
-
-- (void)setFw_cursorColor:(UIColor *)cursorColor
-{
-    self.tintColor = cursorColor;
 }
 
 - (CGRect)fw_cursorRect
