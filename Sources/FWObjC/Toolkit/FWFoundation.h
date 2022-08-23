@@ -34,8 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - NSAttributedString+FWFoundation
 
+@class FWThemeObject<__covariant ObjectType>;
+
 /**
- 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可
+ 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可。
+ 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
  */
 @interface NSAttributedString (FWFoundation)
 
@@ -63,6 +66,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速创建NSAttributedString，自定义字体和颜色
 + (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
 
+/// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
++ (nullable instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
+
+/// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
++ (FWThemeObject<NSAttributedString *> *)fw_themeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
+
+// 获取颜色对应CSS字符串(rgb|rgba格式)
++ (NSString *)fw_CSSStringWithColor:(UIColor *)color NS_REFINED_FOR_SWIFT;
+
+// 获取系统字体对应CSS字符串(family|style|weight|size)
++ (NSString *)fw_CSSStringWithFont:(UIFont *)font NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSData+FWFoundation
@@ -80,6 +95,46 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 读取对象归档
 + (nullable id)fw_unarchiveObject:(Class)clazz withFile:(NSString *)path NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Encrypt
+
+/// 利用AES加密数据
+- (nullable NSData *)fw_AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv NS_REFINED_FOR_SWIFT;
+
+/// 利用AES解密数据
+- (nullable NSData *)fw_AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv NS_REFINED_FOR_SWIFT;
+
+/// 利用3DES加密数据
+- (nullable NSData *)fw_DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv NS_REFINED_FOR_SWIFT;
+
+/// 利用3DES解密数据
+- (nullable NSData *)fw_DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv NS_REFINED_FOR_SWIFT;
+
+#pragma mark - RSA
+
+/// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
+- (nullable NSData *)fw_RSAEncryptWithPublicKey:(NSString *)publicKey NS_REFINED_FOR_SWIFT;
+
+/// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
+- (nullable NSData *)fw_RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode NS_REFINED_FOR_SWIFT;
+
+/// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
+- (nullable NSData *)fw_RSADecryptWithPrivateKey:(NSString *)privateKey NS_REFINED_FOR_SWIFT;
+
+/// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
+- (nullable NSData *)fw_RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode NS_REFINED_FOR_SWIFT;
+
+/// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
+- (nullable NSData *)fw_RSASignWithPrivateKey:(NSString *)privateKey NS_REFINED_FOR_SWIFT;
+
+/// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
+- (nullable NSData *)fw_RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode NS_REFINED_FOR_SWIFT;
+
+/// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
+- (nullable NSData *)fw_RSAVerifyWithPublicKey:(NSString *)publicKey NS_REFINED_FOR_SWIFT;
+
+/// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
+- (nullable NSData *)fw_RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode NS_REFINED_FOR_SWIFT;
 
 @end
 
