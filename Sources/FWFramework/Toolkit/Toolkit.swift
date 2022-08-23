@@ -204,6 +204,37 @@ extension Wrapper where Base: UIApplication {
         return Base.__fw_openAudioPlayer(url)
     }
     
+    /// 播放内置声音文件
+    @discardableResult
+    public static func playSystemSound(_ file: String) -> SystemSoundID {
+        return Base.__fw_playSystemSound(file)
+    }
+
+    /// 停止播放内置声音文件
+    public static func stopSystemSound(_ soundId: SystemSoundID) {
+        Base.__fw_stopSystemSound(soundId)
+    }
+
+    /// 播放内置震动
+    public static func playSystemVibrate() {
+        Base.__fw_playSystemVibrate()
+    }
+
+    /// 语音朗读文字，可指定语言(如zh-CN)
+    public static func playSpeechUtterance(_ string: String, language: String?) {
+        Base.__fw_playSpeechUtterance(string, language: language)
+    }
+    
+    /// 是否是盗版(不是从AppStore安装)
+    public static var isPirated: Bool {
+        return Base.__fw_isPirated
+    }
+    
+    /// 是否是Testflight版本
+    public static var isTestflight: Bool {
+        return Base.__fw_isTestflight
+    }
+    
 }
 
 // MARK: - UIColor+Toolkit

@@ -2034,6 +2034,70 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
+#pragma mark - UITableView+FWUIKit
+
+@implementation UITableView (FWUIKit)
+
++ (void)fw_resetTableStyle
+{
+#if __IPHONE_15_0
+    if (@available(iOS 15.0, *)) {
+        UITableView.appearance.sectionHeaderTopPadding = 0;
+    }
+#endif
+}
+
+- (BOOL)fw_estimatedLayout
+{
+    return self.estimatedRowHeight == UITableViewAutomaticDimension;
+}
+
+- (void)setFw_estimatedLayout:(BOOL)enabled
+{
+    if (enabled) {
+        self.estimatedRowHeight = UITableViewAutomaticDimension;
+        self.estimatedSectionHeaderHeight = UITableViewAutomaticDimension;
+        self.estimatedSectionFooterHeight = UITableViewAutomaticDimension;
+    } else {
+        self.estimatedRowHeight = 0.f;
+        self.estimatedSectionHeaderHeight = 0.f;
+        self.estimatedSectionFooterHeight = 0.f;
+    }
+}
+
+- (void)fw_resetGroupedStyle
+{
+    self.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
+    self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
+    self.sectionHeaderHeight = 0;
+    self.sectionFooterHeight = 0;
+#if __IPHONE_15_0
+    if (@available(iOS 15.0, *)) {
+        self.sectionHeaderTopPadding = 0;
+    }
+#endif
+}
+
+- (void)fw_reloadDataWithCompletion:(void (^)(void))completion
+{
+    [UIView animateWithDuration:0 animations:^{
+        [self reloadData];
+    } completion:^(BOOL finished) {
+        if (completion) {
+            completion();
+        }
+    }];
+}
+
+- (void)fw_reloadDataWithoutAnimation
+{
+    [UIView performWithoutAnimation:^{
+        [self reloadData];
+    }];
+}
+
+@end
+
 #pragma mark - UITableViewCell+FWUIKit
 
 @implementation UITableViewCell (FWUIKit)
@@ -2065,6 +2129,31 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (NSIndexPath *)fw_indexPath
 {
     return [[self fw_tableView] indexPathForCell:self];
+}
+
+@end
+
+#pragma mark - UICollectionView+FWUIKit
+
+@implementation UICollectionView (FWUIKit)
+
+- (void)fw_reloadDataWithCompletion:(void (^)(void))completion
+{
+    [UIView animateWithDuration:0 animations:^{
+        [self reloadData];
+    } completion:^(BOOL finished) {
+        if (completion) {
+            completion();
+        }
+    }];
+}
+
+- (void)fw_reloadDataWithoutAnimation
+{
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [self reloadData];
+    [CATransaction commit];
 }
 
 @end

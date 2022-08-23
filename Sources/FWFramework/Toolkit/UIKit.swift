@@ -663,6 +663,37 @@ extension Wrapper where Base: UITextView {
     
 }
 
+// MARK: - UITableView+UIKit
+extension Wrapper where Base: UITableView {
+    
+    /// 全局清空TableView默认多余边距
+    public static func resetTableStyle() {
+        Base.__fw_resetTableStyle()
+    }
+    
+    /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
+    public var estimatedLayout: Bool {
+        get { return base.__fw_estimatedLayout }
+        set { base.__fw_estimatedLayout = newValue }
+    }
+    
+    /// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
+    public func resetGroupedStyle() {
+        base.__fw_resetGroupedStyle()
+    }
+    
+    /// reloadData完成回调
+    public func reloadData(completion: (() -> Void)?) {
+        base.__fw_reloadData(completion: completion)
+    }
+    
+    /// reloadData禁用动画
+    public func reloadDataWithoutAnimation() {
+        base.__fw_reloadDataWithoutAnimation()
+    }
+    
+}
+
 // MARK: - UITableViewCell+UIKit
 extension Wrapper where Base: UITableViewCell {
     
@@ -680,6 +711,21 @@ extension Wrapper where Base: UITableViewCell {
     /// 获取当前显示indexPath
     public var indexPath: IndexPath? {
         return base.__fw_indexPath
+    }
+    
+}
+
+// MARK: - UICollectionView+UIKit
+extension Wrapper where Base: UICollectionView {
+    
+    /// reloadData完成回调
+    public func reloadData(completion: (() -> Void)?) {
+        base.__fw_reloadData(completion: completion)
+    }
+    
+    /// reloadData禁用动画
+    public func reloadDataWithoutAnimation() {
+        base.__fw_reloadDataWithoutAnimation()
     }
     
 }
