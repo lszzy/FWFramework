@@ -150,6 +150,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，自定义透明度，失败时返回clear
 + (UIColor *)fw_colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha NS_REFINED_FOR_SWIFT;
 
+/// 当前颜色修改亮度比率的颜色
+- (UIColor *)fw_brightnessColor:(CGFloat)ratio NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIFont+FWToolkit
