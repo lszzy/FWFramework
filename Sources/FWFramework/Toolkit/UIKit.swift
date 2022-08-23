@@ -102,6 +102,31 @@ extension Wrapper where Base: UIDevice {
         set { Base.__fw_deviceUUID = newValue }
     }
     
+    /// 是否越狱
+    public static var isJailbroken: Bool {
+        return Base.__fw_isJailbroken
+    }
+    
+    /// 本地IP地址
+    public static var ipAddress: String? {
+        return Base.__fw_ipAddress
+    }
+    
+    /// 本地主机名称
+    public static var hostName: String? {
+        return Base.__fw_hostName
+    }
+    
+    /// 手机运营商名称
+    public static var carrierName: String? {
+        return Base.__fw_carrierName
+    }
+    
+    /// 手机蜂窝网络类型，仅区分2G|3G|4G|5G
+    public static var networkType: String? {
+        return Base.__fw_networkType
+    }
+    
 }
 
 @objc extension UIDevice {
@@ -302,6 +327,28 @@ extension Wrapper where Base: UILabel {
         return Base.__fw_label(with: font, textColor: textColor, text: text)
     }
     
+    /// 计算当前文本所占尺寸，需frame或者宽度布局完整
+    public var textSize: CGSize {
+        return base.__fw_textSize
+    }
+
+    /// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
+    public var attributedTextSize: CGSize {
+        return base.__fw_attributedTextSize
+    }
+    
+}
+
+// MARK: - UIControl+UIKit
+/// 防重复点击可以手工控制enabled或userInteractionEnabled或loading，如request开始时禁用，结束时启用等
+extension Wrapper where Base: UIControl {
+    
+    // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
+    public var touchEventInterval: TimeInterval {
+        get { return base.__fw_touchEventInterval }
+        set { base.__fw_touchEventInterval = newValue }
+    }
+    
 }
 
 // MARK: - UIButton+UIKit
@@ -355,6 +402,12 @@ extension Wrapper where Base: UIButton {
     /// 快速创建图片按钮
     public static func button(image: UIImage?) -> Base {
         return Base.__fw_button(with: image)
+    }
+    
+    /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
+    @discardableResult
+    public func startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSource {
+        return base.__fw_startCountDown(seconds, title: title, waitTitle: waitTitle)
     }
     
 }
