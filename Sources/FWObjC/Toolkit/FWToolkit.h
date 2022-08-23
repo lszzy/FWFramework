@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIApplication (FWToolkit)
 
+/// 读取应用信息字典
++ (nullable id)fw_appInfo:(NSString *)key NS_REFINED_FOR_SWIFT;
+
 /// 读取应用名称
 @property (class, nonatomic, copy, readonly) NSString *fw_appName NS_REFINED_FOR_SWIFT;
 

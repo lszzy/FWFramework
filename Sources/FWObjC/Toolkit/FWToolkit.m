@@ -69,6 +69,11 @@
 
 @implementation UIApplication (FWToolkit)
 
++ (id)fw_appInfo:(NSString *)key
+{
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:key];
+}
+
 + (NSString *)fw_appName
 {
     NSString *appName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];

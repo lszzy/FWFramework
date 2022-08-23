@@ -67,6 +67,21 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
 @property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFA NS_REFINED_FOR_SWIFT;
 
+/// 是否越狱
+@property (class, nonatomic, assign, readonly) BOOL fw_isJailbroken NS_REFINED_FOR_SWIFT;
+
+/// 本地IP地址
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_ipAddress NS_REFINED_FOR_SWIFT;
+
+/// 本地主机名称
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_hostName NS_REFINED_FOR_SWIFT;
+
+/// 手机运营商名称
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_carrierName NS_REFINED_FOR_SWIFT;
+
+/// 手机蜂窝网络类型，仅区分2G|3G|4G|5G
+@property (class, nonatomic, copy, readonly, nullable) NSString *fw_networkType NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIView+FWUIKit
@@ -178,6 +193,22 @@ NS_ASSUME_NONNULL_BEGIN
 /// 快速创建标签并指定文本
 + (instancetype)fw_labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
 
+/// 计算当前文本所占尺寸，需frame或者宽度布局完整
+@property (nonatomic, assign, readonly) CGSize fw_textSize NS_REFINED_FOR_SWIFT;
+
+/// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
+@property (nonatomic, assign, readonly) CGSize fw_attributedTextSize NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UIControl+FWUIKit
+
+/// 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等
+@interface UIControl (FWUIKit)
+
+/// 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
+@property (nonatomic, assign) NSTimeInterval fw_touchEventInterval UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -213,6 +244,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 快速创建图片按钮
 + (instancetype)fw_buttonWithImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
+
+/// 开始按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
+- (dispatch_source_t)fw_startCountDown:(NSInteger)seconds title:(NSString *)title waitTitle:(NSString *)waitTitle NS_REFINED_FOR_SWIFT;
 
 @end
 

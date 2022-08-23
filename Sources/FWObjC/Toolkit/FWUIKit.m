@@ -15,6 +15,11 @@
 #import "FWMessage.h"
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <arpa/inet.h>
+#import <ifaddrs.h>
+#import <net/if.h>
 
 #if FWMacroTracking
 @import AdSupport;
@@ -236,6 +241,131 @@
     #else
     return nil;
     #endif
+}
+
++ (BOOL)fw_isJailbroken
+{
+#if TARGET_OS_SIMULATOR
+    return NO;
+#else
+    // 1
+    NSArray *paths = @[@"/Applications/Cydia.app",
+                       @"/private/var/lib/apt/",
+                       @"/private/var/lib/cydia",
+                       @"/private/var/stash"];
+    for (NSString *path in paths) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            return YES;
+        }
+    }
+    
+    // 2
+    FILE *bash = fopen("/bin/bash", "r");
+    if (bash != NULL) {
+        fclose(bash);
+        return YES;
+    }
+    
+    // 3
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    CFStringRef string = CFUUIDCreateString(NULL, uuid);
+    CFRelease(uuid);
+    NSString *uuidString = (__bridge_transfer NSString *)string;
+    NSString *path = [NSString stringWithFormat:@"/private/%@", uuidString];
+    if ([@"test" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL]) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        return YES;
+    }
+    
+    return NO;
+#endif
+}
+
++ (NSString *)fw_ipAddress
+{
+    NSString *ipAddr = nil;
+    struct ifaddrs *addrs = NULL;
+    
+    int ret = getifaddrs(&addrs);
+    if (0 == ret) {
+        const struct ifaddrs * cursor = addrs;
+        
+        while (cursor) {
+            if (AF_INET == cursor->ifa_addr->sa_family && 0 == (cursor->ifa_flags & IFF_LOOPBACK)) {
+                ipAddr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
+                break;
+            }
+            
+            cursor = cursor->ifa_next;
+        }
+        
+        freeifaddrs(addrs);
+    }
+    
+    return ipAddr;
+}
+
++ (NSString *)fw_hostName
+{
+    char hostName[256];
+    int success = gethostname(hostName, 255);
+    if (success != 0) return nil;
+    hostName[255] = '\0';
+    
+#if TARGET_OS_SIMULATOR
+    return [NSString stringWithFormat:@"%s", hostName];
+#else
+    return [NSString stringWithFormat:@"%s.local", hostName];
+#endif
+}
+
++ (CTTelephonyNetworkInfo *)fw_networkInfo
+{
+    static CTTelephonyNetworkInfo *networkInfo = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        networkInfo = [[CTTelephonyNetworkInfo alloc] init];
+    });
+    return networkInfo;
+}
+
++ (NSString *)fw_carrierName
+{
+    return [self fw_networkInfo].subscriberCellularProvider.carrierName;
+}
+
++ (NSString *)fw_networkType
+{
+    NSString *networkType = nil;
+    NSString *accessTechnology = [self fw_networkInfo].currentRadioAccessTechnology;
+    if (!accessTechnology) return networkType;
+    
+    NSArray *types2G = @[CTRadioAccessTechnologyGPRS,
+                         CTRadioAccessTechnologyEdge,
+                         CTRadioAccessTechnologyCDMA1x];
+    NSArray *types3G = @[CTRadioAccessTechnologyWCDMA,
+                         CTRadioAccessTechnologyHSDPA,
+                         CTRadioAccessTechnologyHSUPA,
+                         CTRadioAccessTechnologyCDMAEVDORev0,
+                         CTRadioAccessTechnologyCDMAEVDORevA,
+                         CTRadioAccessTechnologyCDMAEVDORevB,
+                         CTRadioAccessTechnologyeHRPD];
+    NSArray *types4G = @[CTRadioAccessTechnologyLTE];
+    NSArray *types5G = nil;
+    if (@available(iOS 14.1, *)) {
+        types5G = @[CTRadioAccessTechnologyNRNSA, CTRadioAccessTechnologyNR];
+    }
+    
+    if ([types5G containsObject:accessTechnology]) {
+        networkType = @"5G";
+    } else if ([types4G containsObject:accessTechnology]) {
+        networkType = @"4G";
+    } else if ([types3G containsObject:accessTechnology]) {
+        networkType = @"3G";
+    } else if ([types2G containsObject:accessTechnology]) {
+        networkType = @"2G";
+    }
+    return networkType;
 }
 
 @end
@@ -978,6 +1108,92 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return label;
 }
 
+- (CGSize)fw_textSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSFontAttributeName] = self.font;
+    if (self.lineBreakMode != NSLineBreakByWordWrapping) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        // 由于lineBreakMode默认值为TruncatingTail，多行显示时仍然按照WordWrapping计算
+        if (self.numberOfLines != 1 && self.lineBreakMode == NSLineBreakByTruncatingTail) {
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        } else {
+            paragraphStyle.lineBreakMode = self.lineBreakMode;
+        }
+        attr[NSParagraphStyleAttributeName] = paragraphStyle;
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.text boundingRectWithSize:drawSize
+                                          options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attr
+                                          context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+- (CGSize)fw_attributedTextSize
+{
+    if (CGSizeEqualToSize(self.frame.size, CGSizeZero)) {
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+    }
+    
+    CGSize drawSize = CGSizeMake(self.frame.size.width, CGFLOAT_MAX);
+    CGSize size = [self.attributedText boundingRectWithSize:drawSize
+                                                    options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                    context:nil].size;
+    return CGSizeMake(MIN(drawSize.width, ceilf(size.width)), MIN(drawSize.height, ceilf(size.height)));
+}
+
+@end
+
+#pragma mark - UIControl+FWUIKit
+
+@implementation UIControl (FWUIKit)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UIControl, @selector(sendAction:to:forEvent:), FWSwizzleReturn(void), FWSwizzleArgs(SEL action, id target, UIEvent *event), FWSwizzleCode({
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if (event.type == UIEventTypeTouches && event.subtype == UIEventSubtypeNone && selfObject.fw_touchEventInterval > 0) {
+                if ([[NSDate date] timeIntervalSince1970] - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval) {
+                    return;
+                }
+                selfObject.fw_touchEventTimestamp = [[NSDate date] timeIntervalSince1970];
+            }
+            
+            FWSwizzleOriginal(action, target, event);
+        }));
+    });
+}
+
+- (NSTimeInterval)fw_touchEventInterval
+{
+    return [objc_getAssociatedObject(self, @selector(fw_touchEventInterval)) doubleValue];
+}
+
+- (void)setFw_touchEventInterval:(NSTimeInterval)interval
+{
+    objc_setAssociatedObject(self, @selector(fw_touchEventInterval), @(interval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSTimeInterval)fw_touchEventTimestamp
+{
+    return [objc_getAssociatedObject(self, @selector(fw_touchEventTimestamp)) doubleValue];
+}
+
+- (void)setFw_touchEventTimestamp:(NSTimeInterval)timestamp
+{
+    objc_setAssociatedObject(self, @selector(fw_touchEventTimestamp), @(timestamp), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 #pragma mark - UIButton+FWUIKit
@@ -1085,6 +1301,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     UIButton *button = [self buttonWithType:UIButtonTypeCustom];
     [button setImage:image forState:UIControlStateNormal];
     return button;
+}
+
+- (dispatch_source_t)fw_startCountDown:(NSInteger)seconds title:(NSString *)title waitTitle:(NSString *)waitTitle
+{
+    __weak UIButton *weakBase = self;
+    return [self fw_startCountDown:seconds block:^(NSInteger countDown) {
+        // 先设置titleLabel，再设置title，防止闪烁
+        if (countDown <= 0) {
+            weakBase.titleLabel.text = title;
+            [weakBase setTitle:title forState:UIControlStateNormal];
+            weakBase.enabled = YES;
+        } else {
+            NSString *waitText = [NSString stringWithFormat:waitTitle, countDown];
+            weakBase.titleLabel.text = waitText;
+            [weakBase setTitle:waitText forState:UIControlStateNormal];
+            weakBase.enabled = NO;
+        }
+    }];
 }
 
 @end
