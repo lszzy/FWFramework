@@ -43,6 +43,7 @@
 #import "FWIcon.h"
 #import "FWKeyboard.h"
 #import "FWQuartzCore.h"
+#import "FWThread.h"
 #import "FWToolkit.h"
 #import "FWUIKit.h"
 
