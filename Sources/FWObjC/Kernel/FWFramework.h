@@ -30,6 +30,8 @@
 #import "FWCacheManager.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
+#import "FWDatabase.h"
+#import "FWWebImage.h"
 
 #import "FWAdaptive.h"
 #import "FWAppearance.h"
