@@ -40,6 +40,68 @@ extension Wrapper where Base == Data {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return nil }
         return data.fw.unarchiveObject(clazz)
     }
+    
+    // MARK: - Encrypt
+    /// 利用AES加密数据
+    public func aesEncrypt(key: String, iv: Data) -> Data? {
+        return (base as NSData).__fw_AESEncrypt(withKey: key, andIV: iv)
+    }
+
+    /// 利用AES解密数据
+    public func aesDecrypt(key: String, iv: Data) -> Data? {
+        return (base as NSData).__fw_AESDecrypt(withKey: key, andIV: iv)
+    }
+
+    /// 利用3DES加密数据
+    public func des3Encrypt(key: String, iv: Data) -> Data? {
+        return (base as NSData).__fw_DES3Encrypt(withKey: key, andIV: iv)
+    }
+
+    /// 利用3DES解密数据
+    public func des3Decrypt(key: String, iv: Data) -> Data? {
+        return (base as NSData).__fw_DES3Decrypt(withKey: key, andIV: iv)
+    }
+
+    // MARK: - RSA
+    /// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
+    public func rsaEncrypt(publicKey: String) -> Data? {
+        return (base as NSData).__fw_RSAEncrypt(withPublicKey: publicKey)
+    }
+
+    /// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
+    public func rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
+        return (base as NSData).__fw_RSAEncrypt(withPublicKey: publicKey, andTag: tag, base64Encode: base64Encode)
+    }
+
+    /// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
+    public func rsaDecrypt(privateKey: String) -> Data? {
+        return (base as NSData).__fw_RSADecrypt(withPrivateKey: privateKey)
+    }
+
+    /// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
+    public func rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
+        return (base as NSData).__fw_RSADecrypt(withPrivateKey: privateKey, andTag: tag, base64Decode: base64Decode)
+    }
+
+    /// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
+    public func rsaSign(privateKey: String) -> Data? {
+        return (base as NSData).__fw_RSASign(withPrivateKey: privateKey)
+    }
+
+    /// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
+    public func rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
+        return (base as NSData).__fw_RSASign(withPrivateKey: privateKey, andTag: tag, base64Encode: base64Encode)
+    }
+
+    /// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
+    public func rsaVerify(publicKey: String) -> Data? {
+        return (base as NSData).__fw_RSAVerify(withPublicKey: publicKey)
+    }
+
+    /// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
+    public func rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
+        return (base as NSData).__fw_RSAVerify(withPublicKey: publicKey, andTag: tag, base64Decode: base64Decode)
+    }
 }
 
 // MARK: - Date+Foundation
@@ -282,7 +344,8 @@ extension Wrapper where Base == String {
 }
 
 // MARK: - NSAttributedString+Foundation
-/// 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可
+/// 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可。
+/// 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
 extension Wrapper where Base: NSAttributedString {
     
     /// NSAttributedString对象转换为html字符串
@@ -318,6 +381,26 @@ extension Wrapper where Base: NSAttributedString {
     /// 快速创建NSAttributedString，自定义字体和颜色
     public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Base {
         return Base.__fw_attributedString(string, with: font, textColor: textColor)
+    }
+    
+    /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
+    public static func attributedString(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Base? {
+        return Base.__fw_attributedString(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
+    }
+
+    /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
+    public static func themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
+        return Base.__fw_themeObject(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
+    }
+
+    /// 获取颜色对应CSS字符串(rgb|rgba格式)
+    public static func cssString(color: UIColor) -> String {
+        return Base.__fw_CSSString(with: color)
+    }
+
+    /// 获取系统字体对应CSS字符串(family|style|weight|size)
+    public static func cssString(font: UIFont) -> String {
+        return Base.__fw_CSSString(with: font)
     }
     
 }
