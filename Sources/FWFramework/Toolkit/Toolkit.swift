@@ -250,6 +250,11 @@ extension Wrapper where Base: UIColor {
         return Base.__fw_color(withHexString: hexString, alpha: alpha)
     }
     
+    /// 当前颜色修改亮度比率的颜色
+    public func brightnessColor(_ ratio: CGFloat) -> UIColor {
+        return base.__fw_brightnessColor(ratio)
+    }
+    
 }
 
 // MARK: - UIFont+Toolkit

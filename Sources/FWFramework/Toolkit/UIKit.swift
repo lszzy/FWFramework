@@ -424,6 +424,40 @@ extension Wrapper where Base: UITextField {
         set { base.__fw_autoCompleteBlock = newValue }
     }
     
+    /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
+    public var menuDisabled: Bool {
+        get { return base.__fw_menuDisabled }
+        set { base.__fw_menuDisabled = newValue }
+    }
+
+    /// 自定义光标颜色
+    public var cursorColor: UIColor {
+        get { return base.__fw_cursorColor }
+        set { base.__fw_cursorColor = newValue }
+    }
+
+    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    public var cursorRect: CGRect {
+        get { return base.__fw_cursorRect }
+        set { base.__fw_cursorRect = newValue }
+    }
+
+    /// 获取及设置当前选中文字范围
+    public var selectedRange: NSRange {
+        get { return base.__fw_selectedRange }
+        set { base.__fw_selectedRange = newValue }
+    }
+
+    /// 移动光标到最后
+    public func selectAllRange() {
+        base.__fw_selectAllRange()
+    }
+
+    /// 移动光标到指定位置，兼容动态text赋值
+    public func moveCursor(_ offset: Int) {
+        base.__fw_moveCursor(offset)
+    }
+    
 }
 
 // MARK: - UITextView+UIKit
@@ -467,6 +501,50 @@ extension Wrapper where Base: UITextView {
     public var autoCompleteBlock: ((String) -> Void)? {
         get { return base.__fw_autoCompleteBlock }
         set { base.__fw_autoCompleteBlock = newValue }
+    }
+    
+    /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
+    public var menuDisabled: Bool {
+        get { return base.__fw_menuDisabled }
+        set { base.__fw_menuDisabled = newValue }
+    }
+
+    /// 自定义光标颜色
+    public var cursorColor: UIColor {
+        get { return base.__fw_cursorColor }
+        set { base.__fw_cursorColor = newValue }
+    }
+
+    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    public var cursorRect: CGRect {
+        get { return base.__fw_cursorRect }
+        set { base.__fw_cursorRect = newValue }
+    }
+
+    /// 获取及设置当前选中文字范围
+    public var selectedRange: NSRange {
+        get { return base.__fw_selectedRange }
+        set { base.__fw_selectedRange = newValue }
+    }
+
+    /// 移动光标到最后
+    public func selectAllRange() {
+        base.__fw_selectAllRange()
+    }
+
+    /// 移动光标到指定位置，兼容动态text赋值
+    public func moveCursor(_ offset: Int) {
+        base.__fw_moveCursor(offset)
+    }
+
+    /// 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
+    public var textSize: CGSize {
+        return base.__fw_textSize
+    }
+
+    /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
+    public var attributedTextSize: CGSize {
+        return base.__fw_attributedTextSize
     }
     
 }

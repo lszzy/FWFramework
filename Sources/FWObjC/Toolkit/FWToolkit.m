@@ -488,6 +488,13 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:fr green:fg blue:fb alpha:alpha];
 }
 
+- (UIColor *)fw_brightnessColor:(CGFloat)ratio
+{
+    CGFloat h, s, b, a;
+    [self getHue:&h saturation:&s brightness:&b alpha:&a];
+    return [UIColor colorWithHue:h saturation:s brightness:b * ratio alpha:a];
+}
+
 @end
 
 #pragma mark - UIFont+FWToolkit
