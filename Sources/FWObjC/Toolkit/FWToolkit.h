@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import <AVKit/AVKit.h>
 #import <MessageUI/MessageUI.h>
 
@@ -105,6 +106,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 打开音频播放器，支持NSURL|NSString
 + (nullable AVAudioPlayer *)fw_openAudioPlayer:(id)url NS_REFINED_FOR_SWIFT;
+
+/// 播放内置声音文件
++ (SystemSoundID)fw_playSystemSound:(NSString *)file NS_REFINED_FOR_SWIFT;
+
+/// 停止播放内置声音文件
++ (void)fw_stopSystemSound:(SystemSoundID)soundId NS_REFINED_FOR_SWIFT;
+
+/// 播放内置震动
++ (void)fw_playSystemVibrate NS_REFINED_FOR_SWIFT;
+
+/// 语音朗读文字，可指定语言(如zh-CN)
++ (void)fw_playSpeechUtterance:(NSString *)string language:(nullable NSString *)languageCode NS_REFINED_FOR_SWIFT;
+
+/// 是否是盗版(不是从AppStore安装)
+@property (class, nonatomic, assign, readonly) BOOL fw_isPirated NS_REFINED_FOR_SWIFT;
+
+/// 是否是Testflight版本
+@property (class, nonatomic, assign, readonly) BOOL fw_isTestflight NS_REFINED_FOR_SWIFT;
 
 @end
 

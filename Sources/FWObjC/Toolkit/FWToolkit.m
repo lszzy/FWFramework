@@ -332,6 +332,81 @@
     return nsurl;
 }
 
++ (SystemSoundID)fw_playSystemSound:(NSString *)file
+{
+    if (file.length < 1) return 0;
+    
+    NSString *soundFile = file;
+    if (![file isAbsolutePath]) {
+        soundFile = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+    }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile]) {
+        return 0;
+    }
+    
+    NSURL *soundUrl = [NSURL fileURLWithPath:soundFile];
+    SystemSoundID soundId = 0;
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundUrl, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    return soundId;
+}
+
++ (void)fw_stopSystemSound:(SystemSoundID)soundId
+{
+    if (soundId == 0) return;
+    
+    AudioServicesRemoveSystemSoundCompletion(soundId);
+    AudioServicesDisposeSystemSoundID(soundId);
+}
+
++ (void)fw_playSystemVibrate
+{
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
++ (void)fw_playSpeechUtterance:(NSString *)string language:(nullable NSString *)languageCode
+{
+    AVSpeechUtterance *speechUtterance = [[AVSpeechUtterance alloc] initWithString:string];
+    speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate;
+    speechUtterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:languageCode];
+    AVSpeechSynthesizer *speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
+    [speechSynthesizer speakUtterance:speechUtterance];
+}
+
++ (BOOL)fw_isPirated
+{
+#if TARGET_OS_SIMULATOR
+    return YES;
+#else
+    if (getgid() <= 10) {
+        return YES;
+    }
+    
+    if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"]) {
+        return YES;
+    }
+    
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    NSString *path = [bundlePath stringByAppendingPathComponent:@"_CodeSignature"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    
+    path = [bundlePath stringByAppendingPathComponent:@"SC_Info"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    
+    // 这方法可以运行时被替换掉，可以通过加密代码、修改方法名等提升检察性
+    return NO;
+#endif
+}
+
++ (BOOL)fw_isTestflight
+{
+    return [[NSBundle mainBundle].appStoreReceiptURL.path containsString:@"sandboxReceipt"];
+}
+
 @end
 
 #pragma mark - UIColor+FWToolkit
