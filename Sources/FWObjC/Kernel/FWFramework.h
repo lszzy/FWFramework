@@ -27,6 +27,7 @@
 #import "FWTheme.h"
 #import "FWEncode.h"
 #import "FWException.h"
+#import "FWCacheManager.h"
 
 #import "FWAdaptive.h"
 #import "FWAppearance.h"
