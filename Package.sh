@@ -14,3 +14,5 @@ ln -s ../../FWObjC/Module/Model/*.h ./
 ln -s ../../FWObjC/Module/View/*.h ./
 ln -s ../../FWObjC/Plugin/View/*.h ./
 ln -s ../../FWObjC/Plugin/Toast/*.h ./
+ln -s ../../FWObjC/Plugin/Refresh/*.h ./
+ln -s ../../FWObjC/Plugin/Empty/*.h ./

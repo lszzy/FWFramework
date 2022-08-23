@@ -46,4 +46,6 @@
 #import "FWToolbarView.h"
 
 #import "FWViewPluginImpl.h"
+#import "FWEmptyPluginImpl.h"
+#import "FWRefreshPluginImpl.h"
 #import "FWToastPluginImpl.h"
