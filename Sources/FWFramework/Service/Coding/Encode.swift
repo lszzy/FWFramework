@@ -298,6 +298,11 @@ extension Wrapper where Base == String {
         return (base as NSString).__fw_pinyin
     }
     
+    /// 中文转拼音并进行比较
+    public func pinyinCompare(_ string: String) -> ComparisonResult {
+        return (base as NSString).__fw_pinyinCompare(string)
+    }
+    
     /// 是否包含Emoji表情
     public var containsEmoji: Bool {
         for scalar in base.unicodeScalars {

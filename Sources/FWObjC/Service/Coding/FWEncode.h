@@ -173,6 +173,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *fw_pinyinString NS_REFINED_FOR_SWIFT;
 
 /**
+ 中文转拼音并进行比较
+ */
+- (NSComparisonResult)fw_pinyinCompare:(NSString *)string NS_REFINED_FOR_SWIFT;
+
+/**
  过滤JSON解码特殊字符
  
  兼容\uD800-\uDFFF引起JSON解码报错3840问题，不报错时无需调用
