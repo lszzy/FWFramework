@@ -9,24 +9,15 @@
 import FWFramework
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: AppResponder {
     
-    var window: UIWindow?
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
-        window?.rootViewController = setupController()
         window?.makeKeyAndVisible()
-        return true
     }
-
-}
-
-// MARK: - Private
-private extension AppDelegate {
     
-    func setupController() -> UIViewController {
+    override func setupController() {
         let homeController = HomeController()
         homeController.hidesBottomBarWhenPushed = false
         let homeNav = UINavigationController(rootViewController: homeController)
@@ -44,7 +35,7 @@ private extension AppDelegate {
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [homeNav, testNav, settingsNav]
-        return tabBarController
+        window?.rootViewController = tabBarController
     }
-    
+
 }

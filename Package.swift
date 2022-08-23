@@ -17,8 +17,13 @@ let package = Package(
         .library(
             name: "FWSwiftUI",
             targets: ["FWSwiftUI"]),
+        .library(
+            name: "FWVendor",
+            targets: ["FWVendorSDWebImage", "FWVendorLottie"])
     ],
     dependencies: [
+        .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
+        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "3.2.0")
     ],
     targets: [
         .target(
@@ -49,6 +54,34 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .target(
+            name: "FWVendorSDWebImage",
+            dependencies: [
+                "FWFramework",
+                "SDWebImage"
+            ],
+            path: "Sources/FWVendor/SDWebImage",
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .target(
+            name: "FWVendorLottie",
+            dependencies: [
+                "FWFramework",
+                .product(name: "Lottie", package: "lottie-ios")
+            ],
+            path: "Sources/FWVendor/Lottie",
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],
