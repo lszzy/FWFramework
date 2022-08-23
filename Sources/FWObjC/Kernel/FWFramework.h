@@ -47,6 +47,9 @@
 #import "FWUIKit.h"
 
 #import "FWAppDelegate.h"
+#import "FWNavigationController.h"
+#import "FWNavigationStyle.h"
+#import "FWViewTransition.h"
 #import "FWModel.h"
 #import "FWAttributedLabel.h"
 #import "FWBadgeView.h"
@@ -54,9 +57,13 @@
 #import "FWPageControl.h"
 #import "FWStatisticalManager.h"
 #import "FWToolbarView.h"
+#import "FWWebView.h"
 
 #import "FWViewPluginImpl.h"
 #import "FWEmptyPluginImpl.h"
 #import "FWRefreshPluginImpl.h"
 #import "FWToastPluginImpl.h"
 #import "FWImagePlugin.h"
+#import "FWAlertControllerImpl.h"
+#import "FWImagePickerPluginImpl.h"
+#import "FWImagePreviewPluginImpl.h"
