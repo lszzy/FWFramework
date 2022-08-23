@@ -297,6 +297,31 @@
     return [pinyinStr lowercaseString];
 }
 
+- (NSComparisonResult)fw_pinyinCompare:(NSString *)string
+{
+    NSString *pinyin1 = self.fw_pinyinString;
+    NSString *pinyin2 = string.fw_pinyinString;
+    
+    NSUInteger count = MIN(pinyin1.length, pinyin2.length);
+    for (int i = 0; i < count; i++) {
+        UniChar char1 = [pinyin1 characterAtIndex:i];
+        UniChar char2 = [pinyin2 characterAtIndex:i];
+        if (char1 == char2) continue;
+        
+        NSUInteger charType1 = (char1 >= '0' && char1 <= '9') ? 1 : ((char1 >= 'a' && char1 <= 'z') ? 0 : 2);
+        NSUInteger charType2 = (char2 >= '0' && char2 <= '9') ? 1 : ((char2 >= 'a' && char2 <= 'z') ? 0 : 2);
+        
+        NSComparisonResult typeResult = (charType1 < charType2) ? NSOrderedAscending : ((charType1 > charType2) ? NSOrderedDescending : NSOrderedSame);
+        if (typeResult == NSOrderedSame) {
+            return (char1 < char2) ? NSOrderedAscending : ((char1 > char2) ? NSOrderedDescending : NSOrderedSame);
+        } else {
+            return typeResult;
+        }
+    }
+    
+    return (pinyin1.length < pinyin2.length) ? NSOrderedAscending : ((pinyin1.length > pinyin2.length) ? NSOrderedDescending : NSOrderedSame);
+}
+
 - (NSData *)fw_utf8Data
 {
     return [self dataUsingEncoding:NSUTF8StringEncoding];

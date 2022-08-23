@@ -6,6 +6,7 @@
 //
 
 #import "FWFoundation.h"
+#import "FWEncode.h"
 #import <sys/sysctl.h>
 #import <objc/runtime.h>
 
@@ -59,6 +60,36 @@
     if (self.count < 1) return nil;
     
     return self[arc4random_uniform((u_int32_t)self.count)];
+}
+
+- (id)fw_randomObject:(NSArray *)weights
+{
+    NSInteger count = self.count;
+    if (count < 1) return nil;
+    
+    __block NSInteger sum = 0;
+    [weights enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fw_safeInteger];
+        if (val > 0 && idx < count) {
+            sum += val;
+        }
+    }];
+    if (sum < 1) return self.fw_randomObject;
+    
+    __block NSInteger index = -1;
+    __block NSInteger weight = 0;
+    NSInteger random = arc4random_uniform((u_int32_t)sum);
+    [weights enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fw_safeInteger];
+        if (val > 0 && idx < count) {
+            weight += val;
+            if (weight > random) {
+                index = idx;
+                *stop = YES;
+            }
+        }
+    }];
+    return index >= 0 && index < count ? [self objectAtIndex:index] : self.fw_randomObject;
 }
 
 @end

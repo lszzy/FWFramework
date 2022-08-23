@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 从数组中随机取出对象，如@[@"a", @"b", @"c"]随机取出@"b"
 @property (nullable, nonatomic, readonly) ObjectType fw_randomObject NS_REFINED_FOR_SWIFT;
 
+/// 从数组中按照权重随机取出对象，如@[@"a", @"b", @"c"]按照@[@0, @8, @02]大概率取出@"b"，不会取出@"a"
+- (nullable ObjectType)fw_randomObject:(NSArray *)weights NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSAttributedString+FWFoundation
