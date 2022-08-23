@@ -44,9 +44,12 @@
 
 #import "FWAppDelegate.h"
 #import "FWModel.h"
+#import "FWAttributedLabel.h"
+#import "FWBadgeView.h"
 #import "FWToolbarView.h"
 
 #import "FWViewPluginImpl.h"
 #import "FWEmptyPluginImpl.h"
 #import "FWRefreshPluginImpl.h"
 #import "FWToastPluginImpl.h"
+#import "FWImagePlugin.h"
