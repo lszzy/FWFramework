@@ -11,10 +11,11 @@ Pod::Spec.new do |s|
   s.swift_version         = '5.0'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
-  s.default_subspecs      = ['FWObjC', 'FWFramework', 'FWSwiftUI']
+  s.default_subspecs      = ['FWFramework', 'FWSwiftUI']
   
   s.subspec 'FWObjC' do |ss|
     ss.source_files = 'Sources/FWObjC/**/*.{h,m}'
+    ss.library = 'sqlite3'
   end
   
   s.subspec 'FWFramework' do |ss|
@@ -32,6 +33,24 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWVendor' do |ss|
+    ss.subspec 'SDWebImage' do |sss|
+      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.{h,m,swift}'
+      sss.dependency 'SDWebImage'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+      
+    ss.subspec 'Lottie' do |sss|
+      sss.source_files = 'Sources/FWVendor/Lottie/**/*.{h,m,swift}'
+      sss.dependency 'lottie-ios'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+      
+    ss.subspec 'SQLCipher' do |sss|
+      sss.dependency 'SQLCipher'
+      sss.dependency 'FWFramework/FWFramework'
+      sss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC -DHAVE_USLEEP=1' }
+    end
+      
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
