@@ -129,6 +129,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - UIWindow+FWUIKit
+
+@interface UIWindow (FWUIKit)
+
+/// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index NS_REFINED_FOR_SWIFT;
+
+/// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarController:(Class)viewController NS_REFINED_FOR_SWIFT;
+
+/// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
+
+@end
+
 #pragma mark - UILabel+FWUIKit
 
 @interface UILabel (FWUIKit)
@@ -411,6 +426,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
 @property (nonatomic, assign) BOOL fw_isLoaded NS_REFINED_FOR_SWIFT;
+
+/// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
+- (void)fw_addChildViewController:(UIViewController *)viewController NS_REFINED_FOR_SWIFT;
+
+/// 添加子控制器到指定视图，可自定义布局，解决不能触发viewWillAppear等的bug
+- (void)fw_addChildViewController:(UIViewController *)viewController inView:(nullable UIView *)view layout:(nullable void (NS_NOESCAPE ^)(UIView *view))layout NS_REFINED_FOR_SWIFT;
+
+/// 移除子控制器，解决不能触发viewWillAppear等的bug
+- (void)fw_removeChildViewController:(UIViewController *)viewController NS_REFINED_FOR_SWIFT;
 
 @end
 

@@ -136,6 +136,149 @@ extension Wrapper where Base == String {
         let regexPredicate = NSPredicate(format: "SELF MATCHES %@", regex)
         return regexPredicate.evaluate(with: self.base)
     }
+    
+    /**
+     *  安全截取字符串。解决末尾半个Emoji问题(半个Emoji调UTF8String为NULL，导致MD5签名等失败)
+     *
+     *  @param index 目标索引
+     */
+    public func emojiSubstring(_ index: UInt) -> String {
+        return (base as NSString).__fw_emojiSubstring(index)
+    }
+
+    /**
+     *  正则搜索子串
+     *
+     *  @param regex 正则表达式
+     */
+    public func regexSubstring(_ regex: String) -> String? {
+        return (base as NSString).__fw_regexSubstring(regex)
+    }
+
+    /**
+     *  正则替换字符串
+     *
+     *  @param regex  正则表达式
+     *  @param string 替换模板，如"头部$1中部$2尾部"
+     *
+     *  @return 替换后的字符串
+     */
+    public func regexReplace(_ regex: String, string: String) -> String {
+        return (base as NSString).__fw_regexReplace(regex, with: string)
+    }
+
+    /**
+     *  正则匹配回调
+     *
+     *  @param regex 正则表达式
+     *  @param block 回调句柄。range从大至小，方便replace
+     */
+    public func regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
+        return (base as NSString).__fw_regexMatches(regex, with: block)
+    }
+    
+    /// 转义Html，如"a<"转义为"a&lt;"
+    public var escapeHtml: String {
+        return (base as NSString).__fw_escapeHtml
+    }
+    
+    /**
+     *  是否符合正则表达式
+     *  示例：用户名：^[a-zA-Z][a-zA-Z0-9_]{4,13}$
+     *       密码：^[a-zA-Z0-9_]{6,20}$
+     *       昵称：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
+     *
+     *  @param regex 正则表达式
+     */
+    public func isFormatRegex(_ regex: String) -> Bool {
+        return (base as NSString).__fw_isFormatRegex(regex)
+    }
+
+    /// 是否是手机号
+    public func isFormatMobile() -> Bool {
+        return (base as NSString).__fw_isFormatMobile()
+    }
+
+    /// 是否是座机号
+    public func isFormatTelephone() -> Bool {
+        return (base as NSString).__fw_isFormatTelephone()
+    }
+    
+    /// 是否是整数
+    public func isFormatInteger() -> Bool {
+        return (base as NSString).__fw_isFormatInteger()
+    }
+    
+    /// 是否是数字
+    public func isFormatNumber() -> Bool {
+        return (base as NSString).__fw_isFormatNumber()
+    }
+    
+    /// 是否是合法金额，两位小数点
+    public func isFormatMoney() -> Bool {
+        return (base as NSString).__fw_isFormatMoney()
+    }
+    
+    /// 是否是身份证号
+    public func isFormatIdcard() -> Bool {
+        return (base as NSString).__fw_isFormatIdcard()
+    }
+    
+    /// 是否是银行卡号
+    public func isFormatBankcard() -> Bool {
+        return (base as NSString).__fw_isFormatBankcard()
+    }
+    
+    /// 是否是车牌号
+    public func isFormatCarno() -> Bool {
+        return (base as NSString).__fw_isFormatCarno()
+    }
+    
+    /// 是否是邮政编码
+    public func isFormatPostcode() -> Bool {
+        return (base as NSString).__fw_isFormatPostcode()
+    }
+    
+    /// 是否是邮箱
+    public func isFormatEmail() -> Bool {
+        return (base as NSString).__fw_isFormatEmail()
+    }
+    
+    /// 是否是URL
+    public func isFormatUrl() -> Bool {
+        return (base as NSString).__fw_isFormatUrl()
+    }
+    
+    /// 是否是HTML
+    public func isFormatHtml() -> Bool {
+        return (base as NSString).__fw_isFormatHtml()
+    }
+    
+    /// 是否是IP
+    public func isFormatIp() -> Bool {
+        return (base as NSString).__fw_isFormatIp()
+    }
+    
+    /// 是否全是中文
+    public func isFormatChinese() -> Bool {
+        return (base as NSString).__fw_isFormatChinese()
+    }
+    
+    /// 是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
+    public func isFormatDatetime() -> Bool {
+        return (base as NSString).__fw_isFormatDatetime()
+    }
+    
+    /// 是否是合法时间戳，格式：1301234567
+    public func isFormatTimestamp() -> Bool {
+        return (base as NSString).__fw_isFormatTimestamp()
+    }
+    
+    /// 是否是坐标点字符串，格式：latitude,longitude
+    public func isFormatCoordinate() -> Bool {
+        return (base as NSString).__fw_isFormatCoordinate()
+    }
+    
 }
 
 // MARK: - NSAttributedString+Foundation
@@ -190,6 +333,83 @@ extension Wrapper where Base: NSObject {
     /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
     public func unlock() {
         base.__fw_unlock()
+    }
+    
+}
+
+// MARK: - URL+Foundation
+/// 第三方URL生成器，可先判断canOpenURL，再openURL，需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组
+extension Wrapper where Base == URL {
+
+    /**
+     生成苹果地图地址外部URL
+     
+     @param addr 显示地址，格式latitude,longitude或搜索地址
+     @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+     @return NSURL
+     */
+    public static func appleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_appleMapsURL(withAddr: addr, options: options)
+    }
+
+    /**
+     生成苹果地图导航外部URL
+     
+     @param saddr 导航起始点，格式latitude,longitude或搜索地址
+     @param daddr 导航结束点，格式latitude,longitude或搜索地址
+     @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+     @return NSURL
+     */
+    public static func appleMapsURL(withSaddr saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_appleMapsURL(withSaddr: saddr, daddr: daddr, options: options)
+    }
+
+    /**
+     生成谷歌地图外部URL，URL SCHEME为：comgooglemaps
+     
+     @param addr 显示地址，格式latitude,longitude或搜索地址
+     @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+     @return NSURL
+     */
+    public static func googleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_googleMapsURL(withAddr: addr, options: options)
+    }
+
+    /**
+     生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps
+     
+     @param saddr 导航起始点，格式latitude,longitude或搜索地址
+     @param daddr 导航结束点，格式latitude,longitude或搜索地址
+     @param mode 导航模式，支持driving|transit|bicycling|walking，默认driving
+     @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
+     @return NSURL
+     */
+    public static func googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_googleMapsURL(withSaddr: saddr, daddr: daddr, mode: mode, options: options)
+    }
+
+    /**
+     生成百度地图外部URL，URL SCHEME为：baidumap
+     
+     @param addr 显示地址，格式latitude,longitude或搜索地址
+     @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+     @return NSURL
+     */
+    public static func baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_baiduMapsURL(withAddr: addr, options: options)
+    }
+
+    /**
+     生成百度地图导航外部URL，URL SCHEME为：baidumap
+     
+     @param saddr 导航起始点，格式latitude,longitude或搜索地址
+     @param daddr 导航结束点，格式latitude,longitude或搜索地址
+     @param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving
+     @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+     @return NSURL
+     */
+    public static func baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+        return NSURL.__fw_baiduMapsURL(withSaddr: saddr, daddr: daddr, mode: mode, options: options)
     }
     
 }
