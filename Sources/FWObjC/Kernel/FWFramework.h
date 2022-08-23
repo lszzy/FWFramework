@@ -28,6 +28,8 @@
 #import "FWEncode.h"
 #import "FWException.h"
 #import "FWCacheManager.h"
+#import "FWHTTPSessionManager.h"
+#import "FWNetworkPrivate.h"
 
 #import "FWAdaptive.h"
 #import "FWAppearance.h"
