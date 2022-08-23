@@ -609,6 +609,103 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @end
 
+#pragma mark - UIWindow+FWUIKit
+
+@implementation UIWindow (FWUIKit)
+
+- (__kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index
+{
+    UITabBarController *tabbarController = [self fw_rootTabBarController];
+    if (!tabbarController) return nil;
+    
+    UINavigationController *targetNavigation = nil;
+    if (tabbarController.viewControllers.count > index) {
+        targetNavigation = tabbarController.viewControllers[index];
+    }
+    if (!targetNavigation) return nil;
+    
+    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+}
+
+- (__kindof UIViewController *)fw_selectTabBarController:(Class)viewController
+{
+    UITabBarController *tabbarController = [self fw_rootTabBarController];
+    if (!tabbarController) return nil;
+    
+    UINavigationController *targetNavigation = nil;
+    for (UINavigationController *navigationController in tabbarController.viewControllers) {
+        if ([navigationController isKindOfClass:viewController] ||
+            ([navigationController isKindOfClass:[UINavigationController class]] &&
+             [navigationController.viewControllers.firstObject isKindOfClass:viewController])) {
+            targetNavigation = navigationController;
+            break;
+        }
+    }
+    if (!targetNavigation) return nil;
+    
+    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+}
+
+- (__kindof UIViewController *)fw_selectTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
+{
+    UITabBarController *tabbarController = [self fw_rootTabBarController];
+    if (!tabbarController) return nil;
+    
+    UINavigationController *targetNavigation = nil;
+    for (UINavigationController *navigationController in tabbarController.viewControllers) {
+        UIViewController *viewController = navigationController;
+        if ([navigationController isKindOfClass:[UINavigationController class]]) {
+            viewController = navigationController.viewControllers.firstObject;
+        }
+        if (viewController && block(viewController)) {
+            targetNavigation = navigationController;
+            break;
+        }
+    }
+    if (!targetNavigation) return nil;
+    
+    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+}
+
+- (UITabBarController *)fw_rootTabBarController
+{
+    if ([self.rootViewController isKindOfClass:[UITabBarController class]]) {
+        return (UITabBarController *)self.rootViewController;
+    }
+    
+    if ([self.rootViewController isKindOfClass:[UINavigationController class]]) {
+        UIViewController *firstController = ((UINavigationController *)self.rootViewController).viewControllers.firstObject;
+        if ([firstController isKindOfClass:[UITabBarController class]]) {
+            return (UITabBarController *)firstController;
+        }
+    }
+    
+    return nil;
+}
+
+- (UIViewController *)fw_selectTabBar:(UITabBarController *)tabbarController navigation:(UINavigationController *)targetNavigation
+{
+    UINavigationController *currentNavigation = tabbarController.selectedViewController;
+    if (currentNavigation != targetNavigation) {
+        if ([currentNavigation isKindOfClass:[UINavigationController class]] &&
+            currentNavigation.viewControllers.count > 1) {
+            [currentNavigation popToRootViewControllerAnimated:NO];
+        }
+        tabbarController.selectedViewController = targetNavigation;
+    }
+    
+    UIViewController *targetController = targetNavigation;
+    if ([targetNavigation isKindOfClass:[UINavigationController class]]) {
+        targetController = targetNavigation.viewControllers.firstObject;
+        if (targetNavigation.viewControllers.count > 1) {
+            [targetNavigation popToRootViewControllerAnimated:NO];
+        }
+    }
+    return targetController;
+}
+
+@end
+
 #pragma mark - UILabel+FWUIKit
 
 @implementation UILabel (FWUIKit)
@@ -1834,6 +1931,32 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (void)setFw_isLoaded:(BOOL)isLoaded
 {
     objc_setAssociatedObject(self, @selector(fw_isLoaded), @(isLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fw_addChildViewController:(UIViewController *)viewController
+{
+    [self fw_addChildViewController:viewController inView:nil layout:nil];
+}
+
+- (void)fw_addChildViewController:(UIViewController *)viewController inView:(UIView *)view layout:(__attribute__((noescape)) void (^)(UIView *))layout
+{
+    [self addChildViewController:viewController];
+    UIView *superview = view ?: self.view;
+    [superview addSubview:viewController.view];
+    if (layout != nil) {
+        layout(viewController.view);
+    } else {
+        // viewController.view.frame = superview.bounds;
+        [viewController.view fw_pinEdgesToSuperview];
+    }
+    [viewController didMoveToParentViewController:self];
+}
+
+- (void)fw_removeChildViewController:(UIViewController *)viewController
+{
+    [viewController willMoveToParentViewController:nil];
+    [viewController removeFromParentViewController];
+    [viewController.view removeFromSuperview];
 }
 
 @end

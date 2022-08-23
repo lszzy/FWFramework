@@ -162,6 +162,203 @@ NS_ASSUME_NONNULL_BEGIN
 /// 格式化文件大小为".0K/.1M/.1G"
 + (NSString *)fw_sizeString:(NSUInteger)fileSize NS_REFINED_FOR_SWIFT;
 
+/**
+ *  安全截取字符串。解决末尾半个Emoji问题(半个Emoji调UTF8String为NULL，导致MD5签名等失败)
+ *
+ *  @param index 目标索引
+ */
+- (NSString *)fw_emojiSubstring:(NSUInteger)index NS_REFINED_FOR_SWIFT;
+
+/**
+ *  正则搜索子串
+ *
+ *  @param regex 正则表达式
+ */
+- (nullable NSString *)fw_regexSubstring:(NSString *)regex NS_REFINED_FOR_SWIFT;
+
+/**
+ *  正则替换字符串
+ *
+ *  @param regex  正则表达式
+ *  @param string 替换模板，如"头部$1中部$2尾部"
+ *
+ *  @return 替换后的字符串
+ */
+- (NSString *)fw_regexReplace:(NSString *)regex withString:(NSString *)string NS_REFINED_FOR_SWIFT;
+
+/**
+ *  正则匹配回调
+ *
+ *  @param regex 正则表达式
+ *  @param block 回调句柄。range从大至小，方便replace
+ */
+- (void)fw_regexMatches:(NSString *)regex withBlock:(void (^)(NSRange range))block NS_REFINED_FOR_SWIFT;
+
+/**
+ 转义Html，如"a<"转义为"a&lt;"
+ */
+@property (nonatomic, copy, readonly) NSString *fw_escapeHtml NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否符合正则表达式
+ *  示例：用户名：^[a-zA-Z][a-zA-Z0-9_]{4,13}$
+ *       密码：^[a-zA-Z0-9_]{6,20}$
+ *       昵称：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
+ *
+ *  @param regex 正则表达式
+ */
+- (BOOL)fw_isFormatRegex:(NSString *)regex NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是手机号
+ */
+- (BOOL)fw_isFormatMobile NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是座机号
+ */
+- (BOOL)fw_isFormatTelephone NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是整数
+ */
+- (BOOL)fw_isFormatInteger NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是数字
+ */
+- (BOOL)fw_isFormatNumber NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是合法金额，两位小数点
+ */
+- (BOOL)fw_isFormatMoney NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是身份证号
+ */
+- (BOOL)fw_isFormatIdcard NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是银行卡号
+ */
+- (BOOL)fw_isFormatBankcard NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是车牌号
+ */
+- (BOOL)fw_isFormatCarno NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是邮政编码
+ */
+- (BOOL)fw_isFormatPostcode NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是邮箱
+ */
+- (BOOL)fw_isFormatEmail NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是URL
+ */
+- (BOOL)fw_isFormatUrl NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是HTML
+ */
+- (BOOL)fw_isFormatHtml NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是IP
+ */
+- (BOOL)fw_isFormatIp NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否全是中文
+ */
+- (BOOL)fw_isFormatChinese NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
+ */
+- (BOOL)fw_isFormatDatetime NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是合法时间戳，格式：1301234567
+ */
+- (BOOL)fw_isFormatTimestamp NS_REFINED_FOR_SWIFT;
+
+/**
+ *  是否是坐标点字符串，格式：latitude,longitude
+ */
+- (BOOL)fw_isFormatCoordinate NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - NSURL+FWFoundation
+
+@interface NSURL (FWFoundation)
+
+/**
+ 生成苹果地图地址外部URL
+ 
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_appleMapsURLWithAddr:(nullable NSString *)addr options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
+/**
+ 生成苹果地图导航外部URL
+ 
+ @param saddr 导航起始点，格式latitude,longitude或搜索地址
+ @param daddr 导航结束点，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_appleMapsURLWithSaddr:(nullable NSString *)saddr daddr:(nullable NSString *)daddr options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
+/**
+ 生成谷歌地图外部URL，URL SCHEME为：comgooglemaps
+ 
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_googleMapsURLWithAddr:(nullable NSString *)addr options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
+/**
+ 生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps
+ 
+ @param saddr 导航起始点，格式latitude,longitude或搜索地址
+ @param daddr 导航结束点，格式latitude,longitude或搜索地址
+ @param mode 导航模式，支持driving|transit|bicycling|walking，默认driving
+ @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_googleMapsURLWithSaddr:(nullable NSString *)saddr daddr:(nullable NSString *)daddr mode:(nullable NSString *)mode options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
+/**
+ 生成百度地图外部URL，URL SCHEME为：baidumap
+ 
+ @param addr 显示地址，格式latitude,longitude或搜索地址
+ @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_baiduMapsURLWithAddr:(nullable NSString *)addr options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
+/**
+ 生成百度地图导航外部URL，URL SCHEME为：baidumap
+ 
+ @param saddr 导航起始点，格式latitude,longitude或搜索地址
+ @param daddr 导航结束点，格式latitude,longitude或搜索地址
+ @param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving
+ @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
+ @return NSURL
+ */
++ (nullable NSURL *)fw_baiduMapsURLWithSaddr:(nullable NSString *)saddr daddr:(nullable NSString *)daddr mode:(nullable NSString *)mode options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSUserDefaults+FWFoundation
