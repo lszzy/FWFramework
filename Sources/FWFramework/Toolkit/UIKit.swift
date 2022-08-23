@@ -503,12 +503,6 @@ extension Wrapper where Base: UITextField {
         set { base.__fw_menuDisabled = newValue }
     }
 
-    /// 自定义光标颜色
-    public var cursorColor: UIColor {
-        get { return base.__fw_cursorColor }
-        set { base.__fw_cursorColor = newValue }
-    }
-
     /// 自定义光标大小，不为0才会生效，默认zero不生效
     public var cursorRect: CGRect {
         get { return base.__fw_cursorRect }
@@ -580,12 +574,6 @@ extension Wrapper where Base: UITextView {
     public var menuDisabled: Bool {
         get { return base.__fw_menuDisabled }
         set { base.__fw_menuDisabled = newValue }
-    }
-
-    /// 自定义光标颜色
-    public var cursorColor: UIColor {
-        get { return base.__fw_cursorColor }
-        set { base.__fw_cursorColor = newValue }
     }
 
     /// 自定义光标大小，不为0才会生效，默认zero不生效

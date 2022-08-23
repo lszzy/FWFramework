@@ -310,9 +310,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
 @property (nonatomic, assign) BOOL fw_menuDisabled NS_REFINED_FOR_SWIFT;
 
-/// 自定义光标颜色
-@property (nonatomic, strong, null_resettable) UIColor *fw_cursorColor NS_REFINED_FOR_SWIFT;
-
 /// 自定义光标大小，不为0才会生效，默认zero不生效
 @property (nonatomic, assign) CGRect fw_cursorRect NS_REFINED_FOR_SWIFT;
 
@@ -354,9 +351,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
 @property (nonatomic, assign) BOOL fw_menuDisabled NS_REFINED_FOR_SWIFT;
-
-/// 自定义光标颜色
-@property (nonatomic, strong, null_resettable) UIColor *fw_cursorColor NS_REFINED_FOR_SWIFT;
 
 /// 自定义光标大小，不为0才会生效，默认zero不生效
 @property (nonatomic, assign) CGRect fw_cursorRect NS_REFINED_FOR_SWIFT;
