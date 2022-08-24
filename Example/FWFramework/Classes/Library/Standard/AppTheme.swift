@@ -94,7 +94,6 @@ extension AppTheme {
         UITableView.fw.resetTableStyle()
         UINavigationController.fw.enablePopProxy()
         ViewControllerManager.sharedInstance.hookInit = { viewController in
-            viewController.edgesForExtendedLayout = .all
             viewController.extendedLayoutIncludesOpaqueBars = true
             viewController.hidesBottomBarWhenPushed = true
             viewController.fw.navigationBarHidden = false

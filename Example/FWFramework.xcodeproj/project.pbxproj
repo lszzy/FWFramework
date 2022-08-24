@@ -12,6 +12,9 @@
 		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
 		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
 		2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412228B5FF19003719E7 /* LoginController.swift */; };
+		2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412828B62207003719E7 /* TestSwiftUIController.swift */; };
+		2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412A28B62711003719E7 /* TestSwiftController.swift */; };
+		2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412C28B64774003719E7 /* TestIconController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -46,6 +49,9 @@
 		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		2F6A412228B5FF19003719E7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		2F6A412828B62207003719E7 /* TestSwiftUIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftUIController.swift; sourceTree = "<group>"; };
+		2F6A412A28B62711003719E7 /* TestSwiftController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftController.swift; sourceTree = "<group>"; };
+		2F6A412C28B64774003719E7 /* TestIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestIconController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -122,6 +128,30 @@
 				2F6A412228B5FF19003719E7 /* LoginController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		2F6A412528B620CB003719E7 /* FWObjC */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A412C28B64774003719E7 /* TestIconController.swift */,
+			);
+			path = FWObjC;
+			sourceTree = "<group>";
+		};
+		2F6A412628B620D2003719E7 /* FWSwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
+			);
+			path = FWSwiftUI;
+			sourceTree = "<group>";
+		};
+		2F6A412728B620D7003719E7 /* FWFramework */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
+			);
+			path = FWFramework;
 			sourceTree = "<group>";
 		};
 		2FF08B0F28ADDC000074895A /* Assets */ = {
@@ -203,17 +233,9 @@
 		2FF08B6728ADE7690074895A /* Index */ = {
 			isa = PBXGroup;
 			children = (
-				2FF08B6828ADE7690074895A /* Controller */,
-			);
-			path = Index;
-			sourceTree = "<group>";
-		};
-		2FF08B6828ADE7690074895A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
 				2FF08B6928ADE7690074895A /* SettingsController.swift */,
 			);
-			path = Controller;
+			path = Index;
 			sourceTree = "<group>";
 		};
 		2FF08B6A28ADE7690074895A /* Home */ = {
@@ -228,23 +250,18 @@
 		2FF08B6B28ADE7690074895A /* Index */ = {
 			isa = PBXGroup;
 			children = (
-				2FF08B6C28ADE7690074895A /* Controller */,
-			);
-			path = Index;
-			sourceTree = "<group>";
-		};
-		2FF08B6C28ADE7690074895A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
 				2FF08B6D28ADE7690074895A /* HomeController.swift */,
 			);
-			path = Controller;
+			path = Index;
 			sourceTree = "<group>";
 		};
 		2FF08B6E28ADE7690074895A /* Test */ = {
 			isa = PBXGroup;
 			children = (
 				2FF08B6F28ADE7690074895A /* Index */,
+				2F6A412528B620CB003719E7 /* FWObjC */,
+				2F6A412728B620D7003719E7 /* FWFramework */,
+				2F6A412628B620D2003719E7 /* FWSwiftUI */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -252,17 +269,9 @@
 		2FF08B6F28ADE7690074895A /* Index */ = {
 			isa = PBXGroup;
 			children = (
-				2FF08B7028ADE7690074895A /* Controller */,
-			);
-			path = Index;
-			sourceTree = "<group>";
-		};
-		2FF08B7028ADE7690074895A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
 				2FF08B7128ADE7690074895A /* TestController.swift */,
 			);
-			path = Controller;
+			path = Index;
 			sourceTree = "<group>";
 		};
 		2FF08B7228ADE7690074895A /* User */ = {
@@ -570,9 +579,12 @@
 				2F6A412028B5F913003719E7 /* TabController.swift in Sources */,
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
+				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
+				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
+				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,
 				2FF08B5D28ADDD730074895A /* AppTheme.swift in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
