@@ -501,6 +501,105 @@ extension Wrapper where Base: UIScrollView {
         return base.__fw_isLastPage
     }
     
+    /// 快捷设置contentOffset.x
+    public var contentOffsetX: CGFloat {
+        get { return base.__fw_contentOffsetX }
+        set { base.__fw_contentOffsetX = newValue }
+    }
+
+    /// 快捷设置contentOffset.y
+    public var contentOffsetY: CGFloat {
+        get { return base.__fw_contentOffsetY }
+        set { base.__fw_contentOffsetY = newValue }
+    }
+    
+    /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
+    public var contentView: UIView {
+        return base.__fw_contentView
+    }
+    
+    /**
+     设置自动布局视图悬停到指定父视图固定位置，在scrollViewDidScroll:中调用即可
+     
+     @param view 需要悬停的视图，须占满fromSuperview
+     @param fromSuperview 起始的父视图，须是scrollView的子视图
+     @param toSuperview 悬停的目标视图，须是scrollView的父级视图，一般控制器self.view
+     @param toPosition 需要悬停的目标位置，相对于toSuperview的originY位置
+     @return 相对于悬浮位置的距离，可用来设置导航栏透明度等
+     */
+    @discardableResult
+    public func hoverView(_ view: UIView, fromSuperview: UIView, toSuperview: UIView, toPosition: CGFloat) -> CGFloat {
+        return base.__fw_hover(view, fromSuperview: fromSuperview, toSuperview: toSuperview, toPosition: toPosition)
+    }
+    
+    /// 是否开始识别pan手势
+    public var shouldBegin: ((UIGestureRecognizer) -> Bool)? {
+        get { return base.__fw_shouldBegin }
+        set { base.__fw_shouldBegin = newValue }
+    }
+
+    /// 是否允许同时识别多个手势
+    public var shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+        get { return base.__fw_shouldRecognizeSimultaneously }
+        set { base.__fw_shouldRecognizeSimultaneously = newValue }
+    }
+
+    /// 是否另一个手势识别失败后，才能识别pan手势
+    public var shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+        get { return base.__fw_shouldRequireFailure }
+        set { base.__fw_shouldRequireFailure = newValue }
+    }
+
+    /// 是否pan手势识别失败后，才能识别另一个手势
+    public var shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+        get { return base.__fw_shouldBeRequiredToFail }
+        set { base.__fw_shouldBeRequiredToFail = newValue }
+    }
+    
+}
+
+// MARK: - UIGestureRecognizer+UIKit
+/// gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES
+/// shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
+/// shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
+/// shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
+extension Wrapper where Base: UIGestureRecognizer {
+    
+    /// 获取手势直接作用的view，不同于view，此处是view的subview
+    public weak var targetView: UIView? {
+        return base.__fw_targetView
+    }
+
+    /// 是否正在拖动中：Began || Changed
+    public var isTracking: Bool {
+        return base.__fw_isTracking
+    }
+
+    /// 是否是激活状态: isEnabled && (Began || Changed)
+    public var isActive: Bool {
+        return base.__fw_isActive
+    }
+    
+}
+
+// MARK: - UIPanGestureRecognizer+UIKit
+extension Wrapper where Base: UIPanGestureRecognizer {
+    
+    /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
+    public var swipeDirection: UISwipeGestureRecognizer.Direction {
+        return base.__fw_swipeDirection
+    }
+
+    /// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
+    public var swipePercent: CGFloat {
+        return base.__fw_swipePercent
+    }
+
+    /// 计算指定方向的滑动进度
+    public func swipePercent(of direction: UISwipeGestureRecognizer.Direction) -> CGFloat {
+        return base.__fw_swipePercent(of: direction)
+    }
+    
 }
 
 // MARK: - UIPageControl+UIKit
