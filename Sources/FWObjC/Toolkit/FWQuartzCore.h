@@ -73,6 +73,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, strong) UIImage *fw_themeContents NS_REFINED_FOR_SWIFT;
 
+/// 设置阴影颜色、偏移和半径
+- (void)fw_setShadowColor:(nullable UIColor *)color
+                  offset:(CGSize)offset
+                  radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - CAGradientLayer+FWQuartzCore
@@ -81,6 +86,150 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
 @property (nullable, nonatomic, copy) NSArray<UIColor *> *fw_themeColors NS_REFINED_FOR_SWIFT;
+
+/**
+ *  创建渐变层，需手工addLayer
+ *
+ *  @param frame      渐变区域
+ *  @param colors     渐变颜色，CGColor数组，如[黑，白，黑]
+ *  @param locations  渐变位置，0~1，如[0.25, 0.5, 0.75]对应颜色为[0-0.25黑,0.25-0.5黑渐变白,0.5-0.75白渐变黑,0.75-1黑]
+ *  @param startPoint 渐变开始点，设置渐变方向，左上点为(0,0)，右下点为(1,1)
+ *  @param endPoint   渐变结束点
+ *  @return 渐变Layer
+ */
++ (CAGradientLayer *)fw_gradientLayer:(CGRect)frame
+                              colors:(NSArray *)colors
+                           locations:(nullable NSArray<NSNumber *> *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UIView+FWQuartzCore
+
+@interface UIView (FWQuartzCore)
+
+/**
+ 绘制形状路径，需要在drawRect中调用
+ 
+ @param bezierPath 绘制路径
+ @param strokeWidth 绘制宽度
+ @param strokeColor 绘制颜色
+ @param fillColor 填充颜色
+ */
+- (void)fw_drawBezierPath:(UIBezierPath *)bezierPath
+             strokeWidth:(CGFloat)strokeWidth
+             strokeColor:(UIColor *)strokeColor
+               fillColor:(nullable UIColor *)fillColor NS_REFINED_FOR_SWIFT;
+
+/**
+ 绘制渐变颜色，需要在drawRect中调用，支持四个方向，默认向下Down
+ 
+ @param rect 绘制区域
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
+ @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+ */
+- (void)fw_drawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(nullable const CGFloat *)locations
+                   direction:(UISwipeGestureRecognizerDirection)direction NS_REFINED_FOR_SWIFT;
+
+/**
+ 绘制渐变颜色，需要在drawRect中调用
+ 
+ @param rect 绘制区域
+ @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+ @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
+ @param startPoint 渐变开始点，需要根据rect计算
+ @param endPoint 渐变结束点，需要根据rect计算
+ */
+- (void)fw_drawLinearGradient:(CGRect)rect
+                      colors:(NSArray *)colors
+                   locations:(nullable const CGFloat *)locations
+                  startPoint:(CGPoint)startPoint
+                    endPoint:(CGPoint)endPoint NS_REFINED_FOR_SWIFT;
+
+/**
+ *  添加渐变Layer
+ *
+ *  @param frame      渐变区域
+ *  @param colors     渐变颜色，CGColor数组，如[黑，白，黑]
+ *  @param locations  渐变位置，0~1，如[0.25, 0.5, 0.75]对应颜色为[0-0.25黑,0.25-0.5黑渐变白,0.5-0.75白渐变黑,0.75-1黑]
+ *  @param startPoint 渐变开始点，设置渐变方向，左上点为(0,0)，右下点为(1,1)
+ *  @param endPoint   渐变结束点
+ *  @return 渐变Layer
+ */
+- (CAGradientLayer *)fw_addGradientLayer:(CGRect)frame
+                                 colors:(NSArray *)colors
+                              locations:(nullable NSArray<NSNumber *> *)locations
+                             startPoint:(CGPoint)startPoint
+                               endPoint:(CGPoint)endPoint NS_REFINED_FOR_SWIFT;
+
+/**
+ 添加虚线Layer
+ 
+ @param rect 虚线区域，从中心绘制
+ @param lineLength 虚线的宽度
+ @param lineSpacing 虚线的间距
+ @param lineColor 虚线的颜色
+ @return 虚线Layer
+ */
+- (CALayer *)fw_addDashLayer:(CGRect)rect
+                 lineLength:(CGFloat)lineLength
+                lineSpacing:(CGFloat)lineSpacing
+                  lineColor:(UIColor *)lineColor NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Drag
+
+/// 是否启用拖动，默认NO
+@property (nonatomic, assign) BOOL fw_dragEnabled NS_REFINED_FOR_SWIFT;
+
+/// 拖动手势，延迟加载
+@property (nonatomic, readonly) UIPanGestureRecognizer *fw_dragGesture NS_REFINED_FOR_SWIFT;
+
+/// 设置拖动限制区域，默认CGRectZero，无限制
+@property (nonatomic, assign) CGRect fw_dragLimit NS_REFINED_FOR_SWIFT;
+
+/// 设置拖动动作有效区域，默认self.frame
+@property (nonatomic, assign) CGRect fw_dragArea NS_REFINED_FOR_SWIFT;
+
+/// 是否允许横向拖动(X)，默认YES
+@property (nonatomic, assign) BOOL fw_dragHorizontal NS_REFINED_FOR_SWIFT;
+
+/// 是否允许纵向拖动(Y)，默认YES
+@property (nonatomic, assign) BOOL fw_dragVertical NS_REFINED_FOR_SWIFT;
+
+/// 开始拖动回调
+@property (nullable, nonatomic, copy) void (^fw_dragStartedBlock)(UIView *) NS_REFINED_FOR_SWIFT;
+
+/// 拖动移动回调
+@property (nullable, nonatomic, copy) void (^fw_dragMovedBlock)(UIView *) NS_REFINED_FOR_SWIFT;
+
+/// 结束拖动回调
+@property (nullable, nonatomic, copy) void (^fw_dragEndedBlock)(UIView *) NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - FWGradientView
+
+/// 渐变View，无需设置渐变Layer的frame等，支持自动布局
+NS_SWIFT_NAME(GradientView)
+@interface FWGradientView : UIView
+
+@property (nonatomic, strong, readonly) CAGradientLayer *gradientLayer;
+
+@property (nullable, copy) NSArray *colors;
+
+@property (nullable, copy) NSArray<NSNumber *> *locations;
+
+@property CGPoint startPoint;
+
+@property CGPoint endPoint;
+
+- (instancetype)initWithColors:(nullable NSArray<UIColor *> *)colors locations:(nullable NSArray<NSNumber *> *)locations startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
+
+- (void)setColors:(nullable NSArray<UIColor *> *)colors locations:(nullable NSArray<NSNumber *> *)locations startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
 
 @end
 
