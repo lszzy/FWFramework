@@ -192,6 +192,197 @@ extension Wrapper where Base: UIView {
         return base.__fw_addDashLayer(rect, lineLength: lineLength, lineSpacing: lineSpacing, lineColor: lineColor)
     }
     
+    // MARK: - Animation
+    /**
+     添加UIView动画，使用默认动画参数
+     @note 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同
+     
+     @param block      动画代码块
+     @param duration   持续时间
+     @param completion 完成事件
+     */
+    public func addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_addAnimation(block, duration: duration, completion: completion)
+    }
+
+    /**
+     添加UIView动画
+     
+     @param curve      动画速度
+     @param transition 动画类型
+     @param duration   持续时间，默认0.2
+     @param completion 完成事件
+     */
+    public func addAnimation(curve: UIView.AnimationCurve, transition: UIView.AnimationTransition, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_addAnimation(with: curve, transition: transition, duration: duration, completion: completion)
+    }
+
+    /**
+     添加CABasicAnimation动画
+     
+     @param keyPath    动画路径
+     @param fromValue  开始值
+     @param toValue    结束值
+     @param duration   持续时间，0为默认(0.25秒)
+     @param completion 完成事件
+     @return CABasicAnimation
+     */
+    @discardableResult
+    public func addAnimation(keyPath: String, fromValue: Any, toValue: Any, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
+        return base.__fw_addAnimation(withKeyPath: keyPath, fromValue: fromValue, toValue: toValue, duration: duration, completion: completion)
+    }
+
+    /**
+     添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController
+     
+     @param option     动画选项
+     @param block      动画代码块
+     @param duration   持续时间
+     @param animationsEnabled 是否启用动画
+     @param completion 完成事件
+     */
+    public func addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
+    }
+
+    /**
+     添加CATransition转场动画
+     备注：移除动画可调用[self fwRemoveAnimation]
+     
+     @param type           动画类型
+     @param subtype        子类型
+     @param timingFunction 动画速度
+     @param duration       持续时间，0为默认(0.25秒)
+     @param completion     完成事件
+     @return CATransition
+     */
+    @discardableResult
+    public func addTransition(type: String, subtype: String?, timingFunction: String?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
+        return base.__fw_addTransition(withType: type, subtype: subtype, timingFunction: timingFunction, duration: duration, completion: completion)
+    }
+
+    /// 移除单个框架视图动画
+    public func removeAnimation() {
+        base.__fw_removeAnimation()
+    }
+
+    /// 移除所有视图动画
+    public func removeAllAnimations() {
+        base.__fw_removeAllAnimations()
+    }
+
+    /**
+     *  绘制动画
+     *
+     *  @param layer      CAShapeLayer层
+     *  @param duration   持续时间
+     *  @param completion 完成回调
+     *  @return CABasicAnimation
+     */
+    @discardableResult
+    public func stroke(layer: CAShapeLayer, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
+        return base.__fw_stroke(with: layer, duration: duration, completion: completion)
+    }
+
+    /**
+     *  水平摇摆动画
+     *
+     *  @param times      摇摆次数，默认10
+     *  @param delta      摇摆宽度，默认5
+     *  @param duration   单次时间，默认0.03
+     *  @param completion 完成回调
+     */
+    public func shake(times: Int, delta: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_shake(withTimes: times, delta: delta, duration: duration, completion: completion)
+    }
+
+    /**
+     *  渐显隐动画
+     *
+     *  @param alpha      透明度
+     *  @param duration   持续时长
+     *  @param completion 完成回调
+     */
+    public func fade(alpha: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_fade(withAlpha: alpha, duration: duration, completion: completion)
+    }
+
+    /**
+     *  渐变代码块动画
+     *
+     *  @param block      动画代码块，比如调用imageView.setImage:方法
+     *  @param duration   持续时长，建议0.5
+     *  @param completion 完成回调
+     */
+    public func fade(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_fade(block, duration: duration, completion: completion)
+    }
+
+    /**
+     *  旋转动画
+     *
+     *  @param degree     旋转度数，备注：逆时针需设置-179.99。使用CAAnimation无此问题
+     *  @param duration   持续时长
+     *  @param completion 完成回调
+     */
+    public func rotate(degree: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_rotate(withDegree: degree, duration: duration, completion: completion)
+    }
+
+    /**
+     *  缩放动画
+     *
+     *  @param scaleX     X轴缩放率
+     *  @param scaleY     Y轴缩放率
+     *  @param duration   持续时长
+     *  @param completion 完成回调
+     */
+    public func scale(scaleX: Float, scaleY: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_scale(withScaleX: scaleX, scaleY: scaleY, duration: duration, completion: completion)
+    }
+
+    /**
+     *  移动动画
+     *
+     *  @param point      目标点
+     *  @param duration   持续时长
+     *  @param completion 完成回调
+     */
+    public func move(point: CGPoint, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_move(with: point, duration: duration, completion: completion)
+    }
+
+    /**
+     *  移动变化动画
+     *
+     *  @param frame      目标区域
+     *  @param duration   持续时长
+     *  @param completion 完成回调
+     */
+    public func move(frame: CGRect, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        base.__fw_move(withFrame: frame, duration: duration, completion: completion)
+    }
+    
+    /**
+     取消动画效果执行block
+     
+     @param block 动画代码块
+     @param completion 完成事件
+     */
+    public static func animateNone(block: () -> Void, completion: (() -> Void)? = nil) {
+        Base.__fw_animateNone(block, completion: completion)
+    }
+
+    /**
+     执行block动画完成后执行指定回调
+     
+     @param block 动画代码块
+     @param completion 完成事件
+     */
+    public static func animate(block: () -> Void, completion: (() -> Void)? = nil) {
+        Base.__fw_animate(block, completion: completion)
+    }
+    
     // MARK: - Drag
     /// 是否启用拖动，默认NO
     public var dragEnabled: Bool {
