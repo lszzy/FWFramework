@@ -20,6 +20,7 @@
 		2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413728B674C3003719E7 /* TestThemeController.m */; };
 		2F6A413D28B67C6D003719E7 /* WebController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413C28B67C6D003719E7 /* WebController.m */; };
 		2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414328B68C74003719E7 /* TestAlertController.m */; };
+		2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414628B690E6003719E7 /* TestEmptyController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -68,6 +69,8 @@
 		2F6A413C28B67C6D003719E7 /* WebController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebController.m; sourceTree = "<group>"; };
 		2F6A414228B68C74003719E7 /* TestAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertController.h; sourceTree = "<group>"; };
 		2F6A414328B68C74003719E7 /* TestAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertController.m; sourceTree = "<group>"; };
+		2F6A414528B690E6003719E7 /* TestEmptyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyController.h; sourceTree = "<group>"; };
+		2F6A414628B690E6003719E7 /* TestEmptyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -196,6 +199,8 @@
 			children = (
 				2F6A414228B68C74003719E7 /* TestAlertController.h */,
 				2F6A414328B68C74003719E7 /* TestAlertController.m */,
+				2F6A414528B690E6003719E7 /* TestEmptyController.h */,
+				2F6A414628B690E6003719E7 /* TestEmptyController.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -644,6 +649,7 @@
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,
 				2FF08B5D28ADDD730074895A /* AppTheme.swift in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
+				2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
