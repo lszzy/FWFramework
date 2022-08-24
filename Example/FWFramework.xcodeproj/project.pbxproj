@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F6A411828B5E1E1003719E7 /* Material.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A411728B5E1E1003719E7 /* Material.ttf */; };
+		2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411928B5E2E7003719E7 /* AppIcon.swift */; };
+		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
+		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
+		2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412228B5FF19003719E7 /* LoginController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -36,6 +41,11 @@
 
 /* Begin PBXFileReference section */
 		11AAFFB787F9A25A2B0A4D04 /* Pods-FWFramework_Tests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Tests.staging.xcconfig"; path = "Target Support Files/Pods-FWFramework_Tests/Pods-FWFramework_Tests.staging.xcconfig"; sourceTree = "<group>"; };
+		2F6A411728B5E1E1003719E7 /* Material.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Material.ttf; sourceTree = "<group>"; };
+		2F6A411928B5E2E7003719E7 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
+		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
+		2F6A412228B5FF19003719E7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -89,6 +99,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F6A411B28B5F80A003719E7 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				2FF08B5A28ADDD730074895A /* AppRouter.swift */,
+				2F6A411C28B5F84E003719E7 /* AppMediator.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		2F6A411E28B5F891003719E7 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A411F28B5F913003719E7 /* TabController.swift */,
+			);
+			path = Tab;
+			sourceTree = "<group>";
+		};
+		2F6A412128B5FF07003719E7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A412228B5FF19003719E7 /* LoginController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		2FF08B0F28ADDC000074895A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +131,7 @@
 				2FF08B1028ADDC000074895A /* Localizable.strings */,
 				2FF08B1228ADDC000074895A /* InfoPlist.strings */,
 				2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */,
+				2F6A411728B5E1E1003719E7 /* Material.ttf */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -122,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				2FF08B4A28ADDD720074895A /* AppTheme.swift */,
+				2F6A411928B5E2E7003719E7 /* AppIcon.swift */,
 			);
 			path = Standard;
 			sourceTree = "<group>";
@@ -131,6 +168,7 @@
 			children = (
 				2FF08B5C28ADDD730074895A /* AppDelegate.swift */,
 				2FF08B5928ADDD730074895A /* Config */,
+				2F6A411B28B5F80A003719E7 /* Router */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -139,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				2FF08B5B28ADDD730074895A /* AppConfig.swift */,
-				2FF08B5A28ADDD730074895A /* AppRouter.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -182,6 +219,7 @@
 		2FF08B6A28ADE7690074895A /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				2F6A411E28B5F891003719E7 /* Tab */,
 				2FF08B6B28ADE7690074895A /* Index */,
 			);
 			path = Home;
@@ -238,6 +276,7 @@
 		2FF08B7328ADE7690074895A /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				2F6A412128B5FF07003719E7 /* Controller */,
 				2FF08B7428ADE7690074895A /* Service */,
 			);
 			path = Login;
@@ -430,6 +469,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6A411828B5E1E1003719E7 /* Material.ttf in Resources */,
 				2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */,
 				2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */,
 				2FF08B3E28ADDC000074895A /* Assets.xcassets in Resources */,
@@ -525,8 +565,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
+				2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */,
 				2FF08B7628ADE7690074895A /* SettingsController.swift in Sources */,
+				2F6A412028B5F913003719E7 /* TabController.swift in Sources */,
+				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
+				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,

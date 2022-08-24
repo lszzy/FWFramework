@@ -6,9 +6,10 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
-import Foundation
+import FWFramework
 
-class AppRouter {
+@objcMembers
+class AppRouter: NSObject {
     
     static let homeUrl = "app://home"
     static let testUrl = "app://test"
@@ -19,17 +20,17 @@ class AppRouter {
 // MARK: - Public
 extension AppRouter {
     
-    class func homeRouter() -> Any? {
+    class func homeRouter(_ context: RouterContext) -> Any? {
         let viewController = HomeController()
         return viewController
     }
     
-    class func testRouter() -> Any? {
+    class func testRouter(_ context: RouterContext) -> Any? {
         let viewController = TestController()
         return viewController
     }
     
-    class func settingsRouter() -> Any? {
+    class func settingsRouter(_ context: RouterContext) -> Any? {
         let viewController = SettingsController()
         return viewController
     }

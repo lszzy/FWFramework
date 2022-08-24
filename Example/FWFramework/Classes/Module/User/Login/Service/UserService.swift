@@ -6,8 +6,54 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
-import UIKit
+import FWFramework
 
 class UserService {
+    
+    class UserInfo {
+        public var userId: String = ""
+        public var userName: String = ""
+    }
+    
+    static let shared = UserService()
+    
+    @UserDefaultAnnotation("userId", defaultValue: "")
+    private var userId: String
+    @UserDefaultAnnotation("userName", defaultValue: "")
+    private var userName: String
+    
+}
+
+extension UserService {
+    
+    public func isLogin() -> Bool {
+        return userId.count > 0
+    }
+    
+    public func userInfo() -> UserInfo? {
+        if userId.count < 1 { return nil }
+        
+        let userInfo = UserInfo()
+        userInfo.userId = userId
+        userInfo.userName = userName
+        return userInfo
+    }
+    
+    public func login(_ completion: (() -> Void)?) {
+        let viewController = LoginController()
+        viewController.completion = { [weak self] in
+            self?.userId = "1"
+            self?.userName = "test"
+            completion?()
+        }
+        let navigationController = UINavigationController(rootViewController: viewController)
+        Navigator.present(navigationController, animated: true, completion: nil)
+    }
+    
+    public func logout(_ completion: (() -> Void)?) {
+        userId = ""
+        userName = ""
+        completion?()
+    }
     
 }
