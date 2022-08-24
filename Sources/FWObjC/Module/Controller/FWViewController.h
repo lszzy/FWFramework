@@ -17,13 +17,16 @@ NS_SWIFT_NAME(ViewControllerProtocol)
 
 @optional
 
-/// 渲染导航栏方法，viewDidLoad自动调用，默认未实现
+/// 初始化完成方法，init自动调用，默认未实现
+- (void)didInitialize;
+
+/// 初始化导航栏方法，viewDidLoad自动调用，默认未实现
 - (void)setupNavbar;
 
-/// 渲染子视图方法，viewDidLoad自动调用，默认未实现
+/// 初始化子视图方法，viewDidLoad自动调用，默认未实现
 - (void)setupSubviews;
 
-/// 渲染布局方法，viewDidLoad自动调用，默认未实现
+/// 初始化布局方法，viewDidLoad自动调用，默认未实现
 - (void)setupLayout;
 
 @end
@@ -35,7 +38,6 @@ NS_SWIFT_NAME(ViewControllerIntercepter)
 @interface FWViewControllerIntercepter : NSObject
 
 @property (nonatomic, assign, nullable) SEL initIntercepter;
-@property (nonatomic, assign, nullable) SEL loadViewIntercepter;
 @property (nonatomic, assign, nullable) SEL viewDidLoadIntercepter;
 @property (nonatomic, assign, nullable) SEL viewDidLayoutSubviewsIntercepter;
 
@@ -60,8 +62,6 @@ NS_SWIFT_NAME(ViewControllerManager)
 
 /// 默认全局控制器init钩子句柄，init优先自动调用
 @property (nonatomic, copy, nullable) void (^hookInit)(UIViewController *viewController);
-/// 默认全局控制器loadView钩子句柄，loadView优先自动调用
-@property (nonatomic, copy, nullable) void (^hookLoadView)(UIViewController *viewController);
 /// 默认全局控制器viewDidLoad钩子句柄，viewDidLoad优先自动调用
 @property (nonatomic, copy, nullable) void (^hookViewDidLoad)(UIViewController *viewController);
 /// 默认全局控制器viewDidLayoutSubviews钩子句柄，viewDidLayoutSubviews优先自动调用

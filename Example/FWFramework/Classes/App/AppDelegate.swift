@@ -17,8 +17,8 @@ class AppDelegate: AppResponder {
         window?.makeKeyAndVisible()
         
         Router.registerClass(AppRouter.self)
-        AppTheme.setupTheme()
         MaterialIcons.setupIcon()
+        AppTheme.setupTheme()
     }
     
     override func setupController() {

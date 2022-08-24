@@ -185,25 +185,10 @@
 #pragma clang diagnostic pop
         }
     }
-}
-
-- (void)hookLoadView:(UIViewController *)viewController
-{
-    // 1. 默认loadView
-    if (self.hookLoadView) {
-        self.hookLoadView(viewController);
-    }
     
-    // 2. 拦截器loadView
-    NSArray *protocolNames = [self protocolsWithClass:viewController.class];
-    for (NSString *protocolName in protocolNames) {
-        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
-        if (intercepter.loadViewIntercepter && [self respondsToSelector:intercepter.loadViewIntercepter]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [self performSelector:intercepter.loadViewIntercepter withObject:viewController];
-#pragma clang diagnostic pop
-        }
+    // 3. 控制器didInitialize
+    if ([viewController respondsToSelector:@selector(didInitialize)]) {
+        [(id<FWViewController>)viewController didInitialize];
     }
 }
 
@@ -285,12 +270,6 @@
                 [[FWViewControllerManager sharedInstance] hookInit:viewController];
             }
             return viewController;
-        }));
-        FWSwizzleClass(UIViewController, @selector(loadView), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            if ([selfObject conformsToProtocol:@protocol(FWViewController)]) {
-                [[FWViewControllerManager sharedInstance] hookLoadView:selfObject];
-            }
         }));
         FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
