@@ -205,26 +205,4 @@
     [self.view addSubview:themeButton];
 }
 
-- (void)setupNavbar
-{
-    FWThemeMode mode = FWThemeManager.sharedInstance.mode;
-    NSString *title = mode == FWThemeModeSystem ? @"系统" : (mode == FWThemeModeDark ? @"深色" : @"浅色");
-    FWWeakifySelf();
-    [self fw_setRightBarItem:title block:^(id  _Nonnull sender) {
-        FWStrongifySelf();
-        
-        NSMutableArray *actions = [NSMutableArray arrayWithArray:@[@"系统", @"浅色", @"深色"]];
-        [self fw_showSheetWithTitle:nil message:nil cancel:@"取消" actions:actions actionBlock:^(NSInteger index) {
-            FWStrongifySelf();
-            
-            FWThemeManager.sharedInstance.mode = index;
-            [self setupNavbar];
-            id appDelegate = UIApplication.sharedApplication.delegate;
-            if ([appDelegate isKindOfClass:[FWAppDelegate class]]) {
-                [(FWAppDelegate *)appDelegate setupController];
-            }
-        }];
-    }];
-}
-
 @end

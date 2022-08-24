@@ -25,10 +25,15 @@ extension TabController {
     
     func setupSubviews() {
         delegate = self
-        tabBar.fw.isTranslucent = true
-        tabBar.fw.shadowColor = nil
         tabBar.fw.foregroundColor = AppTheme.textColor
-        tabBar.fw.backgroundColor = AppTheme.barColor.fw.color(alpha: 0.5)
+        if #available(iOS 15, *) {
+            tabBar.fw.isTranslucent = true
+            tabBar.fw.backgroundColor = AppTheme.barColor.fw.color(alpha: 0.5)
+        } else {
+            tabBar.fw.backgroundColor = AppTheme.barColor
+        }
+        tabBar.fw.shadowColor = nil
+        tabBar.fw.setShadowColor(.fw.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
     
     func setupController() {
