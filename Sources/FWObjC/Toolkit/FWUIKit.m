@@ -1631,6 +1631,242 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return (self.fw_currentPage == (self.fw_totalPage - 1));
 }
 
+- (CGFloat)fw_contentOffsetX
+{
+    return self.contentOffset.x;
+}
+
+- (void)setFw_contentOffsetX:(CGFloat)contentOffsetX
+{
+    self.contentOffset = CGPointMake(contentOffsetX, self.contentOffset.y);
+}
+
+- (CGFloat)fw_contentOffsetY
+{
+    return self.contentOffset.y;
+}
+
+- (void)setFw_contentOffsetY:(CGFloat)contentOffsetY
+{
+    self.contentOffset = CGPointMake(self.contentOffset.x, contentOffsetY);
+}
+
+- (UIView *)fw_contentView
+{
+    UIView *contentView = objc_getAssociatedObject(self, _cmd);
+    if (!contentView) {
+        contentView = [[UIView alloc] init];
+        objc_setAssociatedObject(self, _cmd, contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+        [self addSubview:contentView];
+        [contentView fw_pinEdgesToSuperview];
+    }
+    return contentView;
+}
+
+- (CGFloat)fw_hoverView:(UIView *)view
+         fromSuperview:(UIView *)fromSuperview
+           toSuperview:(UIView *)toSuperview
+            toPosition:(CGFloat)toPosition
+{
+    CGFloat distance = [fromSuperview.superview convertPoint:fromSuperview.frame.origin toView:toSuperview].y - toPosition;
+    if (distance <= 0) {
+        if (view.superview != toSuperview) {
+            [view removeFromSuperview];
+            [toSuperview addSubview:view]; {
+                [view fw_pinEdgeToSuperview:NSLayoutAttributeLeft];
+                [view fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:toPosition];
+                [view fw_setDimensionsToSize:view.bounds.size];
+            }
+        }
+    } else {
+        if (view.superview != fromSuperview) {
+            [view removeFromSuperview];
+            [fromSuperview addSubview:view]; {
+                [view fw_pinEdgesToSuperview];
+            }
+        }
+    }
+    return distance;
+}
+
+- (BOOL (^)(UIGestureRecognizer *))fw_shouldBegin
+{
+    return objc_getAssociatedObject(self, @selector(fw_shouldBegin));
+}
+
+- (void)setFw_shouldBegin:(BOOL (^)(UIGestureRecognizer *))shouldBegin
+{
+    objc_setAssociatedObject(self, @selector(fw_shouldBegin), shouldBegin, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [UIScrollView fw_enablePanProxy];
+}
+
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fw_shouldRecognizeSimultaneously
+{
+    return objc_getAssociatedObject(self, @selector(fw_shouldRecognizeSimultaneously));
+}
+
+- (void)setFw_shouldRecognizeSimultaneously:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))shouldRecognizeSimultaneously
+{
+    objc_setAssociatedObject(self, @selector(fw_shouldRecognizeSimultaneously), shouldRecognizeSimultaneously, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [UIScrollView fw_enablePanProxy];
+}
+
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fw_shouldRequireFailure
+{
+    return objc_getAssociatedObject(self, @selector(fw_shouldRequireFailure));
+}
+
+- (void)setFw_shouldRequireFailure:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))shouldRequireFailure
+{
+    objc_setAssociatedObject(self, @selector(fw_shouldRequireFailure), shouldRequireFailure, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [UIScrollView fw_enablePanProxy];
+}
+
+- (BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))fw_shouldBeRequiredToFail
+{
+    return objc_getAssociatedObject(self, @selector(fw_shouldBeRequiredToFail));
+}
+
+- (void)setFw_shouldBeRequiredToFail:(BOOL (^)(UIGestureRecognizer *, UIGestureRecognizer *))shouldBeRequiredToFail
+{
+    objc_setAssociatedObject(self, @selector(fw_shouldBeRequiredToFail), shouldBeRequiredToFail, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [UIScrollView fw_enablePanProxy];
+}
+
++ (void)fw_enablePanProxy
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [UIScrollView fw_exchangeInstanceMethod:@selector(gestureRecognizerShouldBegin:) swizzleMethod:@selector(fw_innerGestureRecognizerShouldBegin:)];
+        [UIScrollView fw_exchangeInstanceMethod:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:) swizzleMethod:@selector(fw_innerGestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+        [UIScrollView fw_exchangeInstanceMethod:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:) swizzleMethod:@selector(fw_innerGestureRecognizer:shouldRequireFailureOfGestureRecognizer:)];
+        [UIScrollView fw_exchangeInstanceMethod:@selector(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:) swizzleMethod:@selector(fw_innerGestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)];
+    });
+}
+
+- (BOOL)fw_innerGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    BOOL (^shouldBlock)(UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fw_shouldBegin));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer);
+    }
+    
+    return [self fw_innerGestureRecognizerShouldBegin:gestureRecognizer];
+}
+
+- (BOOL)fw_innerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fw_shouldRecognizeSimultaneously));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fw_innerGestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+}
+
+- (BOOL)fw_innerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fw_shouldRequireFailure));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fw_innerGestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
+}
+
+- (BOOL)fw_innerGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    BOOL (^shouldBlock)(UIGestureRecognizer *, UIGestureRecognizer *) = objc_getAssociatedObject(self, @selector(fw_shouldBeRequiredToFail));
+    if (shouldBlock) {
+        return shouldBlock(gestureRecognizer, otherGestureRecognizer);
+    }
+    
+    return [self fw_innerGestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
+}
+
+@end
+
+#pragma mark - UIGestureRecognizer+FWUIKit
+
+@implementation UIGestureRecognizer (FWUIKit)
+
+- (UIView *)fw_targetView
+{
+    CGPoint location = [self locationInView:self.view];
+    UIView *targetView = [self.view hitTest:location withEvent:nil];
+    return targetView;
+}
+
+- (BOOL)fw_isTracking
+{
+    return self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged;
+}
+
+- (BOOL)fw_isActive
+{
+    return self.isEnabled && (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged);
+}
+
+@end
+
+#pragma mark - UIPanGestureRecognizer+FWUIKit
+
+@implementation UIPanGestureRecognizer (FWUIKit)
+
+- (UISwipeGestureRecognizerDirection)fw_swipeDirection
+{
+    CGPoint transition = [self translationInView:self.view];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        if (transition.x < 0.0f) {
+            return UISwipeGestureRecognizerDirectionLeft;
+        } else if (transition.x > 0.0f) {
+            return UISwipeGestureRecognizerDirectionRight;
+        }
+    } else {
+        if (transition.y > 0.0f) {
+            return UISwipeGestureRecognizerDirectionDown;
+        } else if (transition.y < 0.0f) {
+            return UISwipeGestureRecognizerDirectionUp;
+        }
+    }
+    return 0;
+}
+
+- (CGFloat)fw_swipePercent
+{
+    CGFloat percent = 0;
+    CGPoint transition = [self translationInView:self.view];
+    if (fabs(transition.x) > fabs(transition.y)) {
+        percent = fabs(transition.x) / self.view.bounds.size.width;
+    } else {
+        percent = fabs(transition.y) / self.view.bounds.size.height;
+    }
+    return MAX(0, MIN(1, percent));
+}
+
+- (CGFloat)fw_swipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction
+{
+    CGFloat percent = 0;
+    CGPoint transition = [self translationInView:self.view];
+    switch (direction) {
+        case UISwipeGestureRecognizerDirectionLeft:
+            percent = -transition.x / self.view.bounds.size.width;
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            percent = transition.x / self.view.bounds.size.width;
+            break;
+        case UISwipeGestureRecognizerDirectionUp:
+            percent = -transition.y / self.view.bounds.size.height;
+            break;
+        case UISwipeGestureRecognizerDirectionDown:
+        default:
+            percent = transition.y / self.view.bounds.size.height;
+            break;
+    }
+    return MAX(0, MIN(1, percent));
+}
+
 @end
 
 #pragma mark - UIPageControl+FWUIKit
