@@ -16,7 +16,7 @@ class TestController: UIViewController {
 
         setupNavbar()
         setupSubviews()
-        setupConstraints()
+        setupLayout()
     }
     
 }
@@ -32,7 +32,7 @@ private extension TestController {
         
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         
     }
     

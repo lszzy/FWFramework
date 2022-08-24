@@ -16,7 +16,7 @@ class HomeController: UIViewController {
 
         setupNavbar()
         setupSubviews()
-        setupConstraints()
+        setupLayout()
     }
 
 }
@@ -32,7 +32,7 @@ private extension HomeController {
         
     }
     
-    private func setupConstraints() {
+    private func setupLayout() {
         
     }
     
