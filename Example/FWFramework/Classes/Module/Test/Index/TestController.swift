@@ -13,10 +13,13 @@ class TestController: UIViewController {
     
     var testData: [Any] = [
         ["FWObjC", [
+            ["Theme", "TestThemeController"],
             ["Icon", "TestIconController"],
         ]],
         ["FWFramework", [
             ["ViewController", "TestSwiftController"],
+            ["Authorize", "TestAuthorizeController"],
+            ["Workflow", "TestWorkflowController"],
         ]],
         ["FWSwiftUI", [
             ["HostingController", "TestSwiftUIController"],
@@ -143,8 +146,14 @@ extension TestController {
         let sectionList = sectionData.object(at: 1) as! NSArray
         let rowData = sectionList.object(at: indexPath.row) as! NSArray
         
-        let className = UIApplication.fw.appExecutable + "." + (rowData.object(at: 1) as! String)
-        if let controllerClass = NSClassFromString(className) as? UIViewController.Type {
+        var className = rowData.object(at: 1) as! String
+        var controllerClass: AnyClass? = NSClassFromString(className)
+        if controllerClass == nil {
+            className = UIApplication.fw.appExecutable + "." + className
+            controllerClass = NSClassFromString(className)
+        }
+        
+        if let controllerClass = controllerClass as? UIViewController.Type {
             let viewController = controllerClass.init()
             viewController.navigationItem.title = rowData.object(at: 0) as? String
             navigationController?.pushViewController(viewController, animated: true)

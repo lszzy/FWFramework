@@ -8,12 +8,14 @@
 
 import FWFramework
 
-@objcMembers
-class AppRouter: NSObject {
+@objcMembers class AppRouter: NSObject {
     
     static let homeUrl = "app://home"
     static let testUrl = "app://test"
     static let settingsUrl = "app://settings"
+    
+    static let httpUrl = "http://*"
+    static let httpsUrl = "https://*"
     
 }
 
@@ -32,6 +34,15 @@ extension AppRouter {
     
     class func settingsRouter(_ context: RouterContext) -> Any? {
         let viewController = SettingsController()
+        return viewController
+    }
+    
+    class func httpRouter(_ context: RouterContext) -> Any? {
+        return httpsRouter(context)
+    }
+    
+    class func httpsRouter(_ context: RouterContext) -> Any? {
+        let viewController = WebController(requestUrl: context.url)
         return viewController
     }
     
