@@ -6,7 +6,7 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
-import UIKit
+import FWFramework
 
 class TestController: UIViewController {
     
@@ -25,7 +25,7 @@ class TestController: UIViewController {
 private extension TestController {
     
     private func setupNavbar() {
-        title = NSLocalizedString("test.title", comment: "测试")
+        title = NSLocalizedString("testTitle", comment: "测试")
     }
    
     private func setupSubviews() {

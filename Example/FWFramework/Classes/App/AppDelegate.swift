@@ -13,29 +13,31 @@ class AppDelegate: AppResponder {
     
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = .white
+        window?.backgroundColor = AppTheme.backgroundColor
         window?.makeKeyAndVisible()
+        
+        Router.registerClass(AppRouter.self)
+        AppTheme.setupTheme()
+        MaterialIcons.setupIcon()
     }
     
     override func setupController() {
-        let homeController = HomeController()
-        homeController.hidesBottomBarWhenPushed = false
-        let homeNav = UINavigationController(rootViewController: homeController)
-        homeNav.tabBarItem.title = NSLocalizedString("home.title", comment: "首页")
-        
-        let testController = TestController()
-        testController.hidesBottomBarWhenPushed = false
-        let testNav = UINavigationController(rootViewController: testController)
-        testNav.tabBarItem.title = NSLocalizedString("test.title", comment: "测试")
-        
-        let settingsController = SettingsController()
-        settingsController.hidesBottomBarWhenPushed = false
-        let settingsNav = UINavigationController(rootViewController: settingsController)
-        settingsNav.tabBarItem.title = NSLocalizedString("settings.title", comment: "设置")
-        
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [homeNav, testNav, settingsNav]
-        window?.rootViewController = tabBarController
+        window?.rootViewController = TabController()
+    }
+    
+    // MARK: - UIApplicationDelegate
+    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        Router.openURL(url.absoluteString)
+        return true
+    }
+    
+    override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+           let webpageURL = userActivity.webpageURL {
+            Router.openURL(webpageURL.absoluteString)
+            return true
+        }
+        return false
     }
 
 }
