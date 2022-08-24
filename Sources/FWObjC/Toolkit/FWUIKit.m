@@ -9,12 +9,14 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWFoundation.h"
+#import "FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
 #import "FWMessage.h"
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
+#import <CoreImage/CoreImage.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <arpa/inet.h>
@@ -735,6 +737,199 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     });
     dispatch_resume(_timer);
     return _timer;
+}
+
+@end
+
+#pragma mark - UIImageView+FWUIKit
+
+@implementation UIImageView (FWUIKit)
+
+- (void)fw_setContentModeAspectFill
+{
+    self.contentMode = UIViewContentModeScaleAspectFill;
+    self.layer.masksToBounds = YES;
+}
+
+- (void)fw_faceAware
+{
+    if (self.image == nil) {
+        return;
+    }
+    
+    [self fw_faceDetect:self.image];
+}
+
+- (void)fw_faceDetect:(UIImage *)aImage
+{
+    static CIDetector *_faceDetector = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace
+                                           context:nil
+                                           options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
+    });
+    
+    __weak UIImageView *weakBase = self;
+    dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWApplication.FWFaceQueue", NULL);
+    dispatch_async(queue, ^{
+        CIImage *image = aImage.CIImage;
+        if (image == nil) {
+            image = [CIImage imageWithCGImage:aImage.CGImage];
+        }
+        
+        NSArray *features = [_faceDetector featuresInImage:image];
+        if (features.count == 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[weakBase fw_faceLayer:NO] removeFromSuperlayer];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakBase fw_faceMark:features size:CGSizeMake(CGImageGetWidth(aImage.CGImage), CGImageGetHeight(aImage.CGImage))];
+            });
+        }
+    });
+}
+
+- (void)fw_faceMark:(NSArray *)features size:(CGSize)size
+{
+    CGRect fixedRect = CGRectMake(MAXFLOAT, MAXFLOAT, 0, 0);
+    CGFloat rightBorder = 0, bottomBorder = 0;
+    for (CIFaceFeature *f in features){
+        CGRect oneRect = f.bounds;
+        oneRect.origin.y = size.height - oneRect.origin.y - oneRect.size.height;
+        
+        fixedRect.origin.x = MIN(oneRect.origin.x, fixedRect.origin.x);
+        fixedRect.origin.y = MIN(oneRect.origin.y, fixedRect.origin.y);
+        
+        rightBorder = MAX(oneRect.origin.x + oneRect.size.width, rightBorder);
+        bottomBorder = MAX(oneRect.origin.y + oneRect.size.height, bottomBorder);
+    }
+    
+    fixedRect.size.width = rightBorder - fixedRect.origin.x;
+    fixedRect.size.height = bottomBorder - fixedRect.origin.y;
+    
+    CGPoint fixedCenter = CGPointMake(fixedRect.origin.x + fixedRect.size.width / 2.0,
+                                      fixedRect.origin.y + fixedRect.size.height / 2.0);
+    CGPoint offset = CGPointZero;
+    CGSize finalSize = size;
+    if (size.width / size.height > self.bounds.size.width / self.bounds.size.height) {
+        finalSize.height = self.bounds.size.height;
+        finalSize.width = size.width/size.height * finalSize.height;
+        fixedCenter.x = finalSize.width / size.width * fixedCenter.x;
+        fixedCenter.y = finalSize.width / size.width * fixedCenter.y;
+        
+        offset.x = fixedCenter.x - self.bounds.size.width * 0.5;
+        if (offset.x < 0) {
+            offset.x = 0;
+        } else if (offset.x + self.bounds.size.width > finalSize.width) {
+            offset.x = finalSize.width - self.bounds.size.width;
+        }
+        offset.x = - offset.x;
+    } else {
+        finalSize.width = self.bounds.size.width;
+        finalSize.height = size.height/size.width * finalSize.width;
+        fixedCenter.x = finalSize.width / size.width * fixedCenter.x;
+        fixedCenter.y = finalSize.width / size.width * fixedCenter.y;
+        
+        offset.y = fixedCenter.y - self.bounds.size.height * (1 - 0.618);
+        if (offset.y < 0) {
+            offset.y = 0;
+        } else if (offset.y + self.bounds.size.height > finalSize.height){
+            offset.y = finalSize.height - self.bounds.size.height;
+        }
+        offset.y = - offset.y;
+    }
+    
+    CALayer *layer = [self fw_faceLayer:YES];
+    layer.frame = CGRectMake(offset.x, offset.y, finalSize.width, finalSize.height);
+    layer.contents = (id)self.image.CGImage;
+}
+
+- (CALayer *)fw_faceLayer:(BOOL)lazyload
+{
+    for (CALayer *layer in self.layer.sublayers) {
+        if ([@"FWFaceLayer" isEqualToString:layer.name]) {
+            return layer;
+        }
+    }
+    
+    if (lazyload) {
+        CALayer *layer = [CALayer layer];
+        layer.name = @"FWFaceLayer";
+        layer.actions = @{
+                          @"contents": [NSNull null],
+                          @"bounds": [NSNull null],
+                          @"position": [NSNull null],
+                          };
+        [self.layer addSublayer:layer];
+        return layer;
+    }
+    
+    return nil;
+}
+
+- (void)fw_reflect
+{
+    CGRect frame = self.frame;
+    frame.origin.y += (frame.size.height + 1);
+    
+    UIImageView *reflectionImageView = [[UIImageView alloc] initWithFrame:frame];
+    self.clipsToBounds = YES;
+    reflectionImageView.contentMode = self.contentMode;
+    [reflectionImageView setImage:self.image];
+    reflectionImageView.transform = CGAffineTransformMakeScale(1.0, -1.0);
+    
+    CALayer *reflectionLayer = [reflectionImageView layer];
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.bounds = reflectionLayer.bounds;
+    gradientLayer.position = CGPointMake(reflectionLayer.bounds.size.width / 2, reflectionLayer.bounds.size.height * 0.5);
+    gradientLayer.colors = [NSArray arrayWithObjects:
+                            (id)[[UIColor clearColor] CGColor],
+                            (id)[[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.3] CGColor], nil];
+    
+    gradientLayer.startPoint = CGPointMake(0.5, 0.5);
+    gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+    reflectionLayer.mask = gradientLayer;
+    
+    [self.superview addSubview:reflectionImageView];
+}
+
+- (void)fw_setImage:(UIImage *)image watermarkImage:(UIImage *)watermarkImage inRect:(CGRect)rect
+{
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0);
+    
+    [image drawInRect:self.bounds];
+    [watermarkImage drawInRect:rect];
+    
+    UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    self.image = newPic;
+}
+
+- (void)fw_setImage:(UIImage *)image watermarkString:(NSAttributedString *)watermarkString inRect:(CGRect)rect
+{
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0);
+    
+    [image drawInRect:self.bounds];
+    [watermarkString drawInRect:rect];
+    
+    UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    self.image = newPic;
+}
+
+- (void)fw_setImage:(UIImage *)image watermarkString:(NSAttributedString *)watermarkString atPoint:(CGPoint)point
+{
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0);
+    
+    [image drawInRect:self.bounds];
+    [watermarkString drawAtPoint:point];
+    
+    UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    self.image = newPic;
 }
 
 @end
@@ -2177,6 +2372,227 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (NSIndexPath *)fw_indexPath
 {
     return [[self fw_collectionView] indexPathForCell:self];
+}
+
+@end
+
+#pragma mark - UISearchBar+FWUIKit
+
+@implementation UISearchBar (FWUIKit)
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UISearchBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            if (@available(iOS 13, *)) { } else {
+                CGFloat textFieldMaxX = selfObject.bounds.size.width;
+                NSValue *cancelInsetValue = objc_getAssociatedObject(selfObject, @selector(fw_cancelButtonInset));
+                if (cancelInsetValue) {
+                    UIButton *cancelButton = [selfObject fw_cancelButton];
+                    if (cancelButton) {
+                        UIEdgeInsets cancelInset = [cancelInsetValue UIEdgeInsetsValue];
+                        CGFloat cancelWidth = [cancelButton sizeThatFits:selfObject.bounds.size].width;
+                        textFieldMaxX = selfObject.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right;
+                        UITextField *textField = [selfObject fw_textField];
+                        CGRect frame = textField.frame;
+                        frame.size.width = textFieldMaxX - frame.origin.x;
+                        textField.frame = frame;
+                    }
+                }
+                
+                NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fw_contentInset));
+                if (contentInsetValue) {
+                    UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                    UITextField *textField = [selfObject fw_textField];
+                    textField.frame = CGRectMake(contentInset.left, contentInset.top, textFieldMaxX - contentInset.left - contentInset.right, selfObject.bounds.size.height - contentInset.top - contentInset.bottom);
+                }
+            }
+            
+            NSNumber *isCenterValue = objc_getAssociatedObject(selfObject, @selector(fw_searchIconCenter));
+            if (isCenterValue) {
+                if (![isCenterValue boolValue]) {
+                    NSNumber *offset = objc_getAssociatedObject(selfObject, @selector(fw_searchIconOffset));
+                    [selfObject setPositionAdjustment:UIOffsetMake(offset ? offset.doubleValue : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
+                } else {
+                    UITextField *textField = [selfObject fw_textField];
+                    CGFloat placeholdWidth = [selfObject.placeholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:textField.font, NSFontAttributeName, nil] context:nil].size.width;
+                    CGFloat textOffset = 4 + [selfObject searchTextPositionAdjustment].horizontal;
+                    CGFloat iconWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
+                    CGFloat targetWidth = textField.frame.size.width - ceilf(placeholdWidth) - textOffset - iconWidth;
+                    CGFloat position = targetWidth / 2 - 6;
+                    [selfObject setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
+                }
+            }
+        }));
+        
+        // iOS13因为层级关系变化，兼容处理
+        if (@available(iOS 13, *)) {
+            FWSwizzleMethod(objc_getClass("UISearchBarTextField"), @selector(setFrame:), nil, FWSwizzleType(UITextField *), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
+                UISearchBar *searchBar = nil;
+                if (@available(iOS 13.0, *)) {
+                    searchBar = (UISearchBar *)selfObject.superview.superview.superview;
+                } else {
+                    searchBar = (UISearchBar *)selfObject.superview.superview;
+                }
+                if ([searchBar isKindOfClass:[UISearchBar class]]) {
+                    CGFloat textFieldMaxX = searchBar.bounds.size.width;
+                    NSValue *cancelInsetValue = objc_getAssociatedObject(searchBar, @selector(fw_cancelButtonInset));
+                    if (cancelInsetValue) {
+                        UIButton *cancelButton = [searchBar fw_cancelButton];
+                        if (cancelButton) {
+                            UIEdgeInsets cancelInset = [cancelInsetValue UIEdgeInsetsValue];
+                            CGFloat cancelWidth = [cancelButton sizeThatFits:searchBar.bounds.size].width;
+                            textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right;
+                            frame.size.width = textFieldMaxX - frame.origin.x;
+                        }
+                    }
+                    
+                    NSValue *contentInsetValue = objc_getAssociatedObject(searchBar, @selector(fw_contentInset));
+                    if (contentInsetValue) {
+                        UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
+                        frame = CGRectMake(contentInset.left, contentInset.top, textFieldMaxX - contentInset.left - contentInset.right, searchBar.bounds.size.height - contentInset.top - contentInset.bottom);
+                    }
+                }
+                
+                FWSwizzleOriginal(frame);
+            }));
+        }
+        
+        FWSwizzleMethod(objc_getClass("UINavigationButton"), @selector(setFrame:), nil, FWSwizzleType(UIButton *), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
+            UISearchBar *searchBar = nil;
+            if (@available(iOS 13.0, *)) {
+                searchBar = (UISearchBar *)selfObject.superview.superview.superview;
+            } else {
+                searchBar = (UISearchBar *)selfObject.superview.superview;
+            }
+            if ([searchBar isKindOfClass:[UISearchBar class]]) {
+                NSValue *cancelButtonInsetValue = objc_getAssociatedObject(searchBar, @selector(fw_cancelButtonInset));
+                if (cancelButtonInsetValue) {
+                    UIEdgeInsets cancelButtonInset = [cancelButtonInsetValue UIEdgeInsetsValue];
+                    CGFloat cancelButtonWidth = [selfObject sizeThatFits:searchBar.bounds.size].width;
+                    frame.origin.x = searchBar.bounds.size.width - cancelButtonWidth - cancelButtonInset.right;
+                    frame.origin.y = cancelButtonInset.top;
+                    frame.size.height = searchBar.bounds.size.height - cancelButtonInset.top - cancelButtonInset.bottom;
+                }
+            }
+            
+            FWSwizzleOriginal(frame);
+        }));
+    });
+}
+
+- (UIEdgeInsets)fw_contentInset
+{
+    return [objc_getAssociatedObject(self, @selector(fw_contentInset)) UIEdgeInsetsValue];
+}
+
+- (void)setFw_contentInset:(UIEdgeInsets)contentInset
+{
+    objc_setAssociatedObject(self, @selector(fw_contentInset), [NSValue valueWithUIEdgeInsets:contentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsLayout];
+}
+
+- (UIEdgeInsets)fw_cancelButtonInset
+{
+    return [objc_getAssociatedObject(self, @selector(fw_cancelButtonInset)) UIEdgeInsetsValue];
+}
+
+- (void)setFw_cancelButtonInset:(UIEdgeInsets)cancelButtonInset
+{
+    objc_setAssociatedObject(self, @selector(fw_cancelButtonInset), [NSValue valueWithUIEdgeInsets:cancelButtonInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsLayout];
+}
+
+- (UITextField *)fw_textField
+{
+    return [self fw_invokeGetter:@"searchField"];
+}
+
+- (UIButton *)fw_cancelButton
+{
+    return [self fw_invokeGetter:@"cancelButton"];
+}
+
+- (UIColor *)fw_backgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(fw_backgroundColor));
+}
+
+- (void)setFw_backgroundColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(fw_backgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.backgroundImage = [UIImage fw_imageWithColor:color];
+}
+
+- (UIColor *)fw_textFieldBackgroundColor
+{
+    UITextField *textField = [self fw_textField];
+    return textField.backgroundColor;
+}
+
+- (void)setFw_textFieldBackgroundColor:(UIColor *)color
+{
+    UITextField *textField = [self fw_textField];
+    textField.backgroundColor = color;
+}
+
+- (CGFloat)fw_searchIconOffset
+{
+    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_searchIconOffset));
+    if (value) return value.doubleValue;
+    return [self positionAdjustmentForSearchBarIcon:UISearchBarIconSearch].horizontal;
+}
+
+- (void)setFw_searchIconOffset:(CGFloat)offset
+{
+    objc_setAssociatedObject(self, @selector(fw_searchIconOffset), @(offset), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setPositionAdjustment:UIOffsetMake(offset, 0) forSearchBarIcon:UISearchBarIconSearch];
+}
+
+- (CGFloat)fw_searchTextOffset
+{
+    return [self searchTextPositionAdjustment].horizontal;
+}
+
+- (void)setFw_searchTextOffset:(CGFloat)offset
+{
+    [self setSearchTextPositionAdjustment:UIOffsetMake(offset, 0)];
+}
+
+- (BOOL)fw_searchIconCenter
+{
+    return [objc_getAssociatedObject(self, @selector(fw_searchIconCenter)) boolValue];
+}
+
+- (void)setFw_searchIconCenter:(BOOL)center
+{
+    objc_setAssociatedObject(self, @selector(fw_searchIconCenter), @(center), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+
+- (BOOL)fw_forceCancelButtonEnabled
+{
+    return [objc_getAssociatedObject(self, @selector(fw_forceCancelButtonEnabled)) boolValue];
+}
+
+- (void)setFw_forceCancelButtonEnabled:(BOOL)enabled
+{
+    objc_setAssociatedObject(self, @selector(fw_forceCancelButtonEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    UIButton *cancelButton = [self fw_cancelButton];
+    if (enabled) {
+        cancelButton.enabled = YES;
+        [cancelButton fw_observeProperty:@"enabled" block:^(UIButton *object, NSDictionary *change) {
+            if (!object.enabled) object.enabled = YES;
+        }];
+    } else {
+        [cancelButton fw_unobserveProperty:@"enabled"];
+    }
 }
 
 @end
