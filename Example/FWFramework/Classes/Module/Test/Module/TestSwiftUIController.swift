@@ -11,15 +11,13 @@ import SwiftUI
 import Combine
 import FWFramework
 
-// 继承UIViewController
 @available(iOS 13.0, *)
-class TestSwiftUIController: UIViewController, ViewControllerProtocol, TestSwiftUIViewDelegate {
+class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
         fw.navigationBarHidden = [true, false].randomElement()!
         
         let hostingView = TestSwiftUIContent()
-            .configure { $0.delegate = self }
             .viewContext(self, userInfo: [
                 "color": Color.green
             ])
@@ -36,41 +34,10 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol, TestSwift
             .bottom()
     }
     
-    // MARK: - TestSwiftUIViewDelegate
-    func openWeb(completion: @escaping () -> Void) {
-        Router.openURL("https://www.baidu.com")
-        completion()
-    }
-    
-}
-
-protocol TestSwiftUIViewDelegate {
-    func openWeb(completion: @escaping () -> Void)
 }
 
 @available(iOS 13.0, *)
-class TestSwiftUIModel: ViewModel {
-    // View中可通过$viewModel.isEnglish获取Binding<Bool>
-    @Published var isEnglish: Bool = true
-    
-    @Published var items: [String] = []
-    
-    // 数据改变时调用editSubject.send(self)通知视图刷新
-    var editPublisher: AnyPublisher<String, Never> { editSubject.eraseToAnyPublisher() }
-    private let editSubject = PassthroughSubject<String, Never>()
-    
-    init(isEnglish: Bool = true) {
-        self.isEnglish = isEnglish
-    }
-    
-    func reloadData() {
-        // 请求数据，并修改items，通知View刷新
-    }
-}
-
-// 继承HostingController
-@available(iOS 13.0, *)
-class TestSwiftUIHostingController: HostingController, ViewControllerProtocol, TestSwiftUIViewDelegate {
+class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     
     // MARK: - Accessor
     var mode: Int = [0, 1, 2].randomElement()!
@@ -93,7 +60,6 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol, T
                 }
         } content: { view, _ in
             TestSwiftUIContent()
-                .configure { $0.delegate = self }
         } failure: { view, error in
             Button(error?.localizedDescription ?? "") {
                 view.state = .loading
@@ -134,13 +100,29 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol, T
             .eraseToAnyView()
     }
     
-    // MARK: - TestSwiftUIViewDelegate
-    func openWeb(completion: @escaping () -> Void) {
-        Router.openURL("https://www.baidu.com")
-        completion()
+}
+
+@available(iOS 13.0, *)
+class TestSwiftUIModel: ViewModel {
+    // View中可通过$viewModel.isEnglish获取Binding<Bool>
+    @Published var isEnglish: Bool = true
+    
+    @Published var items: [String] = []
+    
+    // 数据改变时调用editSubject.send(self)通知视图刷新
+    var editPublisher: AnyPublisher<String, Never> { editSubject.eraseToAnyPublisher() }
+    private let editSubject = PassthroughSubject<String, Never>()
+    
+    init(isEnglish: Bool = true) {
+        self.isEnglish = isEnglish
     }
     
+    func reloadData() {
+        // 请求数据，并修改items，通知View刷新
+    }
 }
+
+
 
 @available(iOS 13.0, *)
 struct TestSwiftUIContent: View {
@@ -148,8 +130,6 @@ struct TestSwiftUIContent: View {
     @Environment(\.viewContext) var viewContext: ViewContext
     
     @ObservedObject var viewModel: TestSwiftUIModel = TestSwiftUIModel()
-    
-    weak var delegate: (NSObject & TestSwiftUIViewDelegate)?
     
     @State var topSize: CGSize = .zero
     @State var contentOffset: CGPoint = .zero
@@ -242,11 +222,11 @@ struct TestSwiftUIContent: View {
                 }
                 
                 Button {
-                    delegate?.openWeb(completion: {
-                        viewContext.object = "Object"
-                        viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
-                        viewContext.send()
-                    })
+                    Router.openURL("https://www.baidu.com")
+                    
+                    viewContext.object = "Object"
+                    viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
+                    viewContext.send()
                 } label: {
                     ViewWrapper {
                         Text("Open Router")

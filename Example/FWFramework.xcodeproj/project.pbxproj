@@ -19,6 +19,7 @@
 		2F6A413528B66FD4003719E7 /* TestWorkflowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413428B66FD4003719E7 /* TestWorkflowController.m */; };
 		2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413728B674C3003719E7 /* TestThemeController.m */; };
 		2F6A413D28B67C6D003719E7 /* WebController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413C28B67C6D003719E7 /* WebController.m */; };
+		2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414328B68C74003719E7 /* TestAlertController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -65,6 +66,8 @@
 		2F6A413928B67B7C003719E7 /* AppSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSwift.h; sourceTree = "<group>"; };
 		2F6A413B28B67C6D003719E7 /* WebController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebController.h; sourceTree = "<group>"; };
 		2F6A413C28B67C6D003719E7 /* WebController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebController.m; sourceTree = "<group>"; };
+		2F6A414228B68C74003719E7 /* TestAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertController.h; sourceTree = "<group>"; };
+		2F6A414328B68C74003719E7 /* TestAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -143,33 +146,31 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
-		2F6A412528B620CB003719E7 /* FWObjC */ = {
+		2F6A412528B620CB003719E7 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A413628B674C3003719E7 /* TestThemeController.h */,
+				2F6A413728B674C3003719E7 /* TestThemeController.m */,
+				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2F6A412628B620D2003719E7 /* Toolkit */ = {
 			isa = PBXGroup;
 			children = (
 				2F6A412C28B64774003719E7 /* TestIconController.swift */,
-				2F6A413628B674C3003719E7 /* TestThemeController.h */,
-				2F6A413728B674C3003719E7 /* TestThemeController.m */,
 			);
-			path = FWObjC;
+			path = Toolkit;
 			sourceTree = "<group>";
 		};
-		2F6A412628B620D2003719E7 /* FWSwiftUI */ = {
+		2F6A412728B620D7003719E7 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
 			);
-			path = FWSwiftUI;
-			sourceTree = "<group>";
-		};
-		2F6A412728B620D7003719E7 /* FWFramework */ = {
-			isa = PBXGroup;
-			children = (
-				2F6A413328B66FD4003719E7 /* TestWorkflowController.h */,
-				2F6A413428B66FD4003719E7 /* TestWorkflowController.m */,
-				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
-				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
-			);
-			path = FWFramework;
+			path = Module;
 			sourceTree = "<group>";
 		};
 		2F6A413A28B67C48003719E7 /* Web */ = {
@@ -179,6 +180,24 @@
 				2F6A413C28B67C6D003719E7 /* WebController.m */,
 			);
 			path = Web;
+			sourceTree = "<group>";
+		};
+		2F6A414028B68BC0003719E7 /* Kernel */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A413328B66FD4003719E7 /* TestWorkflowController.h */,
+				2F6A413428B66FD4003719E7 /* TestWorkflowController.m */,
+			);
+			path = Kernel;
+			sourceTree = "<group>";
+		};
+		2F6A414128B68BD7003719E7 /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				2F6A414228B68C74003719E7 /* TestAlertController.h */,
+				2F6A414328B68C74003719E7 /* TestAlertController.m */,
+			);
+			path = Plugin;
 			sourceTree = "<group>";
 		};
 		2FF08B0F28ADDC000074895A /* Assets */ = {
@@ -289,9 +308,11 @@
 			isa = PBXGroup;
 			children = (
 				2FF08B6F28ADE7690074895A /* Index */,
-				2F6A412528B620CB003719E7 /* FWObjC */,
-				2F6A412728B620D7003719E7 /* FWFramework */,
-				2F6A412628B620D2003719E7 /* FWSwiftUI */,
+				2F6A414028B68BC0003719E7 /* Kernel */,
+				2F6A412528B620CB003719E7 /* Service */,
+				2F6A412628B620D2003719E7 /* Toolkit */,
+				2F6A414128B68BD7003719E7 /* Plugin */,
+				2F6A412728B620D7003719E7 /* Module */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -611,6 +632,7 @@
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
+				2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */,
 				2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */,
 				2F6A413D28B67C6D003719E7 /* WebController.m in Sources */,
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,

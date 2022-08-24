@@ -12,17 +12,22 @@ import Darwin
 class TestController: UIViewController {
     
     var testData: [Any] = [
-        ["FWObjC", [
+        ["Kernel", [
+            ["Navigator", "TestWorkflowController"],
+        ]],
+        ["Service", [
             ["Theme", "TestThemeController"],
+            ["Authorize", "TestAuthorizeController"],
+        ]],
+        ["Toolkit", [
             ["Icon", "TestIconController"],
         ]],
-        ["FWFramework", [
-            ["ViewController", "TestSwiftController"],
-            ["Authorize", "TestAuthorizeController"],
-            ["Workflow", "TestWorkflowController"],
+        ["Plugin", [
+            ["Alert", "TestAlertController"],
         ]],
-        ["FWSwiftUI", [
-            ["HostingController", "TestSwiftUIController"],
+        ["Module", [
+            ["Controller", "TestSwiftController"],
+            ["SwiftUI", "TestSwiftUIController"],
         ]],
     ]
     
