@@ -739,6 +739,82 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return _timer;
 }
 
+- (UIVisualEffectView *)fw_setBlurEffect:(UIBlurEffectStyle)style
+{
+    for (UIView *subview in self.subviews) {
+        if ([subview isKindOfClass:[UIVisualEffectView class]]) {
+            [subview removeFromSuperview];
+        }
+    }
+    
+    if (((NSInteger)style) > -1) {
+        UIBlurEffect *effect = [UIBlurEffect effectWithStyle:style];
+        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        [self addSubview:effectView];
+        [effectView fw_pinEdgesToSuperview];
+        return effectView;
+    }
+    return nil;
+}
+
+- (void)fw_removeAllSubviews
+{
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+- (UIView *)fw_subviewOfClass:(Class)clazz
+{
+    return [self fw_subviewOfBlock:^BOOL(UIView *view) {
+        return [view isKindOfClass:clazz];
+    }];
+}
+
+- (UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block
+{
+    if (block(self)) {
+        return self;
+    }
+    
+    /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
+    for (UIView *subview in self.subviews) {
+        if (block(subview)) {
+            return subview;
+        }
+    } */
+    
+    for (UIView *subview in self.subviews) {
+        UIView *resultView = [subview fw_subviewOfBlock:block];
+        if (resultView) {
+            return resultView;
+        }
+    }
+    
+    return nil;
+}
+
+- (UIImage *)fw_snapshotImage
+{
+    return [UIImage fw_imageWithView:self];
+}
+
+- (NSData *)fw_snapshotPdf
+{
+    CGRect bounds = self.bounds;
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGContextRef context = CGPDFContextCreate(consumer, &bounds, NULL);
+    CGDataConsumerRelease(consumer);
+    if (!context) return nil;
+    CGPDFContextBeginPage(context, NULL);
+    CGContextTranslateCTM(context, 0, bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    [self.layer renderInContext:context];
+    CGPDFContextEndPage(context);
+    CGPDFContextClose(context);
+    CGContextRelease(context);
+    return data;
+}
+
 @end
 
 #pragma mark - UIImageView+FWUIKit

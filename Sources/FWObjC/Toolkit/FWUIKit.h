@@ -86,6 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - UIView+FWUIKit
 
+/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
 @interface UIView (FWUIKit)
 
 /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
@@ -141,6 +142,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
 - (dispatch_source_t)fw_startCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block NS_REFINED_FOR_SWIFT;
+
+/// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
+- (nullable UIVisualEffectView *)fw_setBlurEffect:(UIBlurEffectStyle)style NS_REFINED_FOR_SWIFT;
+
+/// 移除所有子视图
+- (void)fw_removeAllSubviews NS_REFINED_FOR_SWIFT;
+
+/// 递归查找指定子类的第一个视图
+- (nullable __kindof UIView *)fw_subviewOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
+
+/// 递归查找指定条件的第一个视图
+- (nullable __kindof UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
+
+/// 图片截图
+@property (nonatomic, readonly, nullable) UIImage *fw_snapshotImage NS_REFINED_FOR_SWIFT;
+
+/// Pdf截图
+@property (nonatomic, readonly, nullable) NSData *fw_snapshotPdf NS_REFINED_FOR_SWIFT;
 
 @end
 

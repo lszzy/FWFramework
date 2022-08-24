@@ -160,6 +160,7 @@ extension Wrapper where Base: UIDevice {
 }
 
 // MARK: - UIView+UIKit
+/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
 extension Wrapper where Base: UIView {
     
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
@@ -253,6 +254,37 @@ extension Wrapper where Base: UIView {
     @discardableResult
     public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSource {
         return base.__fw_startCountDown(seconds, block: block)
+    }
+    
+    /// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
+    @discardableResult
+    public func setBlurEffect(_ style: UIBlurEffect.Style) -> UIVisualEffectView? {
+        return base.__fw_setBlurEffect(style)
+    }
+    
+    /// 移除所有子视图
+    public func removeAllSubviews() {
+        base.__fw_removeAllSubviews()
+    }
+
+    /// 递归查找指定子类的第一个视图
+    public func subview(of clazz: AnyClass) -> UIView? {
+        return base.__fw_subview(of: clazz)
+    }
+
+    /// 递归查找指定条件的第一个视图
+    public func subview(of block: @escaping (UIView) -> Bool) -> UIView? {
+        return base.__fw_subview(of: block)
+    }
+
+    /// 图片截图
+    public var snapshotImage: UIImage? {
+        return base.__fw_snapshotImage
+    }
+
+    /// Pdf截图
+    public var snapshotPdf: Data? {
+        return base.__fw_snapshotPdf
     }
     
 }

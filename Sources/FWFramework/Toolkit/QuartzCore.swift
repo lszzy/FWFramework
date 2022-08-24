@@ -85,6 +85,11 @@ extension Wrapper where Base: CALayer {
         set { base.__fw_themeContents = newValue }
     }
     
+    /// 设置阴影颜色、偏移和半径
+    public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
+        base.__fw_setShadowColor(color, offset: offset, radius: radius)
+    }
+    
 }
 
 // MARK: - CAGradientLayer+QuartzCore
@@ -94,6 +99,151 @@ extension Wrapper where Base: CAGradientLayer {
     public var themeColors: [UIColor]? {
         get { return base.__fw_themeColors }
         set { base.__fw_themeColors = newValue }
+    }
+    
+    /**
+     *  创建渐变层，需手工addLayer
+     *
+     *  @param frame      渐变区域
+     *  @param colors     渐变颜色，CGColor数组，如[黑，白，黑]
+     *  @param locations  渐变位置，0~1，如[0.25, 0.5, 0.75]对应颜色为[0-0.25黑,0.25-0.5黑渐变白,0.5-0.75白渐变黑,0.75-1黑]
+     *  @param startPoint 渐变开始点，设置渐变方向，左上点为(0,0)，右下点为(1,1)
+     *  @param endPoint   渐变结束点
+     *  @return 渐变Layer
+     */
+    public static func gradientLayer(
+        _ frame: CGRect,
+        colors: [Any],
+        locations: [NSNumber]?,
+        startPoint: CGPoint,
+        endPoint: CGPoint
+    ) -> CAGradientLayer {
+        return Base.__fw_gradientLayer(frame, colors: colors, locations: locations, start: startPoint, end: endPoint)
+    }
+    
+}
+
+// MARK: - UIView+QuartzCore
+extension Wrapper where Base: UIView {
+    
+    /**
+     绘制形状路径，需要在drawRect中调用
+     
+     @param bezierPath 绘制路径
+     @param strokeWidth 绘制宽度
+     @param strokeColor 绘制颜色
+     @param fillColor 填充颜色
+     */
+    public func drawBezierPath(_ bezierPath: UIBezierPath, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) {
+        base.__fw_draw(bezierPath, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+    }
+
+    /**
+     绘制渐变颜色，需要在drawRect中调用，支持四个方向，默认向下Down
+     
+     @param rect 绘制区域
+     @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+     @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
+     @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
+     */
+    public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) {
+        base.__fw_drawLinearGradient(rect, colors: colors, locations: locations, direction: direction)
+    }
+
+    /**
+     绘制渐变颜色，需要在drawRect中调用
+     
+     @param rect 绘制区域
+     @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
+     @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
+     @param startPoint 渐变开始点，需要根据rect计算
+     @param endPoint 渐变结束点，需要根据rect计算
+     */
+    public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) {
+        base.__fw_drawLinearGradient(rect, colors: colors, locations: locations, start: startPoint, end: endPoint)
+    }
+
+    /**
+     *  添加渐变Layer
+     *
+     *  @param frame      渐变区域
+     *  @param colors     渐变颜色，CGColor数组，如[黑，白，黑]
+     *  @param locations  渐变位置，0~1，如[0.25, 0.5, 0.75]对应颜色为[0-0.25黑,0.25-0.5黑渐变白,0.5-0.75白渐变黑,0.75-1黑]
+     *  @param startPoint 渐变开始点，设置渐变方向，左上点为(0,0)，右下点为(1,1)
+     *  @param endPoint   渐变结束点
+     *  @return 渐变Layer
+     */
+    @discardableResult
+    public func addGradientLayer(_ frame: CGRect, colors: [Any], locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) -> CAGradientLayer {
+        return base.__fw_addGradientLayer(frame, colors: colors, locations: locations, start: startPoint, end: endPoint)
+    }
+
+    /**
+     添加虚线Layer
+     
+     @param rect 虚线区域，从中心绘制
+     @param lineLength 虚线的宽度
+     @param lineSpacing 虚线的间距
+     @param lineColor 虚线的颜色
+     @return 虚线Layer
+     */
+    @discardableResult
+    public func addDashLayer(_ rect: CGRect, lineLength: CGFloat, lineSpacing: CGFloat, lineColor: UIColor) -> CALayer {
+        return base.__fw_addDashLayer(rect, lineLength: lineLength, lineSpacing: lineSpacing, lineColor: lineColor)
+    }
+    
+    // MARK: - Drag
+    /// 是否启用拖动，默认NO
+    public var dragEnabled: Bool {
+        get { return base.__fw_dragEnabled }
+        set { base.__fw_dragEnabled = newValue }
+    }
+
+    /// 拖动手势，延迟加载
+    public var dragGesture: UIPanGestureRecognizer {
+        return base.__fw_dragGesture
+    }
+
+    /// 设置拖动限制区域，默认CGRectZero，无限制
+    public var dragLimit: CGRect {
+        get { return base.__fw_dragLimit }
+        set { base.__fw_dragLimit = newValue }
+    }
+
+    /// 设置拖动动作有效区域，默认self.frame
+    public var dragArea: CGRect {
+        get { return base.__fw_dragArea }
+        set { base.__fw_dragArea = newValue }
+    }
+
+    /// 是否允许横向拖动(X)，默认YES
+    public var dragHorizontal: Bool {
+        get { return base.__fw_dragHorizontal }
+        set { base.__fw_dragHorizontal = newValue }
+    }
+
+    /// 是否允许纵向拖动(Y)，默认YES
+    public var dragVertical: Bool {
+        get { return base.__fw_dragVertical }
+        set { base.__fw_dragVertical = newValue }
+    }
+
+    /// 开始拖动回调
+    public var dragStartedBlock: ((UIView) -> Void)? {
+        get { return base.__fw_dragStartedBlock }
+        set { base.__fw_dragStartedBlock = newValue }
+    }
+
+    /// 拖动移动回调
+    public var dragMovedBlock: ((UIView) -> Void)? {
+        get { return base.__fw_dragMovedBlock }
+        set { base.__fw_dragMovedBlock = newValue }
+    }
+
+    /// 结束拖动回调
+    public var dragEndedBlock: ((UIView) -> Void)? {
+        get { return base.__fw_dragEndedBlock }
+        set { base.__fw_dragEndedBlock = newValue }
     }
     
 }
