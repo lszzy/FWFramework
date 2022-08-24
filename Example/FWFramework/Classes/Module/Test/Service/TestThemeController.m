@@ -10,6 +10,8 @@
 #import "AppSwift.h"
 @import FWFramework;
 
+#define TestImage FWIconImage(@"zmdi-var-flower", 24)
+
 @interface TestThemeController () <FWViewController>
 
 @end
@@ -134,37 +136,37 @@
     dispatch_once(&onceToken, ^{
         UIImage.fw_themeImageColor = AppTheme.textColor;
     });
-    imageView.fw_themeImage = FWIcon.closeImage.fw_themeImage;
+    imageView.fw_themeImage = TestImage.fw_themeImage;
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 300, 50, 50)];
-    UIImage *colorImage = [UIImage fw_themeLight:FWIcon.closeImage dark:FWIcon.closeImage];
+    UIImage *colorImage = [UIImage fw_themeLight:TestImage dark:TestImage];
     imageView.fw_themeImage = [colorImage fw_themeImageWithColor:AppTheme.textColor];
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 300, 50, 50)];
-    imageView.fw_themeImage = [FWIcon.closeImage fw_themeImageWithColor:[UIColor redColor]];
+    [UIImage fw_setThemeImage:[UIImage fw_themeLight:TestImage dark:[TestImage fw_imageWithTintColor:[UIColor whiteColor]]] forName:@"dynamicImage"];
+    UIImage *dynamicImage = [UIImage fw_themeNamed:@"dynamicImage"];
+    imageView.image = [dynamicImage fw_imageForStyle:FWThemeManager.sharedInstance.style];
+    FWWeakify(imageView);
+    [imageView fw_addThemeListener:^(FWThemeStyle style) {
+        FWStrongify(imageView);
+        imageView.image = [dynamicImage fw_imageForStyle:style];
+    }];
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 370, 50, 50)];
-    imageView.fw_themeAsset = [UIImageAsset fw_themeLight:FWIcon.closeImage dark:[FWIcon.closeImage fw_imageWithTintColor:[UIColor whiteColor]]];
+    imageView.fw_themeAsset = [UIImageAsset fw_themeLight:TestImage dark:[TestImage fw_imageWithTintColor:[UIColor whiteColor]]];
     [self.view addSubview:imageView];
     
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(90, 370, 50, 50)];
     imageView.fw_themeAsset = [UIImageAsset fw_themeAsset:^UIImage * (FWThemeStyle style) {
-        return style == FWThemeStyleDark ? [FWIcon.closeImage fw_imageWithTintColor:[UIColor yellowColor]] : FWIcon.closeImage;
+        return style == FWThemeStyleDark ? [TestImage fw_imageWithTintColor:[UIColor whiteColor]] : TestImage;
     }];
     [self.view addSubview:imageView];
     
     UIImageView *imageView3 = [[UIImageView alloc] initWithFrame:CGRectMake(160, 370, 50, 50)];
-    [UIImage fw_setThemeImage:[UIImage fw_themeLight:FWIcon.closeImage dark:[FWIcon.closeImage fw_imageWithTintColor:[UIColor redColor]]] forName:@"dynamicImage"];
-    UIImage *dynamicImage = [UIImage fw_themeNamed:@"dynamicImage"];
-    imageView3.image = [dynamicImage fw_imageForStyle:FWThemeManager.sharedInstance.style];
-    FWWeakify(imageView3);
-    [imageView3 fw_addThemeListener:^(FWThemeStyle style) {
-        FWStrongify(imageView3);
-        imageView3.image = [dynamicImage fw_imageForStyle:style];
-    }];
+    imageView3.fw_themeImage = [TestImage fw_themeImageWithColor:[UIColor redColor]];
     [self.view addSubview:imageView3];
     
     UILabel *colorLabel = [UILabel new];

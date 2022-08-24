@@ -24,6 +24,7 @@ class TestController: UIViewController {
         ]],
         ["Plugin", [
             ["Alert", "TestAlertController"],
+            ["Empty", "TestEmptyController"],
         ]],
         ["Module", [
             ["Controller", "TestSwiftController"],
