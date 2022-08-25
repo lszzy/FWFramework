@@ -15,7 +15,8 @@ import UserNotifications
     
     // MARK: - Accessor
     /// 单例模式
-    public static let sharedInstance = NotificationManager()
+    @objc(sharedInstance)
+    public static let shared = NotificationManager()
     
     // MARK: - Authorize
     /// 异步查询通知权限状态，当前线程回调

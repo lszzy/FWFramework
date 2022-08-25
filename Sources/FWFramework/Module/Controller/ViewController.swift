@@ -24,7 +24,7 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionView"), withObject: self) as! UICollectionView
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("collectionView"), withObject: self) as! UICollectionView
             fw.setProperty(result, forName: "collectionView")
             return result
         }
@@ -35,7 +35,7 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "collectionData") as? NSMutableArray {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("collectionData"), withObject: self) as! NSMutableArray
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("collectionData"), withObject: self) as! NSMutableArray
             fw.setProperty(result, forName: "collectionData")
             return result
         }
@@ -48,7 +48,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "scrollView") as? UIScrollView {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("scrollView"), withObject: self) as! UIScrollView
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("scrollView"), withObject: self) as! UIScrollView
             fw.setProperty(result, forName: "scrollView")
             return result
         }
@@ -59,7 +59,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "contentView") as? UIView {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("contentView"), withObject: self) as! UIView
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("contentView"), withObject: self) as! UIView
             fw.setProperty(result, forName: "contentView")
             return result
         }
@@ -72,7 +72,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "tableView") as? UITableView {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableView"), withObject: self) as! UITableView
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("tableView"), withObject: self) as! UITableView
             fw.setProperty(result, forName: "tableView")
             return result
         }
@@ -83,7 +83,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "tableData") as? NSMutableArray {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("tableData"), withObject: self) as! NSMutableArray
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("tableData"), withObject: self) as! NSMutableArray
             fw.setProperty(result, forName: "tableData")
             return result
         }
@@ -96,7 +96,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "webView") as? WebView {
             return result
         } else {
-            let result = ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! WebView
+            let result = ViewControllerManager.shared.performIntercepter(NSSelectorFromString("webView"), withObject: self) as! WebView
             fw.setProperty(result, forName: "webView")
             return result
         }
@@ -105,20 +105,20 @@ extension WebViewControllerProtocol where Self: UIViewController {
     /// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
     @nonobjc public var webItems: NSArray? {
         get {
-            return ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webItems"), withObject: self) as? NSArray
+            return ViewControllerManager.shared.performIntercepter(NSSelectorFromString("webItems"), withObject: self) as? NSArray
         }
         set {
-            ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("setWebItems:"), withObject: self, parameter: newValue)
+            ViewControllerManager.shared.performIntercepter(NSSelectorFromString("setWebItems:"), withObject: self, parameter: newValue)
         }
     }
     
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     @nonobjc public var webRequest: Any? {
         get {
-            return ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("webRequest"), withObject: self)
+            return ViewControllerManager.shared.performIntercepter(NSSelectorFromString("webRequest"), withObject: self)
         }
         set {
-            ViewControllerManager.sharedInstance.performIntercepter(NSSelectorFromString("setWebRequest:"), withObject: self, parameter: newValue)
+            ViewControllerManager.shared.performIntercepter(NSSelectorFromString("setWebRequest:"), withObject: self, parameter: newValue)
         }
     }
 }

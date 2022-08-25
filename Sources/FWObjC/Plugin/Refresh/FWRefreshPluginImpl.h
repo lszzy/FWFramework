@@ -17,7 +17,7 @@ NS_SWIFT_NAME(RefreshPluginImpl)
 @interface FWRefreshPluginImpl : NSObject <FWRefreshPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWRefreshPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWRefreshPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 下拉刷新自定义句柄，开启时自动调用
 @property (nonatomic, copy, nullable) void (^pullRefreshBlock)(FWPullRefreshView *pullRefreshView);

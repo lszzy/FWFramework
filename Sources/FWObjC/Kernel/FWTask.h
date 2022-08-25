@@ -36,7 +36,7 @@ NS_SWIFT_NAME(TaskManager)
 @interface FWTaskManager : NSObject
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWTaskManager *sharedInstance;
+@property (class, nonatomic, readonly) FWTaskManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /** 并发操作的最大任务数 */
 @property (nonatomic, assign) NSInteger maxConcurrentTaskCount;

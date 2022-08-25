@@ -90,8 +90,8 @@ extension SettingsController {
             }
             cell.detailTextLabel?.text = language
         } else if "onTheme" == action {
-            let mode = ThemeManager.sharedInstance.mode
-            let theme = mode == .system ? FW.localized("systemTitle").appending(ThemeManager.sharedInstance.style == .dark ? "(\(FW.localized("themeDark")))" : "(\(FW.localized("themeLight")))") : (mode == .dark ? FW.localized("themeDark") : FW.localized("themeLight"))
+            let mode = ThemeManager.shared.mode
+            let theme = mode == .system ? FW.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(FW.localized("themeDark")))" : "(\(FW.localized("themeLight")))") : (mode == .dark ? FW.localized("themeDark") : FW.localized("themeLight"))
             cell.detailTextLabel?.text = theme
         }
         return cell
@@ -146,7 +146,7 @@ private extension SettingsController {
         }
         
         fw.showSheet(title: FW.localized("themeTitle"), message: nil, cancel: FW.localized("取消"), actions: actions, currentIndex:-1) { (index) in
-            ThemeManager.sharedInstance.mode = ThemeMode(index)
+            ThemeManager.shared.mode = ThemeMode(index)
             TabController.refreshController()
         }
     }

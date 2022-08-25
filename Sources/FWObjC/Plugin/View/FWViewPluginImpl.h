@@ -37,7 +37,7 @@ NS_SWIFT_NAME(ViewPluginImpl)
 @interface FWViewPluginImpl : NSObject <FWViewPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWViewPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWViewPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 自定义进度视图生产句柄，默认FWProgressView
 @property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^customProgressView)(FWProgressViewStyle style);

@@ -107,7 +107,7 @@ NS_SWIFT_NAME(AlertPluginImpl)
 @interface FWAlertPluginImpl : NSObject <FWAlertPlugin>
 
 /// 单例模式对象
-@property (class, nonatomic, readonly) FWAlertPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWAlertPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 自定义Alert弹窗样式，nil时使用单例
 @property (nonatomic, strong, nullable) FWAlertAppearance *customAlertAppearance;

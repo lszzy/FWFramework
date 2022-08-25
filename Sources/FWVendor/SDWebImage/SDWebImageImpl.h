@@ -14,7 +14,7 @@ NS_SWIFT_NAME(SDWebImageImpl)
 @interface FWSDWebImageImpl : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWSDWebImageImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWSDWebImageImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;

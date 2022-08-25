@@ -17,7 +17,7 @@ NS_SWIFT_NAME(EmptyPluginImpl)
 @interface FWEmptyPluginImpl : NSObject <FWEmptyPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWEmptyPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWEmptyPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 显示空界面时是否执行淡入动画，默认YES
 @property (nonatomic, assign) BOOL fadeAnimated;

@@ -139,19 +139,19 @@ extension Wrapper where Base: UIDevice {
                 return deviceUUID
             }
             
-            if let deviceUUID = KeychainManager.sharedInstance.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
+            if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
                 fw_innerDeviceUUID = deviceUUID
                 return deviceUUID
             }
             
             let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
             fw_innerDeviceUUID = deviceUUID
-            KeychainManager.sharedInstance.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
             return deviceUUID
         }
         set {
             fw_innerDeviceUUID = newValue
-            KeychainManager.sharedInstance.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
         }
     }
     

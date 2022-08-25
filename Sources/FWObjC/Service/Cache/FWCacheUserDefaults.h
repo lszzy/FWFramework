@@ -14,7 +14,7 @@ NS_SWIFT_NAME(CacheUserDefaults)
 @interface FWCacheUserDefaults : FWCacheEngine
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWCacheUserDefaults *sharedInstance;
+@property (class, nonatomic, readonly) FWCacheUserDefaults *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 分组对象
 - (instancetype)initWithGroup:(nullable NSString *)group;

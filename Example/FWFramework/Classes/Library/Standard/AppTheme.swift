@@ -93,32 +93,32 @@ extension AppTheme {
         
         UITableView.fw.resetTableStyle()
         UINavigationController.fw.enablePopProxy()
-        ViewControllerManager.sharedInstance.hookInit = { viewController in
+        ViewControllerManager.shared.hookInit = { viewController in
             viewController.extendedLayoutIncludesOpaqueBars = true
             viewController.hidesBottomBarWhenPushed = true
             viewController.fw.navigationBarHidden = false
             viewController.fw.navigationBarStyle = .default
         }
-        ViewControllerManager.sharedInstance.hookViewDidLoad = { viewController in
+        ViewControllerManager.shared.hookViewDidLoad = { viewController in
             viewController.view.backgroundColor = AppTheme.tableColor
             // viewController.fw.backBarItem = Icon.backImage
             // if (viewController.navigationController?.children.count ?? 0) > 1 {
             //     viewController.fw.leftBarItem = Icon.backImage
             // }
         }
-        ViewControllerManager.sharedInstance.hookTableViewController = { viewController in
+        ViewControllerManager.shared.hookTableViewController = { viewController in
             viewController.tableView.backgroundColor = AppTheme.tableColor
         }
     }
     
     private static func setupPlugin() {
-        ToastPluginImpl.sharedInstance.defaultLoadingText = {
+        ToastPluginImpl.shared.defaultLoadingText = {
             return NSAttributedString(string: "加载中...")
         }
-        ToastPluginImpl.sharedInstance.defaultProgressText = {
+        ToastPluginImpl.shared.defaultProgressText = {
             return NSAttributedString(string: "上传中...")
         }
-        ToastPluginImpl.sharedInstance.defaultMessageText = { (style) in
+        ToastPluginImpl.shared.defaultMessageText = { (style) in
             switch style {
             case .success:
                 return NSAttributedString(string: "操作成功")
@@ -128,7 +128,7 @@ extension AppTheme {
                 return nil
             }
         }
-        ToastPluginImpl.sharedInstance.customBlock = { toastView in
+        ToastPluginImpl.shared.customBlock = { toastView in
             if toastView.type == .indicator {
                 if (toastView.attributedTitle?.length ?? 0) < 1 {
                     toastView.contentBackgroundColor = .clear
@@ -136,16 +136,16 @@ extension AppTheme {
                 }
             }
         }
-        EmptyPluginImpl.sharedInstance.customBlock = { (emptyView) in
+        EmptyPluginImpl.shared.customBlock = { (emptyView) in
             emptyView.loadingViewColor = AppTheme.textColor
         }
-        EmptyPluginImpl.sharedInstance.defaultText = {
+        EmptyPluginImpl.shared.defaultText = {
             return "暂无数据"
         }
-        EmptyPluginImpl.sharedInstance.defaultImage = {
+        EmptyPluginImpl.shared.defaultImage = {
             return UIImage.fw.appIconImage()
         }
-        EmptyPluginImpl.sharedInstance.defaultAction = {
+        EmptyPluginImpl.shared.defaultAction = {
             return "重新加载"
         }
     }

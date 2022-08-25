@@ -36,7 +36,7 @@ NS_SWIFT_NAME(StatisticalManager)
 @interface FWStatisticalManager : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWStatisticalManager *sharedInstance;
+@property (class, nonatomic, readonly) FWStatisticalManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否启用事件统计，为提高性能，默认NO未开启，需手动开启
 @property (nonatomic, assign) BOOL statisticalEnabled;
