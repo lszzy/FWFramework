@@ -27,6 +27,8 @@ import Darwin
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
+            ["Collection", "TestCollectionController"],
+            ["Table", "TestTableController"],
             ["Icon", "TestIconController"],
         ]],
         ["Plugin", [
