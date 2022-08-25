@@ -29,6 +29,7 @@ import Darwin
             ["Adaptive", "TestAdaptiveController"],
             ["Collection", "TestCollectionController"],
             ["Table", "TestTableController"],
+            ["Thread", "TestThreadController"],
             ["Icon", "TestIconController"],
         ]],
         ["Plugin", [
@@ -46,6 +47,7 @@ import Darwin
             ["Bridge", "TestBridgeController"],
             ["Toolbar", "TestToolbarController"],
             ["TabBar", "TestTabbarController"],
+            ["Skeleton", "TestSkeletonController"],
             ["SwiftUI", "TestSwiftUIController"],
         ]],
     ]
