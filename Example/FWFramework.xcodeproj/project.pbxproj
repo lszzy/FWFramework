@@ -63,6 +63,7 @@
 		2F6A41C028B79113003719E7 /* TestPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41BF28B79113003719E7 /* TestPopupController.m */; };
 		2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41C828B7960E003719E7 /* TestTransitionController.m */; };
 		2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CB28B7977C003719E7 /* TestPagingController.m */; };
+		2F6A41CF28B7CA65003719E7 /* TestRefreshController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -187,6 +188,8 @@
 		2F6A41C828B7960E003719E7 /* TestTransitionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTransitionController.m; sourceTree = "<group>"; };
 		2F6A41CA28B7977C003719E7 /* TestPagingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPagingController.h; sourceTree = "<group>"; };
 		2F6A41CB28B7977C003719E7 /* TestPagingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPagingController.m; sourceTree = "<group>"; };
+		2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRefreshController.h; sourceTree = "<group>"; };
+		2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRefreshController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -383,6 +386,8 @@
 				2F6A415328B7166B003719E7 /* TestPreviewController.m */,
 				2F6A415E28B71F67003719E7 /* TestPluginController.h */,
 				2F6A415F28B71F67003719E7 /* TestPluginController.m */,
+				2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */,
+				2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */,
 				2F6A415C28B71E12003719E7 /* TestCameraController.swift */,
 				2F6A415928B71CDF003719E7 /* TestToastController.h */,
 				2F6A415A28B71CDF003719E7 /* TestToastController.m */,
@@ -851,6 +856,7 @@
 				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
 				2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */,
+				2F6A41CF28B7CA65003719E7 /* TestRefreshController.m in Sources */,
 				2F6A419528B75A47003719E7 /* TestBadgeController.m in Sources */,
 				2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */,
 				2F6A417D28B740FD003719E7 /* TestNotificationController.m in Sources */,
