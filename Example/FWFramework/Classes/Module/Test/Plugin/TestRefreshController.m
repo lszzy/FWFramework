@@ -110,12 +110,8 @@
 
 - (void)setupTableView
 {
+    [self.tableView fw_resetGroupedStyle];
     [self.tableView registerClass:[TestRefreshCell class] forCellReuseIdentifier:@"Cell"];
-}
-
-- (void)setupNavbar
-{
-    self.fw_extendedLayoutEdge = UIRectEdgeBottom;
 }
 
 - (void)setupSubviews
@@ -128,10 +124,27 @@
     pullView.image = [FWModuleBundle imageNamed:@"Loading.gif"];
     self.tableView.fw_pullRefreshView.shouldChangeAlpha = NO;
     [self.tableView.fw_pullRefreshView setCustomView:pullView forState:FWPullRefreshStateAll];
+    FWWeakifySelf();
+    self.tableView.fw_pullRefreshView.stateBlock = ^(FWPullRefreshView * _Nonnull view, FWPullRefreshState state) {
+        FWStrongifySelf();
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh state-%@", @(state)];
+    };
+    self.tableView.fw_pullRefreshView.progressBlock = ^(FWPullRefreshView * _Nonnull view, CGFloat progress) {
+        FWStrongifySelf();
+        self.navigationItem.title = [NSString stringWithFormat:@"refresh progress-%.2f", progress];
+    };
     
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     infiniteView.image = [FWModuleBundle imageNamed:@"Loading.gif"];
     [self.tableView.fw_infiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
+    self.tableView.fw_infiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
+        FWStrongifySelf();
+        self.navigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
+    };
+    self.tableView.fw_infiniteScrollView.progressBlock = ^(FWInfiniteScrollView * _Nonnull view, CGFloat progress) {
+        FWStrongifySelf();
+        self.navigationItem.title = [NSString stringWithFormat:@"load progress-%.2f", progress];
+    };
 }
 
 - (void)setupLayout
@@ -197,7 +210,7 @@
 - (void)onRefreshing
 {
     NSLog(@"开始刷新");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"刷新完成");
         
         [self.tableData removeAllObjects];
@@ -214,7 +227,7 @@
 - (void)onLoading
 {
     NSLog(@"开始加载");
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
         for (int i = 0; i < 1; i++) {
