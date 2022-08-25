@@ -39,12 +39,13 @@ import Darwin
         ["Plugin", [
             ["AlertPlugin", "TestAlertController"],
             ["EmptyPlugin", "TestEmptyController"],
+            ["ToastPlugin", "TestToastController"],
+            ["RefreshPlugin", "TestRefreshController"],
+            ["ViewPlugin", "TestPluginController"],
+            ["ImagePlugin", "TestImageController"],
             ["ImagePicker", "TestPickerController"],
             ["ImageCamera", "TestCameraController"],
             ["ImagePreview", "TestPreviewController"],
-            ["ToastPlugin", "TestToastController"],
-            ["ImagePlugin", "TestImageController"],
-            ["ViewPlugin", "TestPluginController"],
         ]],
         ["Module", [
             ["BadgeView", "TestBadgeController"],
