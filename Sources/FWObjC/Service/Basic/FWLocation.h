@@ -29,7 +29,7 @@ NS_SWIFT_NAME(LocationManager)
 @interface FWLocationManager : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWLocationManager *sharedInstance;
+@property (class, nonatomic, readonly) FWLocationManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否启用Always定位，默认NO，请求WhenInUse定位
 @property (nonatomic, assign) BOOL alwaysLocation;

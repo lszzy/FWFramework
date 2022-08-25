@@ -39,7 +39,7 @@ NS_SWIFT_NAME(ThemeManager)
 @interface FWThemeManager : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWThemeManager *sharedInstance;
+@property (class, nonatomic, readonly) FWThemeManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 当前主题模式，默认跟随系统模式
 @property (nonatomic, assign) FWThemeMode mode;

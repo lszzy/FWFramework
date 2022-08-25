@@ -226,7 +226,7 @@ NS_SWIFT_NAME(LoggerPluginImpl)
 @interface FWLoggerPluginImpl : NSObject <FWLoggerPlugin>
 
 /// 单例模式对象
-@property (class, nonatomic, readonly) FWLoggerPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWLoggerPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 @end
 

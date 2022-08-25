@@ -141,7 +141,7 @@ NS_SWIFT_NAME(ImagePluginImpl)
 @interface FWImagePluginImpl : NSObject <FWImagePlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWImagePluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWImagePluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;

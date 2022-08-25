@@ -15,7 +15,8 @@ import Security
     
     // MARK: - Accessor
     /// 单例模式
-    public static let sharedInstance = KeychainManager()
+    @objc(sharedInstance)
+    public static let shared = KeychainManager()
     
     private var group: String?
     

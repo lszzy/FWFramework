@@ -272,7 +272,7 @@
  @param cls 类名
  */
 #define FWSingleton( cls ) \
-    @property (class, nonatomic, readonly) cls *sharedInstance;
+    @property (class, nonatomic, readonly) cls *sharedInstance NS_SWIFT_NAME(shared);
 
 /**
  定义单例实现

@@ -17,7 +17,7 @@ NS_SWIFT_NAME(ImagePickerControllerImpl)
 @interface FWImagePickerControllerImpl : NSObject <FWImagePickerPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWImagePickerControllerImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWImagePickerControllerImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否显示相册列表控制器，默认为NO，点击titleView切换相册
 @property (nonatomic, assign) BOOL showsAlbumController;

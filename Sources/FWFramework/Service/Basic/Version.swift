@@ -26,7 +26,8 @@ public enum VersionStatus: Int {
     
     // MARK: - Accessor
     /// 单例模式
-    public static let sharedInstance = VersionManager()
+    @objc(sharedInstance)
+    public static let shared = VersionManager()
     
     /// 当前版本号，可自定义。小于最新版本号表示需要更新，大于最新版本号表示正在审核
     public var currentVersion: String = ""

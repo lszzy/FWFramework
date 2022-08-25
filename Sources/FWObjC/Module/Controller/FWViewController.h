@@ -58,7 +58,7 @@ NS_SWIFT_NAME(ViewControllerManager)
 @interface FWViewControllerManager : NSObject
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance;
+@property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 默认全局控制器init钩子句柄，init优先自动调用
 @property (nonatomic, copy, nullable) void (^hookInit)(UIViewController *viewController);

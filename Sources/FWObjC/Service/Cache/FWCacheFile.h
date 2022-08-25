@@ -14,7 +14,7 @@ NS_SWIFT_NAME(CacheFile)
 @interface FWCacheFile : FWCacheEngine
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWCacheFile *sharedInstance;
+@property (class, nonatomic, readonly) FWCacheFile *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 指定路径
 - (instancetype)initWithPath:(nullable NSString *)path;

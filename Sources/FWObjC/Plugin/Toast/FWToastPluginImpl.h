@@ -17,7 +17,7 @@ NS_SWIFT_NAME(ToastPluginImpl)
 @interface FWToastPluginImpl : NSObject <FWToastPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWToastPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWToastPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 显示吐司时是否执行淡入动画，默认YES
 @property (nonatomic, assign) BOOL fadeAnimated;

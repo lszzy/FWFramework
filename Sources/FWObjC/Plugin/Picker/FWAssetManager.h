@@ -274,7 +274,7 @@ NS_SWIFT_NAME(AssetManager)
 @interface FWAssetManager : NSObject
 
 /// 获取 FWAssetManager 的单例
-@property (class, nonatomic, readonly) FWAssetManager *sharedInstance;
+@property (class, nonatomic, readonly) FWAssetManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 获取当前应用的“照片”访问授权状态
 + (FWAssetAuthorizationStatus)authorizationStatus;

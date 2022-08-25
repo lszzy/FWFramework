@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
 NS_SWIFT_NAME(AudioPlayer)
 @interface FWAudioPlayer : NSObject
 
-@property (class, nonatomic, readonly) FWAudioPlayer *sharedInstance;
+@property (class, nonatomic, readonly) FWAudioPlayer *sharedInstance NS_SWIFT_NAME(shared);
 
 @property (nonatomic, strong, nullable) AVQueuePlayer *audioPlayer;
 @property (nonatomic, weak, nullable) id<FWAudioPlayerDelegate> delegate;

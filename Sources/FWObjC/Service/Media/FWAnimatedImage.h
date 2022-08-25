@@ -107,7 +107,7 @@ NS_SWIFT_NAME(ImageCoder)
 @interface FWImageCoder : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWImageCoder *sharedInstance;
+@property (class, nonatomic, readonly) FWImageCoder *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
 @property (nonatomic, assign) BOOL heicsEnabled;

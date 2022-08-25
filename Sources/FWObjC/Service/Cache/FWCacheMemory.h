@@ -14,7 +14,7 @@ NS_SWIFT_NAME(CacheMemory)
 @interface FWCacheMemory : FWCacheEngine
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWCacheMemory *sharedInstance;
+@property (class, nonatomic, readonly) FWCacheMemory *sharedInstance NS_SWIFT_NAME(shared);
 
 @end
 

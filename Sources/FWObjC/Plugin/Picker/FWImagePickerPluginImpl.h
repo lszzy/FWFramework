@@ -157,7 +157,7 @@ NS_SWIFT_NAME(ImagePickerPluginImpl)
 @interface FWImagePickerPluginImpl : NSObject <FWImagePickerPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWImagePickerPluginImpl *sharedInstance;
+@property (class, nonatomic, readonly) FWImagePickerPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否禁用iOS14+PHPickerViewController(支持多选)，默认NO；设为YES后始终使用UIImagePickerController(仅支持单选)
 @property (nonatomic, assign) BOOL photoPickerDisabled;

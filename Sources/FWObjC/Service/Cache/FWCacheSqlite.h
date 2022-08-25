@@ -14,7 +14,7 @@ NS_SWIFT_NAME(CacheSqlite)
 @interface FWCacheSqlite : FWCacheEngine
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWCacheSqlite *sharedInstance;
+@property (class, nonatomic, readonly) FWCacheSqlite *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 指定路径
 - (instancetype)initWithPath:(nullable NSString *)path;

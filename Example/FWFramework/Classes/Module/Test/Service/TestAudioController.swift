@@ -11,7 +11,7 @@ import FWFramework
 class TestAudioController: UIViewController {
     
     // MARK: - Accessor
-    lazy var audioPlayer = AudioPlayer.sharedInstance
+    lazy var audioPlayer = AudioPlayer.shared
     lazy var resourceLoader = PlayerCacheLoaderManager()
     
     @UserDefaultAnnotation("TestAudioCacheEnabled", defaultValue: false)
