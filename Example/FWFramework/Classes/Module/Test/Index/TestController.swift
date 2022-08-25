@@ -13,6 +13,7 @@ import Darwin
     
     var testData: [Any] = [
         ["Kernel", [
+            ["Router", "TestRouterController"],
             ["Navigator", "TestWorkflowController"],
             ["Promise", "TestPromiseController"],
             ["State", "TestStateController"],
@@ -29,7 +30,9 @@ import Darwin
             ["Adaptive", "TestAdaptiveController"],
             ["Collection", "TestCollectionController"],
             ["Table", "TestTableController"],
+            ["Keyboard", "TestKeyboardController"],
             ["Thread", "TestThreadController"],
+            ["Button", "TestButtonController"],
             ["Icon", "TestIconController"],
         ]],
         ["Plugin", [
@@ -43,10 +46,15 @@ import Darwin
             ["View", "TestPluginController"],
         ]],
         ["Module", [
-            ["Controller", "TestSwiftController"],
+            ["Badge", "TestBadgeController"],
+            ["Banner", "TestBannerController"],
             ["Bridge", "TestBridgeController"],
+            ["Controller", "TestSwiftController"],
+            ["Float", "TestFloatController"],
+            ["Grid", "TestGridController"],
             ["Toolbar", "TestToolbarController"],
             ["TabBar", "TestTabbarController"],
+            ["Statistical", "TestStatisticalController"],
             ["Skeleton", "TestSkeletonController"],
             ["SwiftUI", "TestSwiftUIController"],
         ]],
