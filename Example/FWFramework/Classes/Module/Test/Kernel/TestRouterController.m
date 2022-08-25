@@ -385,7 +385,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onRewrite2
 {
-    [FWRouter openURL:@"https://www.baidu.com/wildcard/原子弹?title=我是字符串100%"];
+    [FWRouter openURL:@"https://www.baidu.com/wildcard/字符串?title=我是字符串100%"];
 }
 
 - (void)onRewrite3
@@ -460,7 +460,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenHttp2
 {
-    [FWRouter openURL:@"http://www.baidu.com/test/directory%202/index.html?param=value#anchor"];
+    [FWRouter openURL:@"https://www.baidu.com/?param=value#anchor"];
 }
 
 - (void)onOpenHttp3
@@ -475,7 +475,7 @@ FWDefStaticString(ROUTE_CLOSE, @"app://close");
 
 - (void)onOpenUniversalLinks
 {
-    NSString *url = @"https://v.douyin.com/";
+    NSString *url = @"https://v.douyin.com/JYmHJ9k/";
     [UIApplication fw_openUniversalLinks:url completionHandler:^(BOOL success) {
         if (!success) {
             [FWRouter openURL:url];
