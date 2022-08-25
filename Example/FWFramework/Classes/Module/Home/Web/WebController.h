@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WebController : UIViewController <FWWebViewController>
 
+@property (nonatomic, copy, nullable) NSString *requestUrl;
+
 - (instancetype)initWithRequestUrl:(nullable NSString *)requestUrl;
 
 @end

@@ -34,6 +34,7 @@
 		2F6A416B28B721C9003719E7 /* Material.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416528B721C9003719E7 /* Material.ttf */; };
 		2F6A416C28B721C9003719E7 /* Lottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416628B721C9003719E7 /* Lottie.json */; };
 		2F6A416D28B721C9003719E7 /* Bridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416728B721C9003719E7 /* Bridge.html */; };
+		2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A416F28B72328003719E7 /* TestBridgeController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -102,6 +103,8 @@
 		2F6A416528B721C9003719E7 /* Material.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Material.ttf; sourceTree = "<group>"; };
 		2F6A416628B721C9003719E7 /* Lottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Lottie.json; sourceTree = "<group>"; };
 		2F6A416728B721C9003719E7 /* Bridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Bridge.html; sourceTree = "<group>"; };
+		2F6A416E28B72328003719E7 /* TestBridgeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBridgeController.h; sourceTree = "<group>"; };
+		2F6A416F28B72328003719E7 /* TestBridgeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBridgeController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 			children = (
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
+				2F6A416E28B72328003719E7 /* TestBridgeController.h */,
+				2F6A416F28B72328003719E7 /* TestBridgeController.m */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -711,6 +716,7 @@
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2F6A413528B66FD4003719E7 /* TestWorkflowController.m in Sources */,
+				2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,

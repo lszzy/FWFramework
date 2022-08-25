@@ -11,7 +11,6 @@
 
 @interface WebController ()
 
-@property (nonatomic, copy, nullable) NSString *requestUrl;
 @property (nonatomic, assign) BOOL toolbarHidden;
 
 @end
