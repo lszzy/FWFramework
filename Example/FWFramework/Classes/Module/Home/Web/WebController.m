@@ -66,6 +66,13 @@
     self.webView.allowsUniversalLinks = YES;
 }
 
+- (void)setupWebLayout
+{
+    CGFloat bottomHeight = self.hidesBottomBarWhenPushed ? 0 : self.fw_tabBarHeight;
+    bottomHeight += self.fw_toolBarHidden ? 0 : self.fw_toolBarHeight;
+    self.webView.fw_layoutChain.horizontal().topToSafeArea().bottomWithInset(bottomHeight);
+}
+
 - (void)setupToolbar
 {
     FWWeakifySelf();
@@ -108,14 +115,21 @@
 
 - (void)reloadToolbar:(BOOL)animated
 {
-    if (self.webView.canGoBack || self.webView.canGoForward) {
-        if (self.fw_toolBarHidden) {
-            [self.navigationController setToolbarHidden:NO animated:animated];
-        }
+    BOOL hidden = !(self.webView.canGoBack || self.webView.canGoForward);
+    if (self.fw_toolBarHidden == hidden) return;
+    
+    if (animated) {
+        [CATransaction begin];
+        FWWeakifySelf();
+        [CATransaction setCompletionBlock:^{
+            FWStrongifySelf();
+            if (self.webView.superview) [self setupWebLayout];
+        }];
+        [self.navigationController setToolbarHidden:hidden animated:animated];
+        [CATransaction commit];
     } else {
-        if (!self.fw_toolBarHidden) {
-            [self.navigationController setToolbarHidden:YES animated:animated];
-        }
+        [self.navigationController setToolbarHidden:hidden animated:animated];
+        if (self.webView.superview) [self setupWebLayout];
     }
 }
 
@@ -127,6 +141,9 @@
 - (void)loadRequestUrl
 {
     [self fw_hideEmptyView];
+    if (!self.fw_isLoaded) {
+        [self fw_showLoading];
+    }
     
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.requestUrl]];
     urlRequest.timeoutInterval = 30;
@@ -137,6 +154,7 @@
 - (void)webViewFinishLoad
 {
     if (self.fw_isLoaded) return;
+    [self fw_hideLoading];
     self.fw_isLoaded = YES;
     
     [self fw_setRightBarItem:@(UIBarButtonSystemItemAction) target:self action:@selector(shareRequestUrl)];
@@ -145,6 +163,7 @@
 - (void)webViewFailLoad:(NSError *)error
 {
     if (self.fw_isLoaded) return;
+    [self fw_hideLoading];
     
     [self fw_setRightBarItem:@(UIBarButtonSystemItemRefresh) target:self action:@selector(loadRequestUrl)];
     
