@@ -59,7 +59,7 @@ class AppModule: NSObject, AppModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到远程通知：\(title ?? "")\n\(userInfo ?? [:])")
+            UIWindow.fw.showMessage(text: "收到远程通知：\(title ?? "")\n\(FW.safeString(userInfo))")
         }
         NotificationManager.sharedInstance.localNotificationHandler = { (userInfo, notification) in
             NotificationManager.sharedInstance.clearNotificationBadges()
@@ -68,7 +68,7 @@ class AppModule: NSObject, AppModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到本地通知：\(title ?? "")\n\(userInfo ?? [:])")
+            UIWindow.fw.showMessage(text: "收到本地通知：\(title ?? "")\n\(FW.safeString(userInfo))")
         }
         return true
     }

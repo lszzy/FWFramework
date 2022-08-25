@@ -15,15 +15,18 @@ import Darwin
         ["Kernel", [
             ["Navigator", "TestWorkflowController"],
             ["Promise", "TestPromiseController"],
+            ["State", "TestStateController"],
         ]],
         ["Service", [
             ["Theme", "TestThemeController"],
             ["Authorize", "TestAuthorizeController"],
+            ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
             ["Audio", "TestAudioController"],
             ["Video", "TestVideoController"],
         ]],
         ["Toolkit", [
+            ["Adaptive", "TestAdaptiveController"],
             ["Icon", "TestIconController"],
         ]],
         ["Plugin", [
@@ -33,6 +36,7 @@ import Darwin
             ["Camera", "TestCameraController"],
             ["Preview", "TestPreviewController"],
             ["Toast", "TestToastController"],
+            ["Image", "TestImageController"],
             ["View", "TestPluginController"],
         ]],
         ["Module", [
