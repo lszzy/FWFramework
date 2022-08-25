@@ -236,7 +236,8 @@
     if (appearance.backImage) self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
     if (appearance.leftBackImage && objc_getAssociatedObject(self, _cmd) == nil) {
         objc_setAssociatedObject(self, _cmd, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        if (self.navigationController.childViewControllers.count > 1) {
+        if (self.navigationController.childViewControllers.count > 1 &&
+            self.navigationItem.leftBarButtonItem == nil) {
             self.fw_leftBarItem = appearance.leftBackImage;
         }
     }

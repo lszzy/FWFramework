@@ -54,6 +54,9 @@
 		2F6A41A128B75E26003719E7 /* TestKeyboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A028B75E26003719E7 /* TestKeyboardController.m */; };
 		2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */; };
 		2F6A41A728B761A0003719E7 /* TestRouterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A628B761A0003719E7 /* TestRouterController.m */; };
+		2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A928B77414003719E7 /* TestAnimationController.m */; };
+		2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41AC28B776CC003719E7 /* TestBarrageController.m */; };
+		2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41AF28B779E4003719E7 /* TestDrawerController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -160,6 +163,12 @@
 		2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestStatisticalController.m; sourceTree = "<group>"; };
 		2F6A41A528B761A0003719E7 /* TestRouterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRouterController.h; sourceTree = "<group>"; };
 		2F6A41A628B761A0003719E7 /* TestRouterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterController.m; sourceTree = "<group>"; };
+		2F6A41A828B77414003719E7 /* TestAnimationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAnimationController.h; sourceTree = "<group>"; };
+		2F6A41A928B77414003719E7 /* TestAnimationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAnimationController.m; sourceTree = "<group>"; };
+		2F6A41AB28B776CC003719E7 /* TestBarrageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBarrageController.h; sourceTree = "<group>"; };
+		2F6A41AC28B776CC003719E7 /* TestBarrageController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBarrageController.m; sourceTree = "<group>"; };
+		2F6A41AE28B779E4003719E7 /* TestDrawerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestDrawerController.h; sourceTree = "<group>"; };
+		2F6A41AF28B779E4003719E7 /* TestDrawerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestDrawerController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -260,6 +269,8 @@
 				2F6A412C28B64774003719E7 /* TestIconController.swift */,
 				2F6A417E28B7424B003719E7 /* TestAdaptiveController.h */,
 				2F6A417F28B7424B003719E7 /* TestAdaptiveController.m */,
+				2F6A41A828B77414003719E7 /* TestAnimationController.h */,
+				2F6A41A928B77414003719E7 /* TestAnimationController.m */,
 				2F6A419028B75855003719E7 /* TestButtonController.h */,
 				2F6A419128B75855003719E7 /* TestButtonController.m */,
 				2F6A418728B74A27003719E7 /* TestCollectionController.h */,
@@ -285,6 +296,10 @@
 				2F6A419428B75A47003719E7 /* TestBadgeController.m */,
 				2F6A419628B75B30003719E7 /* TestBannerController.h */,
 				2F6A419728B75B30003719E7 /* TestBannerController.m */,
+				2F6A41AB28B776CC003719E7 /* TestBarrageController.h */,
+				2F6A41AC28B776CC003719E7 /* TestBarrageController.m */,
+				2F6A41AE28B779E4003719E7 /* TestDrawerController.h */,
+				2F6A41AF28B779E4003719E7 /* TestDrawerController.m */,
 				2F6A419928B75CCA003719E7 /* TestFloatController.h */,
 				2F6A419A28B75CCA003719E7 /* TestFloatController.m */,
 				2F6A419C28B75D64003719E7 /* TestGridController.h */,
@@ -799,6 +814,7 @@
 				2FF08B7628ADE7690074895A /* SettingsController.swift in Sources */,
 				2F6A412028B5F913003719E7 /* TabController.swift in Sources */,
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
+				2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
 				2F6A415428B7166B003719E7 /* TestPreviewController.m in Sources */,
 				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
@@ -817,6 +833,7 @@
 				2F6A413528B66FD4003719E7 /* TestWorkflowController.m in Sources */,
 				2F6A418928B74A27003719E7 /* TestCollectionController.m in Sources */,
 				2F6A41A728B761A0003719E7 /* TestRouterController.m in Sources */,
+				2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */,
 				2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */,
 				2F6A418028B7424B003719E7 /* TestAdaptiveController.m in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
@@ -835,6 +852,7 @@
 				2F6A419B28B75CCA003719E7 /* TestFloatController.m in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
 				2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */,
+				2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */,
 				2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
