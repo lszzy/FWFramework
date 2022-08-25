@@ -38,6 +38,7 @@ import Darwin
             ["Controller", "TestSwiftController"],
             ["Bridge", "TestBridgeController"],
             ["Toolbar", "TestToolbarController"],
+            ["TabBar", "TestTabbarController"],
             ["SwiftUI", "TestSwiftUIController"],
         ]],
     ]
