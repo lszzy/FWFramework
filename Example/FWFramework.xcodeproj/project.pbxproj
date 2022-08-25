@@ -37,6 +37,7 @@
 		2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A416F28B72328003719E7 /* TestBridgeController.m */; };
 		2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417228B724DD003719E7 /* TestToolbarController.m */; };
 		2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417428B72F7B003719E7 /* TestTabbarController.swift */; };
+		2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417628B7319A003719E7 /* TestPromiseController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -110,6 +111,7 @@
 		2F6A417128B724DD003719E7 /* TestToolbarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestToolbarController.h; sourceTree = "<group>"; };
 		2F6A417228B724DD003719E7 /* TestToolbarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestToolbarController.m; sourceTree = "<group>"; };
 		2F6A417428B72F7B003719E7 /* TestTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabbarController.swift; sourceTree = "<group>"; };
+		2F6A417628B7319A003719E7 /* TestPromiseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPromiseController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			children = (
 				2F6A413328B66FD4003719E7 /* TestWorkflowController.h */,
 				2F6A413428B66FD4003719E7 /* TestWorkflowController.m */,
+				2F6A417628B7319A003719E7 /* TestPromiseController.swift */,
 			);
 			path = Kernel;
 			sourceTree = "<group>";
@@ -718,6 +721,7 @@
 				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
 				2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */,
+				2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */,
 				2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */,
 				2F6A415D28B71E12003719E7 /* TestCameraController.swift in Sources */,
 				2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */,

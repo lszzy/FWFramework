@@ -14,6 +14,7 @@ import Darwin
     var testData: [Any] = [
         ["Kernel", [
             ["Navigator", "TestWorkflowController"],
+            ["Promise", "TestPromiseController"],
         ]],
         ["Service", [
             ["Theme", "TestThemeController"],
