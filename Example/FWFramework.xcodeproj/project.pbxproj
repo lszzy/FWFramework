@@ -21,6 +21,10 @@
 		2F6A413D28B67C6D003719E7 /* WebController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413C28B67C6D003719E7 /* WebController.m */; };
 		2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414328B68C74003719E7 /* TestAlertController.m */; };
 		2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414628B690E6003719E7 /* TestEmptyController.m */; };
+		2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414828B70BEC003719E7 /* TestAudioController.swift */; };
+		2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414A28B70E60003719E7 /* TestVideoController.swift */; };
+		2F6A414E28B71041003719E7 /* TestCacheController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414D28B71041003719E7 /* TestCacheController.m */; };
+		2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415028B712DC003719E7 /* TestPickerController.m */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -71,6 +75,12 @@
 		2F6A414328B68C74003719E7 /* TestAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertController.m; sourceTree = "<group>"; };
 		2F6A414528B690E6003719E7 /* TestEmptyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyController.h; sourceTree = "<group>"; };
 		2F6A414628B690E6003719E7 /* TestEmptyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyController.m; sourceTree = "<group>"; };
+		2F6A414828B70BEC003719E7 /* TestAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAudioController.swift; sourceTree = "<group>"; };
+		2F6A414A28B70E60003719E7 /* TestVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVideoController.swift; sourceTree = "<group>"; };
+		2F6A414C28B71041003719E7 /* TestCacheController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCacheController.h; sourceTree = "<group>"; };
+		2F6A414D28B71041003719E7 /* TestCacheController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestCacheController.m; sourceTree = "<group>"; };
+		2F6A414F28B712DC003719E7 /* TestPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPickerController.h; sourceTree = "<group>"; };
+		2F6A415028B712DC003719E7 /* TestPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPickerController.m; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -155,6 +165,10 @@
 				2F6A413628B674C3003719E7 /* TestThemeController.h */,
 				2F6A413728B674C3003719E7 /* TestThemeController.m */,
 				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
+				2F6A414828B70BEC003719E7 /* TestAudioController.swift */,
+				2F6A414A28B70E60003719E7 /* TestVideoController.swift */,
+				2F6A414C28B71041003719E7 /* TestCacheController.h */,
+				2F6A414D28B71041003719E7 /* TestCacheController.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -201,6 +215,8 @@
 				2F6A414328B68C74003719E7 /* TestAlertController.m */,
 				2F6A414528B690E6003719E7 /* TestEmptyController.h */,
 				2F6A414628B690E6003719E7 /* TestEmptyController.m */,
+				2F6A414F28B712DC003719E7 /* TestPickerController.h */,
+				2F6A415028B712DC003719E7 /* TestPickerController.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -629,6 +645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6A414E28B71041003719E7 /* TestCacheController.m in Sources */,
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
 				2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */,
 				2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */,
@@ -636,9 +653,11 @@
 				2F6A412028B5F913003719E7 /* TabController.swift in Sources */,
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
+				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
 				2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */,
 				2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */,
+				2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */,
 				2F6A413D28B67C6D003719E7 /* WebController.m in Sources */,
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
@@ -646,6 +665,7 @@
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
+				2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */,
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,
 				2FF08B5D28ADDD730074895A /* AppTheme.swift in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
