@@ -847,7 +847,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     });
     
     __weak UIImageView *weakBase = self;
-    dispatch_queue_t queue = dispatch_queue_create("site.wuyong.FWApplication.FWFaceQueue", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("site.wuyong.queue.uikit.face", NULL);
     dispatch_async(queue, ^{
         CIImage *image = aImage.CIImage;
         if (image == nil) {

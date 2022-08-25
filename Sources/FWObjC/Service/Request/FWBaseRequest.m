@@ -26,7 +26,7 @@
 #import "FWNetworkPrivate.h"
 #import <objc/runtime.h>
 
-NSString *const FWRequestValidationErrorDomain = @"site.wuyong.request.validation";
+NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.validation";
 
 @interface FWBaseRequest ()
 

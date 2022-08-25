@@ -18,7 +18,7 @@ public enum JSONError: Int, Swift.Error {
 }
 
 extension JSONError: CustomNSError {
-    public static var errorDomain: String { return "FWFramework.JSON" }
+    public static var errorDomain: String { return "site.wuyong.error.json" }
     
     public var errorCode: Int { return self.rawValue }
     

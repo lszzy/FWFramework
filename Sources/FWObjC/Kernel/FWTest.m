@@ -92,7 +92,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
             if ([FWUnitTest sharedInstance].testCases.count > 0) {
-                dispatch_queue_t queue = dispatch_queue_create("FWFramework.Test.asyncQueue", NULL);
+                dispatch_queue_t queue = dispatch_queue_create("site.wuyong.queue.test.async", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
                     FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);

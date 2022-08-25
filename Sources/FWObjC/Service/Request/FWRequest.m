@@ -32,7 +32,7 @@
 #define NSFoundationVersionNumber_With_QoS_Available NSFoundationVersionNumber_iOS_8_0
 #endif
 
-NSString *const FWRequestCacheErrorDomain = @"site.wuyong.request.caching";
+NSString *const FWRequestCacheErrorDomain = @"site.wuyong.error.request.cache";
 
 static dispatch_queue_t fwrequest_cache_writing_queue() {
     static dispatch_queue_t queue;
@@ -42,7 +42,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
         if (NSFoundationVersionNumber >= NSFoundationVersionNumber_With_QoS_Available) {
             attr = dispatch_queue_attr_make_with_qos_class(attr, QOS_CLASS_BACKGROUND, 0);
         }
-        queue = dispatch_queue_create("site.wuyong.fwrequest.caching", attr);
+        queue = dispatch_queue_create("site.wuyong.queue.request.cache", attr);
     });
 
     return queue;
