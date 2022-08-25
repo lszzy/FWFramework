@@ -9,7 +9,7 @@
 import FWFramework
 import Darwin
 
-class TestController: UIViewController {
+@objcMembers class TestController: UIViewController {
     
     var testData: [Any] = [
         ["Kernel", [
@@ -29,6 +29,10 @@ class TestController: UIViewController {
             ["Alert", "TestAlertController"],
             ["Empty", "TestEmptyController"],
             ["Picker", "TestPickerController"],
+            ["Camera", "TestCameraController"],
+            ["Preview", "TestPreviewController"],
+            ["Toast", "TestToastController"],
+            ["View", "TestPluginController"],
         ]],
         ["Module", [
             ["Controller", "TestSwiftController"],
