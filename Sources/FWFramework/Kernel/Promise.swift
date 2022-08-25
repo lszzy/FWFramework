@@ -35,21 +35,21 @@ extension FW {
     /// 约定默认错误，约定失败时可选使用，可用于错误判断，支持自定义
     public static var defaultError: Error = {
         NSError(
-            domain: "FWFramework.Promise",
+            domain: "site.wuyong.error.promise.failure",
             code: 2001,
             userInfo: [NSLocalizedDescriptionKey: "Promise failed"])
     }()
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
     public static var validationError: Error = {
         NSError(
-            domain: "FWFramework.Promise",
+            domain: "site.wuyong.error.promise.validation",
             code: 2002,
             userInfo: [NSLocalizedDescriptionKey: "Promise validation failed"])
     }()
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
     public static var timeoutError: Error = {
         NSError(
-            domain: "FWFramework.Promise",
+            domain: "site.wuyong.error.promise.timeout",
             code: 2003,
             userInfo: [NSLocalizedDescriptionKey: "Promise timeout"])
     }()
@@ -100,7 +100,7 @@ extension FW {
     @discardableResult
     public static func async(_ block: @escaping () throws -> Any?) -> Promise {
         return Promise { completion in
-            DispatchQueue(label: "FWFramework.Promise.asyncQueue", attributes: .concurrent).async {
+            DispatchQueue(label: "site.wuyong.queue.promise.async", attributes: .concurrent).async {
                 do {
                     let value = try block()
                     completion(value)

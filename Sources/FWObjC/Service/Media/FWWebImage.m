@@ -69,7 +69,7 @@
         self.preferredMemoryUsageAfterPurge = preferredMemoryCapacity;
         self.cachedImages = [[NSMutableDictionary alloc] init];
 
-        NSString *queueName = [NSString stringWithFormat:@"site.wuyong.autopurgingimagecache-%@", [[NSUUID UUID] UUIDString]];
+        NSString *queueName = [NSString stringWithFormat:@"site.wuyong.queue.webimage.cache.%@", [[NSUUID UUID] UUIDString]];
         self.synchronizationQueue = dispatch_queue_create([queueName cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_CONCURRENT);
 
         [[NSNotificationCenter defaultCenter]
@@ -332,10 +332,10 @@
         self.mergedTasks = [[NSMutableDictionary alloc] init];
         self.activeRequestCount = 0;
 
-        NSString *name = [NSString stringWithFormat:@"site.wuyong.imagedownloader.synchronizationqueue-%@", [[NSUUID UUID] UUIDString]];
+        NSString *name = [NSString stringWithFormat:@"site.wuyong.queue.webimage.download.%@", [[NSUUID UUID] UUIDString]];
         self.synchronizationQueue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_SERIAL);
 
-        name = [NSString stringWithFormat:@"site.wuyong.imagedownloader.responsequeue-%@", [[NSUUID UUID] UUIDString]];
+        name = [NSString stringWithFormat:@"site.wuyong.queue.webimage.response.%@", [[NSUUID UUID] UUIDString]];
         self.responseQueue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_CONCURRENT);
     }
 

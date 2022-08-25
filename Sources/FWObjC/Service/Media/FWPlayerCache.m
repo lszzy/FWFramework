@@ -1302,7 +1302,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
     self = [super init];
     if (self) {
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-        queue.name = @"site.wuyong.player.download";
+        queue.name = @"site.wuyong.queue.player.download";
         _downloadQueue = queue;
     }
     return self;
