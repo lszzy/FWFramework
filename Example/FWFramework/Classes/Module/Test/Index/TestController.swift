@@ -28,6 +28,7 @@ import Darwin
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
+            ["Animation", "TestAnimationController"],
             ["Collection", "TestCollectionController"],
             ["Table", "TestTableController"],
             ["Keyboard", "TestKeyboardController"],
@@ -48,6 +49,8 @@ import Darwin
         ["Module", [
             ["Badge", "TestBadgeController"],
             ["Banner", "TestBannerController"],
+            ["Barrage", "TestBarrageController"],
+            ["Drawer", "TestDrawerController"],
             ["Bridge", "TestBridgeController"],
             ["Controller", "TestSwiftController"],
             ["Float", "TestFloatController"],

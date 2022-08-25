@@ -102,7 +102,8 @@ extension AppTheme {
         ViewControllerManager.shared.hookViewDidLoad = { viewController in
             viewController.view.backgroundColor = AppTheme.tableColor
             // viewController.fw.backBarItem = Icon.backImage
-            // if (viewController.navigationController?.children.count ?? 0) > 1 {
+            // if (viewController.navigationController?.children.count ?? 0) > 1 &&
+            //     viewController.navigationItem.leftBarButtonItem == nil {
             //     viewController.fw.leftBarItem = Icon.backImage
             // }
         }
