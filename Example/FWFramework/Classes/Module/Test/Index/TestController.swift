@@ -18,6 +18,9 @@ class TestController: UIViewController {
         ["Service", [
             ["Theme", "TestThemeController"],
             ["Authorize", "TestAuthorizeController"],
+            ["Cache", "TestCacheController"],
+            ["Audio", "TestAudioController"],
+            ["Video", "TestVideoController"],
         ]],
         ["Toolkit", [
             ["Icon", "TestIconController"],
@@ -25,6 +28,7 @@ class TestController: UIViewController {
         ["Plugin", [
             ["Alert", "TestAlertController"],
             ["Empty", "TestEmptyController"],
+            ["Picker", "TestPickerController"],
         ]],
         ["Module", [
             ["Controller", "TestSwiftController"],
