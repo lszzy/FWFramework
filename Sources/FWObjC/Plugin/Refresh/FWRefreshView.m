@@ -637,7 +637,7 @@ static char UIScrollViewFWPullRefreshView;
     view.scrollView = self;
     [self addSubview:view];
     
-    view.originalInset = self.adjustedContentInset;
+    view.originalInset = self.contentInset;
     self.fw_pullRefreshView = view;
     self.fw_showPullRefresh = YES;
 }
@@ -1076,7 +1076,7 @@ static char UIScrollViewFWInfiniteScrollView;
     view.scrollView = self;
     [self addSubview:view];
     
-    view.originalInset = self.adjustedContentInset;
+    view.originalInset = self.contentInset;
     self.fw_infiniteScrollView = view;
     self.fw_showInfiniteScroll = YES;
 }
