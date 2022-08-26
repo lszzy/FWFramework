@@ -832,15 +832,15 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
-    CGFloat adjustedContentOffsetY = contentOffset.y;
+    CGFloat adjustedContentOffsetY = contentOffset.y + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top);
     if(self.animationProgressBlock || self.progressBlock) {
-        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
+        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
         CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
         if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
     }
     
-    CGFloat scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height - self.preloadHeight, 0);
+    CGFloat scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) - self.preloadHeight, 0);
     if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
         self.state = FWInfiniteScrollStateLoading;
     else if(adjustedContentOffsetY > scrollOffsetThreshold && self.state == FWInfiniteScrollStateIdle && self.scrollView.isDragging) {
