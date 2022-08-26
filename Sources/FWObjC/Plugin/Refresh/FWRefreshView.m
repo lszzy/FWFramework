@@ -71,6 +71,7 @@ static CGFloat FWPullRefreshViewHeight = 60;
 @property (nonatomic, copy) void (^animationProgressBlock)(FWPullRefreshView *view, CGFloat progress);
 
 @property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, readwrite) CGFloat originalTopInset;
 @property (nonatomic, readwrite) CGFloat pullingPercent;
 
 @property (nonatomic, assign) BOOL showsPullToRefresh;
@@ -100,6 +101,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 @property (nonatomic, copy) void (^animationProgressBlock)(FWInfiniteScrollView *view, CGFloat progress);
 
 @property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, readwrite) CGFloat originalBottomInset;
 @property (nonatomic, assign) BOOL isObserving;
 @property (nonatomic, assign) BOOL isActive;
 

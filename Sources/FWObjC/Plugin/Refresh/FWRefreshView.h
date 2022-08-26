@@ -29,7 +29,6 @@ NS_SWIFT_NAME(PullRefreshView)
 @interface FWPullRefreshView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
-@property (nonatomic, readwrite) CGFloat originalTopInset;
 @property (nullable, nonatomic, strong) UIColor *arrowColor;
 @property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
@@ -91,7 +90,6 @@ NS_SWIFT_NAME(InfiniteScrollView)
 
 @property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) BOOL enabled;
-@property (nonatomic, readwrite) CGFloat originalBottomInset;
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
 @property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
