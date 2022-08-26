@@ -323,7 +323,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fw_infiniteScrollView.isActive ||
-            (contentOffset.y + self.scrollView.safeAreaInsets.top) > 0) {
+            (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) > 0) {
             if (self.pullingPercent > 0) self.pullingPercent = 0;
             if (self.state != FWPullRefreshStateIdle) {
                 self.state = FWPullRefreshStateIdle;
@@ -352,7 +352,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
-    CGFloat adjustedContentOffsetY = contentOffset.y + self.scrollView.safeAreaInsets.top;
+    CGFloat adjustedContentOffsetY = contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top;
     CGFloat progress = -adjustedContentOffsetY / self.scrollView.fw_pullRefreshHeight;
     if(progress > 0) self.isActive = YES;
     if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
@@ -782,7 +782,7 @@ static char UIScrollViewFWPullRefreshView;
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight;
+    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight - (self.scrollView.adjustedContentInset.bottom - self.scrollView.contentInset.bottom);
     [self setScrollViewContentInset:currentInsets];
 }
 
@@ -804,7 +804,7 @@ static char UIScrollViewFWPullRefreshView;
         
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fw_pullRefreshView.isActive ||
-            (contentOffset.y + self.scrollView.safeAreaInsets.top) < 0) {
+            (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) < 0) {
             if (self.state != FWInfiniteScrollStateIdle) {
                 self.state = FWInfiniteScrollStateIdle;
             }
@@ -825,7 +825,7 @@ static char UIScrollViewFWPullRefreshView;
         self.isActive = NO;
         self.scrollView.fw_pullRefreshView.isActive = NO;
     } else if (state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
-        if ((self.scrollView.contentOffset.y + self.scrollView.safeAreaInsets.top) >= 0) {
+        if ((self.scrollView.contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) >= 0) {
             self.state = FWInfiniteScrollStateLoading;
         } else {
             self.state = FWInfiniteScrollStateIdle;
@@ -836,7 +836,7 @@ static char UIScrollViewFWPullRefreshView;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     CGFloat adjustedContentOffsetY = contentOffset.y;
     if(self.animationProgressBlock || self.progressBlock) {
-        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
+        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.adjustedContentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
         CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
         if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
@@ -1010,6 +1010,8 @@ static char UIScrollViewFWPullRefreshView;
                 self.isActive = YES;
                 break;
             case FWInfiniteScrollStateLoading:
+                [self setScrollViewContentInsetForInfiniteScrolling];
+                break;
             default:
                 break;
         }
@@ -1030,6 +1032,7 @@ static char UIScrollViewFWPullRefreshView;
                 break;
                 
             case FWInfiniteScrollStateLoading:
+                [self setScrollViewContentInsetForInfiniteScrolling];
                 [self.indicatorView startAnimating];
                 break;
                 
