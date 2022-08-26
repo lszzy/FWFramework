@@ -174,6 +174,7 @@ static BOOL isExpanded = NO;
 {
     FWWeakifySelf();
     [self.tableView fw_resetGroupedStyle];
+    self.tableView.alwaysBounceVertical = YES;
     self.tableView.backgroundColor = [AppTheme tableColor];
     [self.tableView fw_setRefreshingBlock:^{
         FWStrongifySelf();
@@ -197,7 +198,7 @@ static BOOL isExpanded = NO;
         
         [self onLoading];
     }];
-    self.tableView.fw_infiniteScrollView.preloadHeight = 200;
+    // self.tableView.fw_infiniteScrollView.preloadHeight = 200;
     self.tableView.fw_infiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         
@@ -221,13 +222,13 @@ static BOOL isExpanded = NO;
     FWWeakifySelf();
     [self fw_setRightBarItem:@(UIBarButtonSystemItemRefresh) block:^(id  _Nonnull sender) {
         FWStrongifySelf();
-        [self fw_showSheetWithTitle:nil message:nil cancel:@"取消" actions:@[@"刷新", @"布局撑开", @"布局不撑开"] actionBlock:^(NSInteger index) {
+        [self fw_showSheetWithTitle:nil message:@"滚动视图顶部未延伸" cancel:@"取消" actions:@[self.tableView.contentInsetAdjustmentBehavior == UIScrollViewContentInsetAdjustmentNever ? @"contentInset自适应" : @"contentInset不适应", isExpanded ? @"布局不撑开" : @"布局撑开"] actionBlock:^(NSInteger index) {
             FWStrongifySelf();
             
-            if (index == 1) {
-                isExpanded = YES;
-            } else if (index == 2) {
-                isExpanded = NO;
+            if (index == 0) {
+                self.tableView.contentInsetAdjustmentBehavior = (self.tableView.contentInsetAdjustmentBehavior == UIScrollViewContentInsetAdjustmentNever) ? UIScrollViewContentInsetAdjustmentAutomatic : UIScrollViewContentInsetAdjustmentNever;
+            } else if (index == 1) {
+                isExpanded = !isExpanded;
             }
             [self setupSubviews];
         }];
@@ -396,7 +397,7 @@ static BOOL isExpanded = NO;
         NSLog(@"刷新完成");
         
         [self.tableData removeAllObjects];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView fw_clearHeightCache];
@@ -416,7 +417,7 @@ static BOOL isExpanded = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"加载完成");
         
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             [self.tableData addObject:[self randomObject]];
         }
         [self.tableView reloadData];

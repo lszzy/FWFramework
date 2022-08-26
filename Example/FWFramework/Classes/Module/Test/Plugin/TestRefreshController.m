@@ -111,6 +111,7 @@
 - (void)setupTableView
 {
     [self.tableView fw_resetGroupedStyle];
+    self.tableView.alwaysBounceVertical = YES;
     [self.tableView registerClass:[TestRefreshCell class] forCellReuseIdentifier:@"Cell"];
 }
 
@@ -137,6 +138,7 @@
     UIImageView *infiniteView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     infiniteView.image = [FWModuleBundle imageNamed:@"Loading.gif"];
     [self.tableView.fw_infiniteScrollView setCustomView:infiniteView forState:FWInfiniteScrollStateAll];
+    // self.tableView.fw_infiniteScrollView.preloadHeight = 200;
     self.tableView.fw_infiniteScrollView.stateBlock = ^(FWInfiniteScrollView * _Nonnull view, FWInfiniteScrollState state) {
         FWStrongifySelf();
         self.navigationItem.title = [NSString stringWithFormat:@"load state-%@", @(state)];
