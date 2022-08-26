@@ -323,7 +323,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fw_infiniteScrollView.isActive ||
-            (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) > 0) {
+            [self adjustedContentOffsetY:contentOffset] > 0) {
             if (self.pullingPercent > 0) self.pullingPercent = 0;
             if (self.state != FWPullRefreshStateIdle) {
                 self.state = FWPullRefreshStateIdle;
@@ -352,7 +352,8 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
-    CGFloat progress = -(contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) / self.scrollView.fw_pullRefreshHeight;
+    CGFloat adjustedContentOffsetY = [self adjustedContentOffsetY:contentOffset];
+    CGFloat progress = -adjustedContentOffsetY / self.scrollView.fw_pullRefreshHeight;
     if(progress > 0) self.isActive = YES;
     if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
     if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
@@ -360,13 +361,17 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     CGFloat scrollOffsetThreshold = self.frame.origin.y - self.originalInset.top;
     if(!self.scrollView.isDragging && self.state == FWPullRefreshStateTriggered)
         self.state = FWPullRefreshStateLoading;
-    else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == FWPullRefreshStateIdle) {
+    else if(adjustedContentOffsetY < scrollOffsetThreshold && self.scrollView.isDragging && self.state == FWPullRefreshStateIdle) {
         self.state = FWPullRefreshStateTriggered;
         self.userTriggered = YES;
-    } else if(contentOffset.y >= scrollOffsetThreshold && self.state != FWPullRefreshStateIdle)
+    } else if(adjustedContentOffsetY >= scrollOffsetThreshold && self.state != FWPullRefreshStateIdle)
         self.state = FWPullRefreshStateIdle;
-    else if(contentOffset.y >= scrollOffsetThreshold && self.state == FWPullRefreshStateIdle)
-        self.pullingPercent = MAX(MIN(1.f - (self.scrollView.fw_pullRefreshHeight + contentOffset.y) / self.scrollView.fw_pullRefreshHeight, 1.f), 0.f);
+    else if(adjustedContentOffsetY >= scrollOffsetThreshold && self.state == FWPullRefreshStateIdle)
+        self.pullingPercent = MAX(MIN(-adjustedContentOffsetY / self.scrollView.fw_pullRefreshHeight, 1.f), 0.f);
+}
+
+- (CGFloat)adjustedContentOffsetY:(CGPoint)contentOffset {
+    return contentOffset.y + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top);
 }
 
 #pragma mark - Getters
@@ -803,7 +808,7 @@ static char UIScrollViewFWPullRefreshView;
         
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fw_pullRefreshView.isActive ||
-            (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) < 0) {
+            [self adjustedContentOffsetY:contentOffset] < 0) {
             if (self.state != FWInfiniteScrollStateIdle) {
                 self.state = FWInfiniteScrollStateIdle;
             }
@@ -824,7 +829,7 @@ static char UIScrollViewFWPullRefreshView;
         self.isActive = NO;
         self.scrollView.fw_pullRefreshView.isActive = NO;
     } else if (state == UIGestureRecognizerStateEnded && self.state == FWInfiniteScrollStateTriggered) {
-        if ((self.scrollView.contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) >= 0) {
+        if ([self adjustedContentOffsetY:self.scrollView.contentOffset] >= 0) {
             self.state = FWInfiniteScrollStateLoading;
         } else {
             self.state = FWInfiniteScrollStateIdle;
@@ -833,9 +838,10 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
+    CGFloat adjustedContentOffsetY = [self adjustedContentOffsetY:contentOffset];
     if(self.animationProgressBlock || self.progressBlock) {
         CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
-        CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + contentOffset.y - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
+        CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
         if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
     }
@@ -843,11 +849,15 @@ static char UIScrollViewFWPullRefreshView;
     CGFloat scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height - self.preloadHeight, 0);
     if(!self.scrollView.isDragging && self.state == FWInfiniteScrollStateTriggered)
         self.state = FWInfiniteScrollStateLoading;
-    else if(contentOffset.y > scrollOffsetThreshold && self.state == FWInfiniteScrollStateIdle && self.scrollView.isDragging) {
+    else if(adjustedContentOffsetY > scrollOffsetThreshold && self.state == FWInfiniteScrollStateIdle && self.scrollView.isDragging) {
         self.state = FWInfiniteScrollStateTriggered;
         self.userTriggered = YES;
-    } else if(contentOffset.y < scrollOffsetThreshold && self.state != FWInfiniteScrollStateIdle)
+    } else if(adjustedContentOffsetY < scrollOffsetThreshold && self.state != FWInfiniteScrollStateIdle)
         self.state = FWInfiniteScrollStateIdle;
+}
+
+- (CGFloat)adjustedContentOffsetY:(CGPoint)contentOffset {
+    return contentOffset.y + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top);
 }
 
 #pragma mark - Getters
