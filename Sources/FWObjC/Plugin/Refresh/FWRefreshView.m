@@ -782,7 +782,7 @@ static char UIScrollViewFWPullRefreshView;
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight - (self.scrollView.adjustedContentInset.bottom - self.scrollView.contentInset.bottom);
+    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight;
     [self setScrollViewContentInset:currentInsets];
 }
 
@@ -836,7 +836,7 @@ static char UIScrollViewFWPullRefreshView;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     CGFloat adjustedContentOffsetY = contentOffset.y;
     if(self.animationProgressBlock || self.progressBlock) {
-        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.adjustedContentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
+        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
         CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
         if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
@@ -1010,8 +1010,6 @@ static char UIScrollViewFWPullRefreshView;
                 self.isActive = YES;
                 break;
             case FWInfiniteScrollStateLoading:
-                [self setScrollViewContentInsetForInfiniteScrolling];
-                break;
             default:
                 break;
         }
@@ -1032,7 +1030,6 @@ static char UIScrollViewFWPullRefreshView;
                 break;
                 
             case FWInfiniteScrollStateLoading:
-                [self setScrollViewContentInsetForInfiniteScrolling];
                 [self.indicatorView startAnimating];
                 break;
                 
