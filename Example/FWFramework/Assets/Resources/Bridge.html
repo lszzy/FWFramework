@@ -1,0 +1,101 @@
+<!doctype html>
+<html><head>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<style type='text/css'>
+		html { font-family:Helvetica; color:#222; }
+		h1 { color:steelblue; font-size:24px; margin-top:24px; }
+		button { margin:0 3px 10px; font-size:12px; }
+		.logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
+	</style>
+</head><body>
+	<h1>WebViewJavascriptBridge Demo</h1>
+	<script>
+	window.onerror = function(err) {
+		log('window.onerror: ' + err)
+	}
+
+    function setupWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+        window.WVJBCallbacks = [callback];
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'https://__bridge_loaded__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+    }
+
+    setupWebViewJavascriptBridge(function(bridge) {
+		var uniqueId = 1
+		function log(message, data) {
+			var log = document.getElementById('log')
+			var el = document.createElement('div')
+            var json = JSON.stringify(data)
+			el.className = 'logLine'
+			el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + json
+			if (log.children.length) { log.insertBefore(el, log.children[0]) }
+			else { log.appendChild(el) }
+            console.log(uniqueId++ + '. ' + message + ':\n' + json)
+		}
+        
+        bridge.setErrorHandler(function(handlerName, data, responseCallback) {
+            alert("handler " + handlerName + " undefined: " + JSON.stringify(data))
+            var responseData = { 'Javascript Says':'Error Handler!' }
+            log('JS responding with', responseData)
+            responseCallback(responseData)
+        })
+        
+        bridge.setFilterHandler(function(handlerName, data, responseCallback) {
+            log('ObjC called ' + handlerName + ' with', data)
+            if (handlerName == 'testFilterHandler') {
+                var responseData = { 'Javascript Says':'Filter Handler!' }
+                log('JS responding with', responseData)
+                responseCallback(responseData)
+                return false
+            }
+            
+            return true
+        })
+
+		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+			var responseData = { 'Javascript Says':'Right back atcha!' }
+			log('JS responding with', responseData)
+			responseCallback(responseData)
+		})
+        
+        log('registeredHandlers: ', bridge.getRegisteredHandlers())
+		document.body.appendChild(document.createElement('br'))
+
+		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+		callbackButton.innerHTML = 'testObjc'
+		callbackButton.onclick = function(e) {
+			e.preventDefault()
+			log('JS calling handler "testObjcCallback"')
+			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+				log('JS got response', response)
+			})
+		}
+        
+        var errorButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+        errorButton.innerHTML = 'testError'
+        errorButton.onclick = function(e) {
+            e.preventDefault()
+            log('JS calling handler "testErrorCallback"')
+            bridge.callHandler('testErrorCallback', {'foo': 'bar'}, function(response) {
+                log('JS got response', response)
+            })
+        }
+        
+        var filterButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+        filterButton.innerHTML = 'testFilter'
+        filterButton.onclick = function(e) {
+            e.preventDefault()
+            log('JS calling handler "testFilterCallback"')
+            bridge.callHandler('testFilterCallback', {'foo': 'bar'}, function(response) {
+                log('JS got response', response)
+            })
+        }
+	})
+	</script>
+	<div id='buttons'></div> <div id='log'></div>
+</body></html>
