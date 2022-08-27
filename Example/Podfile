@@ -2,9 +2,13 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '11.0'
 use_frameworks!
 
-target "Example" do
-  project 'FWFramework', 'Testing' => :release, 'Staging' => :release
-
-  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'Compatible', 'Contacts', 'Microphone', 'Calendar', 'AppleMusic', 'Tracking']
+target "FWFramework_Example" do
+  project 'FWFramework', 'Staging' => :release, 'Testing' => :release
+  
+  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWVendor']
   pod 'FWDebug', :configurations => ['Debug', 'Testing']
+  
+  target 'FWFramework_Tests' do
+    inherit! :search_paths
+  end
 end
