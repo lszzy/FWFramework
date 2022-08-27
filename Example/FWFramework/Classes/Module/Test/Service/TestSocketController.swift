@@ -36,7 +36,10 @@ class TestSocketController: UIViewController {
     
     private let serverAddress = "http://127.0.0.1"
     private let serverPort = UInt16(8009)
-    private let clientURL = "http://127.0.0.1:8009"
+    
+    @UserDefaultAnnotation("WebSocketUrl", defaultValue: "http://127.0.0.1:8009")
+    private var clientURL: String
+    private var clientInited = false
     
     private lazy var server: WebSocketServer = {
         let result = WebSocketServer()
@@ -132,6 +135,14 @@ class TestSocketController: UIViewController {
         return button
     }()
     
+    // MARK: - Lifecycle
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if isConnected { client.disconnect() }
+        if serverStarted { server.stop() }
+    }
+    
 }
 
 @available(iOS 12.0, *)
@@ -185,10 +196,20 @@ extension TestSocketController: ViewControllerProtocol {
     }
     
     func onClient() {
-        if isConnected {
-            client.disconnect()
+        if !clientInited {
+            fw.showPrompt(title: nil, message: "WebSocket Server", cancel: nil, confirm: nil) { [weak self] textField in
+                textField.text = self?.clientURL
+            } confirmBlock: { [weak self] value in
+                self?.clientInited = true
+                self?.clientURL = !value.isEmpty ? value : "http://127.0.0.1:8009"
+                self?.onClient()
+            }
         } else {
-            client.connect()
+            if isConnected {
+                client.disconnect()
+            } else {
+                client.connect()
+            }
         }
     }
     
