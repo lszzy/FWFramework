@@ -13,7 +13,7 @@ umbrella_path=Example/Pods/Target\ Support\ Files
 lib_path="docs/$framework_name/"
 sdk_path=$(xcrun --show-sdk-path --sdk iphonesimulator)
 cp "$umbrella_path/$framework_name/$umbrella_name" $lib_path
-find "$framework_name/Classes" -type f ! -regex '*.h' -name '*.h' \
+find "Sources/FWObjC" -type f ! -regex '*.h' -name '*.h' \
     -exec cp {} $lib_path \;
 
 sourcekitten doc -- -project _Pods.xcodeproj -target $framework_name > "$lib_path/swift.json"
