@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.0] - 2022-08-28
+
+### Changed
+* Merge FWApplication into this framework, new version
+* Refactored some API methods and remove uncommon functions
+* Refactor the directory structure and unify Pod submodules
+
 ## [3.8.1] - 2022-08-10
 
 ### Changed
