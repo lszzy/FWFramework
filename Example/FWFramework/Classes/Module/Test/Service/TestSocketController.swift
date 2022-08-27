@@ -48,8 +48,10 @@ class TestSocketController: UIViewController {
                 self?.serverLabel.text = "\(String(describing: connection)) is disconnected"
             case .text(let connection, let string):
                 self?.serverLabel.text = "Received text: \(string)"
+                connection.write(data: string.replacingOccurrences(of: "request", with: "response").fw.utf8Data!, opcode: .textFrame)
             case .binary(let connection, let data):
                 self?.serverLabel.text = "Received data: \(data.count)"
+                connection.write(data: data, opcode: .binaryFrame)
             case .ping(_, _):
                 break
             case .pong(_, _):
