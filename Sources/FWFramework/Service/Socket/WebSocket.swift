@@ -25,19 +25,19 @@ import CommonCrypto
 import zlib
 
 // MARK: - WebSocket
-public enum ErrorType: Error {
+public enum WebSocketErrorType: Error {
     case compressionError
     case securityError
     case protocolError //There was an error parsing the WebSocket frames
     case serverError
 }
 
-public struct WSError: Error {
-    public let type: ErrorType
+public struct WebSocketError: Error {
+    public let type: WebSocketErrorType
     public let message: String
     public let code: UInt16
     
-    public init(type: ErrorType, message: String, code: UInt16) {
+    public init(type: WebSocketErrorType, message: String, code: UInt16) {
         self.type = type
         self.message = message
         self.code = code
@@ -73,7 +73,7 @@ extension WebSocketClient {
     }
     
     public func disconnect() {
-        disconnect(closeCode: CloseCode.normal.rawValue)
+        disconnect(closeCode: WebSocketCloseCode.normal.rawValue)
     }
 }
 
@@ -97,8 +97,8 @@ public protocol WebSocketDelegate: AnyObject {
 /// WebSocket客户端
 ///
 /// [Starscream](https://github.com/daltoniam/Starscream)
-open class WebSocket: WebSocketClient, EngineDelegate {
-    private let engine: Engine
+open class WebSocket: WebSocketClient, WebSocketEngineDelegate {
+    private let engine: WebSocketEngineProtocol
     public weak var delegate: WebSocketDelegate?
     public var onEvent: ((WebSocketEvent) -> Void)?
     
@@ -107,27 +107,27 @@ open class WebSocket: WebSocketClient, EngineDelegate {
     public var callbackQueue = DispatchQueue.main
     public var respondToPingWithPong: Bool {
         set {
-            guard let e = engine as? WSEngine else { return }
+            guard let e = engine as? WebSocketEngine else { return }
             e.respondToPingWithPong = newValue
         }
         get {
-            guard let e = engine as? WSEngine else { return true }
+            guard let e = engine as? WebSocketEngine else { return true }
             return e.respondToPingWithPong
         }
     }
     
-    public init(request: URLRequest, engine: Engine) {
+    public init(request: URLRequest, engine: WebSocketEngineProtocol) {
         self.request = request
         self.engine = engine
     }
     
-    public convenience init(request: URLRequest, certPinner: CertificatePinning? = FoundationSecurity(), compressionHandler: CompressionHandler? = nil, useCustomEngine: Bool = true) {
-        if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *), !useCustomEngine {
-            self.init(request: request, engine: NativeEngine())
-        } else if #available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *) {
-            self.init(request: request, engine: WSEngine(transport: TCPTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
+    public convenience init(request: URLRequest, certPinner: WebSocketCertificatePinning? = WebSocketFoundationSecurity(), compressionHandler: WebSocketCompressionHandler? = nil, useCustomEngine: Bool = true) {
+        if #available(iOS 13.0, *), !useCustomEngine {
+            self.init(request: request, engine: WebSocketNativeEngine())
+        } else if #available(iOS 12.0, *) {
+            self.init(request: request, engine: WebSocketEngine(transport: WebSocketTCPTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
         } else {
-            self.init(request: request, engine: WSEngine(transport: FoundationTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
+            self.init(request: request, engine: WebSocketEngine(transport: WebSocketFoundationTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
         }
     }
     
@@ -136,7 +136,7 @@ open class WebSocket: WebSocketClient, EngineDelegate {
         engine.start(request: request)
     }
     
-    public func disconnect(closeCode: UInt16 = CloseCode.normal.rawValue) {
+    public func disconnect(closeCode: UInt16 = WebSocketCloseCode.normal.rawValue) {
         engine.stop(closeCode: closeCode)
     }
     
@@ -164,7 +164,7 @@ open class WebSocket: WebSocketClient, EngineDelegate {
         write(data: pong, opcode: .pong, completion: completion)
     }
     
-    private func write(data: Data, opcode: FrameOpCode, completion: (() -> ())?) {
+    private func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
         engine.write(data: data, opcode: opcode, completion: completion)
     }
     
@@ -179,7 +179,7 @@ open class WebSocket: WebSocketClient, EngineDelegate {
 }
 
 // MARK: - WebSocketServer
-public enum ConnectionEvent {
+public enum WebSocketConnectionEvent {
     case connected([String: String])
     case disconnected(String, UInt16)
     case text(String)
@@ -189,24 +189,24 @@ public enum ConnectionEvent {
     case error(Error)
 }
 
-public protocol Connection {
-    func write(data: Data, opcode: FrameOpCode)
+public protocol WebSocketConnection {
+    func write(data: Data, opcode: WebSocketFrameOpCode)
 }
 
-public protocol ConnectionDelegate: AnyObject {
-    func didReceive(event: ServerEvent)
+public protocol WebSocketConnectionDelegate: AnyObject {
+    func didReceive(event: WebSocketServerEvent)
 }
 
-public enum ServerEvent {
-    case connected(Connection, [String: String])
-    case disconnected(Connection, String, UInt16)
-    case text(Connection, String)
-    case binary(Connection, Data)
-    case pong(Connection, Data?)
-    case ping(Connection, Data?)
+public enum WebSocketServerEvent {
+    case connected(WebSocketConnection, [String: String])
+    case disconnected(WebSocketConnection, String, UInt16)
+    case text(WebSocketConnection, String)
+    case binary(WebSocketConnection, Data)
+    case pong(WebSocketConnection, Data?)
+    case ping(WebSocketConnection, Data?)
 }
 
-public protocol Server {
+public protocol WebSocketServerProtocol {
     func start(address: String, port: UInt16) -> Error?
     func stop()
 }
@@ -215,31 +215,27 @@ public protocol Server {
 import Network
 
 /// WebSocketServer is a Network.framework implementation of a WebSocket server
-@available(watchOS, unavailable)
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-public class WebSocketServer: Server, ConnectionDelegate {
-    public var onEvent: ((ServerEvent) -> Void)?
+@available(iOS 12.0, *)
+public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelegate {
+    public var onEvent: ((WebSocketServerEvent) -> Void)?
     public var callbackQueue = DispatchQueue.main
-    private var connections = [String: ServerConnection]()
+    private var connections = [String: WebSocketServerConnection]()
     private var listener: NWListener?
-    private let queue = DispatchQueue(label: "com.vluxe.starscream.server.networkstream", attributes: [])
+    private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.server.networkstream", attributes: [])
     
-    public init() {
-        
-    }
+    public init() {}
     
     public func start(address: String, port: UInt16) -> Error? {
-        //TODO: support TLS cert adding/binding
         let parameters = NWParameters(tls: nil, tcp: NWProtocolTCP.Options())
         let p = NWEndpoint.Port(rawValue: port)!
         parameters.requiredLocalEndpoint = NWEndpoint.hostPort(host: NWEndpoint.Host.name(address, nil), port: p)
         
         guard let listener = try? NWListener(using: parameters, on: p) else {
-            return WSError(type: .serverError, message: "unable to start the listener at: \(address):\(port)", code: 0)
+            return WebSocketError(type: .serverError, message: "unable to start the listener at: \(address):\(port)", code: 0)
         }
         listener.newConnectionHandler = {[weak self] conn in
-            let transport = TCPTransport(connection: conn)
-            let c = ServerConnection(transport: transport)
+            let transport = WebSocketTCPTransport(connection: conn)
+            let c = WebSocketServerConnection(transport: transport)
             c.delegate = self
             self?.connections[c.uuid] = c
         }
@@ -268,10 +264,10 @@ public class WebSocketServer: Server, ConnectionDelegate {
         listener?.cancel()
     }
     
-    public func didReceive(event: ServerEvent) {
+    public func didReceive(event: WebSocketServerEvent) {
         switch event {
         case .disconnected(let conn, _, _):
-            guard let conn = conn as? ServerConnection else {
+            guard let conn = conn as? WebSocketServerConnection else {
                 return
             }
             connections.removeValue(forKey: conn.uuid)
@@ -285,21 +281,21 @@ public class WebSocketServer: Server, ConnectionDelegate {
     }
 }
 
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient, FrameCollectorDelegate, TransportEventClient {
-    let transport: TCPTransport
-    private let httpHandler = FoundationHTTPServerHandler()
-    private let framer = WSFramer(isServer: true)
-    private let frameHandler = FrameCollector()
+@available(iOS 12.0, *)
+public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServerDelegate, WebSocketFramerEventClient, WebSocketFrameCollectorDelegate, WebSocketTransportEventClient {
+    let transport: WebSocketTCPTransport
+    private let httpHandler = WebSocketFoundationHTTPServerHandler()
+    private let framer = WebSocketFramer(isServer: true)
+    private let frameHandler = WebSocketFrameCollector()
     private var didUpgrade = false
-    public var onEvent: ((ConnectionEvent) -> Void)?
-    public weak var delegate: ConnectionDelegate?
+    public var onEvent: ((WebSocketConnectionEvent) -> Void)?
+    public weak var delegate: WebSocketConnectionDelegate?
     private let id: String
     var uuid: String {
         return id
     }
     
-    init(transport: TCPTransport) {
+    init(transport: WebSocketTCPTransport) {
         self.id = UUID().uuidString
         self.transport = transport
         transport.register(delegate: self)
@@ -308,21 +304,21 @@ public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient
         frameHandler.delegate = self
     }
     
-    public func write(data: Data, opcode: FrameOpCode) {
+    public func write(data: Data, opcode: WebSocketFrameOpCode) {
         let wsData = framer.createWriteFrame(opcode: opcode, payload: data, isCompressed: false)
         transport.write(data: wsData, completion: {_ in })
     }
     
     // MARK: - TransportEventClient
     
-    public func connectionChanged(state: ConnectionState) {
+    public func connectionChanged(state: WebSocketConnectionState) {
         switch state {
         case .connected:
             break
         case .waiting:
             break
         case .failed(let error):
-            print("server connection error: \(error ?? WSError(type: .protocolError, message: "default error, no extra data", code: 0))") //handleError(error)
+            print("server connection error: \(error ?? WebSocketError(type: .protocolError, message: "default error, no extra data", code: 0))") //handleError(error)
         case .viability(_):
             break
         case .shouldReconnect(_):
@@ -341,7 +337,7 @@ public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient
     
     /// MARK: - HTTPServerDelegate
     
-    public func didReceive(event: HTTPEvent) {
+    public func didReceive(event: WebSocketHTTPEvent) {
         switch event {
         case .success(let headers):
             didUpgrade = true
@@ -356,7 +352,7 @@ public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient
     
     /// MARK: - FrameCollectorDelegate
     
-    public func frameProcessed(event: FrameEvent) {
+    public func frameProcessed(event: WebSocketFrameEvent) {
         switch event {
         case .frame(let frame):
             frameHandler.add(frame: frame)
@@ -365,7 +361,7 @@ public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient
         }
     }
     
-    public func didForm(event: FrameCollector.Event) {
+    public func didForm(event: WebSocketFrameCollector.Event) {
         switch event {
         case .text(let string):
             delegate?.didReceive(event: .text(self, string))
@@ -394,44 +390,43 @@ public class ServerConnection: Connection, HTTPServerDelegate, FramerEventClient
 #endif
 
 // MARK: - Security
-public enum SecurityErrorCode: UInt16 {
+public enum WebSocketSecurityErrorCode: UInt16 {
     case acceptFailed = 1
     case pinningFailed = 2
 }
 
-public enum PinningState {
+public enum WebSocketPinningState {
     case success
     case failed(CFError?)
 }
 
 // CertificatePinning protocol provides an interface for Transports to handle Certificate
 // or Public Key Pinning.
-public protocol CertificatePinning: AnyObject {
-    func evaluateTrust(trust: SecTrust, domain: String?, completion: ((PinningState) -> ()))
+public protocol WebSocketCertificatePinning: AnyObject {
+    func evaluateTrust(trust: SecTrust, domain: String?, completion: ((WebSocketPinningState) -> ()))
 }
 
 // validates the "Sec-WebSocket-Accept" header as defined 1.3 of the RFC 6455
 // https://tools.ietf.org/html/rfc6455#section-1.3
-public protocol HeaderValidator: AnyObject {
+public protocol WebSocketHeaderValidator: AnyObject {
     func validate(headers: [String: String], key: String) -> Error?
 }
 
-public enum FoundationSecurityError: Error {
+public enum WebSocketFoundationSecurityError: Error {
     case invalidRequest
 }
 
-public class FoundationSecurity  {
+public class WebSocketFoundationSecurity  {
     var allowSelfSigned = false
     
     public init(allowSelfSigned: Bool = false) {
         self.allowSelfSigned = allowSelfSigned
     }
     
-    
 }
 
-extension FoundationSecurity: CertificatePinning {
-    public func evaluateTrust(trust: SecTrust, domain: String?, completion: ((PinningState) -> ())) {
+extension WebSocketFoundationSecurity: WebSocketCertificatePinning {
+    public func evaluateTrust(trust: SecTrust, domain: String?, completion: ((WebSocketPinningState) -> ())) {
         if allowSelfSigned {
             completion(.success)
             return
@@ -442,8 +437,8 @@ extension FoundationSecurity: CertificatePinning {
         handleSecurityTrust(trust: trust, completion: completion)
     }
     
-    private func handleSecurityTrust(trust: SecTrust, completion: ((PinningState) -> ())) {
-        if #available(iOS 12.0, OSX 10.14, watchOS 5.0, tvOS 12.0, *) {
+    private func handleSecurityTrust(trust: SecTrust, completion: ((WebSocketPinningState) -> ())) {
+        if #available(iOS 12.0, *) {
             var error: CFError?
             if SecTrustEvaluateWithError(trust, &error) {
                 completion(.success)
@@ -455,7 +450,7 @@ extension FoundationSecurity: CertificatePinning {
         }
     }
     
-    private func handleOldSecurityTrust(trust: SecTrust, completion: ((PinningState) -> ())) {
+    private func handleOldSecurityTrust(trust: SecTrust, completion: ((WebSocketPinningState) -> ())) {
         var result: SecTrustResultType = .unspecified
         SecTrustEvaluate(trust, &result)
         if result == .unspecified || result == .proceed {
@@ -467,12 +462,12 @@ extension FoundationSecurity: CertificatePinning {
     }
 }
 
-extension FoundationSecurity: HeaderValidator {
+extension WebSocketFoundationSecurity: WebSocketHeaderValidator {
     public func validate(headers: [String: String], key: String) -> Error? {
-        if let acceptKey = headers[HTTPWSHeader.acceptName] {
+        if let acceptKey = headers[WebSocketHTTPHeader.acceptName] {
             let sha = "\(key)258EAFA5-E914-47DA-95CA-C5AB0DC85B11".sha1Base64()
             if sha != acceptKey {
-                return WSError(type: .securityError, message: "accept header doesn't match", code: SecurityErrorCode.acceptFailed.rawValue)
+                return WebSocketError(type: .securityError, message: "accept header doesn't match", code: WebSocketSecurityErrorCode.acceptFailed.rawValue)
             }
         }
         return nil
@@ -492,16 +487,16 @@ private extension String {
 }
 
 // MARK: - Compression
-public protocol CompressionHandler {
+public protocol WebSocketCompressionHandler {
     func load(headers: [String: String])
     func decompress(data: Data, isFinal: Bool) -> Data?
     func compress(data: Data) -> Data?
 }
 
-public class WSCompression: CompressionHandler {
+public class WebSocketCompression: WebSocketCompressionHandler {
     let headerWSExtensionName = "Sec-WebSocket-Extensions"
-    var decompressor: Decompressor?
-    var compressor: Compressor?
+    var decompressor: WebSocketDecompressor?
+    var compressor: WebSocketCompressor?
     var decompressorTakeOver = false
     var compressorTakeOver = false
     
@@ -520,12 +515,12 @@ public class WSCompression: CompressionHandler {
             if part.hasPrefix("server_max_window_bits=") {
                 let valString = part.components(separatedBy: "=")[1]
                 if let val = Int(valString.trimmingCharacters(in: .whitespaces)) {
-                    decompressor = Decompressor(windowBits: val)
+                    decompressor = WebSocketDecompressor(windowBits: val)
                 }
             } else if part.hasPrefix("client_max_window_bits=") {
                 let valString = part.components(separatedBy: "=")[1]
                 if let val = Int(valString.trimmingCharacters(in: .whitespaces)) {
-                    compressor = Compressor(windowBits: val)
+                    compressor = WebSocketCompressor(windowBits: val)
                 }
             } else if part == "client_no_context_takeover" {
                 compressorTakeOver = true
@@ -566,7 +561,7 @@ public class WSCompression: CompressionHandler {
 
 }
 
-class Decompressor {
+class WebSocketDecompressor {
     private var strm = z_stream()
     private var buffer = [UInt8](repeating: 0, count: 0x2000)
     private var inflateInitialized = false
@@ -589,7 +584,7 @@ class Decompressor {
 
     func reset() throws {
         teardownInflate()
-        guard initInflate() else { throw WSError(type: .compressionError, message: "Error for decompressor on reset", code: 0) }
+        guard initInflate() else { throw WebSocketError(type: .compressionError, message: "Error for decompressor on reset", code: 0) }
     }
 
     func decompress(_ data: Data, finish: Bool) throws -> Data {
@@ -630,7 +625,7 @@ class Decompressor {
         guard (res == Z_OK && strm.avail_out > 0)
             || (res == Z_BUF_ERROR && Int(strm.avail_out) == buffer.count)
             else {
-                throw WSError(type: .compressionError, message: "Error on decompressing", code: 0)
+                throw WebSocketError(type: .compressionError, message: "Error on decompressing", code: 0)
         }
     }
 
@@ -645,7 +640,7 @@ class Decompressor {
     }
 }
 
-class Compressor {
+class WebSocketCompressor {
     private var strm = z_stream()
     private var buffer = [UInt8](repeating: 0, count: 0x2000)
     private var deflateInitialized = false
@@ -669,7 +664,7 @@ class Compressor {
 
     func reset() throws {
         teardownDeflate()
-        guard initDeflate() else { throw WSError(type: .compressionError, message: "Error for compressor on reset", code: 0) }
+        guard initDeflate() else { throw WebSocketError(type: .compressionError, message: "Error for compressor on reset", code: 0) }
     }
 
     func compress(_ data: Data) throws -> Data {
@@ -697,7 +692,7 @@ class Compressor {
         guard res == Z_OK && strm.avail_out > 0
             || (res == Z_BUF_ERROR && Int(strm.avail_out) == buffer.count)
         else {
-            throw WSError(type: .compressionError, message: "Error on compressing", code: 0)
+            throw WebSocketError(type: .compressionError, message: "Error on compressing", code: 0)
         }
 
         compressed.removeLast(4)
@@ -718,7 +713,6 @@ class Compressor {
 internal extension Data {
     struct ByteError: Swift.Error {}
     
-    #if swift(>=5.0)
     func withUnsafeBytes<ResultType, ContentType>(_ completion: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
         return try withUnsafeBytes {
             if let baseAddress = $0.baseAddress, $0.count > 0 {
@@ -728,9 +722,7 @@ internal extension Data {
             }
         }
     }
-    #endif
     
-    #if swift(>=5.0)
     mutating func withUnsafeMutableBytes<ResultType, ContentType>(_ completion: (UnsafeMutablePointer<ContentType>) throws -> ResultType) rethrows -> ResultType {
         return try withUnsafeMutableBytes {
             if let baseAddress = $0.baseAddress, $0.count > 0 {
@@ -740,29 +732,28 @@ internal extension Data {
             }
         }
     }
-    #endif
 }
 
 // MARK: - Engine
-public protocol EngineDelegate: AnyObject {
+public protocol WebSocketEngineDelegate: AnyObject {
     func didReceive(event: WebSocketEvent)
 }
 
-public protocol Engine {
-    func register(delegate: EngineDelegate)
+public protocol WebSocketEngineProtocol {
+    func register(delegate: WebSocketEngineDelegate)
     func start(request: URLRequest)
     func stop(closeCode: UInt16)
     func forceStop()
-    func write(data: Data, opcode: FrameOpCode, completion: (() -> ())?)
+    func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?)
     func write(string: String, completion: (() -> ())?)
 }
 
-@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionWebSocketDelegate {
+@available(iOS 13.0, *)
+public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessionDataDelegate, URLSessionWebSocketDelegate {
     private var task: URLSessionWebSocketTask?
-    weak var delegate: EngineDelegate?
+    weak var delegate: WebSocketEngineDelegate?
 
-    public func register(delegate: EngineDelegate) {
+    public func register(delegate: WebSocketEngineDelegate) {
         self.delegate = delegate
     }
 
@@ -788,7 +779,7 @@ public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionW
         })
     }
 
-    public func write(data: Data, opcode: FrameOpCode, completion: (() -> ())?) {
+    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
         switch opcode {
         case .binaryFrame:
             task?.send(.data(data), completionHandler: { (error) in
@@ -833,7 +824,7 @@ public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionW
     
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         let p = `protocol` ?? ""
-        broadcast(event: .connected([HTTPWSHeader.protocolName: p]))
+        broadcast(event: .connected([WebSocketHTTPHeader.protocolName: p]))
     }
     
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
@@ -845,32 +836,32 @@ public class NativeEngine: NSObject, Engine, URLSessionDataDelegate, URLSessionW
     }
 }
 
-public class WSEngine: Engine, TransportEventClient, FramerEventClient,
-FrameCollectorDelegate, HTTPHandlerDelegate {
-    private let transport: Transport
-    private let framer: Framer
-    private let httpHandler: HTTPHandler
-    private let compressionHandler: CompressionHandler?
-    private let certPinner: CertificatePinning?
-    private let headerChecker: HeaderValidator
+public class WebSocketEngine: WebSocketEngineProtocol, WebSocketTransportEventClient, WebSocketFramerEventClient,
+WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
+    private let transport: WebSocketTransport
+    private let framer: WebSocketFramerProtocol
+    private let httpHandler: WebSocketHTTPHandler
+    private let compressionHandler: WebSocketCompressionHandler?
+    private let certPinner: WebSocketCertificatePinning?
+    private let headerChecker: WebSocketHeaderValidator
     private var request: URLRequest!
     
-    private let frameHandler = FrameCollector()
+    private let frameHandler = WebSocketFrameCollector()
     private var didUpgrade = false
     private var secKeyValue = ""
-    private let writeQueue = DispatchQueue(label: "com.vluxe.starscream.writequeue")
+    private let writeQueue = DispatchQueue(label: "site.wuyong.queue.websocket.client.writequeue")
     private let mutex = DispatchSemaphore(value: 1)
     private var canSend = false
     
-    weak var delegate: EngineDelegate?
+    weak var delegate: WebSocketEngineDelegate?
     public var respondToPingWithPong: Bool = true
     
-    public init(transport: Transport,
-                certPinner: CertificatePinning? = nil,
-                headerValidator: HeaderValidator = FoundationSecurity(),
-                httpHandler: HTTPHandler = FoundationHTTPHandler(),
-                framer: Framer = WSFramer(),
-                compressionHandler: CompressionHandler? = nil) {
+    public init(transport: WebSocketTransport,
+                certPinner: WebSocketCertificatePinning? = nil,
+                headerValidator: WebSocketHeaderValidator = WebSocketFoundationSecurity(),
+                httpHandler: WebSocketHTTPHandler = WebSocketFoundationHTTPHandler(),
+                framer: WebSocketFramerProtocol = WebSocketFramer(),
+                compressionHandler: WebSocketCompressionHandler? = nil) {
         self.transport = transport
         self.framer = framer
         self.httpHandler = httpHandler
@@ -881,7 +872,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
         frameHandler.delegate = self
     }
     
-    public func register(delegate: EngineDelegate) {
+    public func register(delegate: WebSocketEngineDelegate) {
         self.delegate = delegate
     }
     
@@ -904,7 +895,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
         transport.connect(url: url, timeout: request.timeoutInterval, certificatePinning: certPinner)
     }
     
-    public func stop(closeCode: UInt16 = CloseCode.normal.rawValue) {
+    public func stop(closeCode: UInt16 = WebSocketCloseCode.normal.rawValue) {
         let capacity = MemoryLayout<UInt16>.size
         var pointer = [UInt8](repeating: 0, count: capacity)
         writeUint16(&pointer, offset: 0, value: closeCode)
@@ -924,7 +915,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
         write(data: data, opcode: .textFrame, completion: completion)
     }
     
-    public func write(data: Data, opcode: FrameOpCode, completion: (() -> ())?) {
+    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
         writeQueue.async { [weak self] in
             guard let s = self else { return }
             s.mutex.wait()
@@ -950,11 +941,11 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
     
     // MARK: - TransportEventClient
     
-    public func connectionChanged(state: ConnectionState) {
+    public func connectionChanged(state: WebSocketConnectionState) {
         switch state {
         case .connected:
-            secKeyValue = HTTPWSHeader.generateWebSocketKey()
-            let wsReq = HTTPWSHeader.createUpgrade(request: request, supportsCompression: framer.supportsCompression(), secKeyValue: secKeyValue)
+            secKeyValue = WebSocketHTTPHeader.generateWebSocketKey()
+            let wsReq = WebSocketHTTPHeader.createUpgrade(request: request, supportsCompression: framer.supportsCompression(), secKeyValue: secKeyValue)
             let data = httpHandler.convert(request: wsReq)
             transport.write(data: data, completion: {_ in })
         case .waiting:
@@ -982,7 +973,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
     
     // MARK: - HTTPHandlerDelegate
     
-    public func didReceiveHTTP(event: HTTPEvent) {
+    public func didReceiveHTTP(event: WebSocketHTTPEvent) {
         switch event {
         case .success(let headers):
             if let error = headerChecker.validate(headers: headers, key: secKeyValue) {
@@ -1008,7 +999,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
     
     // MARK: - FramerEventClient
     
-    public func frameProcessed(event: FrameEvent) {
+    public func frameProcessed(event: WebSocketFrameEvent) {
         switch event {
         case .frame(let frame):
             frameHandler.add(frame: frame)
@@ -1023,7 +1014,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
         return compressionHandler?.decompress(data: data, isFinal: isFinal)
     }
     
-    public func didForm(event: FrameCollector.Event) {
+    public func didForm(event: WebSocketFrameCollector.Event) {
         switch event {
         case .text(let string):
             broadcast(event: .text(string))
@@ -1051,7 +1042,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
     //This call can be coming from a lot of different queues/threads.
     //be aware of that when modifying shared variables
     private func handleError(_ error: Error?) {
-        if let wsError = error as? WSError {
+        if let wsError = error as? WebSocketError {
             stop(closeCode: wsError.code)
         } else {
             stop()
@@ -1070,7 +1061,7 @@ FrameCollectorDelegate, HTTPHandlerDelegate {
 }
 
 // MARK: - Transport
-public enum ConnectionState {
+public enum WebSocketConnectionState {
     case connected
     case waiting
     case cancelled
@@ -1088,13 +1079,13 @@ public enum ConnectionState {
     case receive(Data)
 }
 
-public protocol TransportEventClient: AnyObject {
-    func connectionChanged(state: ConnectionState)
+public protocol WebSocketTransportEventClient: AnyObject {
+    func connectionChanged(state: WebSocketConnectionState)
 }
 
-public protocol Transport: AnyObject {
-    func register(delegate: TransportEventClient)
-    func connect(url: URL, timeout: Double, certificatePinning: CertificatePinning?)
+public protocol WebSocketTransport: AnyObject {
+    func register(delegate: WebSocketTransportEventClient)
+    func connect(url: URL, timeout: Double, certificatePinning: WebSocketCertificatePinning?)
     func disconnect()
     func write(data: Data, completion: @escaping ((Error?) -> ()))
     var usingTLS: Bool { get }
@@ -1103,15 +1094,15 @@ public protocol Transport: AnyObject {
 #if canImport(Network)
 import Network
 
-public enum TCPTransportError: Error {
+public enum WebSocketTCPTransportError: Error {
     case invalidRequest
 }
 
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-public class TCPTransport: Transport {
+@available(iOS 12.0, *)
+public class WebSocketTCPTransport: WebSocketTransport {
     private var connection: NWConnection?
-    private let queue = DispatchQueue(label: "com.vluxe.starscream.networkstream", attributes: [])
-    private weak var delegate: TransportEventClient?
+    private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.networkstream", attributes: [])
+    private weak var delegate: WebSocketTransportEventClient?
     private var isRunning = false
     private var isTLS = false
     
@@ -1128,9 +1119,9 @@ public class TCPTransport: Transport {
         //normal connection, will use the "connect" method below
     }
     
-    public func connect(url: URL, timeout: Double = 10, certificatePinning: CertificatePinning? = nil) {
+    public func connect(url: URL, timeout: Double = 10, certificatePinning: WebSocketCertificatePinning? = nil) {
         guard let parts = url.getParts() else {
-            delegate?.connectionChanged(state: .failed(TCPTransportError.invalidRequest))
+            delegate?.connectionChanged(state: .failed(WebSocketTCPTransportError.invalidRequest))
             return
         }
         self.isTLS = parts.isTLS
@@ -1166,7 +1157,7 @@ public class TCPTransport: Transport {
         connection?.cancel()
     }
     
-    public func register(delegate: TransportEventClient) {
+    public func register(delegate: WebSocketTransportEventClient) {
         self.delegate = delegate
     }
     
@@ -1234,24 +1225,24 @@ public class TCPTransport: Transport {
     }
 }
 #else
-typealias TCPTransport = FoundationTransport
+typealias WebSocketTCPTransport = WebSocketFoundationTransport
 #endif
 
-public enum FoundationTransportError: Error {
+public enum WebSocketFoundationTransportError: Error {
     case invalidRequest
     case invalidOutputStream
     case timeout
 }
 
-public class FoundationTransport: NSObject, Transport, StreamDelegate {
-    private weak var delegate: TransportEventClient?
-    private let workQueue = DispatchQueue(label: "com.vluxe.starscream.websocket", attributes: [])
+public class WebSocketFoundationTransport: NSObject, WebSocketTransport, StreamDelegate {
+    private weak var delegate: WebSocketTransportEventClient?
+    private let workQueue = DispatchQueue(label: "site.wuyong.queue.websocket.client.websocket", attributes: [])
     private var inputStream: InputStream?
     private var outputStream: OutputStream?
     private var isOpen = false
     private var onConnect: ((InputStream, OutputStream) -> Void)?
     private var isTLS = false
-    private var certPinner: CertificatePinning?
+    private var certPinner: WebSocketCertificatePinning?
     
     public var usingTLS: Bool {
         return self.isTLS
@@ -1267,9 +1258,9 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         outputStream?.delegate = nil
     }
     
-    public func connect(url: URL, timeout: Double = 10, certificatePinning: CertificatePinning? = nil) {
+    public func connect(url: URL, timeout: Double = 10, certificatePinning: WebSocketCertificatePinning? = nil) {
         guard let parts = url.getParts() else {
-            delegate?.connectionChanged(state: .failed(FoundationTransportError.invalidRequest))
+            delegate?.connectionChanged(state: .failed(WebSocketFoundationTransportError.invalidRequest))
             return
         }
         self.certPinner = certificatePinning
@@ -1304,7 +1295,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         workQueue.asyncAfter(deadline: .now() + timeout, execute: { [weak self] in
             guard let s = self else { return }
             if !s.isOpen {
-                s.delegate?.connectionChanged(state: .failed(FoundationTransportError.timeout))
+                s.delegate?.connectionChanged(state: .failed(WebSocketFoundationTransportError.timeout))
             }
         })
     }
@@ -1325,13 +1316,13 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         inputStream = nil
     }
     
-    public func register(delegate: TransportEventClient) {
+    public func register(delegate: WebSocketTransportEventClient) {
         self.delegate = delegate
     }
     
     public func write(data: Data, completion: @escaping ((Error?) -> ())) {
         guard let outStream = outputStream else {
-            completion(FoundationTransportError.invalidOutputStream)
+            completion(WebSocketFoundationTransportError.invalidOutputStream)
             return
         }
         var total = 0
@@ -1340,7 +1331,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         while total < data.count {
             let written = outStream.write(buffer, maxLength: data.count)
             if written < 0 {
-                completion(FoundationTransportError.invalidOutputStream)
+                completion(WebSocketFoundationTransportError.invalidOutputStream)
                 return
             }
             total += written
@@ -1349,9 +1340,6 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
     }
     
     private func getSecurityData() -> (SecTrust?, String?) {
-        #if os(watchOS)
-        return (nil, nil)
-        #else
         guard let outputStream = outputStream else {
             return (nil, nil)
         }
@@ -1371,7 +1359,6 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             }
         }
         return (trust, domain)
-        #endif
     }
     
     private func read() {
@@ -1442,7 +1429,7 @@ let PayloadLenMask: UInt8   = 0x7F
 let MaxFrameSize: Int       = 32
 
 // Standard WebSocket close codes
-public enum CloseCode: UInt16 {
+public enum WebSocketCloseCode: UInt16 {
     case normal                 = 1000
     case goingAway              = 1001
     case protocolError          = 1002
@@ -1455,7 +1442,7 @@ public enum CloseCode: UInt16 {
     case messageTooBig          = 1009
 }
 
-public enum FrameOpCode: UInt8 {
+public enum WebSocketFrameOpCode: UInt8 {
     case continueFrame = 0x0
     case textFrame = 0x1
     case binaryFrame = 0x2
@@ -1467,36 +1454,36 @@ public enum FrameOpCode: UInt8 {
     case unknown = 100
 }
 
-public struct Frame {
+public struct WebSocketFrame {
     let isFin: Bool
     let needsDecompression: Bool
     let isMasked: Bool
-    let opcode: FrameOpCode
+    let opcode: WebSocketFrameOpCode
     let payloadLength: UInt64
     let payload: Data
     let closeCode: UInt16 //only used by connectionClose opcode
 }
 
-public enum FrameEvent {
-    case frame(Frame)
+public enum WebSocketFrameEvent {
+    case frame(WebSocketFrame)
     case error(Error)
 }
 
-public protocol FramerEventClient: AnyObject {
-    func frameProcessed(event: FrameEvent)
+public protocol WebSocketFramerEventClient: AnyObject {
+    func frameProcessed(event: WebSocketFrameEvent)
 }
 
-public protocol Framer {
+public protocol WebSocketFramerProtocol {
     func add(data: Data)
-    func register(delegate: FramerEventClient)
-    func createWriteFrame(opcode: FrameOpCode, payload: Data, isCompressed: Bool) -> Data
+    func register(delegate: WebSocketFramerEventClient)
+    func createWriteFrame(opcode: WebSocketFrameOpCode, payload: Data, isCompressed: Bool) -> Data
     func updateCompression(supports: Bool)
     func supportsCompression() -> Bool
 }
 
-public class WSFramer: Framer {
-    private let queue = DispatchQueue(label: "com.vluxe.starscream.wsframer", attributes: [])
-    private weak var delegate: FramerEventClient?
+public class WebSocketFramer: WebSocketFramerProtocol {
+    private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.wsframer", attributes: [])
+    private weak var delegate: WebSocketFramerEventClient?
     private var buffer = Data()
     public var compressionEnabled = false
     private let isServer: Bool
@@ -1515,7 +1502,7 @@ public class WSFramer: Framer {
     
     enum ProcessEvent {
         case needsMoreData
-        case processedFrame(Frame, Int)
+        case processedFrame(WebSocketFrame, Int)
         case failed(Error)
     }
     
@@ -1544,7 +1531,7 @@ public class WSFramer: Framer {
         }
     }
 
-    public func register(delegate: FramerEventClient) {
+    public func register(delegate: WebSocketFramerEventClient) {
         self.delegate = delegate
     }
     
@@ -1557,7 +1544,7 @@ public class WSFramer: Framer {
 
         let isFin = (FinMask & pointer[0])
         let opcodeRawValue = (OpCodeMask & pointer[0])
-        let opcode = FrameOpCode(rawValue: opcodeRawValue) ?? .unknown
+        let opcode = WebSocketFrameOpCode(rawValue: opcodeRawValue) ?? .unknown
         let isMasked = (MaskMask & pointer[1])
         let payloadLen = (PayloadLenMask & pointer[1])
         let RSV1 = (RSVMask & pointer[0])
@@ -1567,31 +1554,31 @@ public class WSFramer: Framer {
            needsDecompression = (RSV1Mask & pointer[0]) > 0
         }
         if !isServer && (isMasked > 0 || RSV1 > 0) && opcode != .pong && !needsDecompression {
-            let errCode = CloseCode.protocolError.rawValue
-            return .failed(WSError(type: .protocolError, message: "masked and rsv data is not currently supported", code: errCode))
+            let errCode = WebSocketCloseCode.protocolError.rawValue
+            return .failed(WebSocketError(type: .protocolError, message: "masked and rsv data is not currently supported", code: errCode))
         }
         let isControlFrame = (opcode == .connectionClose || opcode == .ping || opcode == .pong)
         if !isControlFrame && (opcode != .binaryFrame && opcode != .continueFrame &&
             opcode != .textFrame && opcode != .pong) {
-            let errCode = CloseCode.protocolError.rawValue
-            return .failed(WSError(type: .protocolError, message: "unknown opcode: \(opcodeRawValue)", code: errCode))
+            let errCode = WebSocketCloseCode.protocolError.rawValue
+            return .failed(WebSocketError(type: .protocolError, message: "unknown opcode: \(opcodeRawValue)", code: errCode))
         }
         if isControlFrame && isFin == 0 {
-            let errCode = CloseCode.protocolError.rawValue
-            return .failed(WSError(type: .protocolError, message: "control frames can't be fragmented", code: errCode))
+            let errCode = WebSocketCloseCode.protocolError.rawValue
+            return .failed(WebSocketError(type: .protocolError, message: "control frames can't be fragmented", code: errCode))
         }
         
         var offset = 2
     
         if isControlFrame && payloadLen > 125 {
-            return .failed(WSError(type: .protocolError, message: "payload length is longer than allowed for a control frame", code: CloseCode.protocolError.rawValue))
+            return .failed(WebSocketError(type: .protocolError, message: "payload length is longer than allowed for a control frame", code: WebSocketCloseCode.protocolError.rawValue))
         }
         
         var dataLength = UInt64(payloadLen)
-        var closeCode = CloseCode.normal.rawValue
+        var closeCode = WebSocketCloseCode.normal.rawValue
         if opcode == .connectionClose {
             if payloadLen == 1 {
-                closeCode = CloseCode.protocolError.rawValue
+                closeCode = WebSocketCloseCode.protocolError.rawValue
                 dataLength = 0
             } else if payloadLen > 1 {
                 if pointer.count < 4 {
@@ -1602,7 +1589,7 @@ public class WSFramer: Framer {
                 offset += size
                 dataLength -= UInt64(size)
                 if closeCode < 1000 || (closeCode > 1003 && closeCode < 1007) || (closeCode > 1013 && closeCode < 3000) {
-                    closeCode = CloseCode.protocolError.rawValue
+                    closeCode = WebSocketCloseCode.protocolError.rawValue
                 }
             }
         }
@@ -1649,11 +1636,11 @@ public class WSFramer: Framer {
         }
         offset += readDataLength
 
-        let frame = Frame(isFin: isFin > 0, needsDecompression: needsDecompression, isMasked: isMasked > 0, opcode: opcode, payloadLength: dataLength, payload: payload, closeCode: closeCode)
+        let frame = WebSocketFrame(isFin: isFin > 0, needsDecompression: needsDecompression, isMasked: isMasked > 0, opcode: opcode, payloadLength: dataLength, payload: payload, closeCode: closeCode)
         return .processedFrame(frame, offset)
     }
     
-    public func createWriteFrame(opcode: FrameOpCode, payload: Data, isCompressed: Bool) -> Data {
+    public func createWriteFrame(opcode: WebSocketFrameOpCode, payload: Data, isCompressed: Bool) -> Data {
         let payloadLength = payload.count
         
         let capacity = payloadLength + MaxFrameSize
@@ -1706,10 +1693,10 @@ public class WSFramer: Framer {
 
 /// MARK: - functions for simpler array buffer reading and writing
 
-public protocol MyWSArrayType {}
-extension UInt8: MyWSArrayType {}
+public protocol WebSocketArrayType {}
+extension UInt8: WebSocketArrayType {}
 
-public extension Array where Element: MyWSArrayType & UnsignedInteger {
+public extension Array where Element: WebSocketArrayType & UnsignedInteger {
     
     /**
      Read a UInt16 from a buffer.
@@ -1775,12 +1762,12 @@ public func writeUint64( _ buffer: inout [UInt8], offset: Int, value: UInt64) {
     }
 }
 
-public protocol FrameCollectorDelegate: AnyObject {
-    func didForm(event: FrameCollector.Event)
+public protocol WebSocketFrameCollectorDelegate: AnyObject {
+    func didForm(event: WebSocketFrameCollector.Event)
     func decompress(data: Data, isFinal: Bool) -> Data?
 }
 
-public class FrameCollector {
+public class WebSocketFrameCollector {
     public enum Event {
         case text(String)
         case binary(Data)
@@ -1789,13 +1776,13 @@ public class FrameCollector {
         case error(Error)
         case closed(String, UInt16)
     }
-    weak var delegate: FrameCollectorDelegate?
+    weak var delegate: WebSocketFrameCollectorDelegate?
     var buffer = Data()
     var frameCount = 0
     var isText = false //was the first frame a text frame or a binary frame?
     var needsDecompression = false
     
-    public func add(frame: Frame) {
+    public func add(frame: WebSocketFrame) {
         //check single frame action and out of order frames
         if frame.opcode == .connectionClose {
             var code = frame.closeCode
@@ -1803,7 +1790,7 @@ public class FrameCollector {
             if let customCloseReason = String(data: frame.payload, encoding: .utf8) {
                 reason = customCloseReason
             } else {
-                code = CloseCode.protocolError.rawValue
+                code = WebSocketCloseCode.protocolError.rawValue
             }
             delegate?.didForm(event: .closed(reason, code))
             return
@@ -1814,13 +1801,13 @@ public class FrameCollector {
             delegate?.didForm(event: .ping(frame.payload))
             return
         } else if frame.opcode == .continueFrame && frameCount == 0 {
-            let errCode = CloseCode.protocolError.rawValue
-            delegate?.didForm(event: .error(WSError(type: .protocolError, message: "first frame can't be a continue frame", code: errCode)))
+            let errCode = WebSocketCloseCode.protocolError.rawValue
+            delegate?.didForm(event: .error(WebSocketError(type: .protocolError, message: "first frame can't be a continue frame", code: errCode)))
             reset()
             return
         } else if frameCount > 0 && frame.opcode != .continueFrame {
-            let errCode = CloseCode.protocolError.rawValue
-            delegate?.didForm(event: .error(WSError(type: .protocolError, message: "second and beyond of fragment message must be a continue frame", code: errCode)))
+            let errCode = WebSocketCloseCode.protocolError.rawValue
+            delegate?.didForm(event: .error(WebSocketError(type: .protocolError, message: "second and beyond of fragment message must be a continue frame", code: errCode)))
             reset()
             return
         }
@@ -1843,8 +1830,8 @@ public class FrameCollector {
                 if let string = String(data: buffer, encoding: .utf8) {
                     delegate?.didForm(event: .text(string))
                 } else {
-                    let errCode = CloseCode.protocolError.rawValue
-                    delegate?.didForm(event: .error(WSError(type: .protocolError, message: "not valid UTF-8 data", code: errCode)))
+                    let errCode = WebSocketCloseCode.protocolError.rawValue
+                    delegate?.didForm(event: .error(WebSocketError(type: .protocolError, message: "not valid UTF-8 data", code: errCode)))
                 }
             } else {
                 delegate?.didForm(event: .binary(buffer))
@@ -1859,12 +1846,12 @@ public class FrameCollector {
     }
 }
 
-public enum HTTPUpgradeError: Error {
+public enum WebSocketHTTPUpgradeError: Error {
     case notAnUpgrade(Int, [String: String])
     case invalidData
 }
 
-public struct HTTPWSHeader {
+public struct WebSocketHTTPHeader {
     static let upgradeName        = "Upgrade"
     static let upgradeValue       = "websocket"
     static let hostName           = "Host"
@@ -1891,18 +1878,18 @@ public struct HTTPWSHeader {
         }
         
         var req = request
-        if request.value(forHTTPHeaderField: HTTPWSHeader.originName) == nil {
+        if request.value(forHTTPHeaderField: WebSocketHTTPHeader.originName) == nil {
             var origin = url.absoluteString
             if let hostUrl = URL (string: "/", relativeTo: url) {
                 origin = hostUrl.absoluteString
                 origin.remove(at: origin.index(before: origin.endIndex))
             }
-            req.setValue(origin, forHTTPHeaderField: HTTPWSHeader.originName)
+            req.setValue(origin, forHTTPHeaderField: WebSocketHTTPHeader.originName)
         }
-        req.setValue(HTTPWSHeader.upgradeValue, forHTTPHeaderField: HTTPWSHeader.upgradeName)
-        req.setValue(HTTPWSHeader.connectionValue, forHTTPHeaderField: HTTPWSHeader.connectionName)
-        req.setValue(HTTPWSHeader.versionValue, forHTTPHeaderField: HTTPWSHeader.versionName)
-        req.setValue(secKeyValue, forHTTPHeaderField: HTTPWSHeader.keyName)
+        req.setValue(WebSocketHTTPHeader.upgradeValue, forHTTPHeaderField: WebSocketHTTPHeader.upgradeName)
+        req.setValue(WebSocketHTTPHeader.connectionValue, forHTTPHeaderField: WebSocketHTTPHeader.connectionName)
+        req.setValue(WebSocketHTTPHeader.versionValue, forHTTPHeaderField: WebSocketHTTPHeader.versionName)
+        req.setValue(secKeyValue, forHTTPHeaderField: WebSocketHTTPHeader.keyName)
         
         if let cookies = HTTPCookieStorage.shared.cookies(for: url), !cookies.isEmpty {
             let headers = HTTPCookie.requestHeaderFields(with: cookies)
@@ -1913,10 +1900,10 @@ public struct HTTPWSHeader {
         
         if supportsCompression {
             let val = "permessage-deflate; client_max_window_bits; server_max_window_bits=15"
-            req.setValue(val, forHTTPHeaderField: HTTPWSHeader.extensionName)
+            req.setValue(val, forHTTPHeaderField: WebSocketHTTPHeader.extensionName)
         }
-        let hostValue = req.allHTTPHeaderFields?[HTTPWSHeader.hostName] ?? "\(parts.host):\(parts.port)"
-        req.setValue(hostValue, forHTTPHeaderField: HTTPWSHeader.hostName)
+        let hostValue = req.allHTTPHeaderFields?[WebSocketHTTPHeader.hostName] ?? "\(parts.host):\(parts.port)"
+        req.setValue(hostValue, forHTTPHeaderField: WebSocketHTTPHeader.hostName)
         return req
     }
     
@@ -1926,32 +1913,32 @@ public struct HTTPWSHeader {
     }
 }
 
-public enum HTTPEvent {
+public enum WebSocketHTTPEvent {
     case success([String: String])
     case failure(Error)
 }
 
-public protocol HTTPHandlerDelegate: AnyObject {
-    func didReceiveHTTP(event: HTTPEvent)
+public protocol WebSocketHTTPHandlerDelegate: AnyObject {
+    func didReceiveHTTP(event: WebSocketHTTPEvent)
 }
 
-public protocol HTTPHandler {
-    func register(delegate: HTTPHandlerDelegate)
+public protocol WebSocketHTTPHandler {
+    func register(delegate: WebSocketHTTPHandlerDelegate)
     func convert(request: URLRequest) -> Data
     func parse(data: Data) -> Int
 }
 
-public protocol HTTPServerDelegate: AnyObject {
-    func didReceive(event: HTTPEvent)
+public protocol WebSocketHTTPServerDelegate: AnyObject {
+    func didReceive(event: WebSocketHTTPEvent)
 }
 
-public protocol HTTPServerHandler {
-    func register(delegate: HTTPServerDelegate)
+public protocol WebSocketHTTPServerHandler {
+    func register(delegate: WebSocketHTTPServerDelegate)
     func parse(data: Data)
     func createResponse(headers: [String: String]) -> Data
 }
 
-public struct URLParts {
+public struct WebSocketURLParts {
     let port: Int
     let host: String
     let isTLS: Bool
@@ -1963,11 +1950,11 @@ public extension URL {
         guard let scheme = self.scheme else {
             return false
         }
-        return HTTPWSHeader.defaultSSLSchemes.contains(scheme)
+        return WebSocketHTTPHeader.defaultSSLSchemes.contains(scheme)
     }
     
     /// getParts pulls host and port from the url.
-    func getParts() -> URLParts? {
+    func getParts() -> WebSocketURLParts? {
         guard let host = self.host else {
             return nil // no host, this isn't a valid url
         }
@@ -1980,17 +1967,14 @@ public extension URL {
                 port = 80
             }
         }
-        return URLParts(port: port, host: host, isTLS: isTLS)
+        return WebSocketURLParts(port: port, host: host, isTLS: isTLS)
     }
 }
 
-#if os(watchOS)
-public typealias FoundationHTTPHandler = StringHTTPHandler
-#else
-public class FoundationHTTPHandler: HTTPHandler {
+public class WebSocketFoundationHTTPHandler: WebSocketHTTPHandler {
 
     var buffer = Data()
-    weak var delegate: HTTPHandlerDelegate?
+    weak var delegate: WebSocketHTTPHandlerDelegate?
     
     public init() {
         
@@ -2049,8 +2033,8 @@ public class FoundationHTTPHandler: HTTPHandler {
             }
             
             let code = CFHTTPMessageGetResponseStatusCode(response)
-            if code != HTTPWSHeader.switchProtocolCode {
-                delegate?.didReceiveHTTP(event: .failure(HTTPUpgradeError.notAnUpgrade(code, headers)))
+            if code != WebSocketHTTPHeader.switchProtocolCode {
+                delegate?.didReceiveHTTP(event: .failure(WebSocketHTTPUpgradeError.notAnUpgrade(code, headers)))
                 return true
             }
             
@@ -2058,11 +2042,11 @@ public class FoundationHTTPHandler: HTTPHandler {
             return true
         }
         
-        delegate?.didReceiveHTTP(event: .failure(HTTPUpgradeError.invalidData))
+        delegate?.didReceiveHTTP(event: .failure(WebSocketHTTPUpgradeError.invalidData))
         return true
     }
     
-    public func register(delegate: HTTPHandlerDelegate) {
+    public func register(delegate: WebSocketHTTPHandlerDelegate) {
         self.delegate = delegate
     }
     
@@ -2084,23 +2068,18 @@ public class FoundationHTTPHandler: HTTPHandler {
         return -1
     }
 }
-#endif
 
-public class FoundationHTTPServerHandler: HTTPServerHandler {
+public class WebSocketFoundationHTTPServerHandler: WebSocketHTTPServerHandler {
     var buffer = Data()
-    weak var delegate: HTTPServerDelegate?
+    weak var delegate: WebSocketHTTPServerDelegate?
     let getVerb: NSString = "GET"
     
-    public func register(delegate: HTTPServerDelegate) {
+    public func register(delegate: WebSocketHTTPServerDelegate) {
         self.delegate = delegate
     }
     
     public func createResponse(headers: [String: String]) -> Data {
-        #if os(watchOS)
-        //TODO: build response header
-        return Data()
-        #else
-        let response = CFHTTPMessageCreateResponse(kCFAllocatorDefault, HTTPWSHeader.switchProtocolCode,
+        let response = CFHTTPMessageCreateResponse(kCFAllocatorDefault, WebSocketHTTPHeader.switchProtocolCode,
                                                    nil, kCFHTTPVersion1_1).takeRetainedValue()
         
         //TODO: add other values to make a proper response here...
@@ -2112,7 +2091,6 @@ public class FoundationHTTPServerHandler: HTTPServerHandler {
             return Data()
         }
         return cfData as Data
-        #endif
     }
     
     public func parse(data: Data) {
@@ -2126,10 +2104,6 @@ public class FoundationHTTPServerHandler: HTTPServerHandler {
     func parseContent(data: Data) -> Bool {
         var pointer = [UInt8]()
         data.withUnsafeBytes { pointer.append(contentsOf: $0) }
-        #if os(watchOS)
-        //TODO: parse data
-        return false
-        #else
         let response = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, true).takeRetainedValue()
         if !CFHTTPMessageAppendBytes(response, pointer, data.count) {
             return false //not enough data, wait for more
@@ -2139,7 +2113,7 @@ public class FoundationHTTPServerHandler: HTTPServerHandler {
         }
         if let method = CFHTTPMessageCopyRequestMethod(response)?.takeRetainedValue() {
             if (method as NSString) != getVerb {
-                delegate?.didReceive(event: .failure(HTTPUpgradeError.invalidData))
+                delegate?.didReceive(event: .failure(WebSocketHTTPUpgradeError.invalidData))
                 return true
             }
         }
@@ -2156,127 +2130,7 @@ public class FoundationHTTPServerHandler: HTTPServerHandler {
             return true
         }
         
-        delegate?.didReceive(event: .failure(HTTPUpgradeError.invalidData))
+        delegate?.didReceive(event: .failure(WebSocketHTTPUpgradeError.invalidData))
         return true
-        #endif
-    }
-}
-
-public class StringHTTPHandler: HTTPHandler {
-    
-    var buffer = Data()
-    weak var delegate: HTTPHandlerDelegate?
-    
-    public init() {
-        
-    }
-    
-    public func convert(request: URLRequest) -> Data {
-        guard let url = request.url else {
-            return Data()
-        }
-        
-        var path = url.absoluteString
-        let offset = (url.scheme?.count ?? 2) + 3
-        path = String(path[path.index(path.startIndex, offsetBy: offset)..<path.endIndex])
-        if let range = path.range(of: "/") {
-            path = String(path[range.lowerBound..<path.endIndex])
-        } else {
-            path = "/"
-            if let query = url.query {
-                path += "?" + query
-            }
-        }
-        
-        var httpBody = "\(request.httpMethod ?? "GET") \(path) HTTP/1.1\r\n"
-        if let headers = request.allHTTPHeaderFields {
-            for (key, val) in headers {
-                httpBody += "\(key): \(val)\r\n"
-            }
-        }
-        httpBody += "\r\n"
-        
-        guard var data = httpBody.data(using: .utf8) else {
-            return Data()
-        }
-        
-        if let body = request.httpBody {
-            data.append(body)
-        }
-        
-        return data
-    }
-    
-    public func parse(data: Data) -> Int {
-        let offset = findEndOfHTTP(data: data)
-        if offset > 0 {
-            buffer.append(data.subdata(in: 0..<offset))
-            if parseContent(data: buffer) {
-                buffer = Data()
-            }
-        } else {
-            buffer.append(data)
-        }
-        return offset
-    }
-    
-    //returns true when the buffer should be cleared
-    func parseContent(data: Data) -> Bool {
-        guard let str = String(data: data, encoding: .utf8) else {
-            delegate?.didReceiveHTTP(event: .failure(HTTPUpgradeError.invalidData))
-            return true
-        }
-        let splitArr = str.components(separatedBy: "\r\n")
-        var code = -1
-        var i = 0
-        var headers = [String: String]()
-        for str in splitArr {
-            if i == 0 {
-                let responseSplit = str.components(separatedBy: .whitespaces)
-                guard responseSplit.count > 1 else {
-                    delegate?.didReceiveHTTP(event: .failure(HTTPUpgradeError.invalidData))
-                    return true
-                }
-                if let c = Int(responseSplit[1]) {
-                    code = c
-                }
-            } else {
-                guard let separatorIndex = str.firstIndex(of: ":") else { break }
-                let key = str.prefix(upTo: separatorIndex).trimmingCharacters(in: .whitespaces)
-                let val = str.suffix(from: str.index(after: separatorIndex)).trimmingCharacters(in: .whitespaces)
-                headers[key.lowercased()] = val
-            }
-            i += 1
-        }
-        
-        if code != HTTPWSHeader.switchProtocolCode {
-            delegate?.didReceiveHTTP(event: .failure(HTTPUpgradeError.notAnUpgrade(code, headers)))
-            return true
-        }
-        
-        delegate?.didReceiveHTTP(event: .success(headers))
-        return true
-    }
-    
-    public func register(delegate: HTTPHandlerDelegate) {
-        self.delegate = delegate
-    }
-    
-    private func findEndOfHTTP(data: Data) -> Int {
-        let endBytes = [UInt8(ascii: "\r"), UInt8(ascii: "\n"), UInt8(ascii: "\r"), UInt8(ascii: "\n")]
-        var pointer = [UInt8]()
-        data.withUnsafeBytes { pointer.append(contentsOf: $0) }
-        var k = 0
-        for i in 0..<data.count {
-            if pointer[i] == endBytes[k] {
-                k += 1
-                if k == 4 {
-                    return i + 1
-                }
-            } else {
-                k = 0
-            }
-        }
-        return -1
     }
 }
