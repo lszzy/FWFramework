@@ -15,6 +15,8 @@ sdk_path=$(xcrun --show-sdk-path --sdk iphonesimulator)
 cp "$umbrella_path/$framework_name/$umbrella_name" $lib_path
 find "Sources/FWObjC" -type f ! -regex '*.h' -name '*.h' \
     -exec cp {} $lib_path \;
+find "Sources/FWVendor" -type f ! -regex '*.h' -name '*.h' \
+    -exec cp {} $lib_path \;
 
 sourcekitten doc -- -project _Pods.xcodeproj -target $framework_name > "$lib_path/swift.json"
 sourcekitten doc --objc "$lib_path/$umbrella_name" -- -x objective-c -isysroot $sdk_path -I $lib_path -fobjc-arc -fmodules > "$lib_path/objc.json"
