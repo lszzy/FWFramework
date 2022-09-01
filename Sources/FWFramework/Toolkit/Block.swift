@@ -19,7 +19,7 @@ extension FW {
     }
     
     /// 通用互斥锁泛型方法
-    public func synchronized<T>(_ object: AnyObject, closure: () -> T) -> T {
+    public static func synchronized<T>(_ object: AnyObject, closure: () -> T) -> T {
         var result: T? = nil
         __FWSynchronized(object) {
             result = closure()
