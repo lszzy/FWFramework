@@ -193,6 +193,16 @@ NS_SWIFT_NAME(Navigator)
 - (void)fw_pushViewController:(UIViewController *)viewController popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
+ push控制器，并清理到指定工作流（不属于工作流则清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、9
+ 
+ @param viewController push的控制器
+ @param workflow 指定工作流
+ @param animated 是否执行动画
+ */
+- (void)fw_pushViewController:(UIViewController *)viewController popToWorkflow:(NSString *)workflow animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/**
  push控制器，并清理非根控制器（只保留根控制器），完成时回调
  @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
  
@@ -218,6 +228,15 @@ NS_SWIFT_NAME(Navigator)
  @param animated 是否执行动画
  */
 - (void)fw_popTopWorkflowAnimated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
+
+/**
+ pop方式清理到指定工作流，至少保留一个根控制器（不属于工作流则清理），完成时回调
+ @note 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）
+ 
+ @param workflow 指定工作流
+ @param animated 是否执行动画
+ */
+- (void)fw_popToWorkflow:(NSString *)workflow animated:(BOOL)animated completion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /**
  pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器，完成时回调
