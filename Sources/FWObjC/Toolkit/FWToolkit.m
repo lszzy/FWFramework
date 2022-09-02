@@ -365,6 +365,12 @@
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
++ (void)fw_playImpactFeedback:(UIImpactFeedbackStyle)style
+{
+    UIImpactFeedbackGenerator *feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:style];
+    [feedbackGenerator impactOccurred];
+}
+
 + (void)fw_playSpeechUtterance:(NSString *)string language:(nullable NSString *)languageCode
 {
     AVSpeechUtterance *speechUtterance = [[AVSpeechUtterance alloc] initWithString:string];
