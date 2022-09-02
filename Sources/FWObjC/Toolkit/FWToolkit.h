@@ -116,6 +116,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 播放内置震动
 + (void)fw_playSystemVibrate NS_REFINED_FOR_SWIFT;
 
+/// 播放触控反馈
++ (void)fw_playImpactFeedback:(UIImpactFeedbackStyle)style NS_REFINED_FOR_SWIFT;
+
 /// 语音朗读文字，可指定语言(如zh-CN)
 + (void)fw_playSpeechUtterance:(NSString *)string language:(nullable NSString *)languageCode NS_REFINED_FOR_SWIFT;
 

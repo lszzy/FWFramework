@@ -219,6 +219,11 @@ extension Wrapper where Base: UIApplication {
     public static func playSystemVibrate() {
         Base.__fw_playSystemVibrate()
     }
+    
+    /// 播放触控反馈
+    public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+        Base.__fw_playImpactFeedback(style)
+    }
 
     /// 语音朗读文字，可指定语言(如zh-CN)
     public static func playSpeechUtterance(_ string: String, language: String?) {
