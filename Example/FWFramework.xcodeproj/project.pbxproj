@@ -32,7 +32,6 @@
 		2F6A416B28B721C9003719E7 /* Material.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416528B721C9003719E7 /* Material.ttf */; };
 		2F6A416C28B721C9003719E7 /* Lottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416628B721C9003719E7 /* Lottie.json */; };
 		2F6A416D28B721C9003719E7 /* Bridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416728B721C9003719E7 /* Bridge.html */; };
-		2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A416F28B72328003719E7 /* TestBridgeController.m */; };
 		2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417228B724DD003719E7 /* TestToolbarController.m */; };
 		2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417428B72F7B003719E7 /* TestTabbarController.swift */; };
 		2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417628B7319A003719E7 /* TestPromiseController.swift */; };
@@ -49,7 +48,6 @@
 		2F6A419E28B75D64003719E7 /* TestGridController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A419D28B75D64003719E7 /* TestGridController.m */; };
 		2F6A41A128B75E26003719E7 /* TestKeyboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A028B75E26003719E7 /* TestKeyboardController.m */; };
 		2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */; };
-		2F6A41A728B761A0003719E7 /* TestRouterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A628B761A0003719E7 /* TestRouterController.m */; };
 		2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A928B77414003719E7 /* TestAnimationController.m */; };
 		2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41AC28B776CC003719E7 /* TestBarrageController.m */; };
 		2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41AF28B779E4003719E7 /* TestDrawerController.m */; };
@@ -65,6 +63,8 @@
 		2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30128C09F2500C78850 /* TestStateController.swift */; };
 		2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30328C0A69B00C78850 /* TestCacheController.swift */; };
 		2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */; };
+		2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30728C5A03800C78850 /* TestBridgeController.swift */; };
+		2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -129,8 +129,6 @@
 		2F6A416528B721C9003719E7 /* Material.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Material.ttf; sourceTree = "<group>"; };
 		2F6A416628B721C9003719E7 /* Lottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Lottie.json; sourceTree = "<group>"; };
 		2F6A416728B721C9003719E7 /* Bridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Bridge.html; sourceTree = "<group>"; };
-		2F6A416E28B72328003719E7 /* TestBridgeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBridgeController.h; sourceTree = "<group>"; };
-		2F6A416F28B72328003719E7 /* TestBridgeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBridgeController.m; sourceTree = "<group>"; };
 		2F6A417128B724DD003719E7 /* TestToolbarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestToolbarController.h; sourceTree = "<group>"; };
 		2F6A417228B724DD003719E7 /* TestToolbarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestToolbarController.m; sourceTree = "<group>"; };
 		2F6A417428B72F7B003719E7 /* TestTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabbarController.swift; sourceTree = "<group>"; };
@@ -161,8 +159,6 @@
 		2F6A41A028B75E26003719E7 /* TestKeyboardController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestKeyboardController.m; sourceTree = "<group>"; };
 		2F6A41A228B75F6B003719E7 /* TestStatisticalController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestStatisticalController.h; sourceTree = "<group>"; };
 		2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestStatisticalController.m; sourceTree = "<group>"; };
-		2F6A41A528B761A0003719E7 /* TestRouterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRouterController.h; sourceTree = "<group>"; };
-		2F6A41A628B761A0003719E7 /* TestRouterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRouterController.m; sourceTree = "<group>"; };
 		2F6A41A828B77414003719E7 /* TestAnimationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAnimationController.h; sourceTree = "<group>"; };
 		2F6A41A928B77414003719E7 /* TestAnimationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAnimationController.m; sourceTree = "<group>"; };
 		2F6A41AB28B776CC003719E7 /* TestBarrageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBarrageController.h; sourceTree = "<group>"; };
@@ -188,6 +184,8 @@
 		2FB9E30128C09F2500C78850 /* TestStateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateController.swift; sourceTree = "<group>"; };
 		2FB9E30328C0A69B00C78850 /* TestCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCacheController.swift; sourceTree = "<group>"; };
 		2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNotificationController.swift; sourceTree = "<group>"; };
+		2FB9E30728C5A03800C78850 /* TestBridgeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeController.swift; sourceTree = "<group>"; };
+		2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouterController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -339,8 +337,7 @@
 				2F6A41C728B7960E003719E7 /* TestTransitionController.h */,
 				2F6A41C828B7960E003719E7 /* TestTransitionController.m */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
-				2F6A416E28B72328003719E7 /* TestBridgeController.h */,
-				2F6A416F28B72328003719E7 /* TestBridgeController.m */,
+				2FB9E30728C5A03800C78850 /* TestBridgeController.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -358,8 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				2F6A417628B7319A003719E7 /* TestPromiseController.swift */,
-				2F6A41A528B761A0003719E7 /* TestRouterController.h */,
-				2F6A41A628B761A0003719E7 /* TestRouterController.m */,
+				2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */,
 				2FB9E30128C09F2500C78850 /* TestStateController.swift */,
 				2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */,
 			);
@@ -845,6 +841,7 @@
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
 				2F6A41B728B78D5B003719E7 /* TestSegmentController.m in Sources */,
 				2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */,
+				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
 				2F6A415428B7166B003719E7 /* TestPreviewController.m in Sources */,
 				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
@@ -866,9 +863,7 @@
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */,
 				2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */,
-				2F6A41A728B761A0003719E7 /* TestRouterController.m in Sources */,
 				2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */,
-				2F6A417028B72328003719E7 /* TestBridgeController.m in Sources */,
 				2F6A418028B7424B003719E7 /* TestAdaptiveController.m in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */,
@@ -892,6 +887,7 @@
 				2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */,
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
 				2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */,
+				2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
