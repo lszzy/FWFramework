@@ -576,6 +576,22 @@ static BOOL fwStaticColorARGB = NO;
     return [UIColor colorWithRed:fr green:fg blue:fb alpha:alpha];
 }
 
+- (UIColor *)fw_addColor:(UIColor *)color blendMode:(CGBlendMode)blendMode
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
+    uint8_t pixel[4] = { 0 };
+    CGContextRef context = CGBitmapContextCreate(&pixel, 1, 1, 8, 4, colorSpace, bitmapInfo);
+    CGContextSetFillColorWithColor(context, self.CGColor);
+    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
+    CGContextSetBlendMode(context, blendMode);
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    return [UIColor colorWithRed:pixel[0] / 255.0f green:pixel[1] / 255.0f blue:pixel[2] / 255.0f alpha:pixel[3] / 255.0f];
+}
+
 - (UIColor *)fw_brightnessColor:(CGFloat)ratio
 {
     CGFloat h, s, b, a;

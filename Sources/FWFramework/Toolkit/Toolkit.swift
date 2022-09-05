@@ -291,6 +291,11 @@ extension Wrapper where Base: UIColor {
         return Base.__fw_color(withHexString: hexString, alpha: alpha)
     }
     
+    /// 以指定模式添加混合颜色，默认normal模式
+    public func addColor(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIColor {
+        return base.__fw_add(color, blendMode: blendMode)
+    }
+    
     /// 当前颜色修改亮度比率的颜色
     public func brightnessColor(_ ratio: CGFloat) -> UIColor {
         return base.__fw_brightnessColor(ratio)
