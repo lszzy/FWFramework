@@ -79,7 +79,7 @@ import UserNotifications
     
     // MARK: - Local
     /// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
-    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, soundName: String?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)?) {
+    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, soundName: String?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
         let notification = UNMutableNotificationContent()
         if let title = title { notification.title = title }
         if let subtitle = subtitle { notification.subtitle = subtitle }
