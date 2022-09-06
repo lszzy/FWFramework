@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1] - 2022-09-06
+
+### Added
+* Added pop to specified workflow method
+* Added color mixing method
+* Added playback touch feedback method
+
 ## [4.0.0] - 2022-08-28
 
 ### Changed
