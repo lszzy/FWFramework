@@ -397,6 +397,12 @@
     [self fw_pushViewController:viewController popWorkflows:workflows animated:animated completion:completion];
 }
 
+- (void)fw_pushViewController:(UIViewController *)viewController popToWorkflow:(NSString *)workflow animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray *workflows = [NSArray arrayWithObjects:workflow, nil];
+    [self fw_pushViewController:viewController popWorkflows:workflows isMatch:NO animated:animated completion:completion];
+}
+
 - (void)fw_pushViewController:(UIViewController *)viewController popToRootWorkflowAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (self.viewControllers.count < 2) {
@@ -411,6 +417,11 @@
 
 - (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(void (^)(void))completion
 {
+    [self fw_pushViewController:viewController popWorkflows:workflows isMatch:YES animated:animated completion:completion];
+}
+
+- (void)fw_pushViewController:(UIViewController *)viewController popWorkflows:(NSArray<NSString *> *)workflows isMatch:(BOOL)isMatch animated:(BOOL)animated completion:(void (^)(void))completion
+{
     if (workflows.count < 1) {
         [self fw_pushViewController:viewController animated:animated completion:completion];
         return;
@@ -419,13 +430,12 @@
     // 从外到内查找移除的控制器列表
     NSMutableArray *popControllers = [NSMutableArray array];
     [self.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
-        BOOL isStop = YES;
-        
+        BOOL isStop = isMatch;
         NSString *workflow = [controller fw_workflowName];
         if (workflow.length > 0) {
             for (NSString *prefix in workflows) {
                 if ([workflow hasPrefix:prefix]) {
-                    isStop = NO;
+                    isStop = !isMatch;
                     break;
                 }
             }
@@ -454,7 +464,18 @@
     [self fw_popWorkflows:workflows animated:animated completion:completion];
 }
 
+- (void)fw_popToWorkflow:(NSString *)workflow animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSArray *workflows = [NSArray arrayWithObjects:workflow, nil];
+    [self fw_popWorkflows:workflows isMatch:NO animated:animated completion:completion];
+}
+
 - (void)fw_popWorkflows:(NSArray<NSString *> *)workflows animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [self fw_popWorkflows:workflows isMatch:YES animated:animated completion:completion];
+}
+
+- (void)fw_popWorkflows:(NSArray<NSString *> *)workflows isMatch:(BOOL)isMatch animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (workflows.count < 1) {
         if (completion) completion();
@@ -464,13 +485,12 @@
     // 从外到内查找停止目标控制器
     __block UIViewController *toController = nil;
     [self.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIViewController *controller, NSUInteger idx, BOOL *stop) {
-        BOOL isStop = YES;
-        
+        BOOL isStop = isMatch;
         NSString *workflow = [controller fw_workflowName];
         if (workflow.length > 0) {
             for (NSString *prefix in workflows) {
                 if ([workflow hasPrefix:prefix]) {
-                    isStop = NO;
+                    isStop = !isMatch;
                     break;
                 }
             }

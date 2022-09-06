@@ -219,6 +219,11 @@ extension Wrapper where Base: UIApplication {
     public static func playSystemVibrate() {
         Base.__fw_playSystemVibrate()
     }
+    
+    /// 播放触控反馈
+    public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+        Base.__fw_playImpactFeedback(style)
+    }
 
     /// 语音朗读文字，可指定语言(如zh-CN)
     public static func playSpeechUtterance(_ string: String, language: String?) {
@@ -284,6 +289,11 @@ extension Wrapper where Base: UIColor {
     /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度默认1.0，失败时返回clear
     public static func color(hexString: String, alpha: CGFloat = 1.0) -> UIColor {
         return Base.__fw_color(withHexString: hexString, alpha: alpha)
+    }
+    
+    /// 以指定模式添加混合颜色，默认normal模式
+    public func addColor(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIColor {
+        return base.__fw_add(color, blendMode: blendMode)
     }
     
     /// 当前颜色修改亮度比率的颜色

@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.0.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.0.1 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -5860,6 +5860,35 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE4push_13popToWorkflow8animated10completionySo06UIViewD0C_SSSbyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/push(_:popToWorkflow:animated:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE4push_13popToWorkflow8animated10completionySo06UIViewD0C_SSSbyycSgtF">push(_:<wbr>popToWorkflow:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>push控制器，并清理到指定工作流（不属于工作流则清理）</p>
+
+<p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、9</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">push</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">popToWorkflow</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE4push_25popToRootWorkflowAnimated10completionySo06UIViewD0C_SbyycSgtF"></a>
                     <a name="//apple_ref/swift/Method/push(_:popToRootWorkflowAnimated:completion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE4push_25popToRootWorkflowAnimated10completionySo06UIViewD0C_SbyycSgtF">push(_:<wbr>popToRootWorkflowAnimated:<wbr>completion:<wbr>)</a>
@@ -5938,6 +5967,35 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">popTopWorkflow</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE13popToWorkflow_8animated10completionySS_SbyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/popToWorkflow(_:animated:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22UINavigationControllerCRbzlE13popToWorkflow_8animated10completionySS_SbyycSgtF">popToWorkflow(_:<wbr>animated:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>pop方式清理到指定工作流，至少保留一个根控制器（不属于工作流则清理）</p>
+
+<p>示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">popToWorkflow</span><span class="p">(</span><span class="n">_</span> <span class="nv">workflow</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -40148,6 +40206,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18playImpactFeedbackyySo08UIImpactF5StyleVFZ"></a>
+                    <a name="//apple_ref/swift/Method/playImpactFeedback(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18playImpactFeedbackyySo08UIImpactF5StyleVFZ">playImpactFeedback(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>播放触控反馈</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">playImpactFeedback</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UIImpactFeedbackGenerator</span><span class="o">.</span><span class="kt">FeedbackStyle</span> <span class="o">=</span> <span class="o">.</span><span class="n">medium</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE19playSpeechUtterance_8languageySS_SSSgtFZ"></a>
                     <a name="//apple_ref/swift/Method/playSpeechUtterance(_:language:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE19playSpeechUtterance_8languageySS_SSSgtFZ">playSpeechUtterance(_:<wbr>language:<wbr>)</a>
@@ -40476,6 +40561,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">color</span><span class="p">(</span><span class="nv">hexString</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">alpha</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIColor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo7UIColorCRbzlE8addColor_9blendModeA2E_So07CGBlendG0VtF"></a>
+                    <a name="//apple_ref/swift/Method/addColor(_:blendMode:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIColorCRbzlE8addColor_9blendModeA2E_So07CGBlendG0VtF">addColor(_:<wbr>blendMode:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>以指定模式添加混合颜色，默认normal模式</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addColor</span><span class="p">(</span><span class="n">_</span> <span class="nv">color</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">,</span> <span class="nv">blendMode</span><span class="p">:</span> <span class="kt">CGBlendMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">normal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIColor</span></code></pre>
 
                         </div>
                       </div>
@@ -47468,7 +47580,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-08-27)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
