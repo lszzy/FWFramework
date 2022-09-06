@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import UIKit
 
 public typealias APP = FW
 
@@ -52,12 +53,23 @@ extension NavigationBarStyle {
     }
     
     public static func largeButton() -> UIButton {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.setBackgroundImage(UIImage.fw.image(color: AppTheme.buttonColor), for: .normal)
         button.titleLabel?.font = .fw.boldFont(ofSize: 17)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
+        
+        // 高亮时内容不透明
+        // button.fw.setBackgroundColor(AppTheme.buttonColor, for: .normal)
+        // button.fw.setBackgroundColor(AppTheme.buttonColor, for: .disabled)
+        // button.fw.setBackgroundColor(AppTheme.buttonColor.fw.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
+        // button.fw.disabledAlpha = 0.5
+        
+        // 高亮时内容也透明
+        button.backgroundColor = AppTheme.buttonColor
+        button.fw.disabledAlpha = 0.5
+        button.fw.highlightedAlpha = 0.5
+        
         button.fw.setDimension(.width, size: FW.screenWidth - 30)
         button.fw.setDimension(.height, size: 50)
         return button
