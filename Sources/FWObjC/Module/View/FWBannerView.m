@@ -357,7 +357,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setPageControlDotSize:(CGSize)pageControlDotSize
 {
     _pageControlDotSize = pageControlDotSize;
-    [self setupPageControl];
+    
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageContol = (FWPageControl *)_pageControl;
         pageContol.dotSize = pageControlDotSize;
@@ -637,6 +637,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             pageControl.currentDotColor = self.currentPageDotColor;
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
+            pageControl.dotSize = self.pageControlDotSize;
             if (self.pageDotViewClass != NULL) {
                 pageControl.dotViewClass = self.pageDotViewClass;
             }
@@ -677,6 +678,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     if (self.pageDotImage) {
         self.pageDotImage = self.pageDotImage;
     }
+    
+    _pageControlIndex = -1;
     [self notifyPageControlIndex:indexOnPageControl];
 }
 
