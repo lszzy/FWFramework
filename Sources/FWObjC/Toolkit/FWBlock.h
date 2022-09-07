@@ -150,15 +150,44 @@ typedef void (^FWBlockIntParam)(NSInteger index, id _Nullable param) NS_SWIFT_UN
 
 @end
 
+#pragma mark - FWTapGestureRecognizer
+
+/// 支持高亮状态的点击手势
+NS_SWIFT_NAME(TapGestureRecognizer)
+@interface FWTapGestureRecognizer : UITapGestureRecognizer
+
+/// 是否是高亮状态，默认NO
+@property (nonatomic, assign, getter=isHighlighted) BOOL highlighted;
+
+/// 自定义高亮状态变化时处理句柄
+@property (nonatomic, copy, nullable) void (^highlightedChanged)(FWTapGestureRecognizer *gesture);
+
+/// 高亮状态时view的透明度，默认0不生效
+@property (nonatomic, assign) CGFloat highlightedAlpha;
+
+/// 禁用状态时view的透明度，默认0不生效
+@property (nonatomic, assign) CGFloat disabledAlpha;
+
+@end
+
 #pragma mark - UIView+FWBlock
 
 @interface UIView (FWBlock)
 
-/// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
+/// 获取当前视图添加的第一个点击手势，默认nil
+@property (nonatomic, readonly, nullable) UITapGestureRecognizer *fw_tapGesture NS_REFINED_FOR_SWIFT;
+
+/// 添加点击手势事件
 - (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
-/// 添加点击手势句柄，同上
+/// 添加点击手势事件，可自定义点击高亮句柄等
+- (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action customize:(nullable void (^)(FWTapGestureRecognizer *gesture))customize NS_REFINED_FOR_SWIFT;
+
+/// 添加点击手势句柄
 - (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block NS_REFINED_FOR_SWIFT;
+
+/// 添加点击手势句柄，可自定义点击高亮句柄等
+- (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(FWTapGestureRecognizer *gesture))customize NS_REFINED_FOR_SWIFT;
 
 /// 根据唯一标志移除点击手势句柄
 - (void)fw_removeTapGesture:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;

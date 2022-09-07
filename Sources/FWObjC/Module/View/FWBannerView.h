@@ -32,6 +32,7 @@ NS_SWIFT_NAME(BannerViewDelegate)
 
 - (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index;
 
+/** 监听bannerView滚动，快速滚动时也会回调 */
 - (void)bannerView:(FWBannerView *)bannerView didScrollToIndex:(NSInteger)index;
 
 /** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法，默认的FWBannerViewCell也会调用。 */
@@ -103,7 +104,7 @@ NS_SWIFT_NAME(BannerView)
 /** block方式监听点击 */
 @property (nonatomic, copy, nullable) void (^clickItemOperationBlock)(NSInteger currentIndex);
 
-/** block方式监听滚动 */
+/** block方式监听滚动，快速滚动时也会回调 */
 @property (nonatomic, copy, nullable) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
 
 /** 手工滚动到指定index，不使用动画 */
@@ -123,6 +124,9 @@ NS_SWIFT_NAME(BannerView)
 
 /** 是否显示分页控件 */
 @property (nonatomic, assign) BOOL showPageControl;
+
+/** 自定义pageControl控件，初始化后调用 */
+@property (nonatomic, copy, nullable) void (^customPageControl)(UIControl *pageControl);
 
 /** 是否在只有一张图时隐藏pagecontrol，默认为YES */
 @property(nonatomic) BOOL hidesForSinglePage;

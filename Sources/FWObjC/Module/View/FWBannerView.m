@@ -232,6 +232,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
+@property (nonatomic, assign) NSInteger pageControlIndex;
 @property (nonatomic, copy) FWStatisticalClickCallback clickCallback;
 @property (nonatomic, copy) FWStatisticalExposureCallback exposureCallback;
 
@@ -270,7 +271,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _infiniteLoop = YES;
     _showPageControl = YES;
     _pageControlDotSize = CGSizeMake(10, 10);
-    _pageControlDotSpacing = 0;
+    _pageControlDotSpacing = -1;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
     _pageControlStyle = FWBannerViewPageControlStyleSystem;
@@ -278,6 +279,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    _pageControlIndex = -1;
     
     self.backgroundColor = [UIColor clearColor];
 }
@@ -355,7 +357,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setPageControlDotSize:(CGSize)pageControlDotSize
 {
     _pageControlDotSize = pageControlDotSize;
-    [self setupPageControl];
+    
     if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
         FWPageControl *pageContol = (FWPageControl *)_pageControl;
         pageContol.dotSize = pageControlDotSize;
@@ -635,14 +637,18 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             pageControl.currentDotColor = self.currentPageDotColor;
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
+            pageControl.dotSize = self.pageControlDotSize;
             if (self.pageDotViewClass != NULL) {
                 pageControl.dotViewClass = self.pageDotViewClass;
             }
-            if (self.pageControlDotSpacing > 0) {
+            if (self.pageControlDotSpacing >= 0) {
                 pageControl.spacingBetweenDots = self.pageControlDotSpacing;
             }
             [self addSubview:pageControl];
             _pageControl = pageControl;
+            if (self.customPageControl) {
+                self.customPageControl(pageControl);
+            }
         }
             break;
             
@@ -656,6 +662,9 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             pageControl.fw_preferredSize = self.pageControlDotSize;
             [self addSubview:pageControl];
             _pageControl = pageControl;
+            if (self.customPageControl) {
+                self.customPageControl(pageControl);
+            }
         }
             break;
             
@@ -668,6 +677,21 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     if (self.pageDotImage) {
         self.pageDotImage = self.pageDotImage;
+    }
+    
+    _pageControlIndex = -1;
+    [self notifyPageControlIndex:indexOnPageControl];
+}
+
+- (void)notifyPageControlIndex:(NSInteger)indexOnPageControl
+{
+    if (_pageControlIndex == indexOnPageControl) return;
+    _pageControlIndex = indexOnPageControl;
+    if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
+        [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
+    }
+    if (self.itemDidScrollOperationBlock) {
+        self.itemDidScrollOperationBlock(indexOnPageControl);
     }
 }
 
@@ -879,6 +903,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
         pageControl.currentPage = indexOnPageControl;
     }
+    [self notifyPageControlIndex:indexOnPageControl];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -904,14 +929,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
     NSInteger itemIndex = [_flowLayout currentPage];
-    NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
-    
-    if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
-        [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
-    }
-    if (self.itemDidScrollOperationBlock) {
-        self.itemDidScrollOperationBlock(indexOnPageControl);
-    }
+    // 快速滚动时不计曝光次数
     [self statisticalExposureDidChange];
     
     if (self.infiniteLoop) {
