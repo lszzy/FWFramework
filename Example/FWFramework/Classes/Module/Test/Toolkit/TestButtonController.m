@@ -35,7 +35,9 @@ FWPropertyAssign(NSInteger, count);
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
     label.frame = CGRectMake(200, 15, 150, 30);
-    [label fw_addTapGestureWithTarget:self action:@selector(onClick2:)];
+    [label fw_addTapGestureWithTarget:self action:@selector(onClick2:) customize:^(FWTapGestureRecognizer *gesture) {
+        gesture.highlightedAlpha = 0.5;
+    }];
     [self.view addSubview:label];
     
     button = [UIButton fw_buttonWithTitle:@"Button不可重复点击" font:[UIFont fw_fontOfSize:15] titleColor:[AppTheme textColor]];
@@ -49,7 +51,10 @@ FWPropertyAssign(NSInteger, count);
     label.textAlignment = NSTextAlignmentCenter;
     label.userInteractionEnabled = YES;
     label.frame = CGRectMake(200, 60, 150, 30);
-    [label fw_addTapGestureWithTarget:self action:@selector(onClick4:)];
+    [label fw_addTapGestureWithTarget:self action:@selector(onClick4:) customize:^(FWTapGestureRecognizer *gesture) {
+        gesture.disabledAlpha = 0.5;
+        gesture.highlightedAlpha = 0.5;
+    }];
     [self.view addSubview:label];
     
     button = [UIButton fw_buttonWithTitle:@"Button1秒内不可重复点击" font:[UIFont fw_fontOfSize:15] titleColor:[AppTheme textColor]];
@@ -248,9 +253,9 @@ FWPropertyAssign(NSInteger, count);
     self.count += 1;
     [self showCount];
     
-    gesture.view.userInteractionEnabled = NO;
+    gesture.enabled = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        gesture.view.userInteractionEnabled = YES;
+        gesture.enabled = YES;
     });
 }
 
