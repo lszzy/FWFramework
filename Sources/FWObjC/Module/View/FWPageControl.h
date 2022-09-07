@@ -36,6 +36,11 @@ NS_SWIFT_NAME(PageControl)
 @property (nonatomic, nullable) Class dotViewClass;
 
 /**
+ *  Customize dotView block.
+ */
+@property (nonatomic, copy, nullable) void (^customDotView)(UIView *dotView);
+
+/**
  *  UIImage to represent a dot.
  */
 @property (nonatomic, nullable) UIImage *dotImage;
