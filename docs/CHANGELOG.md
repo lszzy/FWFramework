@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.2] - 2022-09-07
+
+### Added
+* Click gesture support to monitor highlighted state
+* Optimized BannerView index change callback method
+
 ## [4.0.1] - 2022-09-06
 
 ### Added

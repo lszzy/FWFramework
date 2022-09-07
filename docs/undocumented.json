@@ -9662,91 +9662,84 @@
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 35,
-      "symbol": "FWBannerViewDelegate.-bannerView:didScrollToIndex:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWBannerView.h",
-      "line": 59,
+      "line": 60,
       "symbol": "FWBannerView.+bannerViewWithFrame:imageURLStringsGroup:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 193,
+      "line": 197,
       "symbol": "FWBannerViewCell",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 195,
+      "line": 199,
       "symbol": "FWBannerViewCell.imageView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 196,
+      "line": 200,
       "symbol": "FWBannerViewCell.title",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 198,
+      "line": 202,
       "symbol": "FWBannerViewCell.titleLabelTextColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 199,
+      "line": 203,
       "symbol": "FWBannerViewCell.titleLabelTextFont",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 200,
+      "line": 204,
       "symbol": "FWBannerViewCell.titleLabelBackgroundColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 201,
+      "line": 205,
       "symbol": "FWBannerViewCell.titleLabelHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 202,
+      "line": 206,
       "symbol": "FWBannerViewCell.titleLabelTextAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 203,
+      "line": 207,
       "symbol": "FWBannerViewCell.contentViewInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 204,
+      "line": 208,
       "symbol": "FWBannerViewCell.contentViewCornerRadius",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 206,
+      "line": 210,
       "symbol": "FWBannerViewCell.hasConfigured",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
@@ -10614,14 +10607,14 @@
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 155,
+      "line": 175,
       "symbol": "UIView(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBlock.h",
-      "line": 173,
+      "line": 202,
       "symbol": "UIControl(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -12854,42 +12847,42 @@
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 107,
+      "line": 112,
       "symbol": "FWDotViewProtocol",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 121,
+      "line": 126,
       "symbol": "FWDotView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 123,
+      "line": 128,
       "symbol": "FWDotView.dotColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 125,
+      "line": 130,
       "symbol": "FWDotView.currentDotColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 127,
+      "line": 132,
       "symbol": "FWDotView.isAnimated",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWPageControl.h",
-      "line": 132,
+      "line": 137,
       "symbol": "FWBorderDotView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
