@@ -184,6 +184,85 @@ void FWSynchronized(id object, void (^closure)(void)) {
 
 @end
 
+#pragma mark - FWTapGestureRecognizer
+
+@implementation FWTapGestureRecognizer
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    if (_highlighted == highlighted) return;
+    _highlighted = highlighted;
+    if (self.enabled && self.highlightedAlpha > 0) {
+        self.view.alpha = highlighted ? self.highlightedAlpha : 1;
+    }
+    if (self.enabled && self.highlightedChanged) {
+        self.highlightedChanged(self);
+    }
+}
+
+- (void)setDisabledAlpha:(CGFloat)alpha
+{
+    _disabledAlpha = alpha;
+    if (alpha > 0) {
+        self.view.alpha = self.enabled ? 1 : alpha;
+    }
+}
+
+- (void)setHighlightedAlpha:(CGFloat)alpha
+{
+    _highlightedAlpha = alpha;
+    if (self.enabled && alpha > 0) {
+        self.view.alpha = self.highlighted ? alpha : 1;
+    }
+}
+
+- (void)setHighlightedChanged:(void (^)(FWTapGestureRecognizer *))changed
+{
+    _highlightedChanged = changed;
+    if (self.enabled && changed) {
+        changed(self);
+    }
+}
+
+- (void)setEnabled:(BOOL)enabled
+{
+    [super setEnabled:enabled];
+    if (self.disabledAlpha > 0) {
+        self.view.alpha = enabled ? 1 : self.disabledAlpha;
+    }
+}
+
+- (void)setState:(UIGestureRecognizerState)state
+{
+    [super setState:state];
+    if (state == UIGestureRecognizerStateBegan) {
+        self.highlighted = YES;
+    } else if (state != UIGestureRecognizerStateChanged) {
+        self.highlighted = NO;
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    self.highlighted = YES;
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    self.highlighted = NO;
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    self.highlighted = NO;
+}
+
+@end
+
 #pragma mark - UIView+FWBlock
 
 @implementation UIView (FWBlock)
@@ -202,16 +281,28 @@ void FWSynchronized(id object, void (^closure)(void)) {
 
 - (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action
 {
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
-    [self addGestureRecognizer:gesture];
+    [self fw_addTapGestureWithTarget:target action:action customize:nil];
 }
 
-- (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block
+- (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action customize:(void (^)(FWTapGestureRecognizer *))customize
 {
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] init];
+    UITapGestureRecognizer *gesture = customize ? [[FWTapGestureRecognizer alloc] initWithTarget:target action:action] : [[UITapGestureRecognizer alloc] initWithTarget:target action:action];
+    [self addGestureRecognizer:gesture];
+    if (customize) customize((FWTapGestureRecognizer *)gesture);
+}
+
+- (NSString *)fw_addTapGestureWithBlock:(void (^)(id _Nonnull))block
+{
+    return [self fw_addTapGestureWithBlock:block customize:nil];
+}
+
+- (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(void (^)(FWTapGestureRecognizer *))customize
+{
+    UITapGestureRecognizer *gesture = customize ? [[FWTapGestureRecognizer alloc] init] : [[UITapGestureRecognizer alloc] init];
     NSString *identifier = [gesture fw_addBlock:block];
     objc_setAssociatedObject(gesture, @selector(fw_addTapGestureWithBlock:), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self addGestureRecognizer:gesture];
+    if (customize) customize((FWTapGestureRecognizer *)gesture);
     return identifier;
 }
 

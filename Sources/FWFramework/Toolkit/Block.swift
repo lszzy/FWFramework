@@ -158,15 +158,15 @@ extension Wrapper where Base: UIView {
         return base.__fw_tapGesture
     }
     
-    /// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
-    public func addTapGesture(target: Any, action: Selector) {
-        base.__fw_addTapGesture(withTarget: target, action: action)
+    /// 添加点击手势事件，可自定义点击高亮句柄等
+    public func addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
+        base.__fw_addTapGesture(withTarget: target, action: action, customize: customize)
     }
 
-    /// 添加点击手势句柄，同上
+    /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    public func addTapGesture(block: @escaping (Any) -> Void) -> String {
-        return base.__fw_addTapGesture(block)
+    public func addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+        return base.__fw_addTapGesture(block, customize: customize)
     }
 
     /// 根据唯一标志移除点击手势句柄
