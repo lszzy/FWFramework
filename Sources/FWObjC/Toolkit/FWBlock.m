@@ -188,6 +188,18 @@ void FWSynchronized(id object, void (^closure)(void)) {
 
 @implementation UIView (FWBlock)
 
+- (UITapGestureRecognizer *)fw_tapGesture
+{
+    UITapGestureRecognizer *tapGesture = nil;
+    for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
+            tapGesture = (UITapGestureRecognizer *)gesture;
+            break;
+        }
+    }
+    return tapGesture;
+}
+
 - (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action
 {
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:action];

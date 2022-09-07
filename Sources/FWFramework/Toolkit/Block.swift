@@ -153,6 +153,11 @@ extension Wrapper where Base: UIGestureRecognizer {
 // MARK: UIView+Block
 extension Wrapper where Base: UIView {
     
+    /// 获取当前视图添加的第一个点击手势，默认nil
+    public var tapGesture: UITapGestureRecognizer? {
+        return base.__fw_tapGesture
+    }
+    
     /// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
     public func addTapGesture(target: Any, action: Selector) {
         base.__fw_addTapGesture(withTarget: target, action: action)
