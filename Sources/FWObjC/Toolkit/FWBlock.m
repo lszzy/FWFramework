@@ -242,22 +242,27 @@ void FWSynchronized(id object, void (^closure)(void)) {
     }
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
     [super touchesBegan:touches withEvent:event];
     self.highlighted = YES;
 }
 
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
     [super touchesEnded:touches withEvent:event];
     self.highlighted = NO;
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
     [super touchesCancelled:touches withEvent:event];
+    self.highlighted = NO;
+}
+
+- (void)reset
+{
+    [super reset];
     self.highlighted = NO;
 }
 
