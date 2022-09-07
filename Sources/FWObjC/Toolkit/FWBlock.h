@@ -154,6 +154,9 @@ typedef void (^FWBlockIntParam)(NSInteger index, id _Nullable param) NS_SWIFT_UN
 
 @interface UIView (FWBlock)
 
+/// 获取当前视图添加的第一个点击手势，默认nil
+@property (nonatomic, readonly, nullable) UITapGestureRecognizer *fw_tapGesture NS_REFINED_FOR_SWIFT;
+
 /// 添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件
 - (void)fw_addTapGestureWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 
