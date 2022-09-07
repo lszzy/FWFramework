@@ -60,6 +60,9 @@ FWPropertyWeak(FWTextTagCollectionView *, tagCollectionView);
     bannerView.autoScroll = YES;
     bannerView.autoScrollTimeInterval = 6;
     bannerView.placeholderImage = [UIImage fw_appIconImage];
+    bannerView.itemDidScrollOperationBlock = ^(NSInteger currentIndex) {
+        FWLogDebug(@"currentIndex: %@", @(currentIndex));
+    };
     [headerView addSubview:bannerView];
     bannerView.fw_layoutChain.leftWithInset(10).topWithInset(50).rightWithInset(10).height(100);
     

@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.0.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.0.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -861,6 +861,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWTagCollectionView.html">FWTagCollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWTapGestureRecognizer.html">FWTapGestureRecognizer</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWTask.html">FWTask</a>
@@ -28875,9 +28878,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture6target6actionyyp_10ObjectiveC8SelectorVtF"></a>
-                    <a name="//apple_ref/swift/Method/addTapGesture(target:action:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture6target6actionyyp_10ObjectiveC8SelectorVtF">addTapGesture(target:<wbr>action:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10tapGestureSo05UITapE10RecognizerCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/tapGesture" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10tapGestureSo05UITapE10RecognizerCSgvp">tapGesture</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -28885,14 +28888,14 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>添加点击手势事件，默认子视图也会响应此事件。如要屏蔽之，解决方法：1、子视图设为UIButton；2、子视图添加空手势事件</p>
+                        <p>获取当前视图添加的第一个点击手势，默认nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTapGesture</span><span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tapGesture</span><span class="p">:</span> <span class="kt">UITapGestureRecognizer</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -28902,9 +28905,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture5blockSSyypc_tF"></a>
-                    <a name="//apple_ref/swift/Method/addTapGesture(block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture5blockSSyypc_tF">addTapGesture(block:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture6target6action9customizeyyp_10ObjectiveC8SelectorVySo05FWTapF10RecognizerCcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/addTapGesture(target:action:customize:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture6target6action9customizeyyp_10ObjectiveC8SelectorVySo05FWTapF10RecognizerCcSgtF">addTapGesture(target:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -28912,7 +28915,34 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>添加点击手势句柄，同上</p>
+                        <p>添加点击手势事件，可自定义点击高亮句柄等</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTapGesture</span><span class="p">(</span><span class="nv">target</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">TapGestureRecognizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture5block9customizeSSyypc_ySo05FWTapF10RecognizerCcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/addTapGesture(block:customize:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTapGesture5block9customizeSSyypc_ySo05FWTapF10RecognizerCcSgtF">addTapGesture(block:<wbr>customize:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>添加点击手势句柄，可自定义点击高亮句柄等</p>
 
                       </div>
                       <div class="declaration">
@@ -28920,7 +28950,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTapGesture</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTapGesture</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">TapGestureRecognizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -47580,7 +47610,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-06)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-07)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -175,6 +175,9 @@
         dotView = [[UIImageView alloc] initWithImage:self.dotImage];
         dotView.frame = CGRectMake(0, 0, self.dotSize.width, self.dotSize.height);
     }
+    if (self.customDotView) {
+        self.customDotView(dotView);
+    }
     
     if (dotView) {
         [self addSubview:dotView];
@@ -345,6 +348,7 @@
     _dotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     _currentDotColor = [UIColor whiteColor];
     self.layer.cornerRadius = MIN(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) / 2;
+    self.layer.masksToBounds = YES;
     self.backgroundColor = self.dotColor;
 }
 
@@ -399,6 +403,7 @@
     self.currentDotColor = [UIColor whiteColor];
     self.layer.cornerRadius = MIN(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) / 2;
     self.layer.borderWidth = 2;
+    self.layer.masksToBounds = YES;
     self.backgroundColor = self.dotColor;
     self.layer.borderColor = self.currentDotColor.CGColor;
 }
