@@ -253,6 +253,7 @@ static CGFloat fwStaticReferenceHeight = 812;
     if ([[UIDevice fw_deviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
     if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fw_deviceSize])) { return 47; }
     if ([self fw_isScreenInch:FWScreenInch67]) { return 47; }
+    if ([self fw_isScreenInch:FWScreenInch54] && [UIDevice fw_iosVersion] >= 15.0) { return 50; }
     return 44;
 }
 
