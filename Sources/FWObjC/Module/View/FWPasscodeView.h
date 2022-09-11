@@ -16,7 +16,7 @@ NS_SWIFT_NAME(PasscodeFlowLayout)
 
 @property (assign, nonatomic) NSInteger itemNum;
 
-@property (assign, nonatomic) NSInteger minLineSpacing;
+@property (assign, nonatomic) CGFloat minLineSpacing;
 
 - (void)updateLineSpacing;
 
