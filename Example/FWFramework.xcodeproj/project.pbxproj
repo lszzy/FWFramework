@@ -16,7 +16,6 @@
 		2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412C28B64774003719E7 /* TestIconController.swift */; };
 		2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */; };
 		2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413728B674C3003719E7 /* TestThemeController.m */; };
-		2F6A413D28B67C6D003719E7 /* WebController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413C28B67C6D003719E7 /* WebController.m */; };
 		2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414328B68C74003719E7 /* TestAlertController.m */; };
 		2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414628B690E6003719E7 /* TestEmptyController.m */; };
 		2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414828B70BEC003719E7 /* TestAudioController.swift */; };
@@ -59,6 +58,7 @@
 		2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CB28B7977C003719E7 /* TestPagingController.m */; };
 		2F6A41CF28B7CA65003719E7 /* TestRefreshController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */; };
 		2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */; };
+		2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F91AA2C28CDD876000A6FA2 /* WebController.swift */; };
 		2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */; };
 		2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30128C09F2500C78850 /* TestStateController.swift */; };
 		2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30328C0A69B00C78850 /* TestCacheController.swift */; };
@@ -102,12 +102,9 @@
 		2F6A412A28B62711003719E7 /* TestSwiftController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftController.swift; sourceTree = "<group>"; };
 		2F6A412C28B64774003719E7 /* TestIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestIconController.swift; sourceTree = "<group>"; };
 		2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthorizeController.swift; sourceTree = "<group>"; };
-		2F6A413228B66FD3003719E7 /* AppBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBridge.h; sourceTree = "<group>"; };
 		2F6A413628B674C3003719E7 /* TestThemeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeController.h; sourceTree = "<group>"; };
 		2F6A413728B674C3003719E7 /* TestThemeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeController.m; sourceTree = "<group>"; };
 		2F6A413928B67B7C003719E7 /* AppSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSwift.h; sourceTree = "<group>"; };
-		2F6A413B28B67C6D003719E7 /* WebController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebController.h; sourceTree = "<group>"; };
-		2F6A413C28B67C6D003719E7 /* WebController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebController.m; sourceTree = "<group>"; };
 		2F6A414228B68C74003719E7 /* TestAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertController.h; sourceTree = "<group>"; };
 		2F6A414328B68C74003719E7 /* TestAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertController.m; sourceTree = "<group>"; };
 		2F6A414528B690E6003719E7 /* TestEmptyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyController.h; sourceTree = "<group>"; };
@@ -180,6 +177,7 @@
 		2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRefreshController.h; sourceTree = "<group>"; };
 		2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRefreshController.m; sourceTree = "<group>"; };
 		2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSocketController.swift; sourceTree = "<group>"; };
+		2F91AA2C28CDD876000A6FA2 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
 		2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWorkflowController.swift; sourceTree = "<group>"; };
 		2FB9E30128C09F2500C78850 /* TestStateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateController.swift; sourceTree = "<group>"; };
 		2FB9E30328C0A69B00C78850 /* TestCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCacheController.swift; sourceTree = "<group>"; };
@@ -345,8 +343,7 @@
 		2F6A413A28B67C48003719E7 /* Web */ = {
 			isa = PBXGroup;
 			children = (
-				2F6A413B28B67C6D003719E7 /* WebController.h */,
-				2F6A413C28B67C6D003719E7 /* WebController.m */,
+				2F91AA2C28CDD876000A6FA2 /* WebController.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -452,7 +449,6 @@
 			isa = PBXGroup;
 			children = (
 				2FF08B5B28ADDD730074895A /* AppConfig.swift */,
-				2F6A413228B66FD3003719E7 /* AppBridge.h */,
 				2F6A413928B67B7C003719E7 /* AppSwift.h */,
 			);
 			path = Config;
@@ -843,6 +839,7 @@
 				2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */,
 				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
+				2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */,
 				2F6A415428B7166B003719E7 /* TestPreviewController.m in Sources */,
 				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
@@ -854,7 +851,6 @@
 				2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */,
 				2F6A415D28B71E12003719E7 /* TestCameraController.swift in Sources */,
 				2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */,
-				2F6A413D28B67C6D003719E7 /* WebController.m in Sources */,
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2F6A418928B74A27003719E7 /* TestCollectionController.m in Sources */,
@@ -994,7 +990,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = FWFramework/Classes/App/Config/AppBridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1082,7 +1078,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = FWFramework/Classes/App/Config/AppBridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1225,7 +1221,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = FWFramework/Classes/App/Config/AppBridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
@@ -1246,7 +1242,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = FWFramework/Classes/App/Config/AppBridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
