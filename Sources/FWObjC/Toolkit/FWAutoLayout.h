@@ -569,8 +569,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 修改最近一批添加或更新的布局约束内间距值
 - (NSArray<NSLayoutConstraint *> *)fw_setInset:(CGFloat)inset NS_REFINED_FOR_SWIFT;
 
-/// 修改最近一批添加或更新的布局约束优先级
+/// 修改最近一批添加或更新的布局约束优先级(iOS12以下必须未激活才生效)
 - (NSArray<NSLayoutConstraint *> *)fw_setPriority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
+
+/// 修改最近一批添加或更新的布局约束有效性
+- (NSArray<NSLayoutConstraint *> *)fw_setActive:(BOOL)active NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Constraint
 
@@ -689,6 +692,11 @@ NS_ASSUME_NONNULL_BEGIN
  移除当前指定约束，不包含Key
  */
 - (void)fw_removeConstraint:(NSLayoutConstraint *)constraint NS_REFINED_FOR_SWIFT;
+
+/**
+ 移除当前指定约束数组，不包含Key
+ */
+- (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints NS_REFINED_FOR_SWIFT;
 
 /**
  移除当前所有约束，不包含Key
@@ -826,6 +834,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^active)(BOOL active);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^remove)(void);
 
 @property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *constraints;
 @property (nonatomic, nullable, readonly) NSLayoutConstraint *constraint;
