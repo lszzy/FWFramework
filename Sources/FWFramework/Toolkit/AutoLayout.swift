@@ -50,6 +50,12 @@ extension Wrapper where Base: UIView {
         get { return base.__fw_autoLayout }
         set { base.__fw_autoLayout = newValue }
     }
+    
+    /// 是否自动安装布局约束，默认true
+    public var autoInstall: Bool {
+        get { return base.__fw_autoInstall }
+        set { base.__fw_autoInstall = newValue }
+    }
 
     /// 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
     public func autoLayoutSubviews() {
@@ -510,6 +516,12 @@ public class LayoutChain {
     @discardableResult
     public func remake() -> Self {
         view?.__fw_removeAllConstraints()
+        return self
+    }
+    
+    @discardableResult
+    public func install(_ install: Bool) -> Self {
+        view?.__fw_autoInstall = install
         return self
     }
 
