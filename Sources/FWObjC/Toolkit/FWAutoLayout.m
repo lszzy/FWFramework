@@ -123,6 +123,17 @@ static BOOL fwStaticAutoScaleLayout = NO;
     self.translatesAutoresizingMaskIntoConstraints = !enabled;
 }
 
+- (BOOL)fw_autoInstall
+{
+    NSNumber *value = objc_getAssociatedObject(self, _cmd);
+    return value ? [value boolValue] : YES;
+}
+
+- (void)setFw_autoInstall:(BOOL)autoInstall
+{
+    objc_setAssociatedObject(self, @selector(fw_autoInstall), @(autoInstall), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (void)fw_autoLayoutSubviews
 {
     // 保存当前的自动布局配置
@@ -830,7 +841,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
         [self.fw_innerLayoutConstraints setObject:constraint forKey:layoutKey];
     }
     [self.fw_innerLastConstraints setArray:[NSArray arrayWithObjects:constraint, nil]];
-    constraint.active = YES;
+    if (self.fw_autoInstall) {
+        constraint.active = YES;
+    }
     return constraint;
 }
 
@@ -875,6 +888,14 @@ static BOOL fwStaticAutoScaleLayout = NO;
 {
     return ^id(void) {
         [self.view fw_removeAllConstraints];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))install
+{
+    return ^id(BOOL install) {
+        self.view.fw_autoInstall = install;
         return self;
     };
 }
