@@ -920,7 +920,10 @@ public enum TabBarItemContentMode : Int {
     }
 
     open func updateDisplay() {
-        let currentImage = (selected ? (selectedImage ?? image) : image)?.withRenderingMode(renderingMode)
+        var currentImage = selected ? (selectedImage ?? image) : image
+        if let targetImage = currentImage, targetImage.size.width > 0, targetImage.size.height > 0 {
+            currentImage = targetImage.withRenderingMode(renderingMode)
+        }
         if let currentImageURL = selected ? (selectedImageURL ?? imageURL) : imageURL {
             imageView.fw.setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
                 guard var renderImage = image else { return }
