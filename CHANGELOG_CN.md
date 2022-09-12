@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.0.3] - 2022-09-12
+
+### Changed
+* 新增WebView允许打开SchemeURL配置
+* 新增List查找UICollectionView方法，兼容iOS16
+* 修复iOS12系统priority异常问题
+
 ## [4.0.2] - 2022-09-07
 
 ### Added
