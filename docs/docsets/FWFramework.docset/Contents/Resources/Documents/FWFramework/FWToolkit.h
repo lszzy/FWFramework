@@ -56,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
 + (BOOL)fw_isSystemURL:(id)url NS_REFINED_FOR_SWIFT;
 
+/// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
++ (BOOL)fw_isSchemeURL:(id)url NS_REFINED_FOR_SWIFT;
+
 /// 判断URL是否HTTP链接，支持NSString|NSURL
 + (BOOL)fw_isHttpURL:(id)url NS_REFINED_FOR_SWIFT;
 

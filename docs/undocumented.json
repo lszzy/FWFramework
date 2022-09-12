@@ -184,98 +184,98 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 941,
+      "line": 944,
       "symbol": "TabBarItemContentView.updateLayout()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1100,
+      "line": 1103,
       "symbol": "TabBarItemContentView.selectAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1104,
+      "line": 1107,
       "symbol": "TabBarItemContentView.deselectAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1108,
+      "line": 1111,
       "symbol": "TabBarItemContentView.reselectAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1112,
+      "line": 1115,
       "symbol": "TabBarItemContentView.highlightAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1116,
+      "line": 1119,
       "symbol": "TabBarItemContentView.dehighlightAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1120,
+      "line": 1123,
       "symbol": "TabBarItemContentView.badgeChangedAnimation(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1128,
+      "line": 1131,
       "symbol": "TabBarItemMoreContentView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1130,
+      "line": 1133,
       "symbol": "TabBarItemMoreContentView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1137,
+      "line": 1140,
       "symbol": "TabBarItemMoreContentView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1141,
+      "line": 1144,
       "symbol": "TabBarItemMoreContentView.systemMore(highlighted:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1223,
+      "line": 1226,
       "symbol": "TabBarItemBadgeView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1230,
+      "line": 1233,
       "symbol": "TabBarItemBadgeView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/Controller/TabBarController.swift",
-      "line": 1255,
+      "line": 1258,
       "symbol": "TabBarItemBadgeView.sizeThatFits(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -16060,35 +16060,35 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 143,
+      "line": 146,
       "symbol": "UIColor(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 238,
+      "line": 241,
       "symbol": "UIFont(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 296,
+      "line": 299,
       "symbol": "UIImage(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 464,
+      "line": 467,
       "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 522,
+      "line": 525,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -16585,315 +16585,315 @@
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 56,
+      "line": 59,
       "symbol": "UIProgressView(FWWebView)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 98,
+      "line": 101,
       "symbol": "FWJsBridgeResponseCallback",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 99,
+      "line": 102,
       "symbol": "FWJsBridgeHandler",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 100,
+      "line": 103,
       "symbol": "FWJsBridgeErrorHandler",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 101,
+      "line": 104,
       "symbol": "FWJsBridgeFilterHandler",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 102,
+      "line": 105,
       "symbol": "FWJsBridgeMessage",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 105,
+      "line": 108,
       "symbol": "FWWebViewJsBridgeDelegate",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 106,
+      "line": 109,
       "symbol": "FWWebViewJsBridgeDelegate.-_evaluateJavascript:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 110,
+      "line": 113,
       "symbol": "FWWebViewJsBridgeBase",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 112,
+      "line": 115,
       "symbol": "FWWebViewJsBridgeBase.delegate",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 113,
+      "line": 116,
       "symbol": "FWWebViewJsBridgeBase.startupMessageQueue",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 114,
+      "line": 117,
       "symbol": "FWWebViewJsBridgeBase.responseCallbacks",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 115,
+      "line": 118,
       "symbol": "FWWebViewJsBridgeBase.messageHandlers",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 116,
+      "line": 119,
       "symbol": "FWWebViewJsBridgeBase.errorHandler",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 117,
+      "line": 120,
       "symbol": "FWWebViewJsBridgeBase.filterHandler",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 119,
+      "line": 122,
       "symbol": "FWWebViewJsBridgeBase.+enableLogging",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 120,
+      "line": 123,
       "symbol": "FWWebViewJsBridgeBase.+setLogMaxLength:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 121,
+      "line": 124,
       "symbol": "FWWebViewJsBridgeBase.-reset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 122,
+      "line": 125,
       "symbol": "FWWebViewJsBridgeBase.-sendData:responseCallback:handlerName:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 123,
+      "line": 126,
       "symbol": "FWWebViewJsBridgeBase.-flushMessageQueue:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 124,
+      "line": 127,
       "symbol": "FWWebViewJsBridgeBase.-injectJavascriptFile",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 125,
+      "line": 128,
       "symbol": "FWWebViewJsBridgeBase.-isWebViewJavascriptBridgeURL:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 126,
+      "line": 129,
       "symbol": "FWWebViewJsBridgeBase.-isQueueMessageURL:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 127,
+      "line": 130,
       "symbol": "FWWebViewJsBridgeBase.-isBridgeLoadedURL:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 128,
+      "line": 131,
       "symbol": "FWWebViewJsBridgeBase.-logUnkownMessage:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 129,
+      "line": 132,
       "symbol": "FWWebViewJsBridgeBase.-webViewJavascriptCheckCommand",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 130,
+      "line": 133,
       "symbol": "FWWebViewJsBridgeBase.-webViewJavascriptFetchQueyCommand",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 131,
+      "line": 134,
       "symbol": "FWWebViewJsBridgeBase.-disableJavscriptAlertBoxSafetyTimeout",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 143,
+      "line": 146,
       "symbol": "FWWebViewJsBridge.+bridgeForWebView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 144,
+      "line": 147,
       "symbol": "FWWebViewJsBridge.+enableLogging",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 146,
+      "line": 149,
       "symbol": "FWWebViewJsBridge.-registerClass:package:context:withMapper:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 147,
+      "line": 150,
       "symbol": "FWWebViewJsBridge.-unregisterClass:package:withMapper:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 148,
+      "line": 151,
       "symbol": "FWWebViewJsBridge.-registerHandler:handler:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 149,
+      "line": 152,
       "symbol": "FWWebViewJsBridge.-removeHandler:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 150,
+      "line": 153,
       "symbol": "FWWebViewJsBridge.-getRegisteredHandlers",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 151,
+      "line": 154,
       "symbol": "FWWebViewJsBridge.-setErrorHandler:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 152,
+      "line": 155,
       "symbol": "FWWebViewJsBridge.-setFilterHandler:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 153,
+      "line": 156,
       "symbol": "FWWebViewJsBridge.-callHandler:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 154,
+      "line": 157,
       "symbol": "FWWebViewJsBridge.-callHandler:data:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 155,
+      "line": 158,
       "symbol": "FWWebViewJsBridge.-callHandler:data:responseCallback:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 156,
+      "line": 159,
       "symbol": "FWWebViewJsBridge.-reset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 157,
+      "line": 160,
       "symbol": "FWWebViewJsBridge.-setWebViewDelegate:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 158,
+      "line": 161,
       "symbol": "FWWebViewJsBridge.-disableJavscriptAlertBoxSafetyTimeout",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 162,
+      "line": 165,
       "symbol": "FWWebViewJsBridge_js",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWWebView.h",
-      "line": 164,
+      "line": 167,
       "symbol": "WKWebView(FWWebViewBridge)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
