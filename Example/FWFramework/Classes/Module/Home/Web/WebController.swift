@@ -12,7 +12,7 @@ class WebController: UIViewController {
     
     var requestUrl: String?
     
-    private var toolbarHidden = false
+    private var toolbarHidden = true
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -30,7 +30,6 @@ class WebController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        toolbarHidden = false
         setupToolbar()
         loadRequestUrl()
     }
@@ -63,6 +62,7 @@ extension WebController: WebViewControllerProtocol {
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
+        webView.allowsSchemeURL = true
     }
     
     func setupWebLayout() {
