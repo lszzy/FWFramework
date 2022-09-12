@@ -619,7 +619,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (NSArray<NSLayoutConstraint *> *)fw_setPriority:(UILayoutPriority)priority
 {
     [self.fw_innerLastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
-        obj.priority = priority;
+        @try {
+            obj.priority = priority;
+        } @catch (NSException *exception) {}
     }];
     return self.fw_innerLastConstraints;
 }
