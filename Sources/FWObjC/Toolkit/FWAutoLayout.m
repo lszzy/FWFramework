@@ -626,6 +626,14 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return self.fw_innerLastConstraints;
 }
 
+- (NSArray<NSLayoutConstraint *> *)fw_setActive:(BOOL)active
+{
+    [self.fw_innerLastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+        obj.active = active;
+    }];
+    return self.fw_innerLastConstraints;
+}
+
 #pragma mark - Constraint
 
 - (NSLayoutConstraint *)fw_constraintToSuperview:(NSLayoutAttribute)attribute
@@ -739,7 +747,6 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (void)fw_removeConstraint:(NSLayoutConstraint *)constraint
 {
     constraint.active = NO;
-    // 移除约束对象
     [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if ([obj isEqual:constraint]) {
             [self.fw_innerLayoutConstraints removeObjectForKey:key];
@@ -749,11 +756,20 @@ static BOOL fwStaticAutoScaleLayout = NO;
     [self.fw_innerLastConstraints removeObject:constraint];
 }
 
+- (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints
+{
+    [NSLayoutConstraint deactivateConstraints:constraints];
+    [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([constraints containsObject:obj]) {
+            [self.fw_innerLayoutConstraints removeObjectForKey:key];
+        }
+    }];
+    [self.fw_innerLastConstraints removeObjectsInArray:constraints];
+}
+
 - (void)fw_removeAllConstraints
 {
-    // 禁用当前所有约束
     [NSLayoutConstraint deactivateConstraints:self.fw_allConstraints];
-    // 清空约束对象
     [self.fw_innerLayoutConstraints removeAllObjects];
     [self.fw_innerLastConstraints removeAllObjects];
 }
@@ -1581,6 +1597,25 @@ static BOOL fwStaticAutoScaleLayout = NO;
 {
     return ^id(UILayoutPriority priority) {
         [self.view fw_setPriority:priority];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))active
+{
+    return ^id(BOOL active) {
+        [self.view fw_setActive:active];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(void))remove
+{
+    return ^id(void) {
+        NSArray *constraints = self.view.fw_lastConstraints;
+        if (constraints.count > 0) {
+            [self.view fw_removeConstraints:constraints];
+        }
         return self;
     };
 }

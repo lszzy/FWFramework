@@ -383,10 +383,16 @@ extension Wrapper where Base: UIView {
         return base.__fw_setInset(inset)
     }
 
-    /// 修改最近一批添加或更新的布局约束优先级
+    /// 修改最近一批添加或更新的布局约束优先级(iOS12以下必须未激活才生效)
     @discardableResult
     public func setPriority(_ priority: UILayoutPriority) -> [NSLayoutConstraint] {
         return base.__fw_setPriority(priority)
+    }
+    
+    /// 修改最近一批添加或更新的布局约束有效性
+    @discardableResult
+    public func setActive(_ active: Bool) -> [NSLayoutConstraint] {
+        return base.__fw_setActive(active)
     }
     
     // MARK: - Constraint
@@ -465,6 +471,12 @@ extension Wrapper where Base: UIView {
     /// - Parameter constraint: 布局约束
     public func removeConstraint(_ constraint: NSLayoutConstraint) {
         base.__fw_removeConstraint(constraint)
+    }
+    
+    /// 移除当前指定约束数组，不包含Key
+    /// - Parameter constraints: 布局约束数组
+    public func removeConstraints(_ constraints: [NSLayoutConstraint]) {
+        base.__fw_removeConstraints(constraints)
     }
 
     /// 移除当前所有约束，不包含Key
@@ -964,6 +976,20 @@ public class LayoutChain {
     @discardableResult
     public func priority(_ priority: UILayoutPriority) -> Self {
         self.view?.__fw_setPriority(priority)
+        return self
+    }
+    
+    @discardableResult
+    public func active(_ active: Bool) -> Self {
+        self.view?.__fw_setActive(active)
+        return self
+    }
+    
+    @discardableResult
+    public func remove() -> Self {
+        if let constraints = self.view?.__fw_lastConstraints, !constraints.isEmpty {
+            self.view?.__fw_removeConstraints(constraints)
+        }
         return self
     }
     
