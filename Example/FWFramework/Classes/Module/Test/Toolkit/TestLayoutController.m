@@ -24,8 +24,13 @@
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = AppTheme.textColor;
     [self.view addSubview:view];
-    view.fw_layoutChain.remake().topToSafeAreaWithInset(20).leftWithInset(20).size(CGSizeMake(100, 100)).width(50)
-        .height(50).priority(UILayoutPriorityDefaultHigh);
+    view.fw_layoutChain.remake()
+        .topToSafeAreaWithInset(20)
+        .leftWithInset(20)
+        .size(CGSizeMake(100, 100))
+        .width(50)
+        .height(50)
+        .priority(UILayoutPriorityDefaultHigh);
     
     UILabel *label = [[UILabel alloc] init];
     label.text = @"text";
@@ -36,19 +41,29 @@
     [label fw_setCornerRadius:5];
     [self.view addSubview:label];
     [label fw_layoutMaker:^(FWLayoutChain * _Nonnull make) {
-        make.widthToView(view).centerYToView(view).leftToViewRightWithOffset(view, 20);
+        make.widthToView(view)
+            .centerYToView(view)
+            .leftToViewRightWithOffset(view, 20);
     }];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitleColor:[AppTheme textColor] forState:UIControlStateNormal];
     [button setTitle:@"btn" forState:UIControlStateNormal];
     [self.view addSubview:button];
-    button.fw_layoutChain.widthToView(view).heightToView(view).leftToViewRightWithOffset(label, 20).topToViewWithOffset(view, 0);
+    button.fw_layoutChain
+        .widthToView(view)
+        .heightToView(view)
+        .leftToViewRightWithOffset(label, 20)
+        .topToViewWithOffset(view, 0);
     
     UIImageView *image = [UIImageView new];
     image.image = [UIImage fw_appIconImage];
     [self.view addSubview:image];
-    image.fw_layoutChain.attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view).heightToWidth(1.0).centerYToView(view).attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
+    image.fw_layoutChain
+        .attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view)
+        .heightToWidth(1.0)
+        .centerYToView(view)
+        .attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
     
     CGFloat lineHeight = ceil(FWFontRegular(16).lineHeight);
     NSString *moreText = @"点击展开";
@@ -64,7 +79,10 @@
     attr.textColor = AppTheme.textColor;
     attr.textAlignment = kCTTextAlignmentLeft;
     [self.view addSubview:attr];
-    attr.fw_layoutChain.leftWithInset(20).rightWithInset(20).topToViewBottomWithOffset(view, 20);
+    attr.fw_layoutChain
+        .leftWithInset(20)
+        .rightWithInset(20)
+        .topToViewBottomWithOffset(view, 20);
     
     [self.attributedLabel setText:@"我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我又要换行了"];
     UILabel *collapseLabel = [UILabel fw_labelWithFont:FWFontRegular(16) textColor:UIColor.blueColor text:@"点击收起"];
@@ -132,7 +150,8 @@
     numberLabel.text = [self numberString];
     [self.view addSubview:numberLabel];
     [numberLabel fw_layoutMaker:^(FWLayoutChain * _Nonnull make) {
-        make.leftWithInset(20).width((FWScreenWidth - 60) / 2.0)
+        make.leftWithInset(20)
+            .width((FWScreenWidth - 60) / 2.0)
             .topToViewBottomWithOffset(attr, 50);
     }];
     
@@ -143,7 +162,8 @@
     number2Label.text = [self number2String];
     [self.view addSubview:number2Label];
     [number2Label fw_layoutMaker:^(FWLayoutChain * _Nonnull make) {
-        make.rightWithInset(20).width((FWScreenWidth - 60) / 2.0)
+        make.rightWithInset(20)
+            .width((FWScreenWidth - 60) / 2.0)
             .topToViewBottomWithOffset(attr, 50);
     }];
 }
