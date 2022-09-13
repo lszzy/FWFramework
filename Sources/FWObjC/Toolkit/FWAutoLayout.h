@@ -242,9 +242,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 指定边属性
  @param inset 偏移距离
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 /**
  与指定视图边属性相同
@@ -275,9 +276,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 另一视图
  @param offset 偏移距离
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 #pragma mark - SafeArea
 
@@ -390,9 +392,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param edge 指定边属性
  @param inset 偏移距离
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Dimension
 
@@ -419,9 +422,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param dimension 尺寸属性
  @param size 尺寸大小
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 /**
  与视图自身尺寸属性指定比例
@@ -440,9 +444,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param toDimension 目标尺寸属性
  @param multiplier 指定比例
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 /**
  与指定视图尺寸属性相同
@@ -473,9 +478,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @param offset 相差大小
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 /**
  与指定视图尺寸属性指定比例
@@ -496,9 +502,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @param multiplier 指定比例
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Constrain
 
@@ -531,9 +538,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @param offset 偏移距离
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 /**
  与指定视图属性指定比例
@@ -554,9 +562,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param otherView 目标视图
  @param multiplier 指定比例
  @param relation 约束关系
+ @param priority 约束优先级
  @return 布局约束
  */
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Constraint
 
@@ -800,9 +809,9 @@ NS_SWIFT_UNAVAILABLE("")
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^attribute)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffset)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat offset, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithOffsetAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat offset, NSLayoutRelation relation, UILayoutPriority priority);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^attributeWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation, UILayoutPriority priority);
 
 #pragma mark - Constraint
 

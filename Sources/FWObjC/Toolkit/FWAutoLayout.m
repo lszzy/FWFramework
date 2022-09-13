@@ -399,12 +399,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset
 {
-    return [self fw_pinEdgeToSuperview:edge withInset:inset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdgeToSuperview:edge withInset:inset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation priority:UILayoutPriorityRequired];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView
@@ -414,12 +414,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_pinEdge:edge toEdge:toEdge ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdge:edge toEdge:toEdge ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toAttribute:toEdge ofView:otherView withOffset:offset relation:relation];
+    return [self fw_constrainAttribute:edge toAttribute:toEdge ofView:otherView withOffset:offset relation:relation priority:priority];
 }
 
 #pragma mark - SafeArea
@@ -518,12 +518,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset
 {
-    return [self fw_pinEdgeToSafeArea:edge withInset:inset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdgeToSafeArea:edge withInset:inset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation priority:UILayoutPriorityRequired];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation priority:priority];
 }
 
 #pragma mark - Dimension
@@ -539,22 +539,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size
 {
-    return [self fw_setDimension:dimension toSize:size relation:NSLayoutRelationEqual];
+    return [self fw_setDimension:dimension toSize:size relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation priority:UILayoutPriorityRequired];
+    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:self withMultiplier:multiplier relation:relation];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:self withMultiplier:multiplier relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView
@@ -564,22 +564,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withOffset:offset relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withOffset:offset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withMultiplier:multiplier relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withMultiplier:multiplier relation:relation priority:priority];
 }
 
 #pragma mark - Constrain
@@ -591,22 +591,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation priority:UILayoutPriorityRequired];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation priority:UILayoutPriorityRequired];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation priority:priority];
 }
 
 #pragma mark - Constraint
@@ -1493,10 +1493,10 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithOffsetAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation, UILayoutPriority))attributeWithOffsetAndRelation
 {
-    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation) {
-        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset relation:relation];
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation, UILayoutPriority priority) {
+        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset relation:relation priority:priority];
         return self;
     };
 }
@@ -1509,10 +1509,10 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithMultiplierAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation, UILayoutPriority))attributeWithMultiplierAndRelation
 {
-    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
-        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation, UILayoutPriority priority) {
+        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation priority:priority];
         return self;
     };
 }
