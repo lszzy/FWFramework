@@ -39,11 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 视图是否自动等比例缩放布局，默认返回全局开关
 @property (nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
-/// 是否启用自动布局
-@property (nonatomic, assign) BOOL fw_autoLayout NS_REFINED_FOR_SWIFT;
-
-/// 是否自动安装布局约束，默认YES
-@property (nonatomic, assign) BOOL fw_autoInstall NS_REFINED_FOR_SWIFT;
+/// 是否自动启用布局约束，默认YES
+@property (nonatomic, assign) BOOL fw_autoActive NS_REFINED_FOR_SWIFT;
 
 /**
  执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
@@ -725,7 +722,8 @@ NS_SWIFT_UNAVAILABLE("")
 #pragma mark - Install
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remake)(void);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^install)(BOOL install);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^autoScale)(BOOL autoScale);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^autoActive)(BOOL autoActive);
 
 #pragma mark - Compression
 

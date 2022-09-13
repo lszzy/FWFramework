@@ -113,25 +113,15 @@ static BOOL fwStaticAutoScaleLayout = NO;
     objc_setAssociatedObject(self, @selector(fw_autoScale), @(autoScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)fw_autoLayout
-{
-    return !self.translatesAutoresizingMaskIntoConstraints;
-}
-
-- (void)setFw_autoLayout:(BOOL)enabled
-{
-    self.translatesAutoresizingMaskIntoConstraints = !enabled;
-}
-
-- (BOOL)fw_autoInstall
+- (BOOL)fw_autoActive
 {
     NSNumber *value = objc_getAssociatedObject(self, _cmd);
     return value ? [value boolValue] : YES;
 }
 
-- (void)setFw_autoInstall:(BOOL)autoInstall
+- (void)setFw_autoActive:(BOOL)autoActive
 {
-    objc_setAssociatedObject(self, @selector(fw_autoInstall), @(autoInstall), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_autoActive), @(autoActive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fw_autoLayoutSubviews
@@ -841,7 +831,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
         [self.fw_innerLayoutConstraints setObject:constraint forKey:layoutKey];
     }
     [self.fw_innerLastConstraints setArray:[NSArray arrayWithObjects:constraint, nil]];
-    if (self.fw_autoInstall) {
+    if (self.fw_autoActive) {
         constraint.active = YES;
     }
     return constraint;
@@ -892,10 +882,18 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(BOOL))install
+- (FWLayoutChain * (^)(BOOL))autoScale
 {
-    return ^id(BOOL install) {
-        self.view.fw_autoInstall = install;
+    return ^id(BOOL autoScale) {
+        self.view.fw_autoScale = autoScale;
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))autoActive
+{
+    return ^id(BOOL autoActive) {
+        self.view.fw_autoActive = autoActive;
         return self;
     };
 }
