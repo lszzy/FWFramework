@@ -1651,6 +1651,13 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
+- (NSLayoutConstraint * (^)(NSString *))constraintWithIdentifier
+{
+    return ^id(NSString *identifier) {
+        return [self.view fw_constraintWithIdentifier:identifier];
+    };
+}
+
 @end
 
 #pragma mark - UIView+FWLayoutChain

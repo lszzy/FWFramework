@@ -833,6 +833,7 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, NSLayoutRelation relation);
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplier)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier);
 @property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintToViewWithMultiplierAndRelation)(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id _Nullable ofView, CGFloat multiplier, NSLayoutRelation relation);
+@property (nonatomic, copy, readonly) NSLayoutConstraint * _Nullable (^constraintWithIdentifier)(NSString * _Nullable identifier);
 
 @end
 

@@ -1016,6 +1016,10 @@ public class LayoutChain {
         return self.view?.__fw_constraint(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
     }
     
+    public func constraint(identifier: String?) -> NSLayoutConstraint? {
+        return self.view?.__fw_constraint(withIdentifier: identifier)
+    }
+    
 }
 
 // MARK: - UIView+LayoutChain
