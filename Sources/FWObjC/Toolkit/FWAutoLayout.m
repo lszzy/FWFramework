@@ -67,25 +67,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 @implementation UIView (FWAutoLayout)
 
-+ (BOOL)fw_autoLayoutRTL
-{
-    return fwStaticAutoLayoutRTL;
-}
-
-+ (void)setFw_autoLayoutRTL:(BOOL)enabled
-{
-    fwStaticAutoLayoutRTL = enabled;
-}
-
-+ (BOOL)fw_autoScale
-{
-    return fwStaticAutoScaleLayout;
-}
-
-+ (void)setFw_autoScale:(BOOL)autoScale
-{
-    fwStaticAutoScaleLayout = autoScale;
-}
+#pragma mark - AutoLayout
 
 + (void)load
 {
@@ -121,7 +103,25 @@ static BOOL fwStaticAutoScaleLayout = NO;
     });
 }
 
-#pragma mark - AutoLayout
++ (BOOL)fw_autoLayoutRTL
+{
+    return fwStaticAutoLayoutRTL;
+}
+
++ (void)setFw_autoLayoutRTL:(BOOL)enabled
+{
+    fwStaticAutoLayoutRTL = enabled;
+}
+
++ (BOOL)fw_autoScale
+{
+    return fwStaticAutoScaleLayout;
+}
+
++ (void)setFw_autoScale:(BOOL)autoScale
+{
+    fwStaticAutoScaleLayout = autoScale;
+}
 
 - (BOOL)fw_autoScale
 {
@@ -132,17 +132,6 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (void)setFw_autoScale:(BOOL)autoScale
 {
     objc_setAssociatedObject(self, @selector(fw_autoScale), @(autoScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_autoActive
-{
-    NSNumber *value = objc_getAssociatedObject(self, _cmd);
-    return value ? [value boolValue] : YES;
-}
-
-- (void)setFw_autoActive:(BOOL)autoActive
-{
-    objc_setAssociatedObject(self, @selector(fw_autoActive), @(autoActive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fw_autoLayoutSubviews
@@ -555,7 +544,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation
 {
-    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation priority:UILayoutPriorityRequired];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier
@@ -607,7 +596,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation priority:UILayoutPriorityRequired];
 }
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier
@@ -617,7 +606,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation priority:UILayoutPriorityRequired];
 }
 
 #pragma mark - Constraint
@@ -740,12 +729,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
             relation = NSLayoutRelationLessThanOrEqual;
         }
     }
-    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation];
+    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation priority:UILayoutPriorityRequired];
     layoutConstraint.fw_isOpposite = isOpposite;
     return layoutConstraint;
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
     NSNumber *scaleValue = objc_getAssociatedObject(self, @selector(fw_autoScale));
     BOOL autoScale = scaleValue ? [scaleValue boolValue] : fwStaticAutoScaleLayout;
@@ -775,16 +764,15 @@ static BOOL fwStaticAutoScaleLayout = NO;
     NSString *layoutIdentifier = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
     NSLayoutConstraint *constraint = [self fw_constraintWithIdentifier:layoutIdentifier];
     if (constraint) {
-        constraint.constant = offset;
+        if (constraint.constant != offset) constraint.constant = offset;
     } else {
         constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
         constraint.identifier = layoutIdentifier;
         [self.fw_innerLayoutConstraints addObject:constraint];
     }
     [self.fw_innerLastConstraints setArray:[NSArray arrayWithObjects:constraint, nil]];
-    if (self.fw_autoActive) {
-        constraint.active = YES;
-    }
+    if (constraint.priority != priority) constraint.fw_priority = priority;
+    constraint.active = YES;
     return constraint;
 }
 
@@ -829,22 +817,6 @@ static BOOL fwStaticAutoScaleLayout = NO;
 {
     return ^id(void) {
         [self.view fw_removeConstraints:self.view.fw_allConstraints];
-        return self;
-    };
-}
-
-- (FWLayoutChain * (^)(BOOL))autoScale
-{
-    return ^id(BOOL autoScale) {
-        self.view.fw_autoScale = autoScale;
-        return self;
-    };
-}
-
-- (FWLayoutChain * (^)(BOOL))autoActive
-{
-    return ^id(BOOL autoActive) {
-        self.view.fw_autoActive = autoActive;
         return self;
     };
 }

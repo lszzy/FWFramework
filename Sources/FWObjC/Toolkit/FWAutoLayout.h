@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (FWAutoLayout)
 
+#pragma mark - AutoLayout
+
 /**
  是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
  @note 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
@@ -34,13 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
-#pragma mark - AutoLayout
-
 /// 视图是否自动等比例缩放布局，默认返回全局开关
 @property (nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
-
-/// 是否自动启用布局约束，默认YES
-@property (nonatomic, assign) BOOL fw_autoActive NS_REFINED_FOR_SWIFT;
 
 /**
  执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
@@ -561,6 +558,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
 
+/**
+ 与指定视图属性指定比例，指定关系
+ 
+ @param attribute 指定属性
+ @param toAttribute 目标视图属性
+ @param otherView 目标视图
+ @param multiplier 指定比例
+ @param offset 偏移距离
+ @param relation 约束关系
+ @param priority 约束优先级
+ @return 布局约束
+ */
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+
 #pragma mark - Constraint
 
 /**
@@ -700,8 +711,6 @@ NS_SWIFT_UNAVAILABLE("")
 #pragma mark - Install
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remake)(void);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^autoScale)(BOOL autoScale);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^autoActive)(BOOL autoActive);
 
 #pragma mark - Compression
 
