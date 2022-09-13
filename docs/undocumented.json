@@ -2557,483 +2557,483 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 177,
+      "line": 175,
       "symbol": "JSON.null",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 198,
+      "line": 196,
       "symbol": "Index",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 199,
+      "line": 197,
       "symbol": "Index.array(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 200,
+      "line": 198,
       "symbol": "Index.dictionary(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 201,
+      "line": 199,
       "symbol": "Index.null",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 221,
+      "line": 219,
       "symbol": "JSONIndex",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 222,
+      "line": 220,
       "symbol": "JSONRawIndex",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 262,
+      "line": 260,
       "symbol": "JSONKey",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 263,
+      "line": 261,
       "symbol": "JSONKey.index(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 264,
+      "line": 262,
       "symbol": "JSONKey.key(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 267,
+      "line": 265,
       "symbol": "JSONSubscriptType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 268,
+      "line": 266,
       "symbol": "JSONSubscriptType.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 272,
+      "line": 270,
       "symbol": "Int.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 278,
+      "line": 276,
       "symbol": "String.jsonKey",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 344,
+      "line": 342,
       "symbol": "JSON.subscript(_:)",
       "symbol_kind": "source.lang.swift.decl.function.subscript",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 362,
+      "line": 360,
       "symbol": "JSON.subscript(_:)",
       "symbol_kind": "source.lang.swift.decl.function.subscript",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 375,
+      "line": 373,
       "symbol": "JSON.subscript(dynamicMember:)",
       "symbol_kind": "source.lang.swift.decl.function.subscript",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 454,
+      "line": 452,
       "symbol": "JSON.rawData(options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 462,
+      "line": 460,
       "symbol": "JSON.rawString(_:options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 471,
+      "line": 469,
       "symbol": "JSON.rawString(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 574,
+      "line": 572,
       "symbol": "JSON.array",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 578,
+      "line": 576,
       "symbol": "JSON.arrayValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 582,
+      "line": 580,
       "symbol": "JSON.arrayObject",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 598,
+      "line": 596,
       "symbol": "JSON.dictionary",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 610,
+      "line": 608,
       "symbol": "JSON.dictionaryValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 614,
+      "line": 612,
       "symbol": "JSON.dictionaryObject",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 630,
+      "line": 628,
       "symbol": "JSON.bool",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 642,
+      "line": 640,
       "symbol": "JSON.boolValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 660,
+      "line": 658,
       "symbol": "JSON.string",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 672,
+      "line": 670,
       "symbol": "JSON.stringValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 690,
+      "line": 688,
       "symbol": "JSON.number",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 703,
+      "line": 701,
       "symbol": "JSON.numberValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 723,
+      "line": 721,
       "symbol": "JSON.null",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 735,
+      "line": 733,
       "symbol": "JSON.exists()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 746,
+      "line": 744,
       "symbol": "JSON.url",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 770,
+      "line": 768,
       "symbol": "JSON.double",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 783,
+      "line": 781,
       "symbol": "JSON.doubleValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 792,
+      "line": 790,
       "symbol": "JSON.float",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 805,
+      "line": 803,
       "symbol": "JSON.floatValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 814,
+      "line": 812,
       "symbol": "JSON.int",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 827,
+      "line": 825,
       "symbol": "JSON.intValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 836,
+      "line": 834,
       "symbol": "JSON.uInt",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 849,
+      "line": 847,
       "symbol": "JSON.uIntValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 858,
+      "line": 856,
       "symbol": "JSON.int8",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 871,
+      "line": 869,
       "symbol": "JSON.int8Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 880,
+      "line": 878,
       "symbol": "JSON.uInt8",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 893,
+      "line": 891,
       "symbol": "JSON.uInt8Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 902,
+      "line": 900,
       "symbol": "JSON.int16",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 915,
+      "line": 913,
       "symbol": "JSON.int16Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 924,
+      "line": 922,
       "symbol": "JSON.uInt16",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 937,
+      "line": 935,
       "symbol": "JSON.uInt16Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 946,
+      "line": 944,
       "symbol": "JSON.int32",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 959,
+      "line": 957,
       "symbol": "JSON.int32Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 968,
+      "line": 966,
       "symbol": "JSON.uInt32",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 981,
+      "line": 979,
       "symbol": "JSON.uInt32Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 990,
+      "line": 988,
       "symbol": "JSON.int64",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1003,
+      "line": 1001,
       "symbol": "JSON.int64Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1012,
+      "line": 1010,
       "symbol": "JSON.uInt64",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1025,
+      "line": 1023,
       "symbol": "JSON.uInt64Value",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1038,
+      "line": 1036,
       "symbol": "==(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1051,
+      "line": 1049,
       "symbol": "<=(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1064,
+      "line": 1062,
       "symbol": ">=(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1077,
+      "line": 1075,
       "symbol": ">(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1086,
+      "line": 1084,
       "symbol": "<(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.free",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1160,
+      "line": 1158,
       "symbol": "JSONWritingOptionsKeys",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1161,
+      "line": 1159,
       "symbol": "JSONWritingOptionsKeys.jsonSerialization",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1162,
+      "line": 1160,
       "symbol": "JSONWritingOptionsKeys.castNilToNSNull",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1163,
+      "line": 1161,
       "symbol": "JSONWritingOptionsKeys.maxObjextDepth",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Coding/JSON.swift",
-      "line": 1164,
+      "line": 1162,
       "symbol": "JSONWritingOptionsKeys.encoding",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -3201,21 +3201,21 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Media/VideoPlayer.swift",
-      "line": 321,
+      "line": 319,
       "symbol": "VideoPlayer.loadView()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Media/VideoPlayer.swift",
-      "line": 327,
+      "line": 325,
       "symbol": "VideoPlayer.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Media/VideoPlayer.swift",
-      "line": 342,
+      "line": 340,
       "symbol": "VideoPlayer.viewDidDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -5364,532 +5364,539 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 499,
+      "line": 489,
       "symbol": "LayoutChain.remake()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 506,
+      "line": 495,
+      "symbol": "LayoutChain.autoScale(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
+      "line": 502,
       "symbol": "LayoutChain.compression(horizontal:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 512,
+      "line": 508,
       "symbol": "LayoutChain.compression(vertical:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 518,
+      "line": 514,
       "symbol": "LayoutChain.hugging(horizontal:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 524,
+      "line": 520,
       "symbol": "LayoutChain.hugging(vertical:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 531,
+      "line": 527,
       "symbol": "LayoutChain.collapsed(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 537,
+      "line": 533,
       "symbol": "LayoutChain.autoCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 543,
+      "line": 539,
       "symbol": "LayoutChain.hiddenCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 550,
+      "line": 546,
       "symbol": "LayoutChain.center(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 556,
+      "line": 552,
       "symbol": "LayoutChain.centerX(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 562,
+      "line": 558,
       "symbol": "LayoutChain.centerY(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 568,
+      "line": 564,
       "symbol": "LayoutChain.center(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 575,
+      "line": 571,
       "symbol": "LayoutChain.centerX(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 581,
+      "line": 577,
       "symbol": "LayoutChain.centerY(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 587,
+      "line": 583,
       "symbol": "LayoutChain.centerX(toView:multiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 593,
+      "line": 589,
       "symbol": "LayoutChain.centerY(toView:multiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 600,
+      "line": 596,
       "symbol": "LayoutChain.edges(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 606,
+      "line": 602,
       "symbol": "LayoutChain.edges(_:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 612,
+      "line": 608,
       "symbol": "LayoutChain.horizontal(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 618,
+      "line": 614,
       "symbol": "LayoutChain.vertical(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 624,
+      "line": 620,
       "symbol": "LayoutChain.top(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 630,
-      "symbol": "LayoutChain.top(_:relation:)",
+      "line": 626,
+      "symbol": "LayoutChain.top(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 636,
+      "line": 632,
       "symbol": "LayoutChain.bottom(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 642,
-      "symbol": "LayoutChain.bottom(_:relation:)",
+      "line": 638,
+      "symbol": "LayoutChain.bottom(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 648,
+      "line": 644,
       "symbol": "LayoutChain.left(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 654,
-      "symbol": "LayoutChain.left(_:relation:)",
+      "line": 650,
+      "symbol": "LayoutChain.left(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 660,
+      "line": 656,
       "symbol": "LayoutChain.right(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 666,
-      "symbol": "LayoutChain.right(_:relation:)",
+      "line": 662,
+      "symbol": "LayoutChain.right(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 672,
+      "line": 668,
       "symbol": "LayoutChain.top(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 678,
-      "symbol": "LayoutChain.top(toView:offset:relation:)",
+      "line": 674,
+      "symbol": "LayoutChain.top(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 684,
+      "line": 680,
       "symbol": "LayoutChain.bottom(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 690,
-      "symbol": "LayoutChain.bottom(toView:offset:relation:)",
+      "line": 686,
+      "symbol": "LayoutChain.bottom(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 696,
+      "line": 692,
       "symbol": "LayoutChain.left(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 702,
-      "symbol": "LayoutChain.left(toView:offset:relation:)",
+      "line": 698,
+      "symbol": "LayoutChain.left(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 708,
+      "line": 704,
       "symbol": "LayoutChain.right(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 714,
-      "symbol": "LayoutChain.right(toView:offset:relation:)",
+      "line": 710,
+      "symbol": "LayoutChain.right(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 720,
+      "line": 716,
       "symbol": "LayoutChain.top(toViewBottom:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 726,
-      "symbol": "LayoutChain.top(toViewBottom:offset:relation:)",
+      "line": 722,
+      "symbol": "LayoutChain.top(toViewBottom:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 732,
+      "line": 728,
       "symbol": "LayoutChain.bottom(toViewTop:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 738,
-      "symbol": "LayoutChain.bottom(toViewTop:offset:relation:)",
+      "line": 734,
+      "symbol": "LayoutChain.bottom(toViewTop:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 744,
+      "line": 740,
       "symbol": "LayoutChain.left(toViewRight:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 750,
-      "symbol": "LayoutChain.left(toViewRight:offset:relation:)",
+      "line": 746,
+      "symbol": "LayoutChain.left(toViewRight:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 756,
+      "line": 752,
       "symbol": "LayoutChain.right(toViewLeft:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 762,
-      "symbol": "LayoutChain.right(toViewLeft:offset:relation:)",
+      "line": 758,
+      "symbol": "LayoutChain.right(toViewLeft:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 769,
+      "line": 765,
       "symbol": "LayoutChain.center(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 775,
+      "line": 771,
       "symbol": "LayoutChain.centerX(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 781,
+      "line": 777,
       "symbol": "LayoutChain.centerY(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 787,
+      "line": 783,
       "symbol": "LayoutChain.edges(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 793,
+      "line": 789,
       "symbol": "LayoutChain.edges(toSafeArea:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 799,
+      "line": 795,
       "symbol": "LayoutChain.horizontal(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 805,
+      "line": 801,
       "symbol": "LayoutChain.vertical(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 811,
+      "line": 807,
       "symbol": "LayoutChain.top(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 817,
-      "symbol": "LayoutChain.top(toSafeArea:relation:)",
+      "line": 813,
+      "symbol": "LayoutChain.top(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 823,
+      "line": 819,
       "symbol": "LayoutChain.bottom(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 829,
-      "symbol": "LayoutChain.bottom(toSafeArea:relation:)",
+      "line": 825,
+      "symbol": "LayoutChain.bottom(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 835,
+      "line": 831,
       "symbol": "LayoutChain.left(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 841,
-      "symbol": "LayoutChain.left(toSafeArea:relation:)",
+      "line": 837,
+      "symbol": "LayoutChain.left(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 847,
+      "line": 843,
       "symbol": "LayoutChain.right(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 853,
-      "symbol": "LayoutChain.right(toSafeArea:relation:)",
+      "line": 849,
+      "symbol": "LayoutChain.right(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 860,
+      "line": 856,
       "symbol": "LayoutChain.size(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 866,
-      "symbol": "LayoutChain.width(_:relation:)",
+      "line": 862,
+      "symbol": "LayoutChain.width(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 872,
-      "symbol": "LayoutChain.height(_:relation:)",
+      "line": 868,
+      "symbol": "LayoutChain.height(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 878,
-      "symbol": "LayoutChain.width(toHeight:relation:)",
+      "line": 874,
+      "symbol": "LayoutChain.width(toHeight:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 884,
-      "symbol": "LayoutChain.height(toWidth:relation:)",
+      "line": 880,
+      "symbol": "LayoutChain.height(toWidth:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 890,
+      "line": 886,
       "symbol": "LayoutChain.size(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 897,
+      "line": 893,
       "symbol": "LayoutChain.width(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 903,
-      "symbol": "LayoutChain.width(toView:offset:relation:)",
+      "line": 899,
+      "symbol": "LayoutChain.width(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 909,
+      "line": 905,
       "symbol": "LayoutChain.height(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 915,
-      "symbol": "LayoutChain.height(toView:offset:relation:)",
+      "line": 911,
+      "symbol": "LayoutChain.height(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 921,
-      "symbol": "LayoutChain.width(toView:multiplier:relation:)",
+      "line": 917,
+      "symbol": "LayoutChain.width(toView:multiplier:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 927,
-      "symbol": "LayoutChain.height(toView:multiplier:relation:)",
+      "line": 923,
+      "symbol": "LayoutChain.height(toView:multiplier:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 934,
+      "line": 930,
       "symbol": "LayoutChain.attribute(_:toAttribute:ofView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 940,
-      "symbol": "LayoutChain.attribute(_:toAttribute:ofView:offset:relation:)",
+      "line": 936,
+      "symbol": "LayoutChain.attribute(_:toAttribute:ofView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 946,
-      "symbol": "LayoutChain.attribute(_:toAttribute:ofView:multiplier:relation:)",
+      "line": 942,
+      "symbol": "LayoutChain.attribute(_:toAttribute:ofView:multiplier:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 953,
+      "line": 949,
       "symbol": "LayoutChain.offset(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 959,
+      "line": 957,
       "symbol": "LayoutChain.inset(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -5903,43 +5910,71 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 971,
+      "line": 973,
+      "symbol": "LayoutChain.identifier(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
+      "line": 981,
+      "symbol": "LayoutChain.active(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
+      "line": 989,
+      "symbol": "LayoutChain.remove()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
+      "line": 995,
       "symbol": "LayoutChain.constraints",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 975,
+      "line": 999,
       "symbol": "LayoutChain.constraint",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 979,
+      "line": 1003,
       "symbol": "LayoutChain.constraint(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 983,
+      "line": 1007,
       "symbol": "LayoutChain.constraint(toSafeArea:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 987,
+      "line": 1011,
       "symbol": "LayoutChain.constraint(_:toAttribute:ofView:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 991,
+      "line": 1015,
       "symbol": "LayoutChain.constraint(_:toAttribute:ofView:multiplier:relation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
+      "line": 1019,
+      "symbol": "LayoutChain.constraint(identifier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -8850,708 +8885,750 @@
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 710,
+      "line": 679,
+      "symbol": "NSLayoutConstraint(FWAutoLayout)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 702,
       "symbol": "FWLayoutChain.view",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 712,
+      "line": 704,
       "symbol": "FWLayoutChain.-initWithView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 716,
+      "line": 708,
       "symbol": "FWLayoutChain.remake",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 720,
+      "line": 709,
+      "symbol": "FWLayoutChain.autoScale",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 713,
       "symbol": "FWLayoutChain.compressionHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 721,
+      "line": 714,
       "symbol": "FWLayoutChain.compressionVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 722,
+      "line": 715,
       "symbol": "FWLayoutChain.huggingHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 723,
+      "line": 716,
       "symbol": "FWLayoutChain.huggingVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 727,
+      "line": 720,
       "symbol": "FWLayoutChain.collapsed",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 728,
+      "line": 721,
       "symbol": "FWLayoutChain.autoCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 729,
+      "line": 722,
       "symbol": "FWLayoutChain.hiddenCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 733,
+      "line": 726,
       "symbol": "FWLayoutChain.center",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 734,
+      "line": 727,
       "symbol": "FWLayoutChain.centerX",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 735,
+      "line": 728,
       "symbol": "FWLayoutChain.centerY",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 736,
+      "line": 729,
       "symbol": "FWLayoutChain.centerWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 737,
+      "line": 730,
       "symbol": "FWLayoutChain.centerXWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 738,
+      "line": 731,
       "symbol": "FWLayoutChain.centerYWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 739,
+      "line": 732,
       "symbol": "FWLayoutChain.centerToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 740,
+      "line": 733,
       "symbol": "FWLayoutChain.centerXToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 741,
+      "line": 734,
       "symbol": "FWLayoutChain.centerYToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 742,
+      "line": 735,
       "symbol": "FWLayoutChain.centerXToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 743,
+      "line": 736,
       "symbol": "FWLayoutChain.centerYToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 744,
+      "line": 737,
       "symbol": "FWLayoutChain.centerXToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 745,
+      "line": 738,
       "symbol": "FWLayoutChain.centerYToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 749,
+      "line": 742,
       "symbol": "FWLayoutChain.edges",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 750,
+      "line": 743,
       "symbol": "FWLayoutChain.edgesWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 751,
+      "line": 744,
       "symbol": "FWLayoutChain.edgesWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 752,
+      "line": 745,
       "symbol": "FWLayoutChain.horizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 753,
+      "line": 746,
       "symbol": "FWLayoutChain.vertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 754,
+      "line": 747,
       "symbol": "FWLayoutChain.top",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 755,
+      "line": 748,
       "symbol": "FWLayoutChain.bottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 756,
+      "line": 749,
       "symbol": "FWLayoutChain.left",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 757,
+      "line": 750,
       "symbol": "FWLayoutChain.right",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 758,
+      "line": 751,
       "symbol": "FWLayoutChain.topWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 759,
+      "line": 752,
       "symbol": "FWLayoutChain.bottomWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 760,
+      "line": 753,
       "symbol": "FWLayoutChain.leftWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 761,
+      "line": 754,
       "symbol": "FWLayoutChain.rightWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 762,
+      "line": 755,
       "symbol": "FWLayoutChain.topToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 763,
+      "line": 756,
       "symbol": "FWLayoutChain.bottomToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 764,
+      "line": 757,
       "symbol": "FWLayoutChain.leftToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 765,
+      "line": 758,
       "symbol": "FWLayoutChain.rightToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 766,
+      "line": 759,
       "symbol": "FWLayoutChain.topToViewBottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 767,
+      "line": 760,
       "symbol": "FWLayoutChain.bottomToViewTop",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 768,
+      "line": 761,
       "symbol": "FWLayoutChain.leftToViewRight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 769,
+      "line": 762,
       "symbol": "FWLayoutChain.rightToViewLeft",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 770,
+      "line": 763,
       "symbol": "FWLayoutChain.topToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 771,
+      "line": 764,
       "symbol": "FWLayoutChain.bottomToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 772,
+      "line": 765,
       "symbol": "FWLayoutChain.leftToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 773,
+      "line": 766,
       "symbol": "FWLayoutChain.rightToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 774,
+      "line": 767,
       "symbol": "FWLayoutChain.topToViewBottomWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 775,
+      "line": 768,
       "symbol": "FWLayoutChain.bottomToViewTopWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 776,
+      "line": 769,
       "symbol": "FWLayoutChain.leftToViewRightWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 777,
+      "line": 770,
       "symbol": "FWLayoutChain.rightToViewLeftWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 781,
+      "line": 774,
       "symbol": "FWLayoutChain.centerToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 782,
+      "line": 775,
       "symbol": "FWLayoutChain.centerXToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 783,
+      "line": 776,
       "symbol": "FWLayoutChain.centerYToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 784,
+      "line": 777,
       "symbol": "FWLayoutChain.centerToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 785,
+      "line": 778,
       "symbol": "FWLayoutChain.centerXToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 786,
+      "line": 779,
       "symbol": "FWLayoutChain.centerYToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 787,
+      "line": 780,
       "symbol": "FWLayoutChain.edgesToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 788,
+      "line": 781,
       "symbol": "FWLayoutChain.edgesToSafeAreaWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 789,
+      "line": 782,
       "symbol": "FWLayoutChain.edgesToSafeAreaWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 790,
+      "line": 783,
       "symbol": "FWLayoutChain.horizontalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 791,
+      "line": 784,
       "symbol": "FWLayoutChain.verticalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 792,
+      "line": 785,
       "symbol": "FWLayoutChain.topToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 793,
+      "line": 786,
       "symbol": "FWLayoutChain.bottomToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 794,
+      "line": 787,
       "symbol": "FWLayoutChain.leftToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 795,
+      "line": 788,
       "symbol": "FWLayoutChain.rightToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 796,
+      "line": 789,
       "symbol": "FWLayoutChain.topToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 797,
+      "line": 790,
       "symbol": "FWLayoutChain.bottomToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 798,
+      "line": 791,
       "symbol": "FWLayoutChain.leftToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 799,
+      "line": 792,
       "symbol": "FWLayoutChain.rightToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 803,
+      "line": 796,
       "symbol": "FWLayoutChain.size",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 804,
+      "line": 797,
       "symbol": "FWLayoutChain.width",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 805,
+      "line": 798,
       "symbol": "FWLayoutChain.height",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 806,
+      "line": 799,
       "symbol": "FWLayoutChain.widthToHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 807,
+      "line": 800,
       "symbol": "FWLayoutChain.heightToWidth",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 808,
+      "line": 801,
       "symbol": "FWLayoutChain.sizeToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 809,
+      "line": 802,
       "symbol": "FWLayoutChain.widthToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 810,
+      "line": 803,
       "symbol": "FWLayoutChain.heightToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 811,
+      "line": 804,
       "symbol": "FWLayoutChain.widthToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 812,
+      "line": 805,
       "symbol": "FWLayoutChain.heightToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 813,
+      "line": 806,
       "symbol": "FWLayoutChain.widthToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 814,
+      "line": 807,
       "symbol": "FWLayoutChain.heightToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 818,
+      "line": 811,
       "symbol": "FWLayoutChain.attribute",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 819,
+      "line": 812,
       "symbol": "FWLayoutChain.attributeWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 820,
+      "line": 813,
       "symbol": "FWLayoutChain.attributeWithOffsetAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 821,
+      "line": 814,
       "symbol": "FWLayoutChain.attributeWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 822,
+      "line": 815,
       "symbol": "FWLayoutChain.attributeWithMultiplierAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 826,
+      "line": 819,
       "symbol": "FWLayoutChain.offset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 827,
+      "line": 820,
       "symbol": "FWLayoutChain.inset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 828,
+      "line": 821,
       "symbol": "FWLayoutChain.priority",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 830,
+      "line": 822,
+      "symbol": "FWLayoutChain.identifier",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 823,
+      "symbol": "FWLayoutChain.active",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 824,
+      "symbol": "FWLayoutChain.remove",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 826,
       "symbol": "FWLayoutChain.constraints",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 831,
+      "line": 827,
       "symbol": "FWLayoutChain.constraint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 832,
+      "line": 828,
       "symbol": "FWLayoutChain.constraintToSuperview",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 833,
+      "line": 829,
       "symbol": "FWLayoutChain.constraintToSuperviewWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 834,
+      "line": 830,
       "symbol": "FWLayoutChain.constraintToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 835,
+      "line": 831,
       "symbol": "FWLayoutChain.constraintToSafeAreaWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 836,
+      "line": 832,
       "symbol": "FWLayoutChain.constraintToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 837,
+      "line": 833,
       "symbol": "FWLayoutChain.constraintToViewWithRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 838,
+      "line": 834,
       "symbol": "FWLayoutChain.constraintToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 839,
+      "line": 835,
       "symbol": "FWLayoutChain.constraintToViewWithMultiplierAndRelation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 836,
+      "symbol": "FWLayoutChain.constraintWithIdentifier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },

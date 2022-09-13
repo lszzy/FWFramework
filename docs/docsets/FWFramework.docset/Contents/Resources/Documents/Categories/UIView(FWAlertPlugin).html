@@ -17,7 +17,7 @@
     <a title="UIView(FWAlertPlugin) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.0.3 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.1.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -85,6 +85,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSFileManager%28FWFoundation%29.html">NSFileManager(FWFoundation)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSLayoutConstraint%28FWAutoLayout%29.html">NSLayoutConstraint(FWAutoLayout)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSMutableArray%28FWSafeType%29.html">NSMutableArray(FWSafeType)</a>
@@ -4188,6 +4191,19 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/AutoLayout"></a>
+                <a name="//apple_ref/swift/Section/AutoLayout" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/AutoLayout"></a>
+                  <h3 class="section-name"><span>AutoLayout</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -4259,19 +4275,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/AutoLayout"></a>
-                <a name="//apple_ref/swift/Section/AutoLayout" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/AutoLayout"></a>
-                  <h3 class="section-name"><span>AutoLayout</span>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -4293,33 +4296,6 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n"><a href="../Categories/UIView%28FWAlertPlugin%29.html#/c:objc(cs)UIView(cpy)fw_autoScale">fw_autoScale</a></span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(py)fw_autoLayout"></a>
-                    <a name="//apple_ref/swift/Property/fw_autoLayout" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(py)fw_autoLayout">fw_autoLayout</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>是否启用自动布局</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_autoLayout</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -5516,9 +5492,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_pinEdgeToSuperview:withInset:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pinEdgeToSuperview:withInset:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdgeToSuperview:withInset:relation:">-fw_pinEdgeToSuperview:<wbr>withInset:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_pinEdgeToSuperview:withInset:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pinEdgeToSuperview:withInset:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdgeToSuperview:withInset:relation:priority:">-fw_pinEdgeToSuperview:<wbr>withInset:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5535,8 +5511,9 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pinEdgeToSuperview</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span>
                                             <span class="nf">withInset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">inset</span>
-                                             <span class="nf">relation</span><span class="p">:</span>
-                                                 <span class="p">(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                             <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                             <span class="nf">priority</span><span class="p">:</span>
+                                                 <span class="p">(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -5577,6 +5554,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -5758,9 +5747,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_pinEdge:toEdge:ofView:withOffset:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pinEdge:toEdge:ofView:withOffset:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdge:toEdge:ofView:withOffset:relation:">-fw_pinEdge:<wbr>toEdge:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_pinEdge:toEdge:ofView:withOffset:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pinEdge:toEdge:ofView:withOffset:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdge:toEdge:ofView:withOffset:relation:priority:">-fw_pinEdge:<wbr>toEdge:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5779,7 +5768,8 @@
                                     <span class="nf">toEdge</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toEdge</span>
                                     <span class="nf">ofView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span>
                                 <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span>
-                                  <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                  <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                  <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -5844,6 +5834,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -6491,9 +6493,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_pinEdgeToSafeArea:withInset:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_pinEdgeToSafeArea:withInset:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdgeToSafeArea:withInset:relation:">-fw_pinEdgeToSafeArea:<wbr>withInset:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_pinEdgeToSafeArea:withInset:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pinEdgeToSafeArea:withInset:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_pinEdgeToSafeArea:withInset:relation:priority:">-fw_pinEdgeToSafeArea:<wbr>withInset:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -6510,7 +6512,8 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pinEdgeToSafeArea</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">edge</span>
                                            <span class="nf">withInset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">inset</span>
-                                            <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                            <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                            <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -6551,6 +6554,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -6693,9 +6708,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_setDimension:toSize:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_setDimension:toSize:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setDimension:toSize:relation:">-fw_setDimension:<wbr>toSize:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_setDimension:toSize:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_setDimension:toSize:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setDimension:toSize:relation:priority:">-fw_setDimension:<wbr>toSize:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -6712,7 +6727,8 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_setDimension</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">dimension</span>
                                          <span class="nf">toSize</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">size</span>
-                                       <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                       <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                       <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -6753,6 +6769,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -6845,9 +6873,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:withMultiplier:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:withMultiplier:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:withMultiplier:relation:">-fw_matchDimension:<wbr>toDimension:<wbr>withMultiplier:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:withMultiplier:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:withMultiplier:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:withMultiplier:relation:priority:">-fw_matchDimension:<wbr>toDimension:<wbr>withMultiplier:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -6865,7 +6893,8 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_matchDimension</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">dimension</span>
                                       <span class="nf">toDimension</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toDimension</span>
                                    <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span>
-                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                         <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -6918,6 +6947,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -7099,9 +7140,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withOffset:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:ofView:withOffset:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withOffset:relation:">-fw_matchDimension:<wbr>toDimension:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withOffset:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:ofView:withOffset:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withOffset:relation:priority:">-fw_matchDimension:<wbr>toDimension:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -7120,7 +7161,8 @@
                                       <span class="nf">toDimension</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toDimension</span>
                                            <span class="nf">ofView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span>
                                        <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span>
-                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                         <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -7185,6 +7227,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -7290,9 +7344,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withMultiplier:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:ofView:withMultiplier:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withMultiplier:relation:">-fw_matchDimension:<wbr>toDimension:<wbr>ofView:<wbr>withMultiplier:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withMultiplier:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_matchDimension:toDimension:ofView:withMultiplier:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_matchDimension:toDimension:ofView:withMultiplier:relation:priority:">-fw_matchDimension:<wbr>toDimension:<wbr>ofView:<wbr>withMultiplier:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -7311,7 +7365,8 @@
                                       <span class="nf">toDimension</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toDimension</span>
                                            <span class="nf">ofView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span>
                                    <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span>
-                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                                         <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                                         <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -7376,6 +7431,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -7572,9 +7639,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withOffset:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_constrainAttribute:toAttribute:ofView:withOffset:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withOffset:relation:">-fw_constrainAttribute:<wbr>toAttribute:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withOffset:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_constrainAttribute:toAttribute:ofView:withOffset:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withOffset:relation:priority:">-fw_constrainAttribute:<wbr>toAttribute:<wbr>ofView:<wbr>withOffset:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -7594,7 +7661,8 @@
               <span class="nf">toAttribute</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toAttribute</span>
                    <span class="nf">ofView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span>
                <span class="nf">withOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span>
-                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                 <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -7659,6 +7727,18 @@
                               <td>
                                 <div>
                                   <p>约束关系</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
                                 </div>
                               </td>
                             </tr>
@@ -7765,9 +7845,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:">-fw_constrainAttribute:<wbr>toAttribute:<wbr>ofView:<wbr>withMultiplier:<wbr>relation:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:priority:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:priority:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constrainAttribute:toAttribute:ofView:withMultiplier:relation:priority:">-fw_constrainAttribute:<wbr>toAttribute:<wbr>ofView:<wbr>withMultiplier:<wbr>relation:<wbr>priority:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -7787,7 +7867,8 @@
               <span class="nf">toAttribute</span><span class="p">:(</span><span class="n">NSLayoutAttribute</span><span class="p">)</span><span class="nv">toAttribute</span>
                    <span class="nf">ofView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">otherView</span>
            <span class="nf">withMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span>
-                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span><span class="p">;</span></code></pre>
+                 <span class="nf">relation</span><span class="p">:(</span><span class="n">NSLayoutRelation</span><span class="p">)</span><span class="nv">relation</span>
+                 <span class="nf">priority</span><span class="p">:(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -7855,107 +7936,24 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div>
                         <h4>Return Value</h4>
                         <p>布局约束</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Offset"></a>
-                <a name="//apple_ref/swift/Section/Offset" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Offset"></a>
-                  <h3 class="section-name"><span>Offset</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(im)fw_setOffset:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_setOffset:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setOffset:">-fw_setOffset:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束偏移值</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_setOffset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">offset</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(im)fw_setInset:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_setInset:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setInset:">-fw_setInset:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束内间距值</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_setInset</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">inset</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(im)fw_setPriority:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_setPriority:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setPriority:">-fw_setPriority:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束优先级</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_setPriority</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">UILayoutPriority</span><span class="p">)</span><span class="nv">priority</span><span class="p">;</span></code></pre>
-
-                        </div>
                       </div>
                     </section>
                   </div>
@@ -8562,9 +8560,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_setConstraint:forKey:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_setConstraint:forKey:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_setConstraint:forKey:">-fw_setConstraint:<wbr>forKey:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_constraintWithIdentifier:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_constraintWithIdentifier:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constraintWithIdentifier:">-fw_constraintWithIdentifier:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -8572,15 +8570,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置约束保存键名，方便更新约束常量</p>
+                        <p>根据唯一标志获取布局约束</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_setConstraint</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraint</span>
-                  <span class="nf">forKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_constraintWithIdentifier</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -8591,70 +8589,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>constraint</em>
+                                <em>identifier</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>布局约束</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>key</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>保存key</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(im)fw_constraintForKey:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_constraintForKey:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_constraintForKey:">-fw_constraintForKey:<wbr></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取键名对应约束</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_constraintForKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>key</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>保存key</p>
+                                  <p>唯一标志</p>
                                 </div>
                               </td>
                             </tr>
@@ -8698,33 +8638,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(py)fw_lastConstraint"></a>
-                    <a name="//apple_ref/swift/Property/fw_lastConstraint" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(py)fw_lastConstraint">fw_lastConstraint</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>最近一条添加或更新的布局约束</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="n">fw_lastConstraint</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:objc(cs)UIView(py)fw_allConstraints"></a>
                     <a name="//apple_ref/swift/Property/fw_allConstraints" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UIView(py)fw_allConstraints">fw_allConstraints</a>
@@ -8735,7 +8648,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取当前所有约束，不包含Key</p>
+                        <p>获取当前所有约束</p>
 
                       </div>
                       <div class="declaration">
@@ -8756,9 +8669,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_removeConstraint:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_removeConstraint:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_removeConstraint:">-fw_removeConstraint:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_removeConstraints:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_removeConstraints:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_removeConstraints:">-fw_removeConstraints:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -8766,41 +8679,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>移除当前指定约束，不包含Key</p>
+                        <p>移除当前指定约束数组</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_removeConstraint</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSLayoutConstraint</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraint</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)UIView(im)fw_removeAllConstraints"></a>
-                    <a name="//apple_ref/swift/Method/-fw_removeAllConstraints" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_removeAllConstraints">-fw_removeAllConstraints</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>移除当前所有约束，不包含Key</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">fw_removeAllConstraints</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_removeConstraints</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nullable</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">constraints</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -14442,7 +14329,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-12)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
