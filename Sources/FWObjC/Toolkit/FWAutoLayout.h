@@ -561,20 +561,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
 
-#pragma mark - Offset
-
-/// 修改最近一批添加或更新的布局约束偏移值
-- (NSArray<NSLayoutConstraint *> *)fw_setOffset:(CGFloat)offset NS_REFINED_FOR_SWIFT;
-
-/// 修改最近一批添加或更新的布局约束内间距值
-- (NSArray<NSLayoutConstraint *> *)fw_setInset:(CGFloat)inset NS_REFINED_FOR_SWIFT;
-
-/// 修改最近一批添加或更新的布局约束优先级(iOS12以下必须未激活才生效)
-- (NSArray<NSLayoutConstraint *> *)fw_setPriority:(UILayoutPriority)priority NS_REFINED_FOR_SWIFT;
-
-/// 修改最近一批添加或更新的布局约束有效性
-- (NSArray<NSLayoutConstraint *> *)fw_setActive:(BOOL)active NS_REFINED_FOR_SWIFT;
-
 #pragma mark - Constraint
 
 /**
@@ -656,6 +642,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSLayoutConstraint *)fw_constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
 
 /**
+ 根据唯一标志获取布局约束
+ 
+ @param identifier 唯一标志
+ @return 布局约束
+ */
+- (nullable NSLayoutConstraint *)fw_constraintWithIdentifier:(nullable NSString *)identifier NS_REFINED_FOR_SWIFT;
+
+/**
  最近一批添加或更新的布局约束
  */
 @property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_lastConstraints NS_REFINED_FOR_SWIFT;
@@ -671,6 +665,21 @@ NS_ASSUME_NONNULL_BEGIN
  移除当前指定约束数组
  */
 - (void)fw_removeConstraints:(nullable NSArray<NSLayoutConstraint *> *)constraints NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - NSLayoutConstraint+FWAutoLayout
+
+@interface NSLayoutConstraint (FWAutoLayout)
+
+/// 标记是否是相反的约束，一般相对于父视图
+@property (nonatomic, assign) BOOL fw_isOpposite NS_REFINED_FOR_SWIFT;
+
+/// 设置内间距值，如果是相反的约束，会自动取反
+@property (nonatomic, assign) CGFloat fw_inset NS_REFINED_FOR_SWIFT;
+
+/// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
+@property (nonatomic, assign) UILayoutPriority fw_priority NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -805,6 +814,7 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^identifier)(NSString * _Nullable identifier);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^active)(BOOL active);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remove)(void);
 

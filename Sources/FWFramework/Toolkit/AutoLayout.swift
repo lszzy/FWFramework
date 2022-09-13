@@ -370,31 +370,6 @@ extension Wrapper where Base: UIView {
         return base.__fw_constrainAttribute(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
     }
     
-    // MARK: - Offset
-    /// 修改最近一批添加或更新的布局约束偏移值
-    @discardableResult
-    public func setOffset(_ offset: CGFloat) -> [NSLayoutConstraint] {
-        return base.__fw_setOffset(offset)
-    }
-
-    /// 修改最近一批添加或更新的布局约束内间距值
-    @discardableResult
-    public func setInset(_ inset: CGFloat) -> [NSLayoutConstraint] {
-        return base.__fw_setInset(inset)
-    }
-
-    /// 修改最近一批添加或更新的布局约束优先级(iOS12以下必须未激活才生效)
-    @discardableResult
-    public func setPriority(_ priority: UILayoutPriority) -> [NSLayoutConstraint] {
-        return base.__fw_setPriority(priority)
-    }
-    
-    /// 修改最近一批添加或更新的布局约束有效性
-    @discardableResult
-    public func setActive(_ active: Bool) -> [NSLayoutConstraint] {
-        return base.__fw_setActive(active)
-    }
-    
     // MARK: - Constraint
     /// 获取添加的与父视图属性的约束，指定关系
     /// - Parameters:
@@ -437,6 +412,14 @@ extension Wrapper where Base: UIView {
         return base.__fw_constraint(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
     }
     
+    /// 根据唯一标志获取布局约束
+    /// - Parameters:
+    ///   - identifier: 唯一标志
+    /// - Returns: 布局约束
+    public func constraint(identifier: String?) -> NSLayoutConstraint? {
+        return base.__fw_constraint(withIdentifier: identifier)
+    }
+    
     /// 最近一批添加或更新的布局约束
     public var lastConstraints: [NSLayoutConstraint] {
         return base.__fw_lastConstraints
@@ -451,6 +434,29 @@ extension Wrapper where Base: UIView {
     /// - Parameter constraints: 布局约束数组
     public func removeConstraints(_ constraints: [NSLayoutConstraint]?) {
         base.__fw_removeConstraints(constraints)
+    }
+    
+}
+
+// MARK: - NSLayoutConstraint+AutoLayout
+extension Wrapper where Base: NSLayoutConstraint {
+    
+    /// 标记是否是相反的约束，一般相对于父视图
+    public var isOpposite: Bool {
+        get { return base.__fw_isOpposite }
+        set { base.__fw_isOpposite = newValue }
+    }
+    
+    /// 设置内间距值，如果是相反的约束，会自动取反
+    public var inset: CGFloat {
+        get { return base.__fw_inset }
+        set { base.__fw_inset = newValue }
+    }
+    
+    /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
+    public var priority: UILayoutPriority {
+        get { return base.__fw_priority }
+        set { base.__fw_priority = newValue }
     }
     
 }
@@ -944,25 +950,41 @@ public class LayoutChain {
     // MARK: - Offset
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
-        self.view?.__fw_setOffset(offset)
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.constant = offset
+        })
         return self
     }
     
     @discardableResult
     public func inset(_ inset: CGFloat) -> Self {
-        self.view?.__fw_setInset(inset)
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.__fw_inset = inset
+        })
         return self
     }
     
     @discardableResult
     public func priority(_ priority: UILayoutPriority) -> Self {
-        self.view?.__fw_setPriority(priority)
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.__fw_priority = priority
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func identifier(_ identifier: String?) -> Self {
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.identifier = identifier
+        })
         return self
     }
     
     @discardableResult
     public func active(_ active: Bool) -> Self {
-        self.view?.__fw_setActive(active)
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.isActive = active
+        })
         return self
     }
     
