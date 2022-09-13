@@ -706,6 +706,7 @@ NS_SWIFT_UNAVAILABLE("")
 #pragma mark - Install
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remake)(void);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^autoScale)(BOOL autoScale);
 
 #pragma mark - Compression
 
