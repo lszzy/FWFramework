@@ -656,52 +656,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSLayoutConstraint *)fw_constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
 
 /**
- 设置约束保存键名，方便更新约束常量
- 
- @param constraint 布局约束
- @param key 保存key
- */
-- (void)fw_setConstraint:(nullable NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key NS_REFINED_FOR_SWIFT;
-
-/**
- 获取键名对应约束
- 
- @param key 保存key
- @return 布局约束
- */
-- (nullable NSLayoutConstraint *)fw_constraintForKey:(id<NSCopying>)key NS_REFINED_FOR_SWIFT;
-
-/**
  最近一批添加或更新的布局约束
  */
 @property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_lastConstraints NS_REFINED_FOR_SWIFT;
 
 /**
- 最近一条添加或更新的布局约束
- */
-@property (nullable, nonatomic, readonly) NSLayoutConstraint *fw_lastConstraint NS_REFINED_FOR_SWIFT;
-
-/**
- 获取当前所有约束，不包含Key
+ 获取当前所有约束
  
  @return 约束列表
  */
 @property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_allConstraints NS_REFINED_FOR_SWIFT;
 
 /**
- 移除当前指定约束，不包含Key
+ 移除当前指定约束数组
  */
-- (void)fw_removeConstraint:(NSLayoutConstraint *)constraint NS_REFINED_FOR_SWIFT;
-
-/**
- 移除当前指定约束数组，不包含Key
- */
-- (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints NS_REFINED_FOR_SWIFT;
-
-/**
- 移除当前所有约束，不包含Key
- */
-- (void)fw_removeAllConstraints NS_REFINED_FOR_SWIFT;
+- (void)fw_removeConstraints:(nullable NSArray<NSLayoutConstraint *> *)constraints NS_REFINED_FOR_SWIFT;
 
 @end
 
