@@ -194,10 +194,11 @@ extension Wrapper where Base: UIView {
     ///   - edge: 指定边属性
     ///   - inset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_pinEdge(toSuperview: edge, withInset: inset, relation: relation)
+    public func pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_pinEdge(toSuperview: edge, withInset: inset, relation: relation, priority: priority)
     }
 
     /// 与指定视图边属性相同，可指定偏移距离和关系
@@ -207,10 +208,11 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 另一视图
     ///   - offset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_pinEdge(edge, toEdge: toEdge, ofView: ofView, withOffset: offset, relation: relation)
+    public func pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_pinEdge(edge, toEdge: toEdge, ofView: ofView, withOffset: offset, relation: relation, priority: priority)
     }
     
     // MARK: - SafeArea
@@ -273,10 +275,11 @@ extension Wrapper where Base: UIView {
     ///   - edge: 指定边属性
     ///   - inset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required   
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_pinEdge(toSafeArea: edge, withInset: inset, relation: relation)
+    public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_pinEdge(toSafeArea: edge, withInset: inset, relation: relation, priority: priority)
     }
     
     // MARK: - Dimension
@@ -293,10 +296,11 @@ extension Wrapper where Base: UIView {
     ///   - dimension: 尺寸属性
     ///   - size: 尺寸大小
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_setDimension(dimension, toSize: size, relation: relation)
+    public func setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_setDimension(dimension, toSize: size, relation: relation, priority: priority)
     }
 
     /// 与视图自身尺寸属性指定比例，指定关系
@@ -305,10 +309,11 @@ extension Wrapper where Base: UIView {
     ///   - toDimension: 目标尺寸属性
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_matchDimension(dimension, toDimension: toDimension, withMultiplier: multiplier, relation: relation)
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_matchDimension(dimension, toDimension: toDimension, withMultiplier: multiplier, relation: relation, priority: priority)
     }
 
     /// 与指定视图尺寸属性相同，可指定相差大小和关系
@@ -318,10 +323,11 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 目标视图
     ///   - offset: 相差大小，默认0
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_matchDimension(dimension, toDimension: toDimension, ofView: ofView, withOffset: offset, relation: relation)
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_matchDimension(dimension, toDimension: toDimension, ofView: ofView, withOffset: offset, relation: relation, priority: priority)
     }
 
     /// 与指定视图尺寸属性指定比例，可指定关系
@@ -331,10 +337,11 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 目标视图
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系，默认相等
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_matchDimension(dimension, toDimension: toDimension, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_matchDimension(dimension, toDimension: toDimension, ofView: ofView, withMultiplier: multiplier, relation: relation, priority: priority)
     }
     
     // MARK: - Constrain
@@ -345,10 +352,11 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 目标视图
     ///   - offset: 偏移距离
     ///   - relation: 约束关系
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_constrainAttribute(attribute, to: toAttribute, ofView: ofView, withOffset: offset, relation: relation)
+    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_constrainAttribute(attribute, to: toAttribute, ofView: ofView, withOffset: offset, relation: relation, priority: priority)
     }
 
     /// 与指定视图属性指定比例，指定关系
@@ -358,10 +366,11 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 目标视图
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系
+    ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint {
-        return base.__fw_constrainAttribute(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
+    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.__fw_constrainAttribute(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation, priority: priority)
     }
     
     // MARK: - Constraint
@@ -608,8 +617,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func top(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSuperview: .top, withInset: inset, relation: relation)
+    public func top(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSuperview: .top, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -620,8 +629,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func bottom(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSuperview: .bottom, withInset: inset, relation: relation)
+    public func bottom(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSuperview: .bottom, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -632,8 +641,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func left(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSuperview: .left, withInset: inset, relation: relation)
+    public func left(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSuperview: .left, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -644,8 +653,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func right(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSuperview: .right, withInset: inset, relation: relation)
+    public func right(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSuperview: .right, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -656,8 +665,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func top(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.top, toEdge: .top, ofView: view, withOffset: offset, relation: relation)
+    public func top(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.top, toEdge: .top, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -668,8 +677,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func bottom(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.bottom, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation)
+    public func bottom(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.bottom, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -680,8 +689,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func left(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.left, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
+    public func left(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.left, toEdge: .left, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -692,8 +701,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func right(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.right, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
+    public func right(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.right, toEdge: .right, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -704,8 +713,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func top(toViewBottom view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.top, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation)
+    public func top(toViewBottom view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.top, toEdge: .bottom, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
     
@@ -716,8 +725,8 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func bottom(toViewTop view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.bottom, toEdge: .top, ofView: view, withOffset: offset, relation: relation)
+    public func bottom(toViewTop view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.bottom, toEdge: .top, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -728,8 +737,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func left(toViewRight view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.left, toEdge: .right, ofView: view, withOffset: offset, relation: relation)
+    public func left(toViewRight view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.left, toEdge: .right, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
     
@@ -740,8 +749,8 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func right(toViewLeft view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_pinEdge(.right, toEdge: .left, ofView: view, withOffset: offset, relation: relation)
+    public func right(toViewLeft view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_pinEdge(.right, toEdge: .left, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
@@ -795,8 +804,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func top(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSafeArea: .top, withInset: inset, relation: relation)
+    public func top(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSafeArea: .top, withInset: inset, relation: relation, priority: priority)
         return self
     }
     
@@ -807,8 +816,8 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func bottom(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSafeArea: .bottom, withInset: inset, relation: relation)
+    public func bottom(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSafeArea: .bottom, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -819,8 +828,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func left(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSafeArea: .left, withInset: inset, relation: relation)
+    public func left(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSafeArea: .left, withInset: inset, relation: relation, priority: priority)
         return self
     }
     
@@ -831,8 +840,8 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func right(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        view?.__fw_pinEdge(toSafeArea: .right, withInset: inset, relation: relation)
+    public func right(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_pinEdge(toSafeArea: .right, withInset: inset, relation: relation, priority: priority)
         return self
     }
 
@@ -844,26 +853,26 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        view?.__fw_setDimension(.width, toSize: width, relation: relation)
+    public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_setDimension(.width, toSize: width, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
-    public func height(_ height: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        view?.__fw_setDimension(.height, toSize: height, relation: relation)
+    public func height(_ height: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_setDimension(.height, toSize: height, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
-    public func width(toHeight multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        view?.__fw_matchDimension(.width, toDimension: .height, withMultiplier: multiplier, relation: relation)
+    public func width(toHeight multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_matchDimension(.width, toDimension: .height, withMultiplier: multiplier, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
-    public func height(toWidth multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        view?.__fw_matchDimension(.height, toDimension: .width, withMultiplier: multiplier, relation: relation)
+    public func height(toWidth multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        view?.__fw_matchDimension(.height, toDimension: .width, withMultiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
@@ -881,8 +890,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func width(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view, withOffset: offset, relation: relation)
+    public func width(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
     
@@ -893,20 +902,20 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func height(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view, withOffset: offset, relation: relation)
+    public func height(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
-    public func width(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view, withMultiplier: multiplier, relation: relation)
+    public func width(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view, withMultiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
-    public func height(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view, withMultiplier: multiplier, relation: relation)
+    public func height(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view, withMultiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
@@ -918,14 +927,14 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation) -> Self {
-        self.view?.__fw_constrainAttribute(attribute, to: toAttribute, ofView: view, withOffset: offset, relation: relation)
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_constrainAttribute(attribute, to: toAttribute, ofView: view, withOffset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> Self {
-        self.view?.__fw_constrainAttribute(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation)
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
+        self.view?.__fw_constrainAttribute(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation, priority: priority)
         return self
     }
     
