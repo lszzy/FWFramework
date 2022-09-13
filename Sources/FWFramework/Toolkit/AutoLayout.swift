@@ -490,6 +490,12 @@ public class LayoutChain {
         view?.__fw_removeConstraints(view?.__fw_allConstraints)
         return self
     }
+    
+    @discardableResult
+    public func autoScale(_ autoScale: Bool) -> Self {
+        view?.__fw_autoScale = autoScale
+        return self
+    }
 
     // MARK: - Compression
     @discardableResult

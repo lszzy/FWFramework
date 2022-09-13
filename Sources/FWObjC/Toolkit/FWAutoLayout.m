@@ -821,6 +821,14 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
+- (FWLayoutChain * (^)(BOOL))autoScale
+{
+    return ^id(BOOL autoScale) {
+        self.view.fw_autoScale = autoScale;
+        return self;
+    };
+}
+
 #pragma mark - Compression
 
 - (FWLayoutChain * (^)(UILayoutPriority))compressionHorizontal
