@@ -649,33 +649,33 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     
     if ((edge & UIRectEdgeTop) == UIRectEdgeTop) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewTopKey edge:UIRectEdgeTop];
-        [borderView fw_constraintForKey:@(NSLayoutAttributeHeight)].constant = width;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeLeft)].constant = leftInset;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeRight)].constant = -rightInset;
+        [borderView fw_setDimension:NSLayoutAttributeHeight toSize:width];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftInset];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightInset];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeLeft) == UIRectEdgeLeft) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewLeftKey edge:UIRectEdgeLeft];
-        [borderView fw_constraintForKey:@(NSLayoutAttributeWidth)].constant = width;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeTop)].constant = leftInset;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeBottom)].constant = -rightInset;
+        [borderView fw_setDimension:NSLayoutAttributeWidth toSize:width];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:leftInset];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:rightInset];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeBottom) == UIRectEdgeBottom) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewBottomKey edge:UIRectEdgeBottom];
-        [borderView fw_constraintForKey:@(NSLayoutAttributeHeight)].constant = width;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeLeft)].constant = leftInset;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeRight)].constant = -rightInset;
+        [borderView fw_setDimension:NSLayoutAttributeHeight toSize:width];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftInset];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightInset];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeRight) == UIRectEdgeRight) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewRightKey edge:UIRectEdgeRight];
-        [borderView fw_constraintForKey:@(NSLayoutAttributeWidth)].constant = width;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeTop)].constant = leftInset;
-        [borderView fw_constraintForKey:@(NSLayoutAttributeBottom)].constant = -rightInset;
+        [borderView fw_setDimension:NSLayoutAttributeWidth toSize:width];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:leftInset];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:rightInset];
         borderView.backgroundColor = color;
     }
 }
@@ -690,14 +690,14 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         
         if (edge == UIRectEdgeTop || edge == UIRectEdgeBottom) {
             [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeTop ? NSLayoutAttributeTop : NSLayoutAttributeBottom)];
-            [borderView fw_setConstraint:[borderView fw_setDimension:NSLayoutAttributeHeight toSize:0] forKey:@(NSLayoutAttributeHeight)];
-            [borderView fw_setConstraint:[borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft] forKey:@(NSLayoutAttributeLeft)];
-            [borderView fw_setConstraint:[borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight] forKey:@(NSLayoutAttributeRight)];
+            [borderView fw_setDimension:NSLayoutAttributeHeight toSize:0];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight];
         } else {
             [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeLeft ? NSLayoutAttributeLeft : NSLayoutAttributeRight)];
-            [borderView fw_setConstraint:[borderView fw_setDimension:NSLayoutAttributeWidth toSize:0] forKey:@(NSLayoutAttributeWidth)];
-            [borderView fw_setConstraint:[borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop] forKey:@(NSLayoutAttributeTop)];
-            [borderView fw_setConstraint:[borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom] forKey:@(NSLayoutAttributeBottom)];
+            [borderView fw_setDimension:NSLayoutAttributeWidth toSize:0];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom];
         }
     }
     return borderView;

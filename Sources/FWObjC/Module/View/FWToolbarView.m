@@ -377,16 +377,16 @@
         if (leftButton) {
             [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:UIScreen.fw_safeAreaInsets.left + 8]];
             [subviewContraints addObject:[leftButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY]];
-            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
             leftWidth += UIScreen.fw_safeAreaInsets.left + 8 + buttonWidth + 8;
         }
         if (leftMoreButton) {
             [subviewContraints addObject:[leftMoreButton fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton withOffset:8]];
             [subviewContraints addObject:[leftMoreButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY]];
-            [subviewContraints addObject:[leftMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[leftMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+            [subviewContraints addObject:[leftMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[leftMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = leftMoreButton.frame.size.width ?: [leftMoreButton sizeThatFits:fitsSize].width;
             leftWidth += buttonWidth + 8;
         }
@@ -397,16 +397,16 @@
         if (rightButton) {
             [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:8 + UIScreen.fw_safeAreaInsets.right]];
             [subviewContraints addObject:[rightButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY]];
-            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
             rightWidth += 8 + buttonWidth + 8 + UIScreen.fw_safeAreaInsets.right;
         }
         if (rightMoreButton) {
             [subviewContraints addObject:[rightMoreButton fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton withOffset:-8]];
             [subviewContraints addObject:[rightMoreButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY]];
-            [subviewContraints addObject:[rightMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[rightMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
+            [subviewContraints addObject:[rightMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[rightMoreButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = rightMoreButton.frame.size.width ?: [rightMoreButton sizeThatFits:fitsSize].width;
             rightWidth += 8 + buttonWidth;
         }
@@ -415,10 +415,10 @@
         if (centerButton) {
             [subviewContraints addObject:[centerButton fw_alignAxisToSuperview:NSLayoutAttributeCenterX]];
             [subviewContraints addObject:[centerButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY]];
-            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftWidth relation:NSLayoutRelationGreaterThanOrEqual]];
-            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightWidth relation:NSLayoutRelationGreaterThanOrEqual]];
+            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftWidth relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[centerButton fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightWidth relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
         }
         self.subviewContraints = subviewContraints;
     }

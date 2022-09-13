@@ -48,6 +48,9 @@ NS_SWIFT_NAME(WebView)
 /// 是否允许打开通用链接，默认NO
 @property (nonatomic, assign) BOOL allowsUniversalLinks;
 
+/// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
+@property (nonatomic, assign) BOOL allowsSchemeURL;
+
 /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nonatomic, strong, nullable) id webRequest;
 

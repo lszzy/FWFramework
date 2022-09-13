@@ -10,61 +10,64 @@
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
-@interface NSLayoutConstraint (FWAutoLayout)
-
-@property (nonatomic, assign) CGFloat fw_innerOriginalConstant;
-@property (nonatomic, assign) BOOL fw_innerOppositeAttribute;
-
-@end
+#pragma mark - NSLayoutConstraint+FWAutoLayout
 
 @implementation NSLayoutConstraint (FWAutoLayout)
 
-- (CGFloat)fw_innerOriginalConstant
+- (CGFloat)fw_originalConstant
 {
     return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
-- (void)setFw_innerOriginalConstant:(CGFloat)originalConstant
+- (void)setFw_originalConstant:(CGFloat)originalConstant
 {
-    objc_setAssociatedObject(self, @selector(fw_innerOriginalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_originalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)fw_innerOppositeAttribute
+- (BOOL)fw_isOpposite
 {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setFw_innerOppositeAttribute:(BOOL)oppositeAttribute
+- (void)setFw_isOpposite:(BOOL)isOpposite
 {
-    objc_setAssociatedObject(self, @selector(fw_innerOppositeAttribute), @(oppositeAttribute), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isOpposite), @(isOpposite), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)fw_inset
+{
+    return self.fw_isOpposite ? -self.constant : self.constant;
+}
+
+- (void)setFw_inset:(CGFloat)inset
+{
+    self.constant = self.fw_isOpposite ? -inset : inset;
+}
+
+- (UILayoutPriority)fw_priority
+{
+    return self.priority;
+}
+
+- (void)setFw_priority:(UILayoutPriority)priority
+{
+    @try {
+        self.priority = priority;
+    } @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
 }
 
 @end
+
+#pragma mark - UIView+FWAutoLayout
 
 static BOOL fwStaticAutoLayoutRTL = NO;
 static BOOL fwStaticAutoScaleLayout = NO;
 
 @implementation UIView (FWAutoLayout)
 
-+ (BOOL)fw_autoLayoutRTL
-{
-    return fwStaticAutoLayoutRTL;
-}
-
-+ (void)setFw_autoLayoutRTL:(BOOL)enabled
-{
-    fwStaticAutoLayoutRTL = enabled;
-}
-
-+ (BOOL)fw_autoScale
-{
-    return fwStaticAutoScaleLayout;
-}
-
-+ (void)setFw_autoScale:(BOOL)autoScale
-{
-    fwStaticAutoScaleLayout = autoScale;
-}
+#pragma mark - AutoLayout
 
 + (void)load
 {
@@ -100,7 +103,25 @@ static BOOL fwStaticAutoScaleLayout = NO;
     });
 }
 
-#pragma mark - AutoLayout
++ (BOOL)fw_autoLayoutRTL
+{
+    return fwStaticAutoLayoutRTL;
+}
+
++ (void)setFw_autoLayoutRTL:(BOOL)enabled
+{
+    fwStaticAutoLayoutRTL = enabled;
+}
+
++ (BOOL)fw_autoScale
+{
+    return fwStaticAutoScaleLayout;
+}
+
++ (void)setFw_autoScale:(BOOL)autoScale
+{
+    fwStaticAutoScaleLayout = autoScale;
+}
 
 - (BOOL)fw_autoScale
 {
@@ -111,16 +132,6 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (void)setFw_autoScale:(BOOL)autoScale
 {
     objc_setAssociatedObject(self, @selector(fw_autoScale), @(autoScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_autoLayout
-{
-    return !self.translatesAutoresizingMaskIntoConstraints;
-}
-
-- (void)setFw_autoLayout:(BOOL)enabled
-{
-    self.translatesAutoresizingMaskIntoConstraints = !enabled;
 }
 
 - (void)fw_autoLayoutSubviews
@@ -230,7 +241,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
         if (collapsed) {
             constraint.constant = 0;
         } else {
-            constraint.constant = constraint.fw_innerOriginalConstant;
+            constraint.constant = constraint.fw_originalConstant;
         }
     }];
     
@@ -259,7 +270,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (void)fw_addCollapseConstraint:(NSLayoutConstraint *)constraint
 {
-    constraint.fw_innerOriginalConstant = constraint.constant;
+    constraint.fw_originalConstant = constraint.constant;
     if (![self.fw_innerCollapseConstraints containsObject:constraint]) {
         [self.fw_innerCollapseConstraints addObject:constraint];
     }
@@ -298,7 +309,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_alignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (NSLayoutConstraint *)fw_alignAxis:(NSLayoutAttribute)axis toView:(id)otherView
@@ -388,12 +399,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset
 {
-    return [self fw_pinEdgeToSuperview:edge withInset:inset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdgeToSuperview:edge withInset:inset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView
@@ -403,12 +414,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_pinEdge:edge toEdge:toEdge ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdge:edge toEdge:toEdge ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toAttribute:toEdge ofView:otherView withOffset:offset relation:relation];
+    return [self fw_constrainAttribute:edge toAttribute:toEdge ofView:otherView withOffset:offset relation:relation priority:priority];
 }
 
 #pragma mark - SafeArea
@@ -434,7 +445,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_alignAxisToSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSafeArea
@@ -507,12 +518,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset
 {
-    return [self fw_pinEdgeToSafeArea:edge withInset:inset relation:NSLayoutRelationEqual];
+    return [self fw_pinEdgeToSafeArea:edge withInset:inset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation priority:priority];
 }
 
 #pragma mark - Dimension
@@ -528,22 +539,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size
 {
-    return [self fw_setDimension:dimension toSize:size relation:NSLayoutRelationEqual];
+    return [self fw_setDimension:dimension toSize:size relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension toSize:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil withMultiplier:0.0 offset:size relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:self withMultiplier:multiplier relation:relation];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:self withMultiplier:multiplier relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView
@@ -553,22 +564,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withOffset:offset relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withOffset:offset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_matchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withMultiplier:multiplier relation:relation];
+    return [self fw_constrainAttribute:dimension toAttribute:toDimension ofView:otherView withMultiplier:multiplier relation:relation priority:priority];
 }
 
 #pragma mark - Constrain
@@ -580,48 +591,22 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:1.0 offset:offset relation:relation priority:priority];
 }
 
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
-    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation];
-}
-
-#pragma mark - Offset
-
-- (NSArray<NSLayoutConstraint *> *)fw_setOffset:(CGFloat)offset
-{
-    [self.fw_innerLastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
-        obj.constant = offset;
-    }];
-    return self.fw_innerLastConstraints;
-}
-
-- (NSArray<NSLayoutConstraint *> *)fw_setInset:(CGFloat)inset
-{
-    [self.fw_innerLastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
-        obj.constant = obj.fw_innerOppositeAttribute ? -inset : inset;
-    }];
-    return self.fw_innerLastConstraints;
-}
-
-- (NSArray<NSLayoutConstraint *> *)fw_setPriority:(UILayoutPriority)priority
-{
-    [self.fw_innerLastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
-        obj.priority = priority;
-    }];
-    return self.fw_innerLastConstraints;
+    return [self fw_constrainAttribute:attribute toAttribute:toAttribute ofView:otherView withMultiplier:multiplier offset:0.0 relation:relation priority:priority];
 }
 
 #pragma mark - Constraint
@@ -693,77 +678,50 @@ static BOOL fwStaticAutoScaleLayout = NO;
         }
     }
     
-    // 自动生成唯一约束Key，存在则获取之
-    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
-    return [self.fw_innerLayoutConstraints objectForKey:layoutKey];
+    // 自动生成唯一约束标记，存在则获取之
+    NSString *layoutIdentifier = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
+    return [self fw_constraintWithIdentifier:layoutIdentifier];
 }
 
-- (void)fw_setConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key
+- (NSLayoutConstraint *)fw_constraintWithIdentifier:(NSString *)identifier
 {
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, @selector(fw_constraintForKey:));
-    if (!constraints) {
-        constraints = [NSMutableDictionary dictionary];
-        objc_setAssociatedObject(self, @selector(fw_constraintForKey:), constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    
-    if (constraint) {
-        [constraints setObject:constraint forKey:key];
-    } else {
-        [constraints removeObjectForKey:key];
-    }
-}
-
-- (NSLayoutConstraint *)fw_constraintForKey:(id<NSCopying>)key
-{
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, @selector(fw_constraintForKey:));
-    return constraints ? [constraints objectForKey:key] : nil;
+    if (identifier.length < 1) return nil;
+    __block NSLayoutConstraint *constraint = nil;
+    [self.fw_innerLayoutConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.identifier && [obj.identifier isEqualToString:identifier]) {
+            constraint = obj;
+            *stop = YES;
+        }
+    }];
+    return constraint;
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_lastConstraints
 {
-    return self.fw_innerLastConstraints;
-}
-
-- (NSLayoutConstraint *)fw_lastConstraint
-{
-    return self.fw_innerLastConstraints.lastObject;
+    return self.fw_innerLastConstraints.copy;
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_allConstraints
 {
-    return [self.fw_innerLayoutConstraints allValues];
+    return self.fw_innerLayoutConstraints.copy;
 }
 
-- (void)fw_removeConstraint:(NSLayoutConstraint *)constraint
+- (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints
 {
-    constraint.active = NO;
-    // 移除约束对象
-    [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([obj isEqual:constraint]) {
-            [self.fw_innerLayoutConstraints removeObjectForKey:key];
-            *stop = YES;
-        }
-    }];
-    [self.fw_innerLastConstraints removeObject:constraint];
-}
-
-- (void)fw_removeAllConstraints
-{
-    // 禁用当前所有约束
-    [NSLayoutConstraint deactivateConstraints:self.fw_allConstraints];
-    // 清空约束对象
-    [self.fw_innerLayoutConstraints removeAllObjects];
-    [self.fw_innerLastConstraints removeAllObjects];
+    if (constraints.count < 1) return;
+    [NSLayoutConstraint deactivateConstraints:constraints];
+    [self.fw_innerLayoutConstraints removeObjectsInArray:constraints];
+    [self.fw_innerLastConstraints removeObjectsInArray:constraints];
 }
 
 #pragma mark - Private
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toSuperview:(id)superview withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toSuperview:(id)superview withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
     NSAssert(self.superview, @"View's superview must not be nil.\nView: %@", self);
-    BOOL oppositeAttribute = NO;
+    BOOL isOpposite = NO;
     if (attribute == NSLayoutAttributeBottom || attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeTrailing) {
-        oppositeAttribute = YES;
+        isOpposite = YES;
         offset = -offset;
         if (relation == NSLayoutRelationLessThanOrEqual) {
             relation = NSLayoutRelationGreaterThanOrEqual;
@@ -771,12 +729,12 @@ static BOOL fwStaticAutoScaleLayout = NO;
             relation = NSLayoutRelationLessThanOrEqual;
         }
     }
-    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation];
-    layoutConstraint.fw_innerOppositeAttribute = oppositeAttribute;
+    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation priority:priority];
+    layoutConstraint.fw_isOpposite = isOpposite;
     return layoutConstraint;
 }
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
     NSNumber *scaleValue = objc_getAssociatedObject(self, @selector(fw_autoScale));
     BOOL autoScale = scaleValue ? [scaleValue boolValue] : fwStaticAutoScaleLayout;
@@ -802,25 +760,27 @@ static BOOL fwStaticAutoScaleLayout = NO;
     }
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    // 自动生成唯一约束Key，存在则更新，否则添加
-    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
-    NSLayoutConstraint *constraint = [self.fw_innerLayoutConstraints objectForKey:layoutKey];
+    // 自动生成唯一约束标记，存在则更新，否则添加
+    NSString *layoutIdentifier = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
+    NSLayoutConstraint *constraint = [self fw_constraintWithIdentifier:layoutIdentifier];
     if (constraint) {
-        constraint.constant = offset;
+        if (constraint.constant != offset) constraint.constant = offset;
     } else {
         constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
-        [self.fw_innerLayoutConstraints setObject:constraint forKey:layoutKey];
+        constraint.identifier = layoutIdentifier;
+        [self.fw_innerLayoutConstraints addObject:constraint];
     }
     [self.fw_innerLastConstraints setArray:[NSArray arrayWithObjects:constraint, nil]];
+    if (constraint.priority != priority) constraint.fw_priority = priority;
     constraint.active = YES;
     return constraint;
 }
 
-- (NSMutableDictionary *)fw_innerLayoutConstraints
+- (NSMutableArray<NSLayoutConstraint *> *)fw_innerLayoutConstraints
 {
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, _cmd);
+    NSMutableArray *constraints = objc_getAssociatedObject(self, _cmd);
     if (!constraints) {
-        constraints = [NSMutableDictionary dictionary];
+        constraints = [NSMutableArray array];
         objc_setAssociatedObject(self, _cmd, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return constraints;
@@ -856,7 +816,15 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))remake
 {
     return ^id(void) {
-        [self.view fw_removeAllConstraints];
+        [self.view fw_removeConstraints:self.view.fw_allConstraints];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))autoScale
+{
+    return ^id(BOOL autoScale) {
+        self.view.fw_autoScale = autoScale;
         return self;
     };
 }
@@ -1533,10 +1501,10 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithOffsetAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation, UILayoutPriority))attributeWithOffsetAndRelation
 {
-    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation) {
-        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset relation:relation];
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat offset, NSLayoutRelation relation, UILayoutPriority priority) {
+        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withOffset:offset relation:relation priority:priority];
         return self;
     };
 }
@@ -1549,10 +1517,10 @@ static BOOL fwStaticAutoScaleLayout = NO;
     };
 }
 
-- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation))attributeWithMultiplierAndRelation
+- (FWLayoutChain * (^)(NSLayoutAttribute, NSLayoutAttribute, id, CGFloat, NSLayoutRelation, UILayoutPriority))attributeWithMultiplierAndRelation
 {
-    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
-        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
+    return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation, UILayoutPriority priority) {
+        [self.view fw_constrainAttribute:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation priority:priority];
         return self;
     };
 }
@@ -1562,7 +1530,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))offset
 {
     return ^id(CGFloat offset) {
-        [self.view fw_setOffset:offset];
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.constant = offset;
+        }];
         return self;
     };
 }
@@ -1570,7 +1540,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(CGFloat))inset
 {
     return ^id(CGFloat inset) {
-        [self.view fw_setInset:inset];
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.fw_inset = inset;
+        }];
         return self;
     };
 }
@@ -1578,7 +1550,37 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(UILayoutPriority))priority
 {
     return ^id(UILayoutPriority priority) {
-        [self.view fw_setPriority:priority];
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.fw_priority = priority;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(NSString *))identifier
+{
+    return ^id(NSString *identifier) {
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.identifier = identifier;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))active
+{
+    return ^id(BOOL active) {
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.active = active;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(void))remove
+{
+    return ^id(void) {
+        [self.view fw_removeConstraints:self.view.fw_lastConstraints];
         return self;
     };
 }
@@ -1590,7 +1592,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)constraint
 {
-    return self.view.fw_lastConstraint;
+    return self.view.fw_lastConstraints.lastObject;
 }
 
 - (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSuperview
@@ -1646,6 +1648,13 @@ static BOOL fwStaticAutoScaleLayout = NO;
 {
     return ^id(NSLayoutAttribute attribute, NSLayoutAttribute toAttribute, id ofView, CGFloat multiplier, NSLayoutRelation relation) {
         return [self.view fw_constraint:attribute toAttribute:toAttribute ofView:ofView withMultiplier:multiplier relation:relation];
+    };
+}
+
+- (NSLayoutConstraint * (^)(NSString *))constraintWithIdentifier
+{
+    return ^id(NSString *identifier) {
+        return [self.view fw_constraintWithIdentifier:identifier];
     };
 }
 

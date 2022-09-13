@@ -30,6 +30,7 @@ import Darwin
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
             ["Animation", "TestAnimationController"],
+            ["AutoLayout", "TestLayoutController"],
             ["CollectionLayout", "TestCollectionController"],
             ["TableLayout", "TestTableController"],
             ["Keyboard", "TestKeyboardController"],

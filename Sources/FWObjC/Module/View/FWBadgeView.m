@@ -64,7 +64,7 @@
     self.backgroundColor = [UIColor redColor];
     self.layer.cornerRadius = badgeHeight / 2.0;
     [self fw_setDimension:NSLayoutAttributeHeight toSize:badgeHeight];
-    [self fw_setDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual];
+    [self fw_setDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
     
     _badgeLabel = [[UILabel alloc] init];
     _badgeLabel.textColor = [UIColor whiteColor];
@@ -72,8 +72,8 @@
     _badgeLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_badgeLabel];
     [_badgeLabel fw_alignCenterToSuperview];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual];
+    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
 }
 
 @end

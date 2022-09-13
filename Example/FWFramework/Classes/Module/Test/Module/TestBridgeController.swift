@@ -20,7 +20,7 @@ class TestJavascriptBridge: NSObject {
 
 class TestBridgeController: WebController {
     
-    override func setupWebBridge(_ bridge: WebViewJsBridge) {
+    func setupWebBridge(_ bridge: WebViewJsBridge) {
         WebViewJsBridge.enableLogging()
         
         bridge.setErrorHandler { handlerName, data, responseCallback in
@@ -69,7 +69,7 @@ class TestBridgeController: WebController {
         })
     }
     
-    override func setupSubviews() {
+    func setupSubviews() {
         let font = UIFont.systemFont(ofSize: 12)
         let y = FW.screenHeight - UIScreen.fw.safeAreaInsets.bottom - 45
         
@@ -111,7 +111,7 @@ class TestBridgeController: WebController {
         jumpButton.titleLabel?.font = font
     }
     
-    override func setupLayout() {
+    func setupLayout() {
         requestUrl = ModuleBundle.resourceURL("Bridge.html")?.absoluteString
     }
     
