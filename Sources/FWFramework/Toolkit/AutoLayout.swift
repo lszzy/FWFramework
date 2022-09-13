@@ -437,51 +437,20 @@ extension Wrapper where Base: UIView {
         return base.__fw_constraint(attribute, to: toAttribute, ofView: ofView, withMultiplier: multiplier, relation: relation)
     }
     
-    /// 设置约束保存键名，方便更新约束常量
-    /// - Parameters:
-    ///   - constraint: 布局约束
-    ///   - forKey: 保存key
-    public func setConstraint(_ constraint: NSLayoutConstraint?, forKey: NSCopying) {
-        base.__fw_setConstraint(constraint, forKey: forKey)
-    }
-
-    /// 获取键名对应约束
-    /// - Parameter forKey: 保存key
-    /// - Returns: 布局约束
-    public func constraint(forKey: NSCopying) -> NSLayoutConstraint? {
-        return base.__fw_constraint(forKey: forKey)
-    }
-    
     /// 最近一批添加或更新的布局约束
     public var lastConstraints: [NSLayoutConstraint] {
         return base.__fw_lastConstraints
     }
     
-    /// 最近一条添加或更新的布局约束
-    public var lastConstraint: NSLayoutConstraint? {
-        return base.__fw_lastConstraint
-    }
-    
-    /// 获取当前所有约束，不包含Key
+    /// 获取当前所有约束
     public var allConstraints: [NSLayoutConstraint] {
         return base.__fw_allConstraints
     }
-
-    /// 移除当前指定约束，不包含Key
-    /// - Parameter constraint: 布局约束
-    public func removeConstraint(_ constraint: NSLayoutConstraint) {
-        base.__fw_removeConstraint(constraint)
-    }
     
-    /// 移除当前指定约束数组，不包含Key
+    /// 移除当前指定约束数组
     /// - Parameter constraints: 布局约束数组
-    public func removeConstraints(_ constraints: [NSLayoutConstraint]) {
+    public func removeConstraints(_ constraints: [NSLayoutConstraint]?) {
         base.__fw_removeConstraints(constraints)
-    }
-
-    /// 移除当前所有约束，不包含Key
-    public func removeAllConstraints() {
-        base.__fw_removeAllConstraints()
     }
     
 }
@@ -509,7 +478,7 @@ public class LayoutChain {
     // MARK: - Install
     @discardableResult
     public func remake() -> Self {
-        view?.__fw_removeAllConstraints()
+        view?.__fw_removeConstraints(view?.__fw_allConstraints)
         return self
     }
     
@@ -999,9 +968,7 @@ public class LayoutChain {
     
     @discardableResult
     public func remove() -> Self {
-        if let constraints = self.view?.__fw_lastConstraints, !constraints.isEmpty {
-            self.view?.__fw_removeConstraints(constraints)
-        }
+        self.view?.__fw_removeConstraints(self.view?.__fw_lastConstraints)
         return self
     }
     
@@ -1011,7 +978,7 @@ public class LayoutChain {
     }
     
     public var constraint: NSLayoutConstraint? {
-        return self.view?.__fw_lastConstraint
+        return self.view?.__fw_lastConstraints.last
     }
     
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {

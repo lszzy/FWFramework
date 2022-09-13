@@ -709,35 +709,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return [self.fw_innerLayoutConstraints objectForKey:layoutKey];
 }
 
-- (void)fw_setConstraint:(NSLayoutConstraint *)constraint forKey:(id<NSCopying>)key
-{
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, @selector(fw_constraintForKey:));
-    if (!constraints) {
-        constraints = [NSMutableDictionary dictionary];
-        objc_setAssociatedObject(self, @selector(fw_constraintForKey:), constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    
-    if (constraint) {
-        [constraints setObject:constraint forKey:key];
-    } else {
-        [constraints removeObjectForKey:key];
-    }
-}
-
-- (NSLayoutConstraint *)fw_constraintForKey:(id<NSCopying>)key
-{
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, @selector(fw_constraintForKey:));
-    return constraints ? [constraints objectForKey:key] : nil;
-}
-
 - (NSArray<NSLayoutConstraint *> *)fw_lastConstraints
 {
     return self.fw_innerLastConstraints;
-}
-
-- (NSLayoutConstraint *)fw_lastConstraint
-{
-    return self.fw_innerLastConstraints.lastObject;
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_allConstraints
@@ -745,20 +719,9 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return [self.fw_innerLayoutConstraints allValues];
 }
 
-- (void)fw_removeConstraint:(NSLayoutConstraint *)constraint
-{
-    constraint.active = NO;
-    [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([obj isEqual:constraint]) {
-            [self.fw_innerLayoutConstraints removeObjectForKey:key];
-            *stop = YES;
-        }
-    }];
-    [self.fw_innerLastConstraints removeObject:constraint];
-}
-
 - (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints
 {
+    if (constraints.count < 1) return;
     [NSLayoutConstraint deactivateConstraints:constraints];
     [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if ([constraints containsObject:obj]) {
@@ -766,13 +729,6 @@ static BOOL fwStaticAutoScaleLayout = NO;
         }
     }];
     [self.fw_innerLastConstraints removeObjectsInArray:constraints];
-}
-
-- (void)fw_removeAllConstraints
-{
-    [NSLayoutConstraint deactivateConstraints:self.fw_allConstraints];
-    [self.fw_innerLayoutConstraints removeAllObjects];
-    [self.fw_innerLastConstraints removeAllObjects];
 }
 
 #pragma mark - Private
@@ -877,7 +833,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))remake
 {
     return ^id(void) {
-        [self.view fw_removeAllConstraints];
+        [self.view fw_removeConstraints:self.view.fw_allConstraints];
         return self;
     };
 }
@@ -1631,10 +1587,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 - (FWLayoutChain * (^)(void))remove
 {
     return ^id(void) {
-        NSArray *constraints = self.view.fw_lastConstraints;
-        if (constraints.count > 0) {
-            [self.view fw_removeConstraints:constraints];
-        }
+        [self.view fw_removeConstraints:self.view.fw_lastConstraints];
         return self;
     };
 }
@@ -1646,7 +1599,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)constraint
 {
-    return self.view.fw_lastConstraint;
+    return self.view.fw_lastConstraints.lastObject;
 }
 
 - (NSLayoutConstraint * (^)(NSLayoutAttribute))constraintToSuperview
