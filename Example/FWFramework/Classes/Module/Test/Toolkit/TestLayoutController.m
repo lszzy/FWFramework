@@ -29,8 +29,7 @@
         .leftWithInset(20)
         .size(CGSizeMake(100, 100))
         .width(50)
-        .height(50)
-        .priority(UILayoutPriorityDefaultHigh);
+        .height(50);
     
     UILabel *label = [[UILabel alloc] init];
     label.text = @"text";
@@ -63,7 +62,7 @@
         .attribute(NSLayoutAttributeWidth, NSLayoutAttributeWidth, view)
         .heightToWidth(1.0)
         .centerYToView(view)
-        .attributeWithOffset(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20);
+        .attributeWithOffsetAndRelation(NSLayoutAttributeLeft, NSLayoutAttributeRight, button, 20, NSLayoutRelationEqual, UILayoutPriorityDefaultHigh);
     
     CGFloat lineHeight = ceil(FWFontRegular(16).lineHeight);
     NSString *moreText = @"点击展开";
