@@ -14,14 +14,14 @@
 
 @implementation NSLayoutConstraint (FWAutoLayout)
 
-- (CGFloat)fw_innerOriginalConstant
+- (CGFloat)fw_originalConstant
 {
     return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
-- (void)setFw_innerOriginalConstant:(CGFloat)originalConstant
+- (void)setFw_originalConstant:(CGFloat)originalConstant
 {
-    objc_setAssociatedObject(self, @selector(fw_innerOriginalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_originalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fw_isOpposite
@@ -252,7 +252,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
         if (collapsed) {
             constraint.constant = 0;
         } else {
-            constraint.constant = constraint.fw_innerOriginalConstant;
+            constraint.constant = constraint.fw_originalConstant;
         }
     }];
     
@@ -281,7 +281,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (void)fw_addCollapseConstraint:(NSLayoutConstraint *)constraint
 {
-    constraint.fw_innerOriginalConstant = constraint.constant;
+    constraint.fw_originalConstant = constraint.constant;
     if (![self.fw_innerCollapseConstraints containsObject:constraint]) {
         [self.fw_innerCollapseConstraints addObject:constraint];
     }
@@ -689,35 +689,39 @@ static BOOL fwStaticAutoScaleLayout = NO;
         }
     }
     
-    // 自动生成唯一约束Key，存在则获取之
-    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
-    return [self.fw_innerLayoutConstraints objectForKey:layoutKey];
+    // 自动生成唯一约束标记，存在则获取之
+    NSString *layoutIdentifier = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
+    return [self fw_constraintWithIdentifier:layoutIdentifier];
 }
 
 - (NSLayoutConstraint *)fw_constraintWithIdentifier:(NSString *)identifier
 {
-    return [self.fw_innerLayoutConstraints objectForKey:identifier];
+    if (identifier.length < 1) return nil;
+    __block NSLayoutConstraint *constraint = nil;
+    [self.fw_innerLayoutConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+        if (obj.identifier && [obj.identifier isEqualToString:identifier]) {
+            constraint = obj;
+            *stop = YES;
+        }
+    }];
+    return constraint;
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_lastConstraints
 {
-    return self.fw_innerLastConstraints;
+    return self.fw_innerLastConstraints.copy;
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_allConstraints
 {
-    return [self.fw_innerLayoutConstraints allValues];
+    return self.fw_innerLayoutConstraints.copy;
 }
 
 - (void)fw_removeConstraints:(NSArray<NSLayoutConstraint *> *)constraints
 {
     if (constraints.count < 1) return;
     [NSLayoutConstraint deactivateConstraints:constraints];
-    [self.fw_innerLayoutConstraints enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([constraints containsObject:obj]) {
-            [self.fw_innerLayoutConstraints removeObjectForKey:key];
-        }
-    }];
+    [self.fw_innerLayoutConstraints removeObjectsInArray:constraints];
     [self.fw_innerLastConstraints removeObjectsInArray:constraints];
 }
 
@@ -767,14 +771,15 @@ static BOOL fwStaticAutoScaleLayout = NO;
     }
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    // 自动生成唯一约束Key，存在则更新，否则添加
-    NSString *layoutKey = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
-    NSLayoutConstraint *constraint = [self.fw_innerLayoutConstraints objectForKey:layoutKey];
+    // 自动生成唯一约束标记，存在则更新，否则添加
+    NSString *layoutIdentifier = [NSString stringWithFormat:@"%ld-%ld-%lu-%ld-%@", (long)attribute, (long)relation, (unsigned long)[otherView hash], (long)toAttribute, @(multiplier)];
+    NSLayoutConstraint *constraint = [self fw_constraintWithIdentifier:layoutIdentifier];
     if (constraint) {
         constraint.constant = offset;
     } else {
         constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
-        [self.fw_innerLayoutConstraints setObject:constraint forKey:layoutKey];
+        constraint.identifier = layoutIdentifier;
+        [self.fw_innerLayoutConstraints addObject:constraint];
     }
     [self.fw_innerLastConstraints setArray:[NSArray arrayWithObjects:constraint, nil]];
     if (self.fw_autoActive) {
@@ -783,11 +788,11 @@ static BOOL fwStaticAutoScaleLayout = NO;
     return constraint;
 }
 
-- (NSMutableDictionary *)fw_innerLayoutConstraints
+- (NSMutableArray<NSLayoutConstraint *> *)fw_innerLayoutConstraints
 {
-    NSMutableDictionary *constraints = objc_getAssociatedObject(self, _cmd);
+    NSMutableArray *constraints = objc_getAssociatedObject(self, _cmd);
     if (!constraints) {
-        constraints = [NSMutableDictionary dictionary];
+        constraints = [NSMutableArray array];
         objc_setAssociatedObject(self, _cmd, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return constraints;
