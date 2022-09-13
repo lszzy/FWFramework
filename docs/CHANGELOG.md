@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.1.0] - 2022-09-13
+
+### Changed
+* Refactor AutoLayout to support priority parameter
+* Added WebView to allow opening SchemeURL configuration
+* Added List lookup UICollectionView method
+* Compatible with Xcode14, compatible with iOS16
+
 ## [4.0.2] - 2022-09-07
 
 ### Added

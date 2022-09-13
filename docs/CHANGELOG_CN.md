@@ -1,5 +1,13 @@
 # 更新日志
 
+## [4.1.0] - 2022-09-13
+
+### Changed
+* 重构AutoLayout支持priority参数
+* 新增WebView允许打开SchemeURL配置
+* 新增List查找UICollectionView方法
+* 兼容Xcode14，兼容iOS16
+
 ## [4.0.2] - 2022-09-07
 
 ### Added

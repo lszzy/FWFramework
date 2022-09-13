@@ -155,6 +155,14 @@
     return NO;
 }
 
++ (BOOL)fw_isSchemeURL:(id)url
+{
+    NSURL *nsurl = [self fw_urlWithString:url];
+    if (nsurl.scheme.length < 1) return NO;
+    if (nsurl.isFileURL || [self fw_isHttpURL:url]) return NO;
+    return YES;
+}
+
 + (BOOL)fw_isHttpURL:(id)url
 {
     NSString *urlString = [url isKindOfClass:[NSURL class]] ? [(NSURL *)url absoluteString] : url;

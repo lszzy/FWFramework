@@ -309,9 +309,7 @@ public enum VideoPlayerBufferingState: Int {
         self.setupPlayerItem(nil)
 
         self.removePlayerObservers()
-        self.playerDelegate = nil
         self.removeApplicationObservers()
-        self.playbackDelegate = nil
         self.removePlayerLayerObservers()
 
         self.playerView.player = nil
@@ -757,6 +755,7 @@ public enum VideoPlayerBufferingState: Int {
     }
 
     internal func removePlayerLayerObservers() {
+        self.playbackDelegate = nil
         self.playerLayerObserver?.invalidate()
         self.playerLayerObserver = nil
     }
@@ -793,6 +792,7 @@ public enum VideoPlayerBufferingState: Int {
             observer.invalidate()
         }
         self.playerObservers.removeAll()
+        self.playerDelegate = nil
     }
 
     // MARK: - queues

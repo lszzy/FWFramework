@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.0.2 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.1.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -85,6 +85,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSFileManager%28FWFoundation%29.html">NSFileManager(FWFoundation)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/NSLayoutConstraint%28FWAutoLayout%29.html">NSLayoutConstraint(FWAutoLayout)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/NSMutableArray%28FWSafeType%29.html">NSMutableArray(FWSafeType)</a>
@@ -24467,33 +24470,6 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10autoLayoutSbvp"></a>
-                    <a name="//apple_ref/swift/Property/autoLayout" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10autoLayoutSbvp">autoLayout</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>是否启用自动布局</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">autoLayout</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18autoLayoutSubviewsyyF"></a>
                     <a name="//apple_ref/swift/Method/autoLayoutSubviews()" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18autoLayoutSubviewsyyF">autoLayoutSubviews()</a>
@@ -25328,9 +25304,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relationSo18NSLayoutConstraintCSo0J9AttributeV_12CoreGraphics7CGFloatVSo0J8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(toSuperview:inset:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relationSo18NSLayoutConstraintCSo0J9AttributeV_12CoreGraphics7CGFloatVSo0J8RelationVtF">pinEdge(toSuperview:<wbr>inset:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8prioritySo18NSLayoutConstraintCSo0K9AttributeV_12CoreGraphics7CGFloatVSo0K8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(toSuperview:inset:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8prioritySo18NSLayoutConstraintCSo0K9AttributeV_12CoreGraphics7CGFloatVSo0K8RelationVSo16UILayoutPriorityatF">pinEdge(toSuperview:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25346,7 +25322,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25390,6 +25366,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -25403,9 +25391,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(_:toEdge:ofView:offset:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF">pinEdge(_:<wbr>toEdge:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(_:toEdge:ofView:offset:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">pinEdge(_:<wbr>toEdge:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25421,7 +25409,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">_</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">_</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25486,6 +25474,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                               <td>
                                 <div>
                                   <p>约束关系，默认相等</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
                                 </div>
                               </td>
                             </tr>
@@ -25845,9 +25845,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relationSo18NSLayoutConstraintCSo0K9AttributeV_12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(toSafeArea:inset:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relationSo18NSLayoutConstraintCSo0K9AttributeV_12CoreGraphics7CGFloatVSo0K8RelationVtF">pinEdge(toSafeArea:<wbr>inset:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(toSafeArea:inset:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">pinEdge(toSafeArea:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25863,7 +25863,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25904,6 +25904,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                               <td>
                                 <div>
                                   <p>约束关系，默认相等</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required<br></p>
                                 </div>
                               </td>
                             </tr>
@@ -25984,9 +25996,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relationSo18NSLayoutConstraintCSo0H9AttributeV_12CoreGraphics7CGFloatVSo0H8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/setDimension(_:size:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relationSo18NSLayoutConstraintCSo0H9AttributeV_12CoreGraphics7CGFloatVSo0H8RelationVtF">setDimension(_:<wbr>size:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8prioritySo18NSLayoutConstraintCSo0I9AttributeV_12CoreGraphics7CGFloatVSo0I8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/setDimension(_:size:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8prioritySo18NSLayoutConstraintCSo0I9AttributeV_12CoreGraphics7CGFloatVSo0I8RelationVSo16UILayoutPriorityatF">setDimension(_:<wbr>size:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26002,7 +26014,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26046,6 +26058,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -26059,9 +26083,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relationSo18NSLayoutConstraintCSo0I9AttributeV_AM12CoreGraphics7CGFloatVSo0I8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:multiplier:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relationSo18NSLayoutConstraintCSo0I9AttributeV_AM12CoreGraphics7CGFloatVSo0I8RelationVtF">matchDimension(_:<wbr>toDimension:<wbr>multiplier:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8prioritySo18NSLayoutConstraintCSo0J9AttributeV_AN12CoreGraphics7CGFloatVSo0J8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:multiplier:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8prioritySo18NSLayoutConstraintCSo0J9AttributeV_AN12CoreGraphics7CGFloatVSo0J8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26077,7 +26101,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26133,6 +26157,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -26146,9 +26182,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:offset:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:offset:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26164,7 +26200,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26232,6 +26268,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -26245,9 +26293,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:multiplier:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relationSo18NSLayoutConstraintCSo0K9AttributeV_ANyp12CoreGraphics7CGFloatVSo0K8RelationVtF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:multiplier:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26263,7 +26311,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26331,6 +26379,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -26357,9 +26417,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0kE0V_ANypSg12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:offset:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relationSo18NSLayoutConstraintCSo0kE0V_ANypSg12CoreGraphics7CGFloatVSo0K8RelationVtF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:offset:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26375,7 +26435,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26443,6 +26503,18 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -26456,9 +26528,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier8relationSo18NSLayoutConstraintCSo0kE0V_ANypSg12CoreGraphics7CGFloatVSo0K8RelationVtF"></a>
-                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:multiplier:relation:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier8relationSo18NSLayoutConstraintCSo0kE0V_ANypSg12CoreGraphics7CGFloatVSo0K8RelationVtF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
+                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:multiplier:relation:priority:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg12CoreGraphics7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26474,7 +26546,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -26542,109 +26614,24 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>priority</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div>
                         <h4>Return Value</h4>
                         <p>布局约束</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Offset"></a>
-                <a name="//apple_ref/swift/Section/Offset" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Offset"></a>
-                  <h3 class="section-name"><span>Offset</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9setOffsetySaySo18NSLayoutConstraintCG12CoreGraphics7CGFloatVF"></a>
-                    <a name="//apple_ref/swift/Method/setOffset(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9setOffsetySaySo18NSLayoutConstraintCG12CoreGraphics7CGFloatVF">setOffset(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束偏移值</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setOffset</span><span class="p">(</span><span class="n">_</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8setInsetySaySo18NSLayoutConstraintCG12CoreGraphics7CGFloatVF"></a>
-                    <a name="//apple_ref/swift/Method/setInset(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8setInsetySaySo18NSLayoutConstraintCG12CoreGraphics7CGFloatVF">setInset(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束内间距值</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setInset</span><span class="p">(</span><span class="n">_</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11setPriorityySaySo18NSLayoutConstraintCGSo08UILayoutE0aF"></a>
-                    <a name="//apple_ref/swift/Method/setPriority(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11setPriorityySaySo18NSLayoutConstraintCGSo08UILayoutE0aF">setPriority(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>修改最近一批添加或更新的布局约束优先级</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setPriority</span><span class="p">(</span><span class="n">_</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
-
-                        </div>
                       </div>
                     </section>
                   </div>
@@ -26973,9 +26960,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setConstraint_6forKeyySo08NSLayoutE0CSg_So9NSCopying_ptF"></a>
-                    <a name="//apple_ref/swift/Method/setConstraint(_:forKey:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setConstraint_6forKeyySo08NSLayoutE0CSg_So9NSCopying_ptF">setConstraint(_:<wbr>forKey:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10constraint10identifierSo18NSLayoutConstraintCSgSSSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/constraint(identifier:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10constraint10identifierSo18NSLayoutConstraintCSgSSSg_tF">constraint(identifier:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26983,14 +26970,14 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置约束保存键名，方便更新约束常量</p>
+                        <p>根据唯一标志获取布局约束</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setConstraint</span><span class="p">(</span><span class="n">_</span> <span class="nv">constraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="p">?,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="kt">NSCopying</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constraint</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -27001,70 +26988,12 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                             <tr>
                               <td>
                                 <code>
-                                <em>constraint</em>
+                                <em>identifier</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>布局约束</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>forKey</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>保存key</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10constraint6forKeySo18NSLayoutConstraintCSgSo9NSCopying_p_tF"></a>
-                    <a name="//apple_ref/swift/Method/constraint(forKey:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10constraint6forKeySo18NSLayoutConstraintCSgSo9NSCopying_p_tF">constraint(forKey:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取键名对应约束</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constraint</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="kt">NSCopying</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>forKey</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>保存key</p>
+                                  <p>唯一标志</p>
                                 </div>
                               </td>
                             </tr>
@@ -27108,33 +27037,6 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14lastConstraintSo08NSLayoutE0CSgvp"></a>
-                    <a name="//apple_ref/swift/Property/lastConstraint" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14lastConstraintSo08NSLayoutE0CSgvp">lastConstraint</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>最近一条添加或更新的布局约束</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">lastConstraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14allConstraintsSaySo18NSLayoutConstraintCGvp"></a>
                     <a name="//apple_ref/swift/Property/allConstraints" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14allConstraintsSaySo18NSLayoutConstraintCGvp">allConstraints</a>
@@ -27145,7 +27047,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取当前所有约束，不包含Key</p>
+                        <p>获取当前所有约束</p>
 
                       </div>
                       <div class="declaration">
@@ -27162,9 +27064,9 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16removeConstraintyySo08NSLayoutE0CF"></a>
-                    <a name="//apple_ref/swift/Method/removeConstraint(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16removeConstraintyySo08NSLayoutE0CF">removeConstraint(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE17removeConstraintsyySaySo18NSLayoutConstraintCGSgF"></a>
+                    <a name="//apple_ref/swift/Method/removeConstraints(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE17removeConstraintsyySaySo18NSLayoutConstraintCGSgF">removeConstraints(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -27172,14 +27074,14 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>移除当前指定约束，不包含Key</p>
+                        <p>移除当前指定约束数组</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeConstraint</span><span class="p">(</span><span class="n">_</span> <span class="nv">constraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeConstraints</span><span class="p">(</span><span class="n">_</span> <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]?)</span></code></pre>
 
                         </div>
                       </div>
@@ -27190,12 +27092,12 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                             <tr>
                               <td>
                                 <code>
-                                <em>constraint</em>
+                                <em>constraints</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>布局约束</p>
+                                  <p>布局约束数组</p>
                                 </div>
                               </td>
                             </tr>
@@ -27205,12 +27107,25 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Available%20where%20%60Base%60%3A%20%60NSLayoutConstraint%60"></a>
+                <a name="//apple_ref/swift/Section/Available where `Base`: `NSLayoutConstraint`" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60NSLayoutConstraint%60"></a>
+                  <h3 class="section-name"><span>Available where <code>Base</code>: <code>NSLayoutConstraint</code></span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20removeAllConstraintsyyF"></a>
-                    <a name="//apple_ref/swift/Method/removeAllConstraints()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20removeAllConstraintsyyF">removeAllConstraints()</a>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE10isOppositeSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isOpposite" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE10isOppositeSbvp">isOpposite</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -27218,14 +27133,68 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>移除当前所有约束，不包含Key</p>
+                        <p>标记是否是相反的约束，一般相对于父视图</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeAllConstraints</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isOpposite</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE5inset12CoreGraphics7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/inset" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE5inset12CoreGraphics7CGFloatVvp">inset</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置内间距值，如果是相反的约束，会自动取反</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE8prioritySo16UILayoutPriorityavp"></a>
+                    <a name="//apple_ref/swift/Property/priority" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE8prioritySo16UILayoutPriorityavp">priority</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全修改优先级，防止iOS13以下已激活约束修改Required崩溃</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -39722,6 +39691,33 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11isSchemeURLySbypFZ"></a>
+                    <a name="//apple_ref/swift/Method/isSchemeURL(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11isSchemeURLySbypFZ">isSchemeURL(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isSchemeURL</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE9isHttpURLySbypFZ"></a>
                     <a name="//apple_ref/swift/Method/isHttpURL(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE9isHttpURLySbypFZ">isHttpURL(_:<wbr>)</a>
@@ -47610,7 +47606,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-07)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

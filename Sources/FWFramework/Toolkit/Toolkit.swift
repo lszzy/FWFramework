@@ -123,6 +123,11 @@ extension Wrapper where Base: UIApplication {
     public static func isSystemURL(_ url: Any) -> Bool {
         return Base.__fw_isSystemURL(url)
     }
+    
+    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
+    public static func isSchemeURL(_ url: Any) -> Bool {
+        return Base.__fw_isSchemeURL(url)
+    }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
     public static func isHttpURL(_ url: Any) -> Bool {

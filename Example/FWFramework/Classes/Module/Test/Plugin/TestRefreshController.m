@@ -74,7 +74,7 @@
         self.myImageView = imageView;
         [self.contentView addSubview:imageView]; {
             [imageView fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:15];
-            [imageView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:15 relation:NSLayoutRelationGreaterThanOrEqual];
+            [imageView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:15 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
             [imageView fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:15];
             NSLayoutConstraint *constraint = [imageView fw_pinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:textLabel withOffset:10];
             [imageView fw_addCollapseConstraint:constraint];

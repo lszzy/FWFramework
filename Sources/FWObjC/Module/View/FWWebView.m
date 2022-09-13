@@ -50,6 +50,13 @@
         return;
     }
     
+    if (((FWWebView *)webView).allowsSchemeURL &&
+        [UIApplication fw_isSchemeURL:navigationAction.request.URL]) {
+        [UIApplication fw_openURL:navigationAction.request.URL];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+    
     if ([webView isKindOfClass:[FWWebView class]] &&
         ((FWWebView *)webView).allowsUniversalLinks &&
         [navigationAction.request.URL.scheme isEqualToString:@"https"]) {
