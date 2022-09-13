@@ -309,7 +309,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_alignAxisToSuperview:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:axis toSuperview:self.superview withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (NSLayoutConstraint *)fw_alignAxis:(NSLayoutAttribute)axis toView:(id)otherView
@@ -404,7 +404,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview withOffset:inset relation:relation priority:UILayoutPriorityRequired];
 }
 
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView
@@ -445,7 +445,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_alignAxisToSafeArea:(NSLayoutAttribute)axis withOffset:(CGFloat)offset
 {
-    return [self fw_constrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual];
+    return [self fw_constrainAttribute:axis toSuperview:self.superview.safeAreaLayoutGuide withOffset:offset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSafeArea
@@ -523,7 +523,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 - (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge withInset:(CGFloat)inset relation:(NSLayoutRelation)relation
 {
-    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation];
+    return [self fw_constrainAttribute:edge toSuperview:self.superview.safeAreaLayoutGuide withOffset:inset relation:relation priority:UILayoutPriorityRequired];
 }
 
 #pragma mark - Dimension
@@ -716,7 +716,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
 
 #pragma mark - Private
 
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toSuperview:(id)superview withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toSuperview:(id)superview withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority
 {
     NSAssert(self.superview, @"View's superview must not be nil.\nView: %@", self);
     BOOL isOpposite = NO;
@@ -729,7 +729,7 @@ static BOOL fwStaticAutoScaleLayout = NO;
             relation = NSLayoutRelationLessThanOrEqual;
         }
     }
-    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation priority:UILayoutPriorityRequired];
+    NSLayoutConstraint *layoutConstraint = [self fw_constrainAttribute:attribute toAttribute:attribute ofView:superview withMultiplier:1.0 offset:offset relation:relation priority:priority];
     layoutConstraint.fw_isOpposite = isOpposite;
     return layoutConstraint;
 }

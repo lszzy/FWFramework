@@ -558,20 +558,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation NS_REFINED_FOR_SWIFT;
 
-/**
- 与指定视图属性指定比例，指定关系
- 
- @param attribute 指定属性
- @param toAttribute 目标视图属性
- @param otherView 目标视图
- @param multiplier 指定比例
- @param offset 偏移距离
- @param relation 约束关系
- @param priority 约束优先级
- @return 布局约束
- */
-- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView withMultiplier:(CGFloat)multiplier offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-
 #pragma mark - Constraint
 
 /**
