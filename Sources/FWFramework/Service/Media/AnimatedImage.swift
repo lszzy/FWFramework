@@ -49,17 +49,17 @@ extension Wrapper where Base == Data {
     }
 
     /// UTType转化为图片格式，未知格式返回FWImageFormatUndefined
-    public static func imageFormat(form utType: CFString) -> ImageFormat {
+    public static func imageFormat(from utType: CFString) -> ImageFormat {
         return NSData.__fw_imageFormat(fromUTType: utType)
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
-    public static func mimeType(form imageFormat: ImageFormat) -> String {
+    public static func mimeType(from imageFormat: ImageFormat) -> String {
         return NSData.__fw_mimeType(fromImageFormat: imageFormat)
     }
     
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    public static func mimeType(form ext: String) -> String {
+    public static func mimeType(from ext: String) -> String {
         return NSData.__fw_mimeType(fromExtension: ext)
     }
 
