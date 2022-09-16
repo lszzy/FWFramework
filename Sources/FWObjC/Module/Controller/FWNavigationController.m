@@ -323,6 +323,7 @@
                 return FWSwizzleOriginal(viewController, animated);
             }
             
+            if (viewController && [selfObject.viewControllers containsObject:viewController]) return;
             if (!selfObject.fw_transitionContextToViewController || !disappearingViewController.fw_transitionNavigationBar) {
                 [disappearingViewController fw_addTransitionNavigationBarIfNeeded];
             }
