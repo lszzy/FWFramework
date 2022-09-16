@@ -10,6 +10,7 @@
 		2F06D15728D31E52007E53EC /* TestToastController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15628D31E52007E53EC /* TestToastController.swift */; };
 		2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15828D44934007E53EC /* TestPickerController.swift */; };
 		2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15A28D451E8007E53EC /* TestPreviewController.swift */; };
+		2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15C28D46F81007E53EC /* TestPluginController.swift */; };
 		2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411928B5E2E7003719E7 /* AppIcon.swift */; };
 		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
 		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
@@ -21,7 +22,6 @@
 		2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414828B70BEC003719E7 /* TestAudioController.swift */; };
 		2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414A28B70E60003719E7 /* TestVideoController.swift */; };
 		2F6A415D28B71E12003719E7 /* TestCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415C28B71E12003719E7 /* TestCameraController.swift */; };
-		2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415F28B71F67003719E7 /* TestPluginController.m */; };
 		2F6A416828B721C9003719E7 /* Animation.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416228B721C9003719E7 /* Animation.png */; };
 		2F6A416928B721C9003719E7 /* Qrcode.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416328B721C9003719E7 /* Qrcode.caf */; };
 		2F6A416A28B721C9003719E7 /* Loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416428B721C9003719E7 /* Loading.gif */; };
@@ -98,6 +98,7 @@
 		2F06D15628D31E52007E53EC /* TestToastController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToastController.swift; sourceTree = "<group>"; };
 		2F06D15828D44934007E53EC /* TestPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPickerController.swift; sourceTree = "<group>"; };
 		2F06D15A28D451E8007E53EC /* TestPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPreviewController.swift; sourceTree = "<group>"; };
+		2F06D15C28D46F81007E53EC /* TestPluginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPluginController.swift; sourceTree = "<group>"; };
 		2F6A411928B5E2E7003719E7 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
@@ -110,8 +111,6 @@
 		2F6A414828B70BEC003719E7 /* TestAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAudioController.swift; sourceTree = "<group>"; };
 		2F6A414A28B70E60003719E7 /* TestVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVideoController.swift; sourceTree = "<group>"; };
 		2F6A415C28B71E12003719E7 /* TestCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCameraController.swift; sourceTree = "<group>"; };
-		2F6A415E28B71F67003719E7 /* TestPluginController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPluginController.h; sourceTree = "<group>"; };
-		2F6A415F28B71F67003719E7 /* TestPluginController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPluginController.m; sourceTree = "<group>"; };
 		2F6A416228B721C9003719E7 /* Animation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Animation.png; sourceTree = "<group>"; };
 		2F6A416328B721C9003719E7 /* Qrcode.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Qrcode.caf; sourceTree = "<group>"; };
 		2F6A416428B721C9003719E7 /* Loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Loading.gif; sourceTree = "<group>"; };
@@ -364,8 +363,7 @@
 				2FDA142028D30F3600985FBD /* TestImageController.swift */,
 				2F06D15828D44934007E53EC /* TestPickerController.swift */,
 				2F06D15A28D451E8007E53EC /* TestPreviewController.swift */,
-				2F6A415E28B71F67003719E7 /* TestPluginController.h */,
-				2F6A415F28B71F67003719E7 /* TestPluginController.m */,
+				2F06D15C28D46F81007E53EC /* TestPluginController.swift */,
 				2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */,
 				2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */,
 				2F6A415C28B71E12003719E7 /* TestCameraController.swift */,
@@ -851,7 +849,6 @@
 				2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */,
 				2F6A418028B7424B003719E7 /* TestAdaptiveController.m in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
-				2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */,
 				2F6A418C28B74DF9003719E7 /* TestThreadController.m in Sources */,
 				2F6A419E28B75D64003719E7 /* TestGridController.m in Sources */,
 				2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */,
@@ -875,6 +872,7 @@
 				2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */,
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
 				2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */,
+				2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */,
 				2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
