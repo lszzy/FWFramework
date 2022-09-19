@@ -802,7 +802,7 @@ static char UIScrollViewFWPullRefreshView;
         
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
         if (self.scrollView.fw_pullRefreshView.isActive ||
-            (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) < 0) {
+            (contentOffset.y + ceil(self.scrollView.adjustedContentInset.top) - self.scrollView.contentInset.top) < 0) {
             if (self.state != FWInfiniteScrollStateIdle) {
                 self.state = FWInfiniteScrollStateIdle;
             }
