@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F06D15728D31E52007E53EC /* TestToastController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15628D31E52007E53EC /* TestToastController.swift */; };
+		2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15828D44934007E53EC /* TestPickerController.swift */; };
+		2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15A28D451E8007E53EC /* TestPreviewController.swift */; };
+		2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15C28D46F81007E53EC /* TestPluginController.swift */; };
+		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
+		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
+		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
 		2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411928B5E2E7003719E7 /* AppIcon.swift */; };
 		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
 		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
@@ -15,16 +22,9 @@
 		2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412A28B62711003719E7 /* TestSwiftController.swift */; };
 		2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412C28B64774003719E7 /* TestIconController.swift */; };
 		2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */; };
-		2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A413728B674C3003719E7 /* TestThemeController.m */; };
-		2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414328B68C74003719E7 /* TestAlertController.m */; };
-		2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414628B690E6003719E7 /* TestEmptyController.m */; };
 		2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414828B70BEC003719E7 /* TestAudioController.swift */; };
 		2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A414A28B70E60003719E7 /* TestVideoController.swift */; };
-		2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415028B712DC003719E7 /* TestPickerController.m */; };
-		2F6A415428B7166B003719E7 /* TestPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415328B7166B003719E7 /* TestPreviewController.m */; };
-		2F6A415B28B71CDF003719E7 /* TestToastController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415A28B71CDF003719E7 /* TestToastController.m */; };
 		2F6A415D28B71E12003719E7 /* TestCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415C28B71E12003719E7 /* TestCameraController.swift */; };
-		2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A415F28B71F67003719E7 /* TestPluginController.m */; };
 		2F6A416828B721C9003719E7 /* Animation.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416228B721C9003719E7 /* Animation.png */; };
 		2F6A416928B721C9003719E7 /* Qrcode.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416328B721C9003719E7 /* Qrcode.caf */; };
 		2F6A416A28B721C9003719E7 /* Loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416428B721C9003719E7 /* Loading.gif */; };
@@ -34,13 +34,10 @@
 		2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417228B724DD003719E7 /* TestToolbarController.m */; };
 		2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417428B72F7B003719E7 /* TestTabbarController.swift */; };
 		2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417628B7319A003719E7 /* TestPromiseController.swift */; };
-		2F6A418028B7424B003719E7 /* TestAdaptiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417F28B7424B003719E7 /* TestAdaptiveController.m */; };
-		2F6A418328B7446D003719E7 /* TestImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418228B7446D003719E7 /* TestImageController.m */; };
 		2F6A418628B7461C003719E7 /* TestTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418528B7461C003719E7 /* TestTableController.m */; };
 		2F6A418928B74A27003719E7 /* TestCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418828B74A27003719E7 /* TestCollectionController.m */; };
 		2F6A418C28B74DF9003719E7 /* TestThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418B28B74DF9003719E7 /* TestThreadController.m */; };
 		2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */; };
-		2F6A419228B75855003719E7 /* TestButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A419128B75855003719E7 /* TestButtonController.m */; };
 		2F6A419528B75A47003719E7 /* TestBadgeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A419428B75A47003719E7 /* TestBadgeController.m */; };
 		2F6A419828B75B30003719E7 /* TestBannerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A419728B75B30003719E7 /* TestBannerController.m */; };
 		2F6A419B28B75CCA003719E7 /* TestFloatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A419A28B75CCA003719E7 /* TestFloatController.m */; };
@@ -56,7 +53,6 @@
 		2F6A41C028B79113003719E7 /* TestPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41BF28B79113003719E7 /* TestPopupController.m */; };
 		2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41C828B7960E003719E7 /* TestTransitionController.m */; };
 		2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CB28B7977C003719E7 /* TestPagingController.m */; };
-		2F6A41CF28B7CA65003719E7 /* TestRefreshController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */; };
 		2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */; };
 		2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F91AA2C28CDD876000A6FA2 /* WebController.swift */; };
 		2FA20E0528CF93F000B88057 /* TestLayoutController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA20E0428CF93F000B88057 /* TestLayoutController.m */; };
@@ -66,6 +62,10 @@
 		2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */; };
 		2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30728C5A03800C78850 /* TestBridgeController.swift */; };
 		2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */; };
+		2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141A28D2D42C00985FBD /* TestThemeController.swift */; };
+		2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141C28D2FC5800985FBD /* TestAlertController.swift */; };
+		2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */; };
+		2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA142028D30F3600985FBD /* TestImageController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -95,6 +95,13 @@
 
 /* Begin PBXFileReference section */
 		11AAFFB787F9A25A2B0A4D04 /* Pods-FWFramework_Tests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Tests.staging.xcconfig"; path = "Target Support Files/Pods-FWFramework_Tests/Pods-FWFramework_Tests.staging.xcconfig"; sourceTree = "<group>"; };
+		2F06D15628D31E52007E53EC /* TestToastController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToastController.swift; sourceTree = "<group>"; };
+		2F06D15828D44934007E53EC /* TestPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPickerController.swift; sourceTree = "<group>"; };
+		2F06D15A28D451E8007E53EC /* TestPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPreviewController.swift; sourceTree = "<group>"; };
+		2F06D15C28D46F81007E53EC /* TestPluginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPluginController.swift; sourceTree = "<group>"; };
+		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
+		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
+		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
 		2F6A411928B5E2E7003719E7 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
@@ -103,24 +110,10 @@
 		2F6A412A28B62711003719E7 /* TestSwiftController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftController.swift; sourceTree = "<group>"; };
 		2F6A412C28B64774003719E7 /* TestIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestIconController.swift; sourceTree = "<group>"; };
 		2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthorizeController.swift; sourceTree = "<group>"; };
-		2F6A413628B674C3003719E7 /* TestThemeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestThemeController.h; sourceTree = "<group>"; };
-		2F6A413728B674C3003719E7 /* TestThemeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThemeController.m; sourceTree = "<group>"; };
 		2F6A413928B67B7C003719E7 /* AppSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSwift.h; sourceTree = "<group>"; };
-		2F6A414228B68C74003719E7 /* TestAlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAlertController.h; sourceTree = "<group>"; };
-		2F6A414328B68C74003719E7 /* TestAlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAlertController.m; sourceTree = "<group>"; };
-		2F6A414528B690E6003719E7 /* TestEmptyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEmptyController.h; sourceTree = "<group>"; };
-		2F6A414628B690E6003719E7 /* TestEmptyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEmptyController.m; sourceTree = "<group>"; };
 		2F6A414828B70BEC003719E7 /* TestAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAudioController.swift; sourceTree = "<group>"; };
 		2F6A414A28B70E60003719E7 /* TestVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVideoController.swift; sourceTree = "<group>"; };
-		2F6A414F28B712DC003719E7 /* TestPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPickerController.h; sourceTree = "<group>"; };
-		2F6A415028B712DC003719E7 /* TestPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPickerController.m; sourceTree = "<group>"; };
-		2F6A415228B7166B003719E7 /* TestPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPreviewController.h; sourceTree = "<group>"; };
-		2F6A415328B7166B003719E7 /* TestPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPreviewController.m; sourceTree = "<group>"; };
-		2F6A415928B71CDF003719E7 /* TestToastController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestToastController.h; sourceTree = "<group>"; };
-		2F6A415A28B71CDF003719E7 /* TestToastController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestToastController.m; sourceTree = "<group>"; };
 		2F6A415C28B71E12003719E7 /* TestCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCameraController.swift; sourceTree = "<group>"; };
-		2F6A415E28B71F67003719E7 /* TestPluginController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPluginController.h; sourceTree = "<group>"; };
-		2F6A415F28B71F67003719E7 /* TestPluginController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPluginController.m; sourceTree = "<group>"; };
 		2F6A416228B721C9003719E7 /* Animation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Animation.png; sourceTree = "<group>"; };
 		2F6A416328B721C9003719E7 /* Qrcode.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Qrcode.caf; sourceTree = "<group>"; };
 		2F6A416428B721C9003719E7 /* Loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Loading.gif; sourceTree = "<group>"; };
@@ -131,10 +124,6 @@
 		2F6A417228B724DD003719E7 /* TestToolbarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestToolbarController.m; sourceTree = "<group>"; };
 		2F6A417428B72F7B003719E7 /* TestTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabbarController.swift; sourceTree = "<group>"; };
 		2F6A417628B7319A003719E7 /* TestPromiseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPromiseController.swift; sourceTree = "<group>"; };
-		2F6A417E28B7424B003719E7 /* TestAdaptiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestAdaptiveController.h; sourceTree = "<group>"; };
-		2F6A417F28B7424B003719E7 /* TestAdaptiveController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestAdaptiveController.m; sourceTree = "<group>"; };
-		2F6A418128B7446D003719E7 /* TestImageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestImageController.h; sourceTree = "<group>"; };
-		2F6A418228B7446D003719E7 /* TestImageController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestImageController.m; sourceTree = "<group>"; };
 		2F6A418428B7461C003719E7 /* TestTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTableController.h; sourceTree = "<group>"; };
 		2F6A418528B7461C003719E7 /* TestTableController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTableController.m; sourceTree = "<group>"; };
 		2F6A418728B74A27003719E7 /* TestCollectionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCollectionController.h; sourceTree = "<group>"; };
@@ -143,8 +132,6 @@
 		2F6A418B28B74DF9003719E7 /* TestThreadController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThreadController.m; sourceTree = "<group>"; };
 		2F6A418D28B74EF5003719E7 /* TestSkeletonController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSkeletonController.h; sourceTree = "<group>"; };
 		2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonController.m; sourceTree = "<group>"; };
-		2F6A419028B75855003719E7 /* TestButtonController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestButtonController.h; sourceTree = "<group>"; };
-		2F6A419128B75855003719E7 /* TestButtonController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestButtonController.m; sourceTree = "<group>"; };
 		2F6A419328B75A47003719E7 /* TestBadgeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBadgeController.h; sourceTree = "<group>"; };
 		2F6A419428B75A47003719E7 /* TestBadgeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestBadgeController.m; sourceTree = "<group>"; };
 		2F6A419628B75B30003719E7 /* TestBannerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestBannerController.h; sourceTree = "<group>"; };
@@ -175,8 +162,6 @@
 		2F6A41C828B7960E003719E7 /* TestTransitionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTransitionController.m; sourceTree = "<group>"; };
 		2F6A41CA28B7977C003719E7 /* TestPagingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPagingController.h; sourceTree = "<group>"; };
 		2F6A41CB28B7977C003719E7 /* TestPagingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPagingController.m; sourceTree = "<group>"; };
-		2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRefreshController.h; sourceTree = "<group>"; };
-		2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestRefreshController.m; sourceTree = "<group>"; };
 		2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSocketController.swift; sourceTree = "<group>"; };
 		2F91AA2C28CDD876000A6FA2 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
 		2FA20E0328CF93F000B88057 /* TestLayoutController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLayoutController.h; sourceTree = "<group>"; };
@@ -187,6 +172,10 @@
 		2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNotificationController.swift; sourceTree = "<group>"; };
 		2FB9E30728C5A03800C78850 /* TestBridgeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeController.swift; sourceTree = "<group>"; };
 		2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouterController.swift; sourceTree = "<group>"; };
+		2FDA141A28D2D42C00985FBD /* TestThemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestThemeController.swift; sourceTree = "<group>"; };
+		2FDA141C28D2FC5800985FBD /* TestAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAlertController.swift; sourceTree = "<group>"; };
+		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
+		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -268,8 +257,7 @@
 		2F6A412528B620CB003719E7 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				2F6A413628B674C3003719E7 /* TestThemeController.h */,
-				2F6A413728B674C3003719E7 /* TestThemeController.m */,
+				2FDA141A28D2D42C00985FBD /* TestThemeController.swift */,
 				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
 				2F6A414828B70BEC003719E7 /* TestAudioController.swift */,
 				2F6A414A28B70E60003719E7 /* TestVideoController.swift */,
@@ -284,12 +272,10 @@
 			isa = PBXGroup;
 			children = (
 				2F6A412C28B64774003719E7 /* TestIconController.swift */,
-				2F6A417E28B7424B003719E7 /* TestAdaptiveController.h */,
-				2F6A417F28B7424B003719E7 /* TestAdaptiveController.m */,
+				2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */,
 				2F6A41A828B77414003719E7 /* TestAnimationController.h */,
 				2F6A41A928B77414003719E7 /* TestAnimationController.m */,
-				2F6A419028B75855003719E7 /* TestButtonController.h */,
-				2F6A419128B75855003719E7 /* TestButtonController.m */,
+				2F06D16228D965C9007E53EC /* TestButtonController.swift */,
 				2F6A418728B74A27003719E7 /* TestCollectionController.h */,
 				2F6A418828B74A27003719E7 /* TestCollectionController.m */,
 				2F6A419F28B75E26003719E7 /* TestKeyboardController.h */,
@@ -367,23 +353,15 @@
 		2F6A414128B68BD7003719E7 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				2F6A414228B68C74003719E7 /* TestAlertController.h */,
-				2F6A414328B68C74003719E7 /* TestAlertController.m */,
-				2F6A414528B690E6003719E7 /* TestEmptyController.h */,
-				2F6A414628B690E6003719E7 /* TestEmptyController.m */,
-				2F6A418128B7446D003719E7 /* TestImageController.h */,
-				2F6A418228B7446D003719E7 /* TestImageController.m */,
-				2F6A414F28B712DC003719E7 /* TestPickerController.h */,
-				2F6A415028B712DC003719E7 /* TestPickerController.m */,
-				2F6A415228B7166B003719E7 /* TestPreviewController.h */,
-				2F6A415328B7166B003719E7 /* TestPreviewController.m */,
-				2F6A415E28B71F67003719E7 /* TestPluginController.h */,
-				2F6A415F28B71F67003719E7 /* TestPluginController.m */,
-				2F6A41CD28B7CA65003719E7 /* TestRefreshController.h */,
-				2F6A41CE28B7CA65003719E7 /* TestRefreshController.m */,
+				2FDA141C28D2FC5800985FBD /* TestAlertController.swift */,
+				2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */,
+				2FDA142028D30F3600985FBD /* TestImageController.swift */,
+				2F06D15828D44934007E53EC /* TestPickerController.swift */,
+				2F06D15A28D451E8007E53EC /* TestPreviewController.swift */,
+				2F06D15C28D46F81007E53EC /* TestPluginController.swift */,
+				2F06D15E28D805DE007E53EC /* TestRefreshController.swift */,
 				2F6A415C28B71E12003719E7 /* TestCameraController.swift */,
-				2F6A415928B71CDF003719E7 /* TestToastController.h */,
-				2F6A415A28B71CDF003719E7 /* TestToastController.m */,
+				2F06D15628D31E52007E53EC /* TestToastController.swift */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -831,25 +809,20 @@
 			files = (
 				2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */,
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
-				2F6A413828B674C3003719E7 /* TestThemeController.m in Sources */,
 				2F6A41A128B75E26003719E7 /* TestKeyboardController.m in Sources */,
-				2F6A415B28B71CDF003719E7 /* TestToastController.m in Sources */,
 				2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */,
 				2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */,
-				2F6A419228B75855003719E7 /* TestButtonController.m in Sources */,
 				2FF08B7628ADE7690074895A /* SettingsController.swift in Sources */,
 				2F6A412028B5F913003719E7 /* TabController.swift in Sources */,
 				2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */,
+				2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */,
 				2F6A41B728B78D5B003719E7 /* TestSegmentController.m in Sources */,
 				2F6A41AA28B77414003719E7 /* TestAnimationController.m in Sources */,
 				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
+				2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */,
 				2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */,
-				2F6A415428B7166B003719E7 /* TestPreviewController.m in Sources */,
-				2F6A415128B712DC003719E7 /* TestPickerController.m in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
-				2F6A414428B68C74003719E7 /* TestAlertController.m in Sources */,
-				2F6A41CF28B7CA65003719E7 /* TestRefreshController.m in Sources */,
 				2F6A419528B75A47003719E7 /* TestBadgeController.m in Sources */,
 				2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */,
 				2FA20E0528CF93F000B88057 /* TestLayoutController.m in Sources */,
@@ -864,31 +837,36 @@
 				2F6A41C028B79113003719E7 /* TestPopupController.m in Sources */,
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */,
+				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,
 				2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */,
+				2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */,
 				2F6A41AD28B776CC003719E7 /* TestBarrageController.m in Sources */,
-				2F6A418028B7424B003719E7 /* TestAdaptiveController.m in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
-				2F6A416028B71F67003719E7 /* TestPluginController.m in Sources */,
 				2F6A418C28B74DF9003719E7 /* TestThreadController.m in Sources */,
 				2F6A419E28B75D64003719E7 /* TestGridController.m in Sources */,
+				2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */,
+				2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
+				2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */,
 				2F6A418628B7461C003719E7 /* TestTableController.m in Sources */,
 				2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */,
-				2F6A418328B7446D003719E7 /* TestImageController.m in Sources */,
+				2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */,
 				2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */,
 				2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */,
 				2F6A41BD28B78FF4003719E7 /* TestPasscodeController.m in Sources */,
 				2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */,
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,
 				2FF08B5D28ADDD730074895A /* AppTheme.swift in Sources */,
+				2F06D15728D31E52007E53EC /* TestToastController.swift in Sources */,
 				2F6A419B28B75CCA003719E7 /* TestFloatController.m in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
-				2F6A414728B690E6003719E7 /* TestEmptyController.m in Sources */,
 				2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */,
+				2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */,
 				2F6A41B028B779E4003719E7 /* TestDrawerController.m in Sources */,
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
 				2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */,
+				2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */,
 				2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

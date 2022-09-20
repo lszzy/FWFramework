@@ -70,11 +70,6 @@
 
 @implementation UIApplication (FWToolkit)
 
-+ (id)fw_appInfo:(NSString *)key
-{
-    return [[NSBundle mainBundle] objectForInfoDictionaryKey:key];
-}
-
 + (NSString *)fw_appName
 {
     NSString *appName = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
@@ -115,6 +110,23 @@
         appExecutable = [self fw_appIdentifier];
     }
     return appExecutable;
+}
+
++ (id)fw_appInfo:(NSString *)key
+{
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:key];
+}
+
++ (NSURL *)fw_appLaunchURL:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)options
+{
+    NSURL *url = options[UIApplicationLaunchOptionsURLKey];
+    if (url) return [url isKindOfClass:[NSURL class]] ? url : nil;
+    NSDictionary *dict = options[UIApplicationLaunchOptionsUserActivityDictionaryKey];
+    if (![dict isKindOfClass:[NSDictionary class]]) return nil;
+    NSUserActivity *userActivity = dict[@"UIApplicationLaunchOptionsUserActivityKey"];
+    if (![userActivity isKindOfClass:[NSUserActivity class]]) return nil;
+    if (![userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) return nil;
+    return userActivity.webpageURL;
 }
 
 + (BOOL)fw_canOpenURL:(id)url
