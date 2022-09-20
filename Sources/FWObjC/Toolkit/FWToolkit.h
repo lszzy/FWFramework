@@ -20,9 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIApplication (FWToolkit)
 
-/// 读取应用信息字典
-+ (nullable id)fw_appInfo:(NSString *)key NS_REFINED_FOR_SWIFT;
-
 /// 读取应用名称
 @property (class, nonatomic, copy, readonly) NSString *fw_appName NS_REFINED_FOR_SWIFT;
 
@@ -40,6 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 读取应用可执行程序名称
 @property (class, nonatomic, copy, readonly) NSString *fw_appExecutable NS_REFINED_FOR_SWIFT;
+
+/// 读取应用信息字典
++ (nullable id)fw_appInfo:(NSString *)key NS_REFINED_FOR_SWIFT;
+
+/// 读取应用启动URL
++ (nullable NSURL *)fw_appLaunchURL:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)options NS_REFINED_FOR_SWIFT;
 
 /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
 + (BOOL)fw_canOpenURL:(id)url NS_REFINED_FOR_SWIFT;

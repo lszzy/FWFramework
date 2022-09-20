@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1] - 2022-09-20
+
+### Fixed
+* Fix method name from spelling error
+* Added the method of parsing the startup URL
+* Optimize the precision problem of pull-up and appending floating-point numbers
+
 ## [4.1.0] - 2022-09-13
 
 ### Changed

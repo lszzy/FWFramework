@@ -69,11 +69,6 @@ extension FW {
 /// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
 extension Wrapper where Base: UIApplication {
     
-    /// 读取应用信息字典
-    public static func appInfo(_ key: String) -> Any? {
-        return Base.__fw_appInfo(key)
-    }
-    
     /// 读取应用名称
     public static var appName: String {
         return Base.__fw_appName
@@ -102,6 +97,16 @@ extension Wrapper where Base: UIApplication {
     /// 读取应用可执行程序名称
     public static var appExecutable: String {
         return Base.__fw_appExecutable
+    }
+    
+    /// 读取应用信息字典
+    public static func appInfo(_ key: String) -> Any? {
+        return Base.__fw_appInfo(key)
+    }
+    
+    /// 读取应用启动URL
+    public static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey : Any]?) -> URL? {
+        return Base.__fw_appLaunchURL(options)
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
