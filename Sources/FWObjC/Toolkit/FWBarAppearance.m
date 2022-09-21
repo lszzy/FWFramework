@@ -44,7 +44,7 @@ static BOOL fwStaticAppearanceEnabled = NO;
     
     if (!UINavigationBar.fw_appearanceEnabled) {
         UIBarButtonItem *appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:[NSArray arrayWithObjects:UINavigationBar.class, nil]];
-        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+        NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateFocused)];
         for (NSNumber *state in states) {
             NSMutableDictionary *attributes = [[appearance titleTextAttributesForState:[state unsignedIntegerValue]] mutableCopy] ?: [NSMutableDictionary new];
             [attributes addEntriesFromDictionary:buttonAttributes];

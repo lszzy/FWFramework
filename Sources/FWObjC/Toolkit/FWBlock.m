@@ -430,7 +430,7 @@ void FWSynchronized(id object, void (^closure)(void)) {
     objc_setAssociatedObject(self, @selector(fw_titleAttributes), titleAttributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
     if (!titleAttributes) return;
     
-    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication), @(UIControlStateReserved)];
+    NSArray<NSNumber *> *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateFocused)];
     for (NSNumber *state in states) {
         NSMutableDictionary *attributes = [self titleTextAttributesForState:[state unsignedIntegerValue]].mutableCopy ?: [NSMutableDictionary new];
         [attributes addEntriesFromDictionary:titleAttributes];
