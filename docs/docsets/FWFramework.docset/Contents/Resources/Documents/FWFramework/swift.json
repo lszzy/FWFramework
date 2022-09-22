@@ -10355,7 +10355,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Module\/Controller\/ViewTransition.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 4372,
+    "key.length" : 4395,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -10554,10 +10554,10 @@
         ]
       },
       {
-        "key.bodylength" : 1423,
+        "key.bodylength" : 1446,
         "key.bodyoffset" : 2539,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1462,
+        "key.length" : 1485,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
         "key.nameoffset" : 2511,
@@ -10569,11 +10569,16 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
+                "key.offset" : 2728
+              },
+              {
+                "key.attribute" : "source.decl.attribute.discardableResult",
+                "key.length" : 18,
                 "key.offset" : 2705
               }
             ],
             "key.bodylength" : 81,
-            "key.bodyoffset" : 2792,
+            "key.bodyoffset" : 2815,
             "key.doc.comment" : "转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view",
             "key.doclength" : 152,
             "key.docoffset" : 2549,
@@ -10581,8 +10586,8 @@
             "key.length" : 162,
             "key.name" : "transition(to:pinEdges:)",
             "key.namelength" : 63,
-            "key.nameoffset" : 2717,
-            "key.offset" : 2712,
+            "key.nameoffset" : 2740,
+            "key.offset" : 2735,
             "key.substructure" : [
 
             ],
@@ -10594,20 +10599,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2965
+                "key.offset" : 2988
               }
             ],
             "key.bodylength" : 68,
-            "key.bodyoffset" : 3044,
+            "key.bodyoffset" : 3067,
             "key.doc.comment" : "包装到转场控制器(pinEdges占满父视图)，返回创建的控制器",
             "key.doclength" : 81,
-            "key.docoffset" : 2880,
+            "key.docoffset" : 2903,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 141,
             "key.name" : "wrappedTransitionController(_:)",
             "key.namelength" : 45,
-            "key.nameoffset" : 2977,
-            "key.offset" : 2972,
+            "key.nameoffset" : 3000,
+            "key.offset" : 2995,
             "key.substructure" : [
 
             ],
@@ -10619,20 +10624,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3203
+                "key.offset" : 3226
               }
             ],
             "key.bodylength" : 100,
-            "key.bodyoffset" : 3332,
+            "key.bodyoffset" : 3355,
             "key.doc.comment" : "自定义视图模拟present系统转场(蒙层渐变，内容向上动画)",
             "key.doclength" : 80,
-            "key.docoffset" : 3119,
+            "key.docoffset" : 3142,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 223,
             "key.name" : "setPresentTransition(_:contentView:completion:)",
             "key.namelength" : 115,
-            "key.nameoffset" : 3215,
-            "key.offset" : 3210,
+            "key.nameoffset" : 3238,
+            "key.offset" : 3233,
             "key.substructure" : [
 
             ]
@@ -10643,20 +10648,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3521
+                "key.offset" : 3544
               }
             ],
             "key.bodylength" : 72,
-            "key.bodyoffset" : 3626,
+            "key.bodyoffset" : 3649,
             "key.doc.comment" : "自定义视图模拟alert缩放转场(蒙层渐变，内容缩放动画)",
             "key.doclength" : 78,
-            "key.docoffset" : 3439,
+            "key.docoffset" : 3462,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 171,
             "key.name" : "setAlertTransition(_:completion:)",
             "key.namelength" : 91,
-            "key.nameoffset" : 3533,
-            "key.offset" : 3528,
+            "key.nameoffset" : 3556,
+            "key.offset" : 3551,
             "key.substructure" : [
 
             ]
@@ -10667,20 +10672,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3780
+                "key.offset" : 3803
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 3884,
+            "key.bodyoffset" : 3907,
             "key.doc.comment" : "自定义视图模拟fade渐变转场(蒙层和内容渐变动画)",
             "key.doclength" : 71,
-            "key.docoffset" : 3705,
+            "key.docoffset" : 3728,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 169,
             "key.name" : "setFadeTransition(_:completion:)",
             "key.namelength" : 90,
-            "key.nameoffset" : 3792,
-            "key.offset" : 3787,
+            "key.nameoffset" : 3815,
+            "key.offset" : 3810,
             "key.substructure" : [
 
             ]
@@ -10689,13 +10694,13 @@
       },
       {
         "key.bodylength" : 351,
-        "key.bodyoffset" : 4019,
+        "key.bodyoffset" : 4042,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 406,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 3975,
-        "key.offset" : 3965,
+        "key.nameoffset" : 3998,
+        "key.offset" : 3988,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -10703,20 +10708,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4192
+                "key.offset" : 4215
               }
             ],
             "key.bodylength" : 117,
-            "key.bodyoffset" : 4246,
+            "key.bodyoffset" : 4269,
             "key.doc.comment" : "导航控制器push|pop转场。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate",
             "key.doclength" : 159,
-            "key.docoffset" : 4029,
+            "key.docoffset" : 4052,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 165,
             "key.name" : "navigationTransition",
             "key.namelength" : 20,
-            "key.nameoffset" : 4203,
-            "key.offset" : 4199,
+            "key.nameoffset" : 4226,
+            "key.offset" : 4222,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "AnimatedTransition?"
           }

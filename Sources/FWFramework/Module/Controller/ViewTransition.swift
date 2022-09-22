@@ -58,6 +58,7 @@ extension Wrapper where Base: UIViewController {
 extension Wrapper where Base: UIView {
     
     /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
+    @discardableResult
     public func transition(to viewController: UIViewController, pinEdges: Bool) -> UIView {
         return base.__fw_transition(to: viewController, pinEdges: pinEdges)
     }
