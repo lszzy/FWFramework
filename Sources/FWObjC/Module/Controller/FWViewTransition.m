@@ -122,13 +122,15 @@
             break;
         }
         case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateEnded: {
             _isInteractive = NO;
             
             BOOL interactEnded = self.interactBlock ? self.interactBlock(gestureRecognizer) : YES;
             if (interactEnded) {
                 BOOL finished = NO;
-                if (gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+                if (gestureRecognizer.state == UIGestureRecognizerStateCancelled ||
+                    gestureRecognizer.state == UIGestureRecognizerStateFailed) {
                     finished = NO;
                 } else if (self.percentComplete >= 0.5) {
                     finished = YES;
