@@ -66,12 +66,10 @@ extension WebController: WebViewControllerProtocol {
     }
     
     func setupWebLayout() {
-        var bottomHeight = hidesBottomBarWhenPushed ? 0 : self.fw.tabBarHeight
-        bottomHeight += fw.toolBarHidden ? 0 : self.fw.toolBarHeight
         webView.fw.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
-            .bottom(bottomHeight)
+            .bottom(fw.bottomBarHeight)
     }
     
     func setupToolbar() {
