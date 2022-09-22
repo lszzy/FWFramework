@@ -144,12 +144,15 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 - (void)requestCompletePreprocessor {
     [super requestCompletePreprocessor];
 
+    NSData *responseData = [super responseData];
     if (self.writeCacheAsynchronously) {
+        __weak __typeof__(self) self_weak_ = self;
         dispatch_async(fwrequest_cache_writing_queue(), ^{
-            [self saveResponseDataToCacheFile:[super responseData]];
+            __typeof__(self) self = self_weak_;
+            [self saveResponseDataToCacheFile:responseData];
         });
     } else {
-        [self saveResponseDataToCacheFile:[super responseData]];
+        [self saveResponseDataToCacheFile:responseData];
     }
 }
 
