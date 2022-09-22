@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.1.2] - 2022-09-22
+
+### Fixed
+* Optimize the controller to get the bottom bar height algorithm
+* Optimized the Failed state processing of transition gestures
+
 ## [4.1.1] - 2022-09-20
 
 ### Fixed
