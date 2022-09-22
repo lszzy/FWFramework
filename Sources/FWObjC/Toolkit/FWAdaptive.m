@@ -453,6 +453,7 @@ static CGFloat fwStaticReferenceHeight = 812;
 - (CGFloat)fw_tabBarHeight
 {
     if (!self.tabBarController || self.tabBarController.tabBar.hidden) return 0.0;
+    if (self.hidesBottomBarWhenPushed && !self.fw_isRoot) return 0.0;
     return self.tabBarController.tabBar.frame.size.height;
 }
 
@@ -461,7 +462,8 @@ static CGFloat fwStaticReferenceHeight = 812;
     if (!self.navigationController || self.navigationController.toolbarHidden) return 0.0;
     // 如果未同时显示标签栏，高度需要加上安全区域高度
     CGFloat height = self.navigationController.toolbar.frame.size.height;
-    if (!self.tabBarController || self.tabBarController.tabBar.hidden) {
+    if (!self.tabBarController || self.tabBarController.tabBar.hidden ||
+        (self.hidesBottomBarWhenPushed && !self.fw_isRoot)) {
         height += UIScreen.fw_safeAreaInsets.bottom;
     }
     return height;
