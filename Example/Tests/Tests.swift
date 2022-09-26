@@ -41,38 +41,20 @@ class Tests: XCTestCase {
     }
     
     func testSwizzle() {
-        NSObject.fw.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction)) { targetClass, originalCMD, originalIMP in
-            let swizzleIMP: @convention(block)(Tests) -> String = { selfObject in
-                typealias originalMSGType = @convention(c)(Tests, Selector) -> String
-                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
-                let value = originalMSG(selfObject, originalCMD)
-                
-                return value + " Action"
-            }
-            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-        }
+        NSObject.fw.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction), methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in {
+            let value = store.original($0, store.selector)
+            return value + " Action"
+        }}
         
-        NSObject.fw.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { targetClass, originalCMD, originalIMP in
-            let swizzleIMP: @convention(block)(Tests.Type) -> String = { selfObject in
-                typealias originalMSGType = @convention(c)(Tests.Type, Selector) -> String
-                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
-                let value = originalMSG(selfObject, originalCMD)
-                
-                return value + " Action"
-            }
-            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-        }
+        NSObject.fw.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { (store: SwizzleStore<@convention(c)(Tests.Type, Selector) -> String, @convention(block)(Tests.Type) -> String>) in {
+            let value = store.original($0, store.selector)
+            return value + " Action"
+        }}
         
-        fw.swizzleInstanceMethod(#selector(objectAction), identifier: "object") { targetClass, originalCMD, originalIMP in
-            let swizzleIMP: @convention(block)(Tests) -> String = { selfObject in
-                typealias originalMSGType = @convention(c)(Tests, Selector) -> String
-                let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
-                let value = originalMSG(selfObject, originalCMD)
-                
-                return value + " Action"
-            }
-            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-        }
+        fw.swizzleInstanceMethod(#selector(objectAction), identifier: "object", methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in { selfObject in
+            let value = store.original(selfObject, store.selector)
+            return value + " Action"
+        }}
         
         XCTAssertEqual(originalAction(), "Original Action")
         XCTAssertEqual(Tests.classAction(), "Class Action")
