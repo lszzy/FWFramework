@@ -152,12 +152,7 @@ extension Wrapper where Base: NSObject {
             target,
             selector: selector,
             identifier: identifier,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
+            with: swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
         )
     }
     
@@ -195,23 +190,13 @@ extension Wrapper where Base: NSObject {
                 originalClass,
                 selector: selector,
                 identifier: identifier,
-                with: { targetClass, originalCMD, originalIMP in
-                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-                }
+                with: swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
             )
         } else {
             return Base.__fw_swizzleInstanceMethod(
                 originalClass,
                 selector: selector,
-                with: { targetClass, originalCMD, originalIMP in
-                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-                }
+                with: swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
             )
         }
     }
@@ -239,23 +224,13 @@ extension Wrapper where Base: NSObject {
                 originalClass,
                 selector: selector,
                 identifier: identifier,
-                with: { targetClass, originalCMD, originalIMP in
-                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-                }
+                with: swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
             )
         } else {
             return Base.__fw_swizzleClassMethod(
                 originalClass,
                 selector: selector,
-                with: { targetClass, originalCMD, originalIMP in
-                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-                }
+                with: swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
             )
         }
     }
@@ -279,12 +254,7 @@ extension Wrapper where Base: NSObject {
         return base.__fw_swizzleInstanceMethod(
             originalSelector,
             identifier: identifier,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
+            with: NSObject.fw.swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
         )
     }
     
@@ -303,6 +273,19 @@ extension Wrapper where Base: NSObject {
             originalSelector,
             identifier: identifier
         )
+    }
+    
+    private static func swizzleBlock<MethodSignature, SwizzleSignature>(
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> (AnyClass, Selector, @escaping () -> IMP) -> Any {
+        return { targetClass, originalCMD, originalIMP in
+            let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+            let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+            let swizzleIMP: SwizzleSignature = block(swizzleStore)
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
     }
     
 }
