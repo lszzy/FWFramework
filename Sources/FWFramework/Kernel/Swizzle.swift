@@ -122,7 +122,7 @@ extension Wrapper where Base: NSObject {
     /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
-    /// NSObject.fw.swizzleInstanceMethod(
+    /// NSObject.fw.swizzleMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad)
     /// ) { (store: SwizzleStore
@@ -134,7 +134,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - target: 目标类或对象
     ///   - selector: 原始方法
-    ///   - identifier: 唯一标识，有值且相同时仅执行一次
+    ///   - identifier: 唯一标识，有值且相同时仅执行一次，默认nil
     ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
     ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
     ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
@@ -143,7 +143,7 @@ extension Wrapper where Base: NSObject {
     public static func swizzleMethod<MethodSignature, SwizzleSignature>(
         _ target: Any?,
         selector: Selector,
-        identifier: String?,
+        identifier: String? = nil,
         methodSignature: MethodSignature.Type = MethodSignature.self,
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
@@ -161,7 +161,7 @@ extension Wrapper where Base: NSObject {
         )
     }
     
-    /// 使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用
+    /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
     /// NSObject.fw.swizzleInstanceMethod(
@@ -176,6 +176,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - originalClass: 原始类
     ///   - selector: 原始方法
+    ///   - identifier: 唯一标识，默认nil
     ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
     ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
     ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
@@ -184,86 +185,42 @@ extension Wrapper where Base: NSObject {
     public static func swizzleInstanceMethod<MethodSignature, SwizzleSignature>(
         _ originalClass: AnyClass,
         selector: Selector,
+        identifier: String? = nil,
         methodSignature: MethodSignature.Type = MethodSignature.self,
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        return Base.__fw_swizzleInstanceMethod(
-            originalClass,
-            selector: selector,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
-        )
-    }
-    
-    /// 使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用
-    /// - Parameters:
-    ///   - originalClass: 原始类
-    ///   - selector: 原始方法
-    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
-    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
-    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func swizzleClassMethod<MethodSignature, SwizzleSignature>(
-        _ originalClass: AnyClass,
-        selector: Selector,
-        methodSignature: MethodSignature.Type = MethodSignature.self,
-        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
-        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
-    ) -> Bool {
-        return Base.__fw_swizzleClassMethod(
-            originalClass,
-            selector: selector,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
-        )
-    }
-    
-    /// 使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
-    /// - Parameters:
-    ///   - originalClass: 原始类
-    ///   - selector: 原始方法
-    ///   - identifier: 唯一标识
-    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
-    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
-    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func swizzleInstanceMethod<MethodSignature, SwizzleSignature>(
-        _ originalClass: AnyClass,
-        selector: Selector,
-        identifier: String,
-        methodSignature: MethodSignature.Type = MethodSignature.self,
-        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
-        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
-    ) -> Bool {
-        return Base.__fw_swizzleInstanceMethod(
-            originalClass,
-            selector: selector,
-            identifier: identifier,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
-        )
+        if let identifier = identifier, !identifier.isEmpty {
+            return Base.__fw_swizzleInstanceMethod(
+                originalClass,
+                selector: selector,
+                identifier: identifier,
+                with: { targetClass, originalCMD, originalIMP in
+                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
+                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+                }
+            )
+        } else {
+            return Base.__fw_swizzleInstanceMethod(
+                originalClass,
+                selector: selector,
+                with: { targetClass, originalCMD, originalIMP in
+                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
+                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+                }
+            )
+        }
     }
 
-    /// 使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     /// - Parameters:
     ///   - originalClass: 原始类
     ///   - selector: 原始方法
-    ///   - identifier: 唯一标识
+    ///   - identifier: 唯一标识，默认nil
     ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
     ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
     ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
@@ -272,28 +229,41 @@ extension Wrapper where Base: NSObject {
     public static func swizzleClassMethod<MethodSignature, SwizzleSignature>(
         _ originalClass: AnyClass,
         selector: Selector,
-        identifier: String,
+        identifier: String? = nil,
         methodSignature: MethodSignature.Type = MethodSignature.self,
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        return Base.__fw_swizzleClassMethod(
-            originalClass,
-            selector: selector,
-            identifier: identifier,
-            with: { targetClass, originalCMD, originalIMP in
-                let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-                let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-                let swizzleIMP: SwizzleSignature = block(swizzleStore)
-                return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-            }
-        )
+        if let identifier = identifier, !identifier.isEmpty {
+            return Base.__fw_swizzleClassMethod(
+                originalClass,
+                selector: selector,
+                identifier: identifier,
+                with: { targetClass, originalCMD, originalIMP in
+                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
+                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+                }
+            )
+        } else {
+            return Base.__fw_swizzleClassMethod(
+                originalClass,
+                selector: selector,
+                with: { targetClass, originalCMD, originalIMP in
+                    let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+                    let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+                    let swizzleIMP: SwizzleSignature = block(swizzleStore)
+                    return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+                }
+            )
+        }
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
     /// - Parameters:
     ///   - originalSelector: 原始方法
-    ///   - identifier: 唯一标识
+    ///   - identifier: 唯一标识，默认空字符串
     ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
     ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
     ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
@@ -301,7 +271,7 @@ extension Wrapper where Base: NSObject {
     @discardableResult
     public func swizzleInstanceMethod<MethodSignature, SwizzleSignature>(
         _ originalSelector: Selector,
-        identifier: String,
+        identifier: String = "",
         methodSignature: MethodSignature.Type = MethodSignature.self,
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
@@ -323,11 +293,11 @@ extension Wrapper where Base: NSObject {
     /// 因为实际替换的是类方法，为了防止影响该类其它对象，需先判断该对象是否替换过，仅替换过才执行自定义流程
     /// - Parameters:
     ///   - originalSelector: 原始方法
-    ///   - identifier: 唯一标识
+    ///   - identifier: 唯一标识，默认空字符串
     /// - Returns: 是否替换
     public func isSwizzleInstanceMethod(
         _ originalSelector: Selector,
-        identifier: String
+        identifier: String = ""
     ) -> Bool {
         return base.__fw_isSwizzleInstanceMethod(
             originalSelector,
