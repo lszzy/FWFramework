@@ -83,7 +83,7 @@
             return [self fw_swizzleInstanceMethod:target selector:originalSelector withBlock:block];
         }
     } else {
-        return [((NSObject *)target) fw_swizzleInstanceMethod:originalSelector identifier:identifier withBlock:block];
+        return [((NSObject *)target) fw_swizzleInstanceMethod:originalSelector identifier:(identifier ?: @"") withBlock:block];
     }
 }
 
