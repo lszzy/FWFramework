@@ -12,29 +12,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
     private var flashlightSelected = false
     
-    private lazy var scanManager: QrcodeScanManager = {
-        let result = QrcodeScanManager()
-        result.sampleBufferDelegate = true
-        result.scanResultBlock = { [weak self] result in
-            guard let result = result else { return }
-            if let sound = ModuleBundle.resourcePath("Qrcode.caf") {
-                UIApplication.fw.playSystemSound(sound)
-            }
-            self?.stopScanManager()
-            self?.onScanResult(result)
-        }
-        result.scanBrightnessBlock = { [weak self] brightness in
-            guard let self = self else { return }
-            if brightness < -1 {
-                self.view.addSubview(self.flashlightBtn)
-            } else {
-                if !self.flashlightSelected {
-                    self.removeFlashlightBtn()
-                }
-            }
-        }
-        return result
-    }()
+    private var scanManager: QrcodeScanManager?
     
     private lazy var scanView: QrcodeScanView = {
         let result = QrcodeScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight))
@@ -73,19 +51,19 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupSubviews() {
-        AuthorizeManager.manager(type: .camera)?.authorize({ [weak self] status in
-            guard let self = self else { return }
-            if status != .authorized {
-                self.fw.showAlert(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil)
-            } else {
-                self.setupScanManager()
-                self.view.addSubview(self.scanView)
-                self.view.addSubview(self.promptLabel)
-                
-                // 由于异步授权，viewWillAppear时可能未完成，此处调用start
-                self.startScanManager()
+        let status = AuthorizeManager.manager(type: .camera)?.authorizeStatus() ?? .restricted
+        if status == .restricted || status == .denied {
+            self.fw.showConfirm(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil, cancel: "取消", confirm: "设置") {
+                UIApplication.fw.openAppSettings()
             }
-        })
+        } else {
+            self.setupScanManager()
+            self.view.addSubview(self.scanView)
+            self.view.addSubview(self.promptLabel)
+            
+            // 由于异步授权，viewWillAppear时可能未完成，此处调用start
+            self.startScanManager()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,18 +81,40 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupScanManager() {
+        let scanManager = QrcodeScanManager()
+        self.scanManager = scanManager
+        scanManager.sampleBufferDelegate = true
         scanManager.scanQrcode(with: view)
+        
+        scanManager.scanResultBlock = { [weak self] result in
+            guard let result = result else { return }
+            if let sound = ModuleBundle.resourcePath("Qrcode.caf") {
+                UIApplication.fw.playSystemSound(sound)
+            }
+            self?.stopScanManager()
+            self?.onScanResult(result)
+        }
+        scanManager.scanBrightnessBlock = { [weak self] brightness in
+            guard let self = self else { return }
+            if brightness < -1 {
+                self.view.addSubview(self.flashlightBtn)
+            } else {
+                if !self.flashlightSelected {
+                    self.removeFlashlightBtn()
+                }
+            }
+        }
     }
     
     func startScanManager() {
-        scanManager.startRunning()
+        scanManager?.startRunning()
         scanView.addTimer()
     }
     
     func stopScanManager() {
         scanView.removeTimer()
         removeFlashlightBtn()
-        scanManager.stopRunning()
+        scanManager?.stopRunning()
     }
     
     @objc func toggleFlashlightBtn(_ button: UIButton) {
