@@ -96,7 +96,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         } completion: { [weak self] in
             guard let self = self else { return }
             
-            var value = self.fw.boundInt(forKey: key)
+            let value = self.fw.boundInt(forKey: key)
             self.onResult(value)
         }
     }
@@ -116,7 +116,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         } completion: { [weak self] in
             guard let self = self else { return }
             
-            var value = self.fw.boundInt(forKey: key)
+            let value = self.fw.boundInt(forKey: key)
             self.onResult(value)
         }
     }
