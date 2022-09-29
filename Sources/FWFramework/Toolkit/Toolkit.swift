@@ -180,8 +180,8 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统分享
-    public static func openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil) {
-        Base.__fw_openActivityItems(activityItems, excludedTypes: excludedTypes)
+    public static func openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
+        Base.__fw_openActivityItems(activityItems, excludedTypes: excludedTypes, customBlock: customBlock)
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
