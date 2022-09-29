@@ -232,11 +232,21 @@
     [self fw_openURL:[NSString stringWithFormat:@"telprompt://%@", phone] completionHandler:completion];
 }
 
-+ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes
++ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes customBlock:(void (^)(UIActivityViewController *))customBlock
 {
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     activityController.excludedActivityTypes = excludedTypes;
-    [FWNavigator presentViewController:activityController animated:YES completion:nil];
+    // 兼容iPad，默认居中显示
+    UIViewController *viewController = [FWNavigator topPresentedController];
+    if ([UIDevice fw_isIpad] && activityController.popoverPresentationController) {
+        UIView *ancestorView = [viewController fw_ancestorView];
+        UIPopoverPresentationController *popoverController = activityController.popoverPresentationController;
+        popoverController.sourceView = ancestorView;
+        popoverController.sourceRect = CGRectMake(ancestorView.center.x, ancestorView.center.y, 0, 0);
+        popoverController.permittedArrowDirections = 0;
+    }
+    if (customBlock) customBlock(activityController);
+    [viewController presentViewController:activityController animated:YES completion:nil];
 }
 
 + (void)fw_openSafariController:(id)url
