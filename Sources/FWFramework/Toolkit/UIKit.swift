@@ -1001,6 +1001,11 @@ extension Wrapper where Base: UIViewController {
     public var isViewVisible: Bool {
         return base.__fw_isViewVisible
     }
+    
+    /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
+    public var ancestorView: UIView {
+        return base.__fw_ancestorView
+    }
 
     /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
     public var isLoaded: Bool {

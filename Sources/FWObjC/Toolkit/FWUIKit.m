@@ -2954,6 +2954,17 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return self.isViewLoaded && self.view.window;
 }
 
+- (UIView *)fw_ancestorView
+{
+    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+        return self.tabBarController.view;
+    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
+        return self.navigationController.view;
+    } else {
+        return self.view;
+    }
+}
+
 - (BOOL)fw_isLoaded
 {
     return [objc_getAssociatedObject(self, @selector(fw_isLoaded)) boolValue];
