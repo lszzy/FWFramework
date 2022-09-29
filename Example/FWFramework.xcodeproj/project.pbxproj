@@ -31,7 +31,6 @@
 		2F6A416B28B721C9003719E7 /* Material.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416528B721C9003719E7 /* Material.ttf */; };
 		2F6A416C28B721C9003719E7 /* Lottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416628B721C9003719E7 /* Lottie.json */; };
 		2F6A416D28B721C9003719E7 /* Bridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416728B721C9003719E7 /* Bridge.html */; };
-		2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417228B724DD003719E7 /* TestToolbarController.m */; };
 		2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417428B72F7B003719E7 /* TestTabbarController.swift */; };
 		2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417628B7319A003719E7 /* TestPromiseController.swift */; };
 		2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */; };
@@ -56,6 +55,7 @@
 		2FB11F0328E3F5F700DCB965 /* TestThreadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0228E3F5F700DCB965 /* TestThreadController.swift */; };
 		2FB11F0528E41C0700DCB965 /* TestKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */; };
 		2FB11F0728E441F400DCB965 /* TestDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0628E441F400DCB965 /* TestDrawerController.swift */; };
+		2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */; };
 		2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */; };
 		2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30128C09F2500C78850 /* TestStateController.swift */; };
 		2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30328C0A69B00C78850 /* TestCacheController.swift */; };
@@ -120,8 +120,6 @@
 		2F6A416528B721C9003719E7 /* Material.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Material.ttf; sourceTree = "<group>"; };
 		2F6A416628B721C9003719E7 /* Lottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Lottie.json; sourceTree = "<group>"; };
 		2F6A416728B721C9003719E7 /* Bridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Bridge.html; sourceTree = "<group>"; };
-		2F6A417128B724DD003719E7 /* TestToolbarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestToolbarController.h; sourceTree = "<group>"; };
-		2F6A417228B724DD003719E7 /* TestToolbarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestToolbarController.m; sourceTree = "<group>"; };
 		2F6A417428B72F7B003719E7 /* TestTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabbarController.swift; sourceTree = "<group>"; };
 		2F6A417628B7319A003719E7 /* TestPromiseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPromiseController.swift; sourceTree = "<group>"; };
 		2F6A418D28B74EF5003719E7 /* TestSkeletonController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSkeletonController.h; sourceTree = "<group>"; };
@@ -155,6 +153,7 @@
 		2FB11F0228E3F5F700DCB965 /* TestThreadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestThreadController.swift; sourceTree = "<group>"; };
 		2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeyboardController.swift; sourceTree = "<group>"; };
 		2FB11F0628E441F400DCB965 /* TestDrawerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDrawerController.swift; sourceTree = "<group>"; };
+		2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToolbarController.swift; sourceTree = "<group>"; };
 		2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWorkflowController.swift; sourceTree = "<group>"; };
 		2FB9E30128C09F2500C78850 /* TestStateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateController.swift; sourceTree = "<group>"; };
 		2FB9E30328C0A69B00C78850 /* TestCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCacheController.swift; sourceTree = "<group>"; };
@@ -278,8 +277,7 @@
 			children = (
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
-				2F6A417128B724DD003719E7 /* TestToolbarController.h */,
-				2F6A417228B724DD003719E7 /* TestToolbarController.m */,
+				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
 				2FB11EF628DB090F00DCB965 /* TestBadgeController.swift */,
 				2F6A419628B75B30003719E7 /* TestBannerController.h */,
 				2F6A419728B75B30003719E7 /* TestBannerController.m */,
@@ -814,6 +812,7 @@
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2F6A41C028B79113003719E7 /* TestPopupController.m in Sources */,
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
+				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
 				2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */,
 				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,
 				2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */,
@@ -828,7 +827,6 @@
 				2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */,
 				2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */,
 				2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */,
-				2F6A417328B724DD003719E7 /* TestToolbarController.m in Sources */,
 				2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */,
 				2FB11EF528DB055C00DCB965 /* TestGridController.swift in Sources */,
 				2F6A41BD28B78FF4003719E7 /* TestPasscodeController.m in Sources */,
