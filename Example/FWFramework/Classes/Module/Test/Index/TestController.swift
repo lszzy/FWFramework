@@ -29,6 +29,7 @@ import Darwin
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
+            ["Compatible", "TestCompatibleController"],
             ["Animation", "TestAnimationController"],
             ["AutoLayout", "TestLayoutController"],
             ["CollectionLayout", "TestCollectionController"],
