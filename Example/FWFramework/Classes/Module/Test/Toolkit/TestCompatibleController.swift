@@ -132,7 +132,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         
         confirmButton.fw.layoutChain
             .horizontal(designMargin)
-            .bottom(toSafeArea: designMargin)
+            .bottom(designMargin + FW.safeAreaInsets.bottom)
             .height(designValue(50))
     }
     
