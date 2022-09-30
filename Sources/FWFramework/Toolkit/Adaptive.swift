@@ -337,6 +337,17 @@ extension Wrapper where Base: UIScreen {
     
 }
 
+// MARK: - UIView+Adaptive
+extension Wrapper where Base: UIView {
+    
+    /// 是否自动等比例缩放方式设置transform，默认NO
+    public var autoScaleTransform: Bool {
+        get { return base.__fw_autoScaleTransform }
+        set { base.__fw_autoScaleTransform = newValue }
+    }
+    
+}
+
 // MARK: - UIViewController+Adaptive
 extension Wrapper where Base: UIViewController {
     
