@@ -39,7 +39,7 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - AutoLayout
-    /// 视图是否自动等比例缩放布局，默认返回全局开关
+    /// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
     public var autoScale: Bool {
         get { return base.__fw_autoScale }
         set { base.__fw_autoScale = newValue }

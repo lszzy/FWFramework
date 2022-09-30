@@ -267,14 +267,19 @@ extension Wrapper where Base: UIView {
         base.__fw_removeAllSubviews()
     }
 
-    /// 递归查找指定子类的第一个视图
+    /// 递归查找指定子类的第一个子视图(含自身)
     public func subview(of clazz: AnyClass) -> UIView? {
         return base.__fw_subview(of: clazz)
     }
 
-    /// 递归查找指定条件的第一个视图
+    /// 递归查找指定条件的第一个子视图(含自身)
     public func subview(of block: @escaping (UIView) -> Bool) -> UIView? {
         return base.__fw_subview(of: block)
+    }
+    
+    /// 递归查找指定条件的第一个父视图(含自身)
+    public func superview(of block: @escaping (UIView) -> Bool) -> UIView? {
+        return base.__fw_superview(of: block)
     }
 
     /// 图片截图
