@@ -127,14 +127,15 @@ static BOOL fwStaticAutoScaleView = NO;
 
 - (BOOL)fw_autoScale
 {
-    if (!fwStaticAutoScaleView) return fwStaticAutoScaleLayout;
+    BOOL autoScale = fwStaticAutoScaleLayout;
+    if (!fwStaticAutoScaleView) return autoScale;
     
-    __block BOOL autoScale = fwStaticAutoScaleLayout;
-    [self fw_superviewOfBlock:^BOOL(UIView *view) {
-        NSNumber *value = objc_getAssociatedObject(view, _cmd);
-        if (value) autoScale = [value boolValue];
-        return value ? YES : NO;
-    }];
+    UIView *targetView = self;
+    while (targetView != nil) {
+        NSNumber *value = objc_getAssociatedObject(targetView, _cmd);
+        if (value) { autoScale = [value boolValue]; break; }
+        targetView = targetView.superview;
+    }
     return autoScale;
 }
 
