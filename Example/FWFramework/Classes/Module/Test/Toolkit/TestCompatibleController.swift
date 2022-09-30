@@ -16,19 +16,17 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     case transform = 2
     }
     
-    var mode: Mode = .default {
-        didSet {
-            setupSubviews()
-        }
-    }
+    var mode: Mode = .default
     
-    var designMargin: CGFloat {
+    private var designMargin: CGFloat {
         return designValue(15)
     }
-    var designSize: CGFloat {
+    
+    private var designSize: CGFloat {
         return designValue(100)
     }
-    func designValue(_ value: CGFloat) -> CGFloat {
+    
+    private func designValue(_ value: CGFloat) -> CGFloat {
         return mode == .relative ? FW.relative(value) : value
     }
     
@@ -62,7 +60,9 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.backgroundColor = AppTheme.backgroundColor
         result.textColor = AppTheme.textColor
         result.textAlignment = .center
+        result.font = FW.font(designValue(16))
         result.fw.setBorderColor(AppTheme.borderColor, width: 0.5)
+        result.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(UIScreen.fw.referenceSize.width)x\(UIScreen.fw.referenceSize.height)，当前屏幕大小为\(FW.screenWidth)x\(FW.screenHeight)，宽度缩放比例为\(FW.relativeScale)\n示例设计图间距为15，图片大小为100x100，观察不同兼容模式下不同屏幕的显示效果"
         return result
     }()
     
@@ -75,6 +75,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     private lazy var confirmButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("确定", for: .normal)
+        result.titleLabel?.font = FW.font(designValue(17), .bold)
         result.fw.addTouch { [weak self] _ in
             self?.fw.showMessage(text: "点击了确定")
         }
@@ -85,59 +86,51 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         fw.extendedLayoutEdge = .bottom
         fw.setRightBarItem("切换") { [weak self] _ in
             self?.fw.showSheet(title: nil, message: nil, actions: ["默认适配", "等比例适配", "等比例缩放"], actionBlock: { index in
-                self?.mode = .init(rawValue: index) ?? .default
+                let vc = TestCompatibleController()
+                vc.mode = Mode(rawValue: index) ?? .default
+                self?.navigationController?.fw.push(vc, popTopWorkflowAnimated: false)
             })
         }
     }
     
     func setupSubviews() {
-        // 清空并重新添加视图
-        view.fw.removeAllSubviews()
-        view.addSubview(bannerView)
-        view.addSubview(imageView)
-        view.addSubview(textLabel)
-        view.addSubview(bottomView)
-        view.addSubview(confirmButton)
-        
-        // 等比例缩放(2)时只需设置transform
         if mode == .transform {
             if FW.relativeScale > FW.relativeHeightScale {
                 view.transform = .init(scaleX: FW.relativeHeightScale, y: FW.relativeHeightScale)
             } else {
                 view.transform = .init(scaleX: FW.relativeScale, y: FW.relativeScale)
             }
-        // 其他模式(0,1)无需设置transform
-        } else {
-            view.transform = .identity
         }
         
-        // 等比例适配(1)时字体大小为相对大小
-        textLabel.font = FW.font(designValue(16))
-        confirmButton.titleLabel?.font = FW.font(designValue(17), .bold)
-        textLabel.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(UIScreen.fw.referenceSize.width)x\(UIScreen.fw.referenceSize.height)，当前屏幕大小为\(FW.screenWidth)x\(FW.screenHeight)，宽度缩放比例为\(FW.relativeScale)\n示例设计图间距为15，图片大小为100x100，观察不同兼容模式下不同屏幕的显示效果"
-        
-        // 等比例适配(1)时布局大小为相对大小
-        bannerView.fw.layoutChain.remake()
+        view.addSubview(bannerView)
+        view.addSubview(imageView)
+        view.addSubview(textLabel)
+        view.addSubview(bottomView)
+        view.addSubview(confirmButton)
+    }
+    
+    func setupLayout() {
+        bannerView.fw.layoutChain
             .top(designMargin)
             .horizontal(designMargin)
             .height(designSize)
         
-        imageView.fw.layoutChain.remake()
+        imageView.fw.layoutChain
             .centerX()
             .top(toViewBottom: bannerView, offset: designMargin)
             .size(CGSizeMake(designSize, designSize))
         
-        textLabel.fw.layoutChain.remake()
+        textLabel.fw.layoutChain
             .horizontal(designMargin)
             .top(toViewBottom: imageView, offset: designMargin)
         
-        bottomView.fw.layoutChain.remake()
+        bottomView.fw.layoutChain
             .centerX()
             .width(designSize)
             .top(toViewBottom: textLabel, offset: designMargin)
-            .height(designValue(250))
+            .bottom(toViewTop: confirmButton, offset: -designMargin)
         
-        confirmButton.fw.layoutChain.remake()
+        confirmButton.fw.layoutChain
             .horizontal(designMargin)
             .bottom(toSafeArea: designMargin)
             .height(designValue(50))
