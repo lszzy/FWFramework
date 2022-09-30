@@ -78,7 +78,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20)
             .top(toViewBottom: subview, offset: 20)
         
-        attributedLabel.text = "我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我又要换行了"
+        attributedLabel.text = "我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我又要换行了"
         let collapseLabel = UILabel.fw.label(font: FW.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(FW.font(16).lineHeight))
