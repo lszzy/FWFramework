@@ -228,6 +228,15 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 
 @end
 
+#pragma mark - UIView+FWAdaptive
+
+@interface UIView (FWAdaptive)
+
+/// 是否自动等比例缩放方式设置transform，默认NO
+@property (nonatomic, assign) BOOL fw_autoScaleTransform NS_REFINED_FOR_SWIFT;
+
+@end
+
 #pragma mark - UIViewController+FWAdaptive
 
 @interface UIViewController (FWAdaptive)

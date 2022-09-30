@@ -95,11 +95,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
         if mode == .transform {
-            if FW.relativeScale > FW.relativeHeightScale {
-                view.transform = .init(scaleX: FW.relativeHeightScale, y: FW.relativeHeightScale)
-            } else {
-                view.transform = .init(scaleX: FW.relativeScale, y: FW.relativeScale)
-            }
+            view.fw.autoScaleTransform = true
         }
         
         view.addSubview(bannerView)
