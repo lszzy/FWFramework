@@ -149,11 +149,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 移除所有子视图
 - (void)fw_removeAllSubviews NS_REFINED_FOR_SWIFT;
 
-/// 递归查找指定子类的第一个视图
+/// 递归查找指定子类的第一个子视图(含自身)
 - (nullable __kindof UIView *)fw_subviewOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
 
-/// 递归查找指定条件的第一个视图
+/// 递归查找指定条件的第一个子视图(含自身)
 - (nullable __kindof UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
+
+/// 递归查找指定条件的第一个父视图(含自身)
+- (nullable __kindof UIView *)fw_superviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
 
 /// 图片截图
 @property (nonatomic, readonly, nullable) UIImage *fw_snapshotImage NS_REFINED_FOR_SWIFT;
