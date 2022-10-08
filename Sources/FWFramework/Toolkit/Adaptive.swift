@@ -83,6 +83,10 @@ extension FW {
     /// 工具栏高度，与是否隐藏无关
     public static var toolBarHeight: CGFloat { return UIScreen.__fw_toolBarHeight }
 
+    /// 当前等比例缩放参考设计图宽度，默认375
+    public static var referenceWidth: CGFloat { return UIScreen.__fw_referenceSize.width }
+    /// 当前等比例缩放参考设计图高度，默认812
+    public static var referenceHeight: CGFloat { return UIScreen.__fw_referenceSize.height }
     /// 当前屏幕宽度缩放比例
     public static var relativeScale: CGFloat { return UIScreen.__fw_relativeScale }
     /// 当前屏幕高度缩放比例
@@ -333,6 +337,17 @@ extension Wrapper where Base: UIScreen {
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         return Base.__fw_flatValue(value, scale: scale)
+    }
+    
+}
+
+// MARK: - UIView+Adaptive
+extension Wrapper where Base: UIView {
+    
+    /// 是否自动等比例缩放方式设置transform，默认NO
+    public var autoScaleTransform: Bool {
+        get { return base.__fw_autoScaleTransform }
+        set { base.__fw_autoScaleTransform = newValue }
     }
     
 }

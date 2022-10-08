@@ -7,6 +7,8 @@
 
 #import "FWAlertPluginImpl.h"
 #import "FWAlertController.h"
+#import "FWAdaptive.h"
+#import "FWUIKit.h"
 #import "FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWMessage.h"
@@ -382,6 +384,15 @@
         if (preferredAction) {
             alertController.preferredAction = preferredAction;
         }
+    }
+    
+    // 兼容iPad，默认居中显示ActionSheet。注意点击视图(如UIBarButtonItem)必须是sourceView及其子视图
+    if ([UIDevice fw_isIpad] && alertController.popoverPresentationController) {
+        UIView *ancestorView = [viewController fw_ancestorView];
+        UIPopoverPresentationController *popoverController = alertController.popoverPresentationController;
+        popoverController.sourceView = ancestorView;
+        popoverController.sourceRect = CGRectMake(ancestorView.center.x, ancestorView.center.y, 0, 0);
+        popoverController.permittedArrowDirections = 0;
     }
     
     // 自定义Alert

@@ -8,6 +8,7 @@
 #import "FWAdaptive.h"
 #import "FWNavigator.h"
 #import "FWUIKit.h"
+#import <objc/runtime.h>
 
 #pragma mark - UIApplication+FWAdaptive
 
@@ -388,6 +389,33 @@ static CGFloat fwStaticReferenceHeight = 812;
     scale = scale ?: [UIScreen mainScreen].scale;
     CGFloat flattedValue = ceil(value * scale) / scale;
     return flattedValue;
+}
+
+@end
+
+#pragma mark - UIView+FWAdaptive
+
+@implementation UIView (FWAdaptive)
+
+- (BOOL)fw_autoScaleTransform
+{
+    return [objc_getAssociatedObject(self, @selector(fw_autoScaleTransform)) boolValue];
+}
+
+- (void)setFw_autoScaleTransform:(BOOL)autoScale
+{
+    objc_setAssociatedObject(self, @selector(fw_autoScaleTransform), @(autoScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (autoScale) {
+        CGFloat scaleX = UIScreen.fw_relativeScale;
+        CGFloat scaleY = UIScreen.fw_relativeHeightScale;
+        if (scaleX > scaleY) {
+            self.transform = CGAffineTransformMakeScale(scaleY, scaleY);
+        } else {
+            self.transform = CGAffineTransformMakeScale(scaleX, scaleX);
+        }
+    } else {
+        self.transform = CGAffineTransformIdentity;
+    }
 }
 
 @end

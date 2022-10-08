@@ -197,7 +197,7 @@ extension Wrapper where Base: UIViewController {
     ///   - message: 操作表消息
     ///   - cancel: 取消按钮标题，默认取消
     ///   - actions: 动作按钮标题列表
-    ///   - currentIndex: 当前选中动作索引
+    ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
@@ -205,7 +205,7 @@ extension Wrapper where Base: UIViewController {
         message: Any?,
         cancel: Any?,
         actions: [Any]?,
-        currentIndex: Int,
+        currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -218,7 +218,7 @@ extension Wrapper where Base: UIViewController {
     ///   - message: 操作表消息
     ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
     ///   - actions: 动作按钮标题列表
-    ///   - currentIndex: 当前选中动作索引
+    ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为输入值数组和索引index
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
@@ -227,7 +227,7 @@ extension Wrapper where Base: UIViewController {
         message: Any?,
         cancel: Any?,
         actions: [Any]?,
-        currentIndex: Int,
+        currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?
@@ -434,7 +434,7 @@ extension Wrapper where Base: UIView {
     ///   - message: 操作表消息
     ///   - cancel: 取消按钮标题，默认取消
     ///   - actions: 动作按钮标题列表
-    ///   - currentIndex: 当前选中动作索引
+    ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
@@ -442,7 +442,7 @@ extension Wrapper where Base: UIView {
         message: Any?,
         cancel: Any?,
         actions: [Any]?,
-        currentIndex: Int,
+        currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -455,7 +455,7 @@ extension Wrapper where Base: UIView {
     ///   - message: 操作表消息
     ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
     ///   - actions: 动作按钮标题列表
-    ///   - currentIndex: 当前选中动作索引
+    ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为输入值数组和索引index
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
@@ -464,7 +464,7 @@ extension Wrapper where Base: UIView {
         message: Any?,
         cancel: Any?,
         actions: [Any]?,
-        currentIndex: Int,
+        currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?

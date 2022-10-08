@@ -149,11 +149,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 移除所有子视图
 - (void)fw_removeAllSubviews NS_REFINED_FOR_SWIFT;
 
-/// 递归查找指定子类的第一个视图
+/// 递归查找指定子类的第一个子视图(含自身)
 - (nullable __kindof UIView *)fw_subviewOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
 
-/// 递归查找指定条件的第一个视图
+/// 递归查找指定条件的第一个子视图(含自身)
 - (nullable __kindof UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
+
+/// 递归查找指定条件的第一个父视图(含自身)
+- (nullable __kindof UIView *)fw_superviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
 
 /// 图片截图
 @property (nonatomic, readonly, nullable) UIImage *fw_snapshotImage NS_REFINED_FOR_SWIFT;
@@ -634,6 +637,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
 @property (nonatomic, assign, readonly) BOOL fw_isViewVisible NS_REFINED_FOR_SWIFT;
+
+/// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
+@property (nonatomic, strong, readonly) UIView *fw_ancestorView NS_REFINED_FOR_SWIFT;
 
 /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
 @property (nonatomic, assign) BOOL fw_isLoaded NS_REFINED_FOR_SWIFT;

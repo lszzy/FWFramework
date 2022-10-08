@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>UIView(FWAlertPlugin) Category Reference</title>
+    <title>UIView(FWAdaptive) Category Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Extension/UIView(FWAlertPlugin)" class="dashAnchor"></a>
-    <a title="UIView(FWAlertPlugin) Category Reference"></a>
+    <a name="//apple_ref/swift/Extension/UIView(FWAdaptive)" class="dashAnchor"></a>
+    <a title="UIView(FWAdaptive) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.1.2 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.2.0 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">FWFramework Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        UIView(FWAlertPlugin) Category Reference
+        UIView(FWAdaptive) Category Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -336,7 +336,7 @@
                 <a href="../Categories/UIToolbar%28FWBarTransition%29.html">UIToolbar(FWBarTransition)</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Categories/UIView%28FWAlertPlugin%29.html">UIView(FWAlertPlugin)</a>
+                <a href="../Categories/UIView%28FWAdaptive%29.html">UIView(FWAdaptive)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/UIViewController%28FWAdaptive%29.html">UIViewController(FWAdaptive)</a>
@@ -1005,6 +1005,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SkeletonView.html">SkeletonView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SwizzleStore.html">SwizzleStore</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/TabBar.html">TabBar</a>
@@ -2550,19 +2553,64 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>UIView(FWAlertPlugin)</h1>
+            <h1>UIView(FWAdaptive)</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UIView</span> <span class="p">(</span><span class="nl">FWAlertPlugin</span><span class="p">)</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UIView</span> <span class="p">(</span><span class="nl">FWAdaptive</span><span class="p">)</span>
+
+<span class="c1">/// 是否自动等比例缩放方式设置transform，默认NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_autoScaleTransform</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="k">@end</span></code></pre>
 
                 </div>
               </div>
-            <p>UIView使用弹窗插件，内部使用UIView.fw.viewController</p>
+            <p>Undocumented</p>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIView(py)fw_autoScaleTransform"></a>
+                    <a name="//apple_ref/swift/Property/fw_autoScaleTransform" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(py)fw_autoScaleTransform">fw_autoScaleTransform</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>是否自动等比例缩放方式设置transform，默认NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_autoScaleTransform</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UIView%2BFWAlertPlugin"></a>
+                <a name="//apple_ref/swift/Section/UIView+FWAlertPlugin" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UIView%2BFWAlertPlugin"></a>
+                  <h3 class="section-name"><span>UIView+FWAlertPlugin</span>
+</h3>
+                </div>
+              </div>
               <ul>
                 <li class="item">
                   <div>
@@ -4201,14 +4249,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>视图是否自动等比例缩放布局，默认返回全局开关</p>
+                        <p>视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n"><a href="../Categories/UIView%28FWAlertPlugin%29.html#/c:objc(cs)UIView(cpy)fw_autoScale">fw_autoScale</a></span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n"><a href="../Categories/UIView%28FWAdaptive%29.html#/c:objc(cs)UIView(cpy)fw_autoScale">fw_autoScale</a></span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -13642,7 +13690,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>递归查找指定子类的第一个视图</p>
+                        <p>递归查找指定子类的第一个子视图(含自身)</p>
 
                       </div>
                       <div class="declaration">
@@ -13669,7 +13717,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>递归查找指定条件的第一个视图</p>
+                        <p>递归查找指定条件的第一个子视图(含自身)</p>
 
                       </div>
                       <div class="declaration">
@@ -13677,6 +13725,34 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_subviewOfBlock</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="nv">block</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIView(im)fw_superviewOfBlock:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_superviewOfBlock:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_superviewOfBlock:">-fw_superviewOfBlock:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>递归查找指定条件的第一个父视图(含自身)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_superviewOfBlock</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -14089,7 +14165,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-22)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
