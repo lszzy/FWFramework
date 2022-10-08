@@ -44,6 +44,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
             ["操作表(样式)", "onSheetA"],
             ["警告框(优先)", "onAlertP"],
             ["操作表(优先)", "onSheetP"],
+            ["操作表(多个)", "onSheetM"],
             ["关闭弹出框", "onCloseA"],
         ])
     }
@@ -263,6 +264,13 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
             self?.fw.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
                 self?.fw.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: nil)
             })
+        }
+    }
+    
+    func onSheetM() {
+        Navigator.topPresentedController?.fw.showSheet(title: "第一个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Navigator.topPresentedController?.fw.showSheet(title: "第二个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
         }
     }
     

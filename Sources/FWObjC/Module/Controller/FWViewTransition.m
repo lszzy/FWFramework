@@ -1045,21 +1045,14 @@
 
 - (UIView *)fw_transitionToController:(UIViewController *)viewController pinEdges:(BOOL)pinEdges
 {
-    UIView *containerView = nil;
-    if (viewController.tabBarController && !viewController.tabBarController.tabBar.hidden) {
-        containerView = viewController.tabBarController.view;
-    } else if (viewController.navigationController && !viewController.navigationController.navigationBarHidden) {
-        containerView = viewController.navigationController.view;
-    } else {
-        containerView = viewController.view;
-    }
-    [containerView addSubview:self];
+    UIView *ancestorView = [viewController fw_ancestorView];
+    [ancestorView addSubview:self];
     if (pinEdges) {
         [self fw_pinEdgesToSuperview];
-        [containerView setNeedsLayout];
-        [containerView layoutIfNeeded];
+        [ancestorView setNeedsLayout];
+        [ancestorView layoutIfNeeded];
     }
-    return containerView;
+    return ancestorView;
 }
 
 - (UIViewController *)fw_wrappedTransitionController:(BOOL)pinEdges

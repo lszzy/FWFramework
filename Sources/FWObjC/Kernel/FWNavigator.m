@@ -376,12 +376,9 @@
         return nil;
     }
     
-    NSMutableArray *currentControllers = [self.viewControllers mutableCopy];
-    NSUInteger remainCount = currentControllers.count > count ? currentControllers.count - count : 1;
-    NSArray *viewControllers = [currentControllers subarrayWithRange:NSMakeRange(0, remainCount)];
-    [currentControllers removeObjectsInRange:NSMakeRange(0, remainCount)];
-    [self fw_setViewControllers:viewControllers animated:animated completion:completion];
-    return currentControllers;
+    NSInteger toIndex = MAX(self.viewControllers.count - count - 1, 0);
+    UIViewController *toController = [self.viewControllers objectAtIndex:toIndex];
+    return [self fw_popToViewController:toController animated:animated completion:completion];
 }
 
 #pragma mark - Workflow

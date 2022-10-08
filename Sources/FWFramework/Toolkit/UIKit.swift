@@ -267,14 +267,19 @@ extension Wrapper where Base: UIView {
         base.__fw_removeAllSubviews()
     }
 
-    /// 递归查找指定子类的第一个视图
+    /// 递归查找指定子类的第一个子视图(含自身)
     public func subview(of clazz: AnyClass) -> UIView? {
         return base.__fw_subview(of: clazz)
     }
 
-    /// 递归查找指定条件的第一个视图
+    /// 递归查找指定条件的第一个子视图(含自身)
     public func subview(of block: @escaping (UIView) -> Bool) -> UIView? {
         return base.__fw_subview(of: block)
+    }
+    
+    /// 递归查找指定条件的第一个父视图(含自身)
+    public func superview(of block: @escaping (UIView) -> Bool) -> UIView? {
+        return base.__fw_superview(of: block)
     }
 
     /// 图片截图
@@ -1000,6 +1005,11 @@ extension Wrapper where Base: UIViewController {
     /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
     public var isViewVisible: Bool {
         return base.__fw_isViewVisible
+    }
+    
+    /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
+    public var ancestorView: UIView {
+        return base.__fw_ancestorView
     }
 
     /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断

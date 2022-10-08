@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)fw_openPhoneApp:(NSString *)phone completionHandler:(nullable void (^)(BOOL success))completion NS_REFINED_FOR_SWIFT;
 
 /// 打开系统分享
-+ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes NS_REFINED_FOR_SWIFT;
++ (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(nullable NSArray<UIActivityType> *)excludedTypes customBlock:(nullable void(^)(UIActivityViewController *activityController))customBlock NS_REFINED_FOR_SWIFT;
 
 /// 打开内部浏览器，支持NSString|NSURL
 + (void)fw_openSafariController:(id)url NS_REFINED_FOR_SWIFT;

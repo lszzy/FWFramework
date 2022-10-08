@@ -762,14 +762,14 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
-- (UIView *)fw_subviewOfClass:(Class)clazz
+- (__kindof UIView *)fw_subviewOfClass:(Class)clazz
 {
     return [self fw_subviewOfBlock:^BOOL(UIView *view) {
         return [view isKindOfClass:clazz];
     }];
 }
 
-- (UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block
+- (__kindof UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block
 {
     if (block(self)) {
         return self;
@@ -790,6 +790,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
     
     return nil;
+}
+
+- (__kindof UIView *)fw_superviewOfBlock:(BOOL (^)(UIView *))block
+{
+    UIView *resultView = nil;
+    UIView *superview = self;
+    while (superview != nil) {
+        if (block(superview)) {
+            resultView = superview;
+            break;
+        }
+        superview = superview.superview;
+    }
+    return resultView;
 }
 
 - (UIImage *)fw_snapshotImage
@@ -2952,6 +2966,17 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (BOOL)fw_isViewVisible
 {
     return self.isViewLoaded && self.view.window;
+}
+
+- (UIView *)fw_ancestorView
+{
+    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+        return self.tabBarController.view;
+    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
+        return self.navigationController.view;
+    } else {
+        return self.view;
+    }
 }
 
 - (BOOL)fw_isLoaded

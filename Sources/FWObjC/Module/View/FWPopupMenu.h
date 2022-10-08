@@ -163,7 +163,7 @@ NS_SWIFT_NAME(PopupMenuDelegate)
  cell 的高度是根据 itemHeight 的，直接设置无效
  建议cell 背景色设置为透明色，不然切的圆角显示不出来
  */
-- (UITableViewCell *)popupMenu:(FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index;
+- (nullable UITableViewCell *)popupMenu:(FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index;
 
 @end
 
