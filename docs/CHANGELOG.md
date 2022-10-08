@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.0] - 2022-10-08
+
+### Changed
+* Globally compatible with iPad
+* Refactor Swift version Swizzle related API methods
+* Added a common method of proportional scaling screen adaptation
+* Modify the autoScale property to take effect for the current view and its subviews
+
 ## [4.1.2] - 2022-09-22
 
 ### Fixed

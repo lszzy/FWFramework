@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.1.2 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.2.0 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -336,7 +336,7 @@
                 <a href="../Categories/UIToolbar%28FWBarTransition%29.html">UIToolbar(FWBarTransition)</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Categories/UIView%28FWAlertPlugin%29.html">UIView(FWAlertPlugin)</a>
+                <a href="../Categories/UIView%28FWAdaptive%29.html">UIView(FWAdaptive)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Categories/UIViewController%28FWAdaptive%29.html">UIViewController(FWAdaptive)</a>
@@ -1005,6 +1005,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SkeletonView.html">SkeletonView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SwizzleStore.html">SwizzleStore</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/TabBar.html">TabBar</a>
@@ -4605,8 +4608,8 @@
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleMethod(_:selector:identifier:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleMethod(_:<wbr>selector:<wbr>identifier:<wbr>block:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/swizzleMethod(_:selector:identifier:methodSignature:swizzleSignature:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">swizzleMethod(_:<wbr>selector:<wbr>identifier:<wbr>methodSignature:<wbr>swizzleSignature:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4616,6 +4619,17 @@
                       <div class="abstract">
                         <p>通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用</p>
 
+<p>Swift实现代码示例：
+NSObject.fw.swizzleMethod(
+    UIViewController.self,
+    selector: #selector(UIViewController.viewDidLoad)
+) { (store: SwizzleStore
+     &lt;@convention&copy; (UIViewController, Selector) -&gt; Void,
+     @convention(block) (UIViewController) -&gt; Void&gt;) in {
+    store.original($0, store.selector)
+    // &hellip;
+}}</p>
+
                       </div>
                     </section>
                   </div>
@@ -4624,8 +4638,8 @@
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleInstanceMethod(_:selector:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleInstanceMethod(_:<wbr>selector:<wbr>block:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/swizzleInstanceMethod(_:selector:identifier:methodSignature:swizzleSignature:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">swizzleInstanceMethod(_:<wbr>selector:<wbr>identifier:<wbr>methodSignature:<wbr>swizzleSignature:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4633,20 +4647,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>使用swizzle替换类实例方法为block实现。复杂情况不会冲突，推荐使用</p>
+                        <p>使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用</p>
 
 <p>Swift实现代码示例：
-NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString(&ldquo;viewDidLoad&rdquo;)) { targetClass, originalCMD, originalIMP in
-    let swizzleIMP: @convention(block)(UIViewController) -&gt; Void = { selfObject in
-        typealias originalMSGType = @convention&copy;(UIViewController, Selector) -&gt; Void
-        let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
-        originalMSG(selfObject, originalCMD)</p>
-<pre class="highlight swift"><code>    <span class="c1">// ...</span>
-<span class="p">}</span>
-<span class="k">return</span> <span class="nf">unsafeBitCast</span><span class="p">(</span><span class="n">swizzleIMP</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
-</code></pre>
-
-<p>}</p>
+NSObject.fw.swizzleInstanceMethod(
+    UIViewController.self,
+    selector: #selector(UIViewController.viewDidLoad),
+    methodSignature: (@convention&copy; (UIViewController, Selector) -&gt; Void).self,
+    swizzleSignature: (@convention(block) (UIViewController) -&gt; Void).self
+) { store in { selfObject in
+    store.original(selfObject, store.selector)
+    // &hellip;
+}}</p>
 
                       </div>
                     </section>
@@ -4656,8 +4668,8 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleClassMethod(_:selector:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleClassMethod(_:<wbr>selector:<wbr>block:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/swizzleClassMethod(_:selector:identifier:methodSignature:swizzleSignature:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">swizzleClassMethod(_:<wbr>selector:<wbr>identifier:<wbr>methodSignature:<wbr>swizzleSignature:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4665,7 +4677,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>使用swizzle替换类静态方法为block实现。复杂情况不会冲突，推荐使用</p>
+                        <p>使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用</p>
 
                       </div>
                     </section>
@@ -4675,46 +4687,8 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleInstanceMethod(_:selector:identifier:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleInstanceMethod(_:<wbr>selector:<wbr>identifier:<wbr>block:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>使用swizzle替换类实例方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用</p>
-
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleClassMethod(_:selector:identifier:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleClassMethod(_:<wbr>selector:<wbr>identifier:<wbr>block:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>使用swizzle替换类静态方法为block实现，identifier相同时仅执行一次。复杂情况不会冲突，推荐使用</p>
-
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/swizzleInstanceMethod(_:identifier:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">swizzleInstanceMethod(_:<wbr>identifier:<wbr>block:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/swizzleInstanceMethod(_:identifier:methodSignature:swizzleSignature:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">swizzleInstanceMethod(_:<wbr>identifier:<wbr>methodSignature:<wbr>swizzleSignature:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -12002,6 +11976,38 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/UIView%2BAdaptive"></a>
+                <a name="//apple_ref/swift/Section/UIView+Adaptive" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UIView%2BAdaptive"></a>
+                  <h3 class="section-name"><span>UIView+Adaptive</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Property/autoScaleTransform" class="dashAnchor"></a>
+                    <a class="token" href="#/">autoScaleTransform</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>是否自动等比例缩放方式设置transform，默认NO</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/UIViewController%2BAdaptive"></a>
                 <a name="//apple_ref/swift/Section/UIViewController+Adaptive" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -12247,7 +12253,7 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>视图是否自动等比例缩放布局，默认返回全局开关</p>
+                        <p>视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关</p>
 
                       </div>
                     </section>
@@ -19657,8 +19663,8 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/openActivityItems(_:excludedTypes:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">openActivityItems(_:<wbr>excludedTypes:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/openActivityItems(_:excludedTypes:customBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">openActivityItems(_:<wbr>excludedTypes:<wbr>customBlock:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22602,7 +22608,26 @@ NSObject.fw.swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFro
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>递归查找指定子类的第一个视图</p>
+                        <p>递归查找指定子类的第一个子视图(含自身)</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/superview(of:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">superview(of:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>递归查找指定条件的第一个父视图(含自身)</p>
 
                       </div>
                     </section>
@@ -24519,6 +24544,25 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                   <div>
                     <code>
                     <a name="/"></a>
+                    <a name="//apple_ref/swift/Property/ancestorView" class="dashAnchor"></a>
+                    <a class="token" href="#/">ancestorView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
                     <a name="//apple_ref/swift/Property/isLoaded" class="dashAnchor"></a>
                     <a class="token" href="#/">isLoaded</a>
                     </code>
@@ -24596,7 +24640,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-09-22)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

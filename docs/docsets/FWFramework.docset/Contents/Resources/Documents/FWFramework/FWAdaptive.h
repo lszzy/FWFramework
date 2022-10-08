@@ -141,6 +141,10 @@ static const FWScreenInch FWScreenInch67 = 67;
 /// 工具栏高度，与是否隐藏无关
 #define FWToolBarHeight [UIScreen fw_toolBarHeight]
 
+/// 当前等比例缩放参考设计图宽度，默认375
+#define FWReferenceWidth [UIScreen fw_referenceSize].width
+/// 当前等比例缩放参考设计图高度，默认812
+#define FWReferenceHeight [UIScreen fw_referenceSize].height
 /// 当前屏幕宽度缩放比例
 #define FWRelativeScale [UIScreen fw_relativeScale]
 /// 当前屏幕高度缩放比例
@@ -225,6 +229,15 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 
 /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
 + (CGFloat)fw_flatValue:(CGFloat)value scale:(CGFloat)scale NS_REFINED_FOR_SWIFT;
+
+@end
+
+#pragma mark - UIView+FWAdaptive
+
+@interface UIView (FWAdaptive)
+
+/// 是否自动等比例缩放方式设置transform，默认NO
+@property (nonatomic, assign) BOOL fw_autoScaleTransform NS_REFINED_FOR_SWIFT;
 
 @end
 
