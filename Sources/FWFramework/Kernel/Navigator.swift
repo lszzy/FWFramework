@@ -14,9 +14,10 @@ import FWObjC
 extension Wrapper where Base: UIWindow {
     
     // MARK: - Static
-    /// 获取当前主window
+    /// 获取当前主window，可自定义
     public static var main: UIWindow? {
-        return Base.__fw_main
+        get { return Base.__fw_main }
+        set { Base.__fw_main = newValue }
     }
 
     /// 获取当前主场景
