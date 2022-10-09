@@ -309,6 +309,7 @@
     FWHTTPSessionManager *sessionManager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
     FWImageResponseSerializer *responseSerializer = [FWImageResponseSerializer serializer];
     responseSerializer.imageScale = 1;
+    responseSerializer.cacheImageData = YES;
     sessionManager.responseSerializer = responseSerializer;
 
     return [self initWithSessionManager:sessionManager
@@ -743,6 +744,9 @@
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
+                           if (responseObject) {
+                               objc_setAssociatedObject(responseObject, @selector(cacheImageData), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                           }
                            if (completion) {
                                completion(responseObject, NO, nil);
                            }
@@ -878,8 +882,13 @@
              progress:(void (^)(double))progress
 {
     return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+        NSData *imageData = nil;
+        if (responseObject) {
+            imageData = objc_getAssociatedObject(responseObject, @selector(cacheImageData));
+            objc_setAssociatedObject(responseObject, @selector(cacheImageData), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
         if (completion) {
-            completion(responseObject, nil, nil);
+            completion(responseObject, imageData, nil);
         }
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
         if (completion) {

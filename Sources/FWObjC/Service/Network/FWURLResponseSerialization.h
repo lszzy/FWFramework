@@ -266,6 +266,11 @@ NS_SWIFT_NAME(ImageResponseSerializer)
 @property (nonatomic, assign) CGFloat imageScale;
 
 /**
+ Whether to cache image data for image. `NO` by default.
+ */
+@property (nonatomic, assign) BOOL cacheImageData;
+
+/**
  Whether to automatically inflate response image data for compressed formats (such as PNG or JPEG). Enabling this can significantly improve drawing performance on iOS when used with `setCompletionBlockWithSuccess:failure:`, as it allows a bitmap representation to be constructed in the background rather than on the main thread. `YES` by default.
  */
 @property (nonatomic, assign) BOOL automaticallyInflatesResponseImage;
