@@ -26,19 +26,19 @@ extension Wrapper where Base: UIViewController {
 
     /// 自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition
     @discardableResult
-    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)?) -> AnimatedTransition {
+    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
         return base.__fw_setPresentTransition(presentationBlock)
     }
 
     /// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
     @discardableResult
-    public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)?) -> AnimatedTransition {
+    public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
         return base.__fw_setAlertTransition(presentationBlock)
     }
     
     /// 自定义控制器fade渐变转场(蒙层和内容渐变动画)，会设置fwModalTransition;
     @discardableResult
-    public func setFadeTransition(_ presentationBlock: ((PresentationController) -> Void)?) -> AnimatedTransition {
+    public func setFadeTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
         return base.__fw_setFadeTransition(presentationBlock)
     }
     
@@ -59,27 +59,27 @@ extension Wrapper where Base: UIView {
     
     /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
     @discardableResult
-    public func transition(to viewController: UIViewController, pinEdges: Bool) -> UIView {
+    public func transition(to viewController: UIViewController, pinEdges: Bool = true) -> UIView {
         return base.__fw_transition(to: viewController, pinEdges: pinEdges)
     }
 
     /// 包装到转场控制器(pinEdges占满父视图)，返回创建的控制器
-    public func wrappedTransitionController(_ pinEdges: Bool) -> UIViewController {
+    public func wrappedTransitionController(_ pinEdges: Bool = true) -> UIViewController {
         return base.__fw_wrappedTransitionController(pinEdges)
     }
 
     /// 自定义视图模拟present系统转场(蒙层渐变，内容向上动画)
-    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, completion: ((Bool) -> Void)?) {
+    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, completion: ((Bool) -> Void)? = nil) {
         base.__fw_setPresent(transitionType, contentView: contentView, completion: completion)
     }
 
     /// 自定义视图模拟alert缩放转场(蒙层渐变，内容缩放动画)
-    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)?) {
+    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
         base.__fw_setAlert(transitionType, completion: completion)
     }
 
     /// 自定义视图模拟fade渐变转场(蒙层和内容渐变动画)
-    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)?) {
+    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
         base.__fw_setFade(transitionType, completion: completion)
     }
     
