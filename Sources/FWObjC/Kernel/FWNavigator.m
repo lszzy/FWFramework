@@ -56,11 +56,16 @@
 
 #pragma mark - UIWindow+FWNavigator
 
+static UIWindow *fwStaticMainWindow = nil;
+
 @implementation UIWindow (FWNavigator)
 
 + (UIWindow *)fw_mainWindow
 {
-    UIWindow *mainWindow = UIApplication.sharedApplication.keyWindow;
+    UIWindow *mainWindow = fwStaticMainWindow;
+    if (mainWindow) return mainWindow;
+    
+    mainWindow = UIApplication.sharedApplication.keyWindow;
     if (!mainWindow) {
         for (UIWindow *window in UIApplication.sharedApplication.windows) {
             if (window.isKeyWindow) { mainWindow = window; break; }
@@ -78,6 +83,11 @@
     }
 #endif
     return mainWindow;
+}
+
++ (void)setFw_mainWindow:(UIWindow *)mainWindow
+{
+    fwStaticMainWindow = mainWindow;
 }
 
 + (UIWindowScene *)fw_mainScene
