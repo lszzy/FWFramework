@@ -706,14 +706,19 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         }
     }
 
+    UIImage *image = nil;
     NSDictionary *options = [self userInfoForResponse:response];
     if (self.automaticallyInflatesResponseImage) {
-        return FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
+        image = FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
     } else {
-        return FWImageWithDataAtScale(data, self.imageScale, options);
+        image = FWImageWithDataAtScale(data, self.imageScale, options);
     }
-
-    return nil;
+    
+    if (self.cacheImageData && image) {
+        objc_setAssociatedObject(image, @selector(cacheImageData), data, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    return image;
 }
 
 #pragma mark - NSSecureCoding
@@ -734,6 +739,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 #else
     self.imageScale = [imageScale floatValue];
 #endif
+    self.cacheImageData = [decoder decodeBoolForKey:NSStringFromSelector(@selector(cacheImageData))];
     self.automaticallyInflatesResponseImage = [decoder decodeBoolForKey:NSStringFromSelector(@selector(automaticallyInflatesResponseImage))];
     return self;
 }
@@ -742,6 +748,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     [super encodeWithCoder:coder];
 
     [coder encodeObject:@(self.imageScale) forKey:NSStringFromSelector(@selector(imageScale))];
+    [coder encodeBool:self.cacheImageData forKey:NSStringFromSelector(@selector(cacheImageData))];
     [coder encodeBool:self.automaticallyInflatesResponseImage forKey:NSStringFromSelector(@selector(automaticallyInflatesResponseImage))];
 }
 
@@ -750,6 +757,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 - (instancetype)copyWithZone:(NSZone *)zone {
     FWImageResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.imageScale = self.imageScale;
+    serializer.cacheImageData = self.cacheImageData;
     serializer.automaticallyInflatesResponseImage = self.automaticallyInflatesResponseImage;
     
     return serializer;
