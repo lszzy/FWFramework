@@ -874,16 +874,16 @@
 - (id)downloadImage:(NSURL *)imageURL
               options:(FWWebImageOptions)options
               context:(NSDictionary<FWImageCoderOptions, id> *)context
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
         if (completion) {
-            completion(responseObject, nil);
+            completion(responseObject, nil, nil);
         }
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
         if (completion) {
-            completion(nil, error);
+            completion(nil, nil, error);
         }
     } progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
         progress(downloadProgress.fractionCompleted);
