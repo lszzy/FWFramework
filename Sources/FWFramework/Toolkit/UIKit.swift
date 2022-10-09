@@ -292,6 +292,17 @@ extension Wrapper where Base: UIView {
         return base.__fw_snapshotPdf
     }
     
+    /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
+    public var sortIndex: Int {
+        get { return base.__fw_sortIndex }
+        set { base.__fw_sortIndex = newValue }
+    }
+
+    /// 根据sortIndex排序subviews，需结合sortIndex使用
+    public func sortSubviews() {
+        base.__fw_sortSubviews()
+    }
+    
 }
 
 // MARK: - UIImageView+UIKit
