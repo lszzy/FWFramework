@@ -90,8 +90,8 @@ NS_SWIFT_NAME(Navigator)
 
 @interface UIWindow (FWNavigator)
 
-/// 获取当前主window
-@property (class, nonatomic, readonly, nullable) UIWindow *fw_mainWindow NS_REFINED_FOR_SWIFT;
+/// 获取当前主window，可自定义
+@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow NS_REFINED_FOR_SWIFT;
 
 /// 获取当前主场景
 @property (class, nonatomic, readonly, nullable) UIWindowScene *fw_mainScene API_AVAILABLE(ios(13.0)) NS_REFINED_FOR_SWIFT;

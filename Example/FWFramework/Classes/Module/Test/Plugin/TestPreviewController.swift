@@ -97,7 +97,7 @@ extension TestPreviewController: ViewControllerProtocol {
                 if imageUrl.hasSuffix(".mp4") {
                     button.setImage(UIImage.fw.appIconImage(), for: .normal)
                 } else {
-                    UIImage.fw.downloadImage(imageUrl) { image, error in
+                    UIImage.fw.downloadImage(imageUrl) { image, _, error in
                         button.setImage(image ?? UIImage.fw.appIconImage(), for: .normal)
                     }
                 }

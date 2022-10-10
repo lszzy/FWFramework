@@ -154,7 +154,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 }
 
 + (id)fw_downloadImage:(id)url
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     return [self fw_downloadImage:url options:0 context:nil completion:completion progress:progress];
@@ -163,7 +163,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 + (id)fw_downloadImage:(id)url
               options:(FWWebImageOptions)options
               context:(NSDictionary<FWImageCoderOptions,id> *)context
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];

@@ -17,7 +17,7 @@
     <a title="UIImage(FWImagePlugin) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.2.0 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.2.1 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2588,14 +2588,14 @@
 
 <span class="c1">/// 下载网络图片并返回下载凭据</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nf">fw_downloadImage</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">url</span>
-                    <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">))</span><span class="nv">completion</span>
+                    <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">NSData</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">data</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">))</span><span class="nv">completion</span>
                       <span class="nf">progress</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">double</span> <span class="n">progress</span><span class="p">))</span><span class="nv">progress</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 下载网络图片并返回下载凭据，指定option</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nf">fw_downloadImage</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">url</span>
                        <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWWebImageOptions.html">FWWebImageOptions</a></span><span class="p">)</span><span class="nv">options</span>
                        <span class="nf">context</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n"><a href="../Type%20Definitions.html#/c:FWImagePlugin.h@T@FWImageCoderOptions">FWImageCoderOptions</a></span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span>
-                    <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">))</span><span class="nv">completion</span>
+                    <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">NSData</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">data</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">))</span><span class="nv">completion</span>
                       <span class="nf">progress</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">double</span> <span class="n">progress</span><span class="p">))</span><span class="nv">progress</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 指定下载凭据取消网络图片下载</span>
@@ -2887,6 +2887,7 @@
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span>
     <span class="nf">fw_downloadImage</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">url</span>
           <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
+                                       <span class="n">NSData</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
                                        <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">))</span><span class="n">completion</span>
             <span class="n">progress</span><span class="o">:</span><span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">double</span><span class="p">))</span><span class="n">progress</span><span class="p">;</span></code></pre>
 
@@ -2920,6 +2921,7 @@
              <span class="nf">options</span><span class="p">:(</span><span class="n"><a href="../Enums/FWWebImageOptions.html">FWWebImageOptions</a></span><span class="p">)</span><span class="nv">options</span>
              <span class="nf">context</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n"><a href="../Type%20Definitions.html#/c:FWImagePlugin.h@T@FWImageCoderOptions">FWImageCoderOptions</a></span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span>
           <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
+                                       <span class="n">NSData</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
                                        <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">))</span><span class="n">completion</span>
             <span class="n">progress</span><span class="o">:</span><span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">double</span><span class="p">))</span><span class="n">progress</span><span class="p">;</span></code></pre>
 
@@ -2960,7 +2962,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-08)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-10)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

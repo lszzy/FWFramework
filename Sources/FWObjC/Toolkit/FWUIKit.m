@@ -829,6 +829,32 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return data;
 }
 
+- (NSInteger)fw_sortIndex
+{
+    return [objc_getAssociatedObject(self, @selector(fw_sortIndex)) integerValue];
+}
+
+- (void)setFw_sortIndex:(NSInteger)sortIndex
+{
+    objc_setAssociatedObject(self, @selector(fw_sortIndex), @(sortIndex), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fw_sortSubviews
+{
+    NSMutableArray *sortViews = [NSMutableArray array];
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView *view, NSUInteger idx, BOOL *stop) {
+        if (view.fw_sortIndex != 0) [sortViews addObject:view];
+    }];
+    if (sortViews.count < 1) return;
+    
+    [sortViews sortUsingComparator:^NSComparisonResult(UIView *view1, UIView *view2) {
+        return (view1.fw_sortIndex < 0 && view2.fw_sortIndex < 0) ? [@(view2.fw_sortIndex) compare:@(view1.fw_sortIndex)] : [@(view1.fw_sortIndex) compare:@(view2.fw_sortIndex)];
+    }];
+    [sortViews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger idx, BOOL *stop) {
+        view.fw_sortIndex < 0 ? [self sendSubviewToBack:view] : [self bringSubviewToFront:view];
+    }];
+}
+
 @end
 
 #pragma mark - UIImageView+FWUIKit
@@ -2970,9 +2996,11 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (UIView *)fw_ancestorView
 {
-    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+    if (self.tabBarController.navigationController) {
+        return self.tabBarController.navigationController.view;
+    } else if (self.tabBarController) {
         return self.tabBarController.view;
-    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
+    } else if (self.navigationController) {
         return self.navigationController.view;
     } else {
         return self.view;

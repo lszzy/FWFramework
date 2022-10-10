@@ -270,6 +270,21 @@ NS_SWIFT_NAME(ImageResponseSerializer)
  */
 @property (nonatomic, assign) BOOL automaticallyInflatesResponseImage;
 
+/**
+ Whether to cache response data for response image. `NO` by default.
+ */
+@property (nonatomic, assign) BOOL shouldCacheResponseData;
+
+/**
+ Get the cached response data for response image if exists.
+ */
++ (nullable NSData *)cachedResponseDataForImage:(nullable UIImage *)image;
+
+/**
+ Clear the cached response data for response image if exists.
+ */
++ (void)clearCachedResponseDataForImage:(nullable UIImage *)image;
+
 @end
 
 #pragma mark -
