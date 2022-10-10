@@ -99,6 +99,12 @@ extension Wrapper where Base: UIViewController {
         set { base.__fw_toastInWindow = newValue }
     }
     
+    /// 设置吐司是否显示在祖先视图上，默认NO，显示到view上
+    public var toastInAncestor: Bool {
+        get { return base.__fw_toastInAncestor }
+        set { base.__fw_toastInAncestor = newValue }
+    }
+    
     /// 设置吐司外间距，默认zero
     public var toastInsets: UIEdgeInsets {
         get { return base.__fw_toastInsets }

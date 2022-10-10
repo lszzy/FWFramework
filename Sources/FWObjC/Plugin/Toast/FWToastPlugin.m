@@ -8,6 +8,7 @@
 #import "FWToastPlugin.h"
 #import "FWToastPluginImpl.h"
 #import "FWPlugin.h"
+#import "FWUIKit.h"
 #import "FWNavigator.h"
 #import <objc/runtime.h>
 
@@ -167,106 +168,106 @@
     objc_setAssociatedObject(self, @selector(fw_toastInWindow), @(toastInWindow), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fw_toastInAncestor
+{
+    return [objc_getAssociatedObject(self, @selector(fw_toastInAncestor)) boolValue];
+}
+
+- (void)setFw_toastInAncestor:(BOOL)toastInAncestor
+{
+    objc_setAssociatedObject(self, @selector(fw_toastInAncestor), @(toastInAncestor), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)fw_toastContainerView
+{
+    if (self.fw_toastInWindow) return UIWindow.fw_mainWindow;
+    if (self.fw_toastInAncestor) return self.fw_ancestorView;
+    return self.view;
+}
+
 - (UIEdgeInsets)fw_toastInsets
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    return view.fw_toastInsets;
+    return self.fw_toastContainerView.fw_toastInsets;
 }
 
 - (void)setFw_toastInsets:(UIEdgeInsets)toastInsets
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    view.fw_toastInsets = toastInsets;
+    self.fw_toastContainerView.fw_toastInsets = toastInsets;
 }
 
 - (void)fw_showLoading
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showLoading];
+    [self.fw_toastContainerView fw_showLoading];
 }
 
 - (void)fw_showLoadingWithText:(id)text
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showLoadingWithText:text];
+    [self.fw_toastContainerView fw_showLoadingWithText:text];
 }
 
 - (void)fw_showLoadingWithText:(id)text cancelBlock:(void (^)(void))cancelBlock
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showLoadingWithText:text cancelBlock:cancelBlock];
+    [self.fw_toastContainerView fw_showLoadingWithText:text cancelBlock:cancelBlock];
 }
 
 - (void)fw_hideLoading
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_hideLoading];
+    [self.fw_toastContainerView fw_hideLoading];
 }
 
 - (BOOL)fw_isShowingLoading
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    return [view fw_isShowingLoading];
+    return [self.fw_toastContainerView fw_isShowingLoading];
 }
 
 - (void)fw_showProgressWithText:(id)text progress:(CGFloat)progress
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showProgressWithText:text progress:progress];
+    [self.fw_toastContainerView fw_showProgressWithText:text progress:progress];
 }
 
 - (void)fw_showProgressWithText:(id)text progress:(CGFloat)progress cancelBlock:(void (^)(void))cancelBlock
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showProgressWithText:text progress:progress cancelBlock:cancelBlock];
+    [self.fw_toastContainerView fw_showProgressWithText:text progress:progress cancelBlock:cancelBlock];
 }
 
 - (void)fw_hideProgress
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_hideProgress];
+    [self.fw_toastContainerView fw_hideProgress];
 }
 
 - (BOOL)fw_isShowingProgress
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    return [view fw_isShowingProgress];
+    return [self.fw_toastContainerView fw_isShowingProgress];
 }
 
 - (void)fw_showMessageWithText:(id)text
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showMessageWithText:text];
+    [self.fw_toastContainerView fw_showMessageWithText:text];
 }
 
 - (void)fw_showMessageWithText:(id)text style:(FWToastStyle)style
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showMessageWithText:text style:style];
+    [self.fw_toastContainerView fw_showMessageWithText:text style:style];
 }
 
 - (void)fw_showMessageWithText:(id)text style:(FWToastStyle)style completion:(void (^)(void))completion
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showMessageWithText:text style:style completion:completion];
+    [self.fw_toastContainerView fw_showMessageWithText:text style:style completion:completion];
 }
 
 - (void)fw_showMessageWithText:(id)text style:(FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(void (^)(void))completion
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_showMessageWithText:text style:style autoHide:autoHide interactive:interactive completion:completion];
+    [self.fw_toastContainerView fw_showMessageWithText:text style:style autoHide:autoHide interactive:interactive completion:completion];
 }
 
 - (void)fw_hideMessage
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    [view fw_hideMessage];
+    [self.fw_toastContainerView fw_hideMessage];
 }
 
 - (BOOL)fw_isShowingMessage
 {
-    UIView *view = self.fw_toastInWindow ? UIWindow.fw_mainWindow : self.view;
-    return [view fw_isShowingMessage];
+    return [self.fw_toastContainerView fw_isShowingMessage];
 }
 
 @end

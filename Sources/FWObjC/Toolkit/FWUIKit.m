@@ -2996,9 +2996,11 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (UIView *)fw_ancestorView
 {
-    if (self.tabBarController && !self.tabBarController.tabBar.hidden) {
+    if (self.tabBarController.navigationController) {
+        return self.tabBarController.navigationController.view;
+    } else if (self.tabBarController) {
         return self.tabBarController.view;
-    } else if (self.navigationController && !self.navigationController.navigationBarHidden) {
+    } else if (self.navigationController) {
         return self.navigationController.view;
     } else {
         return self.view;
