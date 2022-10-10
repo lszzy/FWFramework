@@ -124,7 +124,7 @@ extension WebImageView {
             guard !loadingSucceed else { return }
             
             loadingSucceed = true
-            receipt = UIImage.fw.downloadImage(url, completion: { [weak self] (image, error) in
+            receipt = UIImage.fw.downloadImage(url, completion: { [weak self] (image, data, error) in
                 guard let self = self else { return }
                 
                 if let image = image {

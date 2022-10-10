@@ -115,7 +115,7 @@
 - (id)downloadImage:(NSURL *)imageURL
               options:(FWWebImageOptions)options
               context:(NSDictionary<FWImageCoderOptions,id> *)context
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     return [[SDWebImageManager sharedManager]
@@ -135,7 +135,7 @@
             } : nil)
             completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
                 if (completion) {
-                    completion(image, error);
+                    completion(image, data, error);
                 }
             }];
 }

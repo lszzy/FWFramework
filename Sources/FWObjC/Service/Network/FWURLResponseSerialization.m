@@ -694,6 +694,23 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     return self;
 }
 
++ (NSData *)cachedResponseDataForImage:(UIImage *)image
+{
+    if (!image) return nil;
+    return objc_getAssociatedObject(image, @selector(cachedResponseDataForImage:));
+}
+
++ (void)setCachedResponseData:(NSData *)data forImage:(UIImage *)image
+{
+    if (!image) return;
+    objc_setAssociatedObject(image, @selector(cachedResponseDataForImage:), data, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (void)clearCachedResponseDataForImage:(UIImage *)image
+{
+    [self setCachedResponseData:nil forImage:image];
+}
+
 #pragma mark - FWURLResponseSerializer
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
@@ -706,14 +723,19 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         }
     }
 
+    UIImage *image = nil;
     NSDictionary *options = [self userInfoForResponse:response];
     if (self.automaticallyInflatesResponseImage) {
-        return FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
+        image = FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
     } else {
-        return FWImageWithDataAtScale(data, self.imageScale, options);
+        image = FWImageWithDataAtScale(data, self.imageScale, options);
     }
-
-    return nil;
+    
+    if (self.shouldCacheResponseData && image) {
+        [FWImageResponseSerializer setCachedResponseData:data forImage:image];
+    }
+    
+    return image;
 }
 
 #pragma mark - NSSecureCoding
@@ -735,6 +757,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     self.imageScale = [imageScale floatValue];
 #endif
     self.automaticallyInflatesResponseImage = [decoder decodeBoolForKey:NSStringFromSelector(@selector(automaticallyInflatesResponseImage))];
+    self.shouldCacheResponseData = [decoder decodeBoolForKey:NSStringFromSelector(@selector(shouldCacheResponseData))];
     return self;
 }
 
@@ -743,6 +766,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 
     [coder encodeObject:@(self.imageScale) forKey:NSStringFromSelector(@selector(imageScale))];
     [coder encodeBool:self.automaticallyInflatesResponseImage forKey:NSStringFromSelector(@selector(automaticallyInflatesResponseImage))];
+    [coder encodeBool:self.shouldCacheResponseData forKey:NSStringFromSelector(@selector(shouldCacheResponseData))];
 }
 
 #pragma mark - NSCopying
@@ -751,6 +775,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     FWImageResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.imageScale = self.imageScale;
     serializer.automaticallyInflatesResponseImage = self.automaticallyInflatesResponseImage;
+    serializer.shouldCacheResponseData = self.shouldCacheResponseData;
     
     return serializer;
 }

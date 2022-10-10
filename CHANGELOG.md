@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.1] - 2022-10-10
+
+### Added
+* Added data callback parameter when the picture plugin downloads pictures
+* Support custom global mainWindow properties
+* Added UIView sorting subview hierarchy method
+* View controller added toastInAncestor property
+
 ## [4.2.0] - 2022-10-08
 
 ### Changed

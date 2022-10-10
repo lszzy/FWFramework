@@ -53,7 +53,7 @@ NS_SWIFT_NAME(ImagePlugin)
 - (nullable id)downloadImage:(nullable NSURL *)imageURL
                        options:(FWWebImageOptions)options
                        context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
-                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                    completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
 /// image取消下载网络图片插件方法，指定下载凭据
@@ -106,14 +106,14 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 
 /// 下载网络图片并返回下载凭据
 + (nullable id)fw_downloadImage:(nullable id)url
-                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                    completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
 
 /// 下载网络图片并返回下载凭据，指定option
 + (nullable id)fw_downloadImage:(nullable id)url
                        options:(FWWebImageOptions)options
                        context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
-                    completion:(void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
+                    completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
 
 /// 指定下载凭据取消网络图片下载

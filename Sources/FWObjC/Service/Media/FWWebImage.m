@@ -309,6 +309,7 @@
     FWHTTPSessionManager *sessionManager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
     FWImageResponseSerializer *responseSerializer = [FWImageResponseSerializer serializer];
     responseSerializer.imageScale = 1;
+    responseSerializer.shouldCacheResponseData = YES;
     sessionManager.responseSerializer = responseSerializer;
 
     return [self initWithSessionManager:sessionManager
@@ -743,6 +744,7 @@
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
+                           [FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
                            if (completion) {
                                completion(responseObject, NO, nil);
                            }
@@ -874,16 +876,18 @@
 - (id)downloadImage:(NSURL *)imageURL
               options:(FWWebImageOptions)options
               context:(NSDictionary<FWImageCoderOptions, id> *)context
-           completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
+           completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
     return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+        NSData *imageData = [FWImageResponseSerializer cachedResponseDataForImage:responseObject];
+        [FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
         if (completion) {
-            completion(responseObject, nil);
+            completion(responseObject, imageData, nil);
         }
     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
         if (completion) {
-            completion(nil, error);
+            completion(nil, nil, error);
         }
     } progress:(progress ? ^(NSProgress * _Nonnull downloadProgress) {
         progress(downloadProgress.fractionCompleted);

@@ -164,6 +164,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// Pdf截图
 @property (nonatomic, readonly, nullable) NSData *fw_snapshotPdf NS_REFINED_FOR_SWIFT;
 
+/// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
+@property (nonatomic, assign) NSInteger fw_sortIndex NS_REFINED_FOR_SWIFT;
+
+/// 根据sortIndex排序subviews，需结合sortIndex使用
+- (void)fw_sortSubviews NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIImageView+FWUIKit
