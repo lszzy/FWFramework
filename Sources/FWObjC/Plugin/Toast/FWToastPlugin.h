@@ -117,6 +117,9 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 设置吐司是否显示在window上，默认NO，显示到view上
 @property (nonatomic, assign) BOOL fw_toastInWindow NS_REFINED_FOR_SWIFT;
 
+/// 设置吐司是否显示在祖先视图上，默认NO，显示到view上
+@property (nonatomic, assign) BOOL fw_toastInAncestor NS_REFINED_FOR_SWIFT;
+
 /// 设置吐司外间距，默认zero
 @property (nonatomic, assign) UIEdgeInsets fw_toastInsets NS_REFINED_FOR_SWIFT;
 
