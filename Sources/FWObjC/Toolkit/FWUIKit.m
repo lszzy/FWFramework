@@ -610,6 +610,25 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return borderLayer;
 }
 
+- (void)fw_setDashBorderLayer:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius lineLength:(CGFloat)lineLength lineSpacing:(CGFloat)lineSpacing
+{
+    CAShapeLayer *borderLayer = objc_getAssociatedObject(self, _cmd);
+    if (!borderLayer) {
+        borderLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:borderLayer];
+        objc_setAssociatedObject(self, _cmd, borderLayer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    borderLayer.frame = self.bounds;
+    borderLayer.fillColor = [UIColor clearColor].CGColor;
+    borderLayer.strokeColor = color.CGColor;
+    borderLayer.lineWidth = width;
+    borderLayer.lineJoin = kCALineJoinRound;
+    borderLayer.lineDashPattern = @[@(lineLength), @(lineSpacing)];
+    borderLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    borderLayer.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(width / 2.0, width / 2.0, MAX(0, CGRectGetWidth(self.bounds) - width), MAX(0, CGRectGetHeight(self.bounds) - width)) cornerRadius:radius].CGPath;
+}
+
 - (void)fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius
 {
     CAShapeLayer *cornerLayer = [CAShapeLayer layer];
