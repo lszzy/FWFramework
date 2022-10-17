@@ -29,28 +29,13 @@ extension Wrapper where Base: UIView {
         return base .__fw_hasEmptyView
     }
 
-    /// 显示空界面
-    public func showEmptyView() {
-        base .__fw_showEmpty()
-    }
-
     /// 显示空界面加载视图
     public func showEmptyLoading() {
         base .__fw_showEmptyLoading()
     }
 
-    /// 显示空界面，指定文本和详细文本
-    public func showEmptyView(text: String?, detail: String? = nil) {
-        base .__fw_showEmpty(withText: text, detail: detail)
-    }
-
-    /// 显示空界面，指定文本、详细文本和图片
-    public func showEmptyView(text: String?, detail: String?, image: UIImage?) {
-        base .__fw_showEmpty(withText: text, detail: detail, image: image)
-    }
-
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func showEmptyView(text: String?, detail: String?, image: UIImage?, action: String?, block: ((Any) -> Void)?) {
+    public func showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
         base .__fw_showEmpty(withText: text, detail: detail, image: image, action: action, block: block)
     }
 
@@ -84,28 +69,13 @@ extension Wrapper where Base: UIViewController {
         return base .__fw_hasEmptyView
     }
 
-    /// 显示空界面
-    public func showEmptyView() {
-        base .__fw_showEmptyView()
-    }
-
     /// 显示空界面加载视图
     public func showEmptyLoading() {
         base .__fw_showEmptyViewLoading()
     }
 
-    /// 显示空界面，指定文本和详细文本
-    public func showEmptyView(text: String?, detail: String? = nil) {
-        base .__fw_showEmptyView(withText: text, detail: detail)
-    }
-
-    /// 显示空界面，指定文本、详细文本和图片
-    public func showEmptyView(text: String?, detail: String?, image: UIImage?) {
-        base .__fw_showEmptyView(withText: text, detail: detail, image: image)
-    }
-
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func showEmptyView(text: String?, detail: String?, image: UIImage?, action: String?, block: ((Any) -> Void)?) {
+    public func showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
         base .__fw_showEmptyView(withText: text, detail: detail, image: image, action: action, block: block)
     }
 
