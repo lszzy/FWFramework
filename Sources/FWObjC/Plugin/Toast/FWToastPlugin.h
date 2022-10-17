@@ -26,7 +26,7 @@ NS_SWIFT_NAME(ToastPlugin)
 
 @optional
 
-/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之
+/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
 - (void)showLoadingWithAttributedText:(nullable NSAttributedString *)attributedText cancelBlock:(nullable void (^)(void))cancelBlock inView:(UIView *)view;
 
 /// 隐藏加载吐司
@@ -35,7 +35,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 是否正在显示加载吐司
 - (BOOL)isShowingLoading:(UIView *)view;
 
-/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之
+/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
 - (void)showProgressWithAttributedText:(nullable NSAttributedString *)attributedText progress:(CGFloat)progress cancelBlock:(nullable void (^)(void))cancelBlock inView:(UIView *)view;
 
 /// 隐藏进度条吐司
@@ -70,7 +70,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示加载吐司，需手工隐藏，支持String和AttributedString
 - (void)fw_showLoadingWithText:(nullable id)text NS_REFINED_FOR_SWIFT;
 
-/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
 - (void)fw_showLoadingWithText:(nullable id)text cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏加载吐司
@@ -82,7 +82,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示进度条吐司，需手工隐藏，支持String和AttributedString
 - (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress NS_REFINED_FOR_SWIFT;
 
-/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
 - (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏进度条吐司
@@ -129,7 +129,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示加载吐司，需手工隐藏，支持String和AttributedString
 - (void)fw_showLoadingWithText:(nullable id)text NS_REFINED_FOR_SWIFT;
 
-/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示加载吐司，默认需手工隐藏，指定cancelBlock点击时会自动隐藏并调用之，支持String和AttributedString
 - (void)fw_showLoadingWithText:(nullable id)text cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏加载吐司
@@ -141,7 +141,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示进度条吐司，需手工隐藏，支持String和AttributedString
 - (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress NS_REFINED_FOR_SWIFT;
 
-/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
 - (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏进度条吐司
@@ -182,7 +182,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示加载吐司，需手工隐藏，支持String和AttributedString
 + (void)fw_showLoadingWithText:(nullable id)text NS_REFINED_FOR_SWIFT;
 
-/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
 + (void)fw_showLoadingWithText:(nullable id)text cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏加载吐司
@@ -194,7 +194,7 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示进度条吐司，需手工隐藏，支持String和AttributedString
 + (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress NS_REFINED_FOR_SWIFT;
 
-/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时会自动隐藏并调用之，支持String和AttributedString
+/// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
 + (void)fw_showProgressWithText:(nullable id)text progress:(CGFloat)progress cancelBlock:(nullable void (^)(void))cancelBlock NS_REFINED_FOR_SWIFT;
 
 /// 隐藏进度条吐司
