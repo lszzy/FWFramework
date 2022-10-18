@@ -69,11 +69,9 @@ static BOOL fwStaticAppearanceEnabled = NO;
     self.standardAppearance = self.fw_appearance;
     self.compactAppearance = self.fw_appearance;
     self.scrollEdgeAppearance = self.fw_appearance;
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.compactScrollEdgeAppearance = self.fw_appearance;
     }
-#endif
 }
 
 - (BOOL)fw_isTranslucent
@@ -387,11 +385,9 @@ static BOOL fwStaticAppearanceEnabled = NO;
 - (void)fw_updateAppearance
 {
     self.standardAppearance = self.fw_appearance;
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.scrollEdgeAppearance = self.fw_appearance;
     }
-#endif
 }
 
 - (BOOL)fw_isTranslucent
@@ -626,12 +622,10 @@ static BOOL fwStaticAppearanceEnabled = NO;
 {
     self.standardAppearance = self.fw_appearance;
     self.compactAppearance = self.fw_appearance;
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.scrollEdgeAppearance = self.fw_appearance;
         self.compactScrollEdgeAppearance = self.fw_appearance;
     }
-#endif
 }
 
 - (BOOL)fw_isTranslucent

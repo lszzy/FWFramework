@@ -2606,11 +2606,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 + (void)fw_resetTableStyle
 {
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         UITableView.appearance.sectionHeaderTopPadding = 0;
     }
-#endif
 }
 
 - (BOOL)fw_estimatedLayout
@@ -2637,11 +2635,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
     self.sectionHeaderHeight = 0;
     self.sectionFooterHeight = 0;
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.sectionHeaderTopPadding = 0;
     }
-#endif
 }
 
 - (void)fw_reloadDataWithCompletion:(void (^)(void))completion
