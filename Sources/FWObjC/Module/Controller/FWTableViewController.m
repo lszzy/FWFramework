@@ -65,6 +65,9 @@
         tableView.showsVerticalScrollIndicator = NO;
         tableView.showsHorizontalScrollIndicator = NO;
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        if (@available(iOS 15.0, *)) {
+            tableView.sectionHeaderTopPadding = 0;
+        }
         objc_setAssociatedObject(self, _cmd, tableView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return tableView;
