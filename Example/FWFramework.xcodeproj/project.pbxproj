@@ -17,6 +17,7 @@
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
 		2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */; };
+		2F49EE2028FE8A6F00F229BB /* TestSkeletonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1F28FE8A6F00F229BB /* TestSkeletonController.swift */; };
 		2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411928B5E2E7003719E7 /* AppIcon.swift */; };
 		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
 		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
@@ -36,7 +37,6 @@
 		2F6A416D28B721C9003719E7 /* Bridge.html in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A416728B721C9003719E7 /* Bridge.html */; };
 		2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417428B72F7B003719E7 /* TestTabbarController.swift */; };
 		2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A417628B7319A003719E7 /* TestPromiseController.swift */; };
-		2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */; };
 		2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */; };
 		2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41C828B7960E003719E7 /* TestTransitionController.m */; };
 		2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */; };
@@ -106,6 +106,7 @@
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
 		2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPagingController.swift; sourceTree = "<group>"; };
+		2F49EE1F28FE8A6F00F229BB /* TestSkeletonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSkeletonController.swift; sourceTree = "<group>"; };
 		2F6A411928B5E2E7003719E7 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
@@ -126,8 +127,6 @@
 		2F6A416728B721C9003719E7 /* Bridge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Bridge.html; sourceTree = "<group>"; };
 		2F6A417428B72F7B003719E7 /* TestTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabbarController.swift; sourceTree = "<group>"; };
 		2F6A417628B7319A003719E7 /* TestPromiseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPromiseController.swift; sourceTree = "<group>"; };
-		2F6A418D28B74EF5003719E7 /* TestSkeletonController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestSkeletonController.h; sourceTree = "<group>"; };
-		2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSkeletonController.m; sourceTree = "<group>"; };
 		2F6A41A228B75F6B003719E7 /* TestStatisticalController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestStatisticalController.h; sourceTree = "<group>"; };
 		2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestStatisticalController.m; sourceTree = "<group>"; };
 		2F6A41C728B7960E003719E7 /* TestTransitionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTransitionController.h; sourceTree = "<group>"; };
@@ -284,8 +283,7 @@
 				2FCDB4FD28E54B160079A56C /* TestPopupController.swift */,
 				2FB11F0028E2FB0000DCB965 /* TestQrcodeController.swift */,
 				2FCDB4FF28E571820079A56C /* TestSegmentController.swift */,
-				2F6A418D28B74EF5003719E7 /* TestSkeletonController.h */,
-				2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */,
+				2F49EE1F28FE8A6F00F229BB /* TestSkeletonController.swift */,
 				2F6A41A228B75F6B003719E7 /* TestStatisticalController.h */,
 				2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */,
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
@@ -796,6 +794,7 @@
 				2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */,
 				2F6A412D28B64774003719E7 /* TestIconController.swift in Sources */,
 				2F6E0C4528E691D500C77153 /* TestCompatibleController.swift in Sources */,
+				2F49EE2028FE8A6F00F229BB /* TestSkeletonController.swift in Sources */,
 				2FB11F0728E441F400DCB965 /* TestDrawerController.swift in Sources */,
 				2FCDB50028E571820079A56C /* TestSegmentController.swift in Sources */,
 				2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */,
@@ -821,7 +820,6 @@
 				2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */,
 				2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */,
 				2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */,
-				2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */,
 				2FB11EF528DB055C00DCB965 /* TestGridController.swift in Sources */,
 				2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */,
 				2FF08B6328ADDD730074895A /* AppConfig.swift in Sources */,
