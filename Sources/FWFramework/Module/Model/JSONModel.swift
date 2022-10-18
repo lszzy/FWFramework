@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - Export
 /**
@@ -2187,11 +2188,7 @@ open class DataTransform: TransformType {
 // MARK: - HexColorTransform
 open class HexColorTransform: TransformType {
 
-    #if os(iOS) || os(tvOS) || os(watchOS)
     public typealias Object = UIColor
-    #else
-    public typealias Object = NSColor
-    #endif
 
     public typealias JSON = String
 
@@ -2278,11 +2275,7 @@ open class HexColorTransform: TransformType {
             // "Scan hex error
             return nil
         }
-        #if os(iOS) || os(tvOS) || os(watchOS)
-            return UIColor(red: red, green: green, blue: blue, alpha: alpha)
-        #else
-            return NSColor(calibratedRed: red, green: green, blue: blue, alpha: alpha)
-        #endif
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
 
