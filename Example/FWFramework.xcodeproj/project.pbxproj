@@ -16,6 +16,7 @@
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
+		2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */; };
 		2F6A411A28B5E2E7003719E7 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411928B5E2E7003719E7 /* AppIcon.swift */; };
 		2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411C28B5F84E003719E7 /* AppMediator.swift */; };
 		2F6A412028B5F913003719E7 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A411F28B5F913003719E7 /* TabController.swift */; };
@@ -38,7 +39,6 @@
 		2F6A418F28B74EF5003719E7 /* TestSkeletonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A418E28B74EF5003719E7 /* TestSkeletonController.m */; };
 		2F6A41A428B75F6B003719E7 /* TestStatisticalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */; };
 		2F6A41C928B7960E003719E7 /* TestTransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41C828B7960E003719E7 /* TestTransitionController.m */; };
-		2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41CB28B7977C003719E7 /* TestPagingController.m */; };
 		2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */; };
 		2F6E0C4528E691D500C77153 /* TestCompatibleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */; };
 		2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F91AA2C28CDD876000A6FA2 /* WebController.swift */; };
@@ -105,6 +105,7 @@
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
+		2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPagingController.swift; sourceTree = "<group>"; };
 		2F6A411928B5E2E7003719E7 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		2F6A411C28B5F84E003719E7 /* AppMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMediator.swift; sourceTree = "<group>"; };
 		2F6A411F28B5F913003719E7 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
@@ -131,8 +132,6 @@
 		2F6A41A328B75F6B003719E7 /* TestStatisticalController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestStatisticalController.m; sourceTree = "<group>"; };
 		2F6A41C728B7960E003719E7 /* TestTransitionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTransitionController.h; sourceTree = "<group>"; };
 		2F6A41C828B7960E003719E7 /* TestTransitionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTransitionController.m; sourceTree = "<group>"; };
-		2F6A41CA28B7977C003719E7 /* TestPagingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestPagingController.h; sourceTree = "<group>"; };
-		2F6A41CB28B7977C003719E7 /* TestPagingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPagingController.m; sourceTree = "<group>"; };
 		2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSocketController.swift; sourceTree = "<group>"; };
 		2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCompatibleController.swift; sourceTree = "<group>"; };
 		2F91AA2C28CDD876000A6FA2 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
@@ -280,8 +279,7 @@
 				2FB11F0628E441F400DCB965 /* TestDrawerController.swift */,
 				2FB11EF228DB023B00DCB965 /* TestFloatController.swift */,
 				2FB11EF428DB055C00DCB965 /* TestGridController.swift */,
-				2F6A41CA28B7977C003719E7 /* TestPagingController.h */,
-				2F6A41CB28B7977C003719E7 /* TestPagingController.m */,
+				2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */,
 				2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */,
 				2FCDB4FD28E54B160079A56C /* TestPopupController.swift */,
 				2FB11F0028E2FB0000DCB965 /* TestQrcodeController.swift */,
@@ -787,6 +785,7 @@
 				2FCDB4FC28E543820079A56C /* TestBannerController.swift in Sources */,
 				2FCDB4FE28E54B160079A56C /* TestPopupController.swift in Sources */,
 				2FB11EFD28E2D73800DCB965 /* TestTableController.swift in Sources */,
+				2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */,
 				2FB11EF128DAE16500DCB965 /* TestAnimationController.swift in Sources */,
 				2FB11EFB28E2999C00DCB965 /* TestCollectionController.swift in Sources */,
 				2FB11F0128E2FB0000DCB965 /* TestQrcodeController.swift in Sources */,
@@ -829,7 +828,6 @@
 				2FF08B5D28ADDD730074895A /* AppTheme.swift in Sources */,
 				2F06D15728D31E52007E53EC /* TestToastController.swift in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
-				2F6A41CC28B7977C003719E7 /* TestPagingController.m in Sources */,
 				2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */,
 				2FB11F0328E3F5F700DCB965 /* TestThreadController.swift in Sources */,
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
