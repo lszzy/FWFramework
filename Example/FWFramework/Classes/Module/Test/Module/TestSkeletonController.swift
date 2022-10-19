@@ -175,7 +175,6 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
             
             if let tableView = SkeletonLayout.parseSkeletonView(self.tableView) as? SkeletonTableView {
                 tableView.tableDelegate.cellClass = TestSkeletonCell.self
-                layout.addAnimationView(tableView)
                 scrollView.fw.contentView.addSubview(tableView)
                 tableView.fw.layoutChain.edges()
             }
