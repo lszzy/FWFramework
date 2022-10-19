@@ -176,6 +176,9 @@
         _tableView.dataSource = self;
         _tableView.backgroundColor = UIColor.blackColor;
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        if (@available(iOS 15.0, *)) {
+            _tableView.sectionHeaderTopPadding = 0;
+        }
     }
     return _tableView;
 }

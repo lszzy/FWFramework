@@ -610,6 +610,25 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return borderLayer;
 }
 
+- (void)fw_setDashBorderLayer:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius lineLength:(CGFloat)lineLength lineSpacing:(CGFloat)lineSpacing
+{
+    CAShapeLayer *borderLayer = objc_getAssociatedObject(self, _cmd);
+    if (!borderLayer) {
+        borderLayer = [CAShapeLayer layer];
+        [self.layer addSublayer:borderLayer];
+        objc_setAssociatedObject(self, _cmd, borderLayer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    borderLayer.frame = self.bounds;
+    borderLayer.fillColor = [UIColor clearColor].CGColor;
+    borderLayer.strokeColor = color.CGColor;
+    borderLayer.lineWidth = width;
+    borderLayer.lineJoin = kCALineJoinRound;
+    borderLayer.lineDashPattern = @[@(lineLength), @(lineSpacing)];
+    borderLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    borderLayer.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(width / 2.0, width / 2.0, MAX(0, CGRectGetWidth(self.bounds) - width), MAX(0, CGRectGetHeight(self.bounds) - width)) cornerRadius:radius].CGPath;
+}
+
 - (void)fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius
 {
     CAShapeLayer *cornerLayer = [CAShapeLayer layer];
@@ -2587,11 +2606,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 + (void)fw_resetTableStyle
 {
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         UITableView.appearance.sectionHeaderTopPadding = 0;
     }
-#endif
 }
 
 - (BOOL)fw_estimatedLayout
@@ -2618,11 +2635,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
     self.sectionHeaderHeight = 0;
     self.sectionFooterHeight = 0;
-#if __IPHONE_15_0
     if (@available(iOS 15.0, *)) {
         self.sectionHeaderTopPadding = 0;
     }
-#endif
 }
 
 - (void)fw_reloadDataWithCompletion:(void (^)(void))completion

@@ -50,12 +50,10 @@
 
 + (BOOL)fw_isMac
 {
-#if __IPHONE_14_0
     if (@available(iOS 14.0, *)) {
         return NSProcessInfo.processInfo.isiOSAppOnMac ||
             NSProcessInfo.processInfo.isMacCatalystApp;
     }
-#endif
     return NO;
 }
 

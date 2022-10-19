@@ -229,6 +229,11 @@ extension Wrapper where Base: UIView {
     public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         base.__fw_setBorderLayer(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
     }
+    
+    /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+    public func setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
+        base.__fw_setDashBorderLayer(color, width: width, cornerRadius: cornerRadius, lineLength: lineLength, lineSpacing: lineSpacing)
+    }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
