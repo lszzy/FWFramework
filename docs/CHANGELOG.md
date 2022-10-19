@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.0] - 2022-10-19
+
+### Changed
+* Added Swift version model parsing component JSONModel
+* Modify the default value of the Swift version API method
+* Optimize the skeleton screen view, no need to manually add animation views
+* Rewrite all test cases for Swift implementation
+
 ## [4.2.1] - 2022-10-10
 
 ### Added

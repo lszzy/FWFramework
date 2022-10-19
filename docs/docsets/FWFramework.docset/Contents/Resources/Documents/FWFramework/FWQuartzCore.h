@@ -78,6 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
                   offset:(CGSize)offset
                   radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
+/// 生成图片截图，默认大小为frame.size
+- (nullable UIImage *)fw_snapshotImageWithSize:(CGSize)size NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - CAGradientLayer+FWQuartzCore

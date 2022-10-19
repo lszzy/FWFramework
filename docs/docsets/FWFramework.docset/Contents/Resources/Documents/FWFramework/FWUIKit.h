@@ -128,6 +128,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
 - (void)fw_setBorderLayer:(UIRectEdge)edge color:(nullable UIColor *)color width:(CGFloat)width leftInset:(CGFloat)leftInset rightInset:(CGFloat)rightInset NS_REFINED_FOR_SWIFT;
 
+/// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
+- (void)fw_setDashBorderLayer:(nullable UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)radius lineLength:(CGFloat)lineLength lineSpacing:(CGFloat)lineSpacing NS_REFINED_FOR_SWIFT;
+
 /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
 - (void)fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
