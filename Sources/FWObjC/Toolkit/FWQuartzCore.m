@@ -185,6 +185,15 @@
     self.shadowOpacity = 1.0;
 }
 
+- (UIImage *)fw_snapshotImageWithSize:(CGSize)size
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeEqualToSize(size, CGSizeZero) ? self.frame.size : size, 0.0, [UIScreen mainScreen].scale);
+    [self renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 @end
 
 #pragma mark - CAGradientLayer+FWQuartzCore

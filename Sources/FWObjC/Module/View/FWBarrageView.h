@@ -194,10 +194,4 @@ NS_SWIFT_NAME(BarrageTrackInfo)
 
 @end
 
-@interface CALayer (FWBarrage)
-
-- (nullable UIImage *)fw_convertContentToImageWithSize:(CGSize)contentSize NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END

@@ -248,7 +248,7 @@ public protocol SkeletonViewDelegate {
     /// 自定义动画，默认通用样式
     open var animation: SkeletonAnimationProtocol? = SkeletonAppearance.appearance.animation
     
-    /// 动画层列表，子类可覆写
+    /// 动画层列表
     open var animationLayers: [CAGradientLayer] = []
     
     /// 骨架图片，默认空
@@ -269,7 +269,8 @@ public protocol SkeletonViewDelegate {
     }
     
     required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setupView()
     }
     
     func setupView() {
@@ -290,20 +291,25 @@ public protocol SkeletonViewDelegate {
         }
     }
     
-    /// 开始动画
-    open func startAnimating() {
-        animationLayers.forEach { (gradientLayer) in
-            gradientLayer.fw.themeContext = self
-            animation?.skeletonAnimationStart(gradientLayer)
+    /// 自动开始和停止动画
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+        
+        if window != nil {
+            updateAnimationLayers()
+            animationLayers.forEach { (gradientLayer) in
+                gradientLayer.fw.themeContext = self
+                animation?.skeletonAnimationStart(gradientLayer)
+            }
+        } else {
+            animationLayers.forEach { (gradientLayer) in
+                animation?.skeletonAnimationStop(gradientLayer)
+            }
         }
     }
     
-    /// 停止动画
-    open func stopAnimating() {
-        animationLayers.forEach { (gradientLayer) in
-            animation?.skeletonAnimationStop(gradientLayer)
-        }
-    }
+    /// 更新动画层列表，子类可覆写
+    open func updateAnimationLayers() {}
 }
 
 // MARK: - SkeletonLabel
@@ -330,8 +336,7 @@ public protocol SkeletonViewDelegate {
         backgroundColor = UIColor.clear
     }
     
-    open override func layoutSubviews() {
-        super.layoutSubviews()
+    open override func updateAnimationLayers() {
         animationLayers.removeAll()
         
         let layerHeight = lineHeight
@@ -397,7 +402,7 @@ public protocol SkeletonViewDelegate {
     }
     
     required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     override func setupView() {
@@ -423,46 +428,6 @@ public protocol SkeletonViewDelegate {
                 block?(scrollView.contentOffset.y)
             }
         }
-    }
-    
-    // MARK: - Animation
-    
-    private var animationViews: [SkeletonView] = []
-    
-    /// 添加动画视图，不会调用addSubview
-    open func addAnimationViews(_ animationViews: [SkeletonView]) {
-        for animationView in animationViews {
-            addAnimationView(animationView)
-        }
-    }
-    
-    /// 添加动画视图，不会调用addSubview
-    open func addAnimationView(_ animationView: SkeletonView) {
-        if !animationViews.contains(animationView) {
-            animationViews.append(animationView)
-        }
-    }
-    
-    /// 移除动画视图，不会调用removeFromSuperview
-    open func removeAnimationView(_ animationView: SkeletonView) {
-        animationViews.removeAll { (skeletonView) -> Bool in
-            return skeletonView == animationView
-        }
-    }
-    
-    /// 批量开始动画
-    open override func startAnimating() {
-        animationViews.forEach { (animationView) in
-            animationView.startAnimating()
-        }
-    }
-    
-    /// 批量停止动画
-    open override func stopAnimating() {
-        animationViews.forEach { (animationView) in
-            animationView.stopAnimating()
-        }
-        animationViews.removeAll()
     }
     
     // MARK: - Skeleton
@@ -506,7 +471,6 @@ public protocol SkeletonViewDelegate {
         if skeletonView.superview == nil {
             addSubview(skeletonView)
         }
-        addAnimationView(skeletonView)
         block?(skeletonView)
         return skeletonView
     }
@@ -592,7 +556,6 @@ public protocol SkeletonViewDelegate {
             
             let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutHeader)
             tableView.tableHeaderView = skeletonLayout
-            addAnimationView(skeletonLayout)
         }
     }
     /// 表格尾视图
@@ -602,7 +565,6 @@ public protocol SkeletonViewDelegate {
             
             let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutFooter)
             tableView.tableFooterView = skeletonLayout
-            addAnimationView(skeletonLayout)
         }
     }
     
@@ -622,7 +584,7 @@ public protocol SkeletonViewDelegate {
     }
     
     required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     override func setupView() {
@@ -662,7 +624,6 @@ public protocol SkeletonViewDelegate {
         cell.selectionStyle = .none
         if let skeletonLayout = cell.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
-            removeAnimationView(skeletonLayout)
         }
         
         if layoutCell.superview == nil {
@@ -676,7 +637,6 @@ public protocol SkeletonViewDelegate {
         skeletonLayout.tag = 2052
         cell.contentView.addSubview(skeletonLayout)
         skeletonLayout.fw.pinEdges()
-        addAnimationView(skeletonLayout)
         return cell
     }
     
@@ -689,7 +649,6 @@ public protocol SkeletonViewDelegate {
         let header = UITableViewHeaderFooterView.fw.headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonHeader")
         if let skeletonLayout = header.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
-            removeAnimationView(skeletonLayout)
         }
         
         if layoutHeader.superview == nil {
@@ -703,7 +662,6 @@ public protocol SkeletonViewDelegate {
         skeletonLayout.tag = 2052
         header.contentView.addSubview(skeletonLayout)
         skeletonLayout.fw.pinEdges()
-        addAnimationView(skeletonLayout)
         return header
     }
     
@@ -716,7 +674,6 @@ public protocol SkeletonViewDelegate {
         let footer = UITableViewHeaderFooterView.fw.headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonFooter")
         if let skeletonLayout = footer.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
-            removeAnimationView(skeletonLayout)
         }
         
         if layoutFooter.superview == nil {
@@ -730,7 +687,6 @@ public protocol SkeletonViewDelegate {
         skeletonLayout.tag = 2052
         footer.contentView.addSubview(skeletonLayout)
         skeletonLayout.fw.pinEdges()
-        addAnimationView(skeletonLayout)
         return footer
     }
     
@@ -778,7 +734,7 @@ public protocol SkeletonViewDelegate {
     }
     
     required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     override func setupView() {
@@ -822,7 +778,6 @@ public protocol SkeletonViewDelegate {
         let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath, reuseIdentifier: "FWSkeletonCell")
         if let skeletonLayout = cell.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
-            removeAnimationView(skeletonLayout)
         }
         
         if layoutCell.superview == nil {
@@ -836,7 +791,6 @@ public protocol SkeletonViewDelegate {
         skeletonLayout.tag = 2052
         cell.contentView.addSubview(skeletonLayout)
         skeletonLayout.fw.pinEdges()
-        addAnimationView(skeletonLayout)
         return cell
     }
     
@@ -854,7 +808,6 @@ public protocol SkeletonViewDelegate {
             let header = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonHeader")
             if let skeletonLayout = header.viewWithTag(2052) as? SkeletonLayout {
                 skeletonLayout.removeFromSuperview()
-                removeAnimationView(skeletonLayout)
             }
             
             if layoutHeader.superview == nil {
@@ -868,7 +821,6 @@ public protocol SkeletonViewDelegate {
             skeletonLayout.tag = 2052
             header.addSubview(skeletonLayout)
             skeletonLayout.fw.pinEdges()
-            addAnimationView(skeletonLayout)
             return header
         }
         
@@ -877,7 +829,6 @@ public protocol SkeletonViewDelegate {
             let footer = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonFooter")
             if let skeletonLayout = footer.viewWithTag(2052) as? SkeletonLayout {
                 skeletonLayout.removeFromSuperview()
-                removeAnimationView(skeletonLayout)
             }
             
             if layoutFooter.superview == nil {
@@ -891,7 +842,6 @@ public protocol SkeletonViewDelegate {
             skeletonLayout.tag = 2052
             footer.addSubview(skeletonLayout)
             skeletonLayout.fw.pinEdges()
-            addAnimationView(skeletonLayout)
             return footer
         }
         
@@ -932,7 +882,6 @@ extension Wrapper where Base: UIView {
         
         layout.setNeedsLayout()
         layout.layoutIfNeeded()
-        layout.startAnimating()
     }
     
     /// 显示骨架屏，指定布局代理
@@ -959,7 +908,6 @@ extension Wrapper where Base: UIView {
         }
         
         if let layout = base.subviews.first(where: { $0.tag == 2051 }) as? SkeletonLayout {
-            layout.stopAnimating()
             layout.removeFromSuperview()
         }
     }

@@ -3774,20 +3774,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "docs/FWFramework/FWBarrageView.h",
-      "line": 197,
-      "symbol": "CALayer(FWBarrage)",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWBarrageView.h",
-      "line": 199,
-      "symbol": "CALayer(FWBarrage).-fw_convertContentToImageWithSize:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "docs/FWFramework/FWBaseRequest.h",
       "line": 28,
       "symbol": "FWRequestValidationErrorDomain",
@@ -7520,63 +7506,63 @@
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 85,
+      "line": 88,
       "symbol": "CAGradientLayer(FWQuartzCore)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 110,
+      "line": 113,
       "symbol": "UIView(FWQuartzCore)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 414,
+      "line": 417,
       "symbol": "FWGradientView.gradientLayer",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 416,
+      "line": 419,
       "symbol": "FWGradientView.colors",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 418,
+      "line": 421,
       "symbol": "FWGradientView.locations",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 420,
+      "line": 423,
       "symbol": "FWGradientView.startPoint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 422,
+      "line": 425,
       "symbol": "FWGradientView.endPoint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 424,
+      "line": 427,
       "symbol": "FWGradientView.-initWithColors:locations:startPoint:endPoint:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 426,
+      "line": 429,
       "symbol": "FWGradientView.-setColors:locations:startPoint:endPoint:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -9438,119 +9424,119 @@
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 177,
+      "line": 180,
       "symbol": "UIImageView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 201,
+      "line": 204,
       "symbol": "UIWindow(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 216,
+      "line": 219,
       "symbol": "UILabel(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 268,
+      "line": 271,
       "symbol": "UIButton(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 307,
+      "line": 310,
       "symbol": "UIScrollView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 399,
+      "line": 402,
       "symbol": "UIPanGestureRecognizer(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 414,
+      "line": 417,
       "symbol": "UIPageControl(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 423,
+      "line": 426,
       "symbol": "UISlider(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 435,
+      "line": 438,
       "symbol": "UISwitch(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 444,
+      "line": 447,
       "symbol": "UITextField(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 486,
+      "line": 489,
       "symbol": "UITextView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 534,
+      "line": 537,
       "symbol": "UITableView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 555,
+      "line": 558,
       "symbol": "UITableViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 570,
+      "line": 573,
       "symbol": "UICollectionView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 582,
+      "line": 585,
       "symbol": "UICollectionViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 594,
+      "line": 597,
       "symbol": "UISearchBar(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 630,
+      "line": 633,
       "symbol": "UIViewController(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -9571,28 +9557,28 @@
     },
     {
       "file": "docs/FWFramework/FWURLResponseSerialization.h",
-      "line": 65,
+      "line": 66,
       "symbol": "FWHTTPResponseSerializer.-init",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWURLResponseSerialization.h",
-      "line": 132,
+      "line": 133,
       "symbol": "FWJSONResponseSerializer.-init",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWURLResponseSerialization.h",
-      "line": 213,
+      "line": 214,
       "symbol": "FWPropertyListResponseSerializer.-init",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWURLResponseSerialization.h",
-      "line": 348,
+      "line": 349,
       "symbol": "FWNetworkingOperationFailingURLResponseDataErrorKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"

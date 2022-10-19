@@ -18,14 +18,9 @@ extension FW {
 }
 
 extension Wrapper where Base: UIImage {
-    
-    /// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
-    public static func imageNamed(_ name: String, bundle: Bundle? = nil) -> UIImage? {
-        return Base.__fw_imageNamed(name, bundle: bundle)
-    }
 
     /// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)。支持设置图片解码选项
-    public static func imageNamed(_ name: String, bundle: Bundle?, options: [ImageCoderOptions: Any]?) -> UIImage? {
+    public static func imageNamed(_ name: String, bundle: Bundle? = nil, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
         return Base.__fw_imageNamed(name, bundle: bundle, options: options)
     }
 
@@ -34,13 +29,8 @@ extension Wrapper where Base: UIImage {
         return Base.__fw_image(withContentsOfFile: contentsOfFile)
     }
 
-    /// 从图片数据解码创建UIImage，默认scale为1，支持动图
-    public static func image(data: Data?, scale: CGFloat = 1) -> UIImage? {
-        return Base.__fw_image(with: data, scale: scale)
-    }
-
-    /// 从图片数据解码创建UIImage，指定scale，支持动图。支持设置图片解码选项
-    public static func image(data: Data?, scale: CGFloat, options: [ImageCoderOptions: Any]?) -> UIImage? {
+    /// 从图片数据解码创建UIImage，默认scale为1，支持动图。支持设置图片解码选项
+    public static func image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
         return Base.__fw_image(with: data, scale: scale, options: options)
     }
 
@@ -81,13 +71,8 @@ extension Wrapper where Base: UIImageView {
         return base.__fw_imageURL
     }
 
-    /// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
-    public func setImage(url: Any?, placeholderImage: UIImage? = nil) {
-        base.__fw_setImage(withURL: url, placeholderImage: placeholderImage)
-    }
-
     /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func setImage(url: Any?, placeholderImage: UIImage?, completion: ((UIImage?, Error?) -> Void)?) {
+    public func setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
         base.__fw_setImage(withURL: url, placeholderImage: placeholderImage, completion: completion)
     }
 

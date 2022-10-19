@@ -620,11 +620,9 @@ static SEL FWCGSVGDocumentSEL = NULL;
                 return @"{HEICS}";
             }
         case FWImageFormatWebP:
-#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDictionary;
             }
-#endif
             return @"{WebP}";
         default:
             return nil;
@@ -646,11 +644,9 @@ static SEL FWCGSVGDocumentSEL = NULL;
                 return @"UnclampedDelayTime";
             }
         case FWImageFormatWebP:
-#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
             }
-#endif
             return @"UnclampedDelayTime";
         default:
             return nil;
@@ -672,11 +668,9 @@ static SEL FWCGSVGDocumentSEL = NULL;
                 return @"DelayTime";
             }
         case FWImageFormatWebP:
-#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
             }
-#endif
             return @"DelayTime";
         default:
             return nil;
@@ -698,11 +692,9 @@ static SEL FWCGSVGDocumentSEL = NULL;
                 return @"LoopCount";
             }
         case FWImageFormatWebP:
-#if __IPHONE_14_0
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
             }
-#endif
             return @"LoopCount";
         default:
             return nil;

@@ -90,6 +90,11 @@ extension Wrapper where Base: CALayer {
         base.__fw_setShadowColor(color, offset: offset, radius: radius)
     }
     
+    /// 生成图片截图，默认大小为frame.size
+    public func snapshotImage(size: CGSize = .zero) -> UIImage? {
+        return base.__fw_snapshotImage(with: size)
+    }
+    
 }
 
 // MARK: - CAGradientLayer+QuartzCore
