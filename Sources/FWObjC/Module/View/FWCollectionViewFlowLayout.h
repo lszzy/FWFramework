@@ -271,6 +271,21 @@ NS_SWIFT_NAME(CollectionViewDelegateWaterfallLayout)
  */
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumColumnSpacingForSectionAtIndex:(NSInteger)section;
 
+/**
+ *  Asks the delegate for the pin offset of the header view in the specified section.
+ *
+ *  @param collectionView
+ *    The collection view object displaying the waterfall layout.
+ *  @param collectionViewLayout
+ *    The layout object requesting the information.
+ *  @param section
+ *    The index of the section whose pin offset is being requested.
+ *
+ *  @return
+ *    The pin offset of the header. If you return less than 0, header pin is disabled in the specified section.
+ */
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout pinOffsetForHeaderInSection:(NSInteger)section;
+
 @end
 
 #pragma mark - FWCollectionViewWaterfallLayout
@@ -382,6 +397,13 @@ NS_SWIFT_NAME(CollectionViewWaterfallLayout)
  *    Default: 0.f
  */
 @property (nonatomic, assign) CGFloat minimumContentHeight;
+
+/**
+ *  Set these properties to YES to get headers that pin to the top of the screen while scrolling.
+ *
+ *    Default: NO
+ */
+@property (nonatomic, assign) BOOL sectionHeadersPinToVisibleBounds;
 
 /**
  *  The calculated width of an item in the specified section.
