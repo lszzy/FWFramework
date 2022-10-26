@@ -8,10 +8,12 @@
 
 import FWFramework
 
-class TestCollectionController: UIViewController, CollectionViewControllerProtocol, UICollectionViewDelegateFlowLayout {
+class TestCollectionController: UIViewController, CollectionViewControllerProtocol, UICollectionViewDelegateFlowLayout, CollectionViewDelegateWaterfallLayout {
     
     static var isExpanded = false
     var mode: Int = 0
+    var isWaterfall = false
+    var pinHeader = false
     
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let result = UICollectionViewFlowLayout()
@@ -20,11 +22,23 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         return result
     }()
     
+    lazy var waterfallLayout: CollectionViewWaterfallLayout = {
+        let result = CollectionViewWaterfallLayout()
+        result.minimumColumnSpacing = 10
+        result.minimumInteritemSpacing = 10
+        result.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        return result
+    }()
+    
     func setupCollectionViewLayout() -> UICollectionViewLayout {
-        flowLayout
+        if isWaterfall {
+            return waterfallLayout
+        }
+        return flowLayout
     }
     
     func setupCollectionView() {
+        collectionView.alwaysBounceVertical = true
         collectionView.backgroundColor = AppTheme.tableColor
         collectionView.fw.setRefreshing { [weak self] in
             self?.onRefreshing()
@@ -41,23 +55,41 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     
     func setupNavbar() {
         Self.isExpanded = false
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开"], currentIndex: -1, actionBlock: { index in
-                if index < 3 {
-                    self?.mode = index
-                } else {
-                    Self.isExpanded = index == 3 ? true : false
-                }
-                self?.setupSubviews()
-            })
+        if isWaterfall {
+            fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+                self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停"], currentIndex: -1, actionBlock: { index in
+                    self?.pinHeader = !(self?.pinHeader ?? false)
+                    self?.setupSubviews()
+                })
+            }
+        } else {
+            fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+                self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流"], currentIndex: -1, actionBlock: { index in
+                    if index < 3 {
+                        self?.mode = index
+                        self?.setupSubviews()
+                    } else if index < 5 {
+                        Self.isExpanded = index == 3 ? true : false
+                        self?.setupSubviews()
+                    } else {
+                        let vc = TestCollectionController()
+                        vc.isWaterfall = !(self?.isWaterfall ?? false)
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                })
+            }
         }
     }
     
     func setupSubviews() {
-        if mode == 2 {
-            flowLayout.scrollDirection = .horizontal
+        if isWaterfall {
+            waterfallLayout.sectionHeadersPinToVisibleBounds = pinHeader
         } else {
-            flowLayout.scrollDirection = .vertical
+            if mode == 2 {
+                flowLayout.scrollDirection = .horizontal
+            } else {
+                flowLayout.scrollDirection = .vertical
+            }
         }
         collectionView.fw.beginRefreshing()
     }
@@ -86,7 +118,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if mode == 0 {
-            return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
+            return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (FW.screenWidth - 30) / 2.0 : FW.screenWidth, cacheBy: indexPath) { [weak self] cell in
                 guard let cell = cell as? TestCollectionDynamicLayoutCell else { return }
                 cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
             }
@@ -101,6 +133,14 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
                 cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, heightForHeaderInSection section: Int) -> CGFloat {
+        return self.collectionView(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section).height
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, heightForFooterInSection section: Int) -> CGFloat {
+        return self.collectionView(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section).height
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
