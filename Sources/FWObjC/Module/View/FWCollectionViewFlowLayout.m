@@ -681,14 +681,14 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
       if (pinOffset < 0) continue;
       
       NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
-      UICollectionViewLayoutAttributes *firstItemAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
-      UICollectionViewLayoutAttributes *lastItemAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0, itemCount - 1) inSection:section]];
-      if (!firstItemAttr || !lastItemAttr) continue;
+      UICollectionViewLayoutAttributes *beginAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+      UICollectionViewLayoutAttributes *endAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0, itemCount - 1) inSection:section]];
+      if (!beginAttr || !endAttr) continue;
         
       CGRect attrFrame = attr.frame;
-      CGFloat firstY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(firstItemAttr.frame) - CGRectGetHeight(attrFrame));
-      CGFloat lastY = (CGRectGetMaxY(lastItemAttr.frame) - CGRectGetHeight(attrFrame));
-      attrFrame.origin.y = MIN(firstY, lastY);
+      CGFloat beginY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(beginAttr.frame) - CGRectGetHeight(attrFrame));
+      CGFloat endY = (CGRectGetMaxY(endAttr.frame) - CGRectGetHeight(attrFrame));
+      attrFrame.origin.y = MIN(beginY, endY);
       attr.frame = attrFrame;
       attr.zIndex = 1024;
       supplHeaderAttrDict[attr.indexPath] = attr;
