@@ -681,10 +681,14 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
       if (pinOffset < 0) continue;
       
       NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
-      UICollectionViewLayoutAttributes *itemAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
-      if (!itemAttr) continue;
+      UICollectionViewLayoutAttributes *firstItemAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+      UICollectionViewLayoutAttributes *lastItemAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0, itemCount - 1) inSection:section]];
+      if (!firstItemAttr || !lastItemAttr) continue;
+        
       CGRect attrFrame = attr.frame;
-      attrFrame.origin.y = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(itemAttr.frame) - CGRectGetHeight(attrFrame));
+      CGFloat firstY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(firstItemAttr.frame) - CGRectGetHeight(attrFrame));
+      CGFloat lastY = (CGRectGetMaxY(lastItemAttr.frame) - CGRectGetHeight(attrFrame));
+      attrFrame.origin.y = MIN(firstY, lastY);
       attr.frame = attrFrame;
       attr.zIndex = 1024;
       supplHeaderAttrDict[attr.indexPath] = attr;
