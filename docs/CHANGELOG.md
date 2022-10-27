@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.3.1] - 2022-10-27
+
+### Added
+* Waterfall layout supports Header hover effect
+
 ## [4.3.0] - 2022-10-19
 
 ### Changed

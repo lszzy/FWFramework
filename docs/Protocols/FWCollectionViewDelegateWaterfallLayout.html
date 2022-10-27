@@ -17,7 +17,7 @@
     <a title="FWCollectionViewDelegateWaterfallLayout Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.3.0 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.3.1 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -3370,12 +3370,88 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)FWCollectionViewDelegateWaterfallLayout(im)collectionView:layout:pinOffsetForHeaderInSection:"></a>
+                    <a name="//apple_ref/swift/Method/-collectionView:layout:pinOffsetForHeaderInSection:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)FWCollectionViewDelegateWaterfallLayout(im)collectionView:layout:pinOffsetForHeaderInSection:">-collectionView:<wbr>layout:<wbr>pinOffsetForHeaderInSection:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asks the delegate for the pin offset of the header view in the specified section.</p>
+
+<p>@return
+    The pin offset of the header. If you return less than 0, header pin is disabled in the specified section.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">collectionView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
+                         <span class="nf">layout</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UICollectionViewLayout</span> <span class="o">*</span><span class="p">)</span>
+                                    <span class="n">collectionViewLayout</span>
+    <span class="n">pinOffsetForHeaderInSection</span><span class="o">:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="n">section</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>collectionView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The collection view object displaying the waterfall layout.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>collectionViewLayout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The layout object requesting the information.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>section</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The index of the section whose pin offset is being requested.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-19)</p>
+          <p>&copy; 2022 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2022-10-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

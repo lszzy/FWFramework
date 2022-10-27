@@ -3957,49 +3957,49 @@
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 397,
+      "line": 419,
       "symbol": "FWCollectionViewItemsHorizontalAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 397,
+      "line": 419,
       "symbol": "FWCollectionViewItemsHorizontalAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 405,
+      "line": 427,
       "symbol": "FWCollectionViewItemsVerticalAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 405,
+      "line": 427,
       "symbol": "FWCollectionViewItemsVerticalAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 411,
+      "line": 433,
       "symbol": "FWCollectionViewItemsDirection",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 411,
+      "line": 433,
       "symbol": "FWCollectionViewItemsDirection",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWCollectionViewFlowLayout.h",
-      "line": 465,
+      "line": 487,
       "symbol": "FWCollectionViewAlignLayout.-setScrollDirection:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
