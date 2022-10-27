@@ -299,6 +299,13 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   }
 }
 
+- (void)setSectionHeadersPinToVisibleBounds:(BOOL)sectionHeadersPinToVisibleBounds {
+  if (_sectionHeadersPinToVisibleBounds != sectionHeadersPinToVisibleBounds) {
+    _sectionHeadersPinToVisibleBounds = sectionHeadersPinToVisibleBounds;
+    [self invalidateLayout];
+  }
+}
+
 - (NSInteger)columnCountForSection:(NSInteger)section {
   if ([self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)]) {
     return [self.delegate collectionView:self.collectionView layout:self columnCountForSection:section];
@@ -661,6 +668,32 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
       }
     }
   }
+  
+  if (self.sectionHeadersPinToVisibleBounds) {
+    for (int i = 0; i < self.allItemAttributes.count; i++) {
+      UICollectionViewLayoutAttributes *attr = self.allItemAttributes[i];
+      if (![attr.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) continue;
+      NSInteger section = attr.indexPath.section;
+      CGFloat pinOffset = 0;
+      if ([self.delegate respondsToSelector:@selector(collectionView:layout:pinOffsetForHeaderInSection:)]) {
+        pinOffset = [self.delegate collectionView:self.collectionView layout:self pinOffsetForHeaderInSection:section];
+      }
+      if (pinOffset < 0) continue;
+      
+      NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
+      UICollectionViewLayoutAttributes *beginAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+      UICollectionViewLayoutAttributes *endAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0, itemCount - 1) inSection:section]];
+      if (!beginAttr || !endAttr) continue;
+        
+      CGRect attrFrame = attr.frame;
+      CGFloat beginY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(beginAttr.frame) - CGRectGetHeight(attrFrame));
+      CGFloat endY = (CGRectGetMaxY(endAttr.frame) - CGRectGetHeight(attrFrame));
+      attrFrame.origin.y = MIN(beginY, endY);
+      attr.frame = attrFrame;
+      attr.zIndex = 1024;
+      supplHeaderAttrDict[attr.indexPath] = attr;
+    }
+  }
 
   NSArray *result = [cellAttrDict.allValues arrayByAddingObjectsFromArray:supplHeaderAttrDict.allValues];
   result = [result arrayByAddingObjectsFromArray:supplFooterAttrDict.allValues];
@@ -669,6 +702,9 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
+  if (self.sectionHeadersPinToVisibleBounds) {
+    return YES;
+  }
   CGRect oldBounds = self.collectionView.bounds;
   if (CGRectGetWidth(newBounds) != CGRectGetWidth(oldBounds)) {
     return YES;
