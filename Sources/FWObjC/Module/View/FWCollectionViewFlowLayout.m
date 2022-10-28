@@ -684,10 +684,17 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
       UICollectionViewLayoutAttributes *beginAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
       UICollectionViewLayoutAttributes *endAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0, itemCount - 1) inSection:section]];
       if (!beginAttr || !endAttr) continue;
+      
+      UIEdgeInsets headerInset;
+      if ([self.delegate respondsToSelector:@selector(collectionView:layout:insetForHeaderInSection:)]) {
+        headerInset = [self.delegate collectionView:self.collectionView layout:self insetForHeaderInSection:section];
+      } else {
+        headerInset = self.headerInset;
+      }
         
       CGRect attrFrame = attr.frame;
-      CGFloat beginY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(beginAttr.frame) - CGRectGetHeight(attrFrame));
-      CGFloat endY = (CGRectGetMaxY(endAttr.frame) - CGRectGetHeight(attrFrame));
+      CGFloat beginY = MAX(self.collectionView.contentOffset.y + pinOffset, CGRectGetMinY(beginAttr.frame) - CGRectGetHeight(attrFrame) - headerInset.bottom);
+      CGFloat endY = (CGRectGetMaxY(endAttr.frame) - CGRectGetHeight(attrFrame) - headerInset.bottom);
       attrFrame.origin.y = MIN(beginY, endY);
       attr.frame = attrFrame;
       attr.zIndex = 1024;
