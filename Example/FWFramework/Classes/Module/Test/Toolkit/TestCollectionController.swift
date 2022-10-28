@@ -26,7 +26,8 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         let result = CollectionViewWaterfallLayout()
         result.minimumColumnSpacing = 10
         result.minimumInteritemSpacing = 10
-        result.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.headerInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         return result
     }()
     
