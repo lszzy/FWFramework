@@ -16,7 +16,7 @@
     static NSBundle *bundle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        bundle = [[NSBundle fw_bundleWithName:@"FWApplication"] fw_localizedBundle];
+        bundle = [[NSBundle fw_bundleWithName:@"FWFramework"] fw_localizedBundle];
         if (!bundle) bundle = [NSBundle mainBundle];
     });
     return bundle;
