@@ -74,6 +74,32 @@
         return NO;
     }
     
+    #ifdef __IPHONE_16_0
+    if (@available(iOS 16.0, *)) {
+        UIInterfaceOrientationMask orientationMask = 0;
+        switch (orientation) {
+            case UIDeviceOrientationPortrait:
+                orientationMask = UIInterfaceOrientationMaskPortrait;
+                break;
+            case UIDeviceOrientationPortraitUpsideDown:
+                orientationMask = UIInterfaceOrientationMaskPortraitUpsideDown;
+                break;
+            case UIDeviceOrientationLandscapeLeft:
+                orientationMask = UIInterfaceOrientationMaskLandscapeLeft;
+                break;
+            case UIDeviceOrientationLandscapeRight:
+                orientationMask = UIInterfaceOrientationMaskLandscapeRight;
+                break;
+            default:
+                break;
+        }
+        
+        UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] initWithInterfaceOrientations:orientationMask];
+        [UIWindow.fw_mainScene requestGeometryUpdateWithPreferences:geometryPreferences errorHandler:nil];
+        return YES;
+    }
+    #endif
+    
     [[UIDevice currentDevice] setValue:@(orientation) forKey:@"orientation"];
     return YES;
 }
