@@ -38,7 +38,7 @@ extension Wrapper where Base: UINavigationBar {
             UINavigationBar.__buttonAttributes = newValue
             guard let buttonAttributes = newValue else { return }
             
-            if !UINavigationBar.__appearanceEnabled {
+            if !UINavigationBar.fw.appearanceEnabled {
                 let appearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UINavigationBar.self])
                 let states: [UIControl.State] = [.normal, .highlighted, .disabled, .focused]
                 for state in states {
@@ -81,7 +81,7 @@ extension Wrapper where Base: UINavigationBar {
         }
         set {
             setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
                     appearance.configureWithDefaultBackground()
                 } else {
@@ -133,7 +133,7 @@ extension Wrapper where Base: UINavigationBar {
     }
     
     private func updateTitleAttributes() {
-        if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
             var attributes = appearance.titleTextAttributes
             attributes[NSAttributedString.Key.foregroundColor] = base.tintColor
             if let titleAttributes = titleAttributes {
@@ -166,7 +166,7 @@ extension Wrapper where Base: UINavigationBar {
     }
     
     private func updateButtonAttributes() {
-        if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
             guard let buttonAttributes = buttonAttributes ?? UINavigationBar.__buttonAttributes else { return }
             
             let appearances = [appearance.buttonAppearance, appearance.doneButtonAppearance, appearance.backButtonAppearance]
@@ -190,7 +190,7 @@ extension Wrapper where Base: UINavigationBar {
         set {
             setProperty(newValue, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = newValue
                     appearance.backgroundImage = nil
@@ -228,7 +228,7 @@ extension Wrapper where Base: UINavigationBar {
             setProperty(nil, forName: "backgroundColor")
             setProperty(newValue, forName: "backgroundImage")
             let image = newValue?.fw.image ?? UIImage()
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = image
                 updateAppearance()
@@ -249,7 +249,7 @@ extension Wrapper where Base: UINavigationBar {
             setProperty(nil, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = image
                 updateAppearance()
@@ -268,7 +268,7 @@ extension Wrapper where Base: UINavigationBar {
         set {
             setProperty(newValue, forName: "shadowColor")
             setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = newValue
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -290,7 +290,7 @@ extension Wrapper where Base: UINavigationBar {
         set {
             setProperty(newValue, forName: "shadowImage")
             setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = newValue?.fw.image
                 updateAppearance()
@@ -303,14 +303,14 @@ extension Wrapper where Base: UINavigationBar {
     /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
     public var backImage: UIImage? {
         get {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 return appearance.backIndicatorImage
             }}
             return base.backIndicatorImage
         }
         set {
             let image = newValue?.fw.image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0), color: nil)
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.setBackIndicatorImage(image, transitionMaskImage: image)
                 updateAppearance()
             }} else {
@@ -322,7 +322,7 @@ extension Wrapper where Base: UINavigationBar {
     
     fileprivate func notifyThemeChanged() {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = backgroundColor.fw.color
                     appearance.backgroundImage = nil
@@ -346,7 +346,7 @@ extension Wrapper where Base: UINavigationBar {
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
             let image = backgroundImage.fw.image ?? UIImage()
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = image
                 updateAppearance()
@@ -357,7 +357,7 @@ extension Wrapper where Base: UINavigationBar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = shadowColor.fw.color
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -367,7 +367,7 @@ extension Wrapper where Base: UINavigationBar {
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = shadowImage.fw.image
                 updateAppearance()
@@ -425,7 +425,7 @@ extension Wrapper where Base: UITabBar {
         }
         set {
             setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
                     appearance.configureWithDefaultBackground()
                 } else {
@@ -456,7 +456,7 @@ extension Wrapper where Base: UITabBar {
         set {
             setProperty(newValue, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = newValue
                     appearance.backgroundImage = nil
@@ -493,7 +493,7 @@ extension Wrapper where Base: UITabBar {
         set {
             setProperty(nil, forName: "backgroundColor")
             setProperty(newValue, forName: "backgroundImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = newValue?.fw.image
                 updateAppearance()
@@ -514,7 +514,7 @@ extension Wrapper where Base: UITabBar {
             setProperty(nil, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = image
                 updateAppearance()
@@ -533,7 +533,7 @@ extension Wrapper where Base: UITabBar {
         set {
             setProperty(newValue, forName: "shadowColor")
             setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = newValue
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -555,7 +555,7 @@ extension Wrapper where Base: UITabBar {
         set {
             setProperty(newValue, forName: "shadowImage")
             setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = newValue?.fw.image
                 updateAppearance()
@@ -567,7 +567,7 @@ extension Wrapper where Base: UITabBar {
     
     fileprivate func notifyThemeChanged() {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = backgroundColor.fw.color
                     appearance.backgroundImage = nil
@@ -588,7 +588,7 @@ extension Wrapper where Base: UITabBar {
         }
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = backgroundImage.fw.image
                 updateAppearance()
@@ -599,7 +599,7 @@ extension Wrapper where Base: UITabBar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = shadowColor.fw.color
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -609,7 +609,7 @@ extension Wrapper where Base: UITabBar {
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = shadowImage.fw.image
                 updateAppearance()
@@ -667,7 +667,7 @@ extension Wrapper where Base: UIToolbar {
         }
         set {
             setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
                     appearance.configureWithDefaultBackground()
                 } else {
@@ -691,7 +691,7 @@ extension Wrapper where Base: UIToolbar {
         }
         set {
             base.tintColor = newValue
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 updateAppearance()
             }}
         }
@@ -709,7 +709,7 @@ extension Wrapper where Base: UIToolbar {
     }
     
     private func updateButtonAttributes() {
-        if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
             guard let buttonAttributes = buttonAttributes else { return }
             
             let appearances = [appearance.buttonAppearance, appearance.doneButtonAppearance]
@@ -733,7 +733,7 @@ extension Wrapper where Base: UIToolbar {
         set {
             setProperty(newValue, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = newValue
                     appearance.backgroundImage = nil
@@ -770,7 +770,7 @@ extension Wrapper where Base: UIToolbar {
         set {
             setProperty(nil, forName: "backgroundColor")
             setProperty(newValue, forName: "backgroundImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = newValue?.fw.image
                 updateAppearance()
@@ -791,7 +791,7 @@ extension Wrapper where Base: UIToolbar {
             setProperty(nil, forName: "backgroundColor")
             setProperty(nil, forName: "backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = image
                 updateAppearance()
@@ -810,7 +810,7 @@ extension Wrapper where Base: UIToolbar {
         set {
             setProperty(newValue, forName: "shadowColor")
             setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = newValue
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -832,7 +832,7 @@ extension Wrapper where Base: UIToolbar {
         set {
             setProperty(newValue, forName: "shadowImage")
             setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = newValue?.fw.image
                 updateAppearance()
@@ -866,7 +866,7 @@ extension Wrapper where Base: UIToolbar {
     
     fileprivate func notifyThemeChanged() {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
                     appearance.backgroundColor = backgroundColor.fw.color
                     appearance.backgroundImage = nil
@@ -887,7 +887,7 @@ extension Wrapper where Base: UIToolbar {
         }
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.backgroundColor = nil
                 appearance.backgroundImage = backgroundImage.fw.image
                 updateAppearance()
@@ -898,7 +898,7 @@ extension Wrapper where Base: UIToolbar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = shadowColor.fw.color
                 appearance.shadowImage = nil
                 updateAppearance()
@@ -908,7 +908,7 @@ extension Wrapper where Base: UIToolbar {
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.__appearanceEnabled { if #available(iOS 13.0, *) {
+            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
                 appearance.shadowColor = nil
                 appearance.shadowImage = shadowImage.fw.image
                 updateAppearance()
