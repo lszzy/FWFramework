@@ -12,11 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWBlock
 
 /**
- 通用互斥锁方法
- */
-void FWSynchronized(id object, __attribute__((noescape)) void (^closure)(void)) NS_REFINED_FOR_SWIFT;
-
-/**
  通用不带参数block
  */
 typedef void (^FWBlockVoid)(void) NS_SWIFT_UNAVAILABLE("");
@@ -153,7 +148,7 @@ typedef void (^FWBlockIntParam)(NSInteger index, id _Nullable param) NS_SWIFT_UN
 #pragma mark - FWTapGestureRecognizer
 
 /// 支持高亮状态的点击手势
-NS_SWIFT_NAME(TapGestureRecognizer)
+NS_SWIFT_NAME(__TapGestureRecognizer)
 @interface FWTapGestureRecognizer : UITapGestureRecognizer
 
 /// 是否是高亮状态，默认NO

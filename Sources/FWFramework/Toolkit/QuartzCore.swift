@@ -20,14 +20,18 @@ extension Wrapper where Base: CADisplayLink {
     ///   - selector: 方法
     /// - Returns: CADisplayLink
     public static func commonDisplayLink(target: Any, selector: Selector) -> CADisplayLink {
-        return Base.__fw_commonDisplayLink(withTarget: target, selector: selector)
+        let displayLink = CADisplayLink(target: target, selector: selector)
+        displayLink.add(to: .current, forMode: .common)
+        return displayLink
     }
 
     /// 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
     public static func commonDisplayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        return Base.__fw_commonDisplayLink(block)
+        let displayLink = displayLink(block: block)
+        displayLink.add(to: .current, forMode: .common)
+        return displayLink
     }
 
     /// 创建CADisplayLink，使用block，需要调用addToRunLoop:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。
@@ -36,7 +40,20 @@ extension Wrapper where Base: CADisplayLink {
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
     public static func displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        return Base.__fw_displayLink(block)
+        let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.__displayLinkAction(_:)))
+        objc_setAssociatedObject(displayLink, &CADisplayLink.__displayLinkActionKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return displayLink
+    }
+    
+}
+
+extension CADisplayLink {
+    
+    fileprivate static var __displayLinkActionKey = "displayLinkAction"
+    
+    @objc fileprivate class func __displayLinkAction(_ displayLink: CADisplayLink) {
+        let block = objc_getAssociatedObject(displayLink, &CADisplayLink.__displayLinkActionKey) as? (CADisplayLink) -> Void
+        block?(displayLink)
     }
     
 }

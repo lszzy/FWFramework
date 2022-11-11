@@ -46,12 +46,8 @@
     return [appearance class];
 }
 
-@end
-
-@implementation NSObject (FWAppearance)
-
-- (void)fw_applyAppearance {
-    Class class = [self class];
++ (void)applyAppearance:(NSObject *)object {
+    Class class = [object class];
     if ([class respondsToSelector:@selector(appearance)]) {
         SEL appearanceGuideClassSelector = NSSelectorFromString(@"_appearanceGuideClass");
         if (!class_respondsToSelector(class, appearanceGuideClassSelector)) {
@@ -64,9 +60,17 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         SEL selector = NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:", @"applyInvocationsTo", @"window"]);
-        [NSClassFromString(@"_UIAppearance") performSelector:selector withObject:self withObject:nil];
+        [NSClassFromString(@"_UIAppearance") performSelector:selector withObject:object withObject:nil];
 #pragma clang diagnostic pop
     }
+}
+
+@end
+
+@implementation NSObject (FWAppearance)
+
+- (void)fw_applyAppearance {
+    [FWAppearance applyAppearance:self];
 }
 
 @end

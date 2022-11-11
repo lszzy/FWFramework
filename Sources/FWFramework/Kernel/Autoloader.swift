@@ -77,6 +77,9 @@ public class Autoloader: NSObject, AutoloadProtocol {
     public static func autoload() {
         // 自动加载Autoloader
         autoloadAutoloader()
+        
+        // 自动加载框架内置组件
+        autoload(AutoLayoutAutoloader.self)
     }
     
     private static func autoloadAutoloader() {
