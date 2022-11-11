@@ -9,4 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - __Autoloader
+
+@interface __Autoloader : NSObject
+
+@end
+
 NS_ASSUME_NONNULL_END

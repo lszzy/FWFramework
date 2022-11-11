@@ -68,23 +68,44 @@ extension Wrapper where Base: UIDevice {
     
     /// 设置设备token原始Data，格式化并保存
     public static func setDeviceTokenData(_ tokenData: Data?) {
-        Base.__fw_setDeviceTokenData(tokenData)
+        if let tokenData = tokenData {
+            deviceToken = tokenData.map{ String(format: "%02.0hhx", $0) }.joined()
+        } else {
+            deviceToken = nil
+        }
     }
 
     /// 获取设备Token格式化后的字符串
     public static var deviceToken: String? {
-        get { return Base.__fw_deviceToken }
-        set { Base.__fw_deviceToken = newValue }
+        get {
+            return UserDefaults.standard.string(forKey: "FWDeviceToken")
+        }
+        set {
+            if let deviceToken = newValue {
+                UserDefaults.standard.set(deviceToken, forKey: "FWDeviceToken")
+                UserDefaults.standard.synchronize()
+            } else {
+                UserDefaults.standard.removeObject(forKey: "FWDeviceToken")
+                UserDefaults.standard.synchronize()
+            }
+        }
     }
 
     /// 获取设备模型，格式："iPhone6,1"
     public static var deviceModel: String? {
-        return Base.__fw_deviceModel
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let deviceModel = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return deviceModel
     }
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        return Base.__fw_deviceIDFV
+        return UIDevice.current.identifierForVendor?.uuidString
     }
 
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
@@ -98,8 +119,25 @@ extension Wrapper where Base: UIDevice {
     
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
     public static var deviceUUID: String {
-        get { return Base.__fw_deviceUUID }
-        set { Base.__fw_deviceUUID = newValue }
+        get {
+            if let deviceUUID = UIDevice.__deviceUUID {
+                return deviceUUID
+            }
+            
+            if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
+                UIDevice.__deviceUUID = deviceUUID
+                return deviceUUID
+            }
+            
+            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+            UIDevice.__deviceUUID = deviceUUID
+            KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            return deviceUUID
+        }
+        set {
+            UIDevice.__deviceUUID = newValue
+            KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+        }
     }
     
     /// 是否越狱
@@ -129,33 +167,9 @@ extension Wrapper where Base: UIDevice {
     
 }
 
-@objc extension UIDevice {
+extension UIDevice {
     
-    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
-    @objc(fw_deviceUUID)
-    public static var __fw_deviceUUID: String {
-        get {
-            if let deviceUUID = fw_innerDeviceUUID {
-                return deviceUUID
-            }
-            
-            if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
-                fw_innerDeviceUUID = deviceUUID
-                return deviceUUID
-            }
-            
-            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
-            fw_innerDeviceUUID = deviceUUID
-            KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
-            return deviceUUID
-        }
-        set {
-            fw_innerDeviceUUID = newValue
-            KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
-        }
-    }
-    
-    private static var fw_innerDeviceUUID: String?
+    fileprivate static var __deviceUUID: String?
     
 }
 

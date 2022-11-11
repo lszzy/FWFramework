@@ -235,23 +235,6 @@ extension Wrapper where Base: UICollectionView {
     }
 }
 
-@objc extension UICollectionView {
-    @objc(fw_delegate)
-    public var __fw_delegate: CollectionViewDelegate {
-        return fw.delegate
-    }
-    
-    @objc(fw_collectionView)
-    public static func __fw_collectionView() -> UICollectionView {
-        return fw.collectionView()
-    }
-    
-    @objc(fw_collectionView:)
-    public static func __fw_collectionView(_ collectionViewLayout: UICollectionViewLayout) -> UICollectionView {
-        return fw.collectionView(collectionViewLayout)
-    }
-}
-
 extension Wrapper where Base: UICollectionViewFlowLayout {
     
     /// 初始化布局section配置，在prepareLayout调用即可
