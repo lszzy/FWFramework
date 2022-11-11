@@ -6,6 +6,7 @@
 //
 
 #import "FWAutoloader.h"
+#import "FWBridge.h"
 #import "FWConfiguration.h"
 #import "FWLoader.h"
 #import "FWLogger.h"
