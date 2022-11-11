@@ -134,7 +134,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
         let result = ToolbarButton(image: Icon.closeImage)
         result.tintColor = AppTheme.textColor
         result.fw.addTouch { sender in
-            Navigator.closeViewController(animated: true)
+            Navigator.close(animated: true)
         }
         return result
     }()
