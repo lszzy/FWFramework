@@ -54,10 +54,10 @@ typedef NS_OPTIONS(NSUInteger, FWNavigatorOptions) {
     FWNavigatorOptionStyleAutomatic      = 0 << 24, // default
     FWNavigatorOptionStyleFullScreen     = 1 << 24,
     FWNavigatorOptionStylePageSheet      = 2 << 24,
-} NS_SWIFT_NAME(NavigatorOptions);
+} NS_SWIFT_UNAVAILABLE("");
 
 /// 导航管理器
-NS_SWIFT_NAME(Navigator)
+NS_SWIFT_UNAVAILABLE("")
 @interface FWNavigator : NSObject
 
 /// 获取最顶部的视图控制器

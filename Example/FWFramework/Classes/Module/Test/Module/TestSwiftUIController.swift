@@ -86,7 +86,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             })
             .navigationBarConfigure(
                 leading: Button(action: {
-                    Navigator.closeViewController(animated: true)
+                    Navigator.close(animated: true)
                 }, label: {
                     HStack {
                         Spacer()

@@ -127,7 +127,7 @@ class TestTabbarChildController: UIViewController, ViewControllerProtocol {
         result.backgroundColor = AppTheme.barColor
         result.tintColor = AppTheme.textColor
         result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { sender in
-            Navigator.closeViewController(animated: true)
+            Navigator.close(animated: true)
         })
         return result
     }()
