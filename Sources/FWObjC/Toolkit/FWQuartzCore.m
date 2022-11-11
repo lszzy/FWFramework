@@ -187,7 +187,7 @@
 
 - (UIImage *)fw_snapshotImageWithSize:(CGSize)size
 {
-    UIGraphicsBeginImageContextWithOptions(CGSizeEqualToSize(size, CGSizeZero) ? self.frame.size : size, 0.0, [UIScreen mainScreen].scale);
+    UIGraphicsBeginImageContextWithOptions(CGSizeEqualToSize(size, CGSizeZero) ? self.frame.size : size, NO, [UIScreen mainScreen].scale);
     [self renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
