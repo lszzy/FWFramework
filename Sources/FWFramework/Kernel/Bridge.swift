@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/20.
 //
 
-import Foundation
+import UIKit
 
 @objc extension UITableView {
     @objc(fw_delegate)
