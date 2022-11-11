@@ -295,12 +295,18 @@ extension Wrapper where Base == String {
     
     /// 中文转拼音
     public var pinyinString: String {
-        return (base as NSString).__fw_pinyin
+        if base.isEmpty { return base }
+        let mutableString = NSMutableString(string: base)
+        CFStringTransform(mutableString, nil, kCFStringTransformToLatin, false)
+        let pinyinStr = mutableString.folding(options: .diacriticInsensitive, locale: .current)
+        return pinyinStr.lowercased()
     }
     
     /// 中文转拼音并进行比较
     public func pinyinCompare(_ string: String) -> ComparisonResult {
-        return (base as NSString).__fw_pinyinCompare(string)
+        let pinyin1 = base.fw.pinyinString
+        let pinyin2 = string.fw.pinyinString
+        return pinyin1.compare(pinyin2)
     }
     
     /// 是否包含Emoji表情

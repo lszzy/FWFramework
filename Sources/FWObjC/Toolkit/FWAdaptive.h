@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UIScreen+FWAdaptive
 
 /// 屏幕尺寸可扩展枚举
-typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ScreenInch);
+typedef NSInteger FWScreenInch NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(__ScreenInch);
 static const FWScreenInch FWScreenInch35 = 35;
 static const FWScreenInch FWScreenInch40 = 40;
 static const FWScreenInch FWScreenInch47 = 47;

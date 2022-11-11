@@ -24,6 +24,9 @@ NS_SWIFT_NAME(Appearance)
 /// 获取指定 appearance 对象的关联 Class，通过解析_UIAppearance对象获取
 + (Class)classForAppearance:(id)appearance;
 
+/// 从 appearance 里取值并赋值给指定实例，通常在对象的 init 里调用
++ (void)applyAppearance:(NSObject *)object;
+
 @end
 
 @interface NSObject (FWAppearance)
