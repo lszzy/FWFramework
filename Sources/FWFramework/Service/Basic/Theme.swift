@@ -327,7 +327,7 @@ extension Wrapper where Base: NSObject {
                 if let newContext = newContext {
                     let weakBase = base
                     let identifier = newContext.fw.addThemeListener { [weak weakBase] style in
-                        weakBase?.fw.notifyThemeChanged(style)
+                        weakBase?.fw.notifyThemeListeners(style)
                     }
                     themeContextIdentifier = identifier
                 }
@@ -380,7 +380,7 @@ extension Wrapper where Base: NSObject {
     }
     
     @available(iOS 13.0, *)
-    fileprivate func notifyThemeChanged(_ style: ThemeStyle) {
+    fileprivate func notifyThemeListeners(_ style: ThemeStyle) {
         // 1. 调用themeChanged钩子
         base.themeChanged(style)
         
@@ -390,6 +390,11 @@ extension Wrapper where Base: NSObject {
                 let listener = obj as? (ThemeStyle) -> Void
                 listener?(style)
             }
+        }
+        
+        // 3. 调用renderTheme渲染钩子
+        if base.responds(to: #selector(ThemeObserver.renderTheme(_:))) {
+            base.renderTheme(style)
         }
     }
     
@@ -431,7 +436,7 @@ internal class ThemeAutoloader: AutoloadProtocol {
             if style == oldStyle { return }
             
             let notifyObject: NSObject = selfObject
-            notifyObject.fw.notifyThemeChanged(style)
+            notifyObject.fw.notifyThemeListeners(style)
             if selfObject == UIScreen.main {
                 NotificationCenter.default.post(
                     name: .ThemeChanged,
