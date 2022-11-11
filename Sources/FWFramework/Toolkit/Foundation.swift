@@ -656,7 +656,11 @@ extension Wrapper where Base == URL {
      @return NSURL
      */
     public static func appleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_appleMapsURL(withAddr: addr, options: options)
+        var params = options ?? [:]
+        if let addr = addr, !addr.isEmpty {
+            params["q"] = addr
+        }
+        return mapsURL(string: "http://maps.apple.com/", params: params)
     }
 
     /**
@@ -668,7 +672,14 @@ extension Wrapper where Base == URL {
      @return NSURL
      */
     public static func appleMapsURL(withSaddr saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_appleMapsURL(withSaddr: saddr, daddr: daddr, options: options)
+        var params = options ?? [:]
+        if let saddr = saddr, !saddr.isEmpty {
+            params["saddr"] = saddr
+        }
+        if let daddr = daddr, !daddr.isEmpty {
+            params["daddr"] = daddr
+        }
+        return mapsURL(string: "http://maps.apple.com/", params: params)
     }
 
     /**
@@ -679,7 +690,11 @@ extension Wrapper where Base == URL {
      @return NSURL
      */
     public static func googleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_googleMapsURL(withAddr: addr, options: options)
+        var params = options ?? [:]
+        if let addr = addr, !addr.isEmpty {
+            params["q"] = addr
+        }
+        return mapsURL(string: "comgooglemaps://", params: params)
     }
 
     /**
@@ -691,8 +706,20 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
      @return NSURL
      */
-    public static func googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_googleMapsURL(withSaddr: saddr, daddr: daddr, mode: mode, options: options)
+    public static func googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+        var params = options ?? [:]
+        if let saddr = saddr, !saddr.isEmpty {
+            params["saddr"] = saddr
+        }
+        if let daddr = daddr, !daddr.isEmpty {
+            params["daddr"] = daddr
+        }
+        var directionsmode = "driving"
+        if let mode = mode, !mode.isEmpty {
+            directionsmode = mode
+        }
+        params["directionsmode"] = directionsmode
+        return mapsURL(string: "comgooglemaps://", params: params)
     }
 
     /**
@@ -703,7 +730,21 @@ extension Wrapper where Base == URL {
      @return NSURL
      */
     public static func baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_baiduMapsURL(withAddr: addr, options: options)
+        var params = options ?? [:]
+        if let addr = addr, !addr.isEmpty {
+            if addr.fw.isFormatCoordinate() {
+                params["location"] = addr
+            } else {
+                params["address"] = addr
+            }
+        }
+        if params["coord_type"] == nil {
+            params["coord_type"] = "gcj02"
+        }
+        if params["src"] == nil {
+            params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
+        }
+        return mapsURL(string: "baidumap://map/geocoder", params: params)
     }
 
     /**
@@ -715,8 +756,37 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
      @return NSURL
      */
-    public static func baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        return NSURL.__fw_baiduMapsURL(withSaddr: saddr, daddr: daddr, mode: mode, options: options)
+    public static func baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+        var params = options ?? [:]
+        if let saddr = saddr, !saddr.isEmpty {
+            params["origin"] = saddr
+        }
+        if let daddr = daddr, !daddr.isEmpty {
+            params["destination"] = daddr
+        }
+        var directionsmode = "driving"
+        if let mode = mode, !mode.isEmpty {
+            directionsmode = mode
+        }
+        params["mode"] = directionsmode
+        if params["coord_type"] == nil {
+            params["coord_type"] = "gcj02"
+        }
+        if params["src"] == nil {
+            params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
+        }
+        return mapsURL(string: "baidumap://map/direction", params: params)
+    }
+    
+    private static func mapsURL(string: String, params: [AnyHashable: Any]) -> URL? {
+        var urlString = string + "?"
+        for (key, value) in params {
+            let valueStr = FW.safeString(value)
+                .replacingOccurrences(of: " ", with: "+")
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            urlString += "\(FW.safeString(key))=\(valueStr ?? "")&"
+        }
+        return URL(string: urlString.fw.substring(to: urlString.count - 1))
     }
     
 }
@@ -726,22 +796,32 @@ extension Wrapper where Base: UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象
     public static func object(forKey: String) -> Any? {
-        return Base.__fw_object(forKey: forKey)
+        return UserDefaults.standard.object(forKey: forKey)
     }
 
     /// 保存对象到standard，支持archive对象
     public static func setObject(_ object: Any?, forKey: String) {
-        Base.__fw_setObject(object, forKey: forKey)
+        if let object = object {
+            UserDefaults.standard.set(object, forKey: forKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: forKey)
+        }
+        UserDefaults.standard.synchronize()
     }
     
     /// 读取对象，支持unarchive对象
     public func object(forKey: String) -> Any? {
-        return base.__fw_object(forKey: forKey)
+        return base.object(forKey: forKey)
     }
 
     /// 保存对象，支持archive对象
     public func setObject(_ object: Any?, forKey: String) {
-        base.__fw_setObject(object, forKey: forKey)
+        if let object = object {
+            base.set(object, forKey: forKey)
+        } else {
+            base.removeObject(forKey: forKey)
+        }
+        base.synchronize()
     }
     
 }
