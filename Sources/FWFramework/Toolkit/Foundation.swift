@@ -508,7 +508,20 @@ extension Wrapper where Base: NSAttributedString {
 
     /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
     public static func themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
-        return Base.__fw_themeObject(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
+        var lightAttributes: [NSAttributedString.Key: Any] = [:]
+        var darkAttributes: [NSAttributedString.Key: Any] = [:]
+        if let textColor = defaultAttributes?[.foregroundColor] as? UIColor {
+            lightAttributes[.foregroundColor] = textColor.fw.color(forStyle: .light)
+            darkAttributes[.foregroundColor] = textColor.fw.color(forStyle: .dark)
+        }
+        if let font = defaultAttributes?[.font] as? UIFont {
+            lightAttributes[.font] = font
+            darkAttributes[.font] = font
+        }
+        
+        let lightObject = attributedString(htmlString: htmlString, defaultAttributes: lightAttributes)
+        let darkObject = attributedString(htmlString: htmlString, defaultAttributes: darkAttributes)
+        return ThemeObject(light: lightObject, dark: darkObject)
     }
 
     /// 获取颜色对应CSS字符串(rgb|rgba格式)
