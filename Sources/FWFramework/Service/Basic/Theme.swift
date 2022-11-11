@@ -391,9 +391,6 @@ extension Wrapper where Base: NSObject {
                 listener?(style)
             }
         }
-        
-        // 3. 调用renderTheme渲染钩子
-        base.renderTheme(style)
     }
     
 }
@@ -402,9 +399,6 @@ extension Wrapper where Base: NSObject {
     
     /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
     open func themeChanged(_ style: ThemeStyle) {}
-    
-    /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func renderTheme(_ style: ThemeStyle) {}
     
 }
 
