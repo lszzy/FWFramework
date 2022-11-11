@@ -553,13 +553,16 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
         listener(style);
     }];
     
-    // 3. 调用renderTheme渲染钩子
-    if ([self respondsToSelector:@selector(renderTheme:)]) {
-        [self renderTheme:style];
-    }
+    // 3. 调用fw_renderTheme渲染钩子
+    [self fw_renderTheme:style];
 }
 
 - (void)fw_themeChanged:(FWThemeStyle)style
+{
+    // 子类重写
+}
+
+- (void)fw_renderTheme:(FWThemeStyle)style
 {
     // 子类重写
 }

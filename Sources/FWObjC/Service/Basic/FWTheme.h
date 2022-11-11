@@ -180,18 +180,7 @@ NS_SWIFT_NAME(ThemeObject)
 
 #pragma mark - NSObject+FWTheme
 
-/// iOS13主题订阅观察者监听协议，主题改变时自动通知
-NS_SWIFT_NAME(ThemeObserver)
-@protocol FWThemeObserver <NSObject>
-
-@optional
-
-/// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
-- (void)renderTheme:(FWThemeStyle)style;
-
-@end
-
-@interface NSObject (FWTheme) <FWThemeObserver>
+@interface NSObject (FWTheme)
 
 /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
 @property (nullable, nonatomic, weak) id<UITraitEnvironment> fw_themeContext NS_REFINED_FOR_SWIFT;
@@ -207,6 +196,9 @@ NS_SWIFT_NAME(ThemeObserver)
 
 /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
 - (void)fw_themeChanged:(FWThemeStyle)style NS_REFINED_FOR_SWIFT;
+
+/// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
+- (void)fw_renderTheme:(FWThemeStyle)style NS_REFINED_FOR_SWIFT;
 
 @end
 
