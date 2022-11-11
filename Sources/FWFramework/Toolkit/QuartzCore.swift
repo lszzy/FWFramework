@@ -80,36 +80,91 @@ extension Wrapper where Base: CALayer {
     
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeBackgroundColor: UIColor? {
-        get { return base.__fw_themeBackgroundColor }
-        set { base.__fw_themeBackgroundColor = newValue }
+        get {
+            return property(forName: "themeBackgroundColor") as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: "themeBackgroundColor")
+            base.backgroundColor = newValue?.cgColor
+        }
     }
 
     /// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeBorderColor: UIColor? {
-        get { return base.__fw_themeBorderColor }
-        set { base.__fw_themeBorderColor = newValue }
+        get {
+            return property(forName: "themeBorderColor") as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: "themeBorderColor")
+            base.borderColor = newValue?.cgColor
+        }
     }
 
     /// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeShadowColor: UIColor? {
-        get { return base.__fw_themeShadowColor }
-        set { base.__fw_themeShadowColor = newValue }
+        get {
+            return property(forName: "themeShadowColor") as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: "themeShadowColor")
+            base.shadowColor = newValue?.cgColor
+        }
     }
 
     /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeContents: UIImage? {
-        get { return base.__fw_themeContents }
-        set { base.__fw_themeContents = newValue }
+        get {
+            return property(forName: "themeContents") as? UIImage
+        }
+        set {
+            setProperty(newValue, forName: "themeContents")
+            base.contents = newValue?.fw.image?.cgImage
+        }
     }
     
     /// 设置阴影颜色、偏移和半径
     public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
-        base.__fw_setShadowColor(color, offset: offset, radius: radius)
+        base.shadowColor = color?.cgColor
+        base.shadowOffset = offset
+        base.shadowRadius = radius
+        base.shadowOpacity = 1.0
     }
     
     /// 生成图片截图，默认大小为frame.size
     public func snapshotImage(size: CGSize = .zero) -> UIImage? {
-        return base.__fw_snapshotImage(with: size)
+        UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? base.frame.size : size, false, UIScreen.main.scale)
+        if let context = UIGraphicsGetCurrentContext() {
+            base.render(in: context)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image
+        }
+        return nil
+    }
+    
+    fileprivate func notifyThemeChanged() {
+        if let themeBackgroundColor = themeBackgroundColor {
+            base.backgroundColor = themeBackgroundColor.cgColor
+        }
+        if let themeBorderColor = themeBorderColor {
+            base.borderColor = themeBorderColor.cgColor
+        }
+        if let themeShadowColor = themeShadowColor {
+            base.shadowColor = themeShadowColor.cgColor
+        }
+        if let themeContents = themeContents, themeContents.fw.isThemeImage {
+            base.contents = themeContents.fw.image?.cgImage
+        }
+    }
+    
+}
+
+extension CALayer {
+    
+    @objc open override func themeChanged(_ style: ThemeStyle) {
+        super.themeChanged(style)
+        
+        fw.notifyThemeChanged()
     }
     
 }
@@ -119,8 +174,13 @@ extension Wrapper where Base: CAGradientLayer {
     
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var themeColors: [UIColor]? {
-        get { return base.__fw_themeColors }
-        set { base.__fw_themeColors = newValue }
+        get {
+            return property(forName: "themeColors") as? [UIColor]
+        }
+        set {
+            setProperty(newValue, forName: "themeColors")
+            base.colors = newValue?.map({ $0.cgColor })
+        }
     }
     
     /**
@@ -140,7 +200,25 @@ extension Wrapper where Base: CAGradientLayer {
         startPoint: CGPoint,
         endPoint: CGPoint
     ) -> CAGradientLayer {
-        return Base.__fw_gradientLayer(frame, colors: colors, locations: locations, start: startPoint, end: endPoint)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = frame
+        gradientLayer.colors = colors
+        gradientLayer.locations = locations
+        gradientLayer.startPoint = startPoint
+        gradientLayer.endPoint = endPoint
+        return gradientLayer
+    }
+    
+}
+
+extension CAGradientLayer {
+    
+    @objc open override func themeChanged(_ style: ThemeStyle) {
+        super.themeChanged(style)
+        
+        if let themeColors = fw.themeColors {
+            self.colors = themeColors.map({ $0.cgColor })
+        }
     }
     
 }
