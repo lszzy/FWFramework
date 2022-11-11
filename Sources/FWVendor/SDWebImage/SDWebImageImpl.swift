@@ -9,6 +9,7 @@ import UIKit
 import SDWebImage
 #if FWMacroSPM
 import FWObjC
+import FWFramework
 #endif
 
 /// SDWebImage图片插件，启用SDWebImage子模块后生效
