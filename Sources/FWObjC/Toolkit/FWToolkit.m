@@ -7,7 +7,6 @@
 
 #import "FWToolkit.h"
 #import "FWUIKit.h"
-#import "FWAdaptive.h"
 #import "FWNavigator.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"

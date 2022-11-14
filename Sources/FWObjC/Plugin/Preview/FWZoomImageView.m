@@ -10,10 +10,14 @@
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
 #import "FWAutoLayout.h"
-#import "FWAdaptive.h"
 #import "FWEncode.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWZoomImageVideoPlayerView
 
@@ -121,7 +125,7 @@
     }
     if (_videoCloseButton) {
         [_videoCloseButton sizeToFit];
-        CGPoint videoCloseButtonCenter = self.videoCloseButtonCenter ? self.videoCloseButtonCenter() : CGPointMake(UIScreen.fw_safeAreaInsets.left + 24, FWStatusBarHeight + FWNavigationBarHeight / 2);
+        CGPoint videoCloseButtonCenter = self.videoCloseButtonCenter ? self.videoCloseButtonCenter() : CGPointMake(UIScreen.fw_safeAreaInsets.left + 24, UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2);
         _videoCloseButton.center = videoCloseButtonCenter;
     }
     

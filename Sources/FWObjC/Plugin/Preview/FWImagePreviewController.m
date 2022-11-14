@@ -6,9 +6,13 @@
 //
 
 #import "FWImagePreviewController.h"
-#import "FWAdaptive.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWImagePreviewView
 
@@ -419,7 +423,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
         [self updatePageLabel];
     }
-    CGPoint pageLabelCenter = self.pageLabelCenter ? self.pageLabelCenter() : CGPointMake(FWScreenWidth / 2, FWScreenHeight - (UIScreen.fw_safeAreaInsets.bottom + 18));
+    CGPoint pageLabelCenter = self.pageLabelCenter ? self.pageLabelCenter() : CGPointMake(UIScreen.fw_screenWidth / 2, UIScreen.fw_screenHeight - (UIScreen.fw_safeAreaInsets.bottom + 18));
     self.pageLabel.center = pageLabelCenter;
 }
 
