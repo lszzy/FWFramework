@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  通用加载器，添加处理句柄后指定输入即可加载输出结果
  */
-NS_SWIFT_NAME(__Loader)
+NS_SWIFT_NAME(Loader)
 @interface FWLoader<__covariant InputType, __covariant OutputType> : NSObject
 
 /// 添加block加载器，返回标志id

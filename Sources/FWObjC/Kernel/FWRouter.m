@@ -330,7 +330,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
             if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
                 options = [routerOptions unsignedIntegerValue];
             }
-            [FWNavigator openViewController:viewController animated:YES options:options completion:nil];
+            [FWNavigator open:viewController animated:YES options:options completion:nil];
         }
         return nil;
     };

@@ -15,6 +15,11 @@
 #import <Accelerate/Accelerate.h>
 #import <StoreKit/StoreKit.h>
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - UIApplication+FWToolkit
 
@@ -264,7 +269,7 @@
         objc_setAssociatedObject(safariController, @selector(safariViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
         safariController.delegate = [FWSafariViewControllerDelegate sharedInstance];
     }
-    [FWNavigator presentViewController:safariController animated:YES completion:nil];
+    [FWNavigator present:safariController animated:YES completion:nil];
 }
 
 + (void)fw_openMessageController:(MFMessageComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
@@ -278,7 +283,7 @@
         objc_setAssociatedObject(controller, @selector(messageComposeViewController:didFinishWithResult:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.messageComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [FWNavigator presentViewController:controller animated:YES completion:nil];
+    [FWNavigator present:controller animated:YES completion:nil];
 }
 
 + (void)fw_openMailController:(MFMailComposeViewController *)controller completionHandler:(void (^)(BOOL))completion
@@ -292,7 +297,7 @@
         objc_setAssociatedObject(controller, @selector(mailComposeController:didFinishWithResult:error:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     controller.mailComposeDelegate = [FWSafariViewControllerDelegate sharedInstance];
-    [FWNavigator presentViewController:controller animated:YES completion:nil];
+    [FWNavigator present:controller animated:YES completion:nil];
 }
 
 + (void)fw_openStoreController:(NSDictionary<NSString *,id> *)parameters completionHandler:(void (^)(BOOL))completion
@@ -306,7 +311,7 @@
         }
         
         objc_setAssociatedObject(viewController, @selector(productViewControllerDidFinish:), completion, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        [FWNavigator presentViewController:viewController animated:YES completion:nil];
+        [FWNavigator present:viewController animated:YES completion:nil];
     }];
 }
 
