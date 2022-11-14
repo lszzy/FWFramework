@@ -1034,33 +1034,51 @@ extension Wrapper where Base: UIViewController {
 
     /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
     public var isViewVisible: Bool {
-        return base.__fw_isViewVisible
+        return base.isViewLoaded && base.view.window != nil
     }
     
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
     public var ancestorView: UIView {
-        return base.__fw_ancestorView
+        if let navigationController = base.tabBarController?.navigationController {
+            return navigationController.view
+        } else if let tabBarController = base.tabBarController {
+            return tabBarController.view
+        } else if let navigationController = base.navigationController {
+            return navigationController.view
+        } else {
+            return base.view
+        }
     }
 
     /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
     public var isLoaded: Bool {
-        get { return base.__fw_isLoaded }
-        set { base.__fw_isLoaded = newValue }
+        get { return propertyBool(forName: "isLoaded") }
+        set { setPropertyBool(newValue, forName: "isLoaded") }
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
     public func removeChildViewController(_ viewController: UIViewController) {
-        base.__fw_removeChildViewController(viewController)
+        viewController.willMove(toParent: nil)
+        viewController.removeFromParent()
+        viewController.view.removeFromSuperview()
     }
     
     /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
     public func addChildViewController(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        base.__fw_addChildViewController(viewController, in: nil, layout: layout)
+        addChildViewController(viewController, in: nil, layout: layout)
     }
 
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
     public func addChildViewController(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
-        base.__fw_addChildViewController(viewController, in: view, layout: layout)
+        base.addChild(viewController)
+        let superview: UIView = view ?? base.view
+        superview.addSubview(viewController.view)
+        if layout != nil {
+            layout?(viewController.view)
+        } else {
+            viewController.view.fw.pinEdges()
+        }
+        viewController.didMove(toParent: base)
     }
     
 }

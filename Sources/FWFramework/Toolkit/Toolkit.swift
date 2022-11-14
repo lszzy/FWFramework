@@ -41,7 +41,7 @@ extension FW {
     ///   - weight: 字重可选，默认Regular
     /// - Returns: UIFont
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
-        return UIFont.__fw_font(ofSize: size, weight: weight)
+        return UIFont.fw.font(ofSize: size, weight: weight)
     }
     
     /// 快速创建图标对象
@@ -71,37 +71,43 @@ extension Wrapper where Base: UIApplication {
     
     /// 读取应用名称
     public static var appName: String {
-        return Base.__fw_appName
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+        return appName ?? ""
     }
 
     /// 读取应用显示名称，未配置时读取名称
     public static var appDisplayName: String {
-        return Base.__fw_appDisplayName
+        let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+        return displayName ?? appName
     }
 
     /// 读取应用主版本号，示例：1.0.0
     public static var appVersion: String {
-        return Base.__fw_appVersion
+        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        return appVersion ?? ""
     }
 
     /// 读取应用构建版本号，示例：1.0.0.1
     public static var appBuildVersion: String {
-        return Base.__fw_appBuildVersion
+        let buildVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        return buildVersion ?? ""
     }
 
     /// 读取应用唯一标识
     public static var appIdentifier: String {
-        return Base.__fw_appIdentifier
+        let appIdentifier = Bundle.main.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
+        return appIdentifier ?? ""
     }
     
     /// 读取应用可执行程序名称
     public static var appExecutable: String {
-        return Base.__fw_appExecutable
+        let appExecutable = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
+        return appExecutable ?? appIdentifier
     }
     
     /// 读取应用信息字典
     public static func appInfo(_ key: String) -> Any? {
-        return Base.__fw_appInfo(key)
+        return Bundle.main.object(forInfoDictionaryKey: key)
     }
     
     /// 读取应用启动URL
