@@ -422,7 +422,7 @@ internal class ThemeAutoloader: AutoloadProtocol {
     
     @available(iOS 13.0, *)
     static func swizzleThemeClass(_ themeClass: AnyClass) {
-        NSObject.fw.swizzleInstanceMethod(
+        NSObject.fw_swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection) -> Void).self,

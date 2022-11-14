@@ -66,11 +66,3 @@
 }
 
 @end
-
-@implementation NSObject (FWAppearance)
-
-- (void)fw_applyAppearance {
-    [FWAppearance applyAppearance:self];
-}
-
-@end

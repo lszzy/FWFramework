@@ -29,11 +29,4 @@ NS_SWIFT_NAME(Appearance)
 
 @end
 
-@interface NSObject (FWAppearance)
-
-/// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
-- (void)fw_applyAppearance NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END

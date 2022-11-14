@@ -786,7 +786,7 @@ extension Wrapper where Base: NSLayoutConstraint {
 internal class AutoLayoutAutoloader: AutoloadProtocol {
     
     static func autoload() {
-        NSObject.fw.swizzleInstanceMethod(
+        NSObject.fw_swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.updateConstraints),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
@@ -808,7 +808,7 @@ internal class AutoLayoutAutoloader: AutoloadProtocol {
             }
         }}
         
-        NSObject.fw.swizzleInstanceMethod(
+        NSObject.fw_swizzleInstanceMethod(
             UIView.self,
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
