@@ -447,7 +447,7 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 + (void)fw_themeSwizzleClass:(Class)themeClass NS_AVAILABLE_IOS(13_0)
 {
-    [NSObject fw_swizzleInstanceMethod:themeClass selector:@selector(traitCollectionDidChange:) withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
+    [NSObject fw_swizzleInstanceMethod:themeClass selector:@selector(traitCollectionDidChange:) identifier:nil block:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
         return ^(__unsafe_unretained NSObject<UITraitEnvironment> *selfObject, UITraitCollection *traitCollection) {
             void (*originalMSG)(id, SEL, UITraitCollection *) = (void (*)(id, SEL, UITraitCollection *))originalIMP();
             originalMSG(selfObject, originalCMD, traitCollection);
