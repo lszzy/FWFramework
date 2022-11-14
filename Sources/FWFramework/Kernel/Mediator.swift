@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - FW+Mediator
-extension FW {
+@objc extension FW {
     
     /// 中间件快速访问
     public static var mediator = Mediator.self

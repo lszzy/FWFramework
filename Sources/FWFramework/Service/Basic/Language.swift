@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - FW+Language
-extension FW {
+@objc extension FW {
     /// 读取本地化字符串
     ///
     /// - Parameters:

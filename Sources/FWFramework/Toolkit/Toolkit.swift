@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - FW+Toolkit
-extension FW {
+@objc extension FW {
     /// 从16进制创建UIColor
     ///
     /// - Parameters:
