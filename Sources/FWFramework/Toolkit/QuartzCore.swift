@@ -63,14 +63,56 @@ extension Wrapper where Base: CAAnimation {
     
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
     public var startBlock: ((CAAnimation) -> Void)? {
-        get { return base.__fw_startBlock }
-        set { base.__fw_startBlock = newValue }
+        get {
+            let target = animationTarget(false)
+            return target?.startBlock
+        }
+        set {
+            let target = animationTarget(true)
+            target?.startBlock = newValue
+            base.delegate = target
+        }
     }
 
     /// 设置动画停止回调
     public var stopBlock: ((CAAnimation, Bool) -> Void)? {
-        get { return base.__fw_stopBlock }
-        set { base.__fw_stopBlock = newValue }
+        get {
+            let target = animationTarget(false)
+            return target?.stopBlock
+        }
+        set {
+            let target = animationTarget(true)
+            target?.stopBlock = newValue
+            base.delegate = target
+        }
+    }
+    
+    private func animationTarget(_ lazyload: Bool) -> CAAnimation.AnimationTarget? {
+        var target = property(forName: "animationTarget") as? CAAnimation.AnimationTarget
+        if target == nil && lazyload {
+            target = CAAnimation.AnimationTarget()
+            setProperty(target, forName: "animationTarget")
+        }
+        return target
+    }
+    
+}
+
+extension CAAnimation {
+    
+    fileprivate class AnimationTarget: NSObject, CAAnimationDelegate {
+        
+        var startBlock: ((CAAnimation) -> Void)?
+        var stopBlock: ((CAAnimation, Bool) -> Void)?
+        
+        func animationDidStart(_ anim: CAAnimation) {
+            startBlock?(anim)
+        }
+        
+        func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+            stopBlock?(anim, flag)
+        }
+        
     }
     
 }
@@ -235,7 +277,22 @@ extension Wrapper where Base: UIView {
      @param fillColor 填充颜色
      */
     public func drawBezierPath(_ bezierPath: UIBezierPath, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) {
-        base.__fw_draw(bezierPath, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.saveGState()
+        
+        context.setLineWidth(strokeWidth)
+        context.setLineCap(.round)
+        strokeColor.setStroke()
+        context.addPath(bezierPath.cgPath)
+        context.strokePath()
+        
+        if let fillColor = fillColor {
+            fillColor.setFill()
+            context.addPath(bezierPath.cgPath)
+            context.fillPath()
+        }
+        
+        context.restoreGState()
     }
 
     /**
@@ -247,7 +304,10 @@ extension Wrapper where Base: UIView {
      @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
      */
     public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) {
-        base.__fw_drawLinearGradient(rect, colors: colors, locations: locations, direction: direction)
+        let linePoints = UIBezierPath.fw.linePoints(rect: rect, direction: direction)
+        let startPoint = linePoints.first?.cgPointValue ?? .zero
+        let endPoint = linePoints.last?.cgPointValue ?? .zero
+        return drawLinearGradient(rect, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
     }
 
     /**
@@ -260,7 +320,17 @@ extension Wrapper where Base: UIView {
      @param endPoint 渐变结束点，需要根据rect计算
      */
     public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) {
-        base.__fw_drawLinearGradient(rect, colors: colors, locations: locations, start: startPoint, end: endPoint)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.saveGState()
+        
+        context.addRect(rect)
+        context.clip()
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        if let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations) {
+            context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
+        }
+        
+        context.restoreGState()
     }
 
     /**
@@ -275,7 +345,15 @@ extension Wrapper where Base: UIView {
      */
     @discardableResult
     public func addGradientLayer(_ frame: CGRect, colors: [Any], locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) -> CAGradientLayer {
-        return base.__fw_addGradientLayer(frame, colors: colors, locations: locations, start: startPoint, end: endPoint)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = frame
+        gradientLayer.colors = colors
+        gradientLayer.locations = locations
+        gradientLayer.startPoint = startPoint
+        gradientLayer.endPoint = endPoint
+        
+        base.layer.addSublayer(gradientLayer)
+        return gradientLayer
     }
 
     /**
@@ -289,7 +367,27 @@ extension Wrapper where Base: UIView {
      */
     @discardableResult
     public func addDashLayer(_ rect: CGRect, lineLength: CGFloat, lineSpacing: CGFloat, lineColor: UIColor) -> CALayer {
-        return base.__fw_addDashLayer(rect, lineLength: lineLength, lineSpacing: lineSpacing, lineColor: lineColor)
+        let dashLayer = CAShapeLayer()
+        dashLayer.frame = rect
+        dashLayer.fillColor = UIColor.clear.cgColor
+        dashLayer.strokeColor = lineColor.cgColor
+        
+        let isVertical = lineLength + lineSpacing > rect.size.width
+        dashLayer.lineWidth = isVertical ? CGRectGetWidth(rect) : CGRectGetHeight(rect)
+        dashLayer.lineJoin = .round
+        dashLayer.lineDashPattern = [NSNumber(value: lineLength), NSNumber(value: lineSpacing)]
+        
+        let path = UIBezierPath()
+        if isVertical {
+            path.move(to: CGPoint(x: CGRectGetWidth(rect) / 2.0, y: 0))
+            path.addLine(to: CGPoint(x: CGRectGetWidth(rect) / 2.0, y: CGRectGetHeight(rect)))
+        } else {
+            path.move(to: CGPoint(x: 0, y: CGRectGetHeight(rect) / 2.0))
+            path.addLine(to: CGPoint(x: CGRectGetWidth(rect), y: CGRectGetHeight(rect) / 2.0))
+        }
+        dashLayer.path = path.cgPath
+        base.layer.addSublayer(dashLayer)
+        return dashLayer
     }
     
     // MARK: - Animation
@@ -302,7 +400,8 @@ extension Wrapper where Base: UIView {
      @param completion 完成事件
      */
     public func addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_addAnimation(block, duration: duration, completion: completion)
+        // 注意：AutoLayout动画需要调用父视图(如控制器self.view)的layoutIfNeeded更新布局才能生效
+        UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: 7<<16), animations: block, completion: completion)
     }
 
     /**

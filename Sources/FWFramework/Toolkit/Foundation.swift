@@ -468,37 +468,80 @@ extension Wrapper where Base: NSAttributedString {
     
     /// NSAttributedString对象转换为html字符串
     public func htmlString() -> String? {
-        return base.__fw_htmlString()
+        let htmlData = try? base.data(
+            from: NSMakeRange(0, base.length),
+            documentAttributes: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ]
+        )
+        guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
+        return String(data: htmlData, encoding: .utf8)
     }
 
     /// 计算所占尺寸，需设置Font等
     public var textSize: CGSize {
-        return base.__fw_textSize
+        return textSize(drawSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
     }
 
     /// 计算在指定绘制区域内所占尺寸，需设置Font等
     public func textSize(drawSize: CGSize) -> CGSize {
-        return base.__fw_textSize(withDraw: drawSize)
+        let size = base.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size
+        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
     /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
     public static func attributedString(htmlString: String) -> Base? {
-        return Base.__fw_attributedString(withHtmlString: htmlString)
+        let htmlData = htmlString.data(using: .utf8)
+        guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
+        
+        return try? Base(
+            data: htmlData,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ],
+            documentAttributes: nil
+        )
     }
 
     /// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
     public static func attributedString(image: UIImage?, bounds: CGRect) -> NSAttributedString {
-        return Base.__fw_attributedString(with: image, bounds: bounds)
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = image
+        imageAttachment.bounds = CGRect(x: 0, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
+        let imageString = NSAttributedString(attachment: imageAttachment)
+        if bounds.origin.x <= 0 { return imageString }
+        
+        let attributedString = NSMutableAttributedString()
+        let spacingAttachment = NSTextAttachment()
+        spacingAttachment.image = nil
+        spacingAttachment.bounds = CGRect(x: 0, y: bounds.origin.y, width: bounds.origin.x, height: bounds.size.height)
+        attributedString.append(NSAttributedString(attachment: spacingAttachment))
+        attributedString.append(imageString)
+        return attributedString
     }
     
     /// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
     public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
-        return Base.__fw_attributedString(with: string, attributes: attributes, highlight: highlight, highlightAttributes: highlightAttributes)
+        let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
+        let range = (string as NSString).range(of: highlight)
+        if range.location != NSNotFound, let highlightAttributes = highlightAttributes {
+            attributedString.addAttributes(highlightAttributes, range: range)
+        }
+        return attributedString
     }
     
     /// 快速创建NSAttributedString，自定义字体和颜色
     public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Base {
-        return Base.__fw_attributedString(string, with: font, textColor: textColor)
+        var attributes: [NSAttributedString.Key: Any] = [:]
+        if let font = font {
+            attributes[.font] = font
+        }
+        if let textColor = textColor {
+            attributes[.foregroundColor] = textColor
+        }
+        return Base(string: string, attributes: attributes)
     }
     
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)

@@ -853,11 +853,11 @@ extension Wrapper where Base: UIToolbar {
         }
     }
     
-    private var toolbarDelegate: ToolbarDelegate {
-        if let delegate = property(forName: "toolbarDelegate") as? ToolbarDelegate {
+    private var toolbarDelegate: UIToolbar.ToolbarDelegate {
+        if let delegate = property(forName: "toolbarDelegate") as? UIToolbar.ToolbarDelegate {
             return delegate
         } else {
-            let delegate = ToolbarDelegate()
+            let delegate = UIToolbar.ToolbarDelegate()
             base.delegate = delegate
             setProperty(delegate, forName: "toolbarDelegate")
             return delegate
@@ -920,17 +920,17 @@ extension Wrapper where Base: UIToolbar {
     
 }
 
-fileprivate class ToolbarDelegate: NSObject, UIToolbarDelegate {
-    
-    var barPosition: UIBarPosition = .any
-    
-    func position(for bar: UIBarPositioning) -> UIBarPosition {
-        return barPosition
-    }
-    
-}
-
 extension UIToolbar {
+    
+    fileprivate class ToolbarDelegate: NSObject, UIToolbarDelegate {
+        
+        var barPosition: UIBarPosition = .any
+        
+        func position(for bar: UIBarPositioning) -> UIBarPosition {
+            return barPosition
+        }
+        
+    }
     
     @objc open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
