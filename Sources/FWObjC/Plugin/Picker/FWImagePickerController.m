@@ -16,12 +16,16 @@
 #import "FWImagePlugin.h"
 #import "FWAppBundle.h"
 #import "FWAppearance.h"
-#import "FWAdaptive.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
 #import "FWBarAppearance.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWImageAlbumTableCell
 
@@ -253,7 +257,7 @@
     [super viewDidLayoutSubviews];
     
     self.backgroundView.frame = self.view.bounds;
-    UIEdgeInsets contentInset = UIEdgeInsetsMake(FWTopBarHeight, self.tableView.safeAreaInsets.left, self.tableView.safeAreaInsets.bottom, self.tableView.safeAreaInsets.right);
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.fw_topBarHeight, self.tableView.safeAreaInsets.left, self.tableView.safeAreaInsets.bottom, self.tableView.safeAreaInsets.right);
     if (!UIEdgeInsetsEqualToEdgeInsets(self.tableView.contentInset, contentInset)) {
         self.tableView.contentInset = contentInset;
     }
@@ -305,7 +309,7 @@
     
     if (self.maximumTableViewHeight > 0) {
         CGRect tableFrame = self.tableView.frame;
-        tableFrame.size.height = self.tableViewHeight + FWTopBarHeight;
+        tableFrame.size.height = self.tableViewHeight + UIScreen.fw_topBarHeight;
         self.tableView.frame = tableFrame;
     }
     
@@ -330,7 +334,7 @@
 - (void)showDeniedView {
     if (self.maximumTableViewHeight > 0) {
         CGRect tableFrame = self.tableView.frame;
-        tableFrame.size.height = self.tableViewHeight + FWTopBarHeight;
+        tableFrame.size.height = self.tableViewHeight + UIScreen.fw_topBarHeight;
         self.tableView.frame = tableFrame;
     }
     
@@ -718,7 +722,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.topToolBarView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), FWTopBarHeight);
+    self.topToolBarView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), UIScreen.fw_topBarHeight);
     CGFloat topToolbarPaddingTop = self.view.safeAreaInsets.top;
     CGFloat topToolbarContentHeight = CGRectGetHeight(self.topToolBarView.bounds) - topToolbarPaddingTop;
     self.backButton.fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, topToolbarPaddingTop + (topToolbarContentHeight - CGRectGetHeight(self.backButton.frame)) / 2.0);
@@ -839,7 +843,7 @@
 }
 
 - (CGFloat)bottomToolBarHeight {
-    return _bottomToolBarHeight > 0 ? _bottomToolBarHeight : FWToolBarHeight;
+    return _bottomToolBarHeight > 0 ? _bottomToolBarHeight : UIScreen.fw_toolBarHeight;
 }
 
 @synthesize editButton = _editButton;
@@ -1915,7 +1919,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if (!CGSizeEqualToSize(self.collectionView.frame.size, self.view.bounds.size)) {
         self.collectionView.frame = self.view.bounds;
     }
-    UIEdgeInsets contentInset = UIEdgeInsetsMake(FWTopBarHeight, self.collectionView.safeAreaInsets.left, MAX(operationToolBarViewHeight, self.collectionView.safeAreaInsets.bottom), self.collectionView.safeAreaInsets.right);
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.fw_topBarHeight, self.collectionView.safeAreaInsets.left, MAX(operationToolBarViewHeight, self.collectionView.safeAreaInsets.bottom), self.collectionView.safeAreaInsets.right);
     if (!UIEdgeInsetsEqualToEdgeInsets(self.collectionView.contentInset, contentInset)) {
         self.collectionView.contentInset = contentInset;
         // 放在这里是因为有时候会先走完 refreshWithAssetsGroup 里的 completion 再走到这里，此时前者不会导致 scollToInitialPosition 的滚动，所以在这里再调用一次保证一定会滚
@@ -2088,7 +2092,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     self.albumController.view.frame = self.view.bounds;
     self.albumController.view.hidden = NO;
     self.albumController.view.alpha = 0;
-    CGRect toFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.albumController.tableViewHeight + FWTopBarHeight);
+    CGRect toFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.albumController.tableViewHeight + UIScreen.fw_topBarHeight);
     CGRect fromFrame = toFrame;
     fromFrame.origin.y = -toFrame.size.height;
     self.albumController.tableView.frame = fromFrame;
@@ -2162,7 +2166,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         albumController.backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     }
     if (albumController.maximumTableViewHeight <= 0) {
-        albumController.maximumTableViewHeight = albumController.albumTableViewCellHeight * ceil(FWScreenHeight / albumController.albumTableViewCellHeight / 2.0) + albumController.additionalTableViewHeight;
+        albumController.maximumTableViewHeight = albumController.albumTableViewCellHeight * ceil(UIScreen.fw_screenHeight / albumController.albumTableViewCellHeight / 2.0) + albumController.additionalTableViewHeight;
     }
 }
 
@@ -2210,7 +2214,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (CGFloat)operationToolBarHeight {
     if (!self.allowsMultipleSelection) return 0;
-    return _operationToolBarHeight > 0 ? _operationToolBarHeight : FWToolBarHeight;
+    return _operationToolBarHeight > 0 ? _operationToolBarHeight : UIScreen.fw_toolBarHeight;
 }
 
 @synthesize sendButton = _sendButton;

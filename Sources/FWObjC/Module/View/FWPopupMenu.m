@@ -7,7 +7,6 @@
 
 #import "FWPopupMenu.h"
 #import "FWNavigator.h"
-#import "FWAdaptive.h"
 #if FWMacroSPM
 @import FWFramework;
 #else
@@ -636,7 +635,7 @@ UITableViewDataSource
     _orientationManager = [FWPopupMenuDeviceOrientationManager manager];
     _animationManager = [FWPopupMenuAnimationManager manager];
     _animationManager.animationView = self;
-    _menuBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, FWScreenWidth, FWScreenHeight)];
+    _menuBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)];
     _menuBackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1];
     _menuBackView.alpha = 1;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(touchOutSide)];
@@ -752,7 +751,7 @@ UITableViewDataSource
 
 - (void)updateUI
 {
-    _menuBackView.frame = CGRectMake(0, 0, FWScreenWidth, FWScreenHeight);
+    _menuBackView.frame = CGRectMake(0, 0, UIScreen.fw_screenWidth, UIScreen.fw_screenHeight);
     CGFloat height;
     if (_titles.count > _maxVisibleCount) {
         height = _itemHeight * _maxVisibleCount + _borderWidth * 2;
@@ -763,7 +762,7 @@ UITableViewDataSource
     }
      _isChangeDirection = NO;
     if (_priorityDirection == FWPopupMenuPriorityDirectionTop) {
-        if (_point.y + height + _arrowHeight > FWScreenHeight - _minSpace) {
+        if (_point.y + height + _arrowHeight > UIScreen.fw_screenHeight - _minSpace) {
             _arrowDirection = FWPopupMenuArrowDirectionBottom;
             _isChangeDirection = YES;
         }else {
@@ -779,7 +778,7 @@ UITableViewDataSource
             _isChangeDirection = NO;
         }
     }else if (_priorityDirection == FWPopupMenuPriorityDirectionLeft) {
-        if (_point.x + _itemWidth + _arrowHeight > FWScreenWidth - _minSpace) {
+        if (_point.x + _itemWidth + _arrowHeight > UIScreen.fw_screenWidth - _minSpace) {
             _arrowDirection = FWPopupMenuArrowDirectionRight;
             _isChangeDirection = YES;
         }else {
@@ -800,7 +799,7 @@ UITableViewDataSource
     if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
         CGFloat y = _isChangeDirection ? _point.y  : _point.y;
         if (_arrowPosition > _itemWidth / 2) {
-            self.frame = CGRectMake(FWScreenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
+            self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
         }else if (_arrowPosition < _itemWidth / 2) {
             self.frame = CGRectMake(_minSpace, y, _itemWidth, height + _arrowHeight);
         }else {
@@ -809,7 +808,7 @@ UITableViewDataSource
     }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
         CGFloat y = _isChangeDirection ? _point.y - _arrowHeight - height : _point.y - _arrowHeight - height;
         if (_arrowPosition > _itemWidth / 2) {
-            self.frame = CGRectMake(FWScreenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
+            self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
         }else if (_arrowPosition < _itemWidth / 2) {
             self.frame = CGRectMake(_minSpace, y, _itemWidth, height + _arrowHeight);
         }else {
@@ -991,8 +990,8 @@ UITableViewDataSource
     }
     
     if (_arrowDirection == FWPopupMenuArrowDirectionTop || _arrowDirection == FWPopupMenuArrowDirectionBottom) {
-        if (_point.x + _itemWidth / 2 > FWScreenWidth - _minSpace) {
-            _arrowPosition = _itemWidth - (FWScreenWidth - _minSpace - _point.x);
+        if (_point.x + _itemWidth / 2 > UIScreen.fw_screenWidth - _minSpace) {
+            _arrowPosition = _itemWidth - (UIScreen.fw_screenWidth - _minSpace - _point.x);
         }else if (_point.x < _itemWidth / 2 + _minSpace) {
             _arrowPosition = _point.x - _minSpace;
         }else {

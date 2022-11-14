@@ -8,7 +8,11 @@
 #import "FWImageCropController.h"
 #import "FWAlertPlugin.h"
 #import "FWAppBundle.h"
-#import "FWAdaptive.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 @interface FWImageCropController () <FWImageCropViewDelegate>
 
@@ -925,7 +929,7 @@
 
 - (CGFloat)toolbarHeight
 {
-    return _toolbarHeight > 0 ? _toolbarHeight : FWToolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
+    return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
 }
 
 - (BOOL)verticalLayout

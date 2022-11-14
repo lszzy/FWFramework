@@ -8,7 +8,6 @@
 #import "FWToolbarView.h"
 #import "FWViewPluginImpl.h"
 #import "FWAutoLayout.h"
-#import "FWAdaptive.h"
 #import "FWAppearance.h"
 #import "FWBlock.h"
 #import "FWToolkit.h"
@@ -72,12 +71,12 @@
 - (void)updateHeight:(BOOL)isFirst {
     switch (self.type) {
         case FWToolbarViewTypeNavBar: {
-            _topHeight = FWStatusBarHeight;
-            _menuHeight = FWNavigationBarHeight;
+            _topHeight = UIScreen.fw_statusBarHeight;
+            _menuHeight = UIScreen.fw_navigationBarHeight;
             break;
         }
         case FWToolbarViewTypeTabBar: {
-            _menuHeight = FWTabBarHeight - UIScreen.fw_safeAreaInsets.bottom;
+            _menuHeight = UIScreen.fw_tabBarHeight - UIScreen.fw_safeAreaInsets.bottom;
             _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
             break;
         }
@@ -87,7 +86,7 @@
         }
         case FWToolbarViewTypeDefault:
         default: {
-            _menuHeight = FWToolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
+            _menuHeight = UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
             _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
             break;
         }
@@ -461,7 +460,7 @@
             titleViewSize.height = ceil(titleViewSize.height);
             
             if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
-                CGFloat titleViewMinY = FWFlatValue(CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0));
+                CGFloat titleViewMinY = [UIScreen fw_flatValue:CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0) scale:0];
                 titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
             }
             
@@ -910,7 +909,7 @@
         CGFloat secondLineWidth = [self secondLineWidthInVerticalStyle];
         size.width = MAX(firstLineWidth, secondLineWidth);
         size.height = self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom) + self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom);
-        return CGSizeMake(FWFlatValue(size.width), FWFlatValue(size.height));
+        return CGSizeMake([UIScreen fw_flatValue:size.width scale:0], [UIScreen fw_flatValue:size.height scale:0]);
     } else {
         CGSize size = CGSizeZero;
         size.width = self.titleLabelSize.width + (self.titleEdgeInsetsIfShowingTitleLabel.left + self.titleEdgeInsetsIfShowingTitleLabel.right) + self.subtitleLabelSize.width + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.left + self.subtitleEdgeInsetsIfShowingSubtitleLabel.right);
@@ -918,7 +917,7 @@
         size.height = MAX(self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom), self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom));
         size.height = MAX(size.height, [self loadingViewSpacingSizeIfNeedsPlaceholder].height);
         size.height = MAX(size.height, [self accessorySpacingSizeIfNeedesPlaceholder].height);
-        return CGSizeMake(FWFlatValue(size.width), FWFlatValue(size.height));
+        return CGSizeMake([UIScreen fw_flatValue:size.width scale:0], [UIScreen fw_flatValue:size.height scale:0]);
     }
 }
 

@@ -6,8 +6,12 @@
 //
 
 #import "FWAlertController.h"
-#import "FWAdaptive.h"
 #import "FWAutoLayout.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark ---------------------------- FWAlertControllerAppearance begin --------------------------------
 
@@ -36,7 +40,7 @@
         _textFieldHeight = 30.0;
         _sheetContainerInsets = UIEdgeInsetsZero;
         _alertCornerRadius = 6.0;
-        _alertEdgeDistance = (MIN(FWScreenWidth, FWScreenHeight) - 275) / 2.0;
+        _alertEdgeDistance = (MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight) - 275) / 2.0;
         _sheetEdgeDistance = 70;
         _sheetCornerRadius = 13.0;
         
@@ -1291,10 +1295,10 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     NSMutableArray *alertControllerViewConstraints = [NSMutableArray array];
     CGFloat topValue = _minDistanceToEdges;
     CGFloat bottomValue = _minDistanceToEdges;
-    CGFloat maxWidth = MIN(FWScreenWidth, FWScreenHeight)-_minDistanceToEdges * 2;
-    CGFloat maxHeight = FWScreenHeight-topValue-bottomValue;
+    CGFloat maxWidth = MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)-_minDistanceToEdges * 2;
+    CGFloat maxHeight = UIScreen.fw_screenHeight-topValue-bottomValue;
     if (!self.customAlertView) {
-        // 当屏幕旋转的时候，为了保持alert样式下的宽高不变，因此取MIN(FWScreenWidth, FWScreenHeight)
+        // 当屏幕旋转的时候，为了保持alert样式下的宽高不变，因此取MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)
         [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:maxWidth]];
     } else {
         [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:maxWidth]];
@@ -1365,18 +1369,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (_customViewSize.width) { // 如果宽度没有值，则会假定customAlertViewh水平方向能由子控件撑起
             CGFloat alertControllerViewWidth = 0.0;
             if ([hv isEqualToString:@"H"]) {
-                alertControllerViewWidth = MIN(_customViewSize.width, FWScreenWidth);
+                alertControllerViewWidth = MIN(_customViewSize.width, UIScreen.fw_screenWidth);
             } else {
-                alertControllerViewWidth = MIN(_customViewSize.width, FWScreenWidth-_minDistanceToEdges);
+                alertControllerViewWidth = MIN(_customViewSize.width, UIScreen.fw_screenWidth-_minDistanceToEdges);
             }
             [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:alertControllerViewWidth]];
         }
         if (_customViewSize.height) { // 如果高度没有值，则会假定customAlertViewh垂直方向能由子控件撑起
             CGFloat alertControllerViewHeight = 0.0;
             if ([hv isEqualToString:@"H"]) {
-                alertControllerViewHeight = MIN(_customViewSize.height, FWScreenHeight-_minDistanceToEdges);
+                alertControllerViewHeight = MIN(_customViewSize.height, UIScreen.fw_screenHeight-_minDistanceToEdges);
             } else {
-                alertControllerViewHeight = MIN(_customViewSize.height, FWScreenHeight);
+                alertControllerViewHeight = MIN(_customViewSize.height, UIScreen.fw_screenHeight);
             }
             [alertControllerViewConstraints addObject:[NSLayoutConstraint constraintWithItem:alertControllerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:alertControllerViewHeight]];
         }
@@ -1561,9 +1565,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (CGFloat)maxWidth {
     if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        return MIN(FWScreenWidth, FWScreenHeight)-_minDistanceToEdges * 2;
+        return MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)-_minDistanceToEdges * 2;
     } else {
-        return FWScreenWidth;
+        return UIScreen.fw_screenWidth;
     }
 }
 
@@ -1574,7 +1578,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (self.preferredStyle == FWAlertControllerStyleAlert) {
             for (FWAlertAction *action in self.actions) {
                 // 预估按钮宽度
-                CGFloat preButtonWidth = (MIN(FWScreenWidth, FWScreenHeight) - _minDistanceToEdges * 2 - self.alertAppearance.lineWidth * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
+                CGFloat preButtonWidth = (MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight) - _minDistanceToEdges * 2 - self.alertAppearance.lineWidth * (self.actions.count - 1)) / self.actions.count - action.titleEdgeInsets.left - action.titleEdgeInsets.right;
                 // 如果action的标题文字总宽度，大于按钮的contentRect的宽度，则说明水平排列会导致文字显示不全，此时垂直排列
                 if (action.attributedTitle) {
                     if (ceil([action.attributedTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, self.alertAppearance.actionHeight) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.width) > preButtonWidth) {
@@ -1627,9 +1631,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (void)setupPreferredMaxLayoutWidthForLabel:(UILabel *)textLabel {
     if (self.preferredStyle == FWAlertControllerStyleAlert) {
-        textLabel.preferredMaxLayoutWidth = MIN(FWScreenWidth, FWScreenHeight) - self.minDistanceToEdges * 2 - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
+        textLabel.preferredMaxLayoutWidth = MIN(UIScreen.fw_screenWidth, UIScreen.fw_screenHeight) - self.minDistanceToEdges * 2 - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
     } else {
-        textLabel.preferredMaxLayoutWidth  = FWScreenWidth - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
+        textLabel.preferredMaxLayoutWidth  = UIScreen.fw_screenWidth - self.headerView.contentEdgeInsets.left - self.headerView.contentEdgeInsets.right;
     }
 }
 
@@ -1743,7 +1747,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if (!_isForceOffset && (_offsetForAlert.y == 0.0 || _textFields.lastObject.isFirstResponder || _customTextField)) {
         CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGFloat keyboardEndY = keyboardEndFrame.origin.y;
-        CGFloat diff = fabs((FWScreenHeight - keyboardEndY) * 0.5);
+        CGFloat diff = fabs((UIScreen.fw_screenHeight - keyboardEndY) * 0.5);
         _offsetForAlert.y = -diff;
         [self makeViewOffsetWithAnimated:YES];
     }
@@ -2441,15 +2445,15 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
     CGRect controlViewFrame = alertController.view.frame;
-    controlViewFrame.origin.y = FWScreenHeight;
+    controlViewFrame.origin.y = UIScreen.fw_screenHeight;
     alertController.view.frame = controlViewFrame;
 
     [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect controlViewFrame = alertController.view.frame;
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
-            controlViewFrame.origin.y = FWScreenHeight-controlViewFrame.size.height;
+            controlViewFrame.origin.y = UIScreen.fw_screenHeight-controlViewFrame.size.height;
         } else {
-            controlViewFrame.origin.y = (FWScreenHeight-controlViewFrame.size.height) / 2.0;
+            controlViewFrame.origin.y = (UIScreen.fw_screenHeight-controlViewFrame.size.height) / 2.0;
             [self offSetCenter:alertController];
         }
         alertController.view.frame = controlViewFrame;
@@ -2464,7 +2468,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         CGRect controlViewFrame = alertController.view.frame;
-        controlViewFrame.origin.y = FWScreenHeight;
+        controlViewFrame.origin.y = UIScreen.fw_screenHeight;
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:finished];
@@ -2484,7 +2488,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
     CGRect controlViewFrame = alertController.view.frame;
-    controlViewFrame.origin.x = FWScreenWidth;
+    controlViewFrame.origin.x = UIScreen.fw_screenWidth;
     alertController.view.frame = controlViewFrame;
     
     if (alertController.preferredStyle == FWAlertControllerStyleAlert) {
@@ -2493,9 +2497,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect controlViewFrame = alertController.view.frame;
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
-            controlViewFrame.origin.x = FWScreenWidth-controlViewFrame.size.width;
+            controlViewFrame.origin.x = UIScreen.fw_screenWidth-controlViewFrame.size.width;
         } else {
-            controlViewFrame.origin.x = (FWScreenWidth-controlViewFrame.size.width) / 2.0;
+            controlViewFrame.origin.x = (UIScreen.fw_screenWidth-controlViewFrame.size.width) / 2.0;
         }
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
@@ -2509,7 +2513,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         CGRect controlViewFrame = alertController.view.frame;
-        controlViewFrame.origin.x = FWScreenWidth;
+        controlViewFrame.origin.x = UIScreen.fw_screenWidth;
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:finished];
@@ -2540,7 +2544,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
             controlViewFrame.origin.x = 0;
         } else {
-            controlViewFrame.origin.x = (FWScreenWidth-controlViewFrame.size.width) / 2.0;
+            controlViewFrame.origin.x = (UIScreen.fw_screenWidth-controlViewFrame.size.width) / 2.0;
         }
         alertController.view.frame = controlViewFrame;
     } completion:^(BOOL finished) {
@@ -2582,7 +2586,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         if (alertController.preferredStyle == FWAlertControllerStyleActionSheet) {
             controlViewFrame.origin.y = 0;
         } else {
-            controlViewFrame.origin.y = (FWScreenHeight-controlViewFrame.size.height) / 2.0;
+            controlViewFrame.origin.y = (UIScreen.fw_screenHeight-controlViewFrame.size.height) / 2.0;
             [self offSetCenter:alertController];
         }
         alertController.view.frame = controlViewFrame;
@@ -2715,8 +2719,8 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)offSetCenter:(FWAlertController *)alertController {
     if (!CGPointEqualToPoint(alertController.offsetForAlert, CGPointZero)) {
         CGPoint controlViewCenter = alertController.view.center;
-        controlViewCenter.x = FWScreenWidth / 2.0 + alertController.offsetForAlert.x;
-        controlViewCenter.y = FWScreenHeight / 2.0 + alertController.offsetForAlert.y;
+        controlViewCenter.x = UIScreen.fw_screenWidth / 2.0 + alertController.offsetForAlert.x;
+        controlViewCenter.y = UIScreen.fw_screenHeight / 2.0 + alertController.offsetForAlert.y;
         alertController.view.center = controlViewCenter;
     }
 }

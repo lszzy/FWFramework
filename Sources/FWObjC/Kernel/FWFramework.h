@@ -31,7 +31,6 @@
 #import "FWDatabase.h"
 #import "FWWebImage.h"
 
-#import "FWAdaptive.h"
 #import "FWAppearance.h"
 #import "FWAutoLayout.h"
 #import "FWBarAppearance.h"
