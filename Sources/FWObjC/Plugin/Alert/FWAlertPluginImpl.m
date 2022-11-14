@@ -9,10 +9,13 @@
 #import "FWAlertController.h"
 #import "FWAdaptive.h"
 #import "FWUIKit.h"
-#import "FWRuntime.h"
 #import "FWSwizzle.h"
-#import "FWMessage.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - UIAlertAction+FWAlert
 
@@ -52,7 +55,7 @@
         titleColor = self.fw_alertAppearance.actionColor;
     }
     if (titleColor) {
-        [self fw_invokeSetter:@"titleTextColor" withObject:titleColor];
+        [self fw_invokeSetter:@"titleTextColor" object:titleColor];
     }
 }
 
@@ -64,7 +67,7 @@
 - (void)setFw_titleColor:(UIColor *)titleColor
 {
     objc_setAssociatedObject(self, @selector(fw_titleColor), titleColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fw_invokeSetter:@"titleTextColor" withObject:titleColor];
+    [self fw_invokeSetter:@"titleTextColor" object:titleColor];
 }
 
 + (UIAlertAction *)fw_actionWithObject:(id)object style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction *))handler
@@ -120,7 +123,7 @@
 - (void)setFw_attributedTitle:(NSAttributedString *)attributedTitle
 {
     objc_setAssociatedObject(self, @selector(fw_attributedTitle), attributedTitle, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fw_invokeSetter:@"attributedTitle" withObject:attributedTitle];
+    [self fw_invokeSetter:@"attributedTitle" object:attributedTitle];
 }
 
 - (NSAttributedString *)fw_attributedMessage
@@ -131,7 +134,7 @@
 - (void)setFw_attributedMessage:(NSAttributedString *)attributedMessage
 {
     objc_setAssociatedObject(self, @selector(fw_attributedMessage), attributedMessage, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fw_invokeSetter:@"attributedMessage" withObject:attributedMessage];
+    [self fw_invokeSetter:@"attributedMessage" object:attributedMessage];
 }
 
 + (void)load
