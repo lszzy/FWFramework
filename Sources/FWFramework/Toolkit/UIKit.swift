@@ -1014,22 +1014,39 @@ extension Wrapper where Base: UIViewController {
     
     /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
     public var isRoot: Bool {
-        return base.__fw_isRoot
+        return base.navigationController == nil ||
+            base.navigationController?.viewControllers.first == base
     }
 
     /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
     public var isChild: Bool {
-        return base.__fw_isChild
+        if let parent = base.parent,
+           !(parent is UINavigationController),
+           !(parent is UITabBarController) {
+            return true
+        }
+        return false
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
     public var isPresented: Bool {
-        return base.__fw_isPresented
+        var viewController: UIViewController = base
+        if let navigationController = base.navigationController {
+            if navigationController.viewControllers.first != base { return false }
+            viewController = navigationController
+        }
+        return viewController.presentingViewController?.presentedViewController == viewController
     }
 
     /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
     public var isPageSheet: Bool {
-        return base.__fw_isPageSheet
+        if #available(iOS 13.0, *) {
+            let controller: UIViewController = base.navigationController ?? base
+            if controller.presentingViewController == nil { return false }
+            let style = controller.modalPresentationStyle
+            if style == .automatic || style == .pageSheet { return true }
+        }
+        return false
     }
 
     /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
