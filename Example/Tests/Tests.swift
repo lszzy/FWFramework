@@ -18,7 +18,7 @@ class Tests: XCTestCase {
         XCTAssertEqual(loader.load("Hello "), "Hello Block")
         
         loader.remove(identifier)
-        loader.add(target: self, action: #selector(loaderAction(_:)))
+        loader.addTarget(self, action: #selector(loaderAction(_:)))
         XCTAssertEqual(loader.load("Hello "), "Hello Target")
     }
     

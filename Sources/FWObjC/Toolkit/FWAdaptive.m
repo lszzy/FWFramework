@@ -9,6 +9,11 @@
 #import "FWNavigator.h"
 #import "FWUIKit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - UIApplication+FWAdaptive
 

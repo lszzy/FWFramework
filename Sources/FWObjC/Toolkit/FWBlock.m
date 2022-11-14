@@ -11,6 +11,11 @@
 #import "FWNavigator.h"
 #import "FWToolkit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - NSTimer+FWBlock
 
@@ -552,7 +557,7 @@
         __weak UIViewController *weakController = self;
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem fw_itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController fw_closeViewControllerAnimated:YES];
+            [weakController fw_closeWithAnimated:YES options:0 completion:nil];
         }];
     }
 }
@@ -570,7 +575,7 @@
         __weak UIViewController *weakController = self;
         self.navigationItem.rightBarButtonItem = [UIBarButtonItem fw_itemWithObject:object block:^(id  _Nonnull sender) {
             if (![weakController shouldPopController]) return;
-            [weakController fw_closeViewControllerAnimated:YES];
+            [weakController fw_closeWithAnimated:YES options:0 completion:nil];
         }];
     }
 }
