@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - FW+Adaptive
-extension FW {
+@objc extension FW {
     // MARK: - UIApplication
     /// 是否是调试模式
     public static var isDebug: Bool { UIApplication.fw.isDebug }
@@ -103,18 +103,22 @@ extension FW {
         return UIScreen.fw.fixedHeight(value)
     }
     /// 获取相对设计图等比例缩放size
+    @objc(relativeSize:)
     public static func relative(_ size: CGSize) -> CGSize {
         return CGSize(width: relative(size.width), height: relative(size.height))
     }
     /// 获取相对设计图等比例缩放point
+    @objc(relativePoint:)
     public static func relative(_ point: CGPoint) -> CGPoint {
         return CGPoint(x: relative(point.x), y: relative(point.y))
     }
     /// 获取相对设计图等比例缩放rect
+    @objc(relativeRect:)
     public static func relative(_ rect: CGRect) -> CGRect {
         return CGRect(origin: relative(rect.origin), size: relative(rect.size))
     }
     /// 获取相对设计图等比例缩放insets
+    @objc(relativeInsets:)
     public static func relative(_ insets: UIEdgeInsets) -> UIEdgeInsets {
         return UIEdgeInsets(top: relative(insets.top), left: relative(insets.left), bottom: relative(insets.bottom), right: relative(insets.right))
     }

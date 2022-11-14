@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - FW+Benchmark
-extension FW {
+@objc extension FW {
     
     /// 标记时间调试开始
     ///

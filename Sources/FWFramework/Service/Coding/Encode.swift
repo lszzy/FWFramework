@@ -461,7 +461,7 @@ extension Wrapper where Base == URL {
 }
 
 // MARK: - SafeValue
-extension FW {
+@objc extension FW {
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
         guard let value = value, !(value is NSNull) else { return "" }
