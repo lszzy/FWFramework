@@ -233,3 +233,151 @@ import FWObjC
     }
     
 }
+
+// MARK: - SwizzleStore
+/// 方法交换存储器
+public class SwizzleStore<MethodSignature, SwizzleSignature> {
+    
+    /// 交换类
+    public let `class`: AnyClass
+    /// 交换方法
+    public let selector: Selector
+    /// 方法原始实现
+    public let original: MethodSignature
+    
+    /// 内部初始化方法
+    init(`class`: AnyClass, selector: Selector, original: MethodSignature) {
+        self.class = `class`
+        self.selector = selector
+        self.original = original
+    }
+    
+}
+
+// MARK: - NSObject+SwizzleStore
+@_spi(FW) extension NSObject {
+    
+    /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    ///
+    /// Swift实现代码示例：
+    /// NSObject.fw_swizzleMethod(
+    ///     UIViewController.self,
+    ///     selector: #selector(UIViewController.viewDidLoad)
+    /// ) { (store: SwizzleStore
+    ///      <@convention(c) (UIViewController, Selector) -> Void,
+    ///      @convention(block) (UIViewController) -> Void>) in {
+    ///     store.original($0, store.selector)
+    ///     // ...
+    /// }}
+    ///
+    /// - Parameters:
+    ///   - target: 目标类或对象
+    ///   - selector: 原始方法
+    ///   - identifier: 唯一标识，有值且相同时仅执行一次，默认nil
+    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
+    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
+    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func fw_swizzleMethod<MethodSignature, SwizzleSignature>(
+        _ target: Any?,
+        selector: Selector,
+        identifier: String? = nil,
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> Bool {
+        let swizzleBlock = fw_swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
+        return fw_swizzleMethod(target, selector: selector, identifier: identifier, block: swizzleBlock)
+    }
+    
+    /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    ///
+    /// Swift实现代码示例：
+    /// NSObject.fw_swizzleInstanceMethod(
+    ///     UIViewController.self,
+    ///     selector: #selector(UIViewController.viewDidLoad),
+    ///     methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+    ///     swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+    /// ) { store in { selfObject in
+    ///     store.original(selfObject, store.selector)
+    ///     // ...
+    /// }}
+    ///
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - selector: 原始方法
+    ///   - identifier: 唯一标识，默认nil
+    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
+    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
+    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func fw_swizzleInstanceMethod<MethodSignature, SwizzleSignature>(
+        _ originalClass: AnyClass,
+        selector: Selector,
+        identifier: String? = nil,
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> Bool {
+        let swizzleBlock = fw_swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
+        return fw_swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, block: swizzleBlock)
+    }
+
+    /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - selector: 原始方法
+    ///   - identifier: 唯一标识，默认nil
+    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
+    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
+    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func fw_swizzleClassMethod<MethodSignature, SwizzleSignature>(
+        _ originalClass: AnyClass,
+        selector: Selector,
+        identifier: String? = nil,
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> Bool {
+        let swizzleBlock = fw_swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
+        return fw_swizzleClassMethod(originalClass, selector: selector, identifier: identifier, block: swizzleBlock)
+    }
+    
+    /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
+    /// - Parameters:
+    ///   - originalSelector: 原始方法
+    ///   - identifier: 唯一标识，默认空字符串
+    ///   - methodSignature: 原始方法签名，示例：(@convention(c) (AnyObject, Selector) -> String).self
+    ///   - swizzleSignature: 交换方法签名，示例：(@convention(block) (AnyObject) -> String).self
+    ///   - block: 实现句柄，示例：{ store in { selfObject in return store.original(selfObject, store.selector) } }
+    /// - Returns: 是否成功
+    @discardableResult
+    public func fw_swizzleInstanceMethod<MethodSignature, SwizzleSignature>(
+        _ originalSelector: Selector,
+        identifier: String = "",
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> Bool {
+        let swizzleBlock = NSObject.fw_swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
+        return fw_swizzleInstanceMethod(originalSelector, identifier: identifier, block: swizzleBlock)
+    }
+    
+    private static func fw_swizzleBlock<MethodSignature, SwizzleSignature>(
+        methodSignature: MethodSignature.Type = MethodSignature.self,
+        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
+        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
+    ) -> (AnyClass, Selector, @escaping () -> IMP) -> Any {
+        return { targetClass, originalCMD, originalIMP in
+            let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
+            let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
+            let swizzleIMP: SwizzleSignature = block(swizzleStore)
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
+    }
+    
+}

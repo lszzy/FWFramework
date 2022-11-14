@@ -11,11 +11,11 @@ import FWObjC
 #endif
 
 // MARK: - NSObject+Appearance
-@_spi(FW) @objc extension NSObject {
+extension Wrapper where Base: NSObject {
     
     /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
-    public func fw_applyAppearance() {
-        Appearance.apply(self)
+    public func applyAppearance() {
+        base.fw_applyAppearance()
     }
     
 }

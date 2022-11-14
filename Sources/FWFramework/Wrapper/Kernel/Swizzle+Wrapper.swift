@@ -10,26 +10,6 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - SwizzleStore
-/// 方法交换存储器
-public class SwizzleStore<MethodSignature, SwizzleSignature> {
-    
-    /// 交换类
-    public let `class`: AnyClass
-    /// 交换方法
-    public let selector: Selector
-    /// 方法原始实现
-    public let original: MethodSignature
-    
-    /// 内部初始化方法
-    init(`class`: AnyClass, selector: Selector, original: MethodSignature) {
-        self.class = `class`
-        self.selector = selector
-        self.original = original
-    }
-    
-}
-
 // MARK: - NSObject+Swizzle
 /// 实现block必须返回一个block，返回的block将被当成originalSelector的新实现，所以要在内部自己处理对super的调用，以及对当前调用方法的self的class的保护判断（因为如果originalClass的originalSelector是继承自父类的，originalClass内部并没有重写这个方法，则我们这个函数最终重写的其实是父类的originalSelector，所以会产生预期之外的class的影响，例如originalClass传进来UIButton.class，则最终可能会影响到UIView.class）。block的参数里第一个为你要修改的class，也即等同于originalClass，第二个参数为你要修改的selector，也即等同于originalSelector，第三个参数是一个block，用于获取originalSelector原本的实现，由于IMP可以直接当成C函数调用，所以可利用它来实现“调用 super”的效果，但由于originalSelector的参数个数、参数类型、返回值类型，都会影响IMP的调用写法，所以这个调用只能由业务自己写
 extension Wrapper where Base: NSObject {
@@ -135,8 +115,7 @@ extension Wrapper where Base: NSObject {
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        let swizzleBlock = swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
-        return Base.fw_swizzleMethod(target, selector: selector, identifier: identifier, block: swizzleBlock)
+        return Base.fw_swizzleMethod(target, selector: selector, identifier: identifier, methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
     }
     
     /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -169,8 +148,7 @@ extension Wrapper where Base: NSObject {
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        let swizzleBlock = swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
-        return Base.fw_swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, block: swizzleBlock)
+        return Base.fw_swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -191,8 +169,7 @@ extension Wrapper where Base: NSObject {
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        let swizzleBlock = swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
-        return Base.fw_swizzleClassMethod(originalClass, selector: selector, identifier: identifier, block: swizzleBlock)
+        return Base.fw_swizzleClassMethod(originalClass, selector: selector, identifier: identifier, methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
@@ -211,8 +188,7 @@ extension Wrapper where Base: NSObject {
         swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
         block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
     ) -> Bool {
-        let swizzleBlock = NSObject.fw.swizzleBlock(methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
-        return base.fw_swizzleInstanceMethod(originalSelector, identifier: identifier, block: swizzleBlock)
+        return base.fw_swizzleInstanceMethod(originalSelector, identifier: identifier, methodSignature: methodSignature, swizzleSignature: swizzleSignature, block: block)
     }
     
     /// 判断对象是否使用swizzle替换过指定identifier实例方法。结合swizzleInstanceMethod使用
@@ -227,19 +203,6 @@ extension Wrapper where Base: NSObject {
         identifier: String = ""
     ) -> Bool {
         return base.fw_isSwizzleInstanceMethod(originalSelector, identifier: identifier)
-    }
-    
-    private static func swizzleBlock<MethodSignature, SwizzleSignature>(
-        methodSignature: MethodSignature.Type = MethodSignature.self,
-        swizzleSignature: SwizzleSignature.Type = SwizzleSignature.self,
-        block: @escaping (SwizzleStore<MethodSignature, SwizzleSignature>) -> SwizzleSignature
-    ) -> (AnyClass, Selector, @escaping () -> IMP) -> Any {
-        return { targetClass, originalCMD, originalIMP in
-            let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
-            let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
-            let swizzleIMP: SwizzleSignature = block(swizzleStore)
-            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
-        }
     }
     
 }
