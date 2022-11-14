@@ -7,11 +7,15 @@
 
 #import "FWWebViewController.h"
 #import "FWNavigationController.h"
-#import "FWMessage.h"
 #import "FWBlock.h"
 #import "FWAutoLayout.h"
 #import "FWToolkit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWViewControllerManager+FWWebViewController
 

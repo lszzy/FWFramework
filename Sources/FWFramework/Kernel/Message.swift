@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - Message
-extension Wrapper where Base: NSObject {
+@_spi(FW) @objc extension NSObject {
     
     // MARK: - Observer
     /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -20,8 +20,8 @@ extension Wrapper where Base: NSObject {
     ///   - block: 消息句柄
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
-        return observeMessage(name, object: nil, block: block)
+    public func fw_observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
+        return fw_observeMessage(name, object: nil, block: block)
     }
     
     /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -31,8 +31,8 @@ extension Wrapper where Base: NSObject {
     ///   - block: 消息句柄
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
-        let dict = messageTargets(true)
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
+        let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -54,8 +54,8 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
-        return observeMessage(name, object: nil, target: target, action: action)
+    public func fw_observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
+        return fw_observeMessage(name, object: nil, target: target, action: action)
     }
     
     /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -66,8 +66,8 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
-        let dict = messageTargets(true)
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
+        let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -88,8 +88,8 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func unobserveMessage(_ name: Notification.Name, target: Any?, action: Selector?) {
-        unobserveMessage(name, object: nil, target: target, action: action)
+    public func fw_unobserveMessage(_ name: Notification.Name, target: Any?, action: Selector?) {
+        fw_unobserveMessage(name, object: nil, target: target, action: action)
     }
     
     /// 手工移除某个指定对象点对点消息指定监听
@@ -98,8 +98,8 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func unobserveMessage(_ name: Notification.Name, object: AnyObject?, target: Any?, action: Selector?) {
-        guard let dict = messageTargets(false) else { return }
+    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject?, target: Any?, action: Selector?) {
+        guard let dict = fw_messageTargets(false) else { return }
         
         // object为nil且target为nil始终移除
         if object == nil && target == nil {
@@ -131,8 +131,8 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 消息名称
     ///   - identifier: 监听唯一标志
-    public func unobserveMessage(_ name: Notification.Name, identifier: String) {
-        guard let dict = messageTargets(false),
+    public func fw_unobserveMessage(_ name: Notification.Name, identifier: String) {
+        guard let dict = fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
@@ -145,29 +145,29 @@ extension Wrapper where Base: NSObject {
     
     /// 手工移除某个点对点消息所有监听
     /// - Parameter name: 消息名称
-    public func unobserveMessage(_ name: Notification.Name) {
-        unobserveMessage(name, object: nil)
+    public func fw_unobserveMessage(_ name: Notification.Name) {
+        fw_unobserveMessage(name, object: nil)
     }
     
     /// 手工移除某个指定对象点对点消息所有监听
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
-    public func unobserveMessage(_ name: Notification.Name, object: AnyObject?) {
-        unobserveMessage(name, object: object, target: nil, action: nil)
+    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject?) {
+        fw_unobserveMessage(name, object: object, target: nil, action: nil)
     }
     
     /// 手工移除所有点对点消息监听
-    public func unobserveAllMessages() {
-        guard let dict = messageTargets(false) else { return }
+    public func fw_unobserveAllMessages() {
+        guard let dict = fw_messageTargets(false) else { return }
         dict.removeAllObjects()
     }
     
-    private func messageTargets(_ lazyload: Bool) -> NSMutableDictionary? {
-        var targets = property(forName: "messageTargets") as? NSMutableDictionary
+    private func fw_messageTargets(_ lazyload: Bool) -> NSMutableDictionary? {
+        var targets = fw_property(forName: "fw_messageTargets") as? NSMutableDictionary
         if targets == nil && lazyload {
             targets = NSMutableDictionary()
-            setProperty(targets, forName: "messageTargets")
+            fw_setProperty(targets, forName: "fw_messageTargets")
         }
         return targets
     }
@@ -177,8 +177,8 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 消息名称
     ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        sendMessage(name, object: nil, toReceiver: toReceiver)
+    public func fw_sendMessage(_ name: Notification.Name, toReceiver: Any) {
+        fw_sendMessage(name, object: nil, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象
@@ -186,8 +186,8 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - object: 消息对象
     ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
+    public func fw_sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
+        fw_sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -196,16 +196,16 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象
     ///   - userInfo: 用户信息
     ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
-        NSObject.fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
+    public func fw_sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+        NSObject.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息
     /// - Parameters:
     ///   - name: 消息名称
     ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        sendMessage(name, object: nil, toReceiver: toReceiver)
+    public static func fw_sendMessage(_ name: Notification.Name, toReceiver: Any) {
+        fw_sendMessage(name, object: nil, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象
@@ -213,8 +213,8 @@ extension Wrapper where Base: NSObject {
     ///   - name: 消息名称
     ///   - object: 消息对象
     ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
+    public static func fw_sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
+        fw_sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -223,9 +223,9 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象
     ///   - userInfo: 用户信息
     ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+    public static func fw_sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
         guard let receiver = toReceiver as? NSObject,
-              let dict = receiver.fw.messageTargets(false),
+              let dict = receiver.fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
         let notification = Notification(name: name, object: object, userInfo: userInfo)
@@ -241,7 +241,7 @@ extension Wrapper where Base: NSObject {
 }
 
 // MARK: - Notification
-extension Wrapper where Base: NSObject {
+@_spi(FW) @objc extension NSObject {
     
     // MARK: - Observer
     /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -250,8 +250,8 @@ extension Wrapper where Base: NSObject {
     ///   - block: 通知句柄
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
-        return observeNotification(name, object: nil, block: block)
+    public func fw_observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
+        return fw_observeNotification(name, object: nil, block: block)
     }
     
     /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -261,8 +261,8 @@ extension Wrapper where Base: NSObject {
     ///   - block: 通知句柄
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
-        let dict = notificationTargets(true)
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
+        let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -285,8 +285,8 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
-        return observeNotification(name, object: nil, target: target, action: action)
+    public func fw_observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
+        return fw_observeNotification(name, object: nil, target: target, action: action)
     }
     
     /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -297,8 +297,8 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
-        let dict = notificationTargets(true)
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
+        let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -320,8 +320,8 @@ extension Wrapper where Base: NSObject {
     ///   - name: 通知名称
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func unobserveNotification(_ name: Notification.Name, target: Any?, action: Selector?) {
-        unobserveNotification(name, object: nil, target: target, action: action)
+    public func fw_unobserveNotification(_ name: Notification.Name, target: Any?, action: Selector?) {
+        fw_unobserveNotification(name, object: nil, target: target, action: action)
     }
     
     /// 手工移除某个指定对象广播通知指定监听
@@ -330,8 +330,8 @@ extension Wrapper where Base: NSObject {
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func unobserveNotification(_ name: Notification.Name, object: Any?, target: Any?, action: Selector?) {
-        guard let dict = notificationTargets(false) else { return }
+    public func fw_unobserveNotification(_ name: Notification.Name, object: Any?, target: Any?, action: Selector?) {
+        guard let dict = fw_notificationTargets(false) else { return }
         
         // object为nil且target为nil始终移除
         if object == nil && target == nil {
@@ -370,8 +370,8 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 通知名称
     ///   - identifier: 监听唯一标志
-    public func unobserveNotification(_ name: Notification.Name, identifier: String) {
-        guard let dict = notificationTargets(false),
+    public func fw_unobserveNotification(_ name: Notification.Name, identifier: String) {
+        guard let dict = fw_notificationTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
@@ -385,21 +385,21 @@ extension Wrapper where Base: NSObject {
     
     /// 手工移除某个广播通知所有监听
     /// - Parameter name: 通知名称
-    public func unobserveNotification(_ name: Notification.Name) {
-        unobserveNotification(name, object: nil)
+    public func fw_unobserveNotification(_ name: Notification.Name) {
+        fw_unobserveNotification(name, object: nil)
     }
 
     /// 手工移除某个指定对象广播通知所有监听
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
-    public func unobserveNotification(_ name: Notification.Name, object: Any?) {
-        unobserveNotification(name, object: object, target: nil, action: nil)
+    public func fw_unobserveNotification(_ name: Notification.Name, object: Any?) {
+        fw_unobserveNotification(name, object: object, target: nil, action: nil)
     }
     
     /// 手工移除所有点对点消息监听
-    public func unobserveAllNotifications() {
-        guard let dict = notificationTargets(false) else { return }
+    public func fw_unobserveAllNotifications() {
+        guard let dict = fw_notificationTargets(false) else { return }
         
         for (_, value) in dict {
             if let array = value as? NSArray {
@@ -411,11 +411,11 @@ extension Wrapper where Base: NSObject {
         dict.removeAllObjects()
     }
     
-    private func notificationTargets(_ lazyload: Bool) -> NSMutableDictionary? {
-        var targets = property(forName: "notificationTargets") as? NSMutableDictionary
+    private func fw_notificationTargets(_ lazyload: Bool) -> NSMutableDictionary? {
+        var targets = fw_property(forName: "fw_notificationTargets") as? NSMutableDictionary
         if targets == nil && lazyload {
             targets = NSMutableDictionary()
-            setProperty(targets, forName: "notificationTargets")
+            fw_setProperty(targets, forName: "fw_notificationTargets")
         }
         return targets
     }
@@ -427,7 +427,7 @@ extension Wrapper where Base: NSObject {
     ///   - name: 通知名称
     ///   - object: 通知对象
     ///   - userInfo: 用户信息
-    public func postNotification(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    public func fw_postNotification(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
     }
     
@@ -436,14 +436,14 @@ extension Wrapper where Base: NSObject {
     ///   - name: 通知名称
     ///   - object: 通知对象
     ///   - userInfo: 用户信息
-    public static func postNotification(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    public static func fw_postNotification(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
     }
     
 }
 
 // MARK: - KVO
-extension Wrapper where Base: NSObject {
+@_spi(FW) @objc extension NSObject {
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
@@ -451,8 +451,8 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
-        let dict = kvoTargets(true)
+    public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
+        let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -460,7 +460,7 @@ extension Wrapper where Base: NSObject {
         }
         
         let kvoTarget = __KvoTarget()
-        kvoTarget.object = base
+        kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.block = block
         array?.add(kvoTarget)
@@ -475,8 +475,8 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeProperty(_ property: String, target: AnyObject?, action: Selector) -> String {
-        let dict = kvoTargets(true)
+    public func fw_observeProperty(_ property: String, target: AnyObject?, action: Selector) -> String {
+        let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
@@ -484,7 +484,7 @@ extension Wrapper where Base: NSObject {
         }
         
         let kvoTarget = __KvoTarget()
-        kvoTarget.object = base
+        kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.target = target
         kvoTarget.action = action
@@ -498,8 +498,8 @@ extension Wrapper where Base: NSObject {
     ///   - property: 属性名称
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func unobserveProperty(_ property: String, target: Any?, action: Selector?) {
-        guard let dict = kvoTargets(false) else { return }
+    public func fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
+        guard let dict = fw_kvoTargets(false) else { return }
         
         // target为nil始终移除
         if target == nil {
@@ -529,8 +529,8 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - property: 属性名称
     ///   - identifier: 监听唯一标志
-    public func unobserveProperty(_ property: String, identifier: String) {
-        guard let dict = kvoTargets(false),
+    public func fw_unobserveProperty(_ property: String, identifier: String) {
+        guard let dict = fw_kvoTargets(false),
               let array = dict[property] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
@@ -544,13 +544,13 @@ extension Wrapper where Base: NSObject {
     
     /// 手工移除某个属性所有监听
     /// - Parameter property: 属性名称
-    public func unobserveProperty(_ property: String) {
-        unobserveProperty(property, target: nil, action: nil)
+    public func fw_unobserveProperty(_ property: String) {
+        fw_unobserveProperty(property, target: nil, action: nil)
     }
     
     /// 手工移除所有属性所有监听
-    public func unobserveAllProperties() {
-        guard let dict = kvoTargets(false) else { return }
+    public func fw_unobserveAllProperties() {
+        guard let dict = fw_kvoTargets(false) else { return }
         
         for (_, value) in dict {
             if let array = value as? NSArray {
@@ -564,11 +564,11 @@ extension Wrapper where Base: NSObject {
         dict.removeAllObjects()
     }
     
-    private func kvoTargets(_ lazyload: Bool) -> NSMutableDictionary? {
-        var targets = property(forName: "kvoTargets") as? NSMutableDictionary
+    private func fw_kvoTargets(_ lazyload: Bool) -> NSMutableDictionary? {
+        var targets = fw_property(forName: "fw_kvoTargets") as? NSMutableDictionary
         if targets == nil && lazyload {
             targets = NSMutableDictionary()
-            setProperty(targets, forName: "kvoTargets")
+            fw_setProperty(targets, forName: "fw_kvoTargets")
         }
         return targets
     }

@@ -10,10 +10,13 @@
 #import "FWToolkit.h"
 #import "FWAlertPlugin.h"
 #import "FWAutoLayout.h"
-#import "FWRuntime.h"
-#import "FWMessage.h"
 #import "FWEncode.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWWebView
 
@@ -752,7 +755,7 @@ static int logMaxLength = 500;
     [bridges enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSString *name = package.length > 0 ? [package stringByAppendingString:key] : key;
         [self registerHandler:name handler:^(id  _Nonnull data, FWJsBridgeResponseCallback  _Nonnull responseCallback) {
-            if (context) [clazz fw_invokeMethod:NSSelectorFromString(obj) withObjects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
+            if (context) [clazz fw_invokeMethod:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
         }];
     }];
 #pragma clang diagnostic pop

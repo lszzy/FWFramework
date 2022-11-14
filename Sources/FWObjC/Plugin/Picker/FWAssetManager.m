@@ -6,8 +6,12 @@
 //
 
 #import "FWAssetManager.h"
-#import "FWRuntime.h"
 #import <CoreServices/UTCoreTypes.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWAsset
 

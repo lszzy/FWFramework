@@ -8,8 +8,12 @@
 #import "FWRefreshView.h"
 #import "FWViewPlugin.h"
 #import "FWAppBundle.h"
-#import "FWMessage.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWPullRefreshArrowView
 

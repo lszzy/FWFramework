@@ -8,8 +8,12 @@
 #import "FWRouter.h"
 #import "FWLoader.h"
 #import "FWNavigator.h"
-#import "FWRuntime.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
 FWRouterUserInfoKey const FWRouterOptionsKey = @"routerOptions";

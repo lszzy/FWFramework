@@ -8,11 +8,15 @@
 #import "FWNavigationController.h"
 #import "FWNavigationStyle.h"
 #import "FWBarAppearance.h"
-#import "FWRuntime.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - UINavigationController+FWBarTransition
 

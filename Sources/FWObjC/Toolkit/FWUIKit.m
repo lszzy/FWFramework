@@ -9,11 +9,9 @@
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWFoundation.h"
-#import "FWRuntime.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
-#import "FWMessage.h"
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <CoreImage/CoreImage.h>
@@ -22,6 +20,11 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <net/if.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #if FWMacroTracking
 @import AdSupport;
