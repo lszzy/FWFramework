@@ -14,16 +14,13 @@ import FWObjC
 /// UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
 /// 如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
-extension Wrapper where Base: UIView {
+@_spi(FW) @objc extension UIView {
     
     /// 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
     ///
     /// 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
     /// 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-    public static var autoLayoutRTL: Bool {
-        get { return UIView.__autoLayoutRTL }
-        set { UIView.__autoLayoutRTL = newValue }
-    }
+    public static var fw_autoLayoutRTL = false
     
     /// 是否全局自动等比例缩放布局，默认NO
     ///
@@ -33,21 +30,21 @@ extension Wrapper where Base: UIView {
     /// 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
     /// 2. 只会对offset值生效，其他属性不受影响
     /// 3. 如需特殊处理，可以指定某个视图关闭该功能
-    public static var autoScale: Bool {
-        get { return UIView.__autoScaleLayout }
-        set { UIView.__autoScaleLayout = newValue }
-    }
+    public static var fw_autoScale = false
+    
+    /// 视图是否自动等比例缩放布局全局开关
+    private static var fw_autoScaleView = false
     
     // MARK: - AutoLayout
     /// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
-    public var autoScale: Bool {
+    public var fw_autoScale: Bool {
         get {
-            var autoScale = UIView.__autoScaleLayout
-            if !UIView.__autoScaleView { return autoScale }
+            var autoScale = UIView.fw_autoScale
+            if !UIView.fw_autoScaleView { return autoScale }
             
-            var targetView: UIView? = base
+            var targetView: UIView? = self
             while targetView != nil {
-                if let number = targetView?.fw.property(forName: "autoScale") as? NSNumber {
+                if let number = targetView?.fw_property(forName: "fw_autoScale") as? NSNumber {
                     autoScale = number.boolValue
                     break
                 }
@@ -56,130 +53,130 @@ extension Wrapper where Base: UIView {
             return autoScale
         }
         set {
-            setProperty(NSNumber(value: newValue), forName: "autoScale")
-            if !UIView.__autoScaleView { UIView.__autoScaleView = true }
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_autoScale")
+            if !UIView.fw_autoScaleView { UIView.fw_autoScaleView = true }
         }
     }
 
     /// 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
-    public func autoLayoutSubviews() {
+    public func fw_autoLayoutSubviews() {
         // 保存当前的自动布局配置
-        let translateConstraint = base.translatesAutoresizingMaskIntoConstraints
+        let translateConstraint = self.translatesAutoresizingMaskIntoConstraints
         
         // 启动自动布局，计算子视图尺寸
-        base.translatesAutoresizingMaskIntoConstraints = false
-        base.setNeedsLayout()
-        base.layoutIfNeeded()
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
         
         // 还原自动布局设置
-        base.translatesAutoresizingMaskIntoConstraints = translateConstraint
+        self.translatesAutoresizingMaskIntoConstraints = translateConstraint
     }
 
     /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutHeight(width: CGFloat) -> CGFloat {
+    public func fw_layoutHeight(width: CGFloat) -> CGFloat {
         var fittingHeight: CGFloat = 0
         
         // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
-        let widthFenceConstraint = NSLayoutConstraint(item: base, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: width)
-        base.addConstraint(widthFenceConstraint)
+        let widthFenceConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: width)
+        self.addConstraint(widthFenceConstraint)
         // 自动布局引擎计算
-        fittingHeight = base.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        base.removeConstraint(widthFenceConstraint)
+        fittingHeight = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        self.removeConstraint(widthFenceConstraint)
         
         if (fittingHeight == 0) {
             // 尝试frame布局，调用sizeThatFits:
-            fittingHeight = base.sizeThatFits(CGSize(width: width, height: 0)).height
+            fittingHeight = self.sizeThatFits(CGSize(width: width, height: 0)).height
         }
         return fittingHeight
     }
 
     /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutWidth(height: CGFloat) -> CGFloat {
+    public func fw_layoutWidth(height: CGFloat) -> CGFloat {
         var fittingWidth: CGFloat = 0
         
         // 添加固定的height约束，从而使动态视图(如UILabel)横向扩张。而不是纵向增长，flow-layout的方式
-        let heightFenceConstraint = NSLayoutConstraint(item: base, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: height)
-        base.addConstraint(heightFenceConstraint)
+        let heightFenceConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: height)
+        self.addConstraint(heightFenceConstraint)
         // 自动布局引擎计算
-        fittingWidth = base.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
-        base.removeConstraint(heightFenceConstraint)
+        fittingWidth = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
+        self.removeConstraint(heightFenceConstraint)
         
         if (fittingWidth == 0) {
             // 尝试frame布局，调用sizeThatFits:
-            fittingWidth = base.sizeThatFits(CGSize(width: 0, height: height)).width
+            fittingWidth = self.sizeThatFits(CGSize(width: 0, height: height)).width
         }
         return fittingWidth
     }
     
     // MARK: - Compression
     /// 设置水平方向抗压缩优先级
-    public var compressionHorizontal: UILayoutPriority {
-        get { base.contentCompressionResistancePriority(for: .horizontal) }
-        set { base.setContentCompressionResistancePriority(newValue, for: .horizontal) }
+    public var fw_compressionHorizontal: UILayoutPriority {
+        get { self.contentCompressionResistancePriority(for: .horizontal) }
+        set { self.setContentCompressionResistancePriority(newValue, for: .horizontal) }
     }
 
     /// 设置垂直方向抗压缩优先级
-    public var compressionVertical: UILayoutPriority {
-        get { base.contentCompressionResistancePriority(for: .vertical) }
-        set { base.setContentCompressionResistancePriority(newValue, for: .vertical) }
+    public var fw_compressionVertical: UILayoutPriority {
+        get { self.contentCompressionResistancePriority(for: .vertical) }
+        set { self.setContentCompressionResistancePriority(newValue, for: .vertical) }
     }
 
     /// 设置水平方向抗拉伸优先级
-    public var huggingHorizontal: UILayoutPriority {
-        get { base.contentHuggingPriority(for: .horizontal) }
-        set { base.setContentHuggingPriority(newValue, for: .horizontal) }
+    public var fw_huggingHorizontal: UILayoutPriority {
+        get { self.contentHuggingPriority(for: .horizontal) }
+        set { self.setContentHuggingPriority(newValue, for: .horizontal) }
     }
 
     /// 设置垂直方向抗拉伸优先级
-    public var huggingVertical: UILayoutPriority {
-        get { base.contentHuggingPriority(for: .vertical) }
-        set { base.setContentHuggingPriority(newValue, for: .vertical) }
+    public var fw_huggingVertical: UILayoutPriority {
+        get { self.contentHuggingPriority(for: .vertical) }
+        set { self.setContentHuggingPriority(newValue, for: .vertical) }
     }
     
     // MARK: - Collapse
     /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
-    public var collapsed: Bool {
+    public var fw_collapsed: Bool {
         get {
-            return propertyBool(forName: "collapsed")
+            return fw_propertyBool(forName: "fw_collapsed")
         }
         set {
-            innerCollapseConstraints.enumerateObjects { constraint, _, _ in
+            fw_innerCollapseConstraints.enumerateObjects { constraint, _, _ in
                 guard let constraint = constraint as? NSLayoutConstraint else { return }
-                constraint.constant = newValue ? 0 : constraint.fw.originalConstant
+                constraint.constant = newValue ? 0 : constraint.fw_originalConstant
             }
             
-            setPropertyBool(newValue, forName: "collapsed")
+            fw_setPropertyBool(newValue, forName: "fw_collapsed")
         }
     }
 
     /// 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
-    public var autoCollapse: Bool {
-        get { propertyBool(forName: "autoCollapse") }
-        set { setPropertyBool(newValue, forName: "autoCollapse") }
+    public var fw_autoCollapse: Bool {
+        get { fw_propertyBool(forName: "fw_autoCollapse") }
+        set { fw_setPropertyBool(newValue, forName: "fw_autoCollapse") }
     }
 
     /// 设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
-    public var hiddenCollapse: Bool {
-        get { propertyBool(forName: "hiddenCollapse") }
-        set { setPropertyBool(newValue, forName: "hiddenCollapse") }
+    public var fw_hiddenCollapse: Bool {
+        get { fw_propertyBool(forName: "fw_hiddenCollapse") }
+        set { fw_setPropertyBool(newValue, forName: "fw_hiddenCollapse") }
     }
 
     /// 添加视图的收缩常量，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func addCollapseConstraint(_ constraint: NSLayoutConstraint) {
-        constraint.fw.originalConstant = constraint.constant
-        if !innerCollapseConstraints.contains(constraint) {
-            innerCollapseConstraints.add(constraint)
+    public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint) {
+        constraint.fw_originalConstant = constraint.constant
+        if !fw_innerCollapseConstraints.contains(constraint) {
+            fw_innerCollapseConstraints.add(constraint)
         }
     }
     
-    fileprivate var innerCollapseConstraints: NSMutableArray {
-        if let constraints = property(forName: "innerCollapseConstraints") as? NSMutableArray {
+    fileprivate var fw_innerCollapseConstraints: NSMutableArray {
+        if let constraints = fw_property(forName: "fw_innerCollapseConstraints") as? NSMutableArray {
             return constraints
         } else {
             let constraints = NSMutableArray()
-            setProperty(constraints, forName: "innerCollapseConstraints")
+            fw_setProperty(constraints, forName: "fw_innerCollapseConstraints")
             return constraints
         }
     }
@@ -189,11 +186,11 @@ extension Wrapper where Base: UIView {
     /// - Parameter offset: 偏移距离，默认zero
     /// - Returns: 约束数组
     @discardableResult
-    public func alignCenter(toSuperview offset: CGPoint = .zero) -> [NSLayoutConstraint] {
+    public func fw_alignCenter(toSuperview offset: CGPoint = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(alignAxis(toSuperview: .centerX, offset: offset.x))
-        constraints.append(alignAxis(toSuperview: .centerY, offset: offset.y))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_alignAxis(toSuperview: .centerX, offset: offset.x))
+        constraints.append(fw_alignAxis(toSuperview: .centerY, offset: offset.y))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -203,8 +200,8 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离，默认0
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(toSuperview axis: NSLayoutConstraint.Attribute, offset: CGFloat = 0) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview, offset: offset, relation: .equal, priority: .required)
+    public func fw_alignAxis(toSuperview axis: NSLayoutConstraint.Attribute, offset: CGFloat = 0) -> NSLayoutConstraint {
+        return fw_constrainAttribute(axis, toSuperview: self.superview, offset: offset, relation: .equal, priority: .required)
     }
     
     /// 与另一视图居中相同，可指定偏移距离
@@ -214,8 +211,8 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离，默认0
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, offset: CGFloat = 0) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset)
+    public func fw_alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, offset: CGFloat = 0) -> NSLayoutConstraint {
+        return fw_constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset)
     }
 
     /// 与另一视图居中指定比例
@@ -225,8 +222,8 @@ extension Wrapper where Base: UIView {
     ///   - multiplier: 指定比例
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, multiplier: CGFloat) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier)
+    public func fw_alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, multiplier: CGFloat) -> NSLayoutConstraint {
+        return fw_constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier)
     }
     
     // MARK: - Edge
@@ -234,13 +231,13 @@ extension Wrapper where Base: UIView {
     /// - Parameter insets: 指定距离insets，默认zero
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperview insets: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
+    public func fw_pinEdges(toSuperview insets: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .top, inset: insets.top))
-        constraints.append(pinEdge(toSuperview: .left, inset: insets.left))
-        constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom))
-        constraints.append(pinEdge(toSuperview: .right, inset: insets.right))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSuperview: .top, inset: insets.top))
+        constraints.append(fw_pinEdge(toSuperview: .left, inset: insets.left))
+        constraints.append(fw_pinEdge(toSuperview: .bottom, inset: insets.bottom))
+        constraints.append(fw_pinEdge(toSuperview: .right, inset: insets.right))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
 
@@ -250,21 +247,21 @@ extension Wrapper where Base: UIView {
     ///   - excludingEdge: 排除的边
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperview insets: UIEdgeInsets = .zero, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+    public func fw_pinEdges(toSuperview insets: UIEdgeInsets = .zero, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         if excludingEdge != .top {
-            constraints.append(pinEdge(toSuperview: .top, inset: insets.top))
+            constraints.append(fw_pinEdge(toSuperview: .top, inset: insets.top))
         }
         if excludingEdge != .leading && excludingEdge != .left {
-            constraints.append(pinEdge(toSuperview: .left, inset: insets.left))
+            constraints.append(fw_pinEdge(toSuperview: .left, inset: insets.left))
         }
         if excludingEdge != .bottom {
-            constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom))
+            constraints.append(fw_pinEdge(toSuperview: .bottom, inset: insets.bottom))
         }
         if excludingEdge != .trailing && excludingEdge != .right {
-            constraints.append(pinEdge(toSuperview: .right, inset: insets.right))
+            constraints.append(fw_pinEdge(toSuperview: .right, inset: insets.right))
         }
-        innerLastConstraints.setArray(constraints)
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -273,11 +270,11 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func fw_pinHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .left, inset: inset))
-        constraints.append(pinEdge(toSuperview: .right, inset: inset))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSuperview: .left, inset: inset))
+        constraints.append(fw_pinEdge(toSuperview: .right, inset: inset))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -286,11 +283,11 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func fw_pinVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .top, inset: inset))
-        constraints.append(pinEdge(toSuperview: .bottom, inset: inset))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSuperview: .top, inset: inset))
+        constraints.append(fw_pinEdge(toSuperview: .bottom, inset: inset))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -302,8 +299,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview, offset: inset, relation: relation, priority: priority)
+    public func fw_pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(edge, toSuperview: self.superview, offset: inset, relation: relation, priority: priority)
     }
 
     /// 与指定视图边属性相同，可指定偏移距离和关系
@@ -316,8 +313,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority)
+    public func fw_pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority)
     }
     
     // MARK: - SafeArea
@@ -325,11 +322,11 @@ extension Wrapper where Base: UIView {
     /// - Parameter offset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func alignCenter(toSafeArea offset: CGPoint) -> [NSLayoutConstraint] {
+    public func fw_alignCenter(toSafeArea offset: CGPoint) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(alignAxis(toSafeArea: .centerX, offset: offset.x))
-        constraints.append(alignAxis(toSafeArea: .centerY, offset: offset.y))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_alignAxis(toSafeArea: .centerX, offset: offset.x))
+        constraints.append(fw_alignAxis(toSafeArea: .centerY, offset: offset.y))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -339,21 +336,21 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离，默认0
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(toSafeArea axis: NSLayoutConstraint.Attribute, offset: CGFloat = .zero) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required)
+    public func fw_alignAxis(toSafeArea axis: NSLayoutConstraint.Attribute, offset: CGFloat = .zero) -> NSLayoutConstraint {
+        return fw_constrainAttribute(axis, toSuperview: self.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required)
     }
 
     /// 与父视图安全区域四条边属性相同，可指定距离insets
     /// - Parameter insets: 指定距离insets
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeArea insets: UIEdgeInsets) -> [NSLayoutConstraint] {
+    public func fw_pinEdges(toSafeArea insets: UIEdgeInsets) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .top, inset: insets.top))
-        constraints.append(pinEdge(toSafeArea: .left, inset: insets.left))
-        constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom))
-        constraints.append(pinEdge(toSafeArea: .right, inset: insets.right))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSafeArea: .top, inset: insets.top))
+        constraints.append(fw_pinEdge(toSafeArea: .left, inset: insets.left))
+        constraints.append(fw_pinEdge(toSafeArea: .bottom, inset: insets.bottom))
+        constraints.append(fw_pinEdge(toSafeArea: .right, inset: insets.right))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
 
@@ -363,21 +360,21 @@ extension Wrapper where Base: UIView {
     ///   - excludingEdge: 排除的边
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeArea insets: UIEdgeInsets, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+    public func fw_pinEdges(toSafeArea insets: UIEdgeInsets, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         if excludingEdge != .top {
-            constraints.append(pinEdge(toSafeArea: .top, inset: insets.top))
+            constraints.append(fw_pinEdge(toSafeArea: .top, inset: insets.top))
         }
         if excludingEdge != .leading && excludingEdge != .left {
-            constraints.append(pinEdge(toSafeArea: .left, inset: insets.left))
+            constraints.append(fw_pinEdge(toSafeArea: .left, inset: insets.left))
         }
         if excludingEdge != .bottom {
-            constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom))
+            constraints.append(fw_pinEdge(toSafeArea: .bottom, inset: insets.bottom))
         }
         if excludingEdge != .trailing && excludingEdge != .right {
-            constraints.append(pinEdge(toSafeArea: .right, inset: insets.right))
+            constraints.append(fw_pinEdge(toSafeArea: .right, inset: insets.right))
         }
-        innerLastConstraints.setArray(constraints)
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
 
@@ -386,11 +383,11 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinHorizontal(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func fw_pinHorizontal(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .left, inset: inset))
-        constraints.append(pinEdge(toSafeArea: .right, inset: inset))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSafeArea: .left, inset: inset))
+        constraints.append(fw_pinEdge(toSafeArea: .right, inset: inset))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -399,11 +396,11 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
-    public func pinVertical(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func fw_pinVertical(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .top, inset: inset))
-        constraints.append(pinEdge(toSafeArea: .bottom, inset: inset))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_pinEdge(toSafeArea: .top, inset: inset))
+        constraints.append(fw_pinEdge(toSafeArea: .bottom, inset: inset))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
     
@@ -415,8 +412,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority)
+    public func fw_pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(edge, toSuperview: self.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority)
     }
     
     // MARK: - Dimension
@@ -424,11 +421,11 @@ extension Wrapper where Base: UIView {
     /// - Parameter size: 尺寸大小
     /// - Returns: 约束数组
     @discardableResult
-    public func setDimensions(_ size: CGSize) -> [NSLayoutConstraint] {
+    public func fw_setDimensions(_ size: CGSize) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(setDimension(.width, size: size.width))
-        constraints.append(setDimension(.height, size: size.height))
-        innerLastConstraints.setArray(constraints)
+        constraints.append(fw_setDimension(.width, size: size.width))
+        constraints.append(fw_setDimension(.height, size: size.height))
+        fw_innerLastConstraints.setArray(constraints)
         return constraints
     }
 
@@ -440,8 +437,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority)
+    public func fw_setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority)
     }
 
     /// 与视图自身尺寸属性指定比例，指定关系
@@ -453,8 +450,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return matchDimension(dimension, toDimension: toDimension, ofView: base, multiplier: multiplier, relation: relation, priority: priority)
+    public func fw_matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_matchDimension(dimension, toDimension: toDimension, ofView: self, multiplier: multiplier, relation: relation, priority: priority)
     }
 
     /// 与指定视图尺寸属性相同，可指定相差大小和关系
@@ -467,8 +464,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority)
+    public func fw_matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority)
     }
 
     /// 与指定视图尺寸属性指定比例，可指定关系
@@ -481,8 +478,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority)
+    public func fw_matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority)
     }
     
     // MARK: - Constrain
@@ -496,8 +493,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority)
+    public func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority)
     }
 
     /// 与指定视图属性指定比例，指定关系
@@ -510,8 +507,8 @@ extension Wrapper where Base: UIView {
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: 0, relation: relation, priority: priority)
+    public func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: 0, relation: relation, priority: priority)
     }
     
     // MARK: - Constraint
@@ -520,8 +517,8 @@ extension Wrapper where Base: UIView {
     ///   - attribute: 指定属性
     ///   - relation: 约束关系
     /// - Returns: 布局约束
-    public func constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toSuperview: base.superview, relation: relation)
+    public func fw_constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return fw_constraint(attribute, toSuperview: self.superview, relation: relation)
     }
 
     /// 获取添加的与父视图安全区域属性的约束，指定关系
@@ -529,12 +526,12 @@ extension Wrapper where Base: UIView {
     ///   - attribute: 指定属性
     ///   - relation: 约束关系
     /// - Returns: 布局约束
-    public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toSuperview: base.superview?.safeAreaLayoutGuide, relation: relation)
+    public func fw_constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return fw_constraint(attribute, toSuperview: self.superview?.safeAreaLayoutGuide, relation: relation)
     }
     
-    private func constraint(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint? {
-        assert(base.superview != nil, "View's superview must not be nil.\nView: \(base)")
+    private func fw_constraint(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint? {
+        assert(self.superview != nil, "View's superview must not be nil.\nView: \(self)")
         var targetRelation = relation
         if attribute == .bottom || attribute == .right || attribute == .trailing {
             if relation == .lessThanOrEqual {
@@ -543,7 +540,7 @@ extension Wrapper where Base: UIView {
                 targetRelation = .lessThanOrEqual
             }
         }
-        return constraint(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, relation: targetRelation)
+        return fw_constraint(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, relation: targetRelation)
     }
 
     /// 获取添加的与指定视图属性的约束，指定关系
@@ -553,8 +550,8 @@ extension Wrapper where Base: UIView {
     ///   - ofView: 目标视图
     ///   - relation: 约束关系
     /// - Returns: 布局约束
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, relation: relation)
+    public func fw_constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+        return fw_constraint(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, relation: relation)
     }
 
     /// 获取添加的与指定视图属性指定比例的约束，指定关系
@@ -565,10 +562,10 @@ extension Wrapper where Base: UIView {
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系
     /// - Returns: 布局约束
-    public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
+    public func fw_constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
-        if UIView.__autoLayoutRTL {
+        if UIView.fw_autoLayoutRTL {
             switch attribute {
             case .left:
                 targetAttribute = .leading
@@ -596,17 +593,17 @@ extension Wrapper where Base: UIView {
         }
         
         // 自动生成唯一约束标记，存在则获取之
-        let constraintIdentifier = constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
-        return constraint(identifier: constraintIdentifier)
+        let constraintIdentifier = fw_constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
+        return fw_constraint(identifier: constraintIdentifier)
     }
     
     /// 根据唯一标志获取布局约束
     /// - Parameters:
     ///   - identifier: 唯一标志
     /// - Returns: 布局约束
-    public func constraint(identifier: String?) -> NSLayoutConstraint? {
+    public func fw_constraint(identifier: String?) -> NSLayoutConstraint? {
         guard let identifier = identifier, !identifier.isEmpty else { return nil }
-        let constraint = innerLayoutConstraints.first { obj in
+        let constraint = fw_innerLayoutConstraints.first { obj in
             guard let obj = obj as? NSLayoutConstraint else { return false }
             return obj.identifier == identifier
         }
@@ -614,27 +611,27 @@ extension Wrapper where Base: UIView {
     }
     
     /// 最近一批添加或更新的布局约束
-    public var lastConstraints: [NSLayoutConstraint] {
-        return innerLastConstraints as? [NSLayoutConstraint] ?? []
+    public var fw_lastConstraints: [NSLayoutConstraint] {
+        return fw_innerLastConstraints as? [NSLayoutConstraint] ?? []
     }
     
     /// 获取当前所有约束
-    public var allConstraints: [NSLayoutConstraint] {
-        return innerLayoutConstraints as? [NSLayoutConstraint] ?? []
+    public var fw_allConstraints: [NSLayoutConstraint] {
+        return fw_innerLayoutConstraints as? [NSLayoutConstraint] ?? []
     }
     
     /// 移除当前指定约束数组
     /// - Parameter constraints: 布局约束数组
-    public func removeConstraints(_ constraints: [NSLayoutConstraint]?) {
+    public func fw_removeConstraints(_ constraints: [NSLayoutConstraint]?) {
         guard let constraints = constraints, !constraints.isEmpty else { return }
         NSLayoutConstraint.deactivate(constraints)
-        innerLayoutConstraints.removeObjects(in: constraints)
-        innerLastConstraints.removeObjects(in: constraints)
+        fw_innerLayoutConstraints.removeObjects(in: constraints)
+        fw_innerLastConstraints.removeObjects(in: constraints)
     }
     
     // MARK: - Private
-    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
-        assert(base.superview != nil, "View's superview must not be nil.\nView: \(base)")
+    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
+        assert(self.superview != nil, "View's superview must not be nil.\nView: \(self)")
         var isOpposite = false
         var targetOffset = offset
         var targetRelation = relation
@@ -648,16 +645,16 @@ extension Wrapper where Base: UIView {
             }
         }
         
-        let constraint = constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: targetOffset, relation: targetRelation, priority: priority)
-        constraint.fw.isOpposite = isOpposite
+        let constraint = fw_constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: targetOffset, relation: targetRelation, priority: priority)
+        constraint.fw_isOpposite = isOpposite
         return constraint
     }
     
-    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
-        let targetOffset = autoScale ? UIScreen.fw.relativeValue(offset) : offset
+    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
+        let targetOffset = fw_autoScale ? UIScreen.fw_relativeValue(offset) : offset
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
-        if UIView.__autoLayoutRTL {
+        if UIView.fw_autoLayoutRTL {
             switch attribute {
             case .left:
                 targetAttribute = .leading
@@ -684,29 +681,29 @@ extension Wrapper where Base: UIView {
             }
         }
         
-        base.translatesAutoresizingMaskIntoConstraints = false
+        self.translatesAutoresizingMaskIntoConstraints = false
         // 自动生成唯一约束标记，存在则更新，否则添加
-        let constraintIdentifier = constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
+        let constraintIdentifier = fw_constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
         var targetConstraint: NSLayoutConstraint
-        if let constraint = constraint(identifier: constraintIdentifier) {
+        if let constraint = fw_constraint(identifier: constraintIdentifier) {
             targetConstraint = constraint
             if targetConstraint.constant != targetOffset {
                 targetConstraint.constant = targetOffset
             }
         } else {
-            targetConstraint = NSLayoutConstraint(item: base, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: targetOffset)
+            targetConstraint = NSLayoutConstraint(item: self, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: targetOffset)
             targetConstraint.identifier = constraintIdentifier
-            innerLayoutConstraints.add(targetConstraint)
+            fw_innerLayoutConstraints.add(targetConstraint)
         }
-        innerLastConstraints.setArray([targetConstraint])
+        fw_innerLastConstraints.setArray([targetConstraint])
         if targetConstraint.priority != priority {
-            targetConstraint.fw.priority = priority
+            targetConstraint.fw_priority = priority
         }
         targetConstraint.isActive = true
         return targetConstraint
     }
     
-    private func constraintIdentifier(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation) -> String {
+    private func fw_constraintIdentifier(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation) -> String {
         var viewHash = ""
         if let ofView = ofView as? NSObject {
             viewHash = "\(ofView.hash)"
@@ -716,68 +713,60 @@ extension Wrapper where Base: UIView {
         return String(format: "%ld-%ld-%@-%ld-%@", attribute.rawValue, relation.rawValue, viewHash, toAttribute.rawValue, NSNumber(value: multiplier))
     }
     
-    private var innerLayoutConstraints: NSMutableArray {
-        if let constraints = property(forName: "innerLayoutConstraints") as? NSMutableArray {
+    private var fw_innerLayoutConstraints: NSMutableArray {
+        if let constraints = fw_property(forName: "fw_innerLayoutConstraints") as? NSMutableArray {
             return constraints
         } else {
             let constraints = NSMutableArray()
-            setProperty(constraints, forName: "innerLayoutConstraints")
+            fw_setProperty(constraints, forName: "fw_innerLayoutConstraints")
             return constraints
         }
     }
     
-    private var innerLastConstraints: NSMutableArray {
-        if let constraints = property(forName: "innerLastConstraints") as? NSMutableArray {
+    private var fw_innerLastConstraints: NSMutableArray {
+        if let constraints = fw_property(forName: "fw_innerLastConstraints") as? NSMutableArray {
             return constraints
         } else {
             let constraints = NSMutableArray()
-            setProperty(constraints, forName: "innerLastConstraints")
+            fw_setProperty(constraints, forName: "fw_innerLastConstraints")
             return constraints
         }
     }
-    
-}
-
-extension UIView {
-    
-    fileprivate static var __autoLayoutRTL = false
-    fileprivate static var __autoScaleLayout = false
-    fileprivate static var __autoScaleView = false
     
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
-extension Wrapper where Base: NSLayoutConstraint {
+@_spi(FW) @objc extension NSLayoutConstraint {
     
     /// 标记是否是相反的约束，一般相对于父视图
-    public var isOpposite: Bool {
-        get { propertyBool(forName: "isOpposite") }
-        set { setPropertyBool(newValue, forName: "isOpposite") }
+    public var fw_isOpposite: Bool {
+        get { fw_propertyBool(forName: "fw_isOpposite") }
+        set { fw_setPropertyBool(newValue, forName: "fw_isOpposite") }
     }
     
     /// 设置内间距值，如果是相反的约束，会自动取反
-    public var inset: CGFloat {
-        get { isOpposite ? -base.constant : base.constant }
-        set { base.constant = isOpposite ? -newValue : newValue }
+    public var fw_inset: CGFloat {
+        get { fw_isOpposite ? -self.constant : self.constant }
+        set { self.constant = fw_isOpposite ? -newValue : newValue }
     }
     
     /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
-    public var priority: UILayoutPriority {
+    public var fw_priority: UILayoutPriority {
         get {
-            return base.priority
+            return self.priority
         }
         set {
             __Runtime.tryCatch {
-                base.priority = newValue
+                self.priority = newValue
             } exceptionHandler: { exception in
                 NSLog("%@", exception)
             }
         }
     }
     
-    fileprivate var originalConstant: CGFloat {
-        get { propertyDouble(forName: "originalConstant") }
-        set { setPropertyDouble(newValue, forName: "originalConstant") }
+    fileprivate var fw_originalConstant: CGFloat {
+        get { fw_propertyDouble(forName: "fw_originalConstant") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
     
 }
@@ -794,16 +783,16 @@ internal class AutoLayoutAutoloader: AutoloadProtocol {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw.autoCollapse && selfObject.fw.innerCollapseConstraints.count > 0 {
+            if selfObject.fw_autoCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
                 // Absent意味着视图没有固有size，即{-1, -1}
                 let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
                 // 计算固有尺寸
                 let contentSize = selfObject.intrinsicContentSize
                 // 如果视图没有固定尺寸，自动设置约束
                 if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
-                    selfObject.fw.collapsed = true
+                    selfObject.fw_collapsed = true
                 } else {
-                    selfObject.fw.collapsed = false
+                    selfObject.fw_collapsed = false
                 }
             }
         }}
@@ -816,8 +805,8 @@ internal class AutoLayoutAutoloader: AutoloadProtocol {
         ) { store in { selfObject, hidden in
             store.original(selfObject, store.selector, hidden)
             
-            if selfObject.fw.hiddenCollapse && selfObject.fw.innerCollapseConstraints.count > 0 {
-                selfObject.fw.collapsed = hidden
+            if selfObject.fw_hiddenCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
+                selfObject.fw_collapsed = hidden
             }
         }}
     }
@@ -832,11 +821,6 @@ public class LayoutChain {
     // MARK: - Accessor
     /// 布局视图
     public private(set) weak var view: UIView?
-    
-    /// 关联对象Key
-    fileprivate struct AssociatedKeys {
-        static var layoutChain = "layoutChain"
-    }
 
     // MARK: - Lifecycle
     /// 构造方法
@@ -847,467 +831,467 @@ public class LayoutChain {
     // MARK: - Install
     @discardableResult
     public func remake() -> Self {
-        view?.fw.removeConstraints(view?.fw.allConstraints)
+        view?.fw_removeConstraints(view?.fw_allConstraints)
         return self
     }
     
     @discardableResult
     public func autoScale(_ autoScale: Bool) -> Self {
-        view?.fw.autoScale = autoScale
+        view?.fw_autoScale = autoScale
         return self
     }
 
     // MARK: - Compression
     @discardableResult
     public func compression(horizontal priority: UILayoutPriority) -> Self {
-        view?.fw.compressionHorizontal = priority
+        view?.fw_compressionHorizontal = priority
         return self
     }
 
     @discardableResult
     public func compression(vertical priority: UILayoutPriority) -> Self {
-        view?.fw.compressionVertical = priority
+        view?.fw_compressionVertical = priority
         return self
     }
     
     @discardableResult
     public func hugging(horizontal priority: UILayoutPriority) -> Self {
-        view?.fw.huggingHorizontal = priority
+        view?.fw_huggingHorizontal = priority
         return self
     }
 
     @discardableResult
     public func hugging(vertical priority: UILayoutPriority) -> Self {
-        view?.fw.huggingVertical = priority
+        view?.fw_huggingVertical = priority
         return self
     }
     
     // MARK: - Collapse
     @discardableResult
     public func collapsed(_ collapsed: Bool) -> Self {
-        view?.fw.collapsed = collapsed
+        view?.fw_collapsed = collapsed
         return self
     }
 
     @discardableResult
     public func autoCollapse(_ autoCollapse: Bool) -> Self {
-        view?.fw.autoCollapse = autoCollapse
+        view?.fw_autoCollapse = autoCollapse
         return self
     }
     
     @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
-        view?.fw.hiddenCollapse = hiddenCollapse
+        view?.fw_hiddenCollapse = hiddenCollapse
         return self
     }
 
     // MARK: - Axis
     @discardableResult
     public func center(_ offset: CGPoint = .zero) -> Self {
-        view?.fw.alignCenter(toSuperview: offset)
+        view?.fw_alignCenter(toSuperview: offset)
         return self
     }
 
     @discardableResult
     public func centerX(_ offset: CGFloat = .zero) -> Self {
-        view?.fw.alignAxis(toSuperview: .centerX, offset: offset)
+        view?.fw_alignAxis(toSuperview: .centerX, offset: offset)
         return self
     }
 
     @discardableResult
     public func centerY(_ offset: CGFloat = .zero) -> Self {
-        view?.fw.alignAxis(toSuperview: .centerY, offset: offset)
+        view?.fw_alignAxis(toSuperview: .centerY, offset: offset)
         return self
     }
 
     @discardableResult
     public func center(toView view: Any) -> Self {
-        self.view?.fw.alignAxis(.centerX, toView: view)
-        self.view?.fw.alignAxis(.centerY, toView: view)
+        self.view?.fw_alignAxis(.centerX, toView: view)
+        self.view?.fw_alignAxis(.centerY, toView: view)
         return self
     }
 
     @discardableResult
     public func centerX(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.alignAxis(.centerX, toView: view, offset: offset)
+        self.view?.fw_alignAxis(.centerX, toView: view, offset: offset)
         return self
     }
 
     @discardableResult
     public func centerY(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.alignAxis(.centerY, toView: view, offset: offset)
+        self.view?.fw_alignAxis(.centerY, toView: view, offset: offset)
         return self
     }
 
     @discardableResult
     public func centerX(toView view: Any, multiplier: CGFloat) -> Self {
-        self.view?.fw.alignAxis(.centerX, toView: view, multiplier: multiplier)
+        self.view?.fw_alignAxis(.centerX, toView: view, multiplier: multiplier)
         return self
     }
 
     @discardableResult
     public func centerY(toView view: Any, multiplier: CGFloat) -> Self {
-        self.view?.fw.alignAxis(.centerY, toView: view, multiplier: multiplier)
+        self.view?.fw_alignAxis(.centerY, toView: view, multiplier: multiplier)
         return self
     }
 
     // MARK: - Edge
     @discardableResult
     public func edges(_ insets: UIEdgeInsets = UIEdgeInsets.zero) -> Self {
-        view?.fw.pinEdges(toSuperview: insets)
+        view?.fw_pinEdges(toSuperview: insets)
         return self
     }
     
     @discardableResult
     public func edges(_ insets: UIEdgeInsets = UIEdgeInsets.zero, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
-        view?.fw.pinEdges(toSuperview: insets, excludingEdge: edge)
+        view?.fw_pinEdges(toSuperview: insets, excludingEdge: edge)
         return self
     }
 
     @discardableResult
     public func horizontal(_ inset: CGFloat = .zero) -> Self {
-        view?.fw.pinHorizontal(toSuperview: inset)
+        view?.fw_pinHorizontal(toSuperview: inset)
         return self
     }
 
     @discardableResult
     public func vertical(_ inset: CGFloat = .zero) -> Self {
-        view?.fw.pinVertical(toSuperview: inset)
+        view?.fw_pinVertical(toSuperview: inset)
         return self
     }
 
     @discardableResult
     public func top(_ inset: CGFloat = 0) -> Self {
-        view?.fw.pinEdge(toSuperview: .top, inset: inset)
+        view?.fw_pinEdge(toSuperview: .top, inset: inset)
         return self
     }
     
     @discardableResult
     public func top(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSuperview: .top, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSuperview: .top, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func bottom(_ inset: CGFloat = 0) -> Self {
-        view?.fw.pinEdge(toSuperview: .bottom, inset: inset)
+        view?.fw_pinEdge(toSuperview: .bottom, inset: inset)
         return self
     }
     
     @discardableResult
     public func bottom(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSuperview: .bottom, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSuperview: .bottom, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func left(_ inset: CGFloat = 0) -> Self {
-        view?.fw.pinEdge(toSuperview: .left, inset: inset)
+        view?.fw_pinEdge(toSuperview: .left, inset: inset)
         return self
     }
     
     @discardableResult
     public func left(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSuperview: .left, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSuperview: .left, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func right(_ inset: CGFloat = 0) -> Self {
-        view?.fw.pinEdge(toSuperview: .right, inset: inset)
+        view?.fw_pinEdge(toSuperview: .right, inset: inset)
         return self
     }
     
     @discardableResult
     public func right(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSuperview: .right, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSuperview: .right, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func top(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.top, toEdge: .top, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.top, toEdge: .top, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func top(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.top, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.top, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func bottom(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.bottom, toEdge: .bottom, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.bottom, toEdge: .bottom, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func bottom(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.bottom, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.bottom, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func left(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.left, toEdge: .left, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.left, toEdge: .left, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func left(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.left, toEdge: .left, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.left, toEdge: .left, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func right(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.right, toEdge: .right, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.right, toEdge: .right, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func right(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.right, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.right, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func top(toViewBottom view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.top, toEdge: .bottom, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.top, toEdge: .bottom, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func top(toViewBottom view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.top, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.top, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func bottom(toViewTop view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.bottom, toEdge: .top, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.bottom, toEdge: .top, ofView: view, offset: offset)
         return self
     }
 
     @discardableResult
     public func bottom(toViewTop view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.bottom, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.bottom, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func left(toViewRight view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.left, toEdge: .right, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.left, toEdge: .right, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func left(toViewRight view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.left, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.left, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func right(toViewLeft view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.pinEdge(.right, toEdge: .left, ofView: view, offset: offset)
+        self.view?.fw_pinEdge(.right, toEdge: .left, ofView: view, offset: offset)
         return self
     }
 
     @discardableResult
     public func right(toViewLeft view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.pinEdge(.right, toEdge: .left, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_pinEdge(.right, toEdge: .left, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     // MARK: - SafeArea
     @discardableResult
     public func center(toSafeArea offset: CGPoint) -> Self {
-        view?.fw.alignCenter(toSafeArea: offset)
+        view?.fw_alignCenter(toSafeArea: offset)
         return self
     }
 
     @discardableResult
     public func centerX(toSafeArea offset: CGFloat) -> Self {
-        view?.fw.alignAxis(toSafeArea: .centerX, offset: offset)
+        view?.fw_alignAxis(toSafeArea: .centerX, offset: offset)
         return self
     }
 
     @discardableResult
     public func centerY(toSafeArea offset: CGFloat) -> Self {
-        view?.fw.alignAxis(toSafeArea: .centerY, offset: offset)
+        view?.fw_alignAxis(toSafeArea: .centerY, offset: offset)
         return self
     }
 
     @discardableResult
     public func edges(toSafeArea insets: UIEdgeInsets) -> Self {
-        view?.fw.pinEdges(toSafeArea: insets)
+        view?.fw_pinEdges(toSafeArea: insets)
         return self
     }
     
     @discardableResult
     public func edges(toSafeArea insets: UIEdgeInsets, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
-        view?.fw.pinEdges(toSafeArea: insets, excludingEdge: edge)
+        view?.fw_pinEdges(toSafeArea: insets, excludingEdge: edge)
         return self
     }
 
     @discardableResult
     public func horizontal(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinHorizontal(toSafeArea: inset)
+        view?.fw_pinHorizontal(toSafeArea: inset)
         return self
     }
 
     @discardableResult
     public func vertical(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinVertical(toSafeArea: inset)
+        view?.fw_pinVertical(toSafeArea: inset)
         return self
     }
 
     @discardableResult
     public func top(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinEdge(toSafeArea: .top, inset: inset)
+        view?.fw_pinEdge(toSafeArea: .top, inset: inset)
         return self
     }
     
     @discardableResult
     public func top(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSafeArea: .top, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSafeArea: .top, inset: inset, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func bottom(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinEdge(toSafeArea: .bottom, inset: inset)
+        view?.fw_pinEdge(toSafeArea: .bottom, inset: inset)
         return self
     }
 
     @discardableResult
     public func bottom(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSafeArea: .bottom, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSafeArea: .bottom, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func left(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinEdge(toSafeArea: .left, inset: inset)
+        view?.fw_pinEdge(toSafeArea: .left, inset: inset)
         return self
     }
     
     @discardableResult
     public func left(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSafeArea: .left, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSafeArea: .left, inset: inset, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func right(toSafeArea inset: CGFloat) -> Self {
-        view?.fw.pinEdge(toSafeArea: .right, inset: inset)
+        view?.fw_pinEdge(toSafeArea: .right, inset: inset)
         return self
     }
 
     @discardableResult
     public func right(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.pinEdge(toSafeArea: .right, inset: inset, relation: relation, priority: priority)
+        view?.fw_pinEdge(toSafeArea: .right, inset: inset, relation: relation, priority: priority)
         return self
     }
 
     // MARK: - Dimension
     @discardableResult
     public func size(_ size: CGSize) -> Self {
-        view?.fw.setDimensions(size)
+        view?.fw_setDimensions(size)
         return self
     }
 
     @discardableResult
     public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.setDimension(.width, size: width, relation: relation, priority: priority)
+        view?.fw_setDimension(.width, size: width, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func height(_ height: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.setDimension(.height, size: height, relation: relation, priority: priority)
+        view?.fw_setDimension(.height, size: height, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func width(toHeight multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.matchDimension(.width, toDimension: .height, multiplier: multiplier, relation: relation, priority: priority)
+        view?.fw_matchDimension(.width, toDimension: .height, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func height(toWidth multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        view?.fw.matchDimension(.height, toDimension: .width, multiplier: multiplier, relation: relation, priority: priority)
+        view?.fw_matchDimension(.height, toDimension: .width, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func size(toView view: Any) -> Self {
-        self.view?.fw.matchDimension(.width, toDimension: .width, ofView: view)
-        self.view?.fw.matchDimension(.height, toDimension: .height, ofView: view)
+        self.view?.fw_matchDimension(.width, toDimension: .width, ofView: view)
+        self.view?.fw_matchDimension(.height, toDimension: .height, ofView: view)
         return self
     }
 
     @discardableResult
     public func width(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.matchDimension(.width, toDimension: .width, ofView: view, offset: offset)
+        self.view?.fw_matchDimension(.width, toDimension: .width, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func width(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.matchDimension(.width, toDimension: .width, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_matchDimension(.width, toDimension: .width, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
     
     @discardableResult
     public func height(toView view: Any, offset: CGFloat = 0) -> Self {
-        self.view?.fw.matchDimension(.height, toDimension: .height, ofView: view, offset: offset)
+        self.view?.fw_matchDimension(.height, toDimension: .height, ofView: view, offset: offset)
         return self
     }
 
     @discardableResult
     public func height(toView view: Any, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.matchDimension(.height, toDimension: .height, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_matchDimension(.height, toDimension: .height, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func width(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.matchDimension(.width, toDimension: .width, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
+        self.view?.fw_matchDimension(.width, toDimension: .width, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func height(toView view: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.matchDimension(.height, toDimension: .height, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
+        self.view?.fw_matchDimension(.height, toDimension: .height, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
 
     // MARK: - Attribute
     @discardableResult
     public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, offset: CGFloat = 0) -> Self {
-        self.view?.fw.constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, offset: offset)
+        self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, offset: offset)
         return self
     }
     
     @discardableResult
     public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, offset: offset, relation: relation, priority: priority)
+        self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
 
     @discardableResult
     public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw.constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
+        self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
     
     // MARK: - Offset
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        self.view?.fw_lastConstraints.forEach({ obj in
             obj.constant = offset
         })
         return self
@@ -1315,23 +1299,23 @@ public class LayoutChain {
     
     @discardableResult
     public func inset(_ inset: CGFloat) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
-            obj.fw.inset = inset
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_inset = inset
         })
         return self
     }
     
     @discardableResult
     public func priority(_ priority: UILayoutPriority) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
-            obj.fw.priority = priority
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_priority = priority
         })
         return self
     }
     
     @discardableResult
     public func identifier(_ identifier: String?) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        self.view?.fw_lastConstraints.forEach({ obj in
             obj.identifier = identifier
         })
         return self
@@ -1339,7 +1323,7 @@ public class LayoutChain {
     
     @discardableResult
     public func active(_ active: Bool) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        self.view?.fw_lastConstraints.forEach({ obj in
             obj.isActive = active
         })
         return self
@@ -1347,58 +1331,61 @@ public class LayoutChain {
     
     @discardableResult
     public func remove() -> Self {
-        self.view?.fw.removeConstraints(self.view?.fw.lastConstraints)
+        self.view?.fw_removeConstraints(self.view?.fw_lastConstraints)
         return self
     }
     
     // MARK: - Constraint
     public var constraints: [NSLayoutConstraint] {
-        return self.view?.fw.lastConstraints ?? []
+        return self.view?.fw_lastConstraints ?? []
     }
     
     public var constraint: NSLayoutConstraint? {
-        return self.view?.fw.lastConstraints.last
+        return self.view?.fw_lastConstraints.last
     }
     
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(toSuperview: attribute, relation: relation)
+        return self.view?.fw_constraint(toSuperview: attribute, relation: relation)
     }
     
     public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(toSafeArea: attribute, relation: relation)
+        return self.view?.fw_constraint(toSafeArea: attribute, relation: relation)
     }
 
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, relation: relation)
+        return self.view?.fw_constraint(attribute, toAttribute: toAttribute, ofView: view, relation: relation)
     }
     
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation)
+        return self.view?.fw_constraint(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation)
     }
     
     public func constraint(identifier: String?) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(identifier: identifier)
+        return self.view?.fw_constraint(identifier: identifier)
     }
     
 }
 
 // MARK: - UIView+LayoutChain
-extension Wrapper where Base: UIView {
+@_spi(FW) extension UIView {
 
     /// 链式布局对象
-    public var layoutChain: LayoutChain {
-        if let layoutChain = objc_getAssociatedObject(base, &LayoutChain.AssociatedKeys.layoutChain) as? LayoutChain {
+    public var fw_layoutChain: LayoutChain {
+        if let layoutChain = objc_getAssociatedObject(self, &UIView.fw_layoutChainKey) as? LayoutChain {
             return layoutChain
         }
         
-        let layoutChain = LayoutChain(view: base)
-        objc_setAssociatedObject(base, &LayoutChain.AssociatedKeys.layoutChain, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        let layoutChain = LayoutChain(view: self)
+        objc_setAssociatedObject(self, &UIView.fw_layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return layoutChain
     }
     
     /// 链式布局闭包
-    public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
-        closure(layoutChain)
+    public func fw_layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
+        closure(fw_layoutChain)
     }
+    
+    /// 关联对象Key
+    private static var fw_layoutChainKey = "fw_layoutChain"
     
 }
