@@ -6,7 +6,6 @@
 //
 
 #import "FWEmptyView.h"
-#import "FWAppearance.h"
 #import "FWUIKit.h"
 #import "FWViewPlugin.h"
 #import <objc/runtime.h>

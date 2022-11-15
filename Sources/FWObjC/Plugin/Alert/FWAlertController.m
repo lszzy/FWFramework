@@ -6,7 +6,6 @@
 //
 
 #import "FWAlertController.h"
-#import "FWAutoLayout.h"
 #if FWMacroSPM
 @import FWFramework;
 #else

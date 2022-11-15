@@ -6,7 +6,6 @@
 //
 
 #import "FWBadgeView.h"
-#import "FWAutoLayout.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 #if FWMacroSPM
