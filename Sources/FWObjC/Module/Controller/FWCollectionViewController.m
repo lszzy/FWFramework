@@ -8,6 +8,11 @@
 #import "FWCollectionViewController.h"
 #import "FWAutoLayout.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWViewControllerManager+FWCollectionViewController
 
@@ -90,7 +95,7 @@
 - (void)fw_innerSetupCollectionLayout
 {
     UICollectionView *collectionView = [(id<FWCollectionViewController>)self collectionView];
-    [collectionView fw_pinEdgesToSuperview];
+    [collectionView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

@@ -9,6 +9,11 @@
 #import "FWAutoLayout.h"
 #import "FWUIKit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWAnimatedTransition
 
@@ -1048,7 +1053,7 @@
     UIView *ancestorView = [viewController fw_ancestorView];
     [ancestorView addSubview:self];
     if (pinEdges) {
-        [self fw_pinEdgesToSuperview];
+        [self fw_pinEdgesToSuperview:UIEdgeInsetsZero];
         [ancestorView setNeedsLayout];
         [ancestorView layoutIfNeeded];
     }
@@ -1060,7 +1065,7 @@
     UIViewController *viewController = [[UIViewController alloc] init];
     [viewController.view addSubview:self];
     if (pinEdges) {
-        [self fw_pinEdgesToSuperview];
+        [self fw_pinEdgesToSuperview:UIEdgeInsetsZero];
         [viewController.view setNeedsLayout];
         [viewController.view layoutIfNeeded];
     }

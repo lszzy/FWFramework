@@ -782,7 +782,7 @@
         _progressView = [UIView fw_progressViewWithStyle:FWProgressViewStyleDefault];
         _progressView.hidden = YES;
         [self addSubview:_progressView];
-        [_progressView fw_alignCenterToSuperview];
+        [_progressView fw_alignCenterToSuperview:CGPointZero];
     }
     return _progressView;
 }
@@ -792,7 +792,7 @@
     _progressView = progressView;
     _progressView.hidden = YES;
     [self addSubview:_progressView];
-    [_progressView fw_alignCenterToSuperview];
+    [_progressView fw_alignCenterToSuperview:CGPointZero];
 }
 
 - (CGFloat)progress {

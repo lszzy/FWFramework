@@ -9,6 +9,11 @@
 #import "FWAutoLayout.h"
 #import "FWUIKit.h"
 #import "FWBlock.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWEmptyPluginImpl
 
@@ -60,7 +65,7 @@
     emptyView = [[FWEmptyView alloc] initWithFrame:view.bounds];
     emptyView.tag = 2021;
     [view addSubview:emptyView];
-    [emptyView fw_pinEdgesToSuperviewWithInsets:view.fw_emptyInsets];
+    [emptyView fw_pinEdgesToSuperview:view.fw_emptyInsets];
     [emptyView setLoadingViewHidden:!loading];
     [emptyView setImage:emptyImage];
     [emptyView setTextLabelText:emptyText];

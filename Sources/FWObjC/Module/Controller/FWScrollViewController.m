@@ -8,6 +8,11 @@
 #import "FWScrollViewController.h"
 #import "FWAutoLayout.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWViewControllerManager+FWScrollViewController
 
@@ -32,7 +37,7 @@
     
     UIView *contentView = [viewController contentView];
     [scrollView addSubview:contentView];
-    [contentView fw_pinEdgesToSuperview];
+    [contentView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     
     if (self.hookScrollViewController) {
         self.hookScrollViewController(viewController);
@@ -82,7 +87,7 @@
 - (void)fw_innerSetupScrollLayout
 {
     UIScrollView *scrollView = [(id<FWScrollViewController>)self scrollView];
-    [scrollView fw_pinEdgesToSuperview];
+    [scrollView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

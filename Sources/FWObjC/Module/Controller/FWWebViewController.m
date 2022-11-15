@@ -192,7 +192,7 @@
 - (void)fw_innerSetupWebLayout
 {
     FWWebView *webView = [(id<FWWebViewController>)self webView];
-    [webView fw_pinEdgesToSuperview];
+    [webView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

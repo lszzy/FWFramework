@@ -671,33 +671,33 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     
     if ((edge & UIRectEdgeTop) == UIRectEdgeTop) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewTopKey edge:UIRectEdgeTop];
-        [borderView fw_setDimension:NSLayoutAttributeHeight toSize:width];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftInset];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightInset];
+        [borderView fw_setDimension:NSLayoutAttributeHeight size:width relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:leftInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:rightInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeLeft) == UIRectEdgeLeft) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewLeftKey edge:UIRectEdgeLeft];
-        [borderView fw_setDimension:NSLayoutAttributeWidth toSize:width];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:leftInset];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:rightInset];
+        [borderView fw_setDimension:NSLayoutAttributeWidth size:width relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:leftInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:rightInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeBottom) == UIRectEdgeBottom) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewBottomKey edge:UIRectEdgeBottom];
-        [borderView fw_setDimension:NSLayoutAttributeHeight toSize:width];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:leftInset];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:rightInset];
+        [borderView fw_setDimension:NSLayoutAttributeHeight size:width relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:leftInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:rightInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         borderView.backgroundColor = color;
     }
     
     if ((edge & UIRectEdgeRight) == UIRectEdgeRight) {
         borderView = [self fw_innerBorderView:kUIViewFWBorderViewRightKey edge:UIRectEdgeRight];
-        [borderView fw_setDimension:NSLayoutAttributeWidth toSize:width];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:leftInset];
-        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom withInset:rightInset];
+        [borderView fw_setDimension:NSLayoutAttributeWidth size:width relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:leftInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:rightInset relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         borderView.backgroundColor = color;
     }
 }
@@ -711,15 +711,15 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         objc_setAssociatedObject(self, edgeKey, borderView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         if (edge == UIRectEdgeTop || edge == UIRectEdgeBottom) {
-            [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeTop ? NSLayoutAttributeTop : NSLayoutAttributeBottom)];
-            [borderView fw_setDimension:NSLayoutAttributeHeight toSize:0];
-            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft];
-            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight];
+            [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeTop ? NSLayoutAttributeTop : NSLayoutAttributeBottom) inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_setDimension:NSLayoutAttributeHeight size:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         } else {
-            [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeLeft ? NSLayoutAttributeLeft : NSLayoutAttributeRight)];
-            [borderView fw_setDimension:NSLayoutAttributeWidth toSize:0];
-            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop];
-            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom];
+            [borderView fw_pinEdgeToSuperview:(edge == UIRectEdgeLeft ? NSLayoutAttributeLeft : NSLayoutAttributeRight) inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_setDimension:NSLayoutAttributeWidth size:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+            [borderView fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         }
     }
     return borderView;
@@ -773,7 +773,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         UIBlurEffect *effect = [UIBlurEffect effectWithStyle:style];
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
         [self addSubview:effectView];
-        [effectView fw_pinEdgesToSuperview];
+        [effectView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
         return effectView;
     }
     return nil;
@@ -1797,7 +1797,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         objc_setAssociatedObject(self, _cmd, contentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         [self addSubview:contentView];
-        [contentView fw_pinEdgesToSuperview];
+        [contentView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     }
     return contentView;
 }
@@ -1812,16 +1812,16 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         if (view.superview != toSuperview) {
             [view removeFromSuperview];
             [toSuperview addSubview:view]; {
-                [view fw_pinEdgeToSuperview:NSLayoutAttributeLeft];
-                [view fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:toPosition];
-                [view fw_setDimensionsToSize:view.bounds.size];
+                [view fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+                [view fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:toPosition relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+                [view fw_setDimensions:view.bounds.size];
             }
         }
     } else {
         if (view.superview != fromSuperview) {
             [view removeFromSuperview];
             [fromSuperview addSubview:view]; {
-                [view fw_pinEdgesToSuperview];
+                [view fw_pinEdgesToSuperview:UIEdgeInsetsZero];
             }
         }
     }
@@ -3049,7 +3049,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         layout(viewController.view);
     } else {
         // viewController.view.frame = superview.bounds;
-        [viewController.view fw_pinEdgesToSuperview];
+        [viewController.view fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     }
     [viewController didMoveToParentViewController:self];
 }
