@@ -15,7 +15,6 @@
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
 #import "FWAppBundle.h"
-#import "FWAppearance.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
