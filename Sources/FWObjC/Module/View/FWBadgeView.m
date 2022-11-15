@@ -42,7 +42,7 @@
                 self.userInteractionEnabled = NO;
                 self.backgroundColor = [UIColor redColor];
                 self.layer.cornerRadius = badgeHeight / 2.0;
-                [self fw_setDimensionsToSize:CGSizeMake(badgeHeight, badgeHeight)];
+                [self fw_setDimensions:CGSizeMake(badgeHeight, badgeHeight)];
                 break;
             }
         }
@@ -66,17 +66,17 @@
     self.userInteractionEnabled = NO;
     self.backgroundColor = [UIColor redColor];
     self.layer.cornerRadius = badgeHeight / 2.0;
-    [self fw_setDimension:NSLayoutAttributeHeight toSize:badgeHeight];
-    [self fw_setDimension:NSLayoutAttributeWidth toSize:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [self fw_setDimension:NSLayoutAttributeHeight size:badgeHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [self fw_setDimension:NSLayoutAttributeWidth size:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
     
     _badgeLabel = [[UILabel alloc] init];
     _badgeLabel.textColor = [UIColor whiteColor];
     _badgeLabel.font = [UIFont systemFontOfSize:fontSize];
     _badgeLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_badgeLabel];
-    [_badgeLabel fw_alignCenterToSuperview];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeLeft withInset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [_badgeLabel fw_alignCenterToSuperview:CGPointZero];
+    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
 }
 
 @end
@@ -95,8 +95,8 @@
     [self bringSubviewToFront:badgeView];
     
     // 默认偏移
-    [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:-badgeView.badgeOffset.y];
-    [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:-badgeView.badgeOffset.x];
+    [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:-badgeView.badgeOffset.y relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:-badgeView.badgeOffset.x relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (void)fw_hideBadgeView
@@ -170,8 +170,8 @@
         [view bringSubviewToFront:badgeView];
         
         // 自定义视图时默认偏移，否则固定偏移
-        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 0];
-        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeRight withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : 0];
+        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : 0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     };
 }
 
@@ -208,7 +208,7 @@
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if (@available(iOS 13.0, *)) {
                         UIView *imageView = [UITabBarItem fw_imageView:selfObject];
-                        if (imageView) [badgeView fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
+                        if (imageView) [badgeView fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView offset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
                     }
                     break;
                 }
@@ -257,8 +257,8 @@
         badgeView.tag = 2041;
         [view addSubview:badgeView];
         [view bringSubviewToFront:badgeView];
-        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f];
-        [badgeView fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView withOffset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x];
+        [badgeView fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.y : 2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [badgeView fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:imageView offset:badgeView.badgeStyle == 0 ? -badgeView.badgeOffset.x : -badgeView.badgeOffset.x relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     };
 }
 

@@ -250,8 +250,8 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.progressView.trackTintColor = [UIColor clearColor];
     self.progressView.fw_webProgress = 0;
     [self addSubview:self.progressView];
-    [self.progressView fw_pinEdgesToSuperviewWithInsets:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-    [self.progressView fw_setDimension:NSLayoutAttributeHeight toSize:2.f];
+    [self.progressView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [self.progressView fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     [self fw_observeProperty:@"estimatedProgress" block:^(FWWebView *webView, NSDictionary *change) {
         if (webView.estimatedProgress < 1.0) {
             webView.progressView.fw_webProgress = webView.estimatedProgress;

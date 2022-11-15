@@ -8,6 +8,11 @@
 #import "FWToastPluginImpl.h"
 #import "FWAutoLayout.h"
 #import "FWUIKit.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWToastPluginImpl
 
@@ -58,7 +63,7 @@
     toastView.attributedTitle = loadingText;
     toastView.cancelBlock = cancelBlock;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperviewWithInsets:view.fw_toastInsets];
+    [toastView fw_pinEdgesToSuperview:view.fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);
@@ -105,7 +110,7 @@
     toastView.progress = progress;
     toastView.cancelBlock = cancelBlock;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperviewWithInsets:view.fw_toastInsets];
+    [toastView fw_pinEdgesToSuperview:view.fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);
@@ -142,7 +147,7 @@
     toastView.userInteractionEnabled = !interactive;
     toastView.attributedTitle = messageText;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperviewWithInsets:view.fw_toastInsets];
+    [toastView fw_pinEdgesToSuperview:view.fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);

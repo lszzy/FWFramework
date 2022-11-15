@@ -8,6 +8,11 @@
 #import "FWTableViewController.h"
 #import "FWAutoLayout.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWViewControllerManager+FWTableViewController
 
@@ -91,7 +96,7 @@
 - (void)fw_innerSetupTableLayout
 {
     UITableView *tableView = [(id<FWTableViewController>)self tableView];
-    [tableView fw_pinEdgesToSuperview];
+    [tableView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end
