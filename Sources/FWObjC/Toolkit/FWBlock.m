@@ -6,7 +6,6 @@
 //
 
 #import "FWBlock.h"
-#import "FWBarAppearance.h"
 #import "FWFoundation.h"
 #import "FWNavigator.h"
 #import "FWToolkit.h"

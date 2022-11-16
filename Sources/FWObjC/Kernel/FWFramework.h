@@ -33,7 +33,6 @@
 
 #import "FWAppearance.h"
 #import "FWAutoLayout.h"
-#import "FWBarAppearance.h"
 #import "FWBlock.h"
 #import "FWDynamicLayout.h"
 #import "FWFoundation.h"

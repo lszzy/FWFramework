@@ -478,10 +478,6 @@ internal class ThemeAutoloader: AutoloadProtocol {
         }
     }
     
-}
-
-@objc extension UIImageView {
-    
     open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         

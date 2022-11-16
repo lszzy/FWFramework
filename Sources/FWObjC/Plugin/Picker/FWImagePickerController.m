@@ -18,7 +18,6 @@
 #import "FWUIKit.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"
-#import "FWBarAppearance.h"
 #import <objc/runtime.h>
 #if FWMacroSPM
 @import FWFramework;

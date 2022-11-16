@@ -7,7 +7,6 @@
 
 #import "FWNavigationController.h"
 #import "FWNavigationStyle.h"
-#import "FWBarAppearance.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
