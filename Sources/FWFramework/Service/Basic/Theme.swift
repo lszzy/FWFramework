@@ -11,55 +11,55 @@ import FWObjC
 #endif
 
 // MARK: - UIColor+Theme
-extension Wrapper where Base: UIColor {
+@_spi(FW) @objc extension UIColor {
     
     /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
-    public var color: UIColor {
+    public var fw_color: UIColor {
         if #available(iOS 13.0, *) {
-            return base
+            return self
         } else {
-            return themeObject?.object ?? base
+            return fw_themeObject?.object ?? self
         }
     }
 
     /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
-    public func color(forStyle style: ThemeStyle) -> UIColor {
-        if let themeObject = themeObject {
-            return themeObject.object(forStyle: style) ?? base
+    public func fw_color(forStyle style: ThemeStyle) -> UIColor {
+        if let themeObject = fw_themeObject {
+            return themeObject.object(forStyle: style) ?? self
         }
         
         if #available(iOS 13.0, *) {
             let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-            return base.resolvedColor(with: traitCollection)
+            return self.resolvedColor(with: traitCollection)
         } else {
-            return base
+            return self
         }
     }
 
     /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
-    public var isThemeColor: Bool {
-        return themeObject != nil
+    public var fw_isThemeColor: Bool {
+        return fw_themeObject != nil
     }
     
-    private var themeObject: ThemeObject<UIColor>? {
-        get { property(forName: "themeObject") as? ThemeObject<UIColor> }
-        set { setProperty(newValue, forName: "themeObject") }
+    private var fw_themeObject: ThemeObject<UIColor>? {
+        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIColor> }
+        set { fw_setProperty(newValue, forName: "fw_themeObject") }
     }
     
     /// 动态创建主题色，分别指定浅色和深色
-    public static func themeLight(_ light: UIColor, dark: UIColor) -> UIColor {
-        return themeColor { style in
+    public static func fw_themeLight(_ light: UIColor, dark: UIColor) -> UIColor {
+        return fw_themeColor { style in
             return style == .dark ? dark : light
         }
     }
 
     /// 动态创建主题色，指定提供句柄
-    public static func themeColor(_ provider: @escaping (ThemeStyle) -> UIColor) -> UIColor {
+    public static func fw_themeColor(_ provider: @escaping (ThemeStyle) -> UIColor) -> UIColor {
         if #available(iOS 13.0, *) {
             let color = UIColor { traitCollection in
                 return provider(ThemeManager.shared.style(for: traitCollection))
             }
-            color.fw.themeObject = ThemeObject(provider: provider)
+            color.fw_themeObject = ThemeObject(provider: provider)
             return color
         } else {
             var color = provider(ThemeManager.shared.style)
@@ -74,23 +74,23 @@ extension Wrapper where Base: UIColor {
                 }
             }
             color = UIColor(red: r, green: g, blue: b, alpha: a)
-            color.fw.themeObject = ThemeObject(provider: provider)
+            color.fw_themeObject = ThemeObject(provider: provider)
             return color
         }
     }
 
     /// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
-    public static func themeNamed(_ name: String) -> UIColor {
-        return themeNamed(name, bundle: nil)
+    public static func fw_themeNamed(_ name: String) -> UIColor {
+        return fw_themeNamed(name, bundle: nil)
     }
 
     /// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
-    public static func themeNamed(_ name: String, bundle: Bundle?) -> UIColor {
-        if let themeColor = UIColor.__themeColors[name] {
+    public static func fw_themeNamed(_ name: String, bundle: Bundle?) -> UIColor {
+        if let themeColor = UIColor.fw_themeColors[name] {
             return themeColor
         }
         
-        return themeColor { style in
+        return fw_themeColor { style in
             if #available(iOS 13.0, *) {
                 if let color = UIColor(named: name, in: bundle, compatibleWith: nil) {
                     let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
@@ -105,68 +105,64 @@ extension Wrapper where Base: UIColor {
     }
 
     /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-    public static func setThemeColor(_ color: UIColor?, forName name: String) {
-        UIColor.__themeColors[name] = color
+    public static func fw_setThemeColor(_ color: UIColor?, forName name: String) {
+        UIColor.fw_themeColors[name] = color
     }
 
     /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
-    public static func setThemeColors(_ nameColors: [String: UIColor]) {
-        UIColor.__themeColors.merge(nameColors) { _, last in last }
+    public static func fw_setThemeColors(_ nameColors: [String: UIColor]) {
+        UIColor.fw_themeColors.merge(nameColors) { _, last in last }
     }
     
-}
-
-extension UIColor {
-    
-    fileprivate static var __themeColors: [String: UIColor] = [:]
+    private static var fw_themeColors: [String: UIColor] = [:]
     
 }
 
 // MARK: - UIImage+Theme
 /// 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
 /// 为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
-extension Wrapper where Base: UIImage {
+@_spi(FW) @objc extension UIImage {
     
     /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
-    public var image: UIImage? {
-        if let themeObject = themeObject {
+    public var fw_image: UIImage? {
+        if let themeObject = fw_themeObject {
             return themeObject.object
         } else {
-            return base
+            return self
         }
     }
 
     /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
-    public func image(forStyle style: ThemeStyle) -> UIImage? {
-        if let themeObject = themeObject {
+    public func fw_image(forStyle style: ThemeStyle) -> UIImage? {
+        if let themeObject = fw_themeObject {
             return themeObject.object(forStyle: style)
         } else {
-            return base
+            return self
         }
     }
 
     /// 是否是主题图片，仅支持判断使用fwTheme创建的图片
-    public var isThemeImage: Bool {
-        return themeObject != nil
+    public var fw_isThemeImage: Bool {
+        return fw_themeObject != nil
     }
     
-    private var themeObject: ThemeObject<UIImage>? {
-        get { property(forName: "themeObject") as? ThemeObject<UIImage> }
-        set { setProperty(newValue, forName: "themeObject") }
+    private var fw_themeObject: ThemeObject<UIImage>? {
+        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
+        set { fw_setProperty(newValue, forName: "fw_themeObject") }
     }
     
     // MARK: - Color
     /// 快速生成当前图片对应的默认主题图片
-    public var themeImage: UIImage {
-        return themeImage(color: UIImage.fw.themeImageColor)
+    public var fw_themeImage: UIImage {
+        return fw_themeImage(color: UIImage.fw_themeImageColor)
     }
 
     /// 指定主题颜色，快速生成当前图片对应的主题图片
-    public func themeImage(color themeColor: UIColor) -> UIImage {
-        let weakBase = base
-        return UIImage.fw.themeImage { style in
-            guard let image = weakBase.fw.image(forStyle: style) else { return nil }
-            let color = themeColor.fw.color(forStyle: style)
+    public func fw_themeImage(color themeColor: UIColor) -> UIImage {
+        let weakBase = self
+        return UIImage.fw_themeImage { style in
+            guard let image = weakBase.fw_image(forStyle: style) else { return nil }
+            let color = themeColor.fw_color(forStyle: style)
             
             UIGraphicsBeginImageContextWithOptions(image.size, false, 0)
             color.setFill()
@@ -181,31 +177,31 @@ extension Wrapper where Base: UIImage {
     
     // MARK: - Theme
     /// 创建主题模拟动态图像，分别指定浅色和深色，不支持动态切换，需重新赋值才会变化
-    public static func themeLight(_ light: UIImage?, dark: UIImage?) -> UIImage {
-        return themeImage { style in
+    public static func fw_themeLight(_ light: UIImage?, dark: UIImage?) -> UIImage {
+        return fw_themeImage { style in
             return style == .dark ? dark : light
         }
     }
 
     /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
-    public static func themeImage(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImage {
+    public static func fw_themeImage(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImage {
         let image = UIImage()
-        image.fw.themeObject = ThemeObject(provider: provider)
+        image.fw_themeObject = ThemeObject(provider: provider)
         return image
     }
 
     /// 创建主题模拟动态图像，指定名称，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
-    public static func themeNamed(_ name: String) -> UIImage {
-        return themeNamed(name, bundle: nil)
+    public static func fw_themeNamed(_ name: String) -> UIImage {
+        return fw_themeNamed(name, bundle: nil)
     }
 
     /// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
-    public static func themeNamed(_ name: String, bundle: Bundle?) -> UIImage {
-        if let themeImage = UIImage.__themeImages[name] {
+    public static func fw_themeNamed(_ name: String, bundle: Bundle?) -> UIImage {
+        if let themeImage = UIImage.fw_themeImages[name] {
             return themeImage
         }
         
-        return themeImage { style in
+        return fw_themeImage { style in
             var image = UIImage(named: name, in: bundle, compatibleWith: nil)
             if #available(iOS 13.0, *) {
                 let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
@@ -216,69 +212,66 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 手工单个注册主题图像，未配置主题图像时可使用本方式
-    public static func setThemeImage(_ image: UIImage?, forName name: String) {
-        UIImage.__themeImages[name] = image
+    public static func fw_setThemeImage(_ image: UIImage?, forName name: String) {
+        UIImage.fw_themeImages[name] = image
     }
 
     /// 手工批量注册主题图像，未配置主题图像时可使用本方式
-    public static func setThemeImages(_ nameImages: [String: UIImage]) {
-        UIImage.__themeImages.merge(nameImages) { _, last in last }
+    public static func fw_setThemeImages(_ nameImages: [String: UIImage]) {
+        UIImage.fw_themeImages.merge(nameImages) { _, last in last }
     }
+    
+    private static var fw_themeImages: [String: UIImage] = [:]
 
     // MARK: - Color
     /// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
-    public static var themeImageColor: UIColor {
+    public static var fw_themeImageColor: UIColor {
         get {
-            return UIImage.__themeImageColor ?? UIColor.fw.themeLight(.black, dark: .white)
+            return UIImage.fw_staticThemeColor ?? UIColor.fw_themeLight(.black, dark: .white)
         }
         set {
-            UIImage.__themeImageColor = newValue
+            UIImage.fw_staticThemeColor = newValue
         }
     }
     
-}
-
-extension UIImage {
-    
-    fileprivate static var __themeImages: [String: UIImage] = [:]
-    fileprivate static var __themeImageColor: UIColor?
+    private static var fw_staticThemeColor: UIColor?
     
 }
 
 // MARK: - UIImageAsset+Theme
-extension Wrapper where Base: UIImageAsset {
+@_spi(FW) @objc extension UIImageAsset {
     
     /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
-    public var image: UIImage? {
-        return image(forStyle: ThemeManager.shared.style)
+    public var fw_image: UIImage? {
+        return fw_image(forStyle: ThemeManager.shared.style)
     }
 
     /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
-    public func image(forStyle style: ThemeStyle) -> UIImage? {
-        let isThemeAsset = propertyBool(forName: "isThemeAsset")
+    public func fw_image(forStyle style: ThemeStyle) -> UIImage? {
+        let isThemeAsset = fw_propertyBool(forName: "fw_isThemeAsset")
         if isThemeAsset {
             if #available(iOS 13.0, *) {
                 let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-                return base.image(with: traitCollection)
+                return self.image(with: traitCollection)
             }
         }
         
-        return themeObject?.object(forStyle: style)
+        return fw_themeObject?.object(forStyle: style)
     }
 
     /// 是否是主题图片资源，仅支持判断使用fwTheme创建的图片资源
-    public var isThemeAsset: Bool {
-        let isThemeAsset = propertyBool(forName: "isThemeAsset")
-        return isThemeAsset || themeObject != nil
+    public var fw_isThemeAsset: Bool {
+        let isThemeAsset = fw_propertyBool(forName: "fw_isThemeAsset")
+        return isThemeAsset || fw_themeObject != nil
     }
     
-    private var themeObject: ThemeObject<UIImage>? {
-        get { property(forName: "themeObject") as? ThemeObject<UIImage> }
-        set { setProperty(newValue, forName: "themeObject") }
+    private var fw_themeObject: ThemeObject<UIImage>? {
+        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
+        set { fw_setProperty(newValue, forName: "fw_themeObject") }
     }
     
     /// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
-    public static func themeLight(_ light: UIImage?, dark: UIImage?) -> UIImageAsset {
+    public static func fw_themeLight(_ light: UIImage?, dark: UIImage?) -> UIImageAsset {
         if #available(iOS 13.0, *) {
             let asset = UIImageAsset()
             if let light = light {
@@ -287,49 +280,49 @@ extension Wrapper where Base: UIImageAsset {
             if let dark = dark {
                 asset.register(dark, with: UITraitCollection(userInterfaceStyle: .dark))
             }
-            asset.fw.setPropertyBool(true, forName: "isThemeAsset")
+            asset.fw_setPropertyBool(true, forName: "fw_isThemeAsset")
             return asset
         } else {
-            return themeAsset { style in
+            return fw_themeAsset { style in
                 return style == .dark ? dark : light
             }
         }
     }
 
     /// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
-    public static func themeAsset(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImageAsset {
+    public static func fw_themeAsset(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImageAsset {
         let asset = UIImageAsset()
-        asset.fw.themeObject = ThemeObject(provider: provider)
+        asset.fw_themeObject = ThemeObject(provider: provider)
         return asset
     }
     
 }
 
 // MARK: - NSObject+Theme
-extension Wrapper where Base: NSObject {
+@_spi(FW) @objc extension NSObject {
     
     /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
-    public weak var themeContext: (NSObject & UITraitEnvironment)? {
+    public weak var fw_themeContext: (NSObject & UITraitEnvironment)? {
         get {
-            return property(forName: "themeContext") as? (NSObject & UITraitEnvironment)
+            return fw_property(forName: "fw_themeContext") as? (NSObject & UITraitEnvironment)
         }
         set {
             if #available(iOS 13.0, *) {
-                let oldContext: NSObject? = themeContext
-                setPropertyWeak(newValue, forName: "themeContext")
+                let oldContext: NSObject? = fw_themeContext
+                fw_setPropertyWeak(newValue, forName: "fw_themeContext")
                 
                 if let oldContext = oldContext {
-                    oldContext.fw.removeThemeListener(themeContextIdentifier)
-                    themeContextIdentifier = nil
+                    oldContext.fw_removeThemeListener(fw_themeContextIdentifier)
+                    fw_themeContextIdentifier = nil
                 }
                 
                 let newContext: NSObject? = newValue
                 if let newContext = newContext {
-                    let weakBase = base
-                    let identifier = newContext.fw.addThemeListener { [weak weakBase] style in
-                        weakBase?.fw.notifyThemeListeners(style)
+                    let weakBase = self
+                    let identifier = newContext.fw_addThemeListener { [weak weakBase] style in
+                        weakBase?.fw_notifyThemeListeners(style)
                     }
-                    themeContextIdentifier = identifier
+                    fw_themeContextIdentifier = identifier
                 }
             }
         }
@@ -337,10 +330,10 @@ extension Wrapper where Base: NSObject {
 
     /// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
     @discardableResult
-    public func addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String? {
+    public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String? {
         if #available(iOS 13.0, *) {
             let identifier = UUID().uuidString
-            let listeners = innerThemeListeners(true)
+            let listeners = fw_innerThemeListeners(true)
             listeners?.setObject(listener, forKey: identifier as NSString)
             return identifier
         }
@@ -348,44 +341,47 @@ extension Wrapper where Base: NSObject {
     }
 
     /// iOS13根据订阅唯一标志移除主题通知回调
-    public func removeThemeListener(_ identifier: String?) {
+    public func fw_removeThemeListener(_ identifier: String?) {
         guard let identifier = identifier else { return }
         if #available(iOS 13.0, *) {
-            let listeners = innerThemeListeners(false)
+            let listeners = fw_innerThemeListeners(false)
             listeners?.removeObject(forKey: identifier)
         }
     }
 
     /// iOS13移除所有主题通知回调，一般用于cell重用
-    public func removeAllThemeListeners() {
+    public func fw_removeAllThemeListeners() {
         if #available(iOS 13.0, *) {
-            let listeners = innerThemeListeners(false)
+            let listeners = fw_innerThemeListeners(false)
             listeners?.removeAllObjects()
         }
     }
     
-    private var themeContextIdentifier: String? {
-        get { property(forName: "themeContextIdentifier") as? String }
-        set { setPropertyCopy(newValue, forName: "themeContextIdentifier") }
+    private var fw_themeContextIdentifier: String? {
+        get { fw_property(forName: "fw_themeContextIdentifier") as? String }
+        set { fw_setPropertyCopy(newValue, forName: "fw_themeContextIdentifier") }
     }
     
     @available(iOS 13.0, *)
-    private func innerThemeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
-        var listeners = property(forName: "innerThemeListeners") as? NSMutableDictionary
+    private func fw_innerThemeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
+        var listeners = fw_property(forName: "fw_innerThemeListeners") as? NSMutableDictionary
         if listeners == nil && lazyload {
             listeners = NSMutableDictionary()
-            setProperty(listeners, forName: "innerThemeListeners")
+            fw_setProperty(listeners, forName: "fw_innerThemeListeners")
         }
         return listeners
     }
     
     @available(iOS 13.0, *)
-    fileprivate func notifyThemeListeners(_ style: ThemeStyle) {
+    fileprivate func fw_notifyThemeListeners(_ style: ThemeStyle) {
+        // TODO: 删除
+        self.fw_themeChanged(style)
+        
         // 1. 调用themeChanged钩子
-        base.themeChanged(style)
+        self.themeChanged(style)
         
         // 2. 调用themeListeners句柄
-        if let listeners = innerThemeListeners(false) {
+        if let listeners = fw_innerThemeListeners(false) {
             listeners.enumerateKeysAndObjects { _, obj, _ in
                 let listener = obj as? (ThemeStyle) -> Void
                 listener?(style)
@@ -393,10 +389,13 @@ extension Wrapper where Base: NSObject {
         }
         
         // 3. 调用renderTheme渲染钩子
-        if base.responds(to: #selector(ThemeObserver.renderTheme(_:))) {
-            base.renderTheme(style)
+        if self.responds(to: #selector(ThemeObserver.renderTheme(_:))) {
+            self.renderTheme(style)
         }
     }
+    
+    /// TODO: 删除
+    open func fw_themeChanged(_ style: ThemeStyle) {}
     
 }
 
@@ -436,7 +435,7 @@ internal class ThemeAutoloader: AutoloadProtocol {
             if style == oldStyle { return }
             
             let notifyObject: NSObject = selfObject
-            notifyObject.fw.notifyThemeListeners(style)
+            notifyObject.fw_notifyThemeListeners(style)
             if selfObject == UIScreen.main {
                 NotificationCenter.default.post(
                     name: .ThemeChanged,
@@ -453,29 +452,29 @@ internal class ThemeAutoloader: AutoloadProtocol {
 }
 
 // MARK: - UIImageView+Theme
-extension Wrapper where Base: UIImageView {
+@_spi(FW) @objc extension UIImageView {
     
     /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
-    public var themeImage: UIImage? {
+    public var fw_themeImage: UIImage? {
         get {
-            return property(forName: "themeImage") as? UIImage
+            return fw_property(forName: "fw_themeImage") as? UIImage
         }
         set {
-            setProperty(newValue, forName: "themeImage")
-            setProperty(nil, forName: "themeAsset")
-            base.image = newValue?.fw.image
+            fw_setProperty(newValue, forName: "fw_themeImage")
+            fw_setProperty(nil, forName: "fw_themeAsset")
+            self.image = newValue?.fw_image
         }
     }
 
     /// 设置主题图片资源，自动跟随系统改变，清空时需置为nil，二选一
-    public var themeAsset: UIImageAsset? {
+    public var fw_themeAsset: UIImageAsset? {
         get {
-            return property(forName: "themeAsset") as? UIImageAsset
+            return fw_property(forName: "fw_themeAsset") as? UIImageAsset
         }
         set {
-            setProperty(newValue, forName: "themeAsset")
-            setProperty(nil, forName: "themeImage")
-            base.image = newValue?.fw.image
+            fw_setProperty(newValue, forName: "fw_themeAsset")
+            fw_setProperty(nil, forName: "fw_themeImage")
+            self.image = newValue?.fw_image
         }
     }
     
@@ -486,11 +485,11 @@ extension Wrapper where Base: UIImageView {
     open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         
-        if let themeImage = fw.themeImage, themeImage.fw.isThemeImage {
-            self.image = themeImage.fw.image
+        if let themeImage = fw_themeImage, themeImage.fw_isThemeImage {
+            self.image = themeImage.fw_image
         }
-        if let themeAsset = fw.themeAsset, themeAsset.fw.isThemeAsset {
-            self.image = themeAsset.fw.image
+        if let themeAsset = fw_themeAsset, themeAsset.fw_isThemeAsset {
+            self.image = themeAsset.fw_image
         }
     }
     
