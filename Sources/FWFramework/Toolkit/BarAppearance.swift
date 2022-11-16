@@ -12,33 +12,33 @@ import FWObjC
 
 // MARK: - UINavigationBar+BarAppearance
 /// 导航栏视图分类，全局设置用[UINavigationBar appearance]。默认iOS15+启用appearance，iOS14及以下使用旧版本api
-extension Wrapper where Base: UINavigationBar {
+@_spi(FW) @objc extension UINavigationBar {
     
     /// 是否强制iOS13+启用新版样式，默认false，仅iOS15+才启用
-    public static var appearanceEnabled: Bool {
+    public static var fw_appearanceEnabled: Bool {
         get {
             if #available(iOS 15.0, *) {
                 return true
             } else if #available(iOS 13.0, *) {
-                return UINavigationBar.__appearanceEnabled
+                return UINavigationBar.fw_staticAppearanceEnabled
             }
             return false
         }
         set {
-            UINavigationBar.__appearanceEnabled = newValue
+            UINavigationBar.fw_staticAppearanceEnabled = newValue
         }
     }
     
     /// 设置全局按钮样式属性，nil时系统默认
-    public static var buttonAttributes: [NSAttributedString.Key: Any]? {
+    public static var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return UINavigationBar.__buttonAttributes
+            return UINavigationBar.fw_staticButtonAttributes
         }
         set {
-            UINavigationBar.__buttonAttributes = newValue
+            UINavigationBar.fw_staticButtonAttributes = newValue
             guard let buttonAttributes = newValue else { return }
             
-            if !UINavigationBar.fw.appearanceEnabled {
+            if !UINavigationBar.fw_appearanceEnabled {
                 let appearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UINavigationBar.self])
                 let states: [UIControl.State] = [.normal, .highlighted, .disabled, .focused]
                 for state in states {
@@ -50,126 +50,129 @@ extension Wrapper where Base: UINavigationBar {
         }
     }
     
+    private static var fw_staticAppearanceEnabled = false
+    private static var fw_staticButtonAttributes: [NSAttributedString.Key: Any]?
+    
     /// 导航栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
-    public var appearance: UINavigationBarAppearance {
-        if let appearance = property(forName: "appearance") as? UINavigationBarAppearance {
+    public var fw_appearance: UINavigationBarAppearance {
+        if let appearance = fw_property(forName: "fw_appearance") as? UINavigationBarAppearance {
             return appearance
         } else {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithTransparentBackground()
-            setProperty(appearance, forName: "appearance")
+            fw_setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
 
     /// 手工更新导航栏样式
     @available(iOS 13.0, *)
-    public func updateAppearance() {
-        base.standardAppearance = appearance
-        base.compactAppearance = appearance
-        base.scrollEdgeAppearance = appearance
+    public func fw_updateAppearance() {
+        self.standardAppearance = fw_appearance
+        self.compactAppearance = fw_appearance
+        self.scrollEdgeAppearance = fw_appearance
         if #available(iOS 15.0, *) {
-            base.compactScrollEdgeAppearance = appearance
+            self.compactScrollEdgeAppearance = fw_appearance
         }
     }
 
     /// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var isTranslucent: Bool {
+    public var fw_isTranslucent: Bool {
         get {
-            return propertyBool(forName: "isTranslucent")
+            return fw_propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
-                    appearance.configureWithDefaultBackground()
+                    fw_appearance.configureWithDefaultBackground()
                 } else {
-                    appearance.configureWithTransparentBackground()
+                    fw_appearance.configureWithTransparentBackground()
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if newValue {
-                    base.setBackgroundImage(nil, for: .default)
+                    self.setBackgroundImage(nil, for: .default)
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                 }
             }
         }
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var foregroundColor: UIColor? {
+    public var fw_foregroundColor: UIColor? {
         get {
-            return base.tintColor
+            return self.tintColor
         }
         set {
-            base.tintColor = newValue
-            updateTitleAttributes()
-            updateButtonAttributes()
+            self.tintColor = newValue
+            fw_updateTitleAttributes()
+            fw_updateButtonAttributes()
         }
     }
 
     /// 单独设置标题颜色，nil时显示前景颜色
-    public var titleAttributes: [NSAttributedString.Key: Any]? {
+    public var fw_titleAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return property(forName: "titleAttributes") as? [NSAttributedString.Key: Any]
+            return fw_property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            setProperty(newValue, forName: "titleAttributes")
-            updateTitleAttributes()
+            fw_setProperty(newValue, forName: "fw_titleAttributes")
+            fw_updateTitleAttributes()
         }
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
-    public var buttonAttributes: [NSAttributedString.Key: Any]? {
+    public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return property(forName: "buttonAttributes") as? [NSAttributedString.Key: Any]
+            return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            setProperty(newValue, forName: "buttonAttributes")
-            updateButtonAttributes()
+            fw_setProperty(newValue, forName: "fw_buttonAttributes")
+            fw_updateButtonAttributes()
         }
     }
     
-    private func updateTitleAttributes() {
-        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-            var attributes = appearance.titleTextAttributes
-            attributes[NSAttributedString.Key.foregroundColor] = base.tintColor
-            if let titleAttributes = titleAttributes {
+    private func fw_updateTitleAttributes() {
+        if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+            var attributes = fw_appearance.titleTextAttributes
+            attributes[NSAttributedString.Key.foregroundColor] = self.tintColor
+            if let titleAttributes = fw_titleAttributes {
                 attributes.merge(titleAttributes) { _, last in last }
             }
-            appearance.titleTextAttributes = attributes
+            fw_appearance.titleTextAttributes = attributes
             
-            var largeAttributes = appearance.largeTitleTextAttributes
-            largeAttributes[NSAttributedString.Key.foregroundColor] = base.tintColor
-            if let titleAttributes = titleAttributes {
+            var largeAttributes = fw_appearance.largeTitleTextAttributes
+            largeAttributes[NSAttributedString.Key.foregroundColor] = self.tintColor
+            if let titleAttributes = fw_titleAttributes {
                 largeAttributes.merge(titleAttributes) { _, last in last }
             }
-            appearance.largeTitleTextAttributes = largeAttributes
-            updateAppearance()
+            fw_appearance.largeTitleTextAttributes = largeAttributes
+            fw_updateAppearance()
         }} else {
-            var attributes = base.titleTextAttributes ?? [:]
-            attributes[NSAttributedString.Key.foregroundColor] = base.tintColor
-            if let titleAttributes = titleAttributes {
+            var attributes = self.titleTextAttributes ?? [:]
+            attributes[NSAttributedString.Key.foregroundColor] = self.tintColor
+            if let titleAttributes = fw_titleAttributes {
                 attributes.merge(titleAttributes) { _, last in last }
             }
-            base.titleTextAttributes = attributes
+            self.titleTextAttributes = attributes
             
-            var largeAttributes = base.largeTitleTextAttributes ?? [:]
-            largeAttributes[NSAttributedString.Key.foregroundColor] = base.tintColor
-            if let titleAttributes = titleAttributes {
+            var largeAttributes = self.largeTitleTextAttributes ?? [:]
+            largeAttributes[NSAttributedString.Key.foregroundColor] = self.tintColor
+            if let titleAttributes = fw_titleAttributes {
                 largeAttributes.merge(titleAttributes) { _, last in last }
             }
-            base.largeTitleTextAttributes = largeAttributes
+            self.largeTitleTextAttributes = largeAttributes
         }
     }
     
-    private func updateButtonAttributes() {
-        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-            guard let buttonAttributes = buttonAttributes ?? UINavigationBar.__buttonAttributes else { return }
+    private func fw_updateButtonAttributes() {
+        if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+            guard let buttonAttributes = fw_buttonAttributes ?? UINavigationBar.fw_staticButtonAttributes else { return }
             
-            let appearances = [appearance.buttonAppearance, appearance.doneButtonAppearance, appearance.backButtonAppearance]
+            let appearances = [fw_appearance.buttonAppearance, fw_appearance.doneButtonAppearance, fw_appearance.backButtonAppearance]
             for appearance in appearances {
                 let stateAppearances = [appearance.normal, appearance.highlighted, appearance.disabled]
                 for stateAppearance in stateAppearances {
@@ -178,455 +181,436 @@ extension Wrapper where Base: UINavigationBar {
                     stateAppearance.titleTextAttributes = attributes
                 }
             }
-            updateAppearance()
+            fw_updateAppearance()
         }}
     }
 
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var backgroundColor: UIColor? {
+    public var fw_backgroundColor: UIColor? {
         get {
-            return property(forName: "backgroundColor") as? UIColor
+            return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setProperty(newValue, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
-                    appearance.backgroundColor = newValue
-                    appearance.backgroundImage = nil
+                    fw_appearance.backgroundColor = newValue
+                    fw_appearance.backgroundImage = nil
                 } else {
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = image ?? UIImage()
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = image ?? UIImage()
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if isTranslucent {
-                    base.barTintColor = nil
-                    base.setBackgroundImage(nil, for: .default)
+                    self.barTintColor = nil
+                    self.setBackgroundImage(nil, for: .default)
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    base.setBackgroundImage(image ?? UIImage(), for: .default)
+                    self.setBackgroundImage(image ?? UIImage(), for: .default)
                 }
             }
         }
     }
 
     /// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
-    public var backgroundImage: UIImage? {
+    public var fw_backgroundImage: UIImage? {
         get {
-            return property(forName: "backgroundImage") as? UIImage
+            return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(newValue, forName: "backgroundImage")
-            let image = newValue?.fw.image ?? UIImage()
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = image
-                updateAppearance()
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            let image = newValue?.fw_image ?? UIImage()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(image, for: .default)
+                self.barTintColor = nil
+                self.setBackgroundImage(image, for: .default)
             }
         }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var backgroundTransparent: Bool {
+    public var fw_backgroundTransparent: Bool {
         get {
-            return propertyBool(forName: "backgroundTransparent")
+            return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            setPropertyBool(newValue, forName: "backgroundTransparent")
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
+            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = image
-                updateAppearance()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(image, for: .default)
+                self.barTintColor = nil
+                self.setBackgroundImage(image, for: .default)
             }
         }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var shadowColor: UIColor? {
+    public var fw_shadowColor: UIColor? {
         get {
-            return property(forName: "shadowColor") as? UIColor
+            return fw_property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "shadowColor")
-            setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = newValue
-                appearance.shadowImage = nil
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowColor")
+            fw_setProperty(nil, forName: "fw_shadowImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = newValue
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
             }} else {
                 var image: UIImage?
                 if let color = newValue {
                     image = UIImage.fw.image(color: color)
                 }
-                base.shadowImage = image ?? UIImage()
+                self.shadowImage = image ?? UIImage()
             }
         }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var shadowImage: UIImage? {
+    public var fw_shadowImage: UIImage? {
         get {
-            return property(forName: "shadowImage") as? UIImage
+            return fw_property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            setProperty(newValue, forName: "shadowImage")
-            setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = newValue?.fw.image
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowImage")
+            fw_setProperty(nil, forName: "fw_shadowColor")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = newValue?.fw_image
+                fw_updateAppearance()
             }} else {
-                base.shadowImage = newValue?.fw.image ?? UIImage()
+                self.shadowImage = newValue?.fw_image ?? UIImage()
             }
         }
     }
 
     /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
-    public var backImage: UIImage? {
+    public var fw_backImage: UIImage? {
         get {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                return appearance.backIndicatorImage
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                return fw_appearance.backIndicatorImage
             }}
-            return base.backIndicatorImage
+            return self.backIndicatorImage
         }
         set {
             let image = newValue?.fw.image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0), color: nil)
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.setBackIndicatorImage(image, transitionMaskImage: image)
-                updateAppearance()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.setBackIndicatorImage(image, transitionMaskImage: image)
+                fw_updateAppearance()
             }} else {
-                base.backIndicatorImage = image
-                base.backIndicatorTransitionMaskImage = image
+                self.backIndicatorImage = image
+                self.backIndicatorTransitionMaskImage = image
             }
         }
     }
     
-    fileprivate func notifyThemeChanged() {
-        if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
-                    appearance.backgroundColor = backgroundColor.fw.color
-                    appearance.backgroundImage = nil
-                } else {
-                    let image = UIImage.fw.image(color: backgroundColor.fw.color) ?? UIImage()
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = image
-                }
-                updateAppearance()
-            }} else {
-                if isTranslucent {
-                    base.barTintColor = backgroundColor.fw.color
-                    base.setBackgroundImage(nil, for: .default)
-                } else {
-                    let image = UIImage.fw.image(color: backgroundColor.fw.color) ?? UIImage()
-                    base.barTintColor = nil
-                    base.setBackgroundImage(image, for: .default)
-                }
-            }
-        }
-        
-        if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
-            let image = backgroundImage.fw.image ?? UIImage()
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = image
-                updateAppearance()
-            }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(image, for: .default)
-            }
-        }
-        
-        if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = shadowColor.fw.color
-                appearance.shadowImage = nil
-                updateAppearance()
-            }} else {
-                base.shadowImage = UIImage.fw.image(color: shadowColor.fw.color) ?? UIImage()
-            }
-        }
-        
-        if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = shadowImage.fw.image
-                updateAppearance()
-            }} else {
-                base.shadowImage = shadowImage.fw.image ?? UIImage()
-            }
-        }
-    }
-    
-}
-
-extension UINavigationBar {
-    
-    fileprivate static var __appearanceEnabled = false
-    fileprivate static var __buttonAttributes: [NSAttributedString.Key: Any]?
-    
-    @objc open override func themeChanged(_ style: ThemeStyle) {
+    open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         
-        fw.notifyThemeChanged()
+        if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                if isTranslucent {
+                    fw_appearance.backgroundColor = backgroundColor.fw_color
+                    fw_appearance.backgroundImage = nil
+                } else {
+                    let image = UIImage.fw.image(color: backgroundColor.fw_color) ?? UIImage()
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = image
+                }
+                fw_updateAppearance()
+            }} else {
+                if isTranslucent {
+                    self.barTintColor = backgroundColor.fw_color
+                    self.setBackgroundImage(nil, for: .default)
+                } else {
+                    let image = UIImage.fw.image(color: backgroundColor.fw_color) ?? UIImage()
+                    self.barTintColor = nil
+                    self.setBackgroundImage(image, for: .default)
+                }
+            }
+        }
+        
+        if let backgroundImage = fw_backgroundImage, backgroundImage.fw_isThemeImage {
+            let image = backgroundImage.fw_image ?? UIImage()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = image
+                fw_updateAppearance()
+            }} else {
+                self.barTintColor = nil
+                self.setBackgroundImage(image, for: .default)
+            }
+        }
+        
+        if let shadowColor = fw_shadowColor, shadowColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = shadowColor.fw_color
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
+            }} else {
+                self.shadowImage = UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage()
+            }
+        }
+        
+        if let shadowImage = fw_shadowImage, shadowImage.fw_isThemeImage {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = shadowImage.fw_image
+                fw_updateAppearance()
+            }} else {
+                self.shadowImage = shadowImage.fw_image ?? UIImage()
+            }
+        }
     }
     
 }
 
 // MARK: - UITabBar+BarAppearance
 /// 标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
-extension Wrapper where Base: UITabBar {
+@_spi(FW) @objc extension UITabBar {
     
     /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
-    public var appearance: UITabBarAppearance {
-        if let appearance = property(forName: "appearance") as? UITabBarAppearance {
+    public var fw_appearance: UITabBarAppearance {
+        if let appearance = fw_property(forName: "fw_appearance") as? UITabBarAppearance {
             return appearance
         } else {
             let appearance = UITabBarAppearance()
             appearance.configureWithTransparentBackground()
-            setProperty(appearance, forName: "appearance")
+            fw_setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
 
     /// 手工更新标签栏样式
     @available(iOS 13.0, *)
-    public func updateAppearance() {
-        base.standardAppearance = appearance
+    public func fw_updateAppearance() {
+        self.standardAppearance = fw_appearance
         if #available(iOS 15.0, *) {
-            base.scrollEdgeAppearance = appearance
+            self.scrollEdgeAppearance = fw_appearance
         }
     }
 
     /// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var isTranslucent: Bool {
+    public var fw_isTranslucent: Bool {
         get {
-            return propertyBool(forName: "isTranslucent")
+            return fw_propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
-                    appearance.configureWithDefaultBackground()
+                    fw_appearance.configureWithDefaultBackground()
                 } else {
-                    appearance.configureWithTransparentBackground()
+                    fw_appearance.configureWithTransparentBackground()
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if newValue {
-                    base.backgroundImage = nil
+                    self.backgroundImage = nil
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                 }
             }
         }
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var foregroundColor: UIColor? {
-        get { return base.tintColor }
-        set { base.tintColor = newValue }
+    public var fw_foregroundColor: UIColor? {
+        get { return self.tintColor }
+        set { self.tintColor = newValue }
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
-    public var backgroundColor: UIColor? {
+    public var fw_backgroundColor: UIColor? {
         get {
-            return property(forName: "backgroundColor") as? UIColor
+            return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setProperty(newValue, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
-                    appearance.backgroundColor = newValue
-                    appearance.backgroundImage = nil
+                    fw_appearance.backgroundColor = newValue
+                    fw_appearance.backgroundImage = nil
                 } else {
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = image
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = image
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if isTranslucent {
-                    base.barTintColor = nil
-                    base.backgroundImage = nil
+                    self.barTintColor = nil
+                    self.backgroundImage = nil
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    base.backgroundImage = image
+                    self.backgroundImage = image
                 }
             }
         }
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
-    public var backgroundImage: UIImage? {
+    public var fw_backgroundImage: UIImage? {
         get {
-            return property(forName: "backgroundImage") as? UIImage
+            return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(newValue, forName: "backgroundImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = newValue?.fw.image
-                updateAppearance()
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = newValue?.fw_image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.backgroundImage = newValue?.fw.image
+                self.barTintColor = nil
+                self.backgroundImage = newValue?.fw_image
             }
         }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var backgroundTransparent: Bool {
+    public var fw_backgroundTransparent: Bool {
         get {
-            return propertyBool(forName: "backgroundTransparent")
+            return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            setPropertyBool(newValue, forName: "backgroundTransparent")
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
+            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = image
-                updateAppearance()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.backgroundImage = image
+                self.barTintColor = nil
+                self.backgroundImage = image
             }
         }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var shadowColor: UIColor? {
+    public var fw_shadowColor: UIColor? {
         get {
-            return property(forName: "shadowColor") as? UIColor
+            return fw_property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "shadowColor")
-            setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = newValue
-                appearance.shadowImage = nil
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowColor")
+            fw_setProperty(nil, forName: "fw_shadowImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = newValue
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
             }} else {
                 var image: UIImage?
                 if let color = newValue {
                     image = UIImage.fw.image(color: color)
                 }
-                base.shadowImage = image ?? UIImage()
+                self.shadowImage = image ?? UIImage()
             }
         }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var shadowImage: UIImage? {
+    public var fw_shadowImage: UIImage? {
         get {
-            return property(forName: "shadowImage") as? UIImage
+            return fw_property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            setProperty(newValue, forName: "shadowImage")
-            setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = newValue?.fw.image
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowImage")
+            fw_setProperty(nil, forName: "fw_shadowColor")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = newValue?.fw_image
+                fw_updateAppearance()
             }} else {
-                base.shadowImage = newValue?.fw.image ?? UIImage()
+                self.shadowImage = newValue?.fw_image ?? UIImage()
             }
         }
     }
     
-    fileprivate func notifyThemeChanged() {
-        if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
-                    appearance.backgroundColor = backgroundColor.fw.color
-                    appearance.backgroundImage = nil
-                } else {
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw.color)
-                }
-                updateAppearance()
-            }} else {
-                if isTranslucent {
-                    base.barTintColor = backgroundColor.fw.color
-                    base.backgroundImage = nil
-                } else {
-                    base.barTintColor = nil
-                    base.backgroundImage = UIImage.fw.image(color: backgroundColor.fw.color)
-                }
-            }
-        }
-        
-        if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = backgroundImage.fw.image
-                updateAppearance()
-            }} else {
-                base.barTintColor = nil
-                base.backgroundImage = backgroundImage.fw.image
-            }
-        }
-        
-        if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = shadowColor.fw.color
-                appearance.shadowImage = nil
-                updateAppearance()
-            }} else {
-                base.shadowImage = UIImage.fw.image(color: shadowColor.fw.color) ?? UIImage()
-            }
-        }
-        
-        if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = shadowImage.fw.image
-                updateAppearance()
-            }} else {
-                base.shadowImage = shadowImage.fw.image ?? UIImage()
-            }
-        }
-    }
-    
-}
-
-extension UITabBar {
-    
-    @objc open override func themeChanged(_ style: ThemeStyle) {
+    open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         
-        fw.notifyThemeChanged()
+        if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                if isTranslucent {
+                    fw_appearance.backgroundColor = backgroundColor.fw_color
+                    fw_appearance.backgroundImage = nil
+                } else {
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                }
+                fw_updateAppearance()
+            }} else {
+                if isTranslucent {
+                    self.barTintColor = backgroundColor.fw_color
+                    self.backgroundImage = nil
+                } else {
+                    self.barTintColor = nil
+                    self.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                }
+            }
+        }
+        
+        if let backgroundImage = fw_backgroundImage, backgroundImage.fw_isThemeImage {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = backgroundImage.fw_image
+                fw_updateAppearance()
+            }} else {
+                self.barTintColor = nil
+                self.backgroundImage = backgroundImage.fw_image
+            }
+        }
+        
+        if let shadowColor = fw_shadowColor, shadowColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = shadowColor.fw_color
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
+            }} else {
+                self.shadowImage = UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage()
+            }
+        }
+        
+        if let shadowImage = fw_shadowImage, shadowImage.fw_isThemeImage {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = shadowImage.fw_image
+                fw_updateAppearance()
+            }} else {
+                self.shadowImage = shadowImage.fw_image ?? UIImage()
+            }
+        }
     }
     
 }
@@ -634,85 +618,85 @@ extension UITabBar {
 // MARK: - UIToolbar+BarAppearance
 /// 工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
 /// 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
-extension Wrapper where Base: UIToolbar {
+@_spi(FW) @objc extension UIToolbar {
     
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
-    public var appearance: UIToolbarAppearance {
-        if let appearance = property(forName: "appearance") as? UIToolbarAppearance {
+    public var fw_appearance: UIToolbarAppearance {
+        if let appearance = fw_property(forName: "fw_appearance") as? UIToolbarAppearance {
             return appearance
         } else {
             let appearance = UIToolbarAppearance()
             appearance.configureWithTransparentBackground()
-            setProperty(appearance, forName: "appearance")
+            fw_setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
 
     /// 手工更新工具栏样式
     @available(iOS 13.0, *)
-    public func updateAppearance() {
-        base.standardAppearance = appearance
-        base.compactAppearance = appearance
+    public func fw_updateAppearance() {
+        self.standardAppearance = fw_appearance
+        self.compactAppearance = fw_appearance
         if #available(iOS 15.0, *) {
-            base.scrollEdgeAppearance = appearance
-            base.compactScrollEdgeAppearance = appearance
+            self.scrollEdgeAppearance = fw_appearance
+            self.compactScrollEdgeAppearance = fw_appearance
         }
     }
 
     /// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var isTranslucent: Bool {
+    public var fw_isTranslucent: Bool {
         get {
-            return propertyBool(forName: "isTranslucent")
+            return fw_propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            setPropertyBool(newValue, forName: "isTranslucent")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if newValue {
-                    appearance.configureWithDefaultBackground()
+                    fw_appearance.configureWithDefaultBackground()
                 } else {
-                    appearance.configureWithTransparentBackground()
+                    fw_appearance.configureWithTransparentBackground()
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if newValue {
-                    base.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
+                    self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                 }
             }
         }
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var foregroundColor: UIColor? {
+    public var fw_foregroundColor: UIColor? {
         get {
-            return base.tintColor
+            return self.tintColor
         }
         set {
-            base.tintColor = newValue
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                updateAppearance()
+            self.tintColor = newValue
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_updateAppearance()
             }}
         }
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
-    public var buttonAttributes: [NSAttributedString.Key: Any]? {
+    public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return property(forName: "buttonAttributes") as? [NSAttributedString.Key: Any]
+            return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            setProperty(newValue, forName: "buttonAttributes")
-            updateButtonAttributes()
+            fw_setProperty(newValue, forName: "fw_buttonAttributes")
+            fw_updateButtonAttributes()
         }
     }
     
-    private func updateButtonAttributes() {
-        if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-            guard let buttonAttributes = buttonAttributes else { return }
+    private func fw_updateButtonAttributes() {
+        if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+            guard let buttonAttributes = fw_buttonAttributes else { return }
             
-            let appearances = [appearance.buttonAppearance, appearance.doneButtonAppearance]
+            let appearances = [fw_appearance.buttonAppearance, fw_appearance.doneButtonAppearance]
             for appearance in appearances {
                 let stateAppearances = [appearance.normal, appearance.highlighted, appearance.disabled]
                 for stateAppearance in stateAppearances {
@@ -721,208 +705,206 @@ extension Wrapper where Base: UIToolbar {
                     stateAppearance.titleTextAttributes = attributes
                 }
             }
-            updateAppearance()
+            fw_updateAppearance()
         }}
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
-    public var backgroundColor: UIColor? {
+    public var fw_backgroundColor: UIColor? {
         get {
-            return property(forName: "backgroundColor") as? UIColor
+            return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
+            fw_setProperty(newValue, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 if isTranslucent {
-                    appearance.backgroundColor = newValue
-                    appearance.backgroundImage = nil
+                    fw_appearance.backgroundColor = newValue
+                    fw_appearance.backgroundImage = nil
                 } else {
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = image
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = image
                 }
-                updateAppearance()
+                fw_updateAppearance()
             }} else {
                 if isTranslucent {
-                    base.barTintColor = nil
-                    base.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
+                    self.barTintColor = nil
+                    self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
                 } else {
-                    base.barTintColor = nil
+                    self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
                         image = UIImage.fw.image(color: color)
                     }
-                    base.setBackgroundImage(image, forToolbarPosition: .any, barMetrics: .default)
+                    self.setBackgroundImage(image, forToolbarPosition: .any, barMetrics: .default)
                 }
             }
         }
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
-    public var backgroundImage: UIImage? {
+    public var fw_backgroundImage: UIImage? {
         get {
-            return property(forName: "backgroundImage") as? UIImage
+            return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(newValue, forName: "backgroundImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = newValue?.fw.image
-                updateAppearance()
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = newValue?.fw_image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(newValue?.fw.image, forToolbarPosition: .any, barMetrics: .default)
+                self.barTintColor = nil
+                self.setBackgroundImage(newValue?.fw_image, forToolbarPosition: .any, barMetrics: .default)
             }
         }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var backgroundTransparent: Bool {
+    public var fw_backgroundTransparent: Bool {
         get {
-            return propertyBool(forName: "backgroundTransparent")
+            return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            setPropertyBool(newValue, forName: "backgroundTransparent")
-            setProperty(nil, forName: "backgroundColor")
-            setProperty(nil, forName: "backgroundImage")
+            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw_setProperty(nil, forName: "fw_backgroundColor")
+            fw_setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = image
-                updateAppearance()
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = image
+                fw_updateAppearance()
             }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(image, forToolbarPosition: .any, barMetrics: .default)
+                self.barTintColor = nil
+                self.setBackgroundImage(image, forToolbarPosition: .any, barMetrics: .default)
             }
         }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var shadowColor: UIColor? {
+    public var fw_shadowColor: UIColor? {
         get {
-            return property(forName: "shadowColor") as? UIColor
+            return fw_property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "shadowColor")
-            setProperty(nil, forName: "shadowImage")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = newValue
-                appearance.shadowImage = nil
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowColor")
+            fw_setProperty(nil, forName: "fw_shadowImage")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = newValue
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
             }} else {
                 var image: UIImage?
                 if let color = newValue {
                     image = UIImage.fw.image(color: color)
                 }
-                base.setShadowImage(image ?? UIImage(), forToolbarPosition: .any)
+                self.setShadowImage(image ?? UIImage(), forToolbarPosition: .any)
             }
         }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var shadowImage: UIImage? {
+    public var fw_shadowImage: UIImage? {
         get {
-            return property(forName: "shadowImage") as? UIImage
+            return fw_property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            setProperty(newValue, forName: "shadowImage")
-            setProperty(nil, forName: "shadowColor")
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = newValue?.fw.image
-                updateAppearance()
+            fw_setProperty(newValue, forName: "fw_shadowImage")
+            fw_setProperty(nil, forName: "fw_shadowColor")
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = newValue?.fw_image
+                fw_updateAppearance()
             }} else {
-                base.setShadowImage(newValue?.fw.image ?? UIImage(), forToolbarPosition: .any)
+                self.setShadowImage(newValue?.fw_image ?? UIImage(), forToolbarPosition: .any)
+            }
+        }
+    }
+    
+    open override func themeChanged(_ style: ThemeStyle) {
+        super.themeChanged(style)
+        
+        if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                if isTranslucent {
+                    fw_appearance.backgroundColor = backgroundColor.fw_color
+                    fw_appearance.backgroundImage = nil
+                } else {
+                    fw_appearance.backgroundColor = nil
+                    fw_appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                }
+                fw_updateAppearance()
+            }} else {
+                if isTranslucent {
+                    self.barTintColor = backgroundColor.fw_color
+                    self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
+                } else {
+                    self.barTintColor = nil
+                    self.setBackgroundImage(UIImage.fw.image(color: backgroundColor.fw_color), forToolbarPosition: .any, barMetrics: .default)
+                }
+            }
+        }
+        
+        if let backgroundImage = fw_backgroundImage, backgroundImage.fw_isThemeImage {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.backgroundColor = nil
+                fw_appearance.backgroundImage = backgroundImage.fw_image
+                fw_updateAppearance()
+            }} else {
+                self.barTintColor = nil
+                self.setBackgroundImage(backgroundImage.fw_image, forToolbarPosition: .any, barMetrics: .default)
+            }
+        }
+        
+        if let shadowColor = fw_shadowColor, shadowColor.fw_isThemeColor {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = shadowColor.fw_color
+                fw_appearance.shadowImage = nil
+                fw_updateAppearance()
+            }} else {
+                self.setShadowImage(UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage(), forToolbarPosition: .any)
+            }
+        }
+        
+        if let shadowImage = fw_shadowImage, shadowImage.fw_isThemeImage {
+            if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+                fw_appearance.shadowColor = nil
+                fw_appearance.shadowImage = shadowImage.fw_image
+                fw_updateAppearance()
+            }} else {
+                self.setShadowImage(shadowImage.fw_image ?? UIImage(), forToolbarPosition: .any)
             }
         }
     }
 
     /// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
-    public var barPosition: UIBarPosition {
+    public var fw_barPosition: UIBarPosition {
         get {
-            return .init(rawValue: propertyInt(forName: "barPosition")) ?? .any
+            return .init(rawValue: fw_propertyInt(forName: "fw_barPosition")) ?? .any
         }
         set {
-            setPropertyInt(newValue.rawValue, forName: "barPosition")
-            toolbarDelegate.barPosition = newValue
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_barPosition")
+            fw_toolbarDelegate.barPosition = newValue
         }
     }
     
-    private var toolbarDelegate: UIToolbar.ToolbarDelegate {
-        if let delegate = property(forName: "toolbarDelegate") as? UIToolbar.ToolbarDelegate {
+    private var fw_toolbarDelegate: ToolbarDelegate {
+        if let delegate = fw_property(forName: "fw_toolbarDelegate") as? ToolbarDelegate {
             return delegate
         } else {
-            let delegate = UIToolbar.ToolbarDelegate()
-            base.delegate = delegate
-            setProperty(delegate, forName: "toolbarDelegate")
+            let delegate = ToolbarDelegate()
+            self.delegate = delegate
+            fw_setProperty(delegate, forName: "fw_toolbarDelegate")
             return delegate
         }
     }
     
-    fileprivate func notifyThemeChanged() {
-        if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
-                    appearance.backgroundColor = backgroundColor.fw.color
-                    appearance.backgroundImage = nil
-                } else {
-                    appearance.backgroundColor = nil
-                    appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw.color)
-                }
-                updateAppearance()
-            }} else {
-                if isTranslucent {
-                    base.barTintColor = backgroundColor.fw.color
-                    base.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
-                } else {
-                    base.barTintColor = nil
-                    base.setBackgroundImage(UIImage.fw.image(color: backgroundColor.fw.color), forToolbarPosition: .any, barMetrics: .default)
-                }
-            }
-        }
-        
-        if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.backgroundColor = nil
-                appearance.backgroundImage = backgroundImage.fw.image
-                updateAppearance()
-            }} else {
-                base.barTintColor = nil
-                base.setBackgroundImage(backgroundImage.fw.image, forToolbarPosition: .any, barMetrics: .default)
-            }
-        }
-        
-        if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = shadowColor.fw.color
-                appearance.shadowImage = nil
-                updateAppearance()
-            }} else {
-                base.setShadowImage(UIImage.fw.image(color: shadowColor.fw.color) ?? UIImage(), forToolbarPosition: .any)
-            }
-        }
-        
-        if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
-            if UINavigationBar.fw.appearanceEnabled { if #available(iOS 13.0, *) {
-                appearance.shadowColor = nil
-                appearance.shadowImage = shadowImage.fw.image
-                updateAppearance()
-            }} else {
-                base.setShadowImage(shadowImage.fw.image ?? UIImage(), forToolbarPosition: .any)
-            }
-        }
-    }
-    
-}
-
-extension UIToolbar {
-    
-    fileprivate class ToolbarDelegate: NSObject, UIToolbarDelegate {
+    private class ToolbarDelegate: NSObject, UIToolbarDelegate {
         
         var barPosition: UIBarPosition = .any
         
@@ -930,12 +912,6 @@ extension UIToolbar {
             return barPosition
         }
         
-    }
-    
-    @objc open override func themeChanged(_ style: ThemeStyle) {
-        super.themeChanged(style)
-        
-        fw.notifyThemeChanged()
     }
     
 }
