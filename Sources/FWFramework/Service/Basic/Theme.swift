@@ -159,9 +159,8 @@ import FWObjC
 
     /// 指定主题颜色，快速生成当前图片对应的主题图片
     public func fw_themeImage(color themeColor: UIColor) -> UIImage {
-        let weakBase = self
         return UIImage.fw_themeImage { style in
-            guard let image = weakBase.fw_image(forStyle: style) else { return nil }
+            guard let image = self.fw_image(forStyle: style) else { return nil }
             let color = themeColor.fw_color(forStyle: style)
             
             UIGraphicsBeginImageContextWithOptions(image.size, false, 0)
@@ -318,9 +317,8 @@ import FWObjC
                 
                 let newContext: NSObject? = newValue
                 if let newContext = newContext {
-                    let weakBase = self
-                    let identifier = newContext.fw_addThemeListener { [weak weakBase] style in
-                        weakBase?.fw_notifyThemeListeners(style)
+                    let identifier = newContext.fw_addThemeListener { [weak self] style in
+                        self?.fw_notifyThemeChanged(style)
                     }
                     fw_themeContextIdentifier = identifier
                 }
@@ -373,10 +371,7 @@ import FWObjC
     }
     
     @available(iOS 13.0, *)
-    fileprivate func fw_notifyThemeListeners(_ style: ThemeStyle) {
-        // TODO: 删除
-        self.fw_themeChanged(style)
-        
+    fileprivate func fw_notifyThemeChanged(_ style: ThemeStyle) {
         // 1. 调用themeChanged钩子
         self.themeChanged(style)
         
@@ -393,9 +388,6 @@ import FWObjC
             self.renderTheme(style)
         }
     }
-    
-    /// TODO: 删除
-    open func fw_themeChanged(_ style: ThemeStyle) {}
     
 }
 
@@ -435,7 +427,7 @@ internal class ThemeAutoloader: AutoloadProtocol {
             if style == oldStyle { return }
             
             let notifyObject: NSObject = selfObject
-            notifyObject.fw_notifyThemeListeners(style)
+            notifyObject.fw_notifyThemeChanged(style)
             if selfObject == UIScreen.main {
                 NotificationCenter.default.post(
                     name: .ThemeChanged,
