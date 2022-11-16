@@ -12,14 +12,14 @@ import FWObjC
 
 // MARK: - CADisplayLink+QuartzCore
 /// 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
-extension Wrapper where Base: CADisplayLink {
+@_spi(FW) @objc extension CADisplayLink {
     
     /// 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameters:
     ///   - target: 目标
     ///   - selector: 方法
     /// - Returns: CADisplayLink
-    public static func commonDisplayLink(target: Any, selector: Selector) -> CADisplayLink {
+    public static func fw_commonDisplayLink(target: Any, selector: Selector) -> CADisplayLink {
         let displayLink = CADisplayLink(target: target, selector: selector)
         displayLink.add(to: .current, forMode: .common)
         return displayLink
@@ -28,8 +28,8 @@ extension Wrapper where Base: CADisplayLink {
     /// 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
-    public static func commonDisplayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        let displayLink = displayLink(block: block)
+    public static func fw_commonDisplayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
+        let displayLink = fw_displayLink(block: block)
         displayLink.add(to: .current, forMode: .common)
         return displayLink
     }
@@ -39,68 +39,60 @@ extension Wrapper where Base: CADisplayLink {
     /// 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
-    public static func displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.__displayLinkAction(_:)))
-        objc_setAssociatedObject(displayLink, &CADisplayLink.__displayLinkActionKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    public static func fw_displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
+        let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.fw_displayLinkAction(_:)))
+        objc_setAssociatedObject(displayLink, &CADisplayLink.fw_displayLinkActionKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         return displayLink
     }
     
-}
-
-extension CADisplayLink {
+    private static var fw_displayLinkActionKey = "fw_displayLinkAction"
     
-    fileprivate static var __displayLinkActionKey = "displayLinkAction"
-    
-    @objc fileprivate class func __displayLinkAction(_ displayLink: CADisplayLink) {
-        let block = objc_getAssociatedObject(displayLink, &CADisplayLink.__displayLinkActionKey) as? (CADisplayLink) -> Void
+    private class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
+        let block = objc_getAssociatedObject(displayLink, &CADisplayLink.fw_displayLinkActionKey) as? (CADisplayLink) -> Void
         block?(displayLink)
     }
     
 }
 
 // MARK: - CAAnimation+QuartzCore
-extension Wrapper where Base: CAAnimation {
+@_spi(FW) @objc extension CAAnimation {
     
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
-    public var startBlock: ((CAAnimation) -> Void)? {
+    public var fw_startBlock: ((CAAnimation) -> Void)? {
         get {
-            let target = animationTarget(false)
+            let target = fw_animationTarget(false)
             return target?.startBlock
         }
         set {
-            let target = animationTarget(true)
+            let target = fw_animationTarget(true)
             target?.startBlock = newValue
-            base.delegate = target
+            self.delegate = target
         }
     }
 
     /// 设置动画停止回调
-    public var stopBlock: ((CAAnimation, Bool) -> Void)? {
+    public var fw_stopBlock: ((CAAnimation, Bool) -> Void)? {
         get {
-            let target = animationTarget(false)
+            let target = fw_animationTarget(false)
             return target?.stopBlock
         }
         set {
-            let target = animationTarget(true)
+            let target = fw_animationTarget(true)
             target?.stopBlock = newValue
-            base.delegate = target
+            self.delegate = target
         }
     }
     
-    private func animationTarget(_ lazyload: Bool) -> CAAnimation.AnimationTarget? {
-        var target = property(forName: "animationTarget") as? CAAnimation.AnimationTarget
+    private func fw_animationTarget(_ lazyload: Bool) -> AnimationTarget? {
+        var target = fw_property(forName: "fw_animationTarget") as? AnimationTarget
         if target == nil && lazyload {
-            target = CAAnimation.AnimationTarget()
-            setProperty(target, forName: "animationTarget")
+            target = AnimationTarget()
+            fw_setProperty(target, forName: "fw_animationTarget")
         }
         return target
     }
     
-}
-
-extension CAAnimation {
-    
-    fileprivate class AnimationTarget: NSObject, CAAnimationDelegate {
+    private class AnimationTarget: NSObject, CAAnimationDelegate {
         
         var startBlock: ((CAAnimation) -> Void)?
         var stopBlock: ((CAAnimation, Bool) -> Void)?
@@ -118,65 +110,65 @@ extension CAAnimation {
 }
 
 // MARK: - CALayer+QuartzCore
-extension Wrapper where Base: CALayer {
+@_spi(FW) @objc extension CALayer {
     
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
-    public var themeBackgroundColor: UIColor? {
+    public var fw_themeBackgroundColor: UIColor? {
         get {
-            return property(forName: "themeBackgroundColor") as? UIColor
+            return fw_property(forName: "fw_themeBackgroundColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "themeBackgroundColor")
-            base.backgroundColor = newValue?.cgColor
+            fw_setProperty(newValue, forName: "fw_themeBackgroundColor")
+            self.backgroundColor = newValue?.cgColor
         }
     }
 
     /// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
-    public var themeBorderColor: UIColor? {
+    public var fw_themeBorderColor: UIColor? {
         get {
-            return property(forName: "themeBorderColor") as? UIColor
+            return fw_property(forName: "fw_themeBorderColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "themeBorderColor")
-            base.borderColor = newValue?.cgColor
+            fw_setProperty(newValue, forName: "fw_themeBorderColor")
+            self.borderColor = newValue?.cgColor
         }
     }
 
     /// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
-    public var themeShadowColor: UIColor? {
+    public var fw_themeShadowColor: UIColor? {
         get {
-            return property(forName: "themeShadowColor") as? UIColor
+            return fw_property(forName: "fw_themeShadowColor") as? UIColor
         }
         set {
-            setProperty(newValue, forName: "themeShadowColor")
-            base.shadowColor = newValue?.cgColor
+            fw_setProperty(newValue, forName: "fw_themeShadowColor")
+            self.shadowColor = newValue?.cgColor
         }
     }
 
     /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
-    public var themeContents: UIImage? {
+    public var fw_themeContents: UIImage? {
         get {
-            return property(forName: "themeContents") as? UIImage
+            return fw_property(forName: "fw_themeContents") as? UIImage
         }
         set {
-            setProperty(newValue, forName: "themeContents")
-            base.contents = newValue?.fw.image?.cgImage
+            fw_setProperty(newValue, forName: "fw_themeContents")
+            self.contents = newValue?.fw_image?.cgImage
         }
     }
     
     /// 设置阴影颜色、偏移和半径
-    public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
-        base.shadowColor = color?.cgColor
-        base.shadowOffset = offset
-        base.shadowRadius = radius
-        base.shadowOpacity = 1.0
+    public func fw_setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
+        self.shadowColor = color?.cgColor
+        self.shadowOffset = offset
+        self.shadowRadius = radius
+        self.shadowOpacity = 1.0
     }
     
     /// 生成图片截图，默认大小为frame.size
-    public func snapshotImage(size: CGSize = .zero) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? base.frame.size : size, false, UIScreen.main.scale)
+    public func fw_snapshotImage(size: CGSize = .zero) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? self.frame.size : size, false, UIScreen.main.scale)
         if let context = UIGraphicsGetCurrentContext() {
-            base.render(in: context)
+            self.render(in: context)
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             return image
@@ -184,44 +176,36 @@ extension Wrapper where Base: CALayer {
         return nil
     }
     
-    fileprivate func notifyThemeChanged() {
-        if let themeBackgroundColor = themeBackgroundColor {
-            base.backgroundColor = themeBackgroundColor.cgColor
-        }
-        if let themeBorderColor = themeBorderColor {
-            base.borderColor = themeBorderColor.cgColor
-        }
-        if let themeShadowColor = themeShadowColor {
-            base.shadowColor = themeShadowColor.cgColor
-        }
-        if let themeContents = themeContents, themeContents.fw.isThemeImage {
-            base.contents = themeContents.fw.image?.cgImage
-        }
-    }
-    
-}
-
-extension CALayer {
-    
-    @objc open override func themeChanged(_ style: ThemeStyle) {
+    open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         
-        fw.notifyThemeChanged()
+        if let themeBackgroundColor = fw_themeBackgroundColor {
+            self.backgroundColor = themeBackgroundColor.cgColor
+        }
+        if let themeBorderColor = fw_themeBorderColor {
+            self.borderColor = themeBorderColor.cgColor
+        }
+        if let themeShadowColor = fw_themeShadowColor {
+            self.shadowColor = themeShadowColor.cgColor
+        }
+        if let themeContents = fw_themeContents, themeContents.fw_isThemeImage {
+            self.contents = themeContents.fw_image?.cgImage
+        }
     }
     
 }
 
 // MARK: - CAGradientLayer+QuartzCore
-extension Wrapper where Base: CAGradientLayer {
+@_spi(FW) @objc extension CAGradientLayer {
     
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
-    public var themeColors: [UIColor]? {
+    public var fw_themeColors: [UIColor]? {
         get {
-            return property(forName: "themeColors") as? [UIColor]
+            return fw_property(forName: "fw_themeColors") as? [UIColor]
         }
         set {
-            setProperty(newValue, forName: "themeColors")
-            base.colors = newValue?.map({ $0.cgColor })
+            fw_setProperty(newValue, forName: "fw_themeColors")
+            self.colors = newValue?.map({ $0.cgColor })
         }
     }
     
@@ -235,7 +219,7 @@ extension Wrapper where Base: CAGradientLayer {
      *  @param endPoint   渐变结束点
      *  @return 渐变Layer
      */
-    public static func gradientLayer(
+    public static func fw_gradientLayer(
         _ frame: CGRect,
         colors: [Any],
         locations: [NSNumber]?,
@@ -251,14 +235,10 @@ extension Wrapper where Base: CAGradientLayer {
         return gradientLayer
     }
     
-}
-
-extension CAGradientLayer {
-    
-    @objc open override func themeChanged(_ style: ThemeStyle) {
+    open override func themeChanged(_ style: ThemeStyle) {
         super.themeChanged(style)
         
-        if let themeColors = fw.themeColors {
+        if let themeColors = fw_themeColors {
             self.colors = themeColors.map({ $0.cgColor })
         }
     }
@@ -266,7 +246,7 @@ extension CAGradientLayer {
 }
 
 // MARK: - UIView+QuartzCore
-extension Wrapper where Base: UIView {
+@_spi(FW) @objc extension UIView {
     
     /**
      绘制形状路径，需要在drawRect中调用
@@ -276,7 +256,7 @@ extension Wrapper where Base: UIView {
      @param strokeColor 绘制颜色
      @param fillColor 填充颜色
      */
-    public func drawBezierPath(_ bezierPath: UIBezierPath, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) {
+    public func fw_drawBezierPath(_ bezierPath: UIBezierPath, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.saveGState()
         
@@ -303,11 +283,11 @@ extension Wrapper where Base: UIView {
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
      @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
      */
-    public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) {
+    public func fw_drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) {
         let linePoints = UIBezierPath.fw.linePoints(rect: rect, direction: direction)
         let startPoint = linePoints.first?.cgPointValue ?? .zero
         let endPoint = linePoints.last?.cgPointValue ?? .zero
-        return drawLinearGradient(rect, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
+        return fw_drawLinearGradient(rect, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
     }
 
     /**
@@ -319,7 +299,7 @@ extension Wrapper where Base: UIView {
      @param startPoint 渐变开始点，需要根据rect计算
      @param endPoint 渐变结束点，需要根据rect计算
      */
-    public func drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) {
+    public func fw_drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.saveGState()
         
@@ -344,7 +324,7 @@ extension Wrapper where Base: UIView {
      *  @return 渐变Layer
      */
     @discardableResult
-    public func addGradientLayer(_ frame: CGRect, colors: [Any], locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) -> CAGradientLayer {
+    public func fw_addGradientLayer(_ frame: CGRect, colors: [Any], locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) -> CAGradientLayer {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = frame
         gradientLayer.colors = colors
@@ -352,7 +332,7 @@ extension Wrapper where Base: UIView {
         gradientLayer.startPoint = startPoint
         gradientLayer.endPoint = endPoint
         
-        base.layer.addSublayer(gradientLayer)
+        self.layer.addSublayer(gradientLayer)
         return gradientLayer
     }
 
@@ -366,7 +346,7 @@ extension Wrapper where Base: UIView {
      @return 虚线Layer
      */
     @discardableResult
-    public func addDashLayer(_ rect: CGRect, lineLength: CGFloat, lineSpacing: CGFloat, lineColor: UIColor) -> CALayer {
+    public func fw_addDashLayer(_ rect: CGRect, lineLength: CGFloat, lineSpacing: CGFloat, lineColor: UIColor) -> CALayer {
         let dashLayer = CAShapeLayer()
         dashLayer.frame = rect
         dashLayer.fillColor = UIColor.clear.cgColor
@@ -386,7 +366,7 @@ extension Wrapper where Base: UIView {
             path.addLine(to: CGPoint(x: CGRectGetWidth(rect), y: CGRectGetHeight(rect) / 2.0))
         }
         dashLayer.path = path.cgPath
-        base.layer.addSublayer(dashLayer)
+        self.layer.addSublayer(dashLayer)
         return dashLayer
     }
     
@@ -399,7 +379,7 @@ extension Wrapper where Base: UIView {
      @param duration   持续时间
      @param completion 完成事件
      */
-    public func addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+    public func fw_addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
         // 注意：AutoLayout动画需要调用父视图(如控制器self.view)的layoutIfNeeded更新布局才能生效
         UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: 7<<16), animations: block, completion: completion)
     }
@@ -412,8 +392,8 @@ extension Wrapper where Base: UIView {
      @param duration   持续时间，默认0.2
      @param completion 完成事件
      */
-    public func addAnimation(curve: UIView.AnimationCurve, transition: UIView.AnimationTransition, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_addAnimation(with: curve, transition: transition, duration: duration, completion: completion)
+    public func fw_addAnimation(curve: UIView.AnimationCurve, transition: UIView.AnimationTransition, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_addAnimation(with: curve, transition: transition, duration: duration, completion: completion)
     }
 
     /**
@@ -427,8 +407,8 @@ extension Wrapper where Base: UIView {
      @return CABasicAnimation
      */
     @discardableResult
-    public func addAnimation(keyPath: String, fromValue: Any, toValue: Any, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
-        return base.__fw_addAnimation(withKeyPath: keyPath, fromValue: fromValue, toValue: toValue, duration: duration, completion: completion)
+    public func fw_addAnimation(keyPath: String, fromValue: Any, toValue: Any, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
+        return self.__fw_addAnimation(withKeyPath: keyPath, fromValue: fromValue, toValue: toValue, duration: duration, completion: completion)
     }
 
     /**
@@ -440,8 +420,8 @@ extension Wrapper where Base: UIView {
      @param animationsEnabled 是否启用动画
      @param completion 完成事件
      */
-    public func addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
+    public func fw_addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
     }
 
     /**
@@ -456,18 +436,18 @@ extension Wrapper where Base: UIView {
      @return CATransition
      */
     @discardableResult
-    public func addTransition(type: String, subtype: String?, timingFunction: String?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
-        return base.__fw_addTransition(withType: type, subtype: subtype, timingFunction: timingFunction, duration: duration, completion: completion)
+    public func fw_addTransition(type: String, subtype: String?, timingFunction: String?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
+        return self.__fw_addTransition(withType: type, subtype: subtype, timingFunction: timingFunction, duration: duration, completion: completion)
     }
 
     /// 移除单个框架视图动画
-    public func removeAnimation() {
-        base.__fw_removeAnimation()
+    public func fw_removeAnimation() {
+        self.__fw_removeAnimation()
     }
 
     /// 移除所有视图动画
-    public func removeAllAnimations() {
-        base.__fw_removeAllAnimations()
+    public func fw_removeAllAnimations() {
+        self.__fw_removeAllAnimations()
     }
 
     /**
@@ -479,8 +459,8 @@ extension Wrapper where Base: UIView {
      *  @return CABasicAnimation
      */
     @discardableResult
-    public func stroke(layer: CAShapeLayer, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
-        return base.__fw_stroke(with: layer, duration: duration, completion: completion)
+    public func fw_stroke(layer: CAShapeLayer, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
+        return self.__fw_stroke(with: layer, duration: duration, completion: completion)
     }
 
     /**
@@ -491,8 +471,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   单次时间，默认0.03
      *  @param completion 完成回调
      */
-    public func shake(times: Int, delta: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_shake(withTimes: times, delta: delta, duration: duration, completion: completion)
+    public func fw_shake(times: Int, delta: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_shake(withTimes: times, delta: delta, duration: duration, completion: completion)
     }
 
     /**
@@ -502,8 +482,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fade(alpha: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_fade(withAlpha: alpha, duration: duration, completion: completion)
+    public func fw_fade(alpha: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_fade(withAlpha: alpha, duration: duration, completion: completion)
     }
 
     /**
@@ -513,8 +493,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长，建议0.5
      *  @param completion 完成回调
      */
-    public func fade(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_fade(block, duration: duration, completion: completion)
+    public func fw_fade(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_fade(block, duration: duration, completion: completion)
     }
 
     /**
@@ -524,8 +504,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func rotate(degree: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_rotate(withDegree: degree, duration: duration, completion: completion)
+    public func fw_rotate(degree: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_rotate(withDegree: degree, duration: duration, completion: completion)
     }
 
     /**
@@ -536,8 +516,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func scale(scaleX: Float, scaleY: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_scale(withScaleX: scaleX, scaleY: scaleY, duration: duration, completion: completion)
+    public func fw_scale(scaleX: Float, scaleY: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_scale(withScaleX: scaleX, scaleY: scaleY, duration: duration, completion: completion)
     }
 
     /**
@@ -547,8 +527,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func move(point: CGPoint, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_move(with: point, duration: duration, completion: completion)
+    public func fw_move(point: CGPoint, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_move(with: point, duration: duration, completion: completion)
     }
 
     /**
@@ -558,8 +538,8 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func move(frame: CGRect, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_move(withFrame: frame, duration: duration, completion: completion)
+    public func fw_move(frame: CGRect, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+        self.__fw_move(withFrame: frame, duration: duration, completion: completion)
     }
     
     /**
@@ -568,8 +548,8 @@ extension Wrapper where Base: UIView {
      @param block 动画代码块
      @param completion 完成事件
      */
-    public static func animateNone(block: () -> Void, completion: (() -> Void)? = nil) {
-        Base.__fw_animateNone(block, completion: completion)
+    public static func fw_animateNone(block: () -> Void, completion: (() -> Void)? = nil) {
+        UIView.__fw_animateNone(block, completion: completion)
     }
 
     /**
@@ -578,62 +558,62 @@ extension Wrapper where Base: UIView {
      @param block 动画代码块
      @param completion 完成事件
      */
-    public static func animate(block: () -> Void, completion: (() -> Void)? = nil) {
-        Base.__fw_animate(block, completion: completion)
+    public static func fw_animate(block: () -> Void, completion: (() -> Void)? = nil) {
+        UIView.__fw_animate(block, completion: completion)
     }
     
     // MARK: - Drag
     /// 是否启用拖动，默认NO
-    public var dragEnabled: Bool {
-        get { return base.__fw_dragEnabled }
-        set { base.__fw_dragEnabled = newValue }
+    public var fw_dragEnabled: Bool {
+        get { return self.__fw_dragEnabled }
+        set { self.__fw_dragEnabled = newValue }
     }
 
     /// 拖动手势，延迟加载
-    public var dragGesture: UIPanGestureRecognizer {
-        return base.__fw_dragGesture
+    public var fw_dragGesture: UIPanGestureRecognizer {
+        return self.__fw_dragGesture
     }
 
     /// 设置拖动限制区域，默认CGRectZero，无限制
-    public var dragLimit: CGRect {
-        get { return base.__fw_dragLimit }
-        set { base.__fw_dragLimit = newValue }
+    public var fw_dragLimit: CGRect {
+        get { return self.__fw_dragLimit }
+        set { self.__fw_dragLimit = newValue }
     }
 
     /// 设置拖动动作有效区域，默认self.frame
-    public var dragArea: CGRect {
-        get { return base.__fw_dragArea }
-        set { base.__fw_dragArea = newValue }
+    public var fw_dragArea: CGRect {
+        get { return self.__fw_dragArea }
+        set { self.__fw_dragArea = newValue }
     }
 
     /// 是否允许横向拖动(X)，默认YES
-    public var dragHorizontal: Bool {
-        get { return base.__fw_dragHorizontal }
-        set { base.__fw_dragHorizontal = newValue }
+    public var fw_dragHorizontal: Bool {
+        get { return self.__fw_dragHorizontal }
+        set { self.__fw_dragHorizontal = newValue }
     }
 
     /// 是否允许纵向拖动(Y)，默认YES
-    public var dragVertical: Bool {
-        get { return base.__fw_dragVertical }
-        set { base.__fw_dragVertical = newValue }
+    public var fw_dragVertical: Bool {
+        get { return self.__fw_dragVertical }
+        set { self.__fw_dragVertical = newValue }
     }
 
     /// 开始拖动回调
-    public var dragStartedBlock: ((UIView) -> Void)? {
-        get { return base.__fw_dragStartedBlock }
-        set { base.__fw_dragStartedBlock = newValue }
+    public var fw_dragStartedBlock: ((UIView) -> Void)? {
+        get { return self.__fw_dragStartedBlock }
+        set { self.__fw_dragStartedBlock = newValue }
     }
 
     /// 拖动移动回调
-    public var dragMovedBlock: ((UIView) -> Void)? {
-        get { return base.__fw_dragMovedBlock }
-        set { base.__fw_dragMovedBlock = newValue }
+    public var fw_dragMovedBlock: ((UIView) -> Void)? {
+        get { return self.__fw_dragMovedBlock }
+        set { self.__fw_dragMovedBlock = newValue }
     }
 
     /// 结束拖动回调
-    public var dragEndedBlock: ((UIView) -> Void)? {
-        get { return base.__fw_dragEndedBlock }
-        set { base.__fw_dragEndedBlock = newValue }
+    public var fw_dragEndedBlock: ((UIView) -> Void)? {
+        get { return self.__fw_dragEndedBlock }
+        set { self.__fw_dragEndedBlock = newValue }
     }
     
 }
