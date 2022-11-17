@@ -7,7 +7,6 @@
 
 #import "FWToolbarView.h"
 #import "FWViewPluginImpl.h"
-#import "FWBlock.h"
 #import "FWToolkit.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
@@ -1120,7 +1119,7 @@
     } else {
         button = [[FWToolbarButton alloc] initWithTitle:object];
     }
-    if (block) [button fw_addTouchBlock:block];
+    if (block) [button fw_addTouchWithBlock:block];
     return button;
 }
 

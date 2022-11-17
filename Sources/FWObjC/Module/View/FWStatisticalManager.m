@@ -7,7 +7,6 @@
 
 #import "FWStatisticalManager.h"
 #import "FWSwizzle.h"
-#import "FWBlock.h"
 #import "FWUIKit.h"
 #import <objc/runtime.h>
 #if FWMacroSPM
@@ -222,7 +221,7 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
         }
         [((UIControl *)self) fw_addBlock:^(UIControl *sender) {
             [sender fw_statisticalTriggerClick:nil indexPath:nil];
-        } forControlEvents:controlEvents];
+        } for:controlEvents];
         return;
     }
     

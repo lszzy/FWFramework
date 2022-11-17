@@ -6,7 +6,6 @@
 //
 
 #import "FWUIKit.h"
-#import "FWBlock.h"
 #import "FWFoundation.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
@@ -1395,7 +1394,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         NSDictionary *attributes = [label fw_attributesWithGesture:gesture allowsSpacing:NO];
         id link = attributes[NSLinkAttributeName] ?: attributes[@"URL"];
         if (block) block(link);
-    }];
+    } customize:nil];
 }
 
 - (NSDictionary<NSAttributedStringKey,id> *)fw_attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing

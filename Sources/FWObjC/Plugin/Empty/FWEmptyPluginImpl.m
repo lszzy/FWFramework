@@ -7,7 +7,6 @@
 
 #import "FWEmptyPluginImpl.h"
 #import "FWUIKit.h"
-#import "FWBlock.h"
 #if FWMacroSPM
 @import FWFramework;
 #else
@@ -71,8 +70,8 @@
     [emptyView setDetailTextLabelText:emptyDetail];
     [emptyView setActionButtonTitle:emptyAction];
     [emptyView setMoreActionButtonTitle:emptyMoreAction];
-    if (block) [emptyView.actionButton fw_addTouchBlock:^(id sender) { if (block) block(0, sender); }];
-    if (block && emptyMoreAction) [emptyView.moreActionButton fw_addTouchBlock:^(id sender) { if (block) block(1, sender); }];
+    if (block) [emptyView.actionButton fw_addTouchWithBlock:^(id sender) { if (block) block(0, sender); }];
+    if (block && emptyMoreAction) [emptyView.moreActionButton fw_addTouchWithBlock:^(id sender) { if (block) block(1, sender); }];
 
     if (self.customBlock) {
         self.customBlock(emptyView);

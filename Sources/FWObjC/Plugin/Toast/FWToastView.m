@@ -7,7 +7,11 @@
 
 #import "FWToastView.h"
 #import "FWViewPlugin.h"
-#import "FWBlock.h"
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 #pragma mark - FWToastView
 
@@ -282,7 +286,7 @@
                 [self hide];
                 cancelBlock();
             }
-        }];
+        } customize:nil];
     }
 }
 
