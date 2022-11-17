@@ -910,55 +910,141 @@ import FWObjC
     // MARK: - Drag
     /// 是否启用拖动，默认NO
     public var fw_dragEnabled: Bool {
-        get { return self.__fw_dragEnabled }
-        set { self.__fw_dragEnabled = newValue }
+        get { return self.fw_dragGesture.isEnabled }
+        set { self.fw_dragGesture.isEnabled = newValue }
     }
 
     /// 拖动手势，延迟加载
     public var fw_dragGesture: UIPanGestureRecognizer {
-        return self.__fw_dragGesture
+        if let gesture = fw_property(forName: "fw_dragGesture") as? UIPanGestureRecognizer {
+            return gesture
+        } else {
+            // 初始化拖动手势，默认禁用
+            let gesture = UIPanGestureRecognizer(target: self, action: #selector(UIView.fw_dragHandler(_:)))
+            gesture.maximumNumberOfTouches = 1
+            gesture.minimumNumberOfTouches = 1
+            gesture.cancelsTouchesInView = false
+            gesture.isEnabled = false
+            self.fw_dragArea = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
+            self.addGestureRecognizer(gesture)
+            
+            fw_setProperty(gesture, forName: "fw_dragGesture")
+            return gesture
+        }
     }
 
     /// 设置拖动限制区域，默认CGRectZero，无限制
     public var fw_dragLimit: CGRect {
-        get { return self.__fw_dragLimit }
-        set { self.__fw_dragLimit = newValue }
+        get {
+            if let value = fw_property(forName: "fw_dragLimit") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            if newValue.equalTo(.zero) || newValue.contains(self.frame) {
+                fw_setProperty(NSValue(cgRect: newValue), forName: "fw_dragLimit")
+            }
+        }
     }
 
     /// 设置拖动动作有效区域，默认self.frame
     public var fw_dragArea: CGRect {
-        get { return self.__fw_dragArea }
-        set { self.__fw_dragArea = newValue }
+        get {
+            if let value = fw_property(forName: "fw_dragArea") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            let reletiveFrame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
+            if reletiveFrame.contains(newValue) {
+                fw_setProperty(NSValue(cgRect: newValue), forName: "fw_dragArea")
+            }
+        }
     }
 
     /// 是否允许横向拖动(X)，默认YES
     public var fw_dragHorizontal: Bool {
-        get { return self.__fw_dragHorizontal }
-        set { self.__fw_dragHorizontal = newValue }
+        get { return fw_propertyBool(forName: "fw_dragHorizontal") }
+        set { fw_setPropertyBool(newValue, forName: "fw_dragHorizontal") }
     }
 
     /// 是否允许纵向拖动(Y)，默认YES
     public var fw_dragVertical: Bool {
-        get { return self.__fw_dragVertical }
-        set { self.__fw_dragVertical = newValue }
+        get { return fw_propertyBool(forName: "fw_dragVertical") }
+        set { fw_setPropertyBool(newValue, forName: "fw_dragVertical") }
     }
 
     /// 开始拖动回调
     public var fw_dragStartedBlock: ((UIView) -> Void)? {
-        get { return self.__fw_dragStartedBlock }
-        set { self.__fw_dragStartedBlock = newValue }
+        get { return fw_property(forName: "fw_dragStartedBlock") as? (UIView) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_dragStartedBlock") }
     }
 
     /// 拖动移动回调
     public var fw_dragMovedBlock: ((UIView) -> Void)? {
-        get { return self.__fw_dragMovedBlock }
-        set { self.__fw_dragMovedBlock = newValue }
+        get { return fw_property(forName: "fw_dragMovedBlock") as? (UIView) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_dragMovedBlock") }
     }
 
     /// 结束拖动回调
     public var fw_dragEndedBlock: ((UIView) -> Void)? {
-        get { return self.__fw_dragEndedBlock }
-        set { self.__fw_dragEndedBlock = newValue }
+        get { return fw_property(forName: "fw_dragEndedBlock") as? (UIView) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_dragEndedBlock") }
+    }
+    
+    private func fw_dragHandler(_ sender: UIPanGestureRecognizer) {
+        // 检查是否能够在拖动区域拖动
+        let locationInView = sender.location(in: self)
+        if !self.fw_dragArea.contains(locationInView) &&
+            sender.state == .began {
+            return
+        }
+        
+        if sender.state == .began {
+            let locationInSuperview = sender.location(in: self.superview)
+            self.layer.anchorPoint = CGPoint(x: locationInView.x / self.bounds.width, y: locationInView.y / self.bounds.height)
+            self.center = locationInSuperview
+        }
+        
+        if sender.state == .began && self.fw_dragStartedBlock != nil {
+            self.fw_dragStartedBlock?(self)
+        }
+        
+        if sender.state == .changed && self.fw_dragMovedBlock != nil {
+            self.fw_dragMovedBlock?(self)
+        }
+        
+        if sender.state == .ended && self.fw_dragEndedBlock != nil {
+            self.fw_dragEndedBlock?(self)
+        }
+        
+        let translation = sender.translation(in: self.superview)
+        var newOriginX = CGRectGetMinX(self.frame) + (self.fw_dragHorizontal ? translation.x : 0)
+        var newOriginY = CGRectGetMinY(self.frame) + (self.fw_dragVertical ? translation.y : 0)
+        
+        let cagingArea = self.fw_dragLimit
+        let cagingAreaOriginX = CGRectGetMinX(cagingArea)
+        let cagingAreaOriginY = CGRectGetMinY(cagingArea)
+        let cagingAreaRightSide = cagingAreaOriginX + CGRectGetWidth(cagingArea)
+        let cagingAreaBottomSide = cagingAreaOriginY + CGRectGetHeight(cagingArea)
+        
+        if !cagingArea.equalTo(.zero) {
+            // 确保视图在限制区域内
+            if newOriginX <= cagingAreaOriginX ||
+                newOriginX + CGRectGetWidth(self.frame) >= cagingAreaRightSide {
+                newOriginX = CGRectGetMinX(self.frame)
+            }
+            
+            if newOriginY <= cagingAreaOriginY ||
+                newOriginY + CGRectGetHeight(self.frame) >= cagingAreaBottomSide {
+                newOriginY = CGRectGetMinY(self.frame)
+            }
+        }
+        
+        self.frame = CGRect(x: newOriginX, y: newOriginY, width: CGRectGetWidth(self.frame), height: CGRectGetHeight(self.frame))
+        sender.setTranslation(.zero, in: self.superview)
     }
     
 }
