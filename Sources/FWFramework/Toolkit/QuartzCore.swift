@@ -964,16 +964,30 @@ import FWObjC
         }
     }
 
-    /// 是否允许横向拖动(X)，默认YES
+    /// 是否允许横向拖动(X)，默认true
     public var fw_dragHorizontal: Bool {
-        get { return fw_propertyBool(forName: "fw_dragHorizontal") }
-        set { fw_setPropertyBool(newValue, forName: "fw_dragHorizontal") }
+        get {
+            if let number = fw_property(forName: "fw_dragHorizontal") as? NSNumber {
+                return number.boolValue
+            }
+            return true
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_dragHorizontal")
+        }
     }
 
-    /// 是否允许纵向拖动(Y)，默认YES
+    /// 是否允许纵向拖动(Y)，默认true
     public var fw_dragVertical: Bool {
-        get { return fw_propertyBool(forName: "fw_dragVertical") }
-        set { fw_setPropertyBool(newValue, forName: "fw_dragVertical") }
+        get {
+            if let number = fw_property(forName: "fw_dragVertical") as? NSNumber {
+                return number.boolValue
+            }
+            return true
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_dragVertical")
+        }
     }
 
     /// 开始拖动回调
