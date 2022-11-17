@@ -8,7 +8,6 @@
 #import "FWNavigationStyle.h"
 #import "FWSwizzle.h"
 #import "FWUIKit.h"
-#import "FWBlock.h"
 #import <objc/runtime.h>
 #if FWMacroSPM
 @import FWFramework;
