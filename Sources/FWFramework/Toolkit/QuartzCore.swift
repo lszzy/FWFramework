@@ -256,7 +256,12 @@ import FWObjC
      @param strokeColor 绘制颜色
      @param fillColor 填充颜色
      */
-    public func fw_drawBezierPath(_ bezierPath: UIBezierPath, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) {
+    public func fw_drawBezierPath(
+        _ bezierPath: UIBezierPath,
+        strokeWidth: CGFloat,
+        strokeColor: UIColor,
+        fillColor: UIColor?
+    ) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.saveGState()
         
@@ -283,7 +288,12 @@ import FWObjC
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
      @param direction 渐变方向，自动计算startPoint和endPoint，支持四个方向，默认向下Down
      */
-    public func fw_drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) {
+    public func fw_drawLinearGradient(
+        _ rect: CGRect,
+        colors: [Any],
+        locations: UnsafePointer<CGFloat>?,
+        direction: UISwipeGestureRecognizer.Direction
+    ) {
         let linePoints = UIBezierPath.fw.linePoints(rect: rect, direction: direction)
         let startPoint = linePoints.first?.cgPointValue ?? .zero
         let endPoint = linePoints.last?.cgPointValue ?? .zero
@@ -299,7 +309,13 @@ import FWObjC
      @param startPoint 渐变开始点，需要根据rect计算
      @param endPoint 渐变结束点，需要根据rect计算
      */
-    public func fw_drawLinearGradient(_ rect: CGRect, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) {
+    public func fw_drawLinearGradient(
+        _ rect: CGRect,
+        colors: [Any],
+        locations: UnsafePointer<CGFloat>?,
+        startPoint: CGPoint,
+        endPoint: CGPoint
+    ) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.saveGState()
         
@@ -324,7 +340,13 @@ import FWObjC
      *  @return 渐变Layer
      */
     @discardableResult
-    public func fw_addGradientLayer(_ frame: CGRect, colors: [Any], locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) -> CAGradientLayer {
+    public func fw_addGradientLayer(
+        _ frame: CGRect,
+        colors: [Any],
+        locations: [NSNumber]?,
+        startPoint: CGPoint,
+        endPoint: CGPoint
+    ) -> CAGradientLayer {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = frame
         gradientLayer.colors = colors
@@ -346,7 +368,12 @@ import FWObjC
      @return 虚线Layer
      */
     @discardableResult
-    public func fw_addDashLayer(_ rect: CGRect, lineLength: CGFloat, lineSpacing: CGFloat, lineColor: UIColor) -> CALayer {
+    public func fw_addDashLayer(
+        _ rect: CGRect,
+        lineLength: CGFloat,
+        lineSpacing: CGFloat,
+        lineColor: UIColor
+    ) -> CALayer {
         let dashLayer = CAShapeLayer()
         dashLayer.frame = rect
         dashLayer.fillColor = UIColor.clear.cgColor
@@ -379,9 +406,19 @@ import FWObjC
      @param duration   持续时间
      @param completion 完成事件
      */
-    public func fw_addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+    public func fw_addAnimation(
+        block: @escaping () -> Void,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
         // 注意：AutoLayout动画需要调用父视图(如控制器self.view)的layoutIfNeeded更新布局才能生效
-        UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: 7<<16), animations: block, completion: completion)
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .init(rawValue: 7<<16),
+            animations: block,
+            completion: completion
+        )
     }
 
     /**
@@ -392,8 +429,35 @@ import FWObjC
      @param duration   持续时间，默认0.2
      @param completion 完成事件
      */
-    public func fw_addAnimation(curve: UIView.AnimationCurve, transition: UIView.AnimationTransition, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_addAnimation(with: curve, transition: transition, duration: duration, completion: completion)
+    public func fw_addAnimation(
+        curve: UIView.AnimationCurve,
+        transition: UIView.AnimationTransition,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.beginAnimations("FWAnimation", context: nil)
+        UIView.setAnimationCurve(curve)
+        // 默认值0.2
+        UIView.setAnimationDuration(duration)
+        UIView.setAnimationTransition(transition, for: self, cache: false)
+        
+        // 设置完成事件
+        if completion != nil {
+            UIView.setAnimationDelegate(self)
+            UIView.setAnimationDidStop(#selector(UIView.fw_animationDidStop(_:finished:context:)))
+            fw_setPropertyCopy(completion, forName: "fw_animationDidStop")
+        }
+        
+        UIView.commitAnimations()
+    }
+    
+    private func fw_animationDidStop(
+        _ animationId: String?,
+        finished: NSNumber,
+        context: UnsafeMutableRawPointer?
+    ) {
+        let completion = fw_property(forName: "fw_animationDidStop") as? (Bool) -> Void
+        completion?(finished.boolValue)
     }
 
     /**
@@ -407,8 +471,32 @@ import FWObjC
      @return CABasicAnimation
      */
     @discardableResult
-    public func fw_addAnimation(keyPath: String, fromValue: Any, toValue: Any, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
-        return self.__fw_addAnimation(withKeyPath: keyPath, fromValue: fromValue, toValue: toValue, duration: duration, completion: completion)
+    public func fw_addAnimation(
+        keyPath: String,
+        fromValue: Any,
+        toValue: Any,
+        duration: CFTimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) -> CABasicAnimation {
+        // keyPath支持值如下：
+        // transform.rotation[.(x|y|z)]: 轴旋转动画
+        // transform.scale[.(x|y|z)]: 轴缩放动画
+        // transform.translation[.(x|y|z)]: 轴平移动画
+        let animation = CABasicAnimation(keyPath: keyPath)
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        // 默认值0.25
+        animation.duration = duration
+        
+        // 设置完成事件，需要在add之前设置才能生效，因为add时会copy动画对象
+        if completion != nil {
+            animation.fw_stopBlock = { _, finished in
+                completion?(finished)
+            }
+        }
+        
+        self.layer.add(animation, forKey: "FWAnimation")
+        return animation
     }
 
     /**
@@ -417,11 +505,28 @@ import FWObjC
      @param option     动画选项
      @param block      动画代码块
      @param duration   持续时间
-     @param animationsEnabled 是否启用动画
+     @param animationsEnabled 是否启用动画，默认true
      @param completion 完成事件
      */
-    public func fw_addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
+    public func fw_addTransition(
+        option: UIView.AnimationOptions = [],
+        block: @escaping () -> Void,
+        duration: TimeInterval,
+        animationsEnabled: Bool = true,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.transition(
+            with: self,
+            duration: duration,
+            options: option,
+            animations: {
+                let wasEnabled = UIView.areAnimationsEnabled
+                UIView.setAnimationsEnabled(animationsEnabled)
+                block()
+                UIView.setAnimationsEnabled(wasEnabled)
+            },
+            completion: completion
+        )
     }
 
     /**
@@ -436,18 +541,98 @@ import FWObjC
      @return CATransition
      */
     @discardableResult
-    public func fw_addTransition(type: String, subtype: String?, timingFunction: String?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
-        return self.__fw_addTransition(withType: type, subtype: subtype, timingFunction: timingFunction, duration: duration, completion: completion)
+    public func fw_addTransition(
+        type: CATransitionType,
+        subtype: CATransitionSubtype?,
+        timingFunction: CAMediaTimingFunction?,
+        duration: CFTimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) -> CATransition {
+        // 默认动画完成后自动移除，removedOnCompletion为YES
+        let transition = CATransition()
+        
+        /** type
+         *
+         *  各种动画效果
+         *  kCATransitionFade           交叉淡化过渡(不支持过渡方向)，同fade，默认效果
+         *  kCATransitionMoveIn         新视图移到旧视图上面
+         *  kCATransitionPush           新视图把旧视图推出去
+         *  kCATransitionReveal         显露效果(将旧视图移开,显示下面的新视图)
+         *
+         *  @"fade"                     交叉淡化过渡(不支持过渡方向)，默认效果
+         *  @"moveIn"                   新视图移到旧视图上面
+         *  @"push"                     新视图把旧视图推出去
+         *  @"reveal"                   显露效果(将旧视图移开,显示下面的新视图)
+         *
+         *  @"cube"                     立方体翻滚效果
+         *  @"pageCurl"                 向上翻一页
+         *  @"pageUnCurl"               向下翻一页
+         *  @"suckEffect"               收缩效果，类似系统最小化窗口时的神奇效果(不支持过渡方向)
+         *  @"rippleEffect"             滴水效果,(不支持过渡方向)
+         *  @"oglFlip"                  上下左右翻转效果
+         *  @"rotate"                   旋转效果
+         *  @"cameraIrisHollowOpen"     相机镜头打开效果(不支持过渡方向)
+         *  @"cameraIrisHollowClose"    相机镜头关上效果(不支持过渡方向)
+         */
+        transition.type = type
+        
+        /** subtype
+         *
+         *  各种动画方向
+         *
+         *  kCATransitionFromRight;      同字面意思(下同)
+         *  kCATransitionFromLeft;
+         *  kCATransitionFromTop;
+         *  kCATransitionFromBottom;
+         *
+         *  当type为@"rotate"(旋转)的时候,它也有几个对应的subtype,分别为:
+         *  90cw    逆时针旋转90°
+         *  90ccw   顺时针旋转90°
+         *  180cw   逆时针旋转180°
+         *  180ccw  顺时针旋转180°
+          *
+         *  type与subtype的对应关系(必看),如果对应错误,动画不会显现.
+         *  http://iphonedevwiki.net/index.php/CATransition
+         */
+        transition.subtype = subtype
+        
+        /** timingFunction
+         *
+         *  用于变化起点和终点之间的插值计算,形象点说它决定了动画运行的节奏,比如是均匀变化(相同时间变化量相同)还是
+         *  先快后慢,先慢后快还是先慢再快再慢.
+         *
+         *  动画的开始与结束的快慢,有五个预置分别为(下同):
+         *  kCAMediaTimingFunctionLinear            线性,即匀速
+         *  kCAMediaTimingFunctionEaseIn            先慢后快
+         *  kCAMediaTimingFunctionEaseOut           先快后慢
+         *  kCAMediaTimingFunctionEaseInEaseOut     先慢后快再慢
+         *  kCAMediaTimingFunctionDefault           实际效果是动画中间比较快.
+          */
+        transition.timingFunction = timingFunction
+        
+        // 动画持续时间，默认为0.25秒，传0即可
+        transition.duration = duration
+        
+        // 设置完成事件
+        if completion != nil {
+            transition.fw_stopBlock = { _, finished in
+                completion?(finished)
+            }
+        }
+        
+        // 所有核心动画和特效都是基于CAAnimation(作用于CALayer)
+        self.layer.add(transition, forKey: "FWAnimation")
+        return transition
     }
 
     /// 移除单个框架视图动画
     public func fw_removeAnimation() {
-        self.__fw_removeAnimation()
+        self.layer.removeAnimation(forKey: "FWAnimation")
     }
 
     /// 移除所有视图动画
     public func fw_removeAllAnimations() {
-        self.__fw_removeAllAnimations()
+        self.layer.removeAllAnimations()
     }
 
     /**
@@ -459,8 +644,28 @@ import FWObjC
      *  @return CABasicAnimation
      */
     @discardableResult
-    public func fw_stroke(layer: CAShapeLayer, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) -> CABasicAnimation {
-        return self.__fw_stroke(with: layer, duration: duration, completion: completion)
+    public func fw_stroke(
+        layer: CAShapeLayer,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) -> CABasicAnimation {
+        // strokeEnd动画，仅CAShapeLayer支持
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.duration = duration
+        animation.fromValue = NSNumber(value: 0)
+        animation.toValue = NSNumber(value: 1)
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        animation.autoreverses = false
+        
+        // 设置完成事件
+        if completion != nil {
+            animation.fw_stopBlock = { _, finished in
+                completion?(finished)
+            }
+        }
+        
+        layer.add(animation, forKey: "FWAnimation")
+        return animation
     }
 
     /**
@@ -471,8 +676,66 @@ import FWObjC
      *  @param duration   单次时间，默认0.03
      *  @param completion 完成回调
      */
-    public func fw_shake(times: Int, delta: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_shake(withTimes: times, delta: delta, duration: duration, completion: completion)
+    public func fw_shake(
+        times: Int,
+        delta: CGFloat,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        fw_shake(
+            times: times > 0 ? times : 10,
+            delta: delta > 0 ? delta : 5,
+            duration: duration > 0 ? duration : 0.03,
+            direction: 1,
+            currentTimes: 0,
+            completion: completion
+        )
+    }
+    
+    private func fw_shake(
+        times: Int,
+        delta: CGFloat,
+        duration: TimeInterval,
+        direction: CGFloat,
+        currentTimes: Int,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        // 是否是文本输入框
+        let isTextField = self is UITextField
+        UIView.animate(withDuration: duration) {
+            if isTextField {
+                // 水平摇摆
+                self.transform = CGAffineTransformMakeTranslation(delta * direction, 0)
+                // 垂直摇摆
+                // self.transform = CGAffineTransformMakeTranslation(0, delta * direction)
+            } else {
+                // 水平摇摆
+                self.layer.setAffineTransform(CGAffineTransformMakeTranslation(delta * direction, 0))
+                // 垂直摇摆
+                // self.layer.setAffineTransform(CGAffineTransformMakeTranslation(0, delta * direction))
+            }
+        } completion: { finished in
+            if currentTimes >= times {
+                UIView.animate(withDuration: duration) {
+                    if isTextField {
+                        self.transform = .identity
+                    } else {
+                        self.layer.setAffineTransform(.identity)
+                    }
+                } completion: { finished in
+                    completion?(finished)
+                }
+                return
+            }
+            self.fw_shake(
+                times: times - 1,
+                delta: delta,
+                duration: duration,
+                direction: direction * -1,
+                currentTimes: currentTimes + 1,
+                completion: completion
+            )
+        }
     }
 
     /**
@@ -482,8 +745,20 @@ import FWObjC
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fw_fade(alpha: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_fade(withAlpha: alpha, duration: duration, completion: completion)
+    public func fw_fade(
+        alpha: CGFloat,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear,
+            animations: {
+                self.alpha = alpha
+            },
+            completion: completion
+        )
     }
 
     /**
@@ -493,8 +768,18 @@ import FWObjC
      *  @param duration   持续时长，建议0.5
      *  @param completion 完成回调
      */
-    public func fw_fade(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_fade(block, duration: duration, completion: completion)
+    public func fw_fade(
+        block: @escaping () -> Void,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.transition(
+            with: self,
+            duration: duration,
+            options: [.transitionCrossDissolve, .allowUserInteraction],
+            animations: block,
+            completion: completion
+        )
     }
 
     /**
@@ -504,8 +789,20 @@ import FWObjC
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fw_rotate(degree: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_rotate(withDegree: degree, duration: duration, completion: completion)
+    public func fw_rotate(
+        degree: CGFloat,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear,
+            animations: {
+                self.transform = CGAffineTransformRotate(self.transform, degree * .pi / 180.0)
+            },
+            completion: completion
+        )
     }
 
     /**
@@ -516,8 +813,21 @@ import FWObjC
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fw_scale(scaleX: Float, scaleY: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_scale(withScaleX: scaleX, scaleY: scaleY, duration: duration, completion: completion)
+    public func fw_scale(
+        scaleX: CGFloat,
+        scaleY: CGFloat,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear,
+            animations: {
+                self.transform = CGAffineTransformScale(self.transform, scaleX, scaleY)
+            },
+            completion: completion
+        )
     }
 
     /**
@@ -527,8 +837,20 @@ import FWObjC
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fw_move(point: CGPoint, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_move(with: point, duration: duration, completion: completion)
+    public func fw_move(
+        point: CGPoint,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear,
+            animations: {
+                self.frame = CGRect(origin: point, size: self.frame.size)
+            },
+            completion: completion
+        )
     }
 
     /**
@@ -538,8 +860,20 @@ import FWObjC
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fw_move(frame: CGRect, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_move(withFrame: frame, duration: duration, completion: completion)
+    public func fw_move(
+        frame: CGRect,
+        duration: TimeInterval,
+        completion: ((Bool) -> Void)? = nil
+    ) {
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: .curveLinear,
+            animations: {
+                self.frame = frame
+            },
+            completion: completion
+        )
     }
     
     /**
@@ -548,8 +882,13 @@ import FWObjC
      @param block 动画代码块
      @param completion 完成事件
      */
-    public static func fw_animateNone(block: () -> Void, completion: (() -> Void)? = nil) {
-        UIView.__fw_animateNone(block, completion: completion)
+    public static func fw_animateNone(
+        block: @escaping () -> Void,
+        completion: (() -> Void)? = nil
+    ) {
+        UIView.animate(withDuration: 0, animations: block) { _ in
+            completion?()
+        }
     }
 
     /**
@@ -558,8 +897,14 @@ import FWObjC
      @param block 动画代码块
      @param completion 完成事件
      */
-    public static func fw_animate(block: () -> Void, completion: (() -> Void)? = nil) {
-        UIView.__fw_animate(block, completion: completion)
+    public static func fw_animate(
+        block: () -> Void,
+        completion: (() -> Void)? = nil
+    ) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        block()
+        CATransaction.commit()
     }
     
     // MARK: - Drag

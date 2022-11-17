@@ -243,10 +243,10 @@ extension Wrapper where Base: UIView {
      @param option     动画选项
      @param block      动画代码块
      @param duration   持续时间
-     @param animationsEnabled 是否启用动画
+     @param animationsEnabled 是否启用动画，默认true
      @param completion 完成事件
      */
-    public func addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool, completion: ((Bool) -> Void)? = nil) {
+    public func addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool = true, completion: ((Bool) -> Void)? = nil) {
         base.fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
     }
 
@@ -262,7 +262,7 @@ extension Wrapper where Base: UIView {
      @return CATransition
      */
     @discardableResult
-    public func addTransition(type: String, subtype: String?, timingFunction: String?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
+    public func addTransition(type: CATransitionType, subtype: CATransitionSubtype?, timingFunction: CAMediaTimingFunction?, duration: CFTimeInterval, completion: ((Bool) -> Void)? = nil) -> CATransition {
         return base.fw_addTransition(type: type, subtype: subtype, timingFunction: timingFunction, duration: duration, completion: completion)
     }
 
@@ -308,7 +308,7 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func fade(alpha: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+    public func fade(alpha: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
         base.fw_fade(alpha: alpha, duration: duration, completion: completion)
     }
 
@@ -342,7 +342,7 @@ extension Wrapper where Base: UIView {
      *  @param duration   持续时长
      *  @param completion 完成回调
      */
-    public func scale(scaleX: Float, scaleY: Float, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
+    public func scale(scaleX: CGFloat, scaleY: CGFloat, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
         base.fw_scale(scaleX: scaleX, scaleY: scaleY, duration: duration, completion: completion)
     }
 
@@ -374,7 +374,7 @@ extension Wrapper where Base: UIView {
      @param block 动画代码块
      @param completion 完成事件
      */
-    public static func animateNone(block: () -> Void, completion: (() -> Void)? = nil) {
+    public static func animateNone(block: @escaping () -> Void, completion: (() -> Void)? = nil) {
         Base.fw_animateNone(block: block, completion: completion)
     }
 

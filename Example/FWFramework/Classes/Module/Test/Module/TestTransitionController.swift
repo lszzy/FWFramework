@@ -127,14 +127,14 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         transition.transitionBlock = { transiton in
             if transition.transitionType == .present {
                 transition.start()
-                transition.transitionContext?.view(forKey: .to)?.fw.addTransition(type: CATransitionType.moveIn.rawValue, subtype: CATransitionSubtype.fromTop.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
+                transition.transitionContext?.view(forKey: .to)?.fw.addTransition(type: .moveIn, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
                     transition.complete()
                 })
             } else if transition.transitionType == .dismiss {
                 transition.start()
                 // 这种转场动画需要先隐藏目标视图
                 transition.transitionContext?.view(forKey: .from)?.isHidden = true
-                transition.transitionContext?.view(forKey: .from)?.fw.addTransition(type: CATransitionType.reveal.rawValue, subtype: CATransitionSubtype.fromBottom.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
+                transition.transitionContext?.view(forKey: .from)?.fw.addTransition(type: .reveal, subtype: .fromBottom, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
                     transition.complete()
                 })
             }
@@ -300,14 +300,14 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             if transition.transitionType == .push {
                 transition.start()
                 // 使用navigationController.view做动画，而非containerView做动画，下同
-                self?.navigationController?.view.fw.addTransition(type: CATransitionType.moveIn.rawValue, subtype: CATransitionSubtype.fromTop.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
+                self?.navigationController?.view.fw.addTransition(type: .moveIn, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
                     transition.complete()
                 })
             } else if transition.transitionType == .pop {
                 transition.start()
                 // 这种转场动画需要先隐藏目标视图
                 transition.transitionContext?.view(forKey: .from)?.isHidden = true
-                self?.navigationController?.view.fw.addTransition(type: CATransitionType.reveal.rawValue, subtype: CATransitionSubtype.fromBottom.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
+                self?.navigationController?.view.fw.addTransition(type: .reveal, subtype: .fromBottom, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
                     transition.complete()
                 })
             }

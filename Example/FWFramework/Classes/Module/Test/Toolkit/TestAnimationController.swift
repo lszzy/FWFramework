@@ -74,7 +74,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
         var title: String? = nil
         if animationIndex == 1 {
             title = "Push.FromTop"
-            animationView.fw.addTransition(type: CATransitionType.push.rawValue, subtype: CATransitionSubtype.fromTop.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: 1.0)
+            animationView.fw.addTransition(type: .push, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: 1.0)
         } else if animationIndex == 2 {
             title = "CurlUp"
             animationView.fw.addAnimation(curve: .easeInOut, transition: .curlUp, duration: 1.0)
