@@ -110,30 +110,6 @@
 
 @implementation UITableViewCell (FWDynamicLayout)
 
-- (BOOL)fw_maxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewFixed:(BOOL)maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fw_maxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFw_maxYViewPadding:(CGFloat)maxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_maxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewExpanded:(BOOL)maxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (UIView *)fw_maxYView {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -170,30 +146,6 @@
 #pragma mark - UITableViewHeaderFooterView+FWDynamicLayout
 
 @implementation UITableViewHeaderFooterView (FWDynamicLayout)
-
-- (BOOL)fw_maxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewFixed:(BOOL)maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fw_maxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFw_maxYViewPadding:(CGFloat)maxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_maxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewExpanded:(BOOL)maxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
 
 - (UIView *)fw_maxYView {
     return objc_getAssociatedObject(self, _cmd);
@@ -622,30 +574,6 @@
 
 @implementation UICollectionViewCell (FWDynamicLayout)
 
-- (BOOL)fw_maxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewFixed:(BOOL)maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fw_maxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFw_maxYViewPadding:(CGFloat)maxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_maxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewExpanded:(BOOL)maxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (UIView *)fw_maxYView {
     return objc_getAssociatedObject(self, _cmd);
 }
@@ -694,30 +622,6 @@
 #pragma mark - UICollectionReusableView+FWDynamicLayout
 
 @implementation UICollectionReusableView (FWDynamicLayout)
-
-- (BOOL)fw_maxYViewFixed {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewFixed:(BOOL)maxYViewFixed {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewFixed), @(maxYViewFixed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (CGFloat)fw_maxYViewPadding {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
-}
-
-- (void)setFw_maxYViewPadding:(CGFloat)maxYViewPadding {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewPadding), @(maxYViewPadding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_maxYViewExpanded {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setFw_maxYViewExpanded:(BOOL)maxYViewExpanded {
-    objc_setAssociatedObject(self, @selector(fw_maxYViewExpanded), @(maxYViewExpanded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
 
 - (UIView *)fw_maxYView {
     return objc_getAssociatedObject(self, _cmd);
