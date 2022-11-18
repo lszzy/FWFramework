@@ -16,15 +16,6 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 
 @interface UITableViewCell (FWDynamicLayout)
 
-/// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fw_maxYViewFixed NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
-@property (nonatomic, assign) CGFloat fw_maxYViewPadding NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-@property (nonatomic, assign) BOOL fw_maxYViewExpanded NS_REFINED_FOR_SWIFT;
-
 /// 免注册创建UITableViewCell，内部自动处理缓冲池，默认Default类型
 + (instancetype)fw_cellWithTableView:(UITableView *)tableView NS_REFINED_FOR_SWIFT;
 
@@ -54,15 +45,6 @@ typedef void(^FWHeaderFooterViewConfigurationBlock)(__kindof UITableViewHeaderFo
 typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterView *headerFooterView, NSInteger section) NS_SWIFT_NAME(HeaderFooterViewSectionBlock);
 
 @interface UITableViewHeaderFooterView (FWDynamicLayout)
-
-/// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fw_maxYViewFixed NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
-@property (nonatomic, assign) CGFloat fw_maxYViewPadding NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-@property (nonatomic, assign) BOOL fw_maxYViewExpanded NS_REFINED_FOR_SWIFT;
 
 /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池
 + (instancetype)fw_headerFooterViewWithTableView:(UITableView *)tableView NS_REFINED_FOR_SWIFT;
@@ -180,15 +162,6 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 @interface UICollectionViewCell (FWDynamicLayout)
 
-/// 如果用来确定Cell所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fw_maxYViewFixed NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
-@property (nonatomic, assign) CGFloat fw_maxYViewPadding NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-@property (nonatomic, assign) BOOL fw_maxYViewExpanded NS_REFINED_FOR_SWIFT;
-
 /// 免注册创建UICollectionViewCell，内部自动处理缓冲池
 + (instancetype)fw_cellWithCollectionView:(UICollectionView *)collectionView
                                indexPath:(NSIndexPath *)indexPath NS_REFINED_FOR_SWIFT;
@@ -220,15 +193,6 @@ typedef void(^FWReusableViewConfigurationBlock)(__kindof UICollectionReusableVie
 typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath) NS_SWIFT_NAME(ReusableViewIndexPathBlock);
 
 @interface UICollectionReusableView (FWDynamicLayout)
-
-/// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
-@property (nonatomic, assign) BOOL fw_maxYViewFixed NS_REFINED_FOR_SWIFT;
-
-/// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
-@property (nonatomic, assign) CGFloat fw_maxYViewPadding NS_REFINED_FOR_SWIFT;
-
-/// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-@property (nonatomic, assign) BOOL fw_maxYViewExpanded NS_REFINED_FOR_SWIFT;
 
 /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池
 + (instancetype)fw_reusableViewWithCollectionView:(UICollectionView *)collectionView
