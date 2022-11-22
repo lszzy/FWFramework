@@ -116,7 +116,6 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.fw.height(cellClass: TestSkeletonCell.self) { [weak self] cell in
-            guard let cell = cell as? TestSkeletonCell else { return }
             cell.configure(object: self?.tableData.object(at: indexPath.row) as? String ?? "")
         }
     }
@@ -135,7 +134,6 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return tableView.fw.height(headerFooterViewClass: TestSkeletonHeaderView.self, type: .header) { headerView in
-            guard let headerView = headerView as? TestSkeletonHeaderView else { return }
             headerView.configure(object: "1")
         }
     }
@@ -148,7 +146,6 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return tableView.fw.height(headerFooterViewClass: TestSkeletonFooterView.self, type: .footer) { footerView in
-            guard let footerView = footerView as? TestSkeletonFooterView else { return }
             footerView.configure(object: "1")
         }
     }

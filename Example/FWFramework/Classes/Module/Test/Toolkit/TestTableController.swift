@@ -86,7 +86,6 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.fw.height(cellClass: TestTableDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
-            guard let cell = cell as? TestTableDynamicLayoutCell else { return }
             cell.object = self?.tableData.object(at: indexPath.row) as? TestTableDynamicLayoutObject
         }
     }
@@ -125,7 +124,6 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             return 0
         }
         return tableView.fw.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .header) { headerView in
-            guard let headerView = headerView as? TestTableDynamicLayoutHeaderView else { return }
             headerView.renderData("我是表格Header\n我是表格Header")
         }
     }
@@ -144,7 +142,6 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             return 0
         }
         return tableView.fw.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .footer) { footerView in
-            guard let footerView = footerView as? TestTableDynamicLayoutHeaderView else { return }
             footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         }
     }

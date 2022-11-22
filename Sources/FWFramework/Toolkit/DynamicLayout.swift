@@ -59,7 +59,7 @@ import FWObjC
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
     public static func fw_height(
         tableView: UITableView,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (UITableViewCell) -> Void
     ) -> CGFloat {
         return tableView.fw_height(cellClass: self, configuration: configuration)
     }
@@ -68,7 +68,7 @@ import FWObjC
     public static func fw_height(
         tableView: UITableView,
         cacheBy key: AnyHashable,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (UITableViewCell) -> Void
     ) -> CGFloat {
         return tableView.fw_height(cellClass: self, cacheBy: key, configuration: configuration)
     }
@@ -76,6 +76,12 @@ import FWObjC
 }
 
 // MARK: - UITableViewHeaderFooterView+DynamicLayout
+@objc(FWHeaderFooterViewType)
+public enum HeaderFooterViewType: Int {
+    case header = 0
+    case footer = 1
+}
+
 @_spi(FW) @objc extension UITableViewHeaderFooterView {
     
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
@@ -126,7 +132,7 @@ import FWObjC
     public static func fw_height(
         tableView: UITableView,
         type: HeaderFooterViewType,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         return tableView.fw_height(headerFooterViewClass: self, type: type, configuration: configuration)
     }
@@ -136,7 +142,7 @@ import FWObjC
         tableView: UITableView,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         return tableView.fw_height(headerFooterViewClass: self, type: type, cacheBy: key, configuration: configuration)
     }
@@ -252,7 +258,7 @@ import FWObjC
     /// - Returns: cell高度
     public func fw_height(
         cellClass: UITableViewCell.Type,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (UITableViewCell) -> Void
     ) -> CGFloat {
         return fw_dynamicHeight(cellClass: cellClass, configuration: configuration, shouldCache: nil)
     }
@@ -266,7 +272,7 @@ import FWObjC
     public func fw_height(
         cellClass: UITableViewCell.Type,
         cacheBy key: AnyHashable,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (UITableViewCell) -> Void
     ) -> CGFloat {
         var cellHeight = fw_cellHeightCache(for: key)
         if cellHeight != UITableView.automaticDimension {
@@ -299,7 +305,7 @@ import FWObjC
         return view
     }
     
-    private func fw_dynamicHeight(cellClass: UITableViewCell.Type, configuration: @escaping CellConfigurationBlock, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
+    private func fw_dynamicHeight(cellClass: UITableViewCell.Type, configuration: @escaping (UITableViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
         let view = fw_dynamicView(cellClass: cellClass)
         var width = CGRectGetWidth(self.frame)
         if width <= 0 && self.superview != nil {
@@ -368,7 +374,7 @@ import FWObjC
     public func fw_height(
         headerFooterViewClass: UITableViewHeaderFooterView.Type,
         type: HeaderFooterViewType,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         return fw_dynamicHeight(headerFooterViewClass: headerFooterViewClass, type: type, configuration: configuration, shouldCache: nil)
     }
@@ -384,7 +390,7 @@ import FWObjC
         headerFooterViewClass: UITableViewHeaderFooterView.Type,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         var viewHeight = fw_headerFooterHeightCache(type, for: key)
         if viewHeight != UITableView.automaticDimension {
@@ -416,7 +422,7 @@ import FWObjC
         return view
     }
     
-    private func fw_dynamicHeight(headerFooterViewClass: UITableViewHeaderFooterView.Type, type: HeaderFooterViewType, configuration: @escaping HeaderFooterViewConfigurationBlock, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
+    private func fw_dynamicHeight(headerFooterViewClass: UITableViewHeaderFooterView.Type, type: HeaderFooterViewType, configuration: @escaping (UITableViewHeaderFooterView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
         let view = fw_dynamicView(headerFooterViewClass: headerFooterViewClass, identifier: "\(type.rawValue)")
         var width = CGRectGetWidth(self.frame)
         if width <= 0 && self.superview != nil {
@@ -501,7 +507,7 @@ import FWObjC
         collectionView: UICollectionView,
         width: CGFloat = 0,
         height: CGFloat = 0,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (UICollectionViewCell) -> Void
     ) -> CGSize {
         return collectionView.fw_size(cellClass: self, width: width, height: height, configuration: configuration)
     }
@@ -512,7 +518,7 @@ import FWObjC
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (UICollectionViewCell) -> Void
     ) -> CGSize {
         return collectionView.fw_size(cellClass: self, width: width, height: height, cacheBy: key, configuration: configuration)
     }
@@ -575,7 +581,7 @@ import FWObjC
         width: CGFloat = 0,
         height: CGFloat = 0,
         kind: String,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (UICollectionReusableView) -> Void
     ) -> CGSize {
         return collectionView.fw_size(reusableViewClass: self, width: width, height: height, kind: kind, configuration: configuration)
     }
@@ -587,7 +593,7 @@ import FWObjC
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (UICollectionReusableView) -> Void
     ) -> CGSize {
         return collectionView.fw_size(reusableViewClass: self, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
     }
@@ -706,7 +712,7 @@ import FWObjC
         cellClass: UICollectionViewCell.Type,
         width: CGFloat = 0,
         height: CGFloat = 0,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (UICollectionViewCell) -> Void
     ) -> CGSize {
         return fw_dynamicSize(cellClass: cellClass, width: width, height: height, configuration: configuration, shouldCache: nil)
     }
@@ -724,7 +730,7 @@ import FWObjC
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (UICollectionViewCell) -> Void
     ) -> CGSize {
         var cacheKey = key
         if width > 0 || height > 0 {
@@ -760,7 +766,7 @@ import FWObjC
         return view
     }
     
-    private func fw_dynamicSize(cellClass: UICollectionViewCell.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, configuration: @escaping CollectionCellConfigurationBlock, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
+    private func fw_dynamicSize(cellClass: UICollectionViewCell.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, configuration: @escaping (UICollectionViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
         let view = fw_dynamicView(cellClass: cellClass, identifier: "\(fixedWidth)-\(fixedHeight)")
         var width = fixedWidth
         var height = fixedHeight
@@ -845,7 +851,7 @@ import FWObjC
         width: CGFloat = 0,
         height: CGFloat = 0,
         kind: String,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (UICollectionReusableView) -> Void
     ) -> CGSize {
         return fw_dynamicSize(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, configuration: configuration, shouldCache: nil)
     }
@@ -865,7 +871,7 @@ import FWObjC
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (UICollectionReusableView) -> Void
     ) -> CGSize {
         var cacheKey = key
         if width > 0 || height > 0 {
@@ -901,7 +907,7 @@ import FWObjC
         return view
     }
     
-    private func fw_dynamicSize(reusableViewClass: UICollectionReusableView.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, kind: String, configuration: @escaping ReusableViewConfigurationBlock, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
+    private func fw_dynamicSize(reusableViewClass: UICollectionReusableView.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, kind: String, configuration: @escaping (UICollectionReusableView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
         let view = fw_dynamicView(reusableViewClass: reusableViewClass, identifier: "\(kind)-\(fixedWidth)-\(fixedHeight)")
         var width = fixedWidth
         var height = fixedHeight

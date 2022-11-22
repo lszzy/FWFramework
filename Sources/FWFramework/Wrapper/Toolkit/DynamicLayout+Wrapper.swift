@@ -43,18 +43,22 @@ extension Wrapper where Base: UITableViewCell {
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
     public static func height(
         tableView: UITableView,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGFloat {
-        return Base.fw_height(tableView: tableView, configuration: configuration)
+        return Base.fw_height(tableView: tableView) { cell in
+            configuration(cell as! Base)
+        }
     }
     
     /// 根据配置自动计算cell高度，使用缓存，子类可重写
     public static func height(
         tableView: UITableView,
         cacheBy key: AnyHashable,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGFloat {
-        return Base.fw_height(tableView: tableView, cacheBy: key, configuration: configuration)
+        return Base.fw_height(tableView: tableView, cacheBy: key) { cell in
+            configuration(cell as! Base)
+        }
     }
     
 }
@@ -92,9 +96,11 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
     public static func height(
         tableView: UITableView,
         type: HeaderFooterViewType,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGFloat {
-        return Base.fw_height(tableView: tableView, type: type, configuration: configuration)
+        return Base.fw_height(tableView: tableView, type: type) { headerFooterView in
+            configuration(headerFooterView as! Base)
+        }
     }
     
     /// 根据配置自动计算cell高度，使用缓存，子类可重写
@@ -102,9 +108,11 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         tableView: UITableView,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGFloat {
-        return Base.fw_height(tableView: tableView, type: type, cacheBy: key, configuration: configuration)
+        return Base.fw_height(tableView: tableView, type: type, cacheBy: key) { headerFooterView in
+            configuration(headerFooterView as! Base)
+        }
     }
     
 }
@@ -148,11 +156,13 @@ extension Wrapper where Base: UITableView {
     ///   - cellClass: cell类
     ///   - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak
     /// - Returns: cell高度
-    public func height(
-        cellClass: UITableViewCell.Type,
-        configuration: @escaping CellConfigurationBlock
+    public func height<T: UITableViewCell>(
+        cellClass: T.Type,
+        configuration: @escaping (T) -> Void
     ) -> CGFloat {
-        return base.fw_height(cellClass: cellClass, configuration: configuration)
+        return base.fw_height(cellClass: cellClass) { cell in
+            configuration(cell as! T)
+        }
     }
 
     /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key
@@ -161,12 +171,14 @@ extension Wrapper where Base: UITableView {
     ///   - key: 使用 key 做缓存标识，如数据唯一id，对象hash等
     ///   - configuration: 布局 cell，内部不会拥有 Block，不需要 __weak
     /// - Returns: cell高度
-    public func height(
-        cellClass: UITableViewCell.Type,
+    public func height<T: UITableViewCell>(
+        cellClass: T.Type,
         cacheBy key: AnyHashable,
-        configuration: @escaping CellConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGFloat {
-        return base.fw_height(cellClass: cellClass, cacheBy: key, configuration: configuration)
+        return base.fw_height(cellClass: cellClass, cacheBy: key) { cell in
+            configuration(cell as! T)
+        }
     }
 
     // MARK: - HeaderFooterView
@@ -176,12 +188,14 @@ extension Wrapper where Base: UITableView {
     ///   - type: HeaderFooter类型，Header 或者 Footer
     ///   - configuration: 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
     /// - Returns: HeaderFooter高度
-    public func height(
-        headerFooterViewClass: UITableViewHeaderFooterView.Type,
+    public func height<T: UITableViewHeaderFooterView>(
+        headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGFloat {
-        return base.fw_height(headerFooterViewClass: headerFooterViewClass, type: type, configuration: configuration)
+        return base.fw_height(headerFooterViewClass: headerFooterViewClass, type: type) { headerFooterView in
+            configuration(headerFooterView as! T)
+        }
     }
 
     /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key
@@ -191,13 +205,15 @@ extension Wrapper where Base: UITableView {
     ///   - key: 使用 key 做缓存标识，如数据唯一id，对象hash等
     ///   - configuration: 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
     /// - Returns: HeaderFooter高度
-    public func height(
-        headerFooterViewClass: UITableViewHeaderFooterView.Type,
+    public func height<T: UITableViewHeaderFooterView>(
+        headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable,
-        configuration: @escaping HeaderFooterViewConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGFloat {
-        return base.fw_height(headerFooterViewClass: headerFooterViewClass, type: type, cacheBy: key, configuration: configuration)
+        return base.fw_height(headerFooterViewClass: headerFooterViewClass, type: type, cacheBy: key) { headerFooterView in
+            configuration(headerFooterView as! T)
+        }
     }
     
 }
@@ -237,9 +253,11 @@ extension Wrapper where Base: UICollectionViewCell {
         collectionView: UICollectionView,
         width: CGFloat = 0,
         height: CGFloat = 0,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGSize {
-        return Base.fw_size(collectionView: collectionView, width: width, height: height, configuration: configuration)
+        return Base.fw_size(collectionView: collectionView, width: width, height: height) { cell in
+            configuration(cell as! Base)
+        }
     }
     
     /// 根据配置自动计算view大小，可固定宽度或高度，支持缓存，子类可重写
@@ -248,9 +266,11 @@ extension Wrapper where Base: UICollectionViewCell {
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGSize {
-        return Base.fw_size(collectionView: collectionView, width: width, height: height, cacheBy: key, configuration: configuration)
+        return Base.fw_size(collectionView: collectionView, width: width, height: height, cacheBy: key) { cell in
+            configuration(cell as! Base)
+        }
     }
     
 }
@@ -292,9 +312,11 @@ extension Wrapper where Base: UICollectionReusableView {
         width: CGFloat = 0,
         height: CGFloat = 0,
         kind: String,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGSize {
-        return Base.fw_size(collectionView: collectionView, width: width, height: height, kind: kind, configuration: configuration)
+        return Base.fw_size(collectionView: collectionView, width: width, height: height, kind: kind) { reusableView in
+            configuration(reusableView as! Base)
+        }
     }
     
     /// 根据配置自动计算view大小，可固定宽度或高度，支持缓存，子类可重写
@@ -304,9 +326,11 @@ extension Wrapper where Base: UICollectionReusableView {
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (Base) -> Void
     ) -> CGSize {
-        return Base.fw_size(collectionView: collectionView, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
+        return Base.fw_size(collectionView: collectionView, width: width, height: height, kind: kind, cacheBy: key) { reusableView in
+            configuration(reusableView as! Base)
+        }
     }
     
 }
@@ -351,13 +375,15 @@ extension Wrapper where Base: UICollectionView {
     ///   - height: 固定高度，默认0不固定
     ///   - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak
     /// - Returns: cell尺寸
-    public func size(
-        cellClass: UICollectionViewCell.Type,
+    public func size<T: UICollectionViewCell>(
+        cellClass: T.Type,
         width: CGFloat = 0,
         height: CGFloat = 0,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGSize {
-        return base.fw_size(cellClass: cellClass, width: width, height: height, configuration: configuration)
+        return base.fw_size(cellClass: cellClass, width: width, height: height) { cell in
+            configuration(cell as! T)
+        }
     }
 
     /// 获取 Cell 需要的尺寸，可固定宽度或高度，内部自动处理缓存，缓存标识 key
@@ -368,14 +394,16 @@ extension Wrapper where Base: UICollectionView {
     ///   - key: 使用 key 做缓存标识，如数据唯一id，对象hash等
     ///   - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak
     /// - Returns: cell尺寸
-    public func size(
-        cellClass: UICollectionViewCell.Type,
+    public func size<T: UICollectionViewCell>(
+        cellClass: T.Type,
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable,
-        configuration: @escaping CollectionCellConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGSize {
-        return base.fw_size(cellClass: cellClass, width: width, height: height, cacheBy: key, configuration: configuration)
+        return base.fw_size(cellClass: cellClass, width: width, height: height, cacheBy: key) { cell in
+            configuration(cell as! T)
+        }
     }
 
     // MARK: - ReusableView
@@ -387,14 +415,16 @@ extension Wrapper where Base: UICollectionView {
     ///   - kind: ReusableView类型，Header 或者 Footer
     ///   - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak
     /// - Returns: ReusableView尺寸
-    public func size(
-        reusableViewClass: UICollectionReusableView.Type,
+    public func size<T: UICollectionReusableView>(
+        reusableViewClass: T.Type,
         width: CGFloat = 0,
         height: CGFloat = 0,
         kind: String,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGSize {
-        return base.fw_size(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, configuration: configuration)
+        return base.fw_size(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind) { reusableView in
+            configuration(reusableView as! T)
+        }
     }
 
     /// 获取 ReusableView 需要的尺寸，可固定宽度或高度，内部自动处理缓存，缓存标识 key
@@ -406,15 +436,17 @@ extension Wrapper where Base: UICollectionView {
     ///   - key: 使用 key 做缓存标识，如数据唯一id，对象hash等
     ///   - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak
     /// - Returns: ReusableView尺寸
-    public func size(
-        reusableViewClass: UICollectionReusableView.Type,
+    public func size<T: UICollectionReusableView>(
+        reusableViewClass: T.Type,
         width: CGFloat = 0,
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable,
-        configuration: @escaping ReusableViewConfigurationBlock
+        configuration: @escaping (T) -> Void
     ) -> CGSize {
-        return base.fw_size(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
+        return base.fw_size(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, cacheBy: key) { reusableView in
+            configuration(reusableView as! T)
+        }
     }
     
 }

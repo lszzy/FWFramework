@@ -28,7 +28,7 @@ import FWObjC
     /// 表格section头视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var headerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var headerConfiguration: HeaderFooterViewSectionBlock?
+    open var headerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForHeader: ((Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
@@ -39,7 +39,7 @@ import FWObjC
     /// 表格section尾视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var footerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var footerConfiguration: HeaderFooterViewSectionBlock?
+    open var footerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var heightForFooter: ((Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
@@ -50,7 +50,7 @@ import FWObjC
     /// 表格cell类，支持cell或cellClass，默认nil，优先级低
     open var cellClass: Any?
     /// 表格cell配置句柄，参数为对应cellClass对象
-    open var cellConfiguation: CellIndexPathBlock?
+    open var cellConfiguation: ((UITableViewCell, IndexPath) -> Void)?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     open var heightForRow: ((IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
