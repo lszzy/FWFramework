@@ -103,8 +103,8 @@ import FWObjC
             return UICollectionViewCell(frame: .zero)
         }
         
-        // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-        let cell = clazz.__fw_cell(with: collectionView, indexPath: indexPath)
+        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+        let cell = clazz.fw_cell(collectionView: collectionView, indexPath: indexPath)
         cellConfiguration?(cell, indexPath)
         return cell
     }
@@ -145,8 +145,8 @@ import FWObjC
             if let view = viewClass as? UICollectionReusableView { return view }
             guard let clazz = viewClass as? UICollectionReusableView.Type else { return UICollectionReusableView() }
             
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_reusableView(with: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+            let view = clazz.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             headerConfiguration?(view, indexPath)
             return view
         }
@@ -156,8 +156,8 @@ import FWObjC
             if let view = viewClass as? UICollectionReusableView { return view }
             guard let clazz = viewClass as? UICollectionReusableView.Type else { return UICollectionReusableView() }
             
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_reusableView(with: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+            let view = clazz.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             footerConfiguration?(view, indexPath)
             return view
         }

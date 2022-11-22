@@ -90,8 +90,8 @@ import FWObjC
             return UITableViewCell(style: .default, reuseIdentifier: nil)
         }
         
-        // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-        let cell = clazz.__fw_cell(with: tableView)
+        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+        let cell = clazz.fw_cell(tableView: tableView)
         cellConfiguation?(cell, indexPath)
         return cell
     }
@@ -125,8 +125,8 @@ import FWObjC
             return view
         }
         if let clazz = header as? UITableViewHeaderFooterView.Type {
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_headerFooterView(with: tableView)
+            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+            let view = clazz.fw_headerFooterView(tableView: tableView)
             headerConfiguration?(view, section)
             return view
         }
@@ -163,8 +163,8 @@ import FWObjC
             return view
         }
         if let clazz = footer as? UITableViewHeaderFooterView.Type {
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_headerFooterView(with: tableView)
+            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+            let view = clazz.fw_headerFooterView(tableView: tableView)
             footerConfiguration?(view, section)
             return view
         }
