@@ -33,7 +33,7 @@ import FWObjC
     /// 集合section头视图，支持UICollectionReusableView，默认nil，优先级低
     open var headerViewClass: Any?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var headerConfiguration: ReusableViewIndexPathBlock?
+    open var headerConfiguration: ((UICollectionReusableView, IndexPath) -> Void)?
     /// 集合section头尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var sizeForHeader: ((Int) -> CGSize)?
     /// 集合section头尺寸，默认nil，可设置为automaticSize，优先级低
@@ -44,7 +44,7 @@ import FWObjC
     /// 集合section尾视图，支持UICollectionReusableView，默认nil，优先级低
     open var footerViewClass: Any?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var footerConfiguration: ReusableViewIndexPathBlock?
+    open var footerConfiguration: ((UICollectionReusableView, IndexPath) -> Void)?
     /// 集合section尾尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
     open var sizeForFooter: ((Int) -> CGSize)?
     /// 集合section尾尺寸，默认nil，可设置为automaticSize，优先级低
@@ -55,7 +55,7 @@ import FWObjC
     /// 集合cell类，支持UICollectionViewCell，默认nil，优先级低
     open var cellClass: Any?
     /// 集合cell配置句柄，参数为对应cellClass对象
-    open var cellConfiguration: CollectionCellIndexPathBlock?
+    open var cellConfiguration: ((UICollectionViewCell, IndexPath) -> Void)?
     /// 集合cell尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
     open var sizeForItem: ((IndexPath) -> CGSize)?
     /// 集合cell尺寸，默认nil，可设置为automaticSize，优先级低
