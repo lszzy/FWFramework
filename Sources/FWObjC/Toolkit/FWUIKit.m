@@ -186,66 +186,6 @@
 
 @implementation UIDevice (FWUIKit)
 
-+ (void)fw_setDeviceTokenData:(NSData *)tokenData
-{
-    if (tokenData) {
-        NSMutableString *deviceToken = [NSMutableString string];
-        const char *bytes = tokenData.bytes;
-        NSInteger count = tokenData.length;
-        for (int i = 0; i < count; i++) {
-            [deviceToken appendFormat:@"%02x", bytes[i] & 0x000000FF];
-        }
-        self.fw_deviceToken = [deviceToken copy];
-    } else {
-        self.fw_deviceToken = nil;
-    }
-}
-
-+ (NSString *)fw_deviceToken
-{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"FWDeviceToken"];
-}
-
-+ (void)setFw_deviceToken:(NSString *)deviceToken
-{
-    if (deviceToken) {
-        [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWDeviceToken"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-}
-
-+ (NSString *)fw_deviceModel
-{
-    static NSString *model;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        model = [NSString stringWithUTF8String:machine];
-        free(machine);
-    });
-    return model;
-}
-
-+ (NSString *)fw_deviceIDFV
-{
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-}
-
-+ (NSString *)fw_deviceIDFA
-{
-    #if FWMacroTracking
-    return ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString;
-    #else
-    return nil;
-    #endif
-}
-
 + (BOOL)fw_isJailbroken
 {
 #if TARGET_OS_SIMULATOR

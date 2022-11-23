@@ -107,14 +107,3 @@ import UIKit
         return fw.hasSkeleton
     }
 }
-
-@objc extension UIDevice {
-    
-    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
-    @objc(fw_deviceUUID)
-    public static var __fw_deviceUUID: String {
-        get { fw.deviceUUID }
-        set { fw.deviceUUID = newValue }
-    }
-    
-}
