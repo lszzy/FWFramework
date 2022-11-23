@@ -452,6 +452,21 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  */
 - (nullable NSArray<ObjectType> *)fw_subarrayWithRange:(NSRange)range NS_REFINED_FOR_SWIFT;
 
+/// 过滤数组元素，返回YES的obj重新组装成一个数组
+- (NSArray<ObjectType> *)fw_filterWithBlock:(BOOL (^)(ObjectType obj))block NS_REFINED_FOR_SWIFT;
+
+/// 映射数组元素，返回的obj重新组装成一个数组
+- (NSArray *)fw_mapWithBlock:(id _Nullable (^)(ObjectType obj))block NS_REFINED_FOR_SWIFT;
+
+/// 匹配数组第一个元素，返回满足条件的第一个obj
+- (nullable ObjectType)fw_matchWithBlock:(BOOL (^)(ObjectType obj))block NS_REFINED_FOR_SWIFT;
+
+/// 从数组中随机取出对象，如@[@"a", @"b", @"c"]随机取出@"b"
+@property (nullable, nonatomic, readonly) ObjectType fw_randomObject NS_REFINED_FOR_SWIFT;
+
+/// 从数组中按照权重随机取出对象，如@[@"a", @"b", @"c"]按照@[@0, @8, @02]大概率取出@"b"，不会取出@"a"
+- (nullable ObjectType)fw_randomObject:(NSArray *)weights NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSMutableArray+FWSafeType
@@ -536,6 +551,15 @@ FOUNDATION_EXPORT NSURL * FWSafeURL(id _Nullable value) NS_SWIFT_UNAVAILABLE("")
  @return 键值
  */
 - (nullable ObjectType)fw_objectForKey:(nullable KeyType)key NS_REFINED_FOR_SWIFT;
+
+/// 过滤字典元素，如果block返回NO，则去掉该元素
+- (NSDictionary<KeyType, ObjectType> *)fw_filterWithBlock:(BOOL (^)(KeyType key, ObjectType obj))block NS_REFINED_FOR_SWIFT;
+
+/// 映射字典元素，返回的obj重新组装成一个字典
+- (NSDictionary *)fw_mapWithBlock:(id _Nullable (^)(KeyType key, ObjectType obj))block NS_REFINED_FOR_SWIFT;
+
+/// 匹配字典第一个元素，返回满足条件的第一个obj
+- (nullable ObjectType)fw_matchWithBlock:(BOOL (^)(KeyType key, ObjectType obj))block NS_REFINED_FOR_SWIFT;
 
 @end
 
