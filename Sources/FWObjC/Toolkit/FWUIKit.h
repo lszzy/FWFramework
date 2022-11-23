@@ -52,21 +52,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIDevice (FWUIKit)
 
-/// 设置设备token原始Data，格式化并保存
-+ (void)fw_setDeviceTokenData:(nullable NSData *)tokenData NS_REFINED_FOR_SWIFT;
-
-/// 获取或设置设备Token格式化后的字符串
-@property (class, nonatomic, copy, nullable) NSString *fw_deviceToken NS_REFINED_FOR_SWIFT;
-
-/// 获取设备模型，格式："iPhone6,1"
-@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceModel NS_REFINED_FOR_SWIFT;
-
-/// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFV NS_REFINED_FOR_SWIFT;
-
-/// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
-@property (class, nonatomic, copy, readonly, nullable) NSString *fw_deviceIDFA NS_REFINED_FOR_SWIFT;
-
 /// 是否越狱
 @property (class, nonatomic, assign, readonly) BOOL fw_isJailbroken NS_REFINED_FOR_SWIFT;
 
