@@ -389,7 +389,7 @@ import FWObjC
     
     /// 转义Html，如"a<"转义为"a&lt;"
     public var fw_escapeHtml: String {
-        return (self as NSString).__fw_escapeHtml
+        return __Bridge.escapeHtml(self)
     }
     
     /**
