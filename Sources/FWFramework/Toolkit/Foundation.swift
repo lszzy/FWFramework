@@ -11,22 +11,22 @@ import FWObjC
 #endif
 
 // MARK: - Data+Foundation
-extension Wrapper where Base == Data {
+@_spi(FW) extension Data {
     /// 使用NSKeyedArchiver压缩对象
-    public static func archiveObject(_ object: Any) -> Data? {
+    public static func fw_archiveObject(_ object: Any) -> Data? {
         let data = try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
         return data
     }
     
     /// 使用NSKeyedUnarchiver解压数据
-    public func unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
-        let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: self.base)
+    public func fw_unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
+        let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: self)
         return object
     }
     
     /// 保存对象归档
-    public static func archiveObject(_ object: Any, file: String) -> Bool {
-        guard let data = archiveObject(object) else { return false }
+    public static func fw_archiveObject(_ object: Any, file: String) -> Bool {
+        guard let data = fw_archiveObject(object) else { return false }
         do {
             try data.write(to: URL(fileURLWithPath: file))
             return true
@@ -36,84 +36,84 @@ extension Wrapper where Base == Data {
     }
     
     /// 读取对象归档
-    public static func unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
+    public static func fw_unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return nil }
-        return data.fw.unarchiveObject(clazz)
+        return data.fw_unarchiveObject(clazz)
     }
     
     // MARK: - Encrypt
     /// 利用AES加密数据
-    public func aesEncrypt(key: String, iv: Data) -> Data? {
-        return (base as NSData).__fw_AESEncrypt(withKey: key, andIV: iv)
+    public func fw_aesEncrypt(key: String, iv: Data) -> Data? {
+        return (self as NSData).__fw_AESEncrypt(withKey: key, andIV: iv)
     }
 
     /// 利用AES解密数据
-    public func aesDecrypt(key: String, iv: Data) -> Data? {
-        return (base as NSData).__fw_AESDecrypt(withKey: key, andIV: iv)
+    public func fw_aesDecrypt(key: String, iv: Data) -> Data? {
+        return (self as NSData).__fw_AESDecrypt(withKey: key, andIV: iv)
     }
 
     /// 利用3DES加密数据
-    public func des3Encrypt(key: String, iv: Data) -> Data? {
-        return (base as NSData).__fw_DES3Encrypt(withKey: key, andIV: iv)
+    public func fw_des3Encrypt(key: String, iv: Data) -> Data? {
+        return (self as NSData).__fw_DES3Encrypt(withKey: key, andIV: iv)
     }
 
     /// 利用3DES解密数据
-    public func des3Decrypt(key: String, iv: Data) -> Data? {
-        return (base as NSData).__fw_DES3Decrypt(withKey: key, andIV: iv)
+    public func fw_des3Decrypt(key: String, iv: Data) -> Data? {
+        return (self as NSData).__fw_DES3Decrypt(withKey: key, andIV: iv)
     }
 
     // MARK: - RSA
     /// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
-    public func rsaEncrypt(publicKey: String) -> Data? {
-        return (base as NSData).__fw_RSAEncrypt(withPublicKey: publicKey)
+    public func fw_rsaEncrypt(publicKey: String) -> Data? {
+        return (self as NSData).__fw_RSAEncrypt(withPublicKey: publicKey)
     }
 
     /// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
-    public func rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
-        return (base as NSData).__fw_RSAEncrypt(withPublicKey: publicKey, andTag: tag, base64Encode: base64Encode)
+    public func fw_rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
+        return (self as NSData).__fw_RSAEncrypt(withPublicKey: publicKey, andTag: tag, base64Encode: base64Encode)
     }
 
     /// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
-    public func rsaDecrypt(privateKey: String) -> Data? {
-        return (base as NSData).__fw_RSADecrypt(withPrivateKey: privateKey)
+    public func fw_rsaDecrypt(privateKey: String) -> Data? {
+        return (self as NSData).__fw_RSADecrypt(withPrivateKey: privateKey)
     }
 
     /// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
-    public func rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
-        return (base as NSData).__fw_RSADecrypt(withPrivateKey: privateKey, andTag: tag, base64Decode: base64Decode)
+    public func fw_rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
+        return (self as NSData).__fw_RSADecrypt(withPrivateKey: privateKey, andTag: tag, base64Decode: base64Decode)
     }
 
     /// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
-    public func rsaSign(privateKey: String) -> Data? {
-        return (base as NSData).__fw_RSASign(withPrivateKey: privateKey)
+    public func fw_rsaSign(privateKey: String) -> Data? {
+        return (self as NSData).__fw_RSASign(withPrivateKey: privateKey)
     }
 
     /// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
-    public func rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
-        return (base as NSData).__fw_RSASign(withPrivateKey: privateKey, andTag: tag, base64Encode: base64Encode)
+    public func fw_rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
+        return (self as NSData).__fw_RSASign(withPrivateKey: privateKey, andTag: tag, base64Encode: base64Encode)
     }
 
     /// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
-    public func rsaVerify(publicKey: String) -> Data? {
-        return (base as NSData).__fw_RSAVerify(withPublicKey: publicKey)
+    public func fw_rsaVerify(publicKey: String) -> Data? {
+        return (self as NSData).__fw_RSAVerify(withPublicKey: publicKey)
     }
 
     /// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
-    public func rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
-        return (base as NSData).__fw_RSAVerify(withPublicKey: publicKey, andTag: tag, base64Decode: base64Decode)
+    public func fw_rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
+        return (self as NSData).__fw_RSAVerify(withPublicKey: publicKey, andTag: tag, base64Decode: base64Decode)
     }
 }
 
 // MARK: - Date+Foundation
-extension Wrapper where Base == Date {
+@_spi(FW) extension Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
-    public static var currentTime: TimeInterval {
+    public static var fw_currentTime: TimeInterval {
         get { return NSDate.__fw_currentTime }
         set { NSDate.__fw_currentTime = newValue }
     }
     
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
-    public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
+    public static func fw_date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         if let timeZone = timeZone {
@@ -124,23 +124,23 @@ extension Wrapper where Base == Date {
     }
     
     /// 转化为字符串，默认当前时区，格式：yyyy-MM-dd HH:mm:ss
-    public var stringValue: String {
-        return string(format: "yyyy-MM-dd HH:mm:ss")
+    public var fw_stringValue: String {
+        return fw_string(format: "yyyy-MM-dd HH:mm:ss")
     }
     
     /// 转化为字符串，自定义格式和时区
-    public func string(format: String, timeZone: TimeZone? = nil) -> String {
+    public func fw_string(format: String, timeZone: TimeZone? = nil) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         if let timeZone = timeZone {
             formatter.timeZone = timeZone
         }
-        let string = formatter.string(from: self.base)
+        let string = formatter.string(from: self)
         return string
     }
     
     /// 格式化时长，格式"00:00"或"00:00:00"
-    public static func formatDuration(_ duration: TimeInterval, hasHour: Bool) -> String {
+    public static func fw_formatDuration(_ duration: TimeInterval, hasHour: Bool) -> String {
         var seconds = Int64(duration)
         if hasHour {
             var minute = seconds / 60
@@ -156,88 +156,88 @@ extension Wrapper where Base == Date {
     }
     
     /// 格式化16位、13位时间戳为10位(秒)
-    public static func formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
+    public static func fw_formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
         return NSDate.__fw_formatTimestamp(timestamp)
     }
     
     /// 是否是闰年
-    public var isLeapYear: Bool {
-        return (base as NSDate).__fw_isLeapYear
+    public var fw_isLeapYear: Bool {
+        return (self as NSDate).__fw_isLeapYear
     }
 
     /// 是否是同一天
-    public func isSameDay(_ date: Date) -> Bool {
-        return (base as NSDate).__fw_isSameDay(date)
+    public func fw_isSameDay(_ date: Date) -> Bool {
+        return (self as NSDate).__fw_isSameDay(date)
     }
 
     /// 添加指定日期，如year:1|month:-1|day:1等
-    public func date(byAdding: DateComponents) -> Date? {
-        return (base as NSDate).__fw_date(byAdding: byAdding)
+    public func fw_date(byAdding: DateComponents) -> Date? {
+        return (self as NSDate).__fw_date(byAdding: byAdding)
     }
 
     /// 与指定日期相隔天数
-    public func days(from date: Date) -> Int {
-        return (base as NSDate).__fw_days(from: date)
+    public func fw_days(from date: Date) -> Int {
+        return (self as NSDate).__fw_days(from: date)
     }
 }
 
 // MARK: - NSNumber+Foundation
-extension Wrapper where Base: NSNumber {
+@_spi(FW) @objc extension NSNumber {
     
     /// 转换为CGFloat
-    public var CGFloatValue: CGFloat {
-        return base.__fw_CGFloatValue
+    public var fw_CGFloatValue: CGFloat {
+        return self.__fw_CGFloatValue
     }
 
     /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func roundString(_ digit: Int) -> String {
-        return base.__fw_roundString(digit)
+    public func fw_roundString(_ digit: Int) -> String {
+        return self.__fw_roundString(digit)
     }
 
     /// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func ceilString(_ digit: Int) -> String {
-        return base.__fw_ceilString(digit)
+    public func fw_ceilString(_ digit: Int) -> String {
+        return self.__fw_ceilString(digit)
     }
 
     /// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
-    public func floorString(_ digit: Int) -> String {
-        return base.__fw_floorString(digit)
+    public func fw_floorString(_ digit: Int) -> String {
+        return self.__fw_floorString(digit)
     }
 
     /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func roundNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_roundNumber(digit)
+    public func fw_roundNumber(_ digit: UInt) -> NSNumber {
+        return self.__fw_roundNumber(digit)
     }
 
     /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func ceilNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_ceilNumber(digit)
+    public func fw_ceilNumber(_ digit: UInt) -> NSNumber {
+        return self.__fw_ceilNumber(digit)
     }
 
     /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-    public func floorNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_floorNumber(digit)
+    public func fw_floorNumber(_ digit: UInt) -> NSNumber {
+        return self.__fw_floorNumber(digit)
     }
     
 }
 
 // MARK: - String+Foundation
-extension Wrapper where Base == String {
+@_spi(FW) extension String {
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
-    public func size(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize {
+    public func fw_size(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize {
         var attr: [NSAttributedString.Key: Any] = [:]
         attr[.font] = font
         if let attributes = attributes {
             attr.merge(attributes) { _, last in last }
         }
         
-        let str = self.base as NSString
+        let str = self as NSString
         let size = str.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attr, context: nil).size
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
     /// 格式化文件大小为".0K/.1M/.1G"
-    public static func sizeString(_ aFileSize: UInt) -> String {
+    public static func fw_sizeString(_ aFileSize: UInt) -> String {
         guard aFileSize > 0 else { return "0K" }
         var fileSize = Double(aFileSize) / 1024
         if fileSize >= 1024 {
@@ -254,9 +254,9 @@ extension Wrapper where Base == String {
     }
     
     /// 是否匹配正则表达式，示例：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
-    public func matchesRegex(_ regex: String) -> Bool {
+    public func fw_matchesRegex(_ regex: String) -> Bool {
         let regexPredicate = NSPredicate(format: "SELF MATCHES %@", regex)
-        return regexPredicate.evaluate(with: self.base)
+        return regexPredicate.evaluate(with: self)
     }
     
     /**
@@ -264,8 +264,8 @@ extension Wrapper where Base == String {
      *
      *  @param index 目标索引
      */
-    public func emojiSubstring(_ index: UInt) -> String {
-        return (base as NSString).__fw_emojiSubstring(index)
+    public func fw_emojiSubstring(_ index: UInt) -> String {
+        return (self as NSString).__fw_emojiSubstring(index)
     }
 
     /**
@@ -273,8 +273,8 @@ extension Wrapper where Base == String {
      *
      *  @param regex 正则表达式
      */
-    public func regexSubstring(_ regex: String) -> String? {
-        return (base as NSString).__fw_regexSubstring(regex)
+    public func fw_regexSubstring(_ regex: String) -> String? {
+        return (self as NSString).__fw_regexSubstring(regex)
     }
 
     /**
@@ -285,8 +285,8 @@ extension Wrapper where Base == String {
      *
      *  @return 替换后的字符串
      */
-    public func regexReplace(_ regex: String, string: String) -> String {
-        return (base as NSString).__fw_regexReplace(regex, with: string)
+    public func fw_regexReplace(_ regex: String, string: String) -> String {
+        return (self as NSString).__fw_regexReplace(regex, with: string)
     }
 
     /**
@@ -295,13 +295,13 @@ extension Wrapper where Base == String {
      *  @param regex 正则表达式
      *  @param block 回调句柄。range从大至小，方便replace
      */
-    public func regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
-        return (base as NSString).__fw_regexMatches(regex, with: block)
+    public func fw_regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
+        return (self as NSString).__fw_regexMatches(regex, with: block)
     }
     
     /// 转义Html，如"a<"转义为"a&lt;"
-    public var escapeHtml: String {
-        return (base as NSString).__fw_escapeHtml
+    public var fw_escapeHtml: String {
+        return (self as NSString).__fw_escapeHtml
     }
     
     /**
@@ -312,151 +312,151 @@ extension Wrapper where Base == String {
      *
      *  @param regex 正则表达式
      */
-    public func isFormatRegex(_ regex: String) -> Bool {
-        return (base as NSString).__fw_isFormatRegex(regex)
+    public func fw_isFormatRegex(_ regex: String) -> Bool {
+        return (self as NSString).__fw_isFormatRegex(regex)
     }
 
     /// 是否是手机号
-    public func isFormatMobile() -> Bool {
-        return (base as NSString).__fw_isFormatMobile()
+    public func fw_isFormatMobile() -> Bool {
+        return (self as NSString).__fw_isFormatMobile()
     }
 
     /// 是否是座机号
-    public func isFormatTelephone() -> Bool {
-        return (base as NSString).__fw_isFormatTelephone()
+    public func fw_isFormatTelephone() -> Bool {
+        return (self as NSString).__fw_isFormatTelephone()
     }
     
     /// 是否是整数
-    public func isFormatInteger() -> Bool {
-        return (base as NSString).__fw_isFormatInteger()
+    public func fw_isFormatInteger() -> Bool {
+        return (self as NSString).__fw_isFormatInteger()
     }
     
     /// 是否是数字
-    public func isFormatNumber() -> Bool {
-        return (base as NSString).__fw_isFormatNumber()
+    public func fw_isFormatNumber() -> Bool {
+        return (self as NSString).__fw_isFormatNumber()
     }
     
     /// 是否是合法金额，两位小数点
-    public func isFormatMoney() -> Bool {
-        return (base as NSString).__fw_isFormatMoney()
+    public func fw_isFormatMoney() -> Bool {
+        return (self as NSString).__fw_isFormatMoney()
     }
     
     /// 是否是身份证号
-    public func isFormatIdcard() -> Bool {
-        return (base as NSString).__fw_isFormatIdcard()
+    public func fw_isFormatIdcard() -> Bool {
+        return (self as NSString).__fw_isFormatIdcard()
     }
     
     /// 是否是银行卡号
-    public func isFormatBankcard() -> Bool {
-        return (base as NSString).__fw_isFormatBankcard()
+    public func fw_isFormatBankcard() -> Bool {
+        return (self as NSString).__fw_isFormatBankcard()
     }
     
     /// 是否是车牌号
-    public func isFormatCarno() -> Bool {
-        return (base as NSString).__fw_isFormatCarno()
+    public func fw_isFormatCarno() -> Bool {
+        return (self as NSString).__fw_isFormatCarno()
     }
     
     /// 是否是邮政编码
-    public func isFormatPostcode() -> Bool {
-        return (base as NSString).__fw_isFormatPostcode()
+    public func fw_isFormatPostcode() -> Bool {
+        return (self as NSString).__fw_isFormatPostcode()
     }
     
     /// 是否是邮箱
-    public func isFormatEmail() -> Bool {
-        return (base as NSString).__fw_isFormatEmail()
+    public func fw_isFormatEmail() -> Bool {
+        return (self as NSString).__fw_isFormatEmail()
     }
     
     /// 是否是URL
-    public func isFormatUrl() -> Bool {
-        return (base as NSString).__fw_isFormatUrl()
+    public func fw_isFormatUrl() -> Bool {
+        return (self as NSString).__fw_isFormatUrl()
     }
     
     /// 是否是HTML
-    public func isFormatHtml() -> Bool {
-        return (base as NSString).__fw_isFormatHtml()
+    public func fw_isFormatHtml() -> Bool {
+        return (self as NSString).__fw_isFormatHtml()
     }
     
     /// 是否是IP
-    public func isFormatIp() -> Bool {
-        return (base as NSString).__fw_isFormatIp()
+    public func fw_isFormatIp() -> Bool {
+        return (self as NSString).__fw_isFormatIp()
     }
     
     /// 是否全是中文
-    public func isFormatChinese() -> Bool {
-        return (base as NSString).__fw_isFormatChinese()
+    public func fw_isFormatChinese() -> Bool {
+        return (self as NSString).__fw_isFormatChinese()
     }
     
     /// 是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
-    public func isFormatDatetime() -> Bool {
-        return (base as NSString).__fw_isFormatDatetime()
+    public func fw_isFormatDatetime() -> Bool {
+        return (self as NSString).__fw_isFormatDatetime()
     }
     
     /// 是否是合法时间戳，格式：1301234567
-    public func isFormatTimestamp() -> Bool {
-        return (base as NSString).__fw_isFormatTimestamp()
+    public func fw_isFormatTimestamp() -> Bool {
+        return (self as NSString).__fw_isFormatTimestamp()
     }
     
     /// 是否是坐标点字符串，格式：latitude,longitude
-    public func isFormatCoordinate() -> Bool {
-        return (base as NSString).__fw_isFormatCoordinate()
+    public func fw_isFormatCoordinate() -> Bool {
+        return (self as NSString).__fw_isFormatCoordinate()
     }
     
 }
 
 // MARK: - FileManager+Foundation
-extension Wrapper where Base: FileManager {
+@_spi(FW) @objc extension FileManager {
     
     /// 搜索路径
     ///
     /// - Parameter directory: 搜索目录
     /// - Returns: 目标路径
-    public static func pathSearch(_ directory: FileManager.SearchPathDirectory) -> String {
+    public static func fw_pathSearch(_ directory: FileManager.SearchPathDirectory) -> String {
         return NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true)[0]
     }
 
     /// 沙盒路径，常量
-    public static var pathHome: String {
+    public static var fw_pathHome: String {
         return NSHomeDirectory()
     }
 
     /// 文档路径，iTunes会同步备份
-    public static var pathDocument: String {
-        return pathSearch(.documentDirectory)
+    public static var fw_pathDocument: String {
+        return fw_pathSearch(.documentDirectory)
     }
 
     /// 缓存路径，系统不会删除，iTunes会删除
-    public static var pathCaches: String {
-        return pathSearch(.cachesDirectory)
+    public static var fw_pathCaches: String {
+        return fw_pathSearch(.cachesDirectory)
     }
 
     /// Library路径
-    public static var pathLibrary: String {
-        return pathSearch(.libraryDirectory)
+    public static var fw_pathLibrary: String {
+        return fw_pathSearch(.libraryDirectory)
     }
 
     /// 配置路径，配置文件保存位置
-    public static var pathPreference: String {
-        return (pathLibrary as NSString).appendingPathComponent("Preference")
+    public static var fw_pathPreference: String {
+        return (fw_pathLibrary as NSString).appendingPathComponent("Preference")
     }
 
     /// 临时路径，App退出后可能会删除
-    public static var pathTmp: String {
+    public static var fw_pathTmp: String {
         return NSTemporaryDirectory()
     }
 
     /// bundle路径，不可写
-    public static var pathBundle: String {
+    public static var fw_pathBundle: String {
         return Bundle.main.bundlePath
     }
 
     /// 资源路径，不可写
-    public static var pathResource: String {
+    public static var fw_pathResource: String {
         return Bundle.main.resourcePath ?? ""
     }
 
     /// 获取目录大小，单位：B
-    public static func folderSize(_ folderPath: String) -> UInt64 {
-        return Base.__fw_folderSize(folderPath)
+    public static func fw_folderSize(_ folderPath: String) -> UInt64 {
+        return Self.__fw_folderSize(folderPath)
     }
     
 }
@@ -464,12 +464,12 @@ extension Wrapper where Base: FileManager {
 // MARK: - NSAttributedString+Foundation
 /// 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可。
 /// 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
-extension Wrapper where Base: NSAttributedString {
+@_spi(FW) @objc extension NSAttributedString {
     
     /// NSAttributedString对象转换为html字符串
-    public func htmlString() -> String? {
-        let htmlData = try? base.data(
-            from: NSMakeRange(0, base.length),
+    public func fw_htmlString() -> String? {
+        let htmlData = try? self.data(
+            from: NSMakeRange(0, self.length),
             documentAttributes: [
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
@@ -480,22 +480,22 @@ extension Wrapper where Base: NSAttributedString {
     }
 
     /// 计算所占尺寸，需设置Font等
-    public var textSize: CGSize {
-        return textSize(drawSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+    public var fw_textSize: CGSize {
+        return fw_textSize(drawSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
     }
 
     /// 计算在指定绘制区域内所占尺寸，需设置Font等
-    public func textSize(drawSize: CGSize) -> CGSize {
-        let size = base.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size
+    public func fw_textSize(drawSize: CGSize) -> CGSize {
+        let size = self.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
     /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
-    public static func attributedString(htmlString: String) -> Base? {
+    public static func fw_attributedString(htmlString: String) -> Self? {
         let htmlData = htmlString.data(using: .utf8)
         guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
         
-        return try? Base(
+        return try? Self(
             data: htmlData,
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
@@ -506,7 +506,7 @@ extension Wrapper where Base: NSAttributedString {
     }
 
     /// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
-    public static func attributedString(image: UIImage?, bounds: CGRect) -> NSAttributedString {
+    public static func fw_attributedString(image: UIImage?, bounds: CGRect) -> NSAttributedString {
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = image
         imageAttachment.bounds = CGRect(x: 0, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
@@ -523,7 +523,7 @@ extension Wrapper where Base: NSAttributedString {
     }
     
     /// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
-    public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
+    public static func fw_attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         let range = (string as NSString).range(of: highlight)
         if range.location != NSNotFound, let highlightAttributes = highlightAttributes {
@@ -533,7 +533,7 @@ extension Wrapper where Base: NSAttributedString {
     }
     
     /// 快速创建NSAttributedString，自定义字体和颜色
-    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Base {
+    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Self {
         var attributes: [NSAttributedString.Key: Any] = [:]
         if let font = font {
             attributes[.font] = font
@@ -541,168 +541,168 @@ extension Wrapper where Base: NSAttributedString {
         if let textColor = textColor {
             attributes[.foregroundColor] = textColor
         }
-        return Base(string: string, attributes: attributes)
+        return Self(string: string, attributes: attributes)
     }
     
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
-    public static func attributedString(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Base? {
-        return Base.__fw_attributedString(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
+    public static func fw_attributedString(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Self? {
+        return Self.__fw_attributedString(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
     }
 
     /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
-    public static func themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
+    public static func fw_themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
         var lightAttributes: [NSAttributedString.Key: Any] = [:]
         var darkAttributes: [NSAttributedString.Key: Any] = [:]
         if let textColor = defaultAttributes?[.foregroundColor] as? UIColor {
-            lightAttributes[.foregroundColor] = textColor.fw.color(forStyle: .light)
-            darkAttributes[.foregroundColor] = textColor.fw.color(forStyle: .dark)
+            lightAttributes[.foregroundColor] = textColor.fw_color(forStyle: .light)
+            darkAttributes[.foregroundColor] = textColor.fw_color(forStyle: .dark)
         }
         if let font = defaultAttributes?[.font] as? UIFont {
             lightAttributes[.font] = font
             darkAttributes[.font] = font
         }
         
-        let lightObject = attributedString(htmlString: htmlString, defaultAttributes: lightAttributes)
-        let darkObject = attributedString(htmlString: htmlString, defaultAttributes: darkAttributes)
+        let lightObject = fw_attributedString(htmlString: htmlString, defaultAttributes: lightAttributes)
+        let darkObject = fw_attributedString(htmlString: htmlString, defaultAttributes: darkAttributes)
         return ThemeObject(light: lightObject, dark: darkObject)
     }
 
     /// 获取颜色对应CSS字符串(rgb|rgba格式)
-    public static func cssString(color: UIColor) -> String {
-        return Base.__fw_CSSString(with: color)
+    public static func fw_cssString(color: UIColor) -> String {
+        return Self.__fw_CSSString(with: color)
     }
 
     /// 获取系统字体对应CSS字符串(family|style|weight|size)
-    public static func cssString(font: UIFont) -> String {
-        return Base.__fw_CSSString(with: font)
+    public static func fw_cssString(font: UIFont) -> String {
+        return Self.__fw_CSSString(with: font)
     }
     
 }
 
 // MARK: - NSObject+Foundation
-extension Wrapper where Base: NSObject {
+@_spi(FW) @objc extension NSObject {
     
     /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
-    public func lock() {
-        base.__fw_lock()
+    public func fw_lock() {
+        self.__fw_lock()
     }
 
     /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
-    public func unlock() {
-        base.__fw_unlock()
+    public func fw_unlock() {
+        self.__fw_unlock()
     }
     
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
-    public func performBlock(
+    public func fw_performBlock(
         _ block: @escaping (Any) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return base.__fw_perform(block, afterDelay: delay)
+        return self.__fw_perform(block, afterDelay: delay)
     }
 
     /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
     @discardableResult
-    public func performBlock(
+    public func fw_performBlock(
         inBackground block: @escaping (Any) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return base.__fw_performBlock(inBackground: block, afterDelay: delay)
+        return self.__fw_performBlock(inBackground: block, afterDelay: delay)
     }
 
     /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
     @discardableResult
-    public func performBlock(
+    public func fw_performBlock(
         _ block: @escaping (Any) -> Void,
         on: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return base.__fw_perform(block, on: on, afterDelay: delay)
+        return self.__fw_perform(block, on: on, afterDelay: delay)
     }
     
     /// 同一个identifier仅执行一次block，对象范围
-    public func performOnce(
+    public func fw_performOnce(
         _ identifier: String,
         with block: @escaping () -> Void
     ) {
-        base.__fw_performOnce(identifier, with: block)
+        self.__fw_performOnce(identifier, with: block)
     }
     
     /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
     @discardableResult
-    public static func performBlock(
+    public static func fw_performBlock(
         _ block: @escaping () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return Base.__fw_perform(with: block, afterDelay: delay)
+        return Self.__fw_perform(with: block, afterDelay: delay)
     }
 
     /// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
     @discardableResult
-    public static func performBlock(
+    public static func fw_performBlock(
         inBackground block: @escaping () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return Base.__fw_perform(inBackground: block, afterDelay: delay)
+        return Self.__fw_perform(inBackground: block, afterDelay: delay)
     }
 
     /// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
     @discardableResult
-    public static func performBlock(
+    public static func fw_performBlock(
         _ block: @escaping () -> Void,
         on: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return Base.__fw_perform(with: block, on: on, afterDelay: delay)
+        return Self.__fw_perform(with: block, on: on, afterDelay: delay)
     }
 
     /// 取消指定延迟block，全局范围
-    public static func cancelBlock(_ block: Any) {
-        Base.__fw_cancelBlock(block)
+    public static func fw_cancelBlock(_ block: Any) {
+        Self.__fw_cancelBlock(block)
     }
 
     /// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler，全局范围
-    public static func syncPerform(
+    public static func fw_syncPerform(
         asyncBlock: @escaping (@escaping () -> Void) -> Void
     ) {
-        Base.__fw_syncPerformAsyncBlock(asyncBlock)
+        Self.__fw_syncPerformAsyncBlock(asyncBlock)
     }
 
     /// 同一个identifier仅执行一次block，全局范围
-    public static func performOnce(
+    public static func fw_performOnce(
         _ identifier: String,
         with block: @escaping () -> Void
     ) {
-        Base.__fw_performOnce(identifier, with: block)
+        Self.__fw_performOnce(identifier, with: block)
     }
 
     /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
-    public static func performBlock(
+    public static func fw_performBlock(
         _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: UInt,
         timeoutInterval: TimeInterval,
         delayInterval: TimeInterval
     ) {
-        Base.__fw_perform(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval)
+        Self.__fw_perform(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval)
     }
 
     /// 执行轮询block任务，返回任务Id可取消
     @discardableResult
-    public static func performTask(_ task: @escaping () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
-        return Base.__fw_performTask(task, start: start, interval: interval, repeats: repeats, async: async)
+    public static func fw_performTask(_ task: @escaping () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
+        return Self.__fw_performTask(task, start: start, interval: interval, repeats: repeats, async: async)
     }
 
     /// 指定任务Id取消轮询任务
-    public static func cancelTask(_ taskId: String) {
-        Base.__fw_cancelTask(taskId)
+    public static func fw_cancelTask(_ taskId: String) {
+        Self.__fw_cancelTask(taskId)
     }
     
 }
 
 // MARK: - URL+Foundation
 /// 第三方URL生成器，可先判断canOpenURL，再openURL，需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组
-extension Wrapper where Base == URL {
+@_spi(FW) extension URL {
 
     /**
      生成苹果地图地址外部URL
@@ -711,12 +711,12 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
      @return NSURL
      */
-    public static func appleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_appleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
         }
-        return mapsURL(string: "http://maps.apple.com/", params: params)
+        return fw_mapsURL(string: "http://maps.apple.com/", params: params)
     }
 
     /**
@@ -727,7 +727,7 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
      @return NSURL
      */
-    public static func appleMapsURL(withSaddr saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_appleMapsURL(withSaddr saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let saddr = saddr, !saddr.isEmpty {
             params["saddr"] = saddr
@@ -735,7 +735,7 @@ extension Wrapper where Base == URL {
         if let daddr = daddr, !daddr.isEmpty {
             params["daddr"] = daddr
         }
-        return mapsURL(string: "http://maps.apple.com/", params: params)
+        return fw_mapsURL(string: "http://maps.apple.com/", params: params)
     }
 
     /**
@@ -745,12 +745,12 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
      @return NSURL
      */
-    public static func googleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_googleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
         }
-        return mapsURL(string: "comgooglemaps://", params: params)
+        return fw_mapsURL(string: "comgooglemaps://", params: params)
     }
 
     /**
@@ -762,7 +762,7 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
      @return NSURL
      */
-    public static func googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let saddr = saddr, !saddr.isEmpty {
             params["saddr"] = saddr
@@ -775,7 +775,7 @@ extension Wrapper where Base == URL {
             directionsmode = mode
         }
         params["directionsmode"] = directionsmode
-        return mapsURL(string: "comgooglemaps://", params: params)
+        return fw_mapsURL(string: "comgooglemaps://", params: params)
     }
 
     /**
@@ -785,10 +785,10 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
      @return NSURL
      */
-    public static func baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
-            if addr.fw.isFormatCoordinate() {
+            if addr.fw_isFormatCoordinate() {
                 params["location"] = addr
             } else {
                 params["address"] = addr
@@ -800,7 +800,7 @@ extension Wrapper where Base == URL {
         if params["src"] == nil {
             params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
         }
-        return mapsURL(string: "baidumap://map/geocoder", params: params)
+        return fw_mapsURL(string: "baidumap://map/geocoder", params: params)
     }
 
     /**
@@ -812,7 +812,7 @@ extension Wrapper where Base == URL {
      @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
      @return NSURL
      */
-    public static func baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let saddr = saddr, !saddr.isEmpty {
             params["origin"] = saddr
@@ -831,10 +831,10 @@ extension Wrapper where Base == URL {
         if params["src"] == nil {
             params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
         }
-        return mapsURL(string: "baidumap://map/direction", params: params)
+        return fw_mapsURL(string: "baidumap://map/direction", params: params)
     }
     
-    private static func mapsURL(string: String, params: [AnyHashable: Any]) -> URL? {
+    private static func fw_mapsURL(string: String, params: [AnyHashable: Any]) -> URL? {
         var urlString = string + "?"
         for (key, value) in params {
             let valueStr = FW.safeString(value)
@@ -848,15 +848,15 @@ extension Wrapper where Base == URL {
 }
 
 // MARK: - UserDefaults+Foundation
-extension Wrapper where Base: UserDefaults {
+@_spi(FW) @objc extension UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象
-    public static func object(forKey: String) -> Any? {
+    public static func fw_object(forKey: String) -> Any? {
         return UserDefaults.standard.object(forKey: forKey)
     }
 
     /// 保存对象到standard，支持archive对象
-    public static func setObject(_ object: Any?, forKey: String) {
+    public static func fw_setObject(_ object: Any?, forKey: String) {
         if let object = object {
             UserDefaults.standard.set(object, forKey: forKey)
         } else {
@@ -866,18 +866,18 @@ extension Wrapper where Base: UserDefaults {
     }
     
     /// 读取对象，支持unarchive对象
-    public func object(forKey: String) -> Any? {
-        return base.object(forKey: forKey)
+    public func fw_object(forKey: String) -> Any? {
+        return self.object(forKey: forKey)
     }
 
     /// 保存对象，支持archive对象
-    public func setObject(_ object: Any?, forKey: String) {
+    public func fw_setObject(_ object: Any?, forKey: String) {
         if let object = object {
-            base.set(object, forKey: forKey)
+            self.set(object, forKey: forKey)
         } else {
-            base.removeObject(forKey: forKey)
+            self.removeObject(forKey: forKey)
         }
-        base.synchronize()
+        self.synchronize()
     }
     
 }
