@@ -96,6 +96,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)escapeHtml:(NSString *)string;
 
++ (BOOL)isIdcard:(NSString *)string;
+
++ (BOOL)isBankcard:(NSString *)string;
+
+@end
+
+#pragma mark - __Encrypt
+
+@interface NSData (__Encrypt)
+
+- (nullable NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
+- (nullable NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
+- (nullable NSData *)__DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
+- (nullable NSData *)__DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+
+- (nullable NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey;
+
+- (nullable NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
+
+- (nullable NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey;
+
+- (nullable NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
+
+- (nullable NSData *)__RSASignWithPrivateKey:(NSString *)privateKey;
+
+- (nullable NSData *)__RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
+
+- (nullable NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey;
+
+- (nullable NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
+
 @end
 
 #pragma mark - __NotificationTarget

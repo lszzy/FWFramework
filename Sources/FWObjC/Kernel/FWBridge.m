@@ -7,6 +7,7 @@
 
 #import "FWBridge.h"
 #import <sys/sysctl.h>
+#import <CommonCrypto/CommonCryptor.h>
 
 #pragma mark - __Autoloader
 
@@ -447,6 +448,651 @@
     }
     free(buf);
     return result;
+}
+
++ (BOOL)isIdcard:(NSString *)string {
+    // 简单版本
+    // return [string fw_isFormatRegex:@"^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|x|X)$"];
+    
+    // 复杂版本
+    NSString *sPaperId = string;
+    // 判断位数
+    if ([sPaperId length] != 15 && [sPaperId length] != 18) {
+        return NO;
+    }
+    
+    NSString *carid = sPaperId;
+    long lSumQT = 0;
+    // 加权因子
+    int R[] = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    // 校验码
+    unsigned char sChecker[11] = {'1','0','X', '9', '8', '7', '6', '5', '4', '3', '2'};
+    // 将15位身份证号转换成18位
+    NSMutableString *mString = [NSMutableString stringWithString:sPaperId];
+    if ([sPaperId length] == 15) {
+        [mString insertString:@"19" atIndex:6];
+        long p = 0;
+        const char *pid = [mString UTF8String];
+        for (int i = 0; i <= 16; i++) {
+            p += (pid[i] - 48) * R[i];
+        }
+        int o = p % 11;
+        NSString *string_content = [NSString stringWithFormat:@"%c", sChecker[o]];
+        [mString insertString:string_content atIndex:[mString length]];
+        carid = mString;
+    }
+    
+    // 判断是否在地区码内
+    NSString *sProvince = [carid substringToIndex:2];
+    NSDictionary *dic = @{
+                          @"11" : @"北京",
+                          @"12" : @"天津",
+                          @"13" : @"河北",
+                          @"14" : @"山西",
+                          @"15" : @"内蒙古",
+                          @"21" : @"辽宁",
+                          @"22" : @"吉林",
+                          @"23" : @"黑龙江",
+                          @"31" : @"上海",
+                          @"32" : @"江苏",
+                          @"33" : @"浙江",
+                          @"34" : @"安徽",
+                          @"35" : @"福建",
+                          @"36" : @"江西",
+                          @"37" : @"山东",
+                          @"41" : @"河南",
+                          @"42" : @"湖北",
+                          @"43" : @"湖南",
+                          @"44" : @"广东",
+                          @"45" : @"广西",
+                          @"46" : @"海南",
+                          @"50" : @"重庆",
+                          @"51" : @"四川",
+                          @"52" : @"贵州",
+                          @"53" : @"云南",
+                          @"54" : @"西藏",
+                          @"61" : @"陕西",
+                          @"62" : @"甘肃",
+                          @"63" : @"青海",
+                          @"64" : @"宁夏",
+                          @"65" : @"新疆",
+                          @"71" : @"台湾",
+                          @"81" : @"香港",
+                          @"82" : @"澳门",
+                          @"91" : @"国外",
+                          };
+    if ([dic objectForKey:sProvince] == nil) {
+        return NO;
+    }
+    
+    // 判断年月日是否有效
+    int strYear = [[carid substringWithRange:NSMakeRange(6, 4)] intValue];
+    int strMonth = [[carid substringWithRange:NSMakeRange(10, 2)] intValue];
+    int strDay = [[carid substringWithRange:NSMakeRange(12, 2)] intValue];
+    NSTimeZone *localZone = [NSTimeZone localTimeZone];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setTimeZone:localZone];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormatter dateFromString:[NSString stringWithFormat:@"%d-%d-%d 12:01:01", strYear, strMonth, strDay]];
+    if (date == nil) {
+        return NO;
+    }
+    
+    // 检验长度
+    const char *PaperId  = [carid UTF8String];
+    if( 18 != strlen(PaperId)) return NO;
+    // 校验数字
+    for (int i = 0; i < 18; i++) {
+        if (!isdigit(PaperId[i]) && !(('X' == PaperId[i] || 'x' == PaperId[i]) && 17 == i)) {
+            return NO;
+        }
+    }
+    
+    // 验证最末的校验码
+    for (int i = 0; i <= 16; i++) {
+        lSumQT += (PaperId[i] - 48) * R[i];
+    }
+    if (sChecker[lSumQT % 11] != PaperId[17]) {
+        return NO;
+    }
+    
+    // 校验通过
+    return YES;
+}
+
+/**
+ *  银行卡号有效性问题Luhn算法
+ *  现行 16 位银联卡现行卡号开头 6 位是 622126～622925 之间的，7 到 15 位是银行自定义的，
+ *  可能是发卡分行，发卡网点，发卡序号，第 16 位是校验码。
+ *  16 位卡号校验位采用 Luhm 校验方法计算：
+ *  1，将未带校验位的 15 位卡号从右依次编号 1 到 15，位于奇数位号上的数字乘以 2
+ *  2，将奇位乘积的个十位全部相加，再加上所有偶数位上的数字
+ *  3，将加法和加上校验位能被 10 整除。
+ */
++ (BOOL)isBankcard:(NSString *)string {
+    // 取出最后一位
+    NSString *lastNum = [[string substringFromIndex:(string.length - 1)] copy];
+    // 前15或18位
+    NSString *forwardNum = [[string substringToIndex:(string.length - 1)] copy];
+    
+    NSMutableArray *forwardArr = [[NSMutableArray alloc] initWithCapacity:0];
+    for (int i = 0; i < forwardNum.length; i++) {
+        NSString *subStr = [forwardNum substringWithRange:NSMakeRange(i, 1)];
+        [forwardArr addObject:subStr];
+    }
+    
+    NSMutableArray *forwardDescArr = [[NSMutableArray alloc] initWithCapacity:0];
+    // 前15位或者前18位倒序存进数组
+    for (int i = (int)(forwardArr.count - 1); i > -1; i--) {
+        [forwardDescArr addObject:forwardArr[i]];
+    }
+    
+    // 奇数位*2的积 < 9
+    NSMutableArray *arrOddNum = [[NSMutableArray alloc] initWithCapacity:0];
+    // 奇数位*2的积 > 9
+    NSMutableArray *arrOddNum2 = [[NSMutableArray alloc] initWithCapacity:0];
+    // 偶数位数组
+    NSMutableArray *arrEvenNum = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    for (int i = 0; i < forwardDescArr.count; i++) {
+        NSInteger num = [forwardDescArr[i] intValue];
+        // 偶数位
+        if (i % 2) {
+            [arrEvenNum addObject:[NSNumber numberWithInteger:num]];
+            // 奇数位
+        } else {
+            if (num * 2 < 9) {
+                [arrOddNum addObject:[NSNumber numberWithInteger:num * 2]];
+            } else {
+                NSInteger decadeNum = (num * 2) / 10;
+                NSInteger unitNum = (num * 2) % 10;
+                [arrOddNum2 addObject:[NSNumber numberWithInteger:unitNum]];
+                [arrOddNum2 addObject:[NSNumber numberWithInteger:decadeNum]];
+            }
+        }
+    }
+    
+    __block NSInteger sumOddNumTotal = 0;
+    [arrOddNum enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+        sumOddNumTotal += [obj integerValue];
+    }];
+    
+    __block NSInteger sumOddNum2Total = 0;
+    [arrOddNum2 enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+        sumOddNum2Total += [obj integerValue];
+    }];
+    
+    __block NSInteger sumEvenNumTotal =0 ;
+    [arrEvenNum enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+        sumEvenNumTotal += [obj integerValue];
+    }];
+    
+    NSInteger lastNumber = [lastNum integerValue];
+    NSInteger luhmTotal = lastNumber + sumEvenNumTotal + sumOddNum2Total + sumOddNumTotal;
+    return (luhmTotal % 10 == 0) ? YES : NO;
+}
+
+@end
+
+#pragma mark - __Encrypt
+
+@implementation NSData (__Encrypt)
+
+- (NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv
+{
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    size_t dataMoved;
+    NSMutableData *encryptedData = [NSMutableData dataWithLength:self.length + kCCBlockSizeAES128];
+    
+    CCCryptorStatus status = CCCrypt(kCCEncrypt,                    // kCCEncrypt or kCCDecrypt
+                                     kCCAlgorithmAES128,
+                                     kCCOptionPKCS7Padding,         // Padding option for CBC Mode
+                                     keyData.bytes,
+                                     keyData.length,
+                                     iv.bytes,
+                                     self.bytes,
+                                     self.length,
+                                     encryptedData.mutableBytes,    // encrypted data out
+                                     encryptedData.length,
+                                     &dataMoved);                   // total data moved
+    
+    if (status == kCCSuccess) {
+        encryptedData.length = dataMoved;
+        return encryptedData;
+    }
+    
+    return nil;
+}
+
+- (NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv
+{
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    size_t dataMoved;
+    NSMutableData *decryptedData = [NSMutableData dataWithLength:self.length + kCCBlockSizeAES128];
+    
+    CCCryptorStatus result = CCCrypt(kCCDecrypt,                    // kCCEncrypt or kCCDecrypt
+                                     kCCAlgorithmAES128,
+                                     kCCOptionPKCS7Padding,         // Padding option for CBC Mode
+                                     keyData.bytes,
+                                     keyData.length,
+                                     iv.bytes,
+                                     self.bytes,
+                                     self.length,
+                                     decryptedData.mutableBytes,    // encrypted data out
+                                     decryptedData.length,
+                                     &dataMoved);                   // total data moved
+    
+    if (result == kCCSuccess) {
+        decryptedData.length = dataMoved;
+        return decryptedData;
+    }
+    
+    return nil;
+}
+
+- (NSData *)__DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv
+{
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    size_t dataMoved;
+    NSMutableData *encryptedData = [NSMutableData dataWithLength:self.length + kCCBlockSize3DES];
+    
+    CCCryptorStatus result = CCCrypt(kCCEncrypt,                    // kCCEncrypt or kCCDecrypt
+                                     kCCAlgorithm3DES,
+                                     kCCOptionPKCS7Padding,         // Padding option for CBC Mode
+                                     keyData.bytes,
+                                     keyData.length,
+                                     iv.bytes,
+                                     self.bytes,
+                                     self.length,
+                                     encryptedData.mutableBytes,    // encrypted data out
+                                     encryptedData.length,
+                                     &dataMoved);                   // total data moved
+    
+    if (result == kCCSuccess) {
+        encryptedData.length = dataMoved;
+        return encryptedData;
+    }
+    
+    return nil;
+}
+
+- (NSData *)__DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv
+{
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    size_t dataMoved;
+    NSMutableData *decryptedData = [NSMutableData dataWithLength:self.length + kCCBlockSize3DES];
+    
+    CCCryptorStatus result = CCCrypt(kCCDecrypt,                    // kCCEncrypt or kCCDecrypt
+                                     kCCAlgorithm3DES,
+                                     kCCOptionPKCS7Padding,         // Padding option for CBC Mode
+                                     keyData.bytes,
+                                     keyData.length,
+                                     iv.bytes,
+                                     self.bytes,
+                                     self.length,
+                                     decryptedData.mutableBytes,    // encrypted data out
+                                     decryptedData.length,
+                                     &dataMoved);                   // total data moved
+    
+    if (result == kCCSuccess) {
+        decryptedData.length = dataMoved;
+        return decryptedData;
+    }
+    
+    return nil;
+}
+
+#pragma mark - RSA
+
+- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey
+{
+    return [self __RSAEncryptWithPublicKey:publicKey andTag:@"FWRSA_PublicKey" base64Encode:YES];
+}
+
+- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode
+{
+    if (!publicKey) return nil;
+    
+    SecKeyRef keyRef = [NSData __RSAAddPublicKey:publicKey andTag:tagName];
+    if (!keyRef) return nil;
+    
+    NSData *data = [NSData __RSAEncryptData:self withKeyRef:keyRef isSign:NO];
+    if (data && base64Encode) {
+        data = [data base64EncodedDataWithOptions:0];
+    }
+    return data;
+}
+
+- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey
+{
+    return [self __RSADecryptWithPrivateKey:privateKey andTag:@"FWRSA_PrivateKey" base64Decode:YES];
+}
+
+- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode
+{
+    NSData *data = self;
+    if (base64Decode) {
+        data = [[NSData alloc] initWithBase64EncodedData:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    }
+    if (!data || !privateKey) return nil;
+    
+    SecKeyRef keyRef = [NSData __RSAAddPrivateKey:privateKey andTag:tagName];
+    if (!keyRef) return nil;
+    
+    return [NSData __RSADecryptData:data withKeyRef:keyRef];
+}
+
+- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey
+{
+    return [self __RSASignWithPrivateKey:privateKey andTag:@"FWRSA_PrivateKey" base64Encode:YES];
+}
+
+- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode
+{
+    if (!privateKey) return nil;
+    
+    SecKeyRef keyRef = [NSData __RSAAddPrivateKey:privateKey andTag:tagName];
+    if (!keyRef) return nil;
+    
+    NSData *data = [NSData __RSAEncryptData:self withKeyRef:keyRef isSign:YES];
+    if (data && base64Encode) {
+        data = [data base64EncodedDataWithOptions:0];
+    }
+    return data;
+}
+
+- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey
+{
+    return [self __RSAVerifyWithPublicKey:publicKey andTag:@"FWRSA_PublicKey" base64Decode:YES];
+}
+
+- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode
+{
+    NSData *data = self;
+    if (base64Decode) {
+        data = [[NSData alloc] initWithBase64EncodedData:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    }
+    if (!data || !publicKey) return nil;
+    
+    SecKeyRef keyRef = [NSData __RSAAddPublicKey:publicKey andTag:tagName];
+    if (!keyRef) return nil;
+    
+    return [NSData __RSADecryptData:data withKeyRef:keyRef];
+}
+
++ (NSData *)__RSAEncryptData:(NSData *)data withKeyRef:(SecKeyRef) keyRef isSign:(BOOL)isSign
+{
+    const uint8_t *srcbuf = (const uint8_t *)[data bytes];
+    size_t srclen = (size_t)data.length;
+    
+    size_t block_size = SecKeyGetBlockSize(keyRef) * sizeof(uint8_t);
+    void *outbuf = malloc(block_size);
+    size_t src_block_size = block_size - 11;
+    
+    NSMutableData *ret = [[NSMutableData alloc] init];
+    for (int idx = 0; idx < srclen; idx += src_block_size) {
+        size_t data_len = srclen - idx;
+        if (data_len > src_block_size) {
+            data_len = src_block_size;
+        }
+        
+        size_t outlen = block_size;
+        OSStatus status = noErr;
+        
+        if (isSign) {
+            status = SecKeyRawSign(keyRef,
+                                   kSecPaddingPKCS1,
+                                   srcbuf + idx,
+                                   data_len,
+                                   outbuf,
+                                   &outlen
+                                   );
+        } else {
+            status = SecKeyEncrypt(keyRef,
+                                   kSecPaddingPKCS1,
+                                   srcbuf + idx,
+                                   data_len,
+                                   outbuf,
+                                   &outlen
+                                   );
+        }
+        if (status != 0) {
+            ret = nil;
+            break;
+        } else {
+            [ret appendBytes:outbuf length:outlen];
+        }
+    }
+    
+    free(outbuf);
+    CFRelease(keyRef);
+    return ret;
+}
+
++ (NSData *)__RSADecryptData:(NSData *)data withKeyRef:(SecKeyRef)keyRef
+{
+    const uint8_t *srcbuf = (const uint8_t *)[data bytes];
+    size_t srclen = (size_t)data.length;
+    
+    size_t block_size = SecKeyGetBlockSize(keyRef) * sizeof(uint8_t);
+    UInt8 *outbuf = malloc(block_size);
+    size_t src_block_size = block_size;
+    
+    NSMutableData *ret = [[NSMutableData alloc] init];
+    for (int idx = 0; idx < srclen; idx += src_block_size) {
+        size_t data_len = srclen - idx;
+        if (data_len > src_block_size) {
+            data_len = src_block_size;
+        }
+        
+        size_t outlen = block_size;
+        OSStatus status = noErr;
+        status = SecKeyDecrypt(keyRef,
+                               kSecPaddingNone,
+                               srcbuf + idx,
+                               data_len,
+                               outbuf,
+                               &outlen
+                               );
+        if (status != 0) {
+            ret = nil;
+            break;
+        } else {
+            int idxFirstZero = -1;
+            int idxNextZero = (int)outlen;
+            for (int i = 0; i < outlen; i++) {
+                if (outbuf[i] == 0) {
+                    if (idxFirstZero < 0) {
+                        idxFirstZero = i;
+                    } else {
+                        idxNextZero = i;
+                        break;
+                    }
+                }
+            }
+            [ret appendBytes:&outbuf[idxFirstZero + 1] length:idxNextZero - idxFirstZero - 1];
+        }
+    }
+    
+    free(outbuf);
+    CFRelease(keyRef);
+    return ret;
+}
+
++ (SecKeyRef)__RSAAddPublicKey:(NSString *)key andTag:(NSString *)tagName
+{
+    NSRange spos = [key rangeOfString:@"-----BEGIN PUBLIC KEY-----"];
+    NSRange epos = [key rangeOfString:@"-----END PUBLIC KEY-----"];
+    if (spos.location != NSNotFound && epos.location != NSNotFound) {
+        NSUInteger s = spos.location + spos.length;
+        NSUInteger e = epos.location;
+        NSRange range = NSMakeRange(s, e-s);
+        key = [key substringWithRange:range];
+    }
+    key = [key stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@" "  withString:@""];
+    
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:key options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    data = [self __RSAStripPublicKeyHeader:data];
+    if (!data) {
+        return nil;
+    }
+
+    NSData *tagData = [NSData dataWithBytes:[tagName UTF8String] length:[tagName length]];
+    NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
+    [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:tagData forKey:(__bridge id)kSecAttrApplicationTag];
+    SecItemDelete((__bridge CFDictionaryRef)publicKey);
+    
+    [publicKey setObject:data forKey:(__bridge id)kSecValueData];
+    [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
+    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+    
+    CFTypeRef persistKey = nil;
+    OSStatus status = SecItemAdd((__bridge CFDictionaryRef)publicKey, &persistKey);
+    if (persistKey != nil) {
+        CFRelease(persistKey);
+    }
+    if ((status != noErr) && (status != errSecDuplicateItem)) {
+        return nil;
+    }
+
+    [publicKey removeObjectForKey:(__bridge id)kSecValueData];
+    [publicKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
+    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    
+    SecKeyRef keyRef = nil;
+    status = SecItemCopyMatching((__bridge CFDictionaryRef)publicKey, (CFTypeRef *)&keyRef);
+    if (status != noErr) {
+        return nil;
+    }
+    return keyRef;
+}
+
++ (SecKeyRef)__RSAAddPrivateKey:(NSString *)key andTag:(NSString *)tagName
+{
+    NSRange spos;
+    NSRange epos;
+    spos = [key rangeOfString:@"-----BEGIN RSA PRIVATE KEY-----"];
+    if (spos.length > 0) {
+        epos = [key rangeOfString:@"-----END RSA PRIVATE KEY-----"];
+    } else {
+        spos = [key rangeOfString:@"-----BEGIN PRIVATE KEY-----"];
+        epos = [key rangeOfString:@"-----END PRIVATE KEY-----"];
+    }
+    if (spos.location != NSNotFound && epos.location != NSNotFound) {
+        NSUInteger s = spos.location + spos.length;
+        NSUInteger e = epos.location;
+        NSRange range = NSMakeRange(s, e-s);
+        key = [key substringWithRange:range];
+    }
+    key = [key stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+    key = [key stringByReplacingOccurrencesOfString:@" "  withString:@""];
+
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:key options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    data = [self __RSAStripPrivateKeyHeader:data];
+    if (!data) {
+        return nil;
+    }
+
+    NSData *tagData = [NSData dataWithBytes:[tagName UTF8String] length:[tagName length]];
+    NSMutableDictionary *privateKey = [[NSMutableDictionary alloc] init];
+    [privateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
+    [privateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [privateKey setObject:tagData forKey:(__bridge id)kSecAttrApplicationTag];
+    SecItemDelete((__bridge CFDictionaryRef)privateKey);
+
+    [privateKey setObject:data forKey:(__bridge id)kSecValueData];
+    [privateKey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
+    [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+
+    CFTypeRef persistKey = nil;
+    OSStatus status = SecItemAdd((__bridge CFDictionaryRef)privateKey, &persistKey);
+    if (persistKey != nil) {
+        CFRelease(persistKey);
+    }
+    if ((status != noErr) && (status != errSecDuplicateItem)) {
+        return nil;
+    }
+
+    [privateKey removeObjectForKey:(__bridge id)kSecValueData];
+    [privateKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
+    [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [privateKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+
+    SecKeyRef keyRef = nil;
+    status = SecItemCopyMatching((__bridge CFDictionaryRef)privateKey, (CFTypeRef *)&keyRef);
+    if (status != noErr) {
+        return nil;
+    }
+    return keyRef;
+}
+
++ (NSData *)__RSAStripPublicKeyHeader:(NSData *)d_key
+{
+    if (d_key == nil) return nil;
+    unsigned long len = [d_key length];
+    if (!len) return nil;
+    
+    unsigned char *c_key = (unsigned char *)[d_key bytes];
+    unsigned int  idx    = 0;
+    if (c_key[idx++] != 0x30) return nil;
+    if (c_key[idx] > 0x80) idx += c_key[idx] - 0x80 + 1;
+    else idx++;
+
+    static unsigned char seqiod[] = { 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00 };
+    if (memcmp(&c_key[idx], seqiod, 15)) return nil;
+    
+    idx += 15;
+    if (c_key[idx++] != 0x03) return nil;
+    if (c_key[idx] > 0x80) idx += c_key[idx] - 0x80 + 1;
+    else idx++;
+    if (c_key[idx++] != '\0') return nil;
+    return([NSData dataWithBytes:&c_key[idx] length:len - idx]);
+}
+
++ (NSData *)__RSAStripPrivateKeyHeader:(NSData *)d_key
+{
+    if (d_key == nil) return nil;
+    unsigned long len = [d_key length];
+    if (!len) return nil;
+
+    unsigned char *c_key = (unsigned char *)[d_key bytes];
+    unsigned int  idx     = 22;
+    if (0x04 != c_key[idx++]) return d_key;
+
+    unsigned int c_len = c_key[idx++];
+    int det = c_len & 0x80;
+    if (!det) {
+        c_len = c_len & 0x7f;
+    } else {
+        int byteCount = c_len & 0x7f;
+        if (byteCount + idx > len) {
+            return nil;
+        }
+        unsigned int accum = 0;
+        unsigned char *ptr = &c_key[idx];
+        idx += byteCount;
+        while (byteCount) {
+            accum = (accum << 8) + *ptr;
+            ptr++;
+            byteCount--;
+        }
+        c_len = accum;
+    }
+    return [d_key subdataWithRange:NSMakeRange(idx, c_len)];
 }
 
 @end
