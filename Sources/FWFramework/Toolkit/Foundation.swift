@@ -545,7 +545,17 @@ import FWObjC
 
     /// 获取目录大小，单位：B
     public static func fw_folderSize(_ folderPath: String) -> UInt64 {
-        return Self.__fw_folderSize(folderPath)
+        guard let contents = try? FileManager.default.contentsOfDirectory(atPath: folderPath) else {
+            return 0
+        }
+        var folderSize: UInt64 = 0
+        for file in contents {
+            if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: (folderPath as NSString).appendingPathComponent(file)),
+               let sizeNumber = fileAttributes[.size] as? NSNumber {
+                folderSize += sizeNumber.uint64Value
+            }
+        }
+        return folderSize
     }
     
 }
