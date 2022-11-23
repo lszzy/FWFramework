@@ -94,8 +94,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSTimeInterval)systemUptime;
 
-+ (NSString *)escapeHtml:(NSString *)string;
-
 @end
 
 #pragma mark - __NotificationTarget

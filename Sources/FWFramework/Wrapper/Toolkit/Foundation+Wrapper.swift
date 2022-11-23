@@ -566,7 +566,7 @@ extension Wrapper where Base: NSObject {
     public static func performBlock(
         _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
         completion: @escaping (Bool, Any?) -> Void,
-        retryCount: UInt,
+        retryCount: Int,
         timeoutInterval: TimeInterval,
         delayInterval: TimeInterval
     ) {

@@ -150,57 +150,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSObject+FWFoundation
-
-@interface NSObject (FWFoundation)
-
-/// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
-- (void)fw_lock NS_REFINED_FOR_SWIFT;
-
-/// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
-- (void)fw_unlock NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后主线程执行，返回可取消的block，对象范围
-- (id)fw_performBlock:(void (^)(id obj))block afterDelay:(NSTimeInterval)delay NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
-- (id)fw_performBlockInBackground:(void (^)(id obj))block afterDelay:(NSTimeInterval)delay NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
-- (id)fw_performBlock:(void (^)(id obj))block onQueue:(dispatch_queue_t)queue afterDelay:(NSTimeInterval)delay NS_REFINED_FOR_SWIFT;
-
-/// 同一个identifier仅执行一次block，对象范围
-- (void)fw_performOnce:(NSString *)identifier withBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后主线程执行，返回可取消的block，全局范围
-+ (id)fw_performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay NS_SWIFT_NAME(__fw_perform(with:afterDelay:)) NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
-+ (id)fw_performBlockInBackground:(void (^)(void))block afterDelay:(NSTimeInterval)delay NS_SWIFT_NAME(__fw_perform(inBackground:afterDelay:)) NS_REFINED_FOR_SWIFT;
-
-/// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
-+ (id)fw_performBlock:(void (^)(void))block onQueue:(dispatch_queue_t)queue afterDelay:(NSTimeInterval)delay NS_SWIFT_NAME(__fw_perform(with:on:afterDelay:)) NS_REFINED_FOR_SWIFT;
-
-/// 取消指定延迟block，全局范围
-+ (void)fw_cancelBlock:(id)block NS_REFINED_FOR_SWIFT;
-
-/// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler，全局范围
-+ (void)fw_syncPerformAsyncBlock:(void (^)(void (^completionHandler)(void)))asyncBlock NS_REFINED_FOR_SWIFT;
-
-/// 同一个identifier仅执行一次block，全局范围
-+ (void)fw_performOnce:(NSString *)identifier withBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
-
-/// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒(0不限制)|延迟2秒
-+ (void)fw_performBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSUInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval)delayInterval NS_REFINED_FOR_SWIFT;
-
-/// 执行轮询block任务，返回任务Id可取消
-+ (NSString *)fw_performTask:(void (^)(void))task start:(NSTimeInterval)start interval:(NSTimeInterval)interval repeats:(BOOL)repeats async:(BOOL)async NS_REFINED_FOR_SWIFT;
-
-/// 指定任务Id取消轮询任务
-+ (void)fw_cancelTask:(NSString *)taskId NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - NSString+FWFoundation
 
 @interface NSString (FWFoundation)
