@@ -88,6 +88,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - __Bridge
+
+@interface __Bridge : NSObject
+
++ (NSTimeInterval)systemUptime;
+
++ (NSString *)escapeHtml:(NSString *)string;
+
+@end
+
 #pragma mark - __NotificationTarget
 
 @interface __NotificationTarget : NSObject
