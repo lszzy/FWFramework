@@ -112,7 +112,7 @@ import FWObjC
             return 0
         }
         
-        return tableView.fw.height(cellClass: clazz, cacheBy: indexPath) { [weak self] (cell) in
+        return tableView.fw_height(cellClass: clazz, cacheBy: indexPath) { [weak self] (cell) in
             self?.cellConfiguation?(cell, indexPath)
         }
     }
@@ -148,7 +148,7 @@ import FWObjC
             return view.frame.size.height
         }
         if let clazz = header as? UITableViewHeaderFooterView.Type {
-            return tableView.fw.height(headerFooterViewClass: clazz, type: .header, cacheBy: section) { [weak self] (headerView) in
+            return tableView.fw_height(headerFooterViewClass: clazz, type: .header, cacheBy: section) { [weak self] (headerView) in
                 self?.headerConfiguration?(headerView, section)
             }
         }
@@ -186,7 +186,7 @@ import FWObjC
             return view.frame.size.height
         }
         if let clazz = footer as? UITableViewHeaderFooterView.Type {
-            return tableView.fw.height(headerFooterViewClass: clazz, type: .footer, cacheBy: section) { [weak self] (footerView) in
+            return tableView.fw_height(headerFooterViewClass: clazz, type: .footer, cacheBy: section) { [weak self] (footerView) in
                 self?.footerConfiguration?(footerView, section)
             }
         }
@@ -218,25 +218,25 @@ import FWObjC
     }
 }
 
-extension Wrapper where Base: UITableView {
-    public var delegate: TableViewDelegate {
-        if let result = base.fw.property(forName: "fwDelegate") as? TableViewDelegate {
+@_spi(FW) @objc extension UITableView {
+    public var fw_delegate: TableViewDelegate {
+        if let result = fw_property(forName: "fw_delegate") as? TableViewDelegate {
             return result
         } else {
             let result = TableViewDelegate()
-            base.fw.setProperty(result, forName: "fwDelegate")
-            base.dataSource = result
-            base.delegate = result
+            fw_setProperty(result, forName: "fw_delegate")
+            dataSource = result
+            delegate = result
             return result
         }
     }
     
-    public static func tableView() -> Base {
-        return tableView(.plain)
+    public static func fw_tableView() -> Self {
+        return fw_tableView(.plain)
     }
     
-    public static func tableView(_ style: UITableView.Style) -> Base {
-        let tableView = Base(frame: .zero, style: style)
+    public static func fw_tableView(_ style: UITableView.Style) -> Self {
+        let tableView = Self(frame: .zero, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.tableFooterView = UIView(frame: .zero)

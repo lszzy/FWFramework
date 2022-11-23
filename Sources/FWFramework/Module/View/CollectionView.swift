@@ -130,7 +130,7 @@ import FWObjC
         if inset != .zero && collectionView.frame.size.width > 0 {
             width = collectionView.frame.size.width - inset.left - inset.right
         }
-        return collectionView.fw.size(cellClass: clazz, width: width, cacheBy: indexPath) { [weak self] (cell) in
+        return collectionView.fw_size(cellClass: clazz, width: width, cacheBy: indexPath) { [weak self] (cell) in
             self?.cellConfiguration?(cell, indexPath)
         }
     }
@@ -178,7 +178,7 @@ import FWObjC
         if let view = viewClass as? UICollectionReusableView { return view.frame.size }
         guard let clazz = viewClass as? UICollectionReusableView.Type else { return .zero }
         
-        return collectionView.fw.size(reusableViewClass: clazz, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { [weak self] (reusableView) in
+        return collectionView.fw_size(reusableViewClass: clazz, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { [weak self] (reusableView) in
             self?.headerConfiguration?(reusableView, indexPath)
         }
     }
@@ -196,7 +196,7 @@ import FWObjC
         if let view = viewClass as? UICollectionReusableView { return view.frame.size }
         guard let clazz = viewClass as? UICollectionReusableView.Type else { return .zero }
         
-        return collectionView.fw.size(reusableViewClass: clazz, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { [weak self] (reusableView) in
+        return collectionView.fw_size(reusableViewClass: clazz, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { [weak self] (reusableView) in
             self?.footerConfiguration?(reusableView, indexPath)
         }
     }
@@ -206,45 +206,31 @@ import FWObjC
     }
 }
 
-extension Wrapper where Base: UICollectionView {
-    public var delegate: CollectionViewDelegate {
-        if let result = base.fw.property(forName: "fwDelegate") as? CollectionViewDelegate {
+@_spi(FW) @objc extension UICollectionView {
+    public var fw_delegate: CollectionViewDelegate {
+        if let result = fw_property(forName: "fw_delegate") as? CollectionViewDelegate {
             return result
         } else {
             let result = CollectionViewDelegate()
-            base.fw.setProperty(result, forName: "fwDelegate")
-            base.dataSource = result
-            base.delegate = result
+            fw_setProperty(result, forName: "fw_delegate")
+            dataSource = result
+            delegate = result
             return result
         }
     }
     
-    public static func collectionView() -> Base {
+    public static func fw_collectionView() -> Self {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
         
-        return collectionView(flowLayout)
+        return fw_collectionView(flowLayout)
     }
     
-    public static func collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Base {
-        let collectionView = Base(frame: .zero, collectionViewLayout: collectionViewLayout)
+    public static func fw_collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Self {
+        let collectionView = Self(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }
-}
-
-extension Wrapper where Base: UICollectionViewFlowLayout {
-    
-    /// 初始化布局section配置，在prepareLayout调用即可
-    public func sectionConfigPrepareLayout() {
-        base.__fw_sectionConfigPrepare()
-    }
-
-    /// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
-    public func sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
-        return base.__fw_sectionConfigLayoutAttributesForElements(in: rect)
-    }
-    
 }
