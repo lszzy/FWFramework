@@ -722,6 +722,84 @@ NSURL * FWSafeURL(id value) {
     return [self subarrayWithRange:range];
 }
 
+- (NSArray *)fw_filterWithBlock:(BOOL (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj)) {
+            [result addObject:obj];
+        }
+    }];
+    return result;
+}
+
+- (NSArray *)fw_mapWithBlock:(id (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        id value = block(obj);
+        if (value) {
+            [result addObject:value];
+        }
+    }];
+    return result;
+}
+
+- (id)fw_matchWithBlock:(BOOL (^)(id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
+- (id)fw_randomObject
+{
+    if (self.count < 1) return nil;
+    
+    return self[arc4random_uniform((u_int32_t)self.count)];
+}
+
+- (id)fw_randomObject:(NSArray *)weights
+{
+    NSInteger count = self.count;
+    if (count < 1) return nil;
+    
+    __block NSInteger sum = 0;
+    [weights enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fw_safeInteger];
+        if (val > 0 && idx < count) {
+            sum += val;
+        }
+    }];
+    if (sum < 1) return self.fw_randomObject;
+    
+    __block NSInteger index = -1;
+    __block NSInteger weight = 0;
+    NSInteger random = arc4random_uniform((u_int32_t)sum);
+    [weights enumerateObjectsUsingBlock:^(NSObject *obj, NSUInteger idx, BOOL *stop) {
+        NSInteger val = [obj fw_safeInteger];
+        if (val > 0 && idx < count) {
+            weight += val;
+            if (weight > random) {
+                index = idx;
+                *stop = YES;
+            }
+        }
+    }];
+    return index >= 0 && index < count ? [self objectAtIndex:index] : self.fw_randomObject;
+}
+
 @end
 
 #pragma mark - NSMutableArray+FWSafeType
@@ -806,6 +884,47 @@ NSURL * FWSafeURL(id value) {
     id object = [self objectForKey:key];
     if (object == nil || object == [NSNull null]) return nil;
     return object;
+}
+
+- (NSDictionary *)fw_filterWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result[key] = obj;
+        }
+    }];
+    return result;
+}
+
+- (NSDictionary *)fw_mapWithBlock:(id (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        id value = block(key, obj);
+        if (value) {
+            result[key] = value;
+        }
+    }];
+    return result;
+}
+
+- (id)fw_matchWithBlock:(BOOL (^)(id, id))block
+{
+    NSParameterAssert(block != nil);
+    
+    __block id result = nil;
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (block(key, obj)) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    return result;
 }
 
 @end
