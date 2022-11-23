@@ -6,7 +6,6 @@
 //
 
 #import "FWUIKit.h"
-#import "FWFoundation.h"
 #import "FWSwizzle.h"
 #import "FWToolkit.h"
 #import "FWEncode.h"

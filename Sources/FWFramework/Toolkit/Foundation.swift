@@ -1016,7 +1016,7 @@ import FWObjC
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
         }
-        return fw_mapsURL(string: "http://maps.apple.com/", params: params)
+        return fw_vendorURL("http://maps.apple.com/", params: params)
     }
 
     /**
@@ -1035,7 +1035,7 @@ import FWObjC
         if let daddr = daddr, !daddr.isEmpty {
             params["daddr"] = daddr
         }
-        return fw_mapsURL(string: "http://maps.apple.com/", params: params)
+        return fw_vendorURL("http://maps.apple.com/", params: params)
     }
 
     /**
@@ -1050,7 +1050,7 @@ import FWObjC
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
         }
-        return fw_mapsURL(string: "comgooglemaps://", params: params)
+        return fw_vendorURL("comgooglemaps://", params: params)
     }
 
     /**
@@ -1075,7 +1075,7 @@ import FWObjC
             directionsmode = mode
         }
         params["directionsmode"] = directionsmode
-        return fw_mapsURL(string: "comgooglemaps://", params: params)
+        return fw_vendorURL("comgooglemaps://", params: params)
     }
 
     /**
@@ -1100,7 +1100,7 @@ import FWObjC
         if params["src"] == nil {
             params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
         }
-        return fw_mapsURL(string: "baidumap://map/geocoder", params: params)
+        return fw_vendorURL("baidumap://map/geocoder", params: params)
     }
 
     /**
@@ -1131,12 +1131,20 @@ import FWObjC
         if params["src"] == nil {
             params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
         }
-        return fw_mapsURL(string: "baidumap://map/direction", params: params)
+        return fw_vendorURL("baidumap://map/direction", params: params)
     }
     
-    private static func fw_mapsURL(string: String, params: [AnyHashable: Any]) -> URL? {
+    /**
+     生成外部URL，需配置对应URL SCHEME
+     
+     @param string 外部主URL
+     @param params 附加参数
+     @return NSURL
+     */
+    public static func fw_vendorURL(_ string: String, params: [AnyHashable: Any]? = nil) -> URL? {
         var urlString = string + "?"
-        for (key, value) in params {
+        let urlParams = params ?? [:]
+        for (key, value) in urlParams {
             let valueStr = FW.safeString(value)
                 .replacingOccurrences(of: " ", with: "+")
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)

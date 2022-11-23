@@ -640,8 +640,15 @@
 
 @implementation NSData (__Encrypt)
 
-- (NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv
-{
+- (id)__unarchiveObject:(Class)clazz {
+    id object = nil;
+    @try {
+        object = [NSKeyedUnarchiver unarchivedObjectOfClass:clazz fromData:self error:NULL];
+    } @catch (NSException *exception) { }
+    return object;
+}
+
+- (NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv {
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     
     size_t dataMoved;
@@ -667,8 +674,7 @@
     return nil;
 }
 
-- (NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv
-{
+- (NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv {
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     
     size_t dataMoved;
@@ -694,8 +700,7 @@
     return nil;
 }
 
-- (NSData *)__DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv
-{
+- (NSData *)__DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv {
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     
     size_t dataMoved;
@@ -721,8 +726,7 @@
     return nil;
 }
 
-- (NSData *)__DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv
-{
+- (NSData *)__DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv {
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     
     size_t dataMoved;
@@ -748,15 +752,11 @@
     return nil;
 }
 
-#pragma mark - RSA
-
-- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey
-{
+- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey {
     return [self __RSAEncryptWithPublicKey:publicKey andTag:@"FWRSA_PublicKey" base64Encode:YES];
 }
 
-- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode
-{
+- (NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode {
     if (!publicKey) return nil;
     
     SecKeyRef keyRef = [NSData __RSAAddPublicKey:publicKey andTag:tagName];
@@ -769,13 +769,11 @@
     return data;
 }
 
-- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey
-{
+- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey {
     return [self __RSADecryptWithPrivateKey:privateKey andTag:@"FWRSA_PrivateKey" base64Decode:YES];
 }
 
-- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode
-{
+- (NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode {
     NSData *data = self;
     if (base64Decode) {
         data = [[NSData alloc] initWithBase64EncodedData:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -788,13 +786,11 @@
     return [NSData __RSADecryptData:data withKeyRef:keyRef];
 }
 
-- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey
-{
+- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey {
     return [self __RSASignWithPrivateKey:privateKey andTag:@"FWRSA_PrivateKey" base64Encode:YES];
 }
 
-- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode
-{
+- (NSData *)__RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode {
     if (!privateKey) return nil;
     
     SecKeyRef keyRef = [NSData __RSAAddPrivateKey:privateKey andTag:tagName];
@@ -807,13 +803,11 @@
     return data;
 }
 
-- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey
-{
+- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey {
     return [self __RSAVerifyWithPublicKey:publicKey andTag:@"FWRSA_PublicKey" base64Decode:YES];
 }
 
-- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode
-{
+- (NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode {
     NSData *data = self;
     if (base64Decode) {
         data = [[NSData alloc] initWithBase64EncodedData:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -826,8 +820,7 @@
     return [NSData __RSADecryptData:data withKeyRef:keyRef];
 }
 
-+ (NSData *)__RSAEncryptData:(NSData *)data withKeyRef:(SecKeyRef) keyRef isSign:(BOOL)isSign
-{
++ (NSData *)__RSAEncryptData:(NSData *)data withKeyRef:(SecKeyRef) keyRef isSign:(BOOL)isSign {
     const uint8_t *srcbuf = (const uint8_t *)[data bytes];
     size_t srclen = (size_t)data.length;
     
@@ -875,8 +868,7 @@
     return ret;
 }
 
-+ (NSData *)__RSADecryptData:(NSData *)data withKeyRef:(SecKeyRef)keyRef
-{
++ (NSData *)__RSADecryptData:(NSData *)data withKeyRef:(SecKeyRef)keyRef {
     const uint8_t *srcbuf = (const uint8_t *)[data bytes];
     size_t srclen = (size_t)data.length;
     
@@ -925,8 +917,7 @@
     return ret;
 }
 
-+ (SecKeyRef)__RSAAddPublicKey:(NSString *)key andTag:(NSString *)tagName
-{
++ (SecKeyRef)__RSAAddPublicKey:(NSString *)key andTag:(NSString *)tagName {
     NSRange spos = [key rangeOfString:@"-----BEGIN PUBLIC KEY-----"];
     NSRange epos = [key rangeOfString:@"-----END PUBLIC KEY-----"];
     if (spos.location != NSNotFound && epos.location != NSNotFound) {
@@ -979,8 +970,7 @@
     return keyRef;
 }
 
-+ (SecKeyRef)__RSAAddPrivateKey:(NSString *)key andTag:(NSString *)tagName
-{
++ (SecKeyRef)__RSAAddPrivateKey:(NSString *)key andTag:(NSString *)tagName {
     NSRange spos;
     NSRange epos;
     spos = [key rangeOfString:@"-----BEGIN RSA PRIVATE KEY-----"];
@@ -1040,8 +1030,7 @@
     return keyRef;
 }
 
-+ (NSData *)__RSAStripPublicKeyHeader:(NSData *)d_key
-{
++ (NSData *)__RSAStripPublicKeyHeader:(NSData *)d_key {
     if (d_key == nil) return nil;
     unsigned long len = [d_key length];
     if (!len) return nil;
@@ -1063,8 +1052,7 @@
     return([NSData dataWithBytes:&c_key[idx] length:len - idx]);
 }
 
-+ (NSData *)__RSAStripPrivateKeyHeader:(NSData *)d_key
-{
++ (NSData *)__RSAStripPrivateKeyHeader:(NSData *)d_key {
     if (d_key == nil) return nil;
     unsigned long len = [d_key length];
     if (!len) return nil;

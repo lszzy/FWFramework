@@ -106,6 +106,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (__Encrypt)
 
+- (nullable id)__unarchiveObject:(Class)clazz;
+
 - (nullable NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
 - (nullable NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;

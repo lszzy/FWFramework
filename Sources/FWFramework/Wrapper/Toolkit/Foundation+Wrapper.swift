@@ -661,6 +661,17 @@ extension Wrapper where Base == URL {
         return Base.fw_baiduMapsURL(withSaddr: saddr, daddr: daddr, mode: mode, options: options)
     }
     
+    /**
+     生成外部URL，需配置对应URL SCHEME
+     
+     @param string 外部主URL
+     @param params 附加参数
+     @return NSURL
+     */
+    public static func fw_vendorURL(_ string: String, params: [AnyHashable: Any]? = nil) -> URL? {
+        return Base.fw_vendorURL(string, params: params)
+    }
+    
 }
 
 // MARK: - UserDefaults+Foundation
