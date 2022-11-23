@@ -108,9 +108,40 @@ import FWObjC
 @_spi(FW) extension Date {
     /// 当前时间戳，没有设置过返回本地时间戳，可同步设置服务器时间戳，同步后调整手机时间不影响
     public static var fw_currentTime: TimeInterval {
-        get { return NSDate.__fw_currentTime }
-        set { NSDate.__fw_currentTime = newValue }
+        get {
+            // 没有同步过返回本地时间
+            if fw_staticCurrentBaseTime == 0 {
+                // 是否本地有服务器时间
+                let preCurrentTime = UserDefaults.standard.object(forKey: "FWCurrentTime") as? NSNumber
+                let preLocalTime = UserDefaults.standard.object(forKey: "FWLocalTime") as? NSNumber
+                if let preCurrentTime = preCurrentTime,
+                   let preLocalTime = preLocalTime {
+                    // 计算当前服务器时间
+                    let offsetTime = Date().timeIntervalSince1970 - preLocalTime.doubleValue
+                    return preCurrentTime.doubleValue + offsetTime
+                } else {
+                    return Date().timeIntervalSince1970
+                }
+            // 同步过计算当前服务器时间
+            } else {
+                let offsetTime = __Bridge.systemUptime() - fw_staticLocalBaseTime
+                return fw_staticCurrentBaseTime + offsetTime
+            }
+        }
+        set {
+            fw_staticCurrentBaseTime = newValue
+            // 取运行时间，调整系统时间不会影响
+            fw_staticLocalBaseTime = __Bridge.systemUptime()
+            
+            // 保存当前服务器时间到本地
+            UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
+            UserDefaults.standard.set(NSNumber(value: Date().timeIntervalSince1970), forKey: "FWLocalTime")
+            UserDefaults.standard.synchronize()
+        }
     }
+    
+    private static var fw_staticCurrentBaseTime: TimeInterval = 0
+    private static var fw_staticLocalBaseTime: TimeInterval = 0
     
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
     public static func fw_date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
@@ -157,66 +188,104 @@ import FWObjC
     
     /// 格式化16位、13位时间戳为10位(秒)
     public static func fw_formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
-        return NSDate.__fw_formatTimestamp(timestamp)
+        let string = String(format: "%ld", Int64(timestamp))
+        if string.count == 16 {
+            return timestamp / 1000.0 / 1000.0
+        } else if string.count == 13 {
+            return timestamp / 1000.0
+        } else {
+            return timestamp
+        }
     }
     
     /// 是否是闰年
     public var fw_isLeapYear: Bool {
-        return (self as NSDate).__fw_isLeapYear
+        let year = Calendar.current.component(.year, from: self)
+        if year % 400 == 0 {
+            return true
+        } else if year % 100 == 0 {
+            return false
+        } else if year % 4 == 0 {
+            return true
+        }
+        return false
     }
 
     /// 是否是同一天
     public func fw_isSameDay(_ date: Date) -> Bool {
-        return (self as NSDate).__fw_isSameDay(date)
+        var components = Calendar.current.dateComponents([.era, .year, .month, .day], from: date)
+        let dateOne = Calendar.current.date(from: components)
+        
+        components = Calendar.current.dateComponents([.era, .year, .month, .day], from: self)
+        let dateTwo = Calendar.current.date(from: components)
+        return dateOne == dateTwo
     }
 
     /// 添加指定日期，如year:1|month:-1|day:1等
     public func fw_date(byAdding: DateComponents) -> Date? {
-        return (self as NSDate).__fw_date(byAdding: byAdding)
+        return Calendar.current.date(byAdding: byAdding, to: self)
     }
 
     /// 与指定日期相隔天数
     public func fw_days(from date: Date) -> Int {
-        return (self as NSDate).__fw_days(from: date)
+        let earliest = (self as NSDate).earlierDate(date)
+        let latest = earliest == self ? date : self
+        let multipier: Int = earliest == self ? -1 : 1
+        let components = Calendar.current.dateComponents([.day], from: earliest, to: latest)
+        return multipier * (components.day ?? 0)
     }
 }
 
 // MARK: - NSNumber+Foundation
 @_spi(FW) @objc extension NSNumber {
-    
-    /// 转换为CGFloat
-    public var fw_CGFloatValue: CGFloat {
-        return self.__fw_CGFloatValue
-    }
 
     /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
     public func fw_roundString(_ digit: Int) -> String {
-        return self.__fw_roundString(digit)
+        return fw_formatString(digit, roundingMode: .halfUp)
     }
 
     /// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
     public func fw_ceilString(_ digit: Int) -> String {
-        return self.__fw_ceilString(digit)
+        return fw_formatString(digit, roundingMode: .ceiling)
     }
 
     /// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
     public func fw_floorString(_ digit: Int) -> String {
-        return self.__fw_floorString(digit)
+        return fw_formatString(digit, roundingMode: .floor)
+    }
+    
+    private func fw_formatString(_ digit: Int, roundingMode: NumberFormatter.RoundingMode) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .none
+        formatter.roundingMode = roundingMode
+        formatter.minimumIntegerDigits = 1
+        formatter.maximumFractionDigits = digit
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        formatter.usesGroupingSeparator = false
+        formatter.currencyDecimalSeparator = "."
+        formatter.currencyGroupingSeparator = ""
+        return formatter.string(from: self) ?? ""
     }
 
     /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func fw_roundNumber(_ digit: UInt) -> NSNumber {
-        return self.__fw_roundNumber(digit)
+    public func fw_roundNumber(_ digit: Int) -> NSNumber {
+        return fw_formatNumber(digit, roundingMode: .halfUp)
     }
 
     /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func fw_ceilNumber(_ digit: UInt) -> NSNumber {
-        return self.__fw_ceilNumber(digit)
+    public func fw_ceilNumber(_ digit: Int) -> NSNumber {
+        return fw_formatNumber(digit, roundingMode: .ceiling)
     }
 
     /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-    public func fw_floorNumber(_ digit: UInt) -> NSNumber {
-        return self.__fw_floorNumber(digit)
+    public func fw_floorNumber(_ digit: Int) -> NSNumber {
+        return fw_formatNumber(digit, roundingMode: .floor)
+    }
+    
+    private func fw_formatNumber(_ digit: Int, roundingMode: NumberFormatter.RoundingMode) -> NSNumber {
+        let string = fw_formatString(digit, roundingMode: roundingMode) as NSString
+        return NSNumber(value: string.doubleValue)
     }
     
 }
@@ -264,8 +333,14 @@ import FWObjC
      *
      *  @param index 目标索引
      */
-    public func fw_emojiSubstring(_ index: UInt) -> String {
-        return (self as NSString).__fw_emojiSubstring(index)
+    public func fw_emojiSubstring(_ index: Int) -> String {
+        var result = self as NSString
+        if result.length > index {
+            // 获取index处的整个字符range，并截取掉整个字符，防止半个Emoji
+            let rangeIndex = result.rangeOfComposedCharacterSequence(at: index)
+            result = result.substring(to: rangeIndex.location) as NSString
+        }
+        return result as String
     }
 
     /**
@@ -274,7 +349,12 @@ import FWObjC
      *  @param regex 正则表达式
      */
     public func fw_regexSubstring(_ regex: String) -> String? {
-        return (self as NSString).__fw_regexSubstring(regex)
+        let range = (self as NSString).range(of: regex, options: .regularExpression)
+        if range.location != NSNotFound {
+            return (self as NSString).substring(with: range)
+        } else {
+            return nil
+        }
     }
 
     /**
@@ -286,7 +366,10 @@ import FWObjC
      *  @return 替换后的字符串
      */
     public func fw_regexReplace(_ regex: String, string: String) -> String {
-        return (self as NSString).__fw_regexReplace(regex, with: string)
+        guard let regexObj = try? NSRegularExpression(pattern: regex) else {
+            return self
+        }
+        return regexObj.stringByReplacingMatches(in: self, range: NSMakeRange(0, (self as NSString).length), withTemplate: string)
     }
 
     /**
@@ -296,12 +379,17 @@ import FWObjC
      *  @param block 回调句柄。range从大至小，方便replace
      */
     public func fw_regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
-        return (self as NSString).__fw_regexMatches(regex, with: block)
+        guard let regexObj = try? NSRegularExpression(pattern: regex) else { return }
+        let matches = regexObj.matches(in: self, range: NSMakeRange(0, (self as NSString).length))
+        // 倒序循环，避免replace等越界
+        for match in matches.reversed() {
+            block(match.range)
+        }
     }
     
     /// 转义Html，如"a<"转义为"a&lt;"
     public var fw_escapeHtml: String {
-        return (self as NSString).__fw_escapeHtml
+        return __Bridge.escapeHtml(self)
     }
     
     /**
@@ -313,91 +401,92 @@ import FWObjC
      *  @param regex 正则表达式
      */
     public func fw_isFormatRegex(_ regex: String) -> Bool {
-        return (self as NSString).__fw_isFormatRegex(regex)
+        let regexPredicate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return regexPredicate.evaluate(with: self)
     }
 
     /// 是否是手机号
-    public func fw_isFormatMobile() -> Bool {
-        return (self as NSString).__fw_isFormatMobile()
+    public var fw_isFormatMobile: Bool {
+        return fw_isFormatRegex("^1\\d{10}$")
     }
 
     /// 是否是座机号
-    public func fw_isFormatTelephone() -> Bool {
+    public var fw_isFormatTelephone: Bool {
         return (self as NSString).__fw_isFormatTelephone()
     }
     
     /// 是否是整数
-    public func fw_isFormatInteger() -> Bool {
+    public var fw_isFormatInteger: Bool {
         return (self as NSString).__fw_isFormatInteger()
     }
     
     /// 是否是数字
-    public func fw_isFormatNumber() -> Bool {
+    public var fw_isFormatNumber: Bool {
         return (self as NSString).__fw_isFormatNumber()
     }
     
     /// 是否是合法金额，两位小数点
-    public func fw_isFormatMoney() -> Bool {
+    public var fw_isFormatMoney: Bool {
         return (self as NSString).__fw_isFormatMoney()
     }
     
     /// 是否是身份证号
-    public func fw_isFormatIdcard() -> Bool {
+    public var fw_isFormatIdcard: Bool {
         return (self as NSString).__fw_isFormatIdcard()
     }
     
     /// 是否是银行卡号
-    public func fw_isFormatBankcard() -> Bool {
+    public var fw_isFormatBankcard: Bool {
         return (self as NSString).__fw_isFormatBankcard()
     }
     
     /// 是否是车牌号
-    public func fw_isFormatCarno() -> Bool {
+    public var fw_isFormatCarno: Bool {
         return (self as NSString).__fw_isFormatCarno()
     }
     
     /// 是否是邮政编码
-    public func fw_isFormatPostcode() -> Bool {
+    public var fw_isFormatPostcode: Bool {
         return (self as NSString).__fw_isFormatPostcode()
     }
     
     /// 是否是邮箱
-    public func fw_isFormatEmail() -> Bool {
+    public var fw_isFormatEmail: Bool {
         return (self as NSString).__fw_isFormatEmail()
     }
     
     /// 是否是URL
-    public func fw_isFormatUrl() -> Bool {
+    public var fw_isFormatUrl: Bool {
         return (self as NSString).__fw_isFormatUrl()
     }
     
     /// 是否是HTML
-    public func fw_isFormatHtml() -> Bool {
+    public var fw_isFormatHtml: Bool {
         return (self as NSString).__fw_isFormatHtml()
     }
     
     /// 是否是IP
-    public func fw_isFormatIp() -> Bool {
+    public var fw_isFormatIp: Bool {
         return (self as NSString).__fw_isFormatIp()
     }
     
     /// 是否全是中文
-    public func fw_isFormatChinese() -> Bool {
+    public var fw_isFormatChinese: Bool {
         return (self as NSString).__fw_isFormatChinese()
     }
     
     /// 是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
-    public func fw_isFormatDatetime() -> Bool {
+    public var fw_isFormatDatetime: Bool {
         return (self as NSString).__fw_isFormatDatetime()
     }
     
     /// 是否是合法时间戳，格式：1301234567
-    public func fw_isFormatTimestamp() -> Bool {
+    public var fw_isFormatTimestamp: Bool {
         return (self as NSString).__fw_isFormatTimestamp()
     }
     
     /// 是否是坐标点字符串，格式：latitude,longitude
-    public func fw_isFormatCoordinate() -> Bool {
+    public var fw_isFormatCoordinate: Bool {
         return (self as NSString).__fw_isFormatCoordinate()
     }
     
@@ -788,7 +877,7 @@ import FWObjC
     public static func fw_baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
-            if addr.fw_isFormatCoordinate() {
+            if addr.fw_isFormatCoordinate {
                 params["location"] = addr
             } else {
                 params["address"] = addr

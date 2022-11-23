@@ -151,11 +151,6 @@ extension Wrapper where Base == Date {
 
 // MARK: - NSNumber+Foundation
 extension Wrapper where Base: NSNumber {
-    
-    /// 转换为CGFloat
-    public var CGFloatValue: CGFloat {
-        return base.fw_CGFloatValue
-    }
 
     /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
     public func roundString(_ digit: Int) -> String {
@@ -173,17 +168,17 @@ extension Wrapper where Base: NSNumber {
     }
 
     /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func roundNumber(_ digit: UInt) -> NSNumber {
+    public func roundNumber(_ digit: Int) -> NSNumber {
         return base.fw_roundNumber(digit)
     }
 
     /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func ceilNumber(_ digit: UInt) -> NSNumber {
+    public func ceilNumber(_ digit: Int) -> NSNumber {
         return base.fw_ceilNumber(digit)
     }
 
     /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-    public func floorNumber(_ digit: UInt) -> NSNumber {
+    public func floorNumber(_ digit: Int) -> NSNumber {
         return base.fw_floorNumber(digit)
     }
     
@@ -211,7 +206,7 @@ extension Wrapper where Base == String {
      *
      *  @param index 目标索引
      */
-    public func emojiSubstring(_ index: UInt) -> String {
+    public func emojiSubstring(_ index: Int) -> String {
         return base.fw_emojiSubstring(index)
     }
 
@@ -264,88 +259,88 @@ extension Wrapper where Base == String {
     }
 
     /// 是否是手机号
-    public func isFormatMobile() -> Bool {
-        return base.fw_isFormatMobile()
+    public var isFormatMobile: Bool {
+        return base.fw_isFormatMobile
     }
 
     /// 是否是座机号
-    public func isFormatTelephone() -> Bool {
-        return base.fw_isFormatTelephone()
+    public var isFormatTelephone: Bool {
+        return base.fw_isFormatTelephone
     }
     
     /// 是否是整数
-    public func isFormatInteger() -> Bool {
-        return base.fw_isFormatInteger()
+    public var isFormatInteger: Bool {
+        return base.fw_isFormatInteger
     }
     
     /// 是否是数字
-    public func isFormatNumber() -> Bool {
-        return base.fw_isFormatNumber()
+    public var isFormatNumber: Bool {
+        return base.fw_isFormatNumber
     }
     
     /// 是否是合法金额，两位小数点
-    public func isFormatMoney() -> Bool {
-        return base.fw_isFormatMoney()
+    public var isFormatMoney: Bool {
+        return base.fw_isFormatMoney
     }
     
     /// 是否是身份证号
-    public func isFormatIdcard() -> Bool {
-        return base.fw_isFormatIdcard()
+    public var isFormatIdcard: Bool {
+        return base.fw_isFormatIdcard
     }
     
     /// 是否是银行卡号
-    public func isFormatBankcard() -> Bool {
-        return base.fw_isFormatBankcard()
+    public var isFormatBankcard: Bool {
+        return base.fw_isFormatBankcard
     }
     
     /// 是否是车牌号
-    public func isFormatCarno() -> Bool {
-        return base.fw_isFormatCarno()
+    public var isFormatCarno: Bool {
+        return base.fw_isFormatCarno
     }
     
     /// 是否是邮政编码
-    public func isFormatPostcode() -> Bool {
-        return base.fw_isFormatPostcode()
+    public var isFormatPostcode: Bool {
+        return base.fw_isFormatPostcode
     }
     
     /// 是否是邮箱
-    public func isFormatEmail() -> Bool {
-        return base.fw_isFormatEmail()
+    public var isFormatEmail: Bool {
+        return base.fw_isFormatEmail
     }
     
     /// 是否是URL
-    public func isFormatUrl() -> Bool {
-        return base.fw_isFormatUrl()
+    public var isFormatUrl: Bool {
+        return base.fw_isFormatUrl
     }
     
     /// 是否是HTML
-    public func isFormatHtml() -> Bool {
-        return base.fw_isFormatHtml()
+    public var isFormatHtml: Bool {
+        return base.fw_isFormatHtml
     }
     
     /// 是否是IP
-    public func isFormatIp() -> Bool {
-        return base.fw_isFormatIp()
+    public var isFormatIp: Bool {
+        return base.fw_isFormatIp
     }
     
     /// 是否全是中文
-    public func isFormatChinese() -> Bool {
-        return base.fw_isFormatChinese()
+    public var isFormatChinese: Bool {
+        return base.fw_isFormatChinese
     }
     
     /// 是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
-    public func isFormatDatetime() -> Bool {
-        return base.fw_isFormatDatetime()
+    public var isFormatDatetime: Bool {
+        return base.fw_isFormatDatetime
     }
     
     /// 是否是合法时间戳，格式：1301234567
-    public func isFormatTimestamp() -> Bool {
-        return base.fw_isFormatTimestamp()
+    public var isFormatTimestamp: Bool {
+        return base.fw_isFormatTimestamp
     }
     
     /// 是否是坐标点字符串，格式：latitude,longitude
-    public func isFormatCoordinate() -> Bool {
-        return base.fw_isFormatCoordinate()
+    public var isFormatCoordinate: Bool {
+        return base.fw_isFormatCoordinate
     }
     
 }
