@@ -8,7 +8,7 @@
 # [中文](https://github.com/lszzy/FWFramework/blob/master/README_CN.md)
 
 ## Tutorial
-iOS development framework, convenient for iOS development, compatible with OC and Swift.
+iOS development framework, convenient for iOS development. From version 5.0, it is only compatible with Swift; for OC compatibility, please use version 4.x.
 
 All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
@@ -46,7 +46,7 @@ The document is located in the docs folder, just open index.html in the browser,
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '4.3.0'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
 ## Vendor
