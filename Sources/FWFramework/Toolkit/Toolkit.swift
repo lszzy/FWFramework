@@ -19,7 +19,7 @@ import FWObjC
     ///   - alpha: 透明度可选，默认1.0
     /// - Returns: UIColor
     public static func color(_ hex: Int, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor(red: CGFloat((hex & 0xFF0000) >> 16) / 255.0, green: CGFloat((hex & 0xFF00) >> 8) / 255.0, blue: CGFloat(hex & 0xFF) / 255.0, alpha: alpha)
+        return UIColor.fw_color(hex: hex, alpha: alpha)
     }
 
     /// 从RGB创建UIColor
@@ -263,43 +263,85 @@ import FWObjC
     
     /// 获取当前颜色指定透明度的新颜色
     public func fw_color(alpha: CGFloat) -> UIColor {
-        return self.__fw_color(withAlpha: alpha)
+        return withAlphaComponent(alpha)
     }
 
     /// 读取颜色的十六进制值RGB，不含透明度
     public var fw_hexValue: Int {
-        return self.__fw_hexValue
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        if !getRed(&r, green: &g, blue: &b, alpha: &a) {
+            if getWhite(&r, alpha: &a) {
+                g = r
+                b = r
+            }
+        }
+        
+        let red = Int(r * 255)
+        let green = Int(g * 255)
+        let blue = Int(b * 255)
+        return (red << 16) + (green << 8) + blue
     }
 
     /// 读取颜色的透明度值，范围0~1
     public var fw_alphaValue: CGFloat {
-        return self.__fw_alphaValue
+        return self.cgColor.alpha
     }
 
     /// 读取颜色的十六进制字符串RGB，不含透明度
     public var fw_hexString: String {
-        return self.__fw_hexString
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        if !getRed(&r, green: &g, blue: &b, alpha: &a) {
+            if getWhite(&r, alpha: &a) {
+                g = r
+                b = r
+            }
+        }
+        
+        return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
     }
 
     /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
     public var fw_hexAlphaString: String {
-        return self.__fw_hexAlphaString
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        if !getRed(&r, green: &g, blue: &b, alpha: &a) {
+            if getWhite(&r, alpha: &a) {
+                g = r
+                b = r
+            }
+        }
+        
+        if a >= 1.0 {
+            return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
+        } else if UIColor.fw_colorStandardARGB {
+            return String(format: "#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
+        } else {
+            return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255), lround(a * 255))
+        }
     }
     
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
-    public static var fw_colorStandardARGB: Bool {
-        get { return Self.__fw_colorStandardARGB }
-        set { Self.__fw_colorStandardARGB = newValue }
-    }
+    public static var fw_colorStandardARGB = false
 
     /// 获取透明度为1.0的RGB随机颜色
     public static var fw_randomColor: UIColor {
-        return Self.__fw_random
+        let red = arc4random() % 255
+        let green = arc4random() % 255
+        let blue = arc4random() % 255
+        return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
 
     /// 从十六进制值初始化，格式：0x20B2AA，透明度默认1.0
     public static func fw_color(hex: Int, alpha: CGFloat = 1.0) -> UIColor {
-        return Self.__fw_color(withHex: hex, alpha: alpha)
+        return UIColor(red: CGFloat((hex & 0xFF0000) >> 16) / 255.0, green: CGFloat((hex & 0xFF00) >> 8) / 255.0, blue: CGFloat(hex & 0xFF) / 255.0, alpha: alpha)
     }
 
     /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度默认1.0，失败时返回clear
