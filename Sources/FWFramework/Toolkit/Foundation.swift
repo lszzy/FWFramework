@@ -407,7 +407,7 @@ import FWObjC
 
     /// 是否是手机号
     public var fw_isFormatMobile: Bool {
-        return fw_isFormatRegex("^1\\d{10}$")
+        return (self as NSString).__fw_isFormatMobile()
     }
 
     /// 是否是座机号
@@ -644,8 +644,22 @@ import FWObjC
     }
     
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
-    public static func fw_attributedString(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Self? {
-        return Self.__fw_attributedString(withHtmlString: htmlString, defaultAttributes: defaultAttributes)
+    public static func fw_attributedString(htmlString string: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Self? {
+        guard !string.isEmpty else { return nil }
+        var htmlString = string
+        if let attributes = defaultAttributes {
+            var cssString = ""
+            if let textColor = attributes[.foregroundColor] as? UIColor {
+                cssString = cssString.appendingFormat("color:%@;", fw_cssString(color: textColor))
+            }
+            if let font = attributes[.font] as? UIFont {
+                cssString = cssString.appending(fw_cssString(font: font))
+            }
+            if !cssString.isEmpty {
+                htmlString = String(format: "<style type='text/css'>html{%@}</style>%@", cssString, htmlString)
+            }
+        }
+        return fw_attributedString(htmlString: htmlString)
     }
 
     /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
@@ -668,12 +682,57 @@ import FWObjC
 
     /// 获取颜色对应CSS字符串(rgb|rgba格式)
     public static func fw_cssString(color: UIColor) -> String {
-        return Self.__fw_CSSString(with: color)
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        if !color.getRed(&r, green: &g, blue: &b, alpha: &a) {
+            if color.getWhite(&r, alpha: &a) {
+                g = r
+                b = r
+            }
+        }
+        
+        if a >= 1.0 {
+            return String(format: "rgb(%u, %u, %u)", UInt(round(r * 255.0)), UInt(round(g * 255.0)), UInt(round(b * 255.0)))
+        } else {
+            return String(format: "rgba(%u, %u, %u, %g)", UInt(round(r * 255.0)), UInt(round(g * 255.0)), UInt(round(b * 255.0)), a)
+        }
     }
 
     /// 获取系统字体对应CSS字符串(family|style|weight|size)
     public static func fw_cssString(font: UIFont) -> String {
-        return Self.__fw_CSSString(with: font)
+        let fontWeights: [String: String] = [
+            "ultralight": "100",
+            "thin": "200",
+            "light": "300",
+            "medium": "500",
+            "semibold": "600",
+            "demibold": "600",
+            "extrabold": "800",
+            "ultrabold": "800",
+            "bold": "700",
+            "heavy": "900",
+            "black": "900",
+        ]
+        
+        let fontName = font.fontName.lowercased()
+        var fontStyle = "normal"
+        if fontName.range(of: "italic") != nil {
+            fontStyle = "italic"
+        } else if fontName.range(of: "oblique") != nil {
+            fontStyle = "oblique"
+        }
+        
+        var fontWeight = "400"
+        for (key, value) in fontWeights {
+            if fontName.range(of: key) != nil {
+                fontWeight = value
+                break
+            }
+        }
+        
+        return String(format: "font-family:-apple-system;font-weight:%@;font-style:%@;font-size:%.0fpx;", fontWeight, fontStyle, font.pointSize)
     }
     
 }

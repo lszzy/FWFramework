@@ -32,54 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSAttributedString+FWFoundation
-
-@class FWThemeObject<__covariant ObjectType>;
-
-/**
- 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可。
- 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
- */
-@interface NSAttributedString (FWFoundation)
-
-/// NSAttributedString对象转换为html字符串
-- (nullable NSString *)fw_htmlString NS_REFINED_FOR_SWIFT;
-
-/// 计算所占尺寸，需设置Font等
-@property (nonatomic, assign, readonly) CGSize fw_textSize NS_REFINED_FOR_SWIFT;
-
-/// 计算在指定绘制区域内所占尺寸，需设置Font等
-- (CGSize)fw_textSizeWithDrawSize:(CGSize)drawSize NS_REFINED_FOR_SWIFT;
-
-/// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
-+ (nullable instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString NS_REFINED_FOR_SWIFT;
-
-/// 图片转换为NSAttributedString对象，可实现行内图片样式。其中bounds.x会设置为间距，y常用算法：(font.capHeight - image.size.height) / 2.0
-+ (NSAttributedString *)fw_attributedStringWithImage:(nullable UIImage *)image bounds:(CGRect)bounds NS_REFINED_FOR_SWIFT;
-
-/// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
-+ (NSAttributedString *)fw_attributedStringWithString:(NSString *)string attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes highlight:(NSString *)highlight highlightAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)highlightAttributes NS_REFINED_FOR_SWIFT;
-
-/// 快速创建NSAttributedString，自定义字体
-+ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font NS_REFINED_FOR_SWIFT;
-
-/// 快速创建NSAttributedString，自定义字体和颜色
-+ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
-
-/// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
-+ (nullable instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
-
-/// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
-+ (FWThemeObject<NSAttributedString *> *)fw_themeObjectWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
-
-// 获取颜色对应CSS字符串(rgb|rgba格式)
-+ (NSString *)fw_CSSStringWithColor:(UIColor *)color NS_REFINED_FOR_SWIFT;
-
-// 获取系统字体对应CSS字符串(family|style|weight|size)
-+ (NSString *)fw_CSSStringWithFont:(UIFont *)font NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - NSData+FWFoundation
 
 @interface NSData (FWFoundation)
