@@ -183,33 +183,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSNumber+FWFoundation
-
-@interface NSNumber (FWFoundation)
-
-/// 转换为CGFloat
-@property (nonatomic, assign, readonly) CGFloat fw_CGFloatValue NS_REFINED_FOR_SWIFT;
-
-/// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-- (NSString *)fw_roundString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-- (NSString *)fw_ceilString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
-- (NSString *)fw_floorString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-- (NSNumber *)fw_roundNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-- (NSNumber *)fw_ceilNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-- (NSNumber *)fw_floorNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - NSDictionary+FWFoundation
 
 @interface NSDictionary<__covariant KeyType, __covariant ObjectType> (FWFoundation)
@@ -429,42 +402,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - NSFileManager+FWFoundation
-
-@interface NSFileManager (FWFoundation)
-
-/// 搜索路径，参数为NSSearchPathDirectory
-+ (NSString *)fw_pathSearch:(NSSearchPathDirectory)directory NS_REFINED_FOR_SWIFT;
-
-/// 沙盒路径
-@property (class, nonatomic, copy, readonly) NSString *fw_pathHome NS_REFINED_FOR_SWIFT;
-
-/// 文档路径，iTunes会同步备份
-@property (class, nonatomic, copy, readonly) NSString *fw_pathDocument NS_REFINED_FOR_SWIFT;
-
-/// 缓存路径，系统不会删除，iTunes会删除
-@property (class, nonatomic, copy, readonly) NSString *fw_pathCaches NS_REFINED_FOR_SWIFT;
-
-/// Library路径
-@property (class, nonatomic, copy, readonly) NSString *fw_pathLibrary NS_REFINED_FOR_SWIFT;
-
-/// 配置路径，配置文件保存位置
-@property (class, nonatomic, copy, readonly) NSString *fw_pathPreference NS_REFINED_FOR_SWIFT;
-
-/// 临时路径，App退出后可能会删除
-@property (class, nonatomic, copy, readonly) NSString *fw_pathTmp NS_REFINED_FOR_SWIFT;
-
-/// bundle路径，不可写
-@property (class, nonatomic, copy, readonly) NSString *fw_pathBundle NS_REFINED_FOR_SWIFT;
-
-/// 资源路径，不可写
-@property (class, nonatomic, copy, readonly) NSString *fw_pathResource NS_REFINED_FOR_SWIFT;
-
-/// 获取目录大小，单位：B
-+ (unsigned long long)fw_folderSize:(NSString *)folderPath NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - NSURL+FWFoundation
 
 @interface NSURL (FWFoundation)
@@ -527,24 +464,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return NSURL
  */
 + (nullable NSURL *)fw_baiduMapsURLWithSaddr:(nullable NSString *)saddr daddr:(nullable NSString *)daddr mode:(nullable NSString *)mode options:(nullable NSDictionary *)options NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - NSUserDefaults+FWFoundation
-
-@interface NSUserDefaults (FWFoundation)
-
-/// 读取对象，支持unarchive对象
-- (nullable id)fw_objectForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
-
-/// 保存对象，支持archive对象
-- (void)fw_setObject:(nullable id)object forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
-
-/// 从standard读取对象，支持unarchive对象
-+ (nullable id)fw_objectForKey:(NSString *)key NS_REFINED_FOR_SWIFT;
-
-/// 保存对象到standard，支持archive对象
-+ (void)fw_setObject:(nullable id)object forKey:(NSString *)key NS_REFINED_FOR_SWIFT;
 
 @end
 
