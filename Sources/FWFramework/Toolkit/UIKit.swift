@@ -1089,7 +1089,7 @@ import AdSupport
         if layout != nil {
             layout?(viewController.view)
         } else {
-            viewController.view.fw.pinEdges()
+            viewController.view.fw_pinEdges()
         }
         viewController.didMove(toParent: self)
     }
