@@ -8542,35 +8542,35 @@
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 262,
+      "line": 287,
       "symbol": "FWSegmentedControl.enlargeEdgeInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 269,
+      "line": 294,
       "symbol": "FWSegmentedControl.-initWithSectionTitles:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 270,
+      "line": 295,
       "symbol": "FWSegmentedControl.-initWithSectionImages:sectionSelectedImages:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 271,
+      "line": 296,
       "symbol": "FWSegmentedControl.-initWithSectionImages:sectionSelectedImages:titlesForSections:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 273,
+      "line": 298,
       "symbol": "FWSegmentedControl.-setSelectedSegmentIndex:animated:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"

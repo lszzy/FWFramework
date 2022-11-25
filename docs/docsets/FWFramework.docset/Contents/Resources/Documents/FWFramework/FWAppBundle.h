@@ -11,8 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  框架内置应用Bundle类，应用可替换
- @note 如果主应用存在FWApplication.bundle或主Bundle内包含对应图片|多语言，则优先使用；否则使用框架默认实现。
- FWApplication所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
+ @note 如果主应用存在FWFramework.bundle或主Bundle内包含对应图片|多语言，则优先使用；否则使用框架默认实现。
+ FWFramework所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
  */
 NS_SWIFT_NAME(AppBundle)
 @interface FWAppBundle : FWModuleBundle

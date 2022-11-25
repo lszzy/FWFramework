@@ -73426,7 +73426,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Toolkit\/DynamicLayout.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 29759,
+    "key.length" : 30969,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -73436,10 +73436,10 @@
         "key.offset" : 139
       },
       {
-        "key.bodylength" : 1474,
+        "key.bodylength" : 1497,
         "key.bodyoffset" : 224,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1522,
+        "key.length" : 1545,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
         "key.nameoffset" : 187,
@@ -73548,15 +73548,15 @@
                 "key.offset" : 1474
               }
             ],
-            "key.bodylength" : 84,
-            "key.bodyoffset" : 1607,
+            "key.bodylength" : 115,
+            "key.bodyoffset" : 1599,
             "key.doc.comment" : "根据配置自动计算cell高度，不使用缓存，子类可重写",
             "key.doclength" : 75,
             "key.docoffset" : 1395,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 211,
+            "key.length" : 234,
             "key.name" : "height(tableView:configuration:)",
-            "key.namelength" : 101,
+            "key.namelength" : 93,
             "key.nameoffset" : 1493,
             "key.offset" : 1481,
             "key.substructure" : [
@@ -73570,17 +73570,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 49,
         "key.name" : "MARK: - UITableViewHeaderFooterView+DynamicLayout",
-        "key.offset" : 1704
+        "key.offset" : 1727
       },
       {
-        "key.bodylength" : 1511,
-        "key.bodyoffset" : 1813,
+        "key.bodylength" : 1546,
+        "key.bodyoffset" : 1836,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1571,
+        "key.length" : 1606,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 1764,
-        "key.offset" : 1754,
+        "key.nameoffset" : 1787,
+        "key.offset" : 1777,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -73588,20 +73588,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1951
+                "key.offset" : 1974
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 1983,
+            "key.bodyoffset" : 2006,
             "key.doc.comment" : "如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能",
             "key.doclength" : 124,
-            "key.docoffset" : 1823,
+            "key.docoffset" : 1846,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 129,
             "key.name" : "maxYViewFixed",
             "key.namelength" : 13,
-            "key.nameoffset" : 1962,
-            "key.offset" : 1958,
+            "key.nameoffset" : 1985,
+            "key.offset" : 1981,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -73611,20 +73611,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2193
+                "key.offset" : 2216
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 2230,
+            "key.bodyoffset" : 2253,
             "key.doc.comment" : "最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0",
             "key.doclength" : 96,
-            "key.docoffset" : 2093,
+            "key.docoffset" : 2116,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewPadding",
             "key.namelength" : 15,
-            "key.nameoffset" : 2204,
-            "key.offset" : 2200,
+            "key.nameoffset" : 2227,
+            "key.offset" : 2223,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -73634,20 +73634,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2468
+                "key.offset" : 2491
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 2503,
+            "key.bodyoffset" : 2526,
             "key.doc.comment" : "最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用",
             "key.doclength" : 120,
-            "key.docoffset" : 2344,
+            "key.docoffset" : 2367,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewExpanded",
             "key.namelength" : 16,
-            "key.nameoffset" : 2479,
-            "key.offset" : 2475,
+            "key.nameoffset" : 2502,
+            "key.offset" : 2498,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -73657,20 +73657,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2733
+                "key.offset" : 2756
               }
             ],
             "key.bodylength" : 98,
-            "key.bodyoffset" : 2856,
+            "key.bodyoffset" : 2879,
             "key.doc.comment" : "免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier",
             "key.doclength" : 106,
-            "key.docoffset" : 2623,
+            "key.docoffset" : 2646,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 215,
             "key.name" : "headerFooterView(tableView:reuseIdentifier:)",
             "key.namelength" : 94,
-            "key.nameoffset" : 2752,
-            "key.offset" : 2740,
+            "key.nameoffset" : 2775,
+            "key.offset" : 2763,
             "key.substructure" : [
 
             ],
@@ -73682,20 +73682,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3040
+                "key.offset" : 3063
               }
             ],
-            "key.bodylength" : 96,
-            "key.bodyoffset" : 3221,
+            "key.bodylength" : 151,
+            "key.bodyoffset" : 3224,
             "key.doc.comment" : "根据配置自动计算cell高度，不使用缓存，子类可重写",
             "key.doclength" : 75,
-            "key.docoffset" : 2961,
+            "key.docoffset" : 2984,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 271,
+            "key.length" : 306,
             "key.name" : "height(tableView:type:configuration:)",
-            "key.namelength" : 149,
-            "key.nameoffset" : 3059,
-            "key.offset" : 3047,
+            "key.namelength" : 129,
+            "key.nameoffset" : 3082,
+            "key.offset" : 3070,
             "key.substructure" : [
 
             ],
@@ -73707,26 +73707,26 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 33,
         "key.name" : "MARK: - UITableView+DynamicLayout",
-        "key.offset" : 3330
+        "key.offset" : 3388
       },
       {
-        "key.bodylength" : 6483,
-        "key.bodyoffset" : 3719,
+        "key.bodylength" : 6765,
+        "key.bodyoffset" : 3777,
         "key.doc.comment" : "表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现\n\n如果使用系统自动高度，建议设置estimatedRowHeight提高性能\n- see: [UITableViewDynamicLayoutCacheHeight](https:\/\/github.com\/liangdahong\/UITableViewDynamicLayoutCacheHeight)",
         "key.doclength" : 312,
-        "key.docoffset" : 3364,
+        "key.docoffset" : 3422,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 6527,
+        "key.length" : 6809,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 3686,
-        "key.offset" : 3676,
+        "key.nameoffset" : 3744,
+        "key.offset" : 3734,
         "key.substructure" : [
           {
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 13,
             "key.name" : "MARK: - Cache",
-            "key.offset" : 3732
+            "key.offset" : 3790
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -73734,20 +73734,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3819
+                "key.offset" : 3877
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 3851,
+            "key.bodyoffset" : 3909,
             "key.doc.comment" : "手工清空高度缓存，用于高度发生变化的情况",
             "key.doclength" : 65,
-            "key.docoffset" : 3750,
+            "key.docoffset" : 3808,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 68,
             "key.name" : "clearHeightCache()",
             "key.namelength" : 18,
-            "key.nameoffset" : 3831,
-            "key.offset" : 3826,
+            "key.nameoffset" : 3889,
+            "key.offset" : 3884,
             "key.substructure" : [
 
             ]
@@ -73758,20 +73758,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4039
+                "key.offset" : 4097
               }
             ],
             "key.bodylength" : 66,
-            "key.bodyoffset" : 4116,
+            "key.bodyoffset" : 4174,
             "key.doc.comment" : "指定indexPath设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存",
             "key.doclength" : 131,
-            "key.docoffset" : 3904,
+            "key.docoffset" : 3962,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 137,
             "key.name" : "setCellHeightCache(_:for:)",
             "key.namelength" : 63,
-            "key.nameoffset" : 4051,
-            "key.offset" : 4046,
+            "key.nameoffset" : 4109,
+            "key.offset" : 4104,
             "key.substructure" : [
 
             ]
@@ -73782,20 +73782,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4318
+                "key.offset" : 4376
               }
             ],
             "key.bodylength" : 63,
-            "key.bodyoffset" : 4389,
+            "key.bodyoffset" : 4447,
             "key.doc.comment" : "指定key设置cell高度缓存，如willDisplayCell调用，height为cell.frame.size.height，设置为0时清除缓存",
             "key.doclength" : 125,
-            "key.docoffset" : 4189,
+            "key.docoffset" : 4247,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 128,
             "key.name" : "setCellHeightCache(_:for:)",
             "key.namelength" : 57,
-            "key.nameoffset" : 4330,
-            "key.offset" : 4325,
+            "key.nameoffset" : 4388,
+            "key.offset" : 4383,
             "key.substructure" : [
 
             ]
@@ -73806,20 +73806,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4568
+                "key.offset" : 4626
               }
             ],
             "key.bodylength" : 62,
-            "key.bodyoffset" : 4634,
+            "key.bodyoffset" : 4692,
             "key.doc.comment" : "指定indexPath获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension",
             "key.doclength" : 105,
-            "key.docoffset" : 4459,
+            "key.docoffset" : 4517,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 122,
             "key.name" : "cellHeightCache(for:)",
             "key.namelength" : 41,
-            "key.nameoffset" : 4580,
-            "key.offset" : 4575,
+            "key.nameoffset" : 4638,
+            "key.offset" : 4633,
             "key.substructure" : [
 
             ],
@@ -73831,20 +73831,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4806
+                "key.offset" : 4864
               }
             ],
             "key.bodylength" : 59,
-            "key.bodyoffset" : 4866,
+            "key.bodyoffset" : 4924,
             "key.doc.comment" : "指定key获取cell缓存高度，如estimatedHeightForRow调用，默认值automaticDimension",
             "key.doclength" : 99,
-            "key.docoffset" : 4703,
+            "key.docoffset" : 4761,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 113,
             "key.name" : "cellHeightCache(for:)",
             "key.namelength" : 35,
-            "key.nameoffset" : 4818,
-            "key.offset" : 4813,
+            "key.nameoffset" : 4876,
+            "key.offset" : 4871,
             "key.substructure" : [
 
             ],
@@ -73856,20 +73856,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5081
+                "key.offset" : 5139
               }
             ],
             "key.bodylength" : 91,
-            "key.bodyoffset" : 5186,
+            "key.bodyoffset" : 5244,
             "key.doc.comment" : "指定section设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存",
             "key.doclength" : 145,
-            "key.docoffset" : 4932,
+            "key.docoffset" : 4990,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 190,
             "key.name" : "setHeaderFooterHeightCache(_:type:for:)",
             "key.namelength" : 91,
-            "key.nameoffset" : 5093,
-            "key.offset" : 5088,
+            "key.nameoffset" : 5151,
+            "key.offset" : 5146,
             "key.substructure" : [
 
             ]
@@ -73880,20 +73880,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5429
+                "key.offset" : 5487
               }
             ],
             "key.bodylength" : 83,
-            "key.bodyoffset" : 5536,
+            "key.bodyoffset" : 5594,
             "key.doc.comment" : "指定key设置HeaderFooter高度缓存，如willDisplayHeaderFooter调用，height为view.frame.size.height，设置为0时清除缓存",
             "key.doclength" : 141,
-            "key.docoffset" : 5284,
+            "key.docoffset" : 5342,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 184,
             "key.name" : "setHeaderFooterHeightCache(_:type:for:)",
             "key.namelength" : 93,
-            "key.nameoffset" : 5441,
-            "key.offset" : 5436,
+            "key.nameoffset" : 5499,
+            "key.offset" : 5494,
             "key.substructure" : [
 
             ]
@@ -73904,20 +73904,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5750
+                "key.offset" : 5808
               }
             ],
             "key.bodylength" : 81,
-            "key.bodyoffset" : 5853,
+            "key.bodyoffset" : 5911,
             "key.doc.comment" : "指定section获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension",
             "key.doclength" : 120,
-            "key.docoffset" : 5626,
+            "key.docoffset" : 5684,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 178,
             "key.name" : "headerFooterHeightCache(_:forSection:)",
             "key.namelength" : 78,
-            "key.nameoffset" : 5762,
-            "key.offset" : 5757,
+            "key.nameoffset" : 5820,
+            "key.offset" : 5815,
             "key.substructure" : [
 
             ],
@@ -73929,20 +73929,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6061
+                "key.offset" : 6119
               }
             ],
             "key.bodylength" : 73,
-            "key.bodyoffset" : 6159,
+            "key.bodyoffset" : 6217,
             "key.doc.comment" : "指定key获取HeaderFooter缓存高度，如estimatedHeightForHeaderFooter调用，默认值automaticDimension",
             "key.doclength" : 116,
-            "key.docoffset" : 5941,
+            "key.docoffset" : 5999,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 165,
             "key.name" : "headerFooterHeightCache(_:for:)",
             "key.namelength" : 73,
-            "key.nameoffset" : 6073,
-            "key.offset" : 6068,
+            "key.nameoffset" : 6131,
+            "key.offset" : 6126,
             "key.substructure" : [
 
             ],
@@ -73952,7 +73952,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 12,
             "key.name" : "MARK: - Cell",
-            "key.offset" : 6242
+            "key.offset" : 6300
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -73960,22 +73960,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6490
+                "key.offset" : 6548
               }
             ],
-            "key.bodylength" : 93,
-            "key.bodyoffset" : 6613,
+            "key.bodylength" : 121,
+            "key.bodyoffset" : 6678,
             "key.doc.comment" : "获取 Cell 需要的高度，内部无缓存操作\n- Parameters:\n  - cellClass: cell类\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell高度",
             "key.doclength" : 227,
-            "key.docoffset" : 6259,
+            "key.docoffset" : 6317,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 210,
+            "key.length" : 245,
             "key.name" : "height(cellClass:configuration:)",
-            "key.namelength" : 98,
-            "key.nameoffset" : 6502,
-            "key.offset" : 6497,
+            "key.namelength" : 105,
+            "key.nameoffset" : 6560,
+            "key.offset" : 6555,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 15,
+                    "key.offset" : 6570
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 18,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 6567,
+                "key.offset" : 6567
+              }
             ],
             "key.typename" : "CGFloat"
           },
@@ -73985,22 +74004,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7032
+                "key.offset" : 7125
               }
             ],
-            "key.bodylength" : 113,
-            "key.bodyoffset" : 7193,
+            "key.bodylength" : 141,
+            "key.bodyoffset" : 7293,
             "key.doc.comment" : "获取 Cell 需要的高度，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell class\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局 cell，内部不会拥有 Block，不需要 __weak\n- Returns: cell高度",
             "key.doclength" : 311,
-            "key.docoffset" : 6717,
+            "key.docoffset" : 6810,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 268,
+            "key.length" : 303,
             "key.name" : "height(cellClass:cacheBy:configuration:)",
-            "key.namelength" : 136,
-            "key.nameoffset" : 7044,
-            "key.offset" : 7039,
+            "key.namelength" : 143,
+            "key.nameoffset" : 7137,
+            "key.offset" : 7132,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 15,
+                    "key.offset" : 7147
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 18,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 7144,
+                "key.offset" : 7144
+              }
             ],
             "key.typename" : "CGFloat"
           },
@@ -74010,22 +74048,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7646
+                "key.offset" : 7774
               }
             ],
-            "key.bodylength" : 110,
-            "key.bodyoffset" : 7802,
+            "key.bodylength" : 138,
+            "key.bodyoffset" : 7937,
             "key.doc.comment" : "获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell class\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局 cell，内部不会拥有 Block，不需要 __weak\n- Returns: cell高度",
             "key.doclength" : 329,
-            "key.docoffset" : 7313,
+            "key.docoffset" : 7441,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 260,
+            "key.length" : 295,
             "key.name" : "height(cellClass:cacheBy:configuration:)",
-            "key.namelength" : 131,
-            "key.nameoffset" : 7658,
-            "key.offset" : 7653,
+            "key.namelength" : 138,
+            "key.nameoffset" : 7786,
+            "key.offset" : 7781,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 15,
+                    "key.offset" : 7796
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 18,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 7793,
+                "key.offset" : 7793
+              }
             ],
             "key.typename" : "CGFloat"
           },
@@ -74033,7 +74090,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 24,
             "key.name" : "MARK: - HeaderFooterView",
-            "key.offset" : 7922
+            "key.offset" : 8085
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74041,22 +74098,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8286
+                "key.offset" : 8449
               }
             ],
-            "key.bodylength" : 129,
-            "key.bodyoffset" : 8469,
+            "key.bodylength" : 181,
+            "key.bodyoffset" : 8639,
             "key.doc.comment" : "获取 HeaderFooter 需要的高度，内部无缓存操作\n- Parameters:\n  - headerFooterViewClass: HeaderFooter class\n  - type: HeaderFooter类型，Header 或者 Footer\n  - configuration: 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak\n- Returns: HeaderFooter高度",
             "key.doclength" : 331,
-            "key.docoffset" : 7951,
+            "key.docoffset" : 8114,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 306,
+            "key.length" : 365,
             "key.name" : "height(headerFooterViewClass:type:configuration:)",
-            "key.namelength" : 158,
-            "key.nameoffset" : 8298,
-            "key.offset" : 8293,
+            "key.namelength" : 165,
+            "key.nameoffset" : 8461,
+            "key.offset" : 8456,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 27,
+                    "key.offset" : 8471
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewHeaderFooterView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 30,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 8468,
+                "key.offset" : 8468
+              }
             ],
             "key.typename" : "CGFloat"
           },
@@ -74066,22 +74142,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9022
+                "key.offset" : 9244
               }
             ],
-            "key.bodylength" : 154,
-            "key.bodyoffset" : 9235,
+            "key.bodylength" : 206,
+            "key.bodyoffset" : 9464,
             "key.doc.comment" : "获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - headerFooterViewClass: HeaderFooter class\n  - type: HeaderFooter类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak\n- Returns: HeaderFooter高度",
             "key.doclength" : 409,
-            "key.docoffset" : 8609,
+            "key.docoffset" : 8831,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 361,
+            "key.length" : 420,
             "key.name" : "height(headerFooterViewClass:type:cacheBy:configuration:)",
-            "key.namelength" : 188,
-            "key.nameoffset" : 9034,
-            "key.offset" : 9029,
+            "key.namelength" : 195,
+            "key.nameoffset" : 9256,
+            "key.offset" : 9251,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 27,
+                    "key.offset" : 9266
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewHeaderFooterView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 30,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 9263,
+                "key.offset" : 9263
+              }
             ],
             "key.typename" : "CGFloat"
           },
@@ -74091,22 +74186,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9833
+                "key.offset" : 10114
               }
             ],
-            "key.bodylength" : 146,
-            "key.bodyoffset" : 10049,
+            "key.bodylength" : 198,
+            "key.bodyoffset" : 10337,
             "key.doc.comment" : "获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - headerFooterViewClass: HeaderFooter class\n  - type: HeaderFooter类型，Header 或者 Footer\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak\n- Returns: HeaderFooter高度",
             "key.doclength" : 433,
-            "key.docoffset" : 9396,
+            "key.docoffset" : 9677,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 356,
+            "key.length" : 415,
             "key.name" : "height(headerFooterViewClass:type:cacheBy:configuration:)",
-            "key.namelength" : 191,
-            "key.nameoffset" : 9845,
-            "key.offset" : 9840,
+            "key.namelength" : 198,
+            "key.nameoffset" : 10126,
+            "key.offset" : 10121,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 27,
+                    "key.offset" : 10136
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UITableViewHeaderFooterView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 30,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 10133,
+                "key.offset" : 10133
+              }
             ],
             "key.typename" : "CGFloat"
           }
@@ -74116,17 +74230,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 42,
         "key.name" : "MARK: - UICollectionViewCell+DynamicLayout",
-        "key.offset" : 10208
+        "key.offset" : 10548
       },
       {
-        "key.bodylength" : 2175,
-        "key.bodyoffset" : 10303,
+        "key.bodylength" : 2214,
+        "key.bodyoffset" : 10643,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 2228,
+        "key.length" : 2267,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 10261,
-        "key.offset" : 10251,
+        "key.nameoffset" : 10601,
+        "key.offset" : 10591,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74134,20 +74248,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10429
+                "key.offset" : 10769
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 10461,
+            "key.bodyoffset" : 10801,
             "key.doc.comment" : "如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能",
             "key.doclength" : 112,
-            "key.docoffset" : 10313,
+            "key.docoffset" : 10653,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 129,
             "key.name" : "maxYViewFixed",
             "key.namelength" : 13,
-            "key.nameoffset" : 10440,
-            "key.offset" : 10436,
+            "key.nameoffset" : 10780,
+            "key.offset" : 10776,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -74157,20 +74271,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10659
+                "key.offset" : 10999
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 10696,
+            "key.bodyoffset" : 11036,
             "key.doc.comment" : "最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0",
             "key.doclength" : 84,
-            "key.docoffset" : 10571,
+            "key.docoffset" : 10911,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewPadding",
             "key.namelength" : 15,
-            "key.nameoffset" : 10670,
-            "key.offset" : 10666,
+            "key.nameoffset" : 11010,
+            "key.offset" : 11006,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -74180,20 +74294,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10934
+                "key.offset" : 11274
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 10969,
+            "key.bodyoffset" : 11309,
             "key.doc.comment" : "最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用",
             "key.doclength" : 120,
-            "key.docoffset" : 10810,
+            "key.docoffset" : 11150,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewExpanded",
             "key.namelength" : 16,
-            "key.nameoffset" : 10945,
-            "key.offset" : 10941,
+            "key.nameoffset" : 11285,
+            "key.offset" : 11281,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -74203,20 +74317,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11183
+                "key.offset" : 11523
               }
             ],
             "key.bodylength" : 113,
-            "key.bodyoffset" : 11334,
+            "key.bodyoffset" : 11674,
             "key.doc.comment" : "免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier",
             "key.doclength" : 94,
-            "key.docoffset" : 11085,
+            "key.docoffset" : 11425,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 258,
             "key.name" : "cell(collectionView:indexPath:reuseIdentifier:)",
             "key.namelength" : 122,
-            "key.nameoffset" : 11202,
-            "key.offset" : 11190,
+            "key.nameoffset" : 11542,
+            "key.offset" : 11530,
             "key.substructure" : [
 
             ],
@@ -74228,20 +74342,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11515
+                "key.offset" : 11855
               }
             ],
-            "key.bodylength" : 87,
-            "key.bodyoffset" : 11665,
+            "key.bodylength" : 118,
+            "key.bodyoffset" : 11987,
             "key.doc.comment" : "根据配置自动计算view大小，子类可重写",
             "key.doclength" : 57,
-            "key.docoffset" : 11454,
+            "key.docoffset" : 11794,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 231,
+            "key.length" : 244,
             "key.name" : "size(collectionView:configuration:)",
-            "key.namelength" : 119,
-            "key.nameoffset" : 11534,
-            "key.offset" : 11522,
+            "key.namelength" : 101,
+            "key.nameoffset" : 11874,
+            "key.offset" : 11862,
             "key.substructure" : [
 
             ],
@@ -74253,20 +74367,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11835
+                "key.offset" : 12188
               }
             ],
-            "key.bodylength" : 101,
-            "key.bodyoffset" : 12009,
+            "key.bodylength" : 132,
+            "key.bodyoffset" : 12344,
             "key.doc.comment" : "根据配置自动计算view大小，固定宽度，子类可重写",
             "key.doclength" : 72,
-            "key.docoffset" : 11759,
+            "key.docoffset" : 12112,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 269,
+            "key.length" : 282,
             "key.name" : "size(collectionView:width:configuration:)",
-            "key.namelength" : 143,
-            "key.nameoffset" : 11854,
-            "key.offset" : 11842,
+            "key.namelength" : 125,
+            "key.nameoffset" : 12207,
+            "key.offset" : 12195,
             "key.substructure" : [
 
             ],
@@ -74278,20 +74392,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12193
+                "key.offset" : 12559
               }
             ],
-            "key.bodylength" : 103,
-            "key.bodyoffset" : 12368,
+            "key.bodylength" : 134,
+            "key.bodyoffset" : 12716,
             "key.doc.comment" : "根据配置自动计算view大小，固定高度，子类可重写",
             "key.doclength" : 72,
-            "key.docoffset" : 12117,
+            "key.docoffset" : 12483,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 272,
+            "key.length" : 285,
             "key.name" : "size(collectionView:height:configuration:)",
-            "key.namelength" : 144,
-            "key.nameoffset" : 12212,
-            "key.offset" : 12200,
+            "key.namelength" : 126,
+            "key.nameoffset" : 12578,
+            "key.offset" : 12566,
             "key.substructure" : [
 
             ],
@@ -74303,17 +74417,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 46,
         "key.name" : "MARK: - UICollectionReusableView+DynamicLayout",
-        "key.offset" : 12484
+        "key.offset" : 12863
       },
       {
-        "key.bodylength" : 2398,
-        "key.bodyoffset" : 12587,
+        "key.bodylength" : 2491,
+        "key.bodyoffset" : 12966,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 2455,
+        "key.length" : 2548,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 12541,
-        "key.offset" : 12531,
+        "key.nameoffset" : 12920,
+        "key.offset" : 12910,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74321,20 +74435,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12721
+                "key.offset" : 13100
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 12753,
+            "key.bodyoffset" : 13132,
             "key.doc.comment" : "如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能",
             "key.doclength" : 120,
-            "key.docoffset" : 12597,
+            "key.docoffset" : 12976,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 129,
             "key.name" : "maxYViewFixed",
             "key.namelength" : 13,
-            "key.nameoffset" : 12732,
-            "key.offset" : 12728,
+            "key.nameoffset" : 13111,
+            "key.offset" : 13107,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -74344,20 +74458,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12986
+                "key.offset" : 13365
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 13023,
+            "key.bodyoffset" : 13402,
             "key.doc.comment" : "最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0",
             "key.doclength" : 119,
-            "key.docoffset" : 12863,
+            "key.docoffset" : 13242,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewPadding",
             "key.namelength" : 15,
-            "key.nameoffset" : 12997,
-            "key.offset" : 12993,
+            "key.nameoffset" : 13376,
+            "key.offset" : 13372,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -74367,20 +74481,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13282
+                "key.offset" : 13661
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 13317,
+            "key.bodyoffset" : 13696,
             "key.doc.comment" : "最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用",
             "key.doclength" : 141,
-            "key.docoffset" : 13137,
+            "key.docoffset" : 13516,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "maxYViewExpanded",
             "key.namelength" : 16,
-            "key.nameoffset" : 13293,
-            "key.offset" : 13289,
+            "key.nameoffset" : 13672,
+            "key.offset" : 13668,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -74390,20 +74504,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13544
+                "key.offset" : 13923
               }
             ],
             "key.bodylength" : 133,
-            "key.bodyoffset" : 13725,
+            "key.bodyoffset" : 14104,
             "key.doc.comment" : "免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier",
             "key.doclength" : 103,
-            "key.docoffset" : 13437,
+            "key.docoffset" : 13816,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 308,
             "key.name" : "reusableView(collectionView:kind:indexPath:reuseIdentifier:)",
             "key.namelength" : 152,
-            "key.nameoffset" : 13563,
-            "key.offset" : 13551,
+            "key.nameoffset" : 13942,
+            "key.offset" : 13930,
             "key.substructure" : [
 
             ],
@@ -74415,20 +74529,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13926
+                "key.offset" : 14305
               }
             ],
-            "key.bodylength" : 99,
-            "key.bodyoffset" : 14096,
+            "key.bodylength" : 146,
+            "key.bodyoffset" : 14459,
             "key.doc.comment" : "根据配置自动计算view大小，子类可重写",
             "key.doclength" : 57,
-            "key.docoffset" : 13865,
+            "key.docoffset" : 14244,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 263,
+            "key.length" : 294,
             "key.name" : "size(collectionView:kind:configuration:)",
-            "key.namelength" : 139,
-            "key.nameoffset" : 13945,
-            "key.offset" : 13933,
+            "key.namelength" : 123,
+            "key.nameoffset" : 14324,
+            "key.offset" : 14312,
             "key.substructure" : [
 
             ],
@@ -74440,20 +74554,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14278
+                "key.offset" : 14688
               }
             ],
-            "key.bodylength" : 113,
-            "key.bodyoffset" : 14472,
+            "key.bodylength" : 160,
+            "key.bodyoffset" : 14866,
             "key.doc.comment" : "根据配置自动计算view大小，固定宽度，子类可重写",
             "key.doclength" : 72,
-            "key.docoffset" : 14202,
+            "key.docoffset" : 14612,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 301,
+            "key.length" : 332,
             "key.name" : "size(collectionView:width:kind:configuration:)",
-            "key.namelength" : 163,
-            "key.nameoffset" : 14297,
-            "key.offset" : 14285,
+            "key.namelength" : 147,
+            "key.nameoffset" : 14707,
+            "key.offset" : 14695,
             "key.substructure" : [
 
             ],
@@ -74465,20 +74579,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14668
+                "key.offset" : 15109
               }
             ],
-            "key.bodylength" : 115,
-            "key.bodyoffset" : 14863,
+            "key.bodylength" : 162,
+            "key.bodyoffset" : 15288,
             "key.doc.comment" : "根据配置自动计算view大小，固定高度，子类可重写",
             "key.doclength" : 72,
-            "key.docoffset" : 14592,
+            "key.docoffset" : 15033,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 304,
+            "key.length" : 335,
             "key.name" : "size(collectionView:height:kind:configuration:)",
-            "key.namelength" : 164,
-            "key.nameoffset" : 14687,
-            "key.offset" : 14675,
+            "key.namelength" : 148,
+            "key.nameoffset" : 15128,
+            "key.offset" : 15116,
             "key.substructure" : [
 
             ],
@@ -74490,26 +74604,26 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 38,
         "key.name" : "MARK: - UICollectionView+DynamicLayout",
-        "key.offset" : 14991
+        "key.offset" : 15463
       },
       {
-        "key.bodylength" : 14485,
-        "key.bodyoffset" : 15272,
+        "key.bodylength" : 15223,
+        "key.bodyoffset" : 15744,
         "key.doc.comment" : "集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现\n\n如果使用系统自动尺寸，建议设置estimatedItemSize提高性能",
         "key.doclength" : 194,
-        "key.docoffset" : 15030,
+        "key.docoffset" : 15502,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 14534,
+        "key.length" : 15272,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 15234,
-        "key.offset" : 15224,
+        "key.nameoffset" : 15706,
+        "key.offset" : 15696,
         "key.substructure" : [
           {
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 13,
             "key.name" : "MARK: - Cache",
-            "key.offset" : 15285
+            "key.offset" : 15757
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74517,20 +74631,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15372
+                "key.offset" : 15844
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 15402,
+            "key.bodyoffset" : 15874,
             "key.doc.comment" : "手工清空尺寸缓存，用于尺寸发生变化的情况",
             "key.doclength" : 65,
-            "key.docoffset" : 15303,
+            "key.docoffset" : 15775,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 64,
             "key.name" : "clearSizeCache()",
             "key.namelength" : 16,
-            "key.nameoffset" : 15384,
-            "key.offset" : 15379,
+            "key.nameoffset" : 15856,
+            "key.offset" : 15851,
             "key.substructure" : [
 
             ]
@@ -74541,20 +74655,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15530
+                "key.offset" : 16002
               }
             ],
             "key.bodylength" : 62,
-            "key.bodyoffset" : 15602,
+            "key.bodyoffset" : 16074,
             "key.doc.comment" : "指定indexPath设置cell尺寸缓存，设置为zero时清除缓存",
             "key.doclength" : 73,
-            "key.docoffset" : 15453,
+            "key.docoffset" : 15925,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 128,
             "key.name" : "setCellSizeCache(_:for:)",
             "key.namelength" : 58,
-            "key.nameoffset" : 15542,
-            "key.offset" : 15537,
+            "key.nameoffset" : 16014,
+            "key.offset" : 16009,
             "key.substructure" : [
 
             ]
@@ -74565,20 +74679,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15742
+                "key.offset" : 16214
               }
             ],
             "key.bodylength" : 59,
-            "key.bodyoffset" : 15808,
+            "key.bodyoffset" : 16280,
             "key.doc.comment" : "指定key设置cell尺寸缓存，设置为zero时清除缓存",
             "key.doclength" : 67,
-            "key.docoffset" : 15671,
+            "key.docoffset" : 16143,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 119,
             "key.name" : "setCellSizeCache(_:for:)",
             "key.namelength" : 52,
-            "key.nameoffset" : 15754,
-            "key.offset" : 15749,
+            "key.nameoffset" : 16226,
+            "key.offset" : 16221,
             "key.substructure" : [
 
             ]
@@ -74589,20 +74703,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15945
+                "key.offset" : 16417
               }
             ],
             "key.bodylength" : 60,
-            "key.bodyoffset" : 16008,
+            "key.bodyoffset" : 16480,
             "key.doc.comment" : "指定indexPath获取cell缓存尺寸，默认值automaticSize",
             "key.doclength" : 67,
-            "key.docoffset" : 15874,
+            "key.docoffset" : 16346,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 117,
             "key.name" : "cellSizeCache(for:)",
             "key.namelength" : 39,
-            "key.nameoffset" : 15957,
-            "key.offset" : 15952,
+            "key.nameoffset" : 16429,
+            "key.offset" : 16424,
             "key.substructure" : [
 
             ],
@@ -74614,20 +74728,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16140
+                "key.offset" : 16612
               }
             ],
             "key.bodylength" : 57,
-            "key.bodyoffset" : 16197,
+            "key.bodyoffset" : 16669,
             "key.doc.comment" : "指定key获取cell缓存尺寸，默认值automaticSize",
             "key.doclength" : 61,
-            "key.docoffset" : 16075,
+            "key.docoffset" : 16547,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 108,
             "key.name" : "cellSizeCache(for:)",
             "key.namelength" : 33,
-            "key.nameoffset" : 16152,
-            "key.offset" : 16147,
+            "key.nameoffset" : 16624,
+            "key.offset" : 16619,
             "key.substructure" : [
 
             ],
@@ -74639,20 +74753,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16344
+                "key.offset" : 16816
               }
             ],
             "key.bodylength" : 87,
-            "key.bodyoffset" : 16430,
+            "key.bodyoffset" : 16902,
             "key.doc.comment" : "指定section设置ReusableView尺寸缓存，设置为zero时清除缓存",
             "key.doclength" : 79,
-            "key.docoffset" : 16261,
+            "key.docoffset" : 16733,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 167,
             "key.name" : "setReusableViewSizeCache(_:kind:for:)",
             "key.namelength" : 72,
-            "key.nameoffset" : 16356,
-            "key.offset" : 16351,
+            "key.nameoffset" : 16828,
+            "key.offset" : 16823,
             "key.substructure" : [
 
             ]
@@ -74663,20 +74777,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16603
+                "key.offset" : 17075
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 16691,
+            "key.bodyoffset" : 17163,
             "key.doc.comment" : "指定key设置ReusableView尺寸缓存，设置为zero时清除缓存",
             "key.doclength" : 75,
-            "key.docoffset" : 16524,
+            "key.docoffset" : 16996,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 161,
             "key.name" : "setReusableViewSizeCache(_:kind:for:)",
             "key.namelength" : 74,
-            "key.nameoffset" : 16615,
-            "key.offset" : 16610,
+            "key.nameoffset" : 17087,
+            "key.offset" : 17082,
             "key.substructure" : [
 
             ]
@@ -74687,20 +74801,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16854
+                "key.offset" : 17326
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 16940,
+            "key.bodyoffset" : 17412,
             "key.doc.comment" : "指定section获取ReusableView缓存尺寸，默认值automaticSize",
             "key.doclength" : 73,
-            "key.docoffset" : 16777,
+            "key.docoffset" : 17249,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 159,
             "key.name" : "reusableViewSizeCache(_:forSection:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 16866,
-            "key.offset" : 16861,
+            "key.nameoffset" : 17338,
+            "key.offset" : 17333,
             "key.substructure" : [
 
             ],
@@ -74712,20 +74826,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17099
+                "key.offset" : 17571
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 17180,
+            "key.bodyoffset" : 17652,
             "key.doc.comment" : "指定key获取ReusableView缓存尺寸，默认值automaticSize",
             "key.doclength" : 69,
-            "key.docoffset" : 17026,
+            "key.docoffset" : 17498,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 146,
             "key.name" : "reusableViewSizeCache(_:for:)",
             "key.namelength" : 57,
-            "key.nameoffset" : 17111,
-            "key.offset" : 17106,
+            "key.nameoffset" : 17583,
+            "key.offset" : 17578,
             "key.substructure" : [
 
             ],
@@ -74735,7 +74849,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 12,
             "key.name" : "MARK: - Cell",
-            "key.offset" : 17261
+            "key.offset" : 17733
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74743,22 +74857,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17509
+                "key.offset" : 17981
               }
             ],
-            "key.bodylength" : 91,
-            "key.bodyoffset" : 17639,
+            "key.bodylength" : 119,
+            "key.bodyoffset" : 18113,
             "key.doc.comment" : "获取 Cell 需要的尺寸，内部无缓存操作\n- Parameters:\n  - cellClass: cell类\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
             "key.doclength" : 227,
-            "key.docoffset" : 17278,
+            "key.docoffset" : 17750,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 215,
+            "key.length" : 245,
             "key.name" : "size(cellClass:configuration:)",
-            "key.namelength" : 106,
-            "key.nameoffset" : 17521,
-            "key.offset" : 17516,
+            "key.namelength" : 108,
+            "key.nameoffset" : 17993,
+            "key.offset" : 17988,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 18001
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 17998,
+                "key.offset" : 17998
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74768,22 +74901,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18015
+                "key.offset" : 18517
               }
             ],
-            "key.bodylength" : 105,
-            "key.bodyoffset" : 18169,
+            "key.bodylength" : 133,
+            "key.bodyoffset" : 18673,
             "key.doc.comment" : "获取 Cell 需要的尺寸，固定宽度，内部无缓存操作\n- Parameters:\n  - cellClass: cell类\n  - width: 固定宽度\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
             "key.doclength" : 274,
-            "key.docoffset" : 17737,
+            "key.docoffset" : 18239,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 253,
+            "key.length" : 283,
             "key.name" : "size(cellClass:width:configuration:)",
-            "key.namelength" : 130,
-            "key.nameoffset" : 18027,
-            "key.offset" : 18022,
+            "key.namelength" : 132,
+            "key.nameoffset" : 18529,
+            "key.offset" : 18524,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 18537
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 18534,
+                "key.offset" : 18534
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74793,22 +74945,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18560
+                "key.offset" : 19092
               }
             ],
-            "key.bodylength" : 107,
-            "key.bodyoffset" : 18715,
+            "key.bodylength" : 135,
+            "key.bodyoffset" : 19249,
             "key.doc.comment" : "获取 Cell 需要的尺寸，固定高度，内部无缓存操作\n- Parameters:\n  - cellClass: cell类\n  - height: 固定高度\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
             "key.doclength" : 275,
-            "key.docoffset" : 18281,
+            "key.docoffset" : 18813,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 256,
+            "key.length" : 286,
             "key.name" : "size(cellClass:height:configuration:)",
-            "key.namelength" : 131,
-            "key.nameoffset" : 18572,
-            "key.offset" : 18567,
+            "key.namelength" : 133,
+            "key.nameoffset" : 19104,
+            "key.offset" : 19099,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 19112
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 19109,
+                "key.offset" : 19109
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74818,122 +74989,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19144
+                "key.offset" : 19706
               }
             ],
-            "key.bodylength" : 111,
-            "key.bodyoffset" : 19312,
+            "key.bodylength" : 139,
+            "key.bodyoffset" : 19876,
             "key.doc.comment" : "获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell类\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
             "key.doclength" : 311,
-            "key.docoffset" : 18829,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 273,
-            "key.name" : "size(cellClass:cacheBy:configuration:)",
-            "key.namelength" : 144,
-            "key.nameoffset" : 19156,
-            "key.offset" : 19151,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 19792
-              }
-            ],
-            "key.bodylength" : 125,
-            "key.bodyoffset" : 19984,
-            "key.doc.comment" : "获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell类\n  - width: 固定宽度\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
-            "key.doclength" : 358,
-            "key.docoffset" : 19430,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 311,
-            "key.name" : "size(cellClass:width:cacheBy:configuration:)",
-            "key.namelength" : 168,
-            "key.nameoffset" : 19804,
-            "key.offset" : 19799,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 20479
-              }
-            ],
-            "key.bodylength" : 127,
-            "key.bodyoffset" : 20672,
-            "key.doc.comment" : "获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell类\n  - height: 固定高度\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
-            "key.doclength" : 359,
-            "key.docoffset" : 20116,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 314,
-            "key.name" : "size(cellClass:height:cacheBy:configuration:)",
-            "key.namelength" : 169,
-            "key.nameoffset" : 20491,
-            "key.offset" : 20486,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 21139
-              }
-            ],
-            "key.bodylength" : 108,
-            "key.bodyoffset" : 21302,
-            "key.doc.comment" : "获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell类\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
-            "key.doclength" : 329,
-            "key.docoffset" : 20806,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 265,
-            "key.name" : "size(cellClass:cacheBy:configuration:)",
-            "key.namelength" : 139,
-            "key.nameoffset" : 21151,
-            "key.offset" : 21146,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 21801
-              }
-            ],
-            "key.bodylength" : 122,
-            "key.bodyoffset" : 21988,
-            "key.doc.comment" : "获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell类\n  - width: 固定宽度\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
-            "key.doclength" : 376,
-            "key.docoffset" : 21421,
+            "key.docoffset" : 19391,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 303,
-            "key.name" : "size(cellClass:width:cacheBy:configuration:)",
-            "key.namelength" : 163,
-            "key.nameoffset" : 21813,
-            "key.offset" : 21808,
+            "key.name" : "size(cellClass:cacheBy:configuration:)",
+            "key.namelength" : 146,
+            "key.nameoffset" : 19718,
+            "key.offset" : 19713,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 19726
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 19723,
+                "key.offset" : 19723
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74943,22 +75033,217 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22498
+                "key.offset" : 20384
               }
             ],
-            "key.bodylength" : 124,
-            "key.bodyoffset" : 22686,
+            "key.bodylength" : 153,
+            "key.bodyoffset" : 20578,
+            "key.doc.comment" : "获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell类\n  - width: 固定宽度\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
+            "key.doclength" : 358,
+            "key.docoffset" : 20022,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 341,
+            "key.name" : "size(cellClass:width:cacheBy:configuration:)",
+            "key.namelength" : 170,
+            "key.nameoffset" : 20396,
+            "key.offset" : 20391,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 20404
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 20401,
+                "key.offset" : 20401
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 21101
+              }
+            ],
+            "key.bodylength" : 155,
+            "key.bodyoffset" : 21296,
+            "key.doc.comment" : "获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 indexPath\n- Parameters:\n  - cellClass: cell类\n  - height: 固定高度\n  - indexPath: 使用 indexPath 做缓存标识\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
+            "key.doclength" : 359,
+            "key.docoffset" : 20738,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 344,
+            "key.name" : "size(cellClass:height:cacheBy:configuration:)",
+            "key.namelength" : 171,
+            "key.nameoffset" : 21113,
+            "key.offset" : 21108,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 21121
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 21118,
+                "key.offset" : 21118
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 21791
+              }
+            ],
+            "key.bodylength" : 136,
+            "key.bodyoffset" : 21956,
+            "key.doc.comment" : "获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell类\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
+            "key.doclength" : 329,
+            "key.docoffset" : 21458,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 295,
+            "key.name" : "size(cellClass:cacheBy:configuration:)",
+            "key.namelength" : 141,
+            "key.nameoffset" : 21803,
+            "key.offset" : 21798,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 21811
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 21808,
+                "key.offset" : 21808
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 22483
+              }
+            ],
+            "key.bodylength" : 150,
+            "key.bodyoffset" : 22672,
+            "key.doc.comment" : "获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell类\n  - width: 固定宽度\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
+            "key.doclength" : 376,
+            "key.docoffset" : 22103,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 333,
+            "key.name" : "size(cellClass:width:cacheBy:configuration:)",
+            "key.namelength" : 165,
+            "key.nameoffset" : 22495,
+            "key.offset" : 22490,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 22503
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 22500,
+                "key.offset" : 22500
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 23210
+              }
+            ],
+            "key.bodylength" : 152,
+            "key.bodyoffset" : 23400,
             "key.doc.comment" : "获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - cellClass: cell类\n  - height: 固定高度\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局cell句柄，内部不会拥有Block，不需要__weak\n- Returns: cell尺寸",
             "key.doclength" : 377,
-            "key.docoffset" : 22117,
+            "key.docoffset" : 22829,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 306,
+            "key.length" : 336,
             "key.name" : "size(cellClass:height:cacheBy:configuration:)",
-            "key.namelength" : 164,
-            "key.nameoffset" : 22510,
-            "key.offset" : 22505,
+            "key.namelength" : 166,
+            "key.nameoffset" : 23222,
+            "key.offset" : 23217,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 20,
+                    "key.offset" : 23230
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionViewCell"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 23,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 23227,
+                "key.offset" : 23227
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74966,7 +75251,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 20,
             "key.name" : "MARK: - ReusableView",
-            "key.offset" : 22820
+            "key.offset" : 23562
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -74974,22 +75259,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23176
+                "key.offset" : 23918
               }
             ],
-            "key.bodylength" : 119,
-            "key.bodyoffset" : 23334,
+            "key.bodylength" : 163,
+            "key.bodyoffset" : 24084,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，内部无缓存操作\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - kind: ReusableView类型，Header 或者 Footer\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 327,
-            "key.docoffset" : 22845,
+            "key.docoffset" : 23587,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 271,
+            "key.length" : 323,
             "key.name" : "size(reusableViewClass:kind:configuration:)",
-            "key.namelength" : 134,
-            "key.nameoffset" : 23188,
-            "key.offset" : 23183,
+            "key.namelength" : 142,
+            "key.nameoffset" : 23930,
+            "key.offset" : 23925,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 23938
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 23935,
+                "key.offset" : 23935
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -74999,22 +75303,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23838
+                "key.offset" : 24632
               }
             ],
-            "key.bodylength" : 133,
-            "key.bodyoffset" : 24020,
+            "key.bodylength" : 177,
+            "key.bodyoffset" : 24822,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定宽度，内部无缓存操作\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - width: 固定宽度\n  - kind: ReusableView类型，Header 或者 Footer\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 374,
-            "key.docoffset" : 23460,
+            "key.docoffset" : 24254,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 309,
+            "key.length" : 361,
             "key.name" : "size(reusableViewClass:width:kind:configuration:)",
-            "key.namelength" : 158,
-            "key.nameoffset" : 23850,
-            "key.offset" : 23845,
+            "key.namelength" : 166,
+            "key.nameoffset" : 24644,
+            "key.offset" : 24639,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 24652
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 24649,
+                "key.offset" : 24649
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -75024,72 +75347,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24539
+                "key.offset" : 25385
               }
             ],
-            "key.bodylength" : 135,
-            "key.bodyoffset" : 24722,
+            "key.bodylength" : 179,
+            "key.bodyoffset" : 25576,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定高度，内部无缓存操作\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - height: 固定高度\n  - kind: ReusableView类型，Header 或者 Footer\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 375,
-            "key.docoffset" : 24160,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 312,
-            "key.name" : "size(reusableViewClass:height:kind:configuration:)",
-            "key.namelength" : 159,
-            "key.nameoffset" : 24551,
-            "key.offset" : 24546,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 25273
-              }
-            ],
-            "key.bodylength" : 144,
-            "key.bodyoffset" : 25461,
-            "key.doc.comment" : "获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - kind: ReusableView类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
-            "key.doclength" : 405,
-            "key.docoffset" : 24864,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 326,
-            "key.name" : "size(reusableViewClass:kind:cacheBy:configuration:)",
-            "key.namelength" : 164,
-            "key.nameoffset" : 25285,
-            "key.offset" : 25280,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "CGSize"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 26068
-              }
-            ],
-            "key.bodylength" : 158,
-            "key.bodyoffset" : 26280,
-            "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - width: 固定宽度\n  - kind: ReusableView类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
-            "key.doclength" : 452,
-            "key.docoffset" : 25612,
+            "key.docoffset" : 25006,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 364,
-            "key.name" : "size(reusableViewClass:width:kind:cacheBy:configuration:)",
-            "key.namelength" : 188,
-            "key.nameoffset" : 26080,
-            "key.offset" : 26075,
+            "key.name" : "size(reusableViewClass:height:kind:configuration:)",
+            "key.namelength" : 167,
+            "key.nameoffset" : 25397,
+            "key.offset" : 25392,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 25405
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 25402,
+                "key.offset" : 25402
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -75099,22 +75391,129 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26902
+                "key.offset" : 26171
               }
             ],
-            "key.bodylength" : 160,
-            "key.bodyoffset" : 27115,
+            "key.bodylength" : 188,
+            "key.bodyoffset" : 26367,
+            "key.doc.comment" : "获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - kind: ReusableView类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
+            "key.doclength" : 405,
+            "key.docoffset" : 25762,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 378,
+            "key.name" : "size(reusableViewClass:kind:cacheBy:configuration:)",
+            "key.namelength" : 172,
+            "key.nameoffset" : 26183,
+            "key.offset" : 26178,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 26191
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 26188,
+                "key.offset" : 26188
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 27018
+              }
+            ],
+            "key.bodylength" : 202,
+            "key.bodyoffset" : 27238,
+            "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - width: 固定宽度\n  - kind: ReusableView类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
+            "key.doclength" : 452,
+            "key.docoffset" : 26562,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 416,
+            "key.name" : "size(reusableViewClass:width:kind:cacheBy:configuration:)",
+            "key.namelength" : 196,
+            "key.nameoffset" : 27030,
+            "key.offset" : 27025,
+            "key.substructure" : [
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 27038
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 27035,
+                "key.offset" : 27035
+              }
+            ],
+            "key.typename" : "CGSize"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 27904
+              }
+            ],
+            "key.bodylength" : 204,
+            "key.bodyoffset" : 28125,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 section\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - height: 固定高度\n  - kind: ReusableView类型，Header 或者 Footer\n  - section: 使用 section 做缓存标识\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 453,
-            "key.docoffset" : 26445,
+            "key.docoffset" : 27447,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 367,
+            "key.length" : 419,
             "key.name" : "size(reusableViewClass:height:kind:cacheBy:configuration:)",
-            "key.namelength" : 189,
-            "key.nameoffset" : 26914,
-            "key.offset" : 26909,
+            "key.namelength" : 197,
+            "key.nameoffset" : 27916,
+            "key.offset" : 27911,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 27924
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 27921,
+                "key.offset" : 27921
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -75124,22 +75523,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27715
+                "key.offset" : 28769
               }
             ],
-            "key.bodylength" : 136,
-            "key.bodyoffset" : 27906,
+            "key.bodylength" : 180,
+            "key.bodyoffset" : 28968,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - kind: ReusableView类型，Header 或者 Footer\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 429,
-            "key.docoffset" : 27282,
+            "key.docoffset" : 28336,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 321,
+            "key.length" : 373,
             "key.name" : "size(reusableViewClass:kind:cacheBy:configuration:)",
-            "key.namelength" : 167,
-            "key.nameoffset" : 27727,
-            "key.offset" : 27722,
+            "key.namelength" : 175,
+            "key.nameoffset" : 28781,
+            "key.offset" : 28776,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 28789
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 28786,
+                "key.offset" : 28786
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -75149,22 +75567,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28529
+                "key.offset" : 29635
               }
             ],
-            "key.bodylength" : 150,
-            "key.bodyoffset" : 28744,
+            "key.bodylength" : 194,
+            "key.bodyoffset" : 29858,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - width: 固定宽度\n  - kind: ReusableView类型，Header 或者 Footer\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 476,
-            "key.docoffset" : 28049,
+            "key.docoffset" : 29155,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 359,
+            "key.length" : 411,
             "key.name" : "size(reusableViewClass:width:kind:cacheBy:configuration:)",
-            "key.namelength" : 191,
-            "key.nameoffset" : 28541,
-            "key.offset" : 28536,
+            "key.namelength" : 199,
+            "key.nameoffset" : 29647,
+            "key.offset" : 29642,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 29655
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 29652,
+                "key.offset" : 29652
+              }
             ],
             "key.typename" : "CGSize"
           },
@@ -75174,22 +75611,41 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29382
+                "key.offset" : 30540
               }
             ],
-            "key.bodylength" : 152,
-            "key.bodyoffset" : 29598,
+            "key.bodylength" : 196,
+            "key.bodyoffset" : 30764,
             "key.doc.comment" : "获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key\n- Parameters:\n  - reusableViewClass: ReusableView class\n  - height: 固定高度\n  - kind: ReusableView类型，Header 或者 Footer\n  - key: 使用 key 做缓存标识，如数据唯一id，对象hash等\n  - configuration: 布局 ReusableView，内部不会拥有 Block，不需要 __weak\n- Returns: ReusableView尺寸",
             "key.doclength" : 477,
-            "key.docoffset" : 28901,
+            "key.docoffset" : 30059,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 362,
+            "key.length" : 414,
             "key.name" : "size(reusableViewClass:height:kind:cacheBy:configuration:)",
-            "key.namelength" : 192,
-            "key.nameoffset" : 29394,
-            "key.offset" : 29389,
+            "key.namelength" : 200,
+            "key.nameoffset" : 30552,
+            "key.offset" : 30547,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 24,
+                    "key.offset" : 30560
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "UICollectionReusableView"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 27,
+                "key.name" : "T",
+                "key.namelength" : 1,
+                "key.nameoffset" : 30557,
+                "key.offset" : 30557
+              }
             ],
             "key.typename" : "CGSize"
           }
