@@ -246,11 +246,29 @@ NS_SWIFT_NAME(SegmentedControl)
 @property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorEdgeInsets;
 
 /**
+ Edge insets for the selection indicator box.
+ NOTE: This only affect the bounding box of FWSegmentedControlSelectionStyleBox
+ 
+ Defaults are top: 0.0f
+             left: 0.0f
+           bottom: 0.0f
+            right: 0.0f
+ */
+@property (nonatomic, readwrite) UIEdgeInsets selectionIndicatorBoxEdgeInsets;
+
+/**
  Corner radius for the selection indicator.
  
  Defaults is 0
  */
 @property (nonatomic, assign) CGFloat selectionIndicatorCornerRadius;
+
+/**
+ Corner radius for the selection indicator box.
+ 
+ Defaults is 0
+ */
+@property (nonatomic, assign) CGFloat selectionIndicatorBoxCornerRadius;
 
 /**
  Inset left and right edges of segments.
