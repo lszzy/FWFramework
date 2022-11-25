@@ -352,7 +352,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             CGFloat y = roundf((CGRectGetHeight(self.frame) - selectionStyleNotBox * self.selectionIndicatorHeight) / 2 - stringHeight / 2 + self.selectionIndicatorHeight * locationUp);
             CGRect rect;
             if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-                rect = CGRectMake((self.segmentWidth * idx) + (self.segmentWidth - stringWidth) / 2 + self.contentEdgeInset.left, y, stringWidth, stringHeight);
+                rect = CGRectMake((self.segmentWidth * idx) + (self.segmentWidth - stringWidth) / 2, y, stringWidth, stringHeight);
                 rectDiv = CGRectMake((self.segmentWidth * idx) - (self.verticalDividerWidth / 2) + self.contentEdgeInset.left, self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
                 fullRect = CGRectMake(self.segmentWidth * idx + self.contentEdgeInset.left, 0, self.segmentWidth, oldRect.size.height);
             } else {
@@ -367,13 +367,13 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                 }
                 
                 CGFloat widthForIndex = [[self.segmentWidthsArray objectAtIndex:idx] floatValue];
-                rect = CGRectMake(xOffset + self.contentEdgeInset.left, y, widthForIndex, stringHeight);
+                rect = CGRectMake(xOffset, y, widthForIndex, stringHeight);
                 fullRect = CGRectMake(xOffset + self.contentEdgeInset.left, 0, widthForIndex, oldRect.size.height);
                 rectDiv = CGRectMake(xOffset - (self.verticalDividerWidth / 2) + self.contentEdgeInset.left, self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
             }
             
             // Fix rect position/size to avoid blurry labels
-            rect = CGRectMake(ceilf(rect.origin.x), ceilf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height));
+            rect = CGRectMake(ceilf(rect.origin.x) + self.contentEdgeInset.left, ceilf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height));
             
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = rect;
@@ -560,7 +560,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             }
             
             CGRect imageRect = CGRectMake(imageXOffset + self.contentEdgeInset.left, imageYOffset, imageWidth, imageHeight);
-            CGRect textRect = CGRectMake(ceilf(textXOffset + self.contentEdgeInset.left), ceilf(textYOffset), ceilf(stringWidth), ceilf(stringHeight));
+            CGRect textRect = CGRectMake(ceilf(textXOffset) + self.contentEdgeInset.left, ceilf(textYOffset), ceilf(stringWidth), ceilf(stringHeight));
 
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = textRect;
@@ -933,10 +933,10 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     if (CGRectContainsPoint(enlargeRect, touchLocation)) {
         NSUInteger segment = 0;
         if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-            segment = (touchLocation.x + self.scrollView.contentOffset.x) / self.segmentWidth;
+            segment = (touchLocation.x + self.scrollView.contentOffset.x - self.contentEdgeInset.left) / self.segmentWidth;
         } else if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
             // To know which segment the user touched, we need to loop over the widths and substract it from the x position.
-            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x);
+            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x - self.contentEdgeInset.left);
             for (NSNumber *width in self.segmentWidthsArray) {
                 widthLeft = widthLeft - [width floatValue];
                 
@@ -984,7 +984,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     CGRect rectForSelectedIndex = CGRectZero;
     CGFloat selectedSegmentOffset = 0;
     if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-        rectForSelectedIndex = CGRectMake(self.segmentWidth * index,
+        rectForSelectedIndex = CGRectMake(self.segmentWidth * index + self.contentEdgeInset.left,
                                           0,
                                           self.segmentWidth,
                                           self.frame.size.height);
@@ -1000,7 +1000,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             i++;
         }
         
-        rectForSelectedIndex = CGRectMake(offsetter,
+        rectForSelectedIndex = CGRectMake(offsetter + self.contentEdgeInset.left,
                                           0,
                                           [[self.segmentWidthsArray objectAtIndex:index] floatValue],
                                           self.frame.size.height);
@@ -1235,7 +1235,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     // Calculate current exposure indexes, including segmentEdgeInset
     NSMutableArray *exposureIndexes = [NSMutableArray new];
     NSArray *previousIndexes = self.exposureIndexes;
-    CGFloat currentMin = 0;
+    CGFloat currentMin = self.contentEdgeInset.left;
     for (NSInteger i = 0; i < sectionCount; i++) {
         CGFloat currentMax = currentMin + (dynamicWidth ? self.segmentWidthsArray[i].floatValue : self.segmentWidth);
         if (currentMin > visibleMax) break;
