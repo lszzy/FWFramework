@@ -160,6 +160,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
     self.selectionIndicatorHeight = 5.0f;
     self.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    self.selectionIndicatorBoxEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     self.selectionStyle = FWSegmentedControlSelectionStyleTextWidthStripe;
     self.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationTop;
     self.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleFixed;
@@ -181,6 +182,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     self.selectionIndicatorBoxLayer.borderWidth = 1.0f;
     self.selectionIndicatorBoxOpacity = 0.2;
     self.selectionIndicatorCornerRadius = 0;
+    self.selectionIndicatorBoxCornerRadius = 0;
     
     self.contentMode = UIViewContentModeRedraw;
 }
@@ -229,6 +231,12 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _selectionIndicatorCornerRadius = selectionIndicatorCornerRadius;
     
     self.selectionIndicatorStripLayer.cornerRadius = _selectionIndicatorCornerRadius;
+}
+
+- (void)setSelectionIndicatorBoxCornerRadius:(CGFloat)selectionIndicatorBoxCornerRadius {
+    _selectionIndicatorBoxCornerRadius = selectionIndicatorBoxCornerRadius;
+    
+    self.selectionIndicatorBoxLayer.cornerRadius = _selectionIndicatorBoxCornerRadius;
 }
 
 - (void)setSegmentWidthStyle:(FWSegmentedControlSegmentWidthStyle)segmentWidthStyle {
@@ -802,9 +810,9 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             i++;
         }
         
-        return CGRectMake(selectedSegmentOffset, 0, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame));
+        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorBoxEdgeInsets.left, self.selectionIndicatorBoxEdgeInsets.top, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorBoxEdgeInsets.left - self.selectionIndicatorBoxEdgeInsets.right, CGRectGetHeight(self.frame) - self.selectionIndicatorBoxEdgeInsets.top - self.selectionIndicatorBoxEdgeInsets.bottom);
     }
-    return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, 0, self.segmentWidth, CGRectGetHeight(self.frame));
+    return CGRectMake(self.segmentWidth * self.selectedSegmentIndex + self.selectionIndicatorBoxEdgeInsets.left, self.selectionIndicatorBoxEdgeInsets.top, self.segmentWidth - self.selectionIndicatorBoxEdgeInsets.left - self.selectionIndicatorBoxEdgeInsets.right, CGRectGetHeight(self.frame) - self.selectionIndicatorBoxEdgeInsets.top - self.selectionIndicatorBoxEdgeInsets.bottom);
 }
 
 - (void)updateSegmentsRects {
