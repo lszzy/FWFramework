@@ -271,6 +271,13 @@ NS_SWIFT_NAME(SegmentedControl)
 @property (nonatomic, assign) CGFloat selectionIndicatorBoxCornerRadius;
 
 /**
+ Inset left and right edges of content.
+ 
+ Default is UIEdgeInsetsMake(0, 0, 0, 0)
+ */
+@property (nonatomic, readwrite) UIEdgeInsets contentEdgeInset;
+
+/**
  Inset left and right edges of segments.
  
  Default is UIEdgeInsetsMake(0, 5, 0, 5)
