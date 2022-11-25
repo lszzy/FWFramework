@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.3.2] - 2022-11-25
+
+### Changed
+* SegmentedControl新增box样式和内边距属性
+* 优化DynamicLayout支持Swift泛型
+
 ## [4.3.1] - 2022-10-27
 
 ### Added
