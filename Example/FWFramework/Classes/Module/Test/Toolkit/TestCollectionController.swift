@@ -141,17 +141,14 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         
         if mode == 0 {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (FW.screenWidth - 30) / 2.0 : FW.screenWidth, cacheBy: indexPath) { [weak self] cell in
-                guard let cell = cell as? TestCollectionDynamicLayoutCell else { return }
                 cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
             }
         } else if mode == 1 {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: FW.screenWidth - 30, cacheBy: indexPath) { [weak self] cell in
-                guard let cell = cell as? TestCollectionDynamicLayoutCell else { return }
                 cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
             }
         } else {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, height: FW.screenHeight - FW.topBarHeight, cacheBy: indexPath) { [weak self] cell in
-                guard let cell = cell as? TestCollectionDynamicLayoutCell else { return }
                 cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
             }
         }
@@ -172,17 +169,14 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         
         if mode == 0 {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         } else if mode == 1 {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: FW.screenWidth - 30, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         } else {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: FW.screenHeight - FW.topBarHeight, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         }
@@ -195,17 +189,14 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         
         if mode == 0 {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         } else if mode == 1 {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: FW.screenWidth - 30, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         } else {
             return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: FW.screenHeight - FW.topBarHeight, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
-                guard let reusableView = reusableView as? TestCollectionDynamicLayoutHeaderView else { return }
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         }
