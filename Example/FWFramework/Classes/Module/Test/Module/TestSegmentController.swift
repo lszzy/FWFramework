@@ -48,6 +48,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.selectionStyle = .box
         result.selectionIndicatorBoxCornerRadius = 12
         result.selectionIndicatorBoxEdgeInsets = UIEdgeInsets(top: 8, left: 4, bottom: 8, right: 4)
+        result.contentEdgeInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         result.segmentEdgeInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         result.segmentWidthStyle = .dynamic
         result.selectionIndicatorLocation = .none
