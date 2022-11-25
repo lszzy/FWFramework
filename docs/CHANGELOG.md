@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.3.2] - 2022-11-25
+
+### Changed
+* Added box style and padding properties to SegmentedControl
+* Optimize DynamicLayout to support Swift generics
+
 ## [4.3.1] - 2022-10-27
 
 ### Added
