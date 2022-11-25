@@ -157,9 +157,11 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _selectionIndicatorBoxColor = _selectionIndicatorColor;
 
     self.selectedSegmentIndex = 0;
+    self.contentEdgeInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
     self.selectionIndicatorHeight = 5.0f;
     self.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+    self.selectionIndicatorBoxEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     self.selectionStyle = FWSegmentedControlSelectionStyleTextWidthStripe;
     self.selectionIndicatorLocation = FWSegmentedControlSelectionIndicatorLocationTop;
     self.segmentWidthStyle = FWSegmentedControlSegmentWidthStyleFixed;
@@ -181,6 +183,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     self.selectionIndicatorBoxLayer.borderWidth = 1.0f;
     self.selectionIndicatorBoxOpacity = 0.2;
     self.selectionIndicatorCornerRadius = 0;
+    self.selectionIndicatorBoxCornerRadius = 0;
     
     self.contentMode = UIViewContentModeRedraw;
 }
@@ -229,6 +232,12 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _selectionIndicatorCornerRadius = selectionIndicatorCornerRadius;
     
     self.selectionIndicatorStripLayer.cornerRadius = _selectionIndicatorCornerRadius;
+}
+
+- (void)setSelectionIndicatorBoxCornerRadius:(CGFloat)selectionIndicatorBoxCornerRadius {
+    _selectionIndicatorBoxCornerRadius = selectionIndicatorBoxCornerRadius;
+    
+    self.selectionIndicatorBoxLayer.cornerRadius = _selectionIndicatorBoxCornerRadius;
 }
 
 - (void)setSegmentWidthStyle:(FWSegmentedControlSegmentWidthStyle)segmentWidthStyle {
@@ -344,8 +353,8 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             CGRect rect;
             if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
                 rect = CGRectMake((self.segmentWidth * idx) + (self.segmentWidth - stringWidth) / 2, y, stringWidth, stringHeight);
-                rectDiv = CGRectMake((self.segmentWidth * idx) - (self.verticalDividerWidth / 2), self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
-                fullRect = CGRectMake(self.segmentWidth * idx, 0, self.segmentWidth, oldRect.size.height);
+                rectDiv = CGRectMake((self.segmentWidth * idx) - (self.verticalDividerWidth / 2) + self.contentEdgeInset.left, self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
+                fullRect = CGRectMake(self.segmentWidth * idx + self.contentEdgeInset.left, 0, self.segmentWidth, oldRect.size.height);
             } else {
                 // When we are drawing dynamic widths, we need to loop the widths array to calculate the xOffset
                 CGFloat xOffset = 0;
@@ -359,12 +368,12 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                 
                 CGFloat widthForIndex = [[self.segmentWidthsArray objectAtIndex:idx] floatValue];
                 rect = CGRectMake(xOffset, y, widthForIndex, stringHeight);
-                fullRect = CGRectMake(xOffset, 0, widthForIndex, oldRect.size.height);
-                rectDiv = CGRectMake(xOffset - (self.verticalDividerWidth / 2), self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
+                fullRect = CGRectMake(xOffset + self.contentEdgeInset.left, 0, widthForIndex, oldRect.size.height);
+                rectDiv = CGRectMake(xOffset - (self.verticalDividerWidth / 2) + self.contentEdgeInset.left, self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height - (self.selectionIndicatorHeight * 4));
             }
             
             // Fix rect position/size to avoid blurry labels
-            rect = CGRectMake(ceilf(rect.origin.x), ceilf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height));
+            rect = CGRectMake(ceilf(rect.origin.x) + self.contentEdgeInset.left, ceilf(rect.origin.y), ceilf(rect.size.width), ceilf(rect.size.height));
             
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = rect;
@@ -400,7 +409,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
                 FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
-                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
+                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
                     element.accessibilityTraits = UIAccessibilityTraitButton|UIAccessibilityTraitSelected;
@@ -418,7 +427,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             CGFloat imageHeight = icon.size.height;
             CGFloat y = roundf(CGRectGetHeight(self.frame) - self.selectionIndicatorHeight) / 2 - imageHeight / 2 + ((self.selectionIndicatorLocation == FWSegmentedControlSelectionIndicatorLocationTop) ? self.selectionIndicatorHeight : 0);
             CGFloat x = self.segmentWidth * idx + (self.segmentWidth - imageWidth)/2.0f;
-            CGRect rect = CGRectMake(x, y, imageWidth, imageHeight);
+            CGRect rect = CGRectMake(x + self.contentEdgeInset.left, y, imageWidth, imageHeight);
             
             CALayer *imageLayer = [CALayer layer];
             imageLayer.frame = rect;
@@ -438,7 +447,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             // Vertical Divider
             if (self.isVerticalDividerEnabled && idx>0) {
                 CALayer *verticalDividerLayer = [CALayer layer];
-                verticalDividerLayer.frame = CGRectMake((self.segmentWidth * idx) - (self.verticalDividerWidth / 2), self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height-(self.selectionIndicatorHeight * 4));
+                verticalDividerLayer.frame = CGRectMake((self.segmentWidth * idx) - (self.verticalDividerWidth / 2) + self.contentEdgeInset.left, self.selectionIndicatorHeight * 2, self.verticalDividerWidth, self.frame.size.height-(self.selectionIndicatorHeight * 4));
                 verticalDividerLayer.backgroundColor = self.verticalDividerColor.CGColor;
                 
                 [self.scrollView.layer addSublayer:verticalDividerLayer];
@@ -461,7 +470,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
                 FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
-                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
+                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
                     element.accessibilityTraits = UIAccessibilityTraitButton|UIAccessibilityTraitSelected;
@@ -550,8 +559,8 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                 }
             }
             
-            CGRect imageRect = CGRectMake(imageXOffset, imageYOffset, imageWidth, imageHeight);
-            CGRect textRect = CGRectMake(ceilf(textXOffset), ceilf(textYOffset), ceilf(stringWidth), ceilf(stringHeight));
+            CGRect imageRect = CGRectMake(imageXOffset + self.contentEdgeInset.left, imageYOffset, imageWidth, imageHeight);
+            CGRect textRect = CGRectMake(ceilf(textXOffset) + self.contentEdgeInset.left, ceilf(textYOffset), ceilf(stringWidth), ceilf(stringHeight));
 
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = textRect;
@@ -592,7 +601,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
                 FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
-                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
+                CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
                     element.accessibilityTraits = UIAccessibilityTraitButton|UIAccessibilityTraitSelected;
@@ -752,9 +761,9 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
         
         CGFloat x = widthToStartOfSelectedIndex + ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) - (self.selectionIndicatorHeight/2);
         if (self.selectionStyle == FWSegmentedControlSelectionStyleArrow) {
-            return CGRectMake(x - (self.selectionIndicatorHeight / 2), indicatorYOffset, self.selectionIndicatorHeight * 2, self.selectionIndicatorHeight);
+            return CGRectMake(x - (self.selectionIndicatorHeight / 2) + self.contentEdgeInset.left, indicatorYOffset, self.selectionIndicatorHeight * 2, self.selectionIndicatorHeight);
         } else {
-            return CGRectMake(x, indicatorYOffset, self.selectionIndicatorHeight, self.selectionIndicatorHeight);
+            return CGRectMake(x + self.contentEdgeInset.left, indicatorYOffset, self.selectionIndicatorHeight, self.selectionIndicatorHeight);
         }
     } else {
         if (self.selectionStyle == FWSegmentedControlSelectionStyleTextWidthStripe &&
@@ -764,7 +773,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             CGFloat widthToStartOfSelectedIndex = (self.segmentWidth * self.selectedSegmentIndex);
             
             CGFloat x = ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) + (widthToStartOfSelectedIndex - sectionWidth / 2);
-            return CGRectMake(x + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, sectionWidth - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight);
+            return CGRectMake(x + self.selectionIndicatorEdgeInsets.left + self.contentEdgeInset.left, indicatorYOffset, sectionWidth - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight);
         } else {
             if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
                 CGFloat selectedSegmentOffset = 0.0f;
@@ -777,13 +786,13 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
                     i++;
                 }
                 if (self.selectionStyle == FWSegmentedControlSelectionStyleTextWidthStripe) {
-                   return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + self.segmentEdgeInset.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right - self.segmentEdgeInset.left - self.segmentEdgeInset.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                   return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + self.segmentEdgeInset.left + self.contentEdgeInset.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right - self.segmentEdgeInset.left - self.segmentEdgeInset.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                 } else {
-                    return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                    return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + self.contentEdgeInset.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                 }
             }
             
-            return CGRectMake(self.segmentWidth * self.selectedSegmentIndex + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, self.segmentWidth - self.selectionIndicatorEdgeInsets.left - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight);
+            return CGRectMake(self.segmentWidth * self.selectedSegmentIndex + self.selectionIndicatorEdgeInsets.left + self.contentEdgeInset.left, indicatorYOffset, self.segmentWidth - self.selectionIndicatorEdgeInsets.left - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight);
         }
     }
 }
@@ -802,9 +811,9 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             i++;
         }
         
-        return CGRectMake(selectedSegmentOffset, 0, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame));
+        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorBoxEdgeInsets.left + self.contentEdgeInset.left, self.selectionIndicatorBoxEdgeInsets.top, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorBoxEdgeInsets.left - self.selectionIndicatorBoxEdgeInsets.right, CGRectGetHeight(self.frame) - self.selectionIndicatorBoxEdgeInsets.top - self.selectionIndicatorBoxEdgeInsets.bottom);
     }
-    return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, 0, self.segmentWidth, CGRectGetHeight(self.frame));
+    return CGRectMake(self.segmentWidth * self.selectedSegmentIndex + self.selectionIndicatorBoxEdgeInsets.left + self.contentEdgeInset.left, self.selectionIndicatorBoxEdgeInsets.top, self.segmentWidth - self.selectionIndicatorBoxEdgeInsets.left - self.selectionIndicatorBoxEdgeInsets.right, CGRectGetHeight(self.frame) - self.selectionIndicatorBoxEdgeInsets.top - self.selectionIndicatorBoxEdgeInsets.bottom);
 }
 
 - (void)updateSegmentsRects {
@@ -886,7 +895,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     }
 
     self.scrollView.scrollEnabled = self.isUserDraggable;
-    self.scrollView.contentSize = CGSizeMake([self totalSegmentedControlWidth], self.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake([self totalSegmentedControlWidth] + self.contentEdgeInset.left + self.contentEdgeInset.right, self.frame.size.height);
 }
 
 - (NSUInteger)sectionCount {
@@ -924,10 +933,10 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     if (CGRectContainsPoint(enlargeRect, touchLocation)) {
         NSUInteger segment = 0;
         if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-            segment = (touchLocation.x + self.scrollView.contentOffset.x) / self.segmentWidth;
+            segment = (touchLocation.x + self.scrollView.contentOffset.x - self.contentEdgeInset.left) / self.segmentWidth;
         } else if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleDynamic) {
             // To know which segment the user touched, we need to loop over the widths and substract it from the x position.
-            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x);
+            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x - self.contentEdgeInset.left);
             for (NSNumber *width in self.segmentWidthsArray) {
                 widthLeft = widthLeft - [width floatValue];
                 
@@ -975,7 +984,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     CGRect rectForSelectedIndex = CGRectZero;
     CGFloat selectedSegmentOffset = 0;
     if (self.segmentWidthStyle == FWSegmentedControlSegmentWidthStyleFixed) {
-        rectForSelectedIndex = CGRectMake(self.segmentWidth * index,
+        rectForSelectedIndex = CGRectMake(self.segmentWidth * index + self.contentEdgeInset.left,
                                           0,
                                           self.segmentWidth,
                                           self.frame.size.height);
@@ -991,7 +1000,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             i++;
         }
         
-        rectForSelectedIndex = CGRectMake(offsetter,
+        rectForSelectedIndex = CGRectMake(offsetter + self.contentEdgeInset.left,
                                           0,
                                           [[self.segmentWidthsArray objectAtIndex:index] floatValue],
                                           self.frame.size.height);
@@ -1145,7 +1154,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
             FWAccessibilityElement *elem = [self.accessibilityElements objectAtIndex:i];
             offset += elem.accessibilityFrame.size.width;
         }
-        CGRect rect = CGRectMake(offset-scrollView.contentOffset.x, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
+        CGRect rect = CGRectMake(offset-scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
         element.accessibilityFrame = [self convertRect:rect toView:nil];
     }
 }
@@ -1226,7 +1235,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     // Calculate current exposure indexes, including segmentEdgeInset
     NSMutableArray *exposureIndexes = [NSMutableArray new];
     NSArray *previousIndexes = self.exposureIndexes;
-    CGFloat currentMin = 0;
+    CGFloat currentMin = self.contentEdgeInset.left;
     for (NSInteger i = 0; i < sectionCount; i++) {
         CGFloat currentMax = currentMin + (dynamicWidth ? self.segmentWidthsArray[i].floatValue : self.segmentWidth);
         if (currentMin > visibleMax) break;
