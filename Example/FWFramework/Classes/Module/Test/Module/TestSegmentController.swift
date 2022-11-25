@@ -45,17 +45,20 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
     private lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl(sectionTitles: [])
         result.backgroundColor = AppTheme.cellColor
-        result.selectionStyle = .textWidthStripe
-        result.segmentEdgeInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.selectionStyle = .box
+        result.selectionIndicatorBoxCornerRadius = 12
+        result.selectionIndicatorBoxEdgeInsets = UIEdgeInsets(top: 8, left: 4, bottom: 8, right: 4)
+        result.contentEdgeInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        result.segmentEdgeInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         result.segmentWidthStyle = .dynamic
-        result.selectionIndicatorLocation = .bottom
+        result.selectionIndicatorLocation = .none
         result.selectionIndicatorCornerRadius = 2.5
         result.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.fw.font(ofSize: 16),
+            NSAttributedString.Key.font: UIFont.fw.font(ofSize: 14),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
         result.selectedTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.fw.font(ofSize: 16, weight: .bold),
+            NSAttributedString.Key.font: UIFont.fw.font(ofSize: 14, weight: .bold),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
         return result
@@ -188,7 +191,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         segmentedControl.fw.layoutChain
             .horizontal()
             .top(toViewBottom: marqueeLabel, offset: 10)
-            .height(50)
+            .height(40)
         segmentedControl.sectionTitles = sectionTitles
         segmentedControl.selectedSegmentIndex = 5
         segmentedControl.indexChangeBlock = { [weak self] index in
