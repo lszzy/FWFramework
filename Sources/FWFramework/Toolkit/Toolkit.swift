@@ -6,6 +6,10 @@
 //
 
 import UIKit
+import AVFoundation
+import AudioToolbox
+import AVKit
+import MessageUI
 import SafariServices
 import Accelerate
 import StoreKit
@@ -308,27 +312,86 @@ import FWObjC
 
     /// 打开短信控制器，完成时回调
     public static func fw_openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        Self.__fw_openMessageController(controller, completionHandler: completionHandler)
+        if !MFMessageComposeViewController.canSendText() {
+            completionHandler?(false)
+            return
+        }
+        
+        if completionHandler != nil {
+            controller.fw_setProperty(completionHandler, forName: "messageComposeViewController")
+        }
+        controller.messageComposeDelegate = SafariViewControllerDelegate.shared
+        Navigator.present(controller, animated: true)
     }
 
     /// 打开邮件控制器，完成时回调
     public static func fw_openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        Self.__fw_openMailController(controller, completionHandler: completionHandler)
+        if !MFMailComposeViewController.canSendMail() {
+            completionHandler?(false)
+            return
+        }
+        
+        if completionHandler != nil {
+            controller.fw_setProperty(completionHandler, forName: "mailComposeController")
+        }
+        controller.mailComposeDelegate = SafariViewControllerDelegate.shared
+        Navigator.present(controller, animated: true)
     }
 
     /// 打开Store控制器，完成时回调
     public static func fw_openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil) {
-        Self.__fw_openStoreController(parameters, completionHandler: completionHandler)
+        let controller = SKStoreProductViewController()
+        controller.delegate = SafariViewControllerDelegate.shared
+        controller.loadProduct(withParameters: parameters) { result, _ in
+            if !result {
+                completionHandler?(false)
+                return
+            }
+            
+            controller.fw_setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            Navigator.present(controller, animated: true)
+        }
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
     public static func fw_openVideoPlayer(_ url: Any) -> AVPlayerViewController? {
-        return Self.__fw_openVideoPlayer(url)
+        var player: AVPlayer?
+        if let playerItem = url as? AVPlayerItem {
+            player = AVPlayer(playerItem: playerItem)
+        } else if let url = url as? URL {
+            player = AVPlayer(url: url)
+        } else if let videoUrl = fw_url(string: url) {
+            player = AVPlayer(url: videoUrl)
+        }
+        guard player != nil else { return nil }
+        
+        let viewController = AVPlayerViewController()
+        viewController.player = player
+        return viewController
     }
 
     /// 打开音频播放器，支持NSURL|NSString
     public static func fw_openAudioPlayer(_ url: Any) -> AVAudioPlayer? {
-        return Self.__fw_openAudioPlayer(url)
+        // 设置播放模式示例
+        // try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        
+        var audioUrl: URL?
+        if let url = url as? URL {
+            audioUrl = url
+        } else if let urlString = url as? String {
+            if (urlString as NSString).isAbsolutePath {
+                audioUrl = NSURL.fileURL(withPath: urlString)
+            } else {
+                audioUrl = Bundle.main.url(forResource: urlString, withExtension: nil)
+            }
+        }
+        guard let audioUrl = audioUrl else { return nil }
+        
+        guard let audioPlayer = try? AVAudioPlayer(contentsOf: audioUrl) else { return nil }
+        if !audioPlayer.prepareToPlay() { return nil }
+        
+        audioPlayer.play()
+        return audioPlayer
     }
     
     private static func fw_url(string: Any) -> URL? {
@@ -342,37 +405,84 @@ import FWObjC
     /// 播放内置声音文件
     @discardableResult
     public static func fw_playSystemSound(_ file: String) -> SystemSoundID {
-        return Self.__fw_playSystemSound(file)
+        guard !file.isEmpty else { return 0 }
+        
+        var soundFile = file
+        if !(file as NSString).isAbsolutePath {
+            guard let resourceFile = Bundle.main.path(forResource: file, ofType: nil) else { return 0 }
+            soundFile = resourceFile
+        }
+        if !FileManager.default.fileExists(atPath: soundFile) {
+            return 0
+        }
+        
+        let soundUrl = NSURL.fileURL(withPath: soundFile)
+        var soundId: SystemSoundID = 0
+        AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
+        AudioServicesPlaySystemSound(soundId)
+        return soundId
     }
 
     /// 停止播放内置声音文件
     public static func fw_stopSystemSound(_ soundId: SystemSoundID) {
-        Self.__fw_stopSystemSound(soundId)
+        if soundId == 0 { return }
+        
+        AudioServicesRemoveSystemSoundCompletion(soundId)
+        AudioServicesDisposeSystemSoundID(soundId)
     }
 
     /// 播放内置震动
     public static func fw_playSystemVibrate() {
-        Self.__fw_playSystemVibrate()
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
     }
     
     /// 播放触控反馈
     public static func fw_playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
-        Self.__fw_playImpactFeedback(style)
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
+        feedbackGenerator.impactOccurred()
     }
 
     /// 语音朗读文字，可指定语言(如zh-CN)
     public static func fw_playSpeechUtterance(_ string: String, language: String?) {
-        Self.__fw_playSpeechUtterance(string, language: language)
+        let speechUtterance = AVSpeechUtterance(string: string)
+        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
+        let speechSynthesizer = AVSpeechSynthesizer()
+        speechSynthesizer.speak(speechUtterance)
     }
     
     /// 是否是盗版(不是从AppStore安装)
     public static var fw_isPirated: Bool {
-        return Self.__fw_isPirated
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        if getgid() <= 10 {
+            return true
+        }
+        
+        if Bundle.main.object(forInfoDictionaryKey: "SignerIdentity") != nil {
+            return true
+        }
+        
+        let bundlePath = Bundle.main.bundlePath as NSString
+        var path = bundlePath.appendingPathComponent("_CodeSignature")
+        if !FileManager.default.fileExists(atPath: path) {
+            return true
+        }
+        
+        path = bundlePath.appendingPathComponent("SC_Info")
+        if !FileManager.default.fileExists(atPath: path) {
+            return true
+        }
+        
+        // 这方法可以运行时被替换掉，可以通过加密代码、修改方法名等提升检察性
+        return false
+        #endif
     }
     
     /// 是否是Testflight版本
     public static var fw_isTestflight: Bool {
-        return Self.__fw_isTestflight
+        return Bundle.main.appStoreReceiptURL?.path.contains("sandboxReceipt") ?? false
     }
     
 }
@@ -465,7 +575,76 @@ import FWObjC
 
     /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度默认1.0，失败时返回clear
     public static func fw_color(hexString: String, alpha: CGFloat = 1.0) -> UIColor {
-        return Self.__fw_color(withHexString: hexString, alpha: alpha)
+        // 处理参数
+        var string = hexString.uppercased()
+        if string.hasPrefix("0X") {
+            string = string.fw.substring(from: 2)
+        }
+        if string.hasPrefix("#") {
+            string = string.fw.substring(from: 1)
+        }
+        
+        // 检查长度
+        let length = string.count
+        if length != 3 && length != 4 && length != 6 && length != 8 {
+            return UIColor.clear
+        }
+        
+        // 解析颜色
+        var strR = ""
+        var strG = ""
+        var strB = ""
+        var strA = ""
+        if length < 5 {
+            // ARGB
+            if fw_colorStandardARGB && length == 4 {
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
+            }
+            // RGB|RGBA
+            let tmpR = string.fw.substring(with: NSMakeRange(0, 1))
+            let tmpG = string.fw.substring(with: NSMakeRange(1, 1))
+            let tmpB = string.fw.substring(with: NSMakeRange(2, 1))
+            strR = String(format: "%@%@", tmpR, tmpR)
+            strG = String(format: "%@%@", tmpG, tmpG)
+            strB = String(format: "%@%@", tmpB, tmpB)
+            if length == 4 {
+                let tmpA = string.fw.substring(with: NSMakeRange(3, 1))
+                strA = String(format: "%@%@", tmpA, tmpA)
+            }
+        } else {
+            // AARRGGBB
+            if fw_colorStandardARGB && length == 8 {
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
+            }
+            // RRGGBB|RRGGBBAA
+            strR = string.fw.substring(with: NSMakeRange(0, 2))
+            strG = string.fw.substring(with: NSMakeRange(2, 2))
+            strB = string.fw.substring(with: NSMakeRange(4, 2))
+            if length == 8 {
+                strA = string.fw.substring(with: NSMakeRange(6, 2))
+            }
+        }
+        
+        // 解析颜色
+        var r: UInt64 = 0
+        var g: UInt64 = 0
+        var b: UInt64 = 0
+        Scanner(string: strR).scanHexInt64(&r)
+        Scanner(string: strG).scanHexInt64(&g)
+        Scanner(string: strB).scanHexInt64(&b)
+        let fr: CGFloat = CGFloat(r) / 255.0
+        let fg: CGFloat = CGFloat(g) / 255.0
+        let fb: CGFloat = CGFloat(b) / 255.0
+        
+        // 解析透明度，字符串的透明度优先级高于alpha参数
+        var fa: CGFloat = alpha
+        if !strA.isEmpty {
+            var a: UInt64 = 0
+            Scanner(string: strA).scanHexInt64(&a)
+            fa = CGFloat(a) / 255.0
+        }
+        
+        return UIColor(red: fr, green: fg, blue: fb, alpha: fa)
     }
     
     /// 以指定模式添加混合颜色，默认normal模式
