@@ -649,17 +649,44 @@ import FWObjC
     
     /// 以指定模式添加混合颜色，默认normal模式
     public func fw_addColor(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIColor {
-        return self.__fw_add(color, blendMode: blendMode)
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+        var pixel = Array<UInt32>(repeating: 0, count: 4)
+        let context = CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: bitmapInfo)
+        context?.setFillColor(self.cgColor)
+        context?.fill([CGRect(x: 0, y: 0, width: 1, height: 1)])
+        context?.setBlendMode(blendMode)
+        context?.setFillColor(color.cgColor)
+        context?.fill([CGRect(x: 0, y: 0, width: 1, height: 1)])
+        return UIColor(red: CGFloat(pixel[0]) / 255.0, green: CGFloat(pixel[1]) / 255.0, blue: CGFloat(pixel[2]) / 255.0, alpha: CGFloat(pixel[3]) / 255.0)
     }
     
     /// 当前颜色修改亮度比率的颜色
     public func fw_brightnessColor(_ ratio: CGFloat) -> UIColor {
-        return self.__fw_brightnessColor(ratio)
+        var h: CGFloat = 0
+        var s: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return UIColor(hue: h, saturation: s, brightness: b * ratio, alpha: a)
     }
     
     /// 判断当前颜色是否为深色
     public var fw_isDarkColor: Bool {
-        return self.__fw_isDarkColor
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        if !getRed(&r, green: &g, blue: &b, alpha: &a) {
+            if getWhite(&r, alpha: &a) {
+                g = r
+                b = r
+            }
+        }
+        
+        let referenceValue: CGFloat = 0.411
+        let colorDelta = r * 0.299 + g * 0.587 + b * 0.114
+        return 1.0 - colorDelta > referenceValue
     }
     
     /**
@@ -672,7 +699,10 @@ import FWObjC
      @return 渐变色
      */
     public static func fw_gradientColor(size: CGSize, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) -> UIColor {
-        return Self.__fw_gradientColor(with: size, colors: colors, locations: locations, direction: direction)
+        let linePoints = UIBezierPath.fw_linePoints(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height), direction: direction)
+        let startPoint = linePoints.first?.cgPointValue ?? .zero
+        let endPoint = linePoints.last?.cgPointValue ?? .zero
+        return fw_gradientColor(size: size, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
     }
 
     /**
@@ -686,7 +716,21 @@ import FWObjC
      @return 渐变色
      */
     public static func fw_gradientColor(size: CGSize, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) -> UIColor {
-        return Self.__fw_gradientColor(with: size, colors: colors, locations: locations, start: startPoint, end: endPoint)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations)
+        if let context = context, let gradient = gradient {
+            context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        if let image = image {
+            return UIColor(patternImage: image)
+        }
+        return UIColor.clear
     }
     
 }
@@ -695,95 +739,103 @@ import FWObjC
 @_spi(FW) @objc extension UIFont {
     
     /// 全局自定义字体句柄，优先调用
-    public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont)? {
-        get { return Self.__fw_fontBlock }
-        set { Self.__fw_fontBlock = newValue }
-    }
+    public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont)?
     
     /// 是否自动等比例缩放字体，默认NO
-    public static var fw_autoScale: Bool {
-        get { return Self.__fw_autoScale }
-        set { Self.__fw_autoScale = newValue }
-    }
+    public static var fw_autoScale: Bool = false
 
     /// 返回系统Thin字体
     public static func fw_thinFont(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_thinFont(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .thin)
     }
     /// 返回系统Light字体
     public static func fw_lightFont(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_lightFont(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .light)
     }
     /// 返回系统Regular字体
     public static func fw_font(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_font(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .regular)
     }
     /// 返回系统Medium字体
     public static func fw_mediumFont(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_mediumFont(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .medium)
     }
     /// 返回系统Semibold字体
     public static func fw_semiboldFont(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_semiboldFont(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .semibold)
     }
     /// 返回系统Bold字体
     public static func fw_boldFont(ofSize: CGFloat) -> UIFont {
-        return Self.__fw_boldFont(ofSize: ofSize)
+        return fw_font(ofSize: ofSize, weight: .bold)
     }
 
     /// 创建指定尺寸和weight的系统字体
     public static func fw_font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
-        return Self.__fw_font(ofSize: ofSize, weight: weight)
+        if let fontBlock = self.fw_fontBlock {
+            return fontBlock(ofSize, weight)
+        }
+        
+        var size = ofSize
+        if fw_autoScale {
+            size = UIScreen.fw_relativeValue(size)
+        }
+        return UIFont.systemFont(ofSize: size, weight: weight)
     }
     
     /// 是否是粗体
     public var fw_isBold: Bool {
-        return self.__fw_isBold
+        return fontDescriptor.symbolicTraits.contains(.traitBold)
     }
 
     /// 是否是斜体
     public var fw_isItalic: Bool {
-        return self.__fw_isItalic
+        return fontDescriptor.symbolicTraits.contains(.traitItalic)
     }
 
     /// 当前字体的粗体字体
     public var fw_boldFont: UIFont {
-        return self.__fw_bold
+        let symbolicTraits = fontDescriptor.symbolicTraits.union(.traitBold)
+        return UIFont(descriptor: fontDescriptor.withSymbolicTraits(symbolicTraits) ?? fontDescriptor, size: pointSize)
     }
     
     /// 当前字体的非粗体字体
     public var fw_nonBoldFont: UIFont {
-        return self.__fw_nonBold
+        var symbolicTraits = fontDescriptor.symbolicTraits
+        symbolicTraits.remove(.traitBold)
+        return UIFont(descriptor: fontDescriptor.withSymbolicTraits(symbolicTraits) ?? fontDescriptor, size: pointSize)
     }
     
     /// 当前字体的斜体字体
     public var fw_italicFont: UIFont {
-        return self.__fw_italic
+        let symbolicTraits = fontDescriptor.symbolicTraits.union(.traitItalic)
+        return UIFont(descriptor: fontDescriptor.withSymbolicTraits(symbolicTraits) ?? fontDescriptor, size: pointSize)
     }
     
     /// 当前字体的非斜体字体
     public var fw_nonItalicFont: UIFont {
-        return self.__fw_nonItalic
+        var symbolicTraits = fontDescriptor.symbolicTraits
+        symbolicTraits.remove(.traitItalic)
+        return UIFont(descriptor: fontDescriptor.withSymbolicTraits(symbolicTraits) ?? fontDescriptor, size: pointSize)
     }
     
     /// 字体空白高度(上下之和)
     public var fw_spaceHeight: CGFloat {
-        return self.__fw_spaceHeight
+        return lineHeight - pointSize
     }
 
     /// 根据字体计算指定倍数行间距的实际行距值(减去空白高度)，示例：行间距为0.5倍实际高度
     public func fw_lineSpacing(multiplier: CGFloat) -> CGFloat {
-        return self.__fw_lineSpacing(withMultiplier: multiplier)
+        return pointSize * multiplier - (lineHeight - pointSize)
     }
 
     /// 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度
     public func fw_lineHeight(multiplier: CGFloat) -> CGFloat {
-        return self.__fw_lineHeight(withMultiplier: multiplier)
+        return pointSize * multiplier
     }
 
     /// 计算当前字体与指定字体居中对齐的偏移值
     public func fw_baselineOffset(_ font: UIFont) -> CGFloat {
-        return self.__fw_baselineOffset(font)
+        return (lineHeight - font.lineHeight) / 2.0 + (descender - font.descender)
     }
     
 }

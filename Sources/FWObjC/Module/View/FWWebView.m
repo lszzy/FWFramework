@@ -47,14 +47,14 @@
     }
     
     if ([UIApplication fw_isSystemURL:navigationAction.request.URL]) {
-        [UIApplication fw_openURL:navigationAction.request.URL];
+        [UIApplication fw_openURL:navigationAction.request.URL completionHandler:nil];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
     if (((FWWebView *)webView).allowsSchemeURL &&
         [UIApplication fw_isSchemeURL:navigationAction.request.URL]) {
-        [UIApplication fw_openURL:navigationAction.request.URL];
+        [UIApplication fw_openURL:navigationAction.request.URL completionHandler:nil];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
