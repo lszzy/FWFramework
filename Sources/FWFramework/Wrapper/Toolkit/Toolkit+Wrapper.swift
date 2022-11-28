@@ -108,6 +108,11 @@ extension Wrapper where Base: UIApplication {
     public static func openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
         Base.fw_openAppSettings(completionHandler)
     }
+    
+    /// 打开系统应用通知设置页
+    public static func openAppNotificationSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+        Base.fw_openAppNotificationSettings(completionHandler)
+    }
 
     /// 打开系统邮件App
     public static func openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
