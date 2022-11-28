@@ -6,6 +6,13 @@
 //
 
 import UIKit
+import AVFoundation
+import AudioToolbox
+import AVKit
+import MessageUI
+import SafariServices
+import Accelerate
+import StoreKit
 #if FWMacroSPM
 import FWObjC
 #endif
