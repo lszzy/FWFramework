@@ -483,7 +483,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 长边压缩图片尺寸，获取等比例的图片
-    public func compressImage(maxWidth: Int) -> UIImage? {
+    public func compressImage(maxWidth: CGFloat) -> UIImage? {
         return base.fw_compressImage(maxWidth: maxWidth)
     }
 

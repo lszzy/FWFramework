@@ -865,7 +865,9 @@ import AdSupport
     
     /// 全局清空TableView默认多余边距
     public static func fw_resetTableStyle() {
-        Self.__fw_resetTableStyle()
+        if #available(iOS 15.0, *) {
+            UITableView.appearance().sectionHeaderTopPadding = 0
+        }
     }
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
