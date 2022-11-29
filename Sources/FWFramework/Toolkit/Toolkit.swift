@@ -845,132 +845,382 @@ import FWObjC
     
     /// 从当前图片创建指定透明度的图片
     public func fw_image(alpha: CGFloat) -> UIImage? {
-        return self.__fw_image(withAlpha: alpha)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), blendMode: .normal, alpha: alpha)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 从当前UIImage混合颜色创建UIImage，可自定义模式，默认destinationIn
     public func fw_image(tintColor: UIColor, blendMode: CGBlendMode = .destinationIn) -> UIImage? {
-        return self.__fw_image(withTintColor: tintColor, blendMode: blendMode)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0)
+        tintColor.setFill()
+        let bounds = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+        UIRectFill(bounds)
+        self.draw(in: bounds, blendMode: blendMode, alpha: 1.0)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 缩放图片到指定大小
-    public func fw_image(scaleSize: CGSize) -> UIImage? {
-        return self.__fw_image(withScale: scaleSize)
+    public func fw_image(scaleSize size: CGSize) -> UIImage? {
+        guard size.width > 0, size.height > 0 else { return nil }
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        self.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 缩放图片到指定大小，指定模式
-    public func fw_image(scaleSize: CGSize, contentMode: UIView.ContentMode) -> UIImage? {
-        return self.__fw_image(withScale: scaleSize, contentMode: contentMode)
+    public func fw_image(scaleSize size: CGSize, contentMode: UIView.ContentMode) -> UIImage? {
+        guard size.width > 0, size.height > 0 else { return nil }
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        fw_draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), contentMode: contentMode, clipsToBounds: false)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 按指定模式绘制图片
     public func fw_draw(in rect: CGRect, contentMode: UIView.ContentMode, clipsToBounds: Bool) {
-        self.__fw_draw(in: rect, with: contentMode, clipsToBounds: clipsToBounds)
+        let drawRect = fw_rect(contentMode: contentMode, rect: rect, size: self.size)
+        if drawRect.size.width <= 0 || drawRect.size.height <= 0 { return }
+        if clipsToBounds {
+            if let context = UIGraphicsGetCurrentContext() {
+                context.saveGState()
+                context.addRect(rect)
+                context.clip()
+                self.draw(in: drawRect)
+                context.restoreGState()
+            }
+        } else {
+            self.draw(in: drawRect)
+        }
+    }
+    
+    private func fw_rect(contentMode: UIView.ContentMode, rect: CGRect, size: CGSize) -> CGRect {
+        var rect = CGRectStandardize(rect)
+        var size = CGSize(width: size.width < 0 ? -size.width : size.width, height: size.height < 0 ? -size.height : size.height)
+        let center = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect))
+        
+        switch contentMode {
+        case .scaleAspectFit, .scaleAspectFill:
+            if rect.size.width < 0.01 || rect.size.height < 0.01 ||
+                size.width < 0.01 || size.height < 0.01 {
+                rect.origin = center
+                rect.size = .zero
+            } else {
+                var scale: CGFloat = 0
+                if contentMode == .scaleAspectFit {
+                    if size.width / size.height < rect.size.width / rect.size.height {
+                        scale = rect.size.height / size.height
+                    } else {
+                        scale = rect.size.width / size.width
+                    }
+                } else {
+                    if size.width / size.height < rect.size.width / rect.size.height {
+                        scale = rect.size.width / size.width
+                    } else {
+                        scale = rect.size.height / size.height
+                    }
+                }
+                size.width *= scale
+                size.height *= scale
+                rect.size = size
+                rect.origin = CGPoint(x: center.x - size.width * 0.5, y: center.y - size.height * 0.5)
+            }
+        case .center:
+            rect.size = size
+            rect.origin = CGPoint(x: center.x - size.width * 0.5, y: center.y - size.height * 0.5)
+        case .top:
+            rect.origin.x = center.x - size.width * 0.5
+            rect.size = size
+        case .bottom:
+            rect.origin.x = center.x - size.width * 0.5
+            rect.origin.y += rect.size.height - size.height
+            rect.size = size
+        case .left:
+            rect.origin.y = center.y - size.height * 0.5
+            rect.size = size
+        case .right:
+            rect.origin.y = center.y - size.height * 0.5
+            rect.origin.x += rect.size.width - size.width
+            rect.size = size
+        case .topLeft:
+            rect.size = size
+        case .topRight:
+            rect.origin.x += rect.size.width - size.width
+            rect.size = size
+        case .bottomLeft:
+            rect.origin.y += rect.size.height - size.height
+            rect.size = size
+        case .bottomRight:
+            rect.origin.x += rect.size.width - size.width
+            rect.origin.y += rect.size.height - size.height
+            rect.size = size
+        case .scaleToFill, .redraw:
+            break
+        default:
+            break
+        }
+        return rect
     }
 
     /// 裁剪指定区域图片
     public func fw_image(cropRect: CGRect) -> UIImage? {
-        return self.__fw_image(withCropRect: cropRect)
+        var rect = cropRect
+        rect.origin.x *= self.scale
+        rect.origin.y *= self.scale
+        rect.size.width *= self.scale
+        rect.size.height *= self.scale
+        guard rect.width > 0, rect.height > 0 else { return nil }
+        
+        guard let imageRef = self.cgImage?.cropping(to: rect) else { return nil }
+        let image = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        return image
     }
 
     /// 指定颜色填充图片边缘
     public func fw_image(insets: UIEdgeInsets, color: UIColor?) -> UIImage? {
-        return self.__fw_image(with: insets, color: color)
+        var size = self.size
+        size.width -= insets.left + insets.right
+        size.height -= insets.top + insets.bottom
+        if size.width <= 0 || size.height <= 0 { return nil }
+        let rect = CGRect(x: -insets.left, y: -insets.top, width: self.size.width, height: self.size.height)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        if let color = color, let context = UIGraphicsGetCurrentContext() {
+            context.setFillColor(color.cgColor)
+            let path = CGMutablePath()
+            path.addRect(CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            path.addRect(rect)
+            context.addPath(path)
+            context.fillPath(using: .evenOdd)
+        }
+        self.draw(in: rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 拉伸图片(平铺模式)，指定端盖区域（不拉伸区域）
     public func fw_image(capInsets: UIEdgeInsets) -> UIImage {
-        return self.__fw_image(withCapInsets: capInsets)
+        return resizableImage(withCapInsets: capInsets)
     }
 
     /// 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
     public func fw_image(capInsets: UIEdgeInsets, resizingMode: UIImage.ResizingMode) -> UIImage {
-        return self.__fw_image(withCapInsets: capInsets, resizingMode: resizingMode)
+        return resizableImage(withCapInsets: capInsets, resizingMode: resizingMode)
     }
 
     /// 生成圆角图片
     public func fw_image(cornerRadius: CGFloat) -> UIImage? {
-        return self.__fw_image(withCornerRadius: cornerRadius)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0)
+        let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+        UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+        self.draw(in: rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 按角度常数(0~360)转动图片，指定图片尺寸是否延伸来适应内容，否则图片尺寸不变，内容被裁剪，默认true
     public func fw_image(rotateDegree: CGFloat, fitSize: Bool = true) -> UIImage? {
-        return self.__fw_image(withRotateDegree: rotateDegree, fitSize: fitSize)
+        let radians = rotateDegree * .pi / 180.0
+        let width = self.cgImage?.width ?? .zero
+        let height = self.cgImage?.height ?? .zero
+        let newRect = CGRectApplyAffineTransform(CGRect(x: 0, y: 0, width: width, height: height), fitSize ? CGAffineTransformMakeRotation(radians) : .identity)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(
+            data: nil,
+            width: Int(newRect.size.width),
+            height: Int(newRect.size.height),
+            bitsPerComponent: 8,
+            bytesPerRow: Int(newRect.size.width) * 4,
+            space: colorSpace,
+            bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
+        ) else { return nil }
+        
+        context.setShouldAntialias(true)
+        context.setAllowsAntialiasing(true)
+        context.interpolationQuality = .high
+        context.translateBy(x: newRect.size.width * 0.5, y: newRect.size.height * 0.5)
+        context.rotate(by: radians)
+        
+        guard let cgImage = self.cgImage else { return nil }
+        context.draw(cgImage, in: CGRect(x: -(CGFloat(width) * 0.5), y: -(CGFloat(height) * 0.5), width: CGFloat(width), height: CGFloat(height)))
+        guard let imageRef = context.makeImage() else { return nil }
+        let image = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        return image
     }
 
     /// 生成mark图片
     public func fw_image(maskImage: UIImage) -> UIImage? {
-        return self.__fw_image(withMaskImage: maskImage)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0)
+        if let context = UIGraphicsGetCurrentContext(), let mask = maskImage.cgImage {
+            context.clip(to: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), mask: mask)
+        }
+        self.draw(at: .zero)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 图片合并，并制定叠加图片的起始位置
     public func fw_image(mergeImage: UIImage, atPoint: CGPoint) -> UIImage? {
-        return self.__fw_image(withMerge: mergeImage, at: atPoint)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0)
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        mergeImage.draw(at: atPoint)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 图片应用CIFilter滤镜处理
     public func fw_image(filter: CIFilter) -> UIImage? {
-        return self.__fw_image(with: filter)
+        var inputImage: CIImage?
+        if let ciImage = self.ciImage {
+            inputImage = ciImage
+        } else {
+            guard let imageRef = self.cgImage else { return nil }
+            inputImage = CIImage(cgImage: imageRef)
+        }
+        guard let inputImage = inputImage else { return nil }
+        
+        let context = CIContext()
+        filter.setValue(inputImage, forKey: kCIInputImageKey)
+        guard let outputImage = filter.outputImage else { return nil }
+        
+        guard let imageRef = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
+        let image = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        return image
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
     public func fw_compressImage(maxLength: Int) -> UIImage? {
-        return self.__fw_compressImage(withMaxLength: maxLength)
+        guard let data = fw_compressData(maxLength: maxLength, compressRatio: 0) else { return nil }
+        return UIImage(data: data)
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
     public func fw_compressData(maxLength: Int, compressRatio: CGFloat) -> Data? {
-        return self.__fw_compressData(withMaxLength: maxLength, compressRatio: compressRatio)
+        var compress: CGFloat = 1.0
+        let stepCompress: CGFloat = compressRatio > 0 ? compressRatio : 0.1
+        var data = fw_hasAlpha ? self.pngData() : self.jpegData(compressionQuality: compress)
+        while (data?.count ?? 0) > maxLength && compress > stepCompress {
+            compress -= stepCompress
+            data = self.jpegData(compressionQuality: compress)
+        }
+        return data
     }
 
     /// 长边压缩图片尺寸，获取等比例的图片
-    public func fw_compressImage(maxWidth: Int) -> UIImage? {
-        return self.__fw_compressImage(withMaxWidth: maxWidth)
+    public func fw_compressImage(maxWidth: CGFloat) -> UIImage? {
+        let newSize = fw_scaleSize(maxWidth: maxWidth)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
+        self.draw(in: CGRect(origin: .zero, size: newSize))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 通过指定图片最长边，获取等比例的图片size
     public func fw_scaleSize(maxWidth: CGFloat) -> CGSize {
-        return self.__fw_scaleSize(withMaxWidth: maxWidth)
+        if maxWidth <= 0 { return self.size }
+        
+        let width = self.size.width
+        let height = self.size.height
+        if width > maxWidth || height > maxWidth {
+            var newWidth: CGFloat = 0
+            var newHeight: CGFloat = 0
+            if width > height {
+                newWidth = maxWidth
+                newHeight = newWidth * height / width
+            } else if height > width {
+                newHeight = maxWidth
+                newWidth = newHeight * width / height
+            } else {
+                newWidth = maxWidth
+                newHeight = maxWidth
+            }
+            return CGSize(width: newWidth, height: newHeight)
+        } else {
+            return CGSize(width: width, height: height)
+        }
     }
 
     /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
     public var fw_originalImage: UIImage {
-        return self.__fw_original
+        return withRenderingMode(.alwaysOriginal)
     }
 
     /// 获取模板渲染模式图片，始终显示tintColor，不显示原色。默认自动根据上下文
     public var fw_templateImage: UIImage {
-        return self.__fw_template
+        return withRenderingMode(.alwaysTemplate)
     }
 
     /// 判断图片是否有透明通道
     public var fw_hasAlpha: Bool {
-        return self.__fw_hasAlpha
+        guard let cgImage = self.cgImage else { return false }
+        let alpha = cgImage.alphaInfo
+        return alpha == .first || alpha == .last ||
+            alpha == .premultipliedFirst || alpha == .premultipliedLast
     }
 
     /// 获取当前图片的像素大小，多倍图会放大到一倍
     public var fw_pixelSize: CGSize {
-        return self.__fw_pixelSize
+        return CGSize(width: self.size.width * self.scale, height: self.size.height * self.scale)
     }
     
     /// 从视图创建UIImage，生成截图，主线程调用
     public static func fw_image(view: UIView) -> UIImage? {
-        return Self.__fw_image(with: view)
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0)
+        if view.window != nil {
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        } else if let context = UIGraphicsGetCurrentContext() {
+            view.layer.render(in: context)
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
     /// 从颜色创建UIImage，尺寸默认1x1
     public static func fw_image(color: UIColor) -> UIImage? {
-        return Self.__fw_image(with: color)
+        return fw_image(color: color, size: CGSize(width: 1.0, height: 1.0))
     }
     
     /// 从颜色创建UIImage，可指定尺寸和圆角，默认圆角0
     public static func fw_image(color: UIColor, size: CGSize, cornerRadius: CGFloat = 0) -> UIImage? {
-        return Self.__fw_image(with: color, size: size, cornerRadius: cornerRadius)
+        guard size.width > 0, size.height > 0 else { return nil }
+        
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        context.setFillColor(color.cgColor)
+        if cornerRadius > 0 {
+            let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+            path.addClip()
+            path.fill()
+        } else {
+            context.fill([rect])
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 从block创建UIImage，指定尺寸
     public static func fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
-        return Self.__fw_image(with: size, block: block)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        block(context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
     /// 保存图片到相册，保存成功时error为nil
