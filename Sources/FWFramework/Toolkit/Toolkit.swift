@@ -1443,14 +1443,184 @@ import FWObjC
 /// 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
 @_spi(FW) @objc extension UINavigationController {
     
+    private class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
+        
+        private weak var navigationController: UINavigationController?
+        
+        init(navigationController: UINavigationController?) {
+            self.navigationController = navigationController
+        }
+        
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            guard let topController = navigationController?.topViewController else { return false }
+            return topController.shouldPopController && topController.allowsPopGesture
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return true
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return gestureRecognizer is UIScreenEdgePanGestureRecognizer
+        }
+        
+    }
+    
+    private class GestureRecognizerDelegateProxy: DelegateProxy, UIGestureRecognizerDelegate {
+        
+        weak var navigationController: UINavigationController?
+        
+        func shouldForceReceive() -> Bool {
+            if (navigationController?.viewControllers.count ?? 0) <= 1 { return false }
+            if !(navigationController?.interactivePopGestureRecognizer?.isEnabled ?? false) { return false }
+            return navigationController?.topViewController?.allowsPopGesture ?? false
+        }
+        
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+                // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
+                let shouldPop = navigationController?.topViewController?.shouldPopController ?? false
+                if shouldPop {
+                    if let shouldBegin = (self.delegate as? UIGestureRecognizerDelegate)?.gestureRecognizerShouldBegin?(gestureRecognizer) {
+                        return shouldBegin
+                    }
+                }
+                return false
+            }
+            return true
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+                if let shouldReceive = (self.delegate as? UIGestureRecognizerDelegate)?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
+                    if !shouldReceive && shouldForceReceive() {
+                        return true
+                    }
+                    return shouldReceive
+                }
+            }
+            return true
+        }
+        
+        @objc func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool {
+            // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
+            if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
+                if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
+                   let shouldReceive = self.delegate?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
+                    if !shouldReceive && shouldForceReceive() {
+                        return true
+                    }
+                    return shouldReceive
+                }
+            }
+            return true
+        }
+        
+    }
+    
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func fw_enablePopProxy() {
-        self.__fw_enablePopProxy()
+        self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
+        fw_setPropertyBool(true, forName: "fw_popProxyEnabled")
+        UINavigationController.fw_swizzlePopProxy()
     }
     
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func fw_enablePopProxy() {
-        Self.__fw_enablePopProxy()
+        fw_staticPopProxyEnabled = true
+        fw_swizzlePopProxy()
+    }
+    
+    private var fw_popProxyEnabled: Bool {
+        return fw_propertyBool(forName: "fw_popProxyEnabled")
+    }
+    
+    private var fw_popProxyTarget: PopProxyTarget {
+        if let proxy = fw_property(forName: "fw_popProxyTarget") as? PopProxyTarget {
+            return proxy
+        } else {
+            let proxy = PopProxyTarget(navigationController: self)
+            fw_setProperty(proxy, forName: "fw_popProxyTarget")
+            return proxy
+        }
+    }
+    
+    private var fw_delegateProxy: GestureRecognizerDelegateProxy {
+        if let proxy = fw_property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
+            return proxy
+        } else {
+            let proxy = GestureRecognizerDelegateProxy()
+            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            return proxy
+        }
+    }
+    
+    private static var fw_staticPopProxyEnabled = false
+    private static var fw_staticPopProxySwizzled = false
+    
+    private static func fw_swizzlePopProxy() {
+        guard !fw_staticPopProxySwizzled else { return }
+        fw_staticPopProxySwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
+            methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
+            swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
+        ) { store in { selfObject, navigationBar, item in
+            if fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled {
+                // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+                if selfObject.viewControllers.count >= (navigationBar.items?.count ?? 0) &&
+                    !(selfObject.topViewController?.shouldPopController ?? false) {
+                    return false
+                }
+            }
+            
+            return store.original(selfObject, store.selector, navigationBar, item)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            if !fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled { return }
+            
+            // 拦截系统返回手势事件代理，加载自定义代理方法
+            if !(selfObject.interactivePopGestureRecognizer?.delegate is GestureRecognizerDelegateProxy) {
+                selfObject.fw_delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
+                selfObject.fw_delegateProxy.navigationController = selfObject
+                selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw_delegateProxy
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarHidden),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarStyle),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
     }
     
 }

@@ -290,19 +290,4 @@ typedef NS_OPTIONS(NSUInteger, FWViewControllerVisibleState) {
 
 @end
 
-#pragma mark - UINavigationController+FWToolkit
-
-/**
- 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
- */
-@interface UINavigationController (FWToolkit)
-
-/// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-+ (void)fw_enablePopProxy NS_REFINED_FOR_SWIFT;
-
-/// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-- (void)fw_enablePopProxy NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END
