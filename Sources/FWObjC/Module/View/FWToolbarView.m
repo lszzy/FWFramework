@@ -16,6 +16,7 @@
 @interface NSObject ()
 
 + (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (void)fw_applyAppearance;
 
 @end
 
@@ -25,12 +26,32 @@
 - (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 - (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 - (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)fw_pinHorizontalToSuperview:(CGFloat)inset;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_alignAxisToSuperview:(NSLayoutAttribute)axis offset:(CGFloat)offset;
 
 @end
 
 @interface UIControl ()
 
 - (NSString *)fw_addTouchWithBlock:(void (^)(id sender))block;
+
+@end
+
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat fw_statusBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fw_navigationBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fw_tabBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+@property (class, nonatomic, assign, readonly) CGFloat fw_toolBarHeight;
++ (CGFloat)fw_flatValue:(CGFloat)value scale:(CGFloat)scale;
+
+@end
+
+@interface UIImage ()
+
+- (nullable UIImage *)fw_imageWithAlpha:(CGFloat)alpha;
 
 @end
 

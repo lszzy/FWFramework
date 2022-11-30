@@ -10,7 +10,17 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+- (NSString *)fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(__kindof UITapGestureRecognizer *gesture))customize;
+
+@end
+
+@interface NSTimer ()
+
++ (NSTimer *)fw_commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+@end
 
 #else
 

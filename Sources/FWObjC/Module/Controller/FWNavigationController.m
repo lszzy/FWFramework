@@ -17,6 +17,19 @@
 @interface NSObject ()
 
 + (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (nullable id)fw_invokeGetter:(NSString *)name;
+
+@end
+
+@interface UINavigationBar ()
+
+@property (class, nonatomic, assign) BOOL fw_appearanceEnabled;
+
+@end
+
+@interface UIViewController ()
+
+@property (nonatomic, assign, readonly) BOOL shouldPopController;
 
 @end
 

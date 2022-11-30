@@ -11,7 +11,11 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
++ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
+
+@end
 
 #else
 

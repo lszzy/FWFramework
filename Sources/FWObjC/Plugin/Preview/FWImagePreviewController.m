@@ -11,7 +11,22 @@
 
 #if FWMacroSPM
 
+@interface UIScreen ()
 
+@property (class, nonatomic, assign, readonly) CGFloat fw_screenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+
+@end
+
+#define FWViewControllerVisibleStateDidAppear 3
+#define FWViewControllerVisibleStateDidDisappear 5
+
+@interface UIViewController ()
+
+@property (nonatomic, assign, readonly) NSInteger fw_visibleState;
+
+@end
 
 #else
 

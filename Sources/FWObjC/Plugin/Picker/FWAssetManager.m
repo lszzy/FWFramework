@@ -10,7 +10,11 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (nullable id)fw_invokeGetter:(NSString *)name;
+
+@end
 
 #else
 

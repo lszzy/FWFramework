@@ -15,6 +15,19 @@
 @interface NSObject ()
 
 + (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+- (BOOL)fw_isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier;
+
+@end
+
+@interface UIControl ()
+
+- (NSString *)fw_addBlock:(void (^)(id sender))block for:(UIControlEvents)controlEvents;
+
+@end
+
+@interface UIGestureRecognizer ()
+
+- (NSString *)fw_addBlock:(void (^)(id sender))block;
 
 @end
 

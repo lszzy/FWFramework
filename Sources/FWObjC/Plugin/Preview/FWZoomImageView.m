@@ -17,7 +17,16 @@
 
 @interface UIView ()
 
+@property (nonatomic, assign) CGPoint fw_origin;
 - (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+
+@end
+
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat fw_statusBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fw_navigationBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
 
 @end
 

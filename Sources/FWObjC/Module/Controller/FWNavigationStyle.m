@@ -18,6 +18,27 @@
 
 @end
 
+@interface UINavigationBar ()
+
+@property (nonatomic, assign) BOOL fw_isTranslucent;
+@property (nonatomic, strong, nullable) UIColor *fw_foregroundColor;
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_titleAttributes;
+@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_buttonAttributes;
+@property (nonatomic, strong, nullable) UIColor *fw_backgroundColor;
+@property (nonatomic, strong, nullable) UIImage *fw_backgroundImage;
+@property (nonatomic, assign) BOOL fw_backgroundTransparent;
+@property (nonatomic, strong, nullable) UIColor *fw_shadowColor;
+@property (nonatomic, strong, nullable) UIImage *fw_shadowImage;
+@property (nonatomic, strong, nullable) UIImage *fw_backImage;
+
+@end
+
+@interface UIViewController ()
+
+@property (nonatomic, strong, nullable) id fw_leftBarItem;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

@@ -15,6 +15,13 @@
 
 @end
 
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat fw_screenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

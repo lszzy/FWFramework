@@ -12,7 +12,18 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
++ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
+
+@end
+
+@interface UIWindow ()
+
+@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+- (void)fw_open:(UIViewController *)viewController animated:(BOOL)animated options:(FWNavigatorOptions)options completion:(nullable void (^)(void))completion;
+
+@end
 
 #else
 
@@ -335,7 +346,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
             if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
                 options = [routerOptions unsignedIntegerValue];
             }
-            [FWNavigator open:viewController animated:YES options:options completion:nil];
+            [UIWindow.fw_mainWindow fw_open:viewController animated:YES options:options completion:nil];
         }
         return nil;
     };
