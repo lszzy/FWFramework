@@ -388,6 +388,8 @@ import AdSupport
         }
         set {
             let prevTextAttributes = self.fw_textAttributes
+            if (prevTextAttributes as? NSDictionary)?.isEqual(to: newValue ?? [:]) ?? false { return }
+            
             fw_setPropertyCopy(newValue, forName: "fw_textAttributes")
             guard (self.text?.count ?? 0) > 0 else { return }
             
