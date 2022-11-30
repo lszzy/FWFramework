@@ -80,7 +80,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showImagePreviewWithImageURLs:imageURLs
                                imageInfos:imageInfos
@@ -98,7 +98,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showImagePreviewWithImageURLs:imageURLs
                                imageInfos:imageInfos

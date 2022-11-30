@@ -9,7 +9,16 @@
 
 #if FWMacroSPM
 
+@interface UIFont ()
 
++ (UIFont *)fw_thinFontOfSize:(CGFloat)size;
++ (UIFont *)fw_lightFontOfSize:(CGFloat)size;
++ (UIFont *)fw_fontOfSize:(CGFloat)size;
++ (UIFont *)fw_mediumFontOfSize:(CGFloat)size;
++ (UIFont *)fw_semiboldFontOfSize:(CGFloat)size;
++ (UIFont *)fw_boldFontOfSize:(CGFloat)size;
+
+@end
 
 #else
 
