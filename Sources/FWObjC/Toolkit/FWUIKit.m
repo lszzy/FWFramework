@@ -17,10 +17,15 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <net/if.h>
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #if FWMacroTracking

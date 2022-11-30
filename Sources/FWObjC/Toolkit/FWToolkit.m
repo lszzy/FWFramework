@@ -6,10 +6,15 @@
 //
 
 #import "FWToolkit.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 UIFont * FWFontThin(CGFloat size) { return [UIFont fw_thinFontOfSize:size]; }

@@ -7,10 +7,25 @@
 
 #import "FWEmptyPluginImpl.h"
 #import "FWUIKit.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+@interface UIView ()
+
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+
+@end
+
+@interface UIControl ()
+
+- (NSString *)fw_addTouchWithBlock:(void (^)(id sender))block;
+
+@end
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - FWEmptyPluginImpl
