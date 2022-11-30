@@ -14,7 +14,12 @@
 
 #if FWMacroSPM
 
+@interface UIWindow ()
 
+@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+@property (nonatomic, readonly, nullable) UIViewController *fw_topPresentedController;
+
+@end
 
 #else
 

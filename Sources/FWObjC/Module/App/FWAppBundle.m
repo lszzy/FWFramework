@@ -11,7 +11,11 @@
 
 #if FWMacroSPM
 
+@interface UIImage ()
 
++ (nullable UIImage *)fw_imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
+
+@end
 
 #else
 

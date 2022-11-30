@@ -12,7 +12,11 @@
 
 #if FWMacroSPM
 
+@interface UIImage ()
 
+@property (nonatomic, assign, readonly) BOOL fw_hasAlpha;
+
+@end
 
 #else
 

@@ -22,7 +22,43 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (void)fw_applyAppearance;
+
+@end
+
+@interface UIView ()
+
+@property (nonatomic, assign) CGPoint fw_origin;
+@property (nonatomic, assign) CGFloat fw_width;
+
+@end
+
+@interface UINavigationBar ()
+
+@property (nonatomic, strong, nullable) UIColor *fw_backgroundColor;
+@property (nonatomic, strong, nullable) UIColor *fw_foregroundColor;
+@property (nonatomic, strong, nullable) UIImage *fw_backImage;
+@property (nonatomic, assign) BOOL fw_isTranslucent;
+@property (nonatomic, strong, nullable) UIColor *fw_shadowColor;
+
+@end
+
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat fw_pixelOne;
+@property (class, nonatomic, assign, readonly) CGFloat fw_topBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fw_toolBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
+
+@end
+
+@interface UIImage ()
+
+- (nullable UIImage *)fw_imageWithScaleSize:(CGSize)size;
+
+@end
 
 #else
 

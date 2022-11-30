@@ -35,6 +35,22 @@
 - (void)fw_unobserveProperty:(NSString *)property;
 - (NSString *)fw_observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
 + (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)fw_exchangeInstanceMethod:(SEL)originalSelector swizzleMethod:(SEL)swizzleSelector;
+- (nullable id)fw_invokeGetter:(NSString *)name;
+
+@end
+
+@interface NSDate ()
+
+@property (class, nonatomic, assign) NSTimeInterval fw_currentTime;
+
+@end
+
+@interface UIImage ()
+
++ (nullable UIImage *)fw_imageWithView:(UIView *)view;
++ (nullable UIImage *)fw_imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
++ (nullable UIImage *)fw_imageWithColor:(UIColor *)color;
 
 @end
 
