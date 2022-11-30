@@ -14,7 +14,11 @@
 
 #if FWMacroSPM
 
+@interface UIWindow ()
 
+@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+
+@end
 
 #else
 

@@ -15,7 +15,11 @@
 
 #if FWMacroSPM
 
+@interface UIWindow ()
 
+@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+
+@end
 
 #else
 
@@ -323,7 +327,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showAlertWithTitle:title
                        message:message];
@@ -336,7 +340,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showAlertWithTitle:title
                        message:message
@@ -354,7 +358,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showAlertWithTitle:title
                        message:message
@@ -373,7 +377,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showConfirmWithTitle:title
                          message:message
@@ -391,7 +395,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showConfirmWithTitle:title
                          message:message
@@ -409,7 +413,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showPromptWithTitle:title
                         message:message
@@ -428,7 +432,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showPromptWithTitle:title
                         message:message
@@ -450,7 +454,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showPromptWithTitle:title
                         message:message
@@ -475,7 +479,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showAlertWithTitle:title
                        message:message
@@ -496,7 +500,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showSheetWithTitle:title
                         message:message
@@ -512,7 +516,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showSheetWithTitle:title
                        message:message
@@ -531,7 +535,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showSheetWithTitle:title
                        message:message
@@ -553,7 +557,7 @@
 {
     UIViewController *ctrl = self.fw_viewController;
     if (!ctrl || ctrl.presentedViewController) {
-        ctrl = FWNavigator.topPresentedController;
+        ctrl = UIWindow.fw_mainWindow.fw_topPresentedController;
     }
     [ctrl fw_showSheetWithTitle:title
                        message:message

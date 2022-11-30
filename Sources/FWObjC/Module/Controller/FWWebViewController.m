@@ -24,6 +24,18 @@
 
 @end
 
+@interface UIViewController ()
+
+@property (nonatomic, copy, nullable) BOOL (^fw_allowsPopGesture)(void);
+
+@end
+
+@interface UIBarButtonItem ()
+
++ (instancetype)fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>
