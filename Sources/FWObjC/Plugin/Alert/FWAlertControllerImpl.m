@@ -10,7 +10,11 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+
+@end
 
 #else
 

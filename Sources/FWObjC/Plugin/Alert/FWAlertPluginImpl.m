@@ -13,7 +13,19 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (nullable id)fw_invokeSetter:(NSString *)name object:(nullable id)object;
++ (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
+@end
+
+@interface UIDevice ()
+
+@property (class, nonatomic, assign, readonly) BOOL fw_isIpad;
+
+@end
 
 #else
 

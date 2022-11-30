@@ -11,7 +11,11 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+
+@end
 
 #else
 

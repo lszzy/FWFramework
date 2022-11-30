@@ -12,7 +12,57 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+@property (nonatomic, assign) BOOL fw_autoScale;
+@property (nonatomic, assign) UILayoutPriority fw_compressionHorizontal;
+@property (nonatomic, assign) UILayoutPriority fw_compressionVertical;
+@property (nonatomic, assign) UILayoutPriority fw_huggingHorizontal;
+@property (nonatomic, assign) UILayoutPriority fw_huggingVertical;
+@property (nonatomic, assign) BOOL fw_collapsed;
+@property (nonatomic, assign) BOOL fw_autoCollapse;
+@property (nonatomic, assign) BOOL fw_hiddenCollapse;
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_allConstraints;
+@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_lastConstraints;
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (void)fw_removeConstraints:(nullable NSArray<NSLayoutConstraint *> *)constraints;
+- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSLayoutConstraint *)fw_alignAxisToSuperview:(NSLayoutAttribute)axis offset:(CGFloat)offset;
+- (NSLayoutConstraint *)fw_alignAxis:(NSLayoutAttribute)axis toView:(id)otherView offset:(CGFloat)offset;
+- (NSLayoutConstraint *)fw_alignAxis:(NSLayoutAttribute)axis toView:(id)otherView multiplier:(CGFloat)multiplier;
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)fw_pinHorizontalToSuperview:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)fw_pinVerticalToSuperview:(CGFloat)inset;
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSafeArea:(CGPoint)offset;
+- (NSLayoutConstraint *)fw_alignAxisToSafeArea:(NSLayoutAttribute)axis offset:(CGFloat)offset;
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSafeArea:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSafeArea:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)fw_pinHorizontalToSafeArea:(CGFloat)inset;
+- (NSArray<NSLayoutConstraint *> *)fw_pinVerticalToSafeArea:(CGFloat)inset;
+- (NSLayoutConstraint *)fw_pinEdgeToSafeArea:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension multiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView multiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_constrainAttribute:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView multiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (nullable NSLayoutConstraint *)fw_constraintToSuperview:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)fw_constraintToSafeArea:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)fw_constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)fw_constraint:(NSLayoutAttribute)attribute toAttribute:(NSLayoutAttribute)toAttribute ofView:(nullable id)otherView multiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
+- (nullable NSLayoutConstraint *)fw_constraintWithIdentifier:(nullable NSString *)identifier;
+
+@end
+
+@interface NSLayoutConstraint ()
+
+@property (nonatomic, assign) CGFloat fw_inset;
+@property (nonatomic, assign) UILayoutPriority fw_priority;
+
+@end
 
 #else
 
