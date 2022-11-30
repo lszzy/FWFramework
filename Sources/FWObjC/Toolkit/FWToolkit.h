@@ -44,18 +44,6 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
 - (nullable UIImage *)fw_imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage NS_REFINED_FOR_SWIFT;
 
-/// 如果没有透明通道，增加透明通道
-@property (nonatomic, readonly) UIImage *fw_alphaImage NS_REFINED_FOR_SWIFT;
-
-/// 截取View所有视图，包括旋转缩放效果
-+ (nullable UIImage *)fw_imageWithView:(UIView *)view limitWidth:(CGFloat)limitWidth NS_REFINED_FOR_SWIFT;
-
-/// 从Pdf数据或者路径创建UIImage
-+ (nullable UIImage *)fw_imageWithPdf:(id)path NS_REFINED_FOR_SWIFT;
-
-/// 从Pdf数据或者路径创建指定大小UIImage
-+ (nullable UIImage *)fw_imageWithPdf:(id)path size:(CGSize)size NS_REFINED_FOR_SWIFT;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1351,12 +1351,53 @@ import FWObjC
 
     /// 如果没有透明通道，增加透明通道
     public var fw_alphaImage: UIImage {
-        return self.__fw_alpha
+        guard !fw_hasAlpha,
+              let imageRef = self.cgImage,
+              let colorSpace = imageRef.colorSpace else { return self }
+        
+        let width = imageRef.width
+        let height = imageRef.height
+        let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
+        context?.draw(imageRef, in: CGRect(x: 0, y: 0, width: width, height: height))
+        guard let alphaImageRef = context?.makeImage() else { return self }
+        let alphaImage = UIImage(cgImage: alphaImageRef)
+        return alphaImage
     }
 
     /// 截取View所有视图，包括旋转缩放效果
     public static func fw_image(view: UIView, limitWidth: CGFloat) -> UIImage? {
-        return Self.__fw_image(with: view, limitWidth: limitWidth)
+        let oldTransform = view.transform
+        var scaleTransform = CGAffineTransform.identity
+        if !limitWidth.isNaN && limitWidth > 0 && CGRectGetWidth(view.frame) > 0 {
+            let maxScale = limitWidth / CGRectGetWidth(view.frame)
+            let transformScale = CGAffineTransform(scaleX: maxScale, y: maxScale)
+            scaleTransform = CGAffineTransformConcat(oldTransform, transformScale)
+        }
+        if scaleTransform != .identity {
+            view.transform = scaleTransform
+        }
+        
+        let actureFrame = view.frame
+        let actureBounds = view.bounds
+        UIGraphicsBeginImageContextWithOptions(actureFrame.size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        context?.saveGState()
+        context?.translateBy(x: actureFrame.size.width / 2.0, y: actureFrame.size.height / 2.0)
+        context?.concatenate(view.transform)
+        let anchorPoint = view.layer.anchorPoint
+        context?.translateBy(x: -actureBounds.size.width * anchorPoint.x, y: -actureBounds.size.height * anchorPoint.y)
+        if view.window != nil {
+            // iOS7+：更新屏幕后再截图，防止刚添加还未显示时截图失败，效率高
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        } else if let context = UIGraphicsGetCurrentContext() {
+            // iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
+            view.layer.render(in: context)
+        }
+        
+        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        view.transform = oldTransform
+        return screenshot
     }
 
     /// 获取AppIcon图片
@@ -1375,7 +1416,30 @@ import FWObjC
 
     /// 从Pdf数据或者路径创建指定大小UIImage
     public static func fw_image(pdf path: Any, size: CGSize = .zero) -> UIImage? {
-        return Self.__fw_image(withPdf: path, size: size)
+        var pdf: CGPDFDocument?
+        if let data = path as? Data {
+            if let provider = CGDataProvider(data: data as CFData) {
+                pdf = CGPDFDocument(provider)
+            }
+        } else if let path = path as? String {
+            pdf = CGPDFDocument(NSURL.fileURL(withPath: path) as CFURL)
+        }
+        guard let pdf = pdf else { return nil }
+        guard let page = pdf.page(at: 1) else { return nil }
+        
+        let pdfRect = page.getBoxRect(.cropBox)
+        let pdfSize = size.equalTo(.zero) ? pdfRect.size : size
+        let scale = UIScreen.main.scale
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(data: nil, width: Int(pdfSize.width * scale), height: Int(pdfSize.height * scale), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue) else { return nil }
+        
+        context.scaleBy(x: scale, y: scale)
+        context.translateBy(x: -pdfRect.origin.x, y: -pdfRect.origin.y)
+        context.drawPDFPage(page)
+        
+        guard let imageRef = context.makeImage() else { return nil }
+        let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
+        return image
     }
     
     /**
