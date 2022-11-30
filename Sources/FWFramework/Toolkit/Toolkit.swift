@@ -1225,37 +1225,118 @@ import FWObjC
     
     /// 保存图片到相册，保存成功时error为nil
     public func fw_saveImage(completion: ((Error?) -> Void)? = nil) {
-        self.__fw_saveImage(completion: completion)
+        fw_setPropertyCopy(completion, forName: "fw_saveImage")
+        UIImageWriteToSavedPhotosAlbum(self, self, #selector(fw_innerImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
-        Self.__fw_saveVideo(videoPath, withCompletion: completion)
+        __Runtime.setPropertyPolicy(UIImage.classForCoder(), with: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
+        if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
+            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_innerVideo(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+    
+    private func fw_innerImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+        let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
+        fw_setPropertyCopy(nil, forName: "fw_saveImage")
+        block?(error)
+    }
+    
+    private static func fw_innerVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+        let block = __Runtime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
+        __Runtime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
+        block?(error)
     }
     
     /// 获取灰度图
     public var fw_grayImage: UIImage? {
-        return self.__fw_gray
+        let width: Int = Int(self.size.width)
+        let height: Int = Int(self.size.height)
+        let colorSpace = CGColorSpaceCreateDeviceGray()
+        guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGImageAlphaInfo.none.rawValue),
+              let cgImage = self.cgImage else { return nil }
+        
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        guard let imageRef = context.makeImage() else { return nil }
+        return UIImage(cgImage: imageRef)
     }
 
     /// 获取图片的平均颜色
     public var fw_averageColor: UIColor {
-        return self.__fw_averageColor
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+        var rgba = Array<UInt32>(repeating: 0, count: 4)
+        let context = CGContext(data: &rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: bitmapInfo)
+        if let context = context, let cgImage = self.cgImage {
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        }
+        
+        if rgba[3] > 0 {
+            let alpha = CGFloat(rgba[3]) / 255.0
+            let multiplier = alpha / 255.0
+            return UIColor(red: CGFloat(rgba[0]) * multiplier, green: CGFloat(rgba[1]) * multiplier, blue: CGFloat(rgba[2]) * multiplier, alpha: alpha)
+        } else {
+            return UIColor(red: CGFloat(rgba[0]) / 255.0, green: CGFloat(rgba[1]) / 255.0, blue: CGFloat(rgba[2]) / 255.0, alpha: CGFloat(rgba[3]) / 255.0)
+        }
     }
 
     /// 倒影图片
     public func fw_image(reflectScale: CGFloat) -> UIImage? {
-        return self.__fw_image(withReflectScale: reflectScale)
+        var sharedMask: CGImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1, height: 256), true, 0)
+        if let gradientContext = UIGraphicsGetCurrentContext() {
+            var colors: [CGFloat] = [0, 1, 1, 1]
+            let colorSpace = CGColorSpaceCreateDeviceGray()
+            if let gradient = CGGradient(colorSpace: colorSpace, colorComponents: &colors, locations: nil, count: 2) {
+                let gradientStartPoint = CGPoint(x: 0, y: 0)
+                let gradientEndPoint = CGPoint(x: 0, y: 256)
+                gradientContext.drawLinearGradient(gradient, start: gradientStartPoint, end: gradientEndPoint, options: .drawsAfterEndLocation)
+            }
+            sharedMask = gradientContext.makeImage()
+            UIGraphicsEndImageContext()
+        }
+        
+        let height = ceil(self.size.height * reflectScale)
+        let size = CGSize(width: self.size.width, height: height)
+        let bounds = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        if let sharedMask = sharedMask {
+            context?.clip(to: bounds, mask: sharedMask)
+        }
+        context?.scaleBy(x: 1.0, y: -1.0)
+        context?.translateBy(x: 0, y: -self.size.height)
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 倒影图片
     public func fw_image(reflectScale: CGFloat, gap: CGFloat, alpha: CGFloat) -> UIImage? {
-        return self.__fw_image(withReflectScale: reflectScale, gap: gap, alpha: alpha)
+        let reflection = fw_image(reflectScale: reflectScale)
+        let reflectionOffset = (reflection?.size.height ?? 0) + gap
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: self.size.width, height: self.size.height + reflectionOffset * 2.0), false, 0)
+        reflection?.draw(at: CGPoint(x: 0, y: reflectionOffset + self.size.height + gap), blendMode: .normal, alpha: alpha)
+        self.draw(at: CGPoint(x: 0, y: reflectionOffset))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 阴影图片
     public func fw_image(shadowColor: UIColor, offset: CGSize, blur: CGFloat) -> UIImage? {
-        return self.__fw_image(withShadowColor: shadowColor, offset: offset, blur: blur)
+        let border = CGSize(width: abs(offset.width) + blur, height: abs(offset.height) + blur)
+        let size = CGSize(width: self.size.width + border.width * 2.0, height: self.size.height + border.height * 2.0)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setShadow(offset: offset, blur: blur, color: shadowColor.cgColor)
+        self.draw(at: CGPoint(x: border.width, y: border.height))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 获取装饰图片
@@ -1280,12 +1361,16 @@ import FWObjC
 
     /// 获取AppIcon图片
     public static func fw_appIconImage() -> UIImage? {
-        return Self.__fw_appIcon()
+        let infoPlist = Bundle.main.infoDictionary as? NSDictionary
+        let iconFiles = infoPlist?.value(forKeyPath: "CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconFiles") as? NSArray
+        guard let iconName = iconFiles?.lastObject as? String else { return nil }
+        return UIImage(named: iconName)
     }
 
     /// 获取AppIcon指定尺寸图片，名称格式：AppIcon60x60
     public static func fw_appIconImage(size: CGSize) -> UIImage? {
-        return Self.__fw_appIconImage(size)
+        let iconName = String(format: "AppIcon%.0fx%.0f", size.width, size.height)
+        return UIImage(named: iconName)
     }
 
     /// 从Pdf数据或者路径创建指定大小UIImage
@@ -1303,7 +1388,10 @@ import FWObjC
      @return 渐变颜色UIImage
      */
     public static func fw_gradientImage(size: CGSize, colors: [Any], locations: UnsafePointer<CGFloat>?, direction: UISwipeGestureRecognizer.Direction) -> UIImage? {
-        return Self.__fw_gradientImage(with: size, colors: colors, locations: locations, direction: direction)
+        let linePoints = UIBezierPath.fw_linePoints(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height), direction: direction)
+        let startPoint = linePoints.first?.cgPointValue ?? .zero
+        let endPoint = linePoints.last?.cgPointValue ?? .zero
+        return fw_gradientImage(size: size, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
     }
 
     /**
@@ -1317,7 +1405,20 @@ import FWObjC
      @return 渐变颜色UIImage
      */
     public static func fw_gradientImage(size: CGSize, colors: [Any], locations: UnsafePointer<CGFloat>?, startPoint: CGPoint, endPoint: CGPoint) -> UIImage? {
-        return Self.__fw_gradientImage(with: size, colors: colors, locations: locations, start: startPoint, end: endPoint)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        context.addRect(rect)
+        context.clip()
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        if let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations) {
+            context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
+        }
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
 }
@@ -1327,114 +1428,219 @@ import FWObjC
     
     /// 顶部纵坐标，frame.origin.y
     public var fw_top: CGFloat {
-        get { return self.__fw_top }
-        set { self.__fw_top = newValue }
+        get {
+            return self.frame.origin.y
+        }
+        set {
+            var frame = self.frame
+            frame.origin.y = newValue
+            self.frame = frame
+        }
     }
 
     /// 底部纵坐标，frame.origin.y + frame.size.height
     public var fw_bottom: CGFloat {
-        get { return self.__fw_bottom }
-        set { self.__fw_bottom = newValue }
+        get {
+            return self.fw_top + self.fw_height
+        }
+        set {
+            self.fw_top = newValue - self.fw_height
+        }
     }
 
     /// 左边横坐标，frame.origin.x
     public var fw_left: CGFloat {
-        get { return self.__fw_left }
-        set { self.__fw_left = newValue }
+        get {
+            return self.frame.origin.x
+        }
+        set {
+            var frame = self.frame
+            frame.origin.x = newValue
+            self.frame = frame
+        }
     }
 
     /// 右边横坐标，frame.origin.x + frame.size.width
     public var fw_right: CGFloat {
-        get { return self.__fw_right }
-        set { self.__fw_right = newValue }
+        get {
+            return self.fw_left + self.fw_width
+        }
+        set {
+            self.fw_left = newValue - self.fw_width
+        }
     }
 
     /// 宽度，frame.size.width
     public var fw_width: CGFloat {
-        get { return self.__fw_width }
-        set { self.__fw_width = newValue }
+        get {
+            return self.frame.size.width
+        }
+        set {
+            var frame = self.frame
+            frame.size.width = newValue
+            self.frame = frame
+        }
     }
 
     /// 高度，frame.size.height
     public var fw_height: CGFloat {
-        get { return self.__fw_height }
-        set { self.__fw_height = newValue }
+        get {
+            return self.frame.size.height
+        }
+        set {
+            var frame = self.frame
+            frame.size.height = newValue
+            self.frame = frame
+        }
     }
 
     /// 中心横坐标，center.x
     public var fw_centerX: CGFloat {
-        get { return self.__fw_centerX }
-        set { self.__fw_centerX = newValue }
+        get {
+            return self.center.x
+        }
+        set {
+            self.center = CGPoint(x: newValue, y: self.center.y)
+        }
     }
 
     /// 中心纵坐标，center.y
     public var fw_centerY: CGFloat {
-        get { return self.__fw_centerY }
-        set { self.__fw_centerY = newValue }
+        get {
+            return self.center.y
+        }
+        set {
+            self.center = CGPoint(x: self.center.x, y: newValue)
+        }
     }
 
     /// 起始横坐标，frame.origin.x
     public var fw_x: CGFloat {
-        get { return self.__fw_x }
-        set { self.__fw_x = newValue }
+        get {
+            return self.frame.origin.x
+        }
+        set {
+            var frame = self.frame
+            frame.origin.x = newValue
+            self.frame = frame
+        }
     }
 
     /// 起始纵坐标，frame.origin.y
     public var fw_y: CGFloat {
-        get { return self.__fw_y }
-        set { self.__fw_y = newValue }
+        get {
+            return self.frame.origin.y
+        }
+        set {
+            var frame = self.frame
+            frame.origin.y = newValue
+            self.frame = frame
+        }
     }
 
     /// 起始坐标，frame.origin
     public var fw_origin: CGPoint {
-        get { return self.__fw_origin }
-        set { self.__fw_origin = newValue }
+        get {
+            return self.frame.origin
+        }
+        set {
+            var frame = self.frame
+            frame.origin = newValue
+            self.frame = frame
+        }
     }
 
     /// 大小，frame.size
     public var fw_size: CGSize {
-        get { return self.__fw_size }
-        set { self.__fw_size = newValue }
+        get {
+            return self.frame.size
+        }
+        set {
+            var frame = self.frame
+            frame.size = newValue
+            self.frame = frame
+        }
     }
     
 }
 
 // MARK: - UIViewController+Toolkit
+/// 视图控制器生命周期状态枚举
+@objc(FWViewControllerVisibleState)
+public enum ViewControllerVisibleState: Int {
+    case ready = 0
+    case didLoad = 1
+    case willAppear = 2
+    case didAppear = 3
+    case willDisappear = 4
+    case didDisappear = 5
+}
+
 @_spi(FW) @objc extension UIViewController {
     
     /// 当前生命周期状态，默认Ready
-    public var fw_visibleState: ViewControllerVisibleState {
-        return self.__fw_visibleState
+    public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
+        get {
+            let value = fw_propertyInt(forName: "fw_visibleState")
+            return .init(rawValue: value) ?? .ready
+        }
+        set {
+            let valueChanged = self.fw_visibleState != newValue
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_visibleState")
+            if valueChanged && self.fw_visibleStateChanged != nil {
+                self.fw_visibleStateChanged?(self, newValue)
+            }
+        }
     }
 
     /// 生命周期变化时通知句柄，默认nil
     public var fw_visibleStateChanged: ((UIViewController, ViewControllerVisibleState) -> Void)? {
-        get { return self.__fw_visibleStateChanged }
-        set { self.__fw_visibleStateChanged = newValue }
+        get { fw_property(forName: "fw_visibleStateChanged") as? (UIViewController, ViewControllerVisibleState) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_visibleStateChanged") }
     }
 
     /// 自定义完成结果对象，默认nil
     public var fw_completionResult: Any? {
-        get { return self.__fw_completionResult }
-        set { self.__fw_completionResult = newValue }
+        get { fw_property(forName: "fw_completionResult") }
+        set { fw_setProperty(newValue, forName: "fw_completionResult") }
     }
 
     /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
     public var fw_completionHandler: ((Any?) -> Void)? {
-        get { return self.__fw_completionHandler }
-        set { self.__fw_completionHandler = newValue }
+        get { fw_property(forName: "fw_completionHandler") as? (Any?) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_completionHandler") }
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
     public var fw_allowsPopGesture: (() -> Bool)? {
-        get { return self.__fw_allowsPopGesture }
-        set { self.__fw_allowsPopGesture = newValue }
+        get { fw_property(forName: "fw_allowsPopGesture") as? () -> Bool }
+        set { fw_setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
     public var fw_shouldPopController: (() -> Bool)? {
-        get { return self.__fw_shouldPopController }
-        set { self.__fw_shouldPopController = newValue }
+        get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
+        set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
+    }
+    
+}
+
+@objc extension UIViewController {
+    
+    /// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认true
+    open var allowsPopGesture: Bool {
+        if let block = fw_allowsPopGesture {
+            return block()
+        }
+        return true
+    }
+    
+    /// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认true
+    open var shouldPopController: Bool {
+        if let block = fw_shouldPopController {
+            return block()
+        }
+        return true
     }
     
 }
@@ -1620,6 +1826,84 @@ import FWObjC
             } else {
                 return store.original(selfObject, store.selector)
             }
+        }}
+    }
+    
+}
+
+// MARK: - ToolkitAutoloader
+internal class ToolkitAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            selfObject.fw_visibleState = .didLoad
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willAppear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didAppear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willDisappear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didDisappear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: NSSelectorFromString("dealloc"),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            // dealloc时不调用fw，防止释放时动态创建包装器对象
+            let completionHandler = selfObject.fw_completionHandler
+            if completionHandler != nil {
+                let completionResult = selfObject.fw_completionResult
+                completionHandler?(completionResult)
+            }
+            
+            store.original(selfObject, store.selector)
         }}
     }
     
