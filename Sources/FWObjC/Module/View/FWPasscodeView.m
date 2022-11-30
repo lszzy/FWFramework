@@ -10,7 +10,15 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+
+@end
 
 #else
 

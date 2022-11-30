@@ -12,7 +12,17 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+
+@end
+
+@interface NSObject ()
+
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+
+@end
 
 #else
 

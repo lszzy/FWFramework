@@ -20,7 +20,23 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
+- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+
+@end
+
+@interface NSObject ()
+
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (void)fw_unobserveProperty:(NSString *)property;
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
++ (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
+@end
 
 #else
 

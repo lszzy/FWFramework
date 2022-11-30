@@ -12,7 +12,27 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (NSString *)fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
+- (NSString *)fw_observeNotification:(NSNotificationName)name object:(nullable id)object target:(nullable id)target action:(SEL)action;
+- (nullable id)fw_invokeGetter:(NSString *)name;
+
+@end
+
+@interface UIGestureRecognizer ()
+
++ (instancetype)fw_gestureRecognizerWithBlock:(void (^)(id sender))block;
+
+@end
+
+@interface UIBarButtonItem ()
+
++ (instancetype)fw_itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
++ (instancetype)fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
+
+@end
 
 #else
 

@@ -12,7 +12,12 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
+- (NSString *)fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
+- (void)fw_unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
+
+@end
 
 #else
 
