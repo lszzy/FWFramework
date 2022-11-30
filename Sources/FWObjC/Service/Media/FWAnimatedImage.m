@@ -11,10 +11,19 @@
 #import <ImageIO/ImageIO.h>
 #import <dlfcn.h>
 #import <objc/runtime.h>
+
 #if FWMacroSPM
-@import FWFramework;
+
+@interface UIImage ()
+
+@property (nonatomic, assign, readonly) BOOL fw_hasAlpha;
+
+@end
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - UIImage+FWAnimated

@@ -8,10 +8,15 @@
 #import "FWAppBundle.h"
 #import "FWLanguage.h"
 #import "FWToolkit.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 @implementation FWAppBundle

@@ -8,10 +8,20 @@
 #import "FWImageCropController.h"
 #import "FWAlertPlugin.h"
 #import "FWAppBundle.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat fw_toolBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+
+@end
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 @interface FWImageCropController () <FWImageCropViewDelegate>

@@ -7,10 +7,15 @@
 
 #import "FWPasscodeView.h"
 #import "FWUIKit.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 @implementation FWPasscodeFlowLayout

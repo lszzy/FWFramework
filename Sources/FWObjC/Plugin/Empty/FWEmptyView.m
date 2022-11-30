@@ -9,10 +9,19 @@
 #import "FWUIKit.h"
 #import "FWViewPlugin.h"
 #import <objc/runtime.h>
+
 #if FWMacroSPM
-@import FWFramework;
+
+@interface NSObject ()
+
+- (void)fw_applyAppearance;
+
+@end
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - FWEmptyView

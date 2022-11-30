@@ -7,10 +7,15 @@
 
 #import "FWPopupMenu.h"
 #import "FWNavigator.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - FWPopupMenuPath

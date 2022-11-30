@@ -7,10 +7,15 @@
 
 #import "FWToastView.h"
 #import "FWViewPlugin.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - FWToastView

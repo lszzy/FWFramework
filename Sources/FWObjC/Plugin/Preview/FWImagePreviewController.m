@@ -8,10 +8,15 @@
 #import "FWImagePreviewController.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - FWImagePreviewView

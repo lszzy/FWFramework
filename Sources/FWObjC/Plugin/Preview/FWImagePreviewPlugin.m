@@ -11,10 +11,15 @@
 #import "FWUIKit.h"
 #import "FWNavigator.h"
 #import <objc/runtime.h>
+
 #if FWMacroSPM
-@import FWFramework;
+
+
+
 #else
+
 #import <FWFramework/FWFramework-Swift.h>
+
 #endif
 
 #pragma mark - UIViewController+FWImagePreviewPlugin
