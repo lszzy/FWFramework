@@ -81,6 +81,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         // 自动加载框架内置组件
         autoload(AutoLayoutAutoloader.self)
         autoload(ThemeAutoloader.self)
+        autoload(UIKitAutoloader.self)
     }
     
     private static func autoloadAutoloader() {

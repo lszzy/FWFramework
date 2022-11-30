@@ -294,6 +294,10 @@
     }
 }
 
++ (BOOL)isEqual:(id)obj1 with:(id)obj2 {
+    return obj1 == obj2;
+}
+
 @end
 
 #pragma mark - __Swizzle

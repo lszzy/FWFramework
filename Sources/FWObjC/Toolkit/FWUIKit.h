@@ -199,48 +199,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UILabel+FWUIKit
-
-@interface UILabel (FWUIKit)
-
-/// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
-@property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *fw_textAttributes NS_REFINED_FOR_SWIFT;
-
-/// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
-@property (nonatomic, assign) CGFloat fw_lineHeight NS_REFINED_FOR_SWIFT;
-
-/// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
-@property (nonatomic, assign) UIEdgeInsets fw_contentInset NS_REFINED_FOR_SWIFT;
-
-/// 纵向分布方式，默认居中
-@property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
-
-/// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
-- (void)fw_addLinkGestureWithBlock:(void (^)(id _Nullable link))block NS_REFINED_FOR_SWIFT;
-
-/// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
-- (NSDictionary<NSAttributedStringKey, id> *)fw_attributesWithGesture:(UIGestureRecognizer *)gesture allowsSpacing:(BOOL)allowsSpacing NS_REFINED_FOR_SWIFT;
-
-/// 快速设置标签
-- (void)fw_setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
-
-/// 快速设置标签并指定文本
-- (void)fw_setFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
-
-/// 快速创建标签
-+ (instancetype)fw_labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
-
-/// 快速创建标签并指定文本
-+ (instancetype)fw_labelWithFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor text:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
-
-/// 计算当前文本所占尺寸，需frame或者宽度布局完整
-@property (nonatomic, assign, readonly) CGSize fw_textSize NS_REFINED_FOR_SWIFT;
-
-/// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
-@property (nonatomic, assign, readonly) CGSize fw_attributedTextSize NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UIControl+FWUIKit
 
 /// 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等
