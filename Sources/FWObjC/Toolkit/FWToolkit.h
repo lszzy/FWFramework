@@ -34,16 +34,4 @@ FOUNDATION_EXPORT UIFont * FWFontSemibold(CGFloat size) NS_SWIFT_UNAVAILABLE("")
 /// 快速创建Bold字体
 FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
-#pragma mark - UIImage+FWToolkit
-
-@interface UIImage (FWToolkit)
-
-/// 获取装饰图片
-@property (nonatomic, readonly) UIImage *fw_maskImage NS_REFINED_FOR_SWIFT;
-
-/// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
-- (nullable UIImage *)fw_imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END

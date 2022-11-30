@@ -136,6 +136,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - __Image
+
+@interface UIImage (__Image)
+
+@property (nonatomic, readonly) UIImage *__maskImage;
+
+- (nullable UIImage *)__imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
+
+@end
+
 #pragma mark - __NotificationTarget
 
 @interface __NotificationTarget : NSObject
