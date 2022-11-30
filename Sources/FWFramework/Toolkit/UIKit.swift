@@ -383,56 +383,280 @@ import AdSupport
     
     /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
     public var fw_textAttributes: [NSAttributedString.Key: Any]? {
-        get { return self.__fw_textAttributes }
-        set { self.__fw_textAttributes = newValue }
+        get {
+            return fw_property(forName: "fw_textAttributes") as? [NSAttributedString.Key : Any]
+        }
+        set {
+            let prevTextAttributes = self.fw_textAttributes
+            fw_setPropertyCopy(newValue, forName: "fw_textAttributes")
+            guard (self.text?.count ?? 0) > 0 else { return }
+            
+            let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString
+            let stringLength = string?.length ?? 0
+            let fullRange = NSMakeRange(0, stringLength)
+            if let prevTextAttributes = prevTextAttributes {
+                var removeAttributes: [NSAttributedString.Key] = []
+                string?.enumerateAttributes(in: fullRange, using: { attrs, range, _ in
+                    if NSEqualRanges(range, NSMakeRange(0, stringLength - 1)),
+                       let attrKern = attrs[.kern] as? NSNumber,
+                       let prevKern = prevTextAttributes[.kern] as? NSNumber,
+                       attrKern.isEqual(to: prevKern) {
+                        string?.removeAttribute(.kern, range: NSMakeRange(0, stringLength - 1))
+                    }
+                    if !NSEqualRanges(range, fullRange) { return }
+                    for (attr, value) in attrs {
+                        if __Runtime.isEqual(prevTextAttributes[attr], with: value) {
+                            removeAttributes.append(attr)
+                        }
+                    }
+                })
+                for attr in removeAttributes {
+                    string?.removeAttribute(attr, range: fullRange)
+                }
+            }
+            
+            if let textAttributes = newValue {
+                string?.addAttributes(textAttributes, range: fullRange)
+            }
+            fw_innerSetAttributedText(fw_adjustedAttributedString(string))
+        }
+    }
+    
+    private func fw_adjustedAttributedString(_ string: NSAttributedString?) -> NSAttributedString? {
+        guard let string = string, string.length > 0 else { return string }
+        var attributedString: NSMutableAttributedString?
+        if let mutableString = string as? NSMutableAttributedString {
+            attributedString = mutableString
+        } else {
+            attributedString = string.mutableCopy() as? NSMutableAttributedString
+        }
+        let attributedLength = attributedString?.length ?? 0
+        
+        if self.fw_textAttributes?[.kern] != nil {
+            attributedString?.removeAttribute(.kern, range: NSMakeRange(string.length - 1, 1))
+        }
+        
+        var shouldAdjustLineHeight = self.fw_issetLineHeight
+        attributedString?.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, attributedLength), using: { obj, range, stop in
+            guard let style = obj as? NSParagraphStyle else { return }
+            if NSEqualRanges(range, NSMakeRange(0, attributedLength)) {
+                if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                    shouldAdjustLineHeight = false
+                    stop.pointee = true
+                }
+            }
+        })
+        if shouldAdjustLineHeight {
+            let paraStyle = NSMutableParagraphStyle()
+            paraStyle.minimumLineHeight = self.fw_lineHeight
+            paraStyle.maximumLineHeight = self.fw_lineHeight
+            paraStyle.lineBreakMode = self.lineBreakMode
+            paraStyle.alignment = self.textAlignment
+            attributedString?.addAttribute(.paragraphStyle, value: paraStyle, range: NSMakeRange(0, attributedLength))
+            
+            let baselineOffset = (self.fw_lineHeight - self.font.lineHeight) / 4.0
+            attributedString?.addAttribute(.baselineOffset, value: baselineOffset, range: NSMakeRange(0, attributedLength))
+        }
+        return attributedString
     }
 
     /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
     public var fw_lineHeight: CGFloat {
-        get { return self.__fw_lineHeight }
-        set { self.__fw_lineHeight = newValue }
+        get {
+            if self.fw_issetLineHeight {
+                return fw_propertyDouble(forName: "fw_lineHeight")
+            } else if (self.attributedText?.length ?? 0) > 0 {
+                let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString
+                var result: CGFloat = 0
+                string?.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string?.length ?? 0), using: { obj, range, stop in
+                    guard let style = obj as? NSParagraphStyle else { return }
+                    if NSEqualRanges(range, NSMakeRange(0, string?.length ?? 0)) {
+                        if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                            result = style.maximumLineHeight
+                            stop.pointee = true
+                        }
+                    }
+                })
+                return result == 0 ? self.font.lineHeight : result
+            } else if (self.text?.count ?? 0) > 0 {
+                return self.font.lineHeight
+            }
+            return 0
+        }
+        set {
+            if newValue < 0 {
+                fw_setProperty(nil, forName: "fw_lineHeight")
+            } else {
+                fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+            }
+            guard let string = self.attributedText?.string else { return }
+            let attributedString = NSAttributedString(string: string, attributes: self.fw_textAttributes)
+            self.attributedText = fw_adjustedAttributedString(attributedString)
+        }
+    }
+    
+    private var fw_issetLineHeight: Bool {
+        return fw_property(forName: "fw_lineHeight") != nil
     }
 
     /// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
     public var fw_contentInset: UIEdgeInsets {
-        get { return self.__fw_contentInset }
-        set { self.__fw_contentInset = newValue }
+        get {
+            if let value = fw_property(forName: "fw_contentInset") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
+            self.setNeedsDisplay()
+        }
     }
 
     /// 纵向分布方式，默认居中
     public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
-        get { return self.__fw_verticalAlignment }
-        set { self.__fw_verticalAlignment = newValue }
+        get {
+            let value = fw_propertyInt(forName: "fw_verticalAlignment")
+            return .init(rawValue: value) ?? .center
+        }
+        set {
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_verticalAlignment")
+            self.setNeedsDisplay()
+        }
     }
     
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
     public func fw_addLinkGesture(block: @escaping (Any?) -> Void) {
-        self.__fw_addLinkGesture(block)
+        self.isUserInteractionEnabled = true
+        self.fw_addTapGesture { gesture in
+            guard let gesture = gesture as? UITapGestureRecognizer,
+                  let label = gesture.view as? UILabel else { return }
+            let attributes = label.fw_attributes(gesture: gesture, allowsSpacing: false)
+            let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
+            block(link)
+        }
     }
     
     /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
     public func fw_attributes(gesture: UIGestureRecognizer, allowsSpacing: Bool) -> [NSAttributedString.Key: Any] {
-        return self.__fw_attributes(withGesture: gesture, allowsSpacing: allowsSpacing)
+        guard let attributedString = self.attributedText else { return [:] }
+        let textContainer = NSTextContainer(size: self.bounds.size)
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = self.numberOfLines
+        textContainer.lineBreakMode = self.lineBreakMode
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        let textStorage = NSTextStorage(attributedString: attributedString)
+        textStorage.addLayoutManager(layoutManager)
+        
+        let point = gesture.location(in: self)
+        var distance: CGFloat = 0
+        let index = layoutManager.characterIndex(for: point, in: textContainer, fractionOfDistanceBetweenInsertionPoints: &distance)
+        if !allowsSpacing && distance >= 1 { return [:] }
+        return attributedString.attributes(at: index, effectiveRange: nil)
     }
 
     /// 快速设置标签并指定文本
     public func fw_setFont(_ font: UIFont?, textColor: UIColor?, text: String? = nil) {
-        self.__fw_setFont(font, textColor: textColor, text: text)
+        if let font = font { self.font = font }
+        if let textColor = textColor { self.textColor = textColor }
+        if let text = text { self.text = text }
     }
     
     /// 快速创建标签并指定文本
     public static func fw_label(font: UIFont?, textColor: UIColor?, text: String? = nil) -> Self {
-        return Self.__fw_label(with: font, textColor: textColor, text: text)
+        let label = Self()
+        label.fw_setFont(font, textColor: textColor, text: text)
+        return label
     }
     
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
     public var fw_textSize: CGSize {
-        return self.__fw_textSize
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        var attrs: [NSAttributedString.Key: Any] = [:]
+        attrs[.font] = self.font
+        if self.lineBreakMode != .byWordWrapping {
+            let paragraphStyle = NSMutableParagraphStyle()
+            // 由于lineBreakMode默认值为TruncatingTail，多行显示时仍然按照WordWrapping计算
+            if self.numberOfLines != 1 && self.lineBreakMode == .byTruncatingTail {
+                paragraphStyle.lineBreakMode = .byWordWrapping
+            } else {
+                paragraphStyle.lineBreakMode = self.lineBreakMode
+            }
+            attrs[.paragraphStyle] = paragraphStyle
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        let size = (self.text as? NSString)?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
 
     /// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
     public var fw_attributedTextSize: CGSize {
-        return self.__fw_attributedTextSize
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        let size = self.attributedText?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
+    }
+    
+    func fw_innerSetText(_ text: String?) {
+        guard let text = text else {
+            fw_innerSetText(text)
+            return
+        }
+        if (self.fw_textAttributes?.count ?? 0) < 1 && !self.fw_issetLineHeight {
+            fw_innerSetText(text)
+            return
+        }
+        let attributedString = NSAttributedString(string: text, attributes: self.fw_textAttributes)
+        self.fw_innerSetAttributedText(fw_adjustedAttributedString(attributedString))
+    }
+    
+    func fw_innerSetAttributedText(_ text: NSAttributedString?) {
+        guard let text = text else {
+            self.fw_innerSetAttributedText(text)
+            return
+        }
+        if (self.fw_textAttributes?.count ?? 0) < 1 && !self.fw_issetLineHeight {
+            self.fw_innerSetAttributedText(text)
+            return
+        }
+        var attributedString: NSMutableAttributedString? = NSMutableAttributedString(string: text.string, attributes: self.fw_textAttributes)
+        attributedString = fw_adjustedAttributedString(attributedString)?.mutableCopy() as? NSMutableAttributedString
+        text.enumerateAttributes(in: NSMakeRange(0, text.length)) { attrs, range, _ in
+            attributedString?.addAttributes(attrs, range: range)
+        }
+        self.fw_innerSetAttributedText(attributedString)
+    }
+    
+    func fw_innerSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
+        self.fw_innerSetLineBreakMode(lineBreakMode)
+        guard var textAttributes = self.fw_textAttributes else { return }
+        if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
+           let mutableStyle = paragraphStyle.mutableCopy() as? NSMutableParagraphStyle {
+            mutableStyle.lineBreakMode = lineBreakMode
+            textAttributes[.paragraphStyle] = mutableStyle
+            self.fw_textAttributes = textAttributes
+        }
+    }
+    
+    func fw_innerSetTextAlignment(_ textAlignment: NSTextAlignment) {
+        self.fw_innerSetTextAlignment(textAlignment)
+        guard var textAttributes = self.fw_textAttributes else { return }
+        if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
+           let mutableStyle = paragraphStyle.mutableCopy() as? NSMutableParagraphStyle {
+            mutableStyle.alignment = textAlignment
+            textAttributes[.paragraphStyle] = mutableStyle
+            self.fw_textAttributes = textAttributes
+        }
     }
     
 }
@@ -1094,6 +1318,18 @@ import AdSupport
             viewController.view.fw_pinEdges()
         }
         viewController.didMove(toParent: self)
+    }
+    
+}
+
+// MARK: - UIKitAutoloader
+internal class UIKitAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_innerSetText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
     }
     
 }

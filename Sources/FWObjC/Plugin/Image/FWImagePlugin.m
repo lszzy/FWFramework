@@ -9,6 +9,11 @@
 #import "FWPlugin.h"
 #import "FWToolkit.h"
 #import <objc/runtime.h>
+#if FWMacroSPM
+@import FWFramework;
+#else
+#import <FWFramework/FWFramework-Swift.h>
+#endif
 
 FWImageCoderOptions const FWImageCoderOptionScaleFactor = @"imageScaleFactor";
 

@@ -72,6 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)synchronized:(id)object closure:(__attribute__((noescape)) void (^)(void))closure;
 
++ (BOOL)isEqual:(nullable id)obj1 with:(nullable id)obj2;
+
 @end
 
 #pragma mark - __Swizzle
