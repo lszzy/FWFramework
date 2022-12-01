@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreTelephony
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -224,28 +225,99 @@ import AdSupport
     
     /// 是否越狱
     public static var fw_isJailbroken: Bool {
-        return Self.__fw_isJailbroken
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        // 1
+        let paths = [
+            "/Applications/Cydia.app",
+            "/private/var/lib/apt/",
+            "/private/var/lib/cydia",
+            "/private/var/stash"
+        ]
+        for path in paths {
+            if FileManager.default.fileExists(atPath: path) {
+                return true
+            }
+        }
+        
+        // 2
+        if let bash = fopen("/bin/bash", "r") {
+            fclose(bash)
+            return true
+        }
+        
+        // 3
+        let uuidString = UUID().uuidString
+        let path = "/private/\(uuidString)"
+        do {
+            try "test".write(toFile: path, atomically: true, encoding: .utf8)
+            try FileManager.default.removeItem(atPath: path)
+            return true
+        } catch {
+            return false
+        }
+        #endif
     }
     
     /// 本地IP地址
     public static var fw_ipAddress: String? {
-        return Self.__fw_ipAddress
+        return __Bridge.ipAddress()
     }
     
     /// 本地主机名称
     public static var fw_hostName: String? {
-        return Self.__fw_hostName
+        return __Bridge.hostName()
     }
     
     /// 手机运营商名称
     public static var fw_carrierName: String? {
-        return Self.__fw_carrierName
+        return fw_networkInfo.subscriberCellularProvider?.carrierName
     }
     
     /// 手机蜂窝网络类型，仅区分2G|3G|4G|5G
     public static var fw_networkType: String? {
-        return Self.__fw_networkType
+        var networkType: String?
+        guard let accessTechnology = fw_networkInfo.currentRadioAccessTechnology else { return networkType }
+        
+        let types2G = [
+            CTRadioAccessTechnologyGPRS,
+            CTRadioAccessTechnologyEdge,
+            CTRadioAccessTechnologyCDMA1x
+        ]
+        let types3G = [
+            CTRadioAccessTechnologyWCDMA,
+            CTRadioAccessTechnologyHSDPA,
+            CTRadioAccessTechnologyHSUPA,
+            CTRadioAccessTechnologyCDMAEVDORev0,
+            CTRadioAccessTechnologyCDMAEVDORevA,
+            CTRadioAccessTechnologyCDMAEVDORevB,
+            CTRadioAccessTechnologyeHRPD
+        ]
+        let types4G = [
+            CTRadioAccessTechnologyLTE
+        ]
+        var types5G: [String] = []
+        if #available(iOS 14.1, *) {
+            types5G = [
+                CTRadioAccessTechnologyNRNSA,
+                CTRadioAccessTechnologyNR
+            ]
+        }
+        
+        if types5G.contains(accessTechnology) {
+            networkType = "5G"
+        } else if types4G.contains(accessTechnology) {
+            networkType = "4G"
+        } else if types3G.contains(accessTechnology) {
+            networkType = "3G"
+        } else if types2G.contains(accessTechnology) {
+            networkType = "2G"
+        }
+        return networkType
     }
+    
+    private static var fw_networkInfo = CTTelephonyNetworkInfo()
     
 }
 

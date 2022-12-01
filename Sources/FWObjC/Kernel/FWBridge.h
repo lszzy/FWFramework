@@ -102,6 +102,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isBankcard:(NSString *)string;
 
++ (NSString *)ipAddress;
+
++ (NSString *)hostName;
+
 @end
 
 #pragma mark - __Encrypt
