@@ -426,37 +426,159 @@ import AdSupport
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        self.__fw_setBorderLayer(edge, color: color, width: width)
+        fw_setBorderLayer(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        self.__fw_setBorderLayer(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
+        if edge.contains(.top) {
+            let borderLayer = fw_innerBorderLayer("fw_borderLayerTop")
+            borderLayer.frame = CGRect(x: leftInset, y: 0, width: self.bounds.size.width - leftInset - rightInset, height: width)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.left) {
+            let borderLayer = fw_innerBorderLayer("fw_borderLayerLeft")
+            borderLayer.frame = CGRect(x: 0, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.bottom) {
+            let borderLayer = fw_innerBorderLayer("fw_borderLayerBottom")
+            borderLayer.frame = CGRect(x: leftInset, y: self.bounds.size.height - width, width: self.bounds.size.width - leftInset - rightInset, height: width)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.right) {
+            let borderLayer = fw_innerBorderLayer("fw_borderLayerRight")
+            borderLayer.frame = CGRect(x: self.bounds.size.width - width, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+    }
+    
+    private func fw_innerBorderLayer(_ edgeKey: String) -> CALayer {
+        if let borderLayer = fw_property(forName: edgeKey) as? CALayer {
+            return borderLayer
+        } else {
+            let borderLayer = CALayer()
+            self.layer.addSublayer(borderLayer)
+            fw_setProperty(borderLayer, forName: edgeKey)
+            return borderLayer
+        }
     }
     
     /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
-        self.__fw_setDashBorderLayer(color, width: width, cornerRadius: cornerRadius, lineLength: lineLength, lineSpacing: lineSpacing)
+        var borderLayer: CAShapeLayer
+        if let layer = fw_property(forName: "fw_dashBorderLayer") as? CAShapeLayer {
+            borderLayer = layer
+        } else {
+            borderLayer = CAShapeLayer()
+            self.layer.addSublayer(borderLayer)
+            fw_setProperty(borderLayer, forName: "fw_dashBorderLayer")
+        }
+        
+        borderLayer.frame = self.bounds
+        borderLayer.fillColor = UIColor.clear.cgColor
+        borderLayer.strokeColor = color?.cgColor
+        borderLayer.lineWidth = width
+        borderLayer.lineJoin = .round
+        borderLayer.lineDashPattern = [NSNumber(value: lineLength), NSNumber(value: lineSpacing)]
+        borderLayer.position = CGPoint(x: CGRectGetMidX(self.bounds), y: CGRectGetMidY(self.bounds))
+        borderLayer.path = UIBezierPath(roundedRect: CGRect(x: width / 2.0, y: width / 2.0, width: max(0, CGRectGetWidth(self.bounds) - width), height: max(0, CGRectGetHeight(self.bounds) - width)), cornerRadius: cornerRadius).cgPath
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
-        self.__fw_setCornerLayer(corner, radius: radius)
+        let cornerLayer = CAShapeLayer()
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
+        cornerLayer.frame = self.bounds
+        cornerLayer.path = path.cgPath
+        self.layer.mask = cornerLayer
     }
 
     /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat, borderColor: UIColor?, width: CGFloat) {
-        self.__fw_setCornerLayer(corner, radius: radius, borderColor: borderColor, width: width)
+        fw_setCornerLayer(corner, radius: radius)
+        
+        var borderLayer: CAShapeLayer
+        if let layer = fw_property(forName: "fw_borderLayerCorner") as? CAShapeLayer {
+            borderLayer = layer
+        } else {
+            borderLayer = CAShapeLayer()
+            self.layer.addSublayer(borderLayer)
+            fw_setProperty(borderLayer, forName: "fw_borderLayerCorner")
+        }
+        
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
+        borderLayer.frame = self.bounds
+        borderLayer.path = path.cgPath
+        borderLayer.strokeColor = borderColor?.cgColor
+        borderLayer.lineWidth = width * 2.0
+        borderLayer.fillColor = nil
     }
     
     /// 绘制单边或多边边框视图。使用AutoLayout
     public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        self.__fw_setBorderView(edge, color: color, width: width)
+        fw_setBorderView(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框。使用AutoLayout
     public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        self.__fw_setBorderView(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
+        if edge.contains(.top) {
+            let borderView = fw_innerBorderView("fw_borderViewTop", edge: .top)
+            borderView.fw_setDimension(.height, size: width)
+            borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.left) {
+            let borderView = fw_innerBorderView("fw_borderViewLeft", edge: .left)
+            borderView.fw_setDimension(.width, size: width)
+            borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.bottom) {
+            let borderView = fw_innerBorderView("fw_borderViewBottom", edge: .bottom)
+            borderView.fw_setDimension(.height, size: width)
+            borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.right) {
+            let borderView = fw_innerBorderView("fw_borderViewRight", edge: .right)
+            borderView.fw_setDimension(.width, size: width)
+            borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+    }
+    
+    private func fw_innerBorderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
+        if let borderView = fw_property(forName: edgeKey) as? UIView {
+            return borderView
+        } else {
+            let borderView = UIView()
+            self.addSubview(borderView)
+            fw_setProperty(borderView, forName: edgeKey)
+            
+            if edge == .top || edge == .bottom {
+                borderView.fw_pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
+                borderView.fw_setDimension(.height, size: 0)
+                borderView.fw_pinEdge(toSuperview: .left, inset: 0)
+                borderView.fw_pinEdge(toSuperview: .right, inset: 0)
+            } else {
+                borderView.fw_pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
+                borderView.fw_setDimension(.width, size: 0)
+                borderView.fw_pinEdge(toSuperview: .top, inset: 0)
+                borderView.fw_pinEdge(toSuperview: .bottom, inset: 0)
+            }
+            return borderView
+        }
     }
     
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
@@ -1723,6 +1845,106 @@ import AdSupport
 internal class UIKitAutoloader: AutoloadProtocol {
     
     static func autoload() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.point(inside:with:)),
+            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
+        ) { store in { selfObject, point, event in
+            if let insetsValue = selfObject.fw_property(forName: "fw_touchInsets") as? NSValue {
+                let touchInsets = insetsValue.uiEdgeInsetsValue
+                var bounds = selfObject.bounds
+                bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
+                return CGRectContainsPoint(bounds, point)
+            }
+            
+            return store.original(selfObject, store.selector, point, event)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.drawText(in:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
+        ) { store in { selfObject, aRect in
+            var rect = aRect
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
+            }
+            
+            let verticalAlignment = selfObject.fw_verticalAlignment
+            if verticalAlignment == .top {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.size.width, height: fitsSize.height)
+            } else if verticalAlignment == .bottom {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.size.height - fitsSize.height), width: rect.size.width, height: fitsSize.height)
+            }
+            
+            store.original(selfObject, store.selector, rect)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(getter: UILabel.intrinsicContentSize),
+            methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
+        ) { store in { selfObject in
+            var size = store.original(selfObject, store.selector)
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue,
+               !size.equalTo(.zero) {
+                let contentInset = contentInsetValue.uiEdgeInsetsValue
+                size = CGSize(width: size.width + contentInset.left + contentInset.right, height: size.height + contentInset.top + contentInset.bottom)
+            }
+            return size
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.sizeThatFits(_:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
+        ) { store in { selfObject, aSize in
+            var size = aSize
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                let contentInset = contentInsetValue.uiEdgeInsetsValue
+                size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
+                var fitsSize = store.original(selfObject, store.selector, size)
+                if !fitsSize.equalTo(.zero) {
+                    fitsSize = CGSize(width: fitsSize.width + contentInset.left + contentInset.right, height: fitsSize.height + contentInset.top + contentInset.bottom)
+                }
+                return fitsSize
+            }
+            
+            return store.original(selfObject, store.selector, size)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isEnabled),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, enabled in
+            store.original(selfObject, store.selector, enabled)
+            
+            if selfObject.fw_disabledAlpha > 0 {
+                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isHighlighted),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, highlighted in
+            store.original(selfObject, store.selector, highlighted)
+            
+            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
+                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
+            }
+        }}
+        
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_innerSetText(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
