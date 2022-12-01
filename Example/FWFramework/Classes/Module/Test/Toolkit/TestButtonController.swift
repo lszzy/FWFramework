@@ -179,7 +179,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button1.fw.setCornerRadius(5)
         button1.fw.disabledAlpha = 0.5
         button1.fw.highlightedAlpha = 0.5
-        button1.fw.setTitle("按钮文字", font: FW.font(10), textColor: .black)
+        button1.fw.setTitle("按钮文字", font: FW.font(10), titleColor: .black)
         button1.fw.setImage(UIImage.fw.appIconImage()?.fw.image(scaleSize: CGSize(width: 24, height: 24)))
         button1.fw.setImageEdge(.top, spacing: 4)
         view.addSubview(button1)
@@ -190,7 +190,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button2.fw.setCornerRadius(5)
         button2.fw.disabledAlpha = 0.5
         button2.fw.highlightedAlpha = 0.5
-        button2.fw.setTitle("按钮文字", font: FW.font(10), textColor: .black)
+        button2.fw.setTitle("按钮文字", font: FW.font(10), titleColor: .black)
         button2.fw.setImage(UIImage.fw.appIconImage()?.fw.image(scaleSize: CGSize(width: 24, height: 24)))
         button2.fw.setImageEdge(.left, spacing: 4)
         view.addSubview(button2)
@@ -201,7 +201,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button3.fw.setCornerRadius(5)
         button3.fw.disabledAlpha = 0.5
         button3.fw.highlightedAlpha = 0.5
-        button3.fw.setTitle("按钮文字", font: FW.font(10), textColor: .black)
+        button3.fw.setTitle("按钮文字", font: FW.font(10), titleColor: .black)
         button3.fw.setImage(UIImage.fw.appIconImage()?.fw.image(scaleSize: CGSize(width: 24, height: 24)))
         button3.fw.setImageEdge(.bottom, spacing: 4)
         view.addSubview(button3)
@@ -212,7 +212,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button4.fw.setCornerRadius(5)
         button4.fw.disabledAlpha = 0.5
         button4.fw.highlightedAlpha = 0.5
-        button4.fw.setTitle("按钮文字", font: FW.font(10), textColor: .black)
+        button4.fw.setTitle("按钮文字", font: FW.font(10), titleColor: .black)
         button4.fw.setImage(UIImage.fw.appIconImage()?.fw.image(scaleSize: CGSize(width: 24, height: 24)))
         button4.fw.setImageEdge(.right, spacing: 4)
         view.addSubview(button4)

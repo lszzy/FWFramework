@@ -418,8 +418,8 @@ extension Wrapper where Base: UIButton {
     }
 
     /// 快速设置文本按钮
-    public func setTitle(_ title: String?, font: UIFont?, textColor: UIColor?) {
-        base.fw_setTitle(title, font: font, textColor: textColor)
+    public func setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
+        base.fw_setTitle(title, font: font, titleColor: titleColor)
     }
 
     /// 快速设置文本
