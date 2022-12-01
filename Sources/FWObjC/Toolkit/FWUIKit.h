@@ -319,72 +319,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIGestureRecognizer+FWUIKit
-
-/**
- gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES
- shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
- shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
- shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
- */
-@interface UIGestureRecognizer (FWUIKit)
-
-/// 获取手势直接作用的view，不同于view，此处是view的subview
-@property (nullable, nonatomic, weak, readonly) UIView *fw_targetView NS_REFINED_FOR_SWIFT;
-
-/// 是否正在拖动中：Began || Changed
-@property (nonatomic, assign, readonly) BOOL fw_isTracking NS_REFINED_FOR_SWIFT;
-
-/// 是否是激活状态: isEnabled && (Began || Changed)
-@property (nonatomic, assign, readonly) BOOL fw_isActive NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIPanGestureRecognizer+FWUIKit
-
-@interface UIPanGestureRecognizer (FWUIKit)
-
-/// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
-@property (nonatomic, assign, readonly) UISwipeGestureRecognizerDirection fw_swipeDirection NS_REFINED_FOR_SWIFT;
-
-/// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
-@property (nonatomic, assign, readonly) CGFloat fw_swipePercent NS_REFINED_FOR_SWIFT;
-
-/// 计算指定方向的滑动进度
-- (CGFloat)fw_swipePercentOfDirection:(UISwipeGestureRecognizerDirection)direction NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIPageControl+FWUIKit
-
-@interface UIPageControl (FWUIKit)
-
-/// 自定义圆点大小，默认{10, 10}
-@property (nonatomic, assign) CGSize fw_preferredSize NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UISlider+FWUIKit
-
-@interface UISlider (FWUIKit)
-
-/// 中间圆球的大小，默认zero
-@property (nonatomic, assign) CGSize fw_thumbSize NS_REFINED_FOR_SWIFT;
-
-/// 中间圆球的颜色，默认nil
-@property (nonatomic, strong, nullable) UIColor *fw_thumbColor NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UISwitch+FWUIKit
-
-@interface UISwitch (FWUIKit)
-
-/// 自定义尺寸大小，默认{51,31}
-@property (nonatomic, assign) CGSize fw_preferredSize NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UITextField+FWUIKit
 
 @interface UITextField (FWUIKit)
@@ -475,66 +409,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UITableView+FWUIKit
-
-@interface UITableView (FWUIKit)
-
-/// 全局清空TableView默认多余边距
-+ (void)fw_resetTableStyle NS_REFINED_FOR_SWIFT;
-
-/// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
-@property (nonatomic, assign) BOOL fw_estimatedLayout UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
-
-/// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-- (void)fw_resetGroupedStyle NS_REFINED_FOR_SWIFT;
-
-/// reloadData完成回调
-- (void)fw_reloadDataWithCompletion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/// reloadData禁用动画
-- (void)fw_reloadDataWithoutAnimation NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UITableViewCell+FWUIKit
-
-@interface UITableViewCell (FWUIKit)
-
-/// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
-@property (nonatomic, assign) UIEdgeInsets fw_separatorInset NS_REFINED_FOR_SWIFT;
-
-/// 获取当前所属tableView
-@property (nonatomic, weak, readonly, nullable) UITableView *fw_tableView NS_REFINED_FOR_SWIFT;
-
-/// 获取当前显示indexPath
-@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UICollectionView+FWUIKit
-
-@interface UICollectionView (FWUIKit)
-
-/// reloadData完成回调
-- (void)fw_reloadDataWithCompletion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-/// reloadData禁用动画
-- (void)fw_reloadDataWithoutAnimation NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UICollectionViewCell+FWUIKit
-
-@interface UICollectionViewCell (FWUIKit)
-
-/// 获取当前所属collectionView
-@property (nonatomic, weak, readonly, nullable) UICollectionView *fw_collectionView NS_REFINED_FOR_SWIFT;
-
-/// 获取当前显示indexPath
-@property (nonatomic, readonly, nullable) NSIndexPath *fw_indexPath NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UISearchBar+FWUIKit
 
 @interface UISearchBar (FWUIKit)
@@ -568,42 +442,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
 @property (nonatomic, assign) BOOL fw_forceCancelButtonEnabled NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIViewController+FWUIKit
-
-@interface UIViewController (FWUIKit)
-
-/// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-@property (nonatomic, assign, readonly) BOOL fw_isRoot NS_REFINED_FOR_SWIFT;
-
-/// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-@property (nonatomic, assign, readonly) BOOL fw_isChild NS_REFINED_FOR_SWIFT;
-
-/// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-@property (nonatomic, assign, readonly) BOOL fw_isPresented NS_REFINED_FOR_SWIFT;
-
-/// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-@property (nonatomic, assign, readonly) BOOL fw_isPageSheet NS_REFINED_FOR_SWIFT;
-
-/// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-@property (nonatomic, assign, readonly) BOOL fw_isViewVisible NS_REFINED_FOR_SWIFT;
-
-/// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-@property (nonatomic, strong, readonly) UIView *fw_ancestorView NS_REFINED_FOR_SWIFT;
-
-/// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-@property (nonatomic, assign) BOOL fw_isLoaded NS_REFINED_FOR_SWIFT;
-
-/// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-- (void)fw_addChildViewController:(UIViewController *)viewController NS_REFINED_FOR_SWIFT;
-
-/// 添加子控制器到指定视图，可自定义布局，解决不能触发viewWillAppear等的bug
-- (void)fw_addChildViewController:(UIViewController *)viewController inView:(nullable UIView *)view layout:(nullable void (NS_NOESCAPE ^)(UIView *view))layout NS_REFINED_FOR_SWIFT;
-
-/// 移除子控制器，解决不能触发viewWillAppear等的bug
-- (void)fw_removeChildViewController:(UIViewController *)viewController NS_REFINED_FOR_SWIFT;
 
 @end
 

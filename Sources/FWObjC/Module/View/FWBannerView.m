@@ -11,6 +11,16 @@
 #import "FWImagePlugin.h"
 #import "FWStatisticalManager.h"
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - FWBannerViewFlowLayout
 
 @interface FWBannerViewFlowLayout : UICollectionViewFlowLayout

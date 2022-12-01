@@ -856,17 +856,19 @@ import AdSupport
     
     /// 获取手势直接作用的view，不同于view，此处是view的subview
     public weak var fw_targetView: UIView? {
-        return self.__fw_targetView
+        let location = self.location(in: self.view)
+        let targetView = self.view?.hitTest(location, with: nil)
+        return targetView
     }
 
     /// 是否正在拖动中：Began || Changed
     public var fw_isTracking: Bool {
-        return self.__fw_isTracking
+        return state == .began || state == .changed
     }
 
     /// 是否是激活状态: isEnabled && (Began || Changed)
     public var fw_isActive: Bool {
-        return self.__fw_isActive
+        return isEnabled && (state == .began || state == .changed)
     }
     
 }
@@ -876,17 +878,56 @@ import AdSupport
     
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
     public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
-        return self.__fw_swipeDirection
+        let transition = self.translation(in: self.view)
+        if abs(transition.x) > abs(transition.y) {
+            if transition.x < 0 {
+                return .left
+            } else if transition.x > 0 {
+                return .right
+            }
+        } else {
+            if transition.y > 0 {
+                return .down
+            } else if transition.y < 0 {
+                return .up
+            }
+        }
+        return []
     }
 
     /// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
     public var fw_swipePercent: CGFloat {
-        return self.__fw_swipePercent
+        guard let view = self.view,
+              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
+        var percent: CGFloat = 0
+        let transition = self.translation(in: view)
+        if abs(transition.x) > abs(transition.y) {
+            percent = abs(transition.x) / view.bounds.width
+        } else {
+            percent = abs(transition.y) / view.bounds.height
+        }
+        return max(0, min(percent, 1))
     }
 
     /// 计算指定方向的滑动进度
     public func fw_swipePercent(of direction: UISwipeGestureRecognizer.Direction) -> CGFloat {
-        return self.__fw_swipePercent(of: direction)
+        guard let view = self.view,
+              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
+        var percent: CGFloat = 0
+        let transition = self.translation(in: view)
+        switch direction {
+        case .left:
+            percent = -transition.x / view.bounds.width
+        case .right:
+            percent = transition.x / view.bounds.width
+        case .up:
+            percent = -transition.y / view.bounds.height
+        case .down:
+            percent = transition.y / view.bounds.height
+        default:
+            percent = transition.y / view.bounds.height
+        }
+        return max(0, min(percent, 1))
     }
     
 }
@@ -896,8 +937,19 @@ import AdSupport
     
     /// 自定义圆点大小，默认{10, 10}
     public var fw_preferredSize: CGSize {
-        get { return self.__fw_preferredSize }
-        set { self.__fw_preferredSize = newValue }
+        get {
+            var size = self.bounds.size
+            if size.height <= 0 {
+                size = self.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+                if size.height <= 0 { size = CGSize(width: 10, height: 10) }
+            }
+            return size
+        }
+        set {
+            let height = self.fw_preferredSize.height
+            let scale = newValue.height / height
+            self.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
     }
     
 }
@@ -907,14 +959,41 @@ import AdSupport
     
     /// 中间圆球的大小，默认zero
     public var fw_thumbSize: CGSize {
-        get { return self.__fw_thumbSize }
-        set { self.__fw_thumbSize = newValue }
+        get {
+            if let value = fw_property(forName: "fw_thumbSize") as? NSValue {
+                return value.cgSizeValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(cgSize: newValue), forName: "fw_thumbSize")
+            fw_updateThumbImage()
+        }
     }
 
     /// 中间圆球的颜色，默认nil
     public var fw_thumbColor: UIColor? {
-        get { return self.__fw_thumbColor }
-        set { self.__fw_thumbColor = newValue }
+        get {
+            return fw_property(forName: "fw_thumbColor") as? UIColor
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_thumbColor")
+            self.fw_updateThumbImage()
+        }
+    }
+    
+    private func fw_updateThumbImage() {
+        let thumbSize = self.fw_thumbSize
+        guard thumbSize.width > 0, thumbSize.height > 0 else { return }
+        let thumbColor = self.fw_thumbColor ?? (self.tintColor ?? .white)
+        let thumbImage = UIImage.fw_image(size: thumbSize) { context in
+            let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: thumbSize.width, height: thumbSize.height))
+            context.setFillColor(thumbColor.cgColor)
+            path.fill()
+        }
+        
+        self.setThumbImage(thumbImage, for: .normal)
+        self.setThumbImage(thumbImage, for: .highlighted)
     }
     
 }
@@ -924,8 +1003,19 @@ import AdSupport
     
     /// 自定义尺寸大小，默认{51,31}
     public var fw_preferredSize: CGSize {
-        get { return self.__fw_preferredSize }
-        set { self.__fw_preferredSize = newValue }
+        get {
+            var size = self.bounds.size
+            if size.height <= 0 {
+                size = self.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+                if size.height <= 0 { size = CGSize(width: 51, height: 31) }
+            }
+            return size
+        }
+        set {
+            let height = self.fw_preferredSize.height
+            let scale = newValue.height / height
+            self.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
     }
     
 }
@@ -1098,23 +1188,47 @@ import AdSupport
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
     public var fw_estimatedLayout: Bool {
-        get { return self.__fw_estimatedLayout }
-        set { self.__fw_estimatedLayout = newValue }
+        get {
+            return self.estimatedRowHeight == UITableView.automaticDimension
+        }
+        set {
+            if newValue {
+                self.estimatedRowHeight = UITableView.automaticDimension
+                self.estimatedSectionHeaderHeight = UITableView.automaticDimension
+                self.estimatedSectionFooterHeight = UITableView.automaticDimension
+            } else {
+                self.estimatedRowHeight = 0
+                self.estimatedSectionHeaderHeight = 0
+                self.estimatedSectionFooterHeight = 0
+            }
+        }
     }
     
     /// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
     public func fw_resetGroupedStyle() {
-        self.__fw_resetGroupedStyle()
+        self.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        self.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        self.sectionHeaderHeight = 0
+        self.sectionFooterHeight = 0
+        if #available(iOS 15.0, *) {
+            self.sectionHeaderTopPadding = 0
+        }
     }
     
     /// reloadData完成回调
     public func fw_reloadData(completion: (() -> Void)?) {
-        self.__fw_reloadData(completion: completion)
+        UIView.animate(withDuration: 0) {
+            self.reloadData()
+        } completion: { _ in
+            completion?()
+        }
     }
     
     /// reloadData禁用动画
     public func fw_reloadDataWithoutAnimation() {
-        self.__fw_reloadDataWithoutAnimation()
+        UIView.performWithoutAnimation {
+            self.reloadData()
+        }
     }
     
 }
@@ -1124,18 +1238,31 @@ import AdSupport
     
     /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
     public var fw_separatorInset: UIEdgeInsets {
-        get { return self.__fw_separatorInset }
-        set { self.__fw_separatorInset = newValue }
+        get {
+            return self.separatorInset
+        }
+        set {
+            self.separatorInset = newValue
+            self.preservesSuperviewLayoutMargins = false
+            self.layoutMargins = separatorInset
+        }
     }
 
     /// 获取当前所属tableView
     public weak var fw_tableView: UITableView? {
-        return self.__fw_tableView
+        var superview = self.superview
+        while superview != nil {
+            if let tableView = superview as? UITableView {
+                return tableView
+            }
+            superview = superview?.superview
+        }
+        return nil
     }
 
     /// 获取当前显示indexPath
     public var fw_indexPath: IndexPath? {
-        return self.__fw_indexPath
+        return fw_tableView?.indexPath(for: self)
     }
     
 }
@@ -1145,12 +1272,19 @@ import AdSupport
     
     /// reloadData完成回调
     public func fw_reloadData(completion: (() -> Void)?) {
-        self.__fw_reloadData(completion: completion)
+        UIView.animate(withDuration: 0) {
+            self.reloadData()
+        } completion: { _ in
+            completion?()
+        }
     }
     
     /// reloadData禁用动画
     public func fw_reloadDataWithoutAnimation() {
-        self.__fw_reloadDataWithoutAnimation()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        self.reloadData()
+        CATransaction.commit()
     }
     
 }
@@ -1160,12 +1294,19 @@ import AdSupport
     
     /// 获取当前所属collectionView
     public weak var fw_collectionView: UICollectionView? {
-        return self.__fw_collectionView
+        var superview = self.superview
+        while superview != nil {
+            if let collectionView = superview as? UICollectionView {
+                return collectionView
+            }
+            superview = superview?.superview
+        }
+        return nil
     }
 
     /// 获取当前显示indexPath
     public var fw_indexPath: IndexPath? {
-        return self.__fw_indexPath
+        return fw_collectionView?.indexPath(for: self)
     }
     
 }
