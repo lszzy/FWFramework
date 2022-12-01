@@ -325,6 +325,14 @@ import AdSupport
 /// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
 @_spi(FW) @objc extension UIView {
     
+    private class SaturationGrayView: UIView {
+        
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            return nil
+        }
+        
+    }
+    
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
     public var fw_isViewVisible: Bool {
         if isHidden || alpha <= 0.01 || self.window == nil { return false }
@@ -732,6 +740,36 @@ import AdSupport
         }
     }
     
+    /// 是否显示灰色视图
+    public var fw_hasGrayView: Bool {
+        let grayView = self.subviews.first { $0 is SaturationGrayView }
+        return grayView != nil
+    }
+    
+    /// 显示灰色视图
+    @discardableResult
+    public func fw_showGrayView() -> UIView {
+        fw_hideGrayView()
+        
+        let overlay = SaturationGrayView()
+        overlay.isUserInteractionEnabled = false
+        overlay.backgroundColor = UIColor.lightGray
+        overlay.layer.compositingFilter = "saturationBlendMode"
+        overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+        self.addSubview(overlay)
+        overlay.fw_pinEdges()
+        return overlay
+    }
+    
+    /// 隐藏灰色视图
+    public func fw_hideGrayView() {
+        for subview in self.subviews {
+            if subview is SaturationGrayView {
+                subview.removeFromSuperview()
+            }
+        }
+    }
+    
 }
 
 // MARK: - UIImageView+UIKit
@@ -750,7 +788,25 @@ import AdSupport
 
     /// 倒影效果
     public func fw_reflect() {
-        self.__fw_reflect()
+        var frame = self.frame
+        frame.origin.y += frame.size.height + 1
+        
+        let reflectImageView = UIImageView(frame: frame)
+        self.clipsToBounds = true
+        reflectImageView.contentMode = self.contentMode
+        reflectImageView.image = self.image
+        reflectImageView.transform = CGAffineTransform(scaleX: 1.0, y: -1.0)
+        
+        let reflectLayer = reflectImageView.layer
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.bounds = reflectLayer.bounds
+        gradientLayer.position = CGPoint(x: reflectLayer.bounds.size.width / 2.0, y: reflectLayer.bounds.size.height / 2.0)
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.3).cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        reflectLayer.mask = gradientLayer
+        
+        self.superview?.addSubview(reflectImageView)
     }
 
     /// 图片水印
