@@ -255,59 +255,101 @@ import AdSupport
     
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
     public var fw_isViewVisible: Bool {
-        return self.__fw_isViewVisible
+        if isHidden || alpha <= 0.01 || self.window == nil { return false }
+        if bounds.width == 0 || bounds.height == 0 { return false }
+        return true
     }
 
     /// 获取响应的视图控制器
     public var fw_viewController: UIViewController? {
-        return self.__fw_viewController
+        var responder = self.next
+        while responder != nil {
+            if let viewController = responder as? UIViewController {
+                return viewController
+            }
+            responder = responder?.next
+        }
+        return nil
     }
 
     /// 设置额外热区(点击区域)
     public var fw_touchInsets: UIEdgeInsets {
-        get { return self.__fw_touchInsets }
-        set { self.__fw_touchInsets = newValue }
+        get {
+            if let value = fw_property(forName: "fw_touchInsets") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_touchInsets")
+        }
     }
 
     /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
     public var fw_fitFrame: CGRect {
-        get { return self.__fw_fitFrame }
-        set { self.__fw_fitFrame = newValue }
+        get {
+            return self.frame
+        }
+        set {
+            var fitFrame = newValue
+            fitFrame.size = fw_fitSize(drawSize: CGSize(width: fitFrame.size.width, height: .greatestFiniteMagnitude))
+            self.frame = fitFrame
+        }
     }
 
     /// 计算当前视图适合大小，需实现sizeThatFits:方法
     public var fw_fitSize: CGSize {
-        return self.__fw_fitSize
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        return fw_fitSize(drawSize: drawSize)
     }
 
     /// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
     public func fw_fitSize(drawSize: CGSize) -> CGSize {
-        return self.__fw_fitSize(withDraw: drawSize)
+        let size = self.sizeThatFits(drawSize)
+        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
     /// 根据tag查找subview，仅从subviews中查找
     public func fw_subview(tag: Int) -> UIView? {
-        return self.__fw_subview(withTag: tag)
+        var subview: UIView?
+        for obj in self.subviews {
+            if obj.tag == tag {
+                subview = obj
+                break
+            }
+        }
+        return subview
     }
 
     /// 设置阴影颜色、偏移和半径
     public func fw_setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
-        self.__fw_setShadowColor(color, offset: offset, radius: radius)
+        self.layer.shadowColor = color?.cgColor
+        self.layer.shadowOffset = offset
+        self.layer.shadowRadius = radius
+        self.layer.shadowOpacity = 1.0
     }
 
     /// 绘制四边边框
     public func fw_setBorderColor(_ color: UIColor?, width: CGFloat) {
-        self.__fw_setBorderColor(color, width: width)
+        self.layer.borderColor = color?.cgColor
+        self.layer.borderWidth = width
     }
 
     /// 绘制四边边框和四角圆角
     public func fw_setBorderColor(_ color: UIColor?, width: CGFloat, cornerRadius: CGFloat) {
-        self.__fw_setBorderColor(color, width: width, cornerRadius: cornerRadius)
+        self.fw_setBorderColor(color, width: width)
+        self.fw_setCornerRadius(cornerRadius)
     }
 
     /// 绘制四角圆角
     public func fw_setCornerRadius(_ radius: CGFloat) {
-        self.__fw_setCornerRadius(radius)
+        self.layer.cornerRadius = radius
+        self.layer.masksToBounds = true
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
@@ -359,7 +401,7 @@ import AdSupport
     
     /// 移除所有子视图
     public func fw_removeAllSubviews() {
-        self.__fw_removeAllSubviews()
+        self.subviews.forEach { $0.removeFromSuperview() }
     }
 
     /// 递归查找指定子类的第一个子视图(含自身)
