@@ -9,6 +9,9 @@
 #import <sys/sysctl.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <Accelerate/Accelerate.h>
+#import <arpa/inet.h>
+#import <ifaddrs.h>
+#import <net/if.h>
 
 #pragma mark - __Autoloader
 
@@ -637,6 +640,42 @@
     NSInteger lastNumber = [lastNum integerValue];
     NSInteger luhmTotal = lastNumber + sumEvenNumTotal + sumOddNum2Total + sumOddNumTotal;
     return (luhmTotal % 10 == 0) ? YES : NO;
+}
+
++ (NSString *)ipAddress {
+    NSString *ipAddr = nil;
+    struct ifaddrs *addrs = NULL;
+    
+    int ret = getifaddrs(&addrs);
+    if (0 == ret) {
+        const struct ifaddrs * cursor = addrs;
+        
+        while (cursor) {
+            if (AF_INET == cursor->ifa_addr->sa_family && 0 == (cursor->ifa_flags & IFF_LOOPBACK)) {
+                ipAddr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
+                break;
+            }
+            
+            cursor = cursor->ifa_next;
+        }
+        
+        freeifaddrs(addrs);
+    }
+    
+    return ipAddr;
+}
+
++ (NSString *)hostName {
+    char hostName[256];
+    int success = gethostname(hostName, 255);
+    if (success != 0) return nil;
+    hostName[255] = '\0';
+    
+#if TARGET_OS_SIMULATOR
+    return [NSString stringWithFormat:@"%s", hostName];
+#else
+    return [NSString stringWithFormat:@"%s.local", hostName];
+#endif
 }
 
 @end
