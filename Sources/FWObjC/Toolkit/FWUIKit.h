@@ -9,52 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIView+FWUIKit
-
-/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
-@interface UIView (FWUIKit)
-
-/// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
-- (dispatch_source_t)fw_startCountDown:(NSInteger)seconds block:(void (^)(NSInteger countDown))block NS_REFINED_FOR_SWIFT;
-
-/// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
-- (nullable UIVisualEffectView *)fw_setBlurEffect:(UIBlurEffectStyle)style NS_REFINED_FOR_SWIFT;
-
-/// 移除所有子视图
-- (void)fw_removeAllSubviews NS_REFINED_FOR_SWIFT;
-
-/// 递归查找指定子类的第一个子视图(含自身)
-- (nullable __kindof UIView *)fw_subviewOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
-
-/// 递归查找指定条件的第一个子视图(含自身)
-- (nullable __kindof UIView *)fw_subviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
-
-/// 递归查找指定条件的第一个父视图(含自身)
-- (nullable __kindof UIView *)fw_superviewOfBlock:(BOOL (^)(UIView *view))block NS_REFINED_FOR_SWIFT;
-
-/// 图片截图
-@property (nonatomic, readonly, nullable) UIImage *fw_snapshotImage NS_REFINED_FOR_SWIFT;
-
-/// Pdf截图
-@property (nonatomic, readonly, nullable) NSData *fw_snapshotPdf NS_REFINED_FOR_SWIFT;
-
-/// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
-@property (nonatomic, assign) NSInteger fw_sortIndex NS_REFINED_FOR_SWIFT;
-
-/// 根据sortIndex排序subviews，需结合sortIndex使用
-- (void)fw_sortSubviews NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UIImageView+FWUIKit
 
 @interface UIImageView (FWUIKit)
-
-/// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
-- (void)fw_setContentModeAspectFill UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
-
-/// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
-- (void)fw_faceAware NS_REFINED_FOR_SWIFT;
 
 /// 倒影效果
 - (void)fw_reflect NS_REFINED_FOR_SWIFT;

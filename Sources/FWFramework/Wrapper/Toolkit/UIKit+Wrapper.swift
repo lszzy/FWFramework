@@ -220,7 +220,7 @@ extension Wrapper where Base: UIView {
     
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
     @discardableResult
-    public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSource {
+    public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSourceTimer {
         return base.fw_startCountDown(seconds, block: block)
     }
     
@@ -457,7 +457,7 @@ extension Wrapper where Base: UIButton {
     
     /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
     @discardableResult
-    public func startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSource {
+    public func startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSourceTimer {
         return base.fw_startCountDown(seconds, title: title, waitTitle: waitTitle)
     }
     
