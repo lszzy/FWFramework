@@ -88,6 +88,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
 
++ (BOOL)swizzleDeallocMethod:(Class)originalClass withBlock:(void (^)(NSObject *object))block;
+
 @end
 
 #pragma mark - __Bridge
