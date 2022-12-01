@@ -9,45 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIBezierPath+FWUIKit
-
-@interface UIBezierPath (FWUIKit)
-
-/// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-- (nullable UIImage *)fw_shapeImage:(CGSize)size
-                     strokeWidth:(CGFloat)strokeWidth
-                     strokeColor:(UIColor *)strokeColor
-                       fillColor:(nullable UIColor *)fillColor NS_REFINED_FOR_SWIFT;
-
-/// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-- (CAShapeLayer *)fw_shapeLayer:(CGRect)rect
-                 strokeWidth:(CGFloat)strokeWidth
-                 strokeColor:(UIColor *)strokeColor
-                   fillColor:(nullable UIColor *)fillColor NS_REFINED_FOR_SWIFT;
-
-/// 根据点计算折线路径(NSValue点)
-+ (UIBezierPath *)fw_linesWithPoints:(NSArray *)points NS_REFINED_FOR_SWIFT;
-
-/// 根据点计算贝塞尔曲线路径
-+ (UIBezierPath *)fw_quadCurvedPathWithPoints:(NSArray *)points NS_REFINED_FOR_SWIFT;
-
-/// 计算两点的中心点
-+ (CGPoint)fw_middlePoint:(CGPoint)p1 withPoint:(CGPoint)p2 NS_REFINED_FOR_SWIFT;
-
-/// 计算两点的贝塞尔曲线控制点
-+ (CGPoint)fw_controlPoint:(CGPoint)p1 withPoint:(CGPoint)p2 NS_REFINED_FOR_SWIFT;
-
-/// 将角度(0~360)转换为弧度，周长为2*M_PI*r
-+ (CGFloat)fw_radianWithDegree:(CGFloat)degree NS_REFINED_FOR_SWIFT;
-
-/// 将弧度转换为角度(0~360)
-+ (CGFloat)fw_degreeWithRadian:(CGFloat)radian NS_REFINED_FOR_SWIFT;
-
-/// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
-+ (NSArray<NSValue *> *)fw_linePointsWithRect:(CGRect)rect direction:(UISwipeGestureRecognizerDirection)direction NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UIDevice+FWUIKit
 
 @interface UIDevice (FWUIKit)
@@ -206,45 +167,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
 @property (nonatomic, assign) NSTimeInterval fw_touchEventInterval UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIButton+FWUIKit
-
-@interface UIButton (FWUIKit)
-
-/// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fw_disabledAlpha NS_REFINED_FOR_SWIFT;
-
-/// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-@property (nonatomic, assign) CGFloat fw_highlightedAlpha NS_REFINED_FOR_SWIFT;
-
-/// 快速设置文本按钮
-- (void)fw_setTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
-
-/// 快速设置文本
-- (void)fw_setTitle:(nullable NSString *)title NS_REFINED_FOR_SWIFT;
-
-/// 快速设置图片
-- (void)fw_setImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
-
-/// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
-///
-/// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
-/// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
-- (void)fw_setImageEdge:(UIRectEdge)edge spacing:(CGFloat)spacing NS_REFINED_FOR_SWIFT;
-
-/// 设置状态背景色
-- (void)fw_setBackgroundColor:(nullable UIColor *)backgroundColor forState:(UIControlState)state NS_REFINED_FOR_SWIFT;
-
-/// 快速创建文本按钮
-+ (instancetype)fw_buttonWithTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
-
-/// 快速创建图片按钮
-+ (instancetype)fw_buttonWithImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
-
-/// 开始按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
-- (dispatch_source_t)fw_startCountDown:(NSInteger)seconds title:(NSString *)title waitTitle:(NSString *)waitTitle NS_REFINED_FOR_SWIFT;
 
 @end
 

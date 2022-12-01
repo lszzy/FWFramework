@@ -18,47 +18,127 @@ import AdSupport
     
     /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
     public func fw_shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
-        return self.__fw_shapeImage(size, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        context.setLineWidth(strokeWidth)
+        context.setLineCap(.round)
+        strokeColor.setStroke()
+        context.addPath(self.cgPath)
+        context.strokePath()
+        
+        if let fillColor = fillColor {
+            fillColor.setFill()
+            context.addPath(self.cgPath)
+            context.fillPath()
+        }
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
     public func fw_shapeLayer(_ rect: CGRect, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> CAShapeLayer {
-        return self.__fw_shapeLayer(rect, strokeWidth: strokeWidth, stroke: strokeColor, fill: fillColor)
+        let layer = CAShapeLayer()
+        layer.frame = rect
+        layer.lineWidth = strokeWidth
+        layer.lineCap = .round
+        layer.strokeColor = strokeColor.cgColor
+        if let fillColor = fillColor {
+            layer.fillColor = fillColor.cgColor
+        }
+        layer.path = self.cgPath
+        return layer
     }
 
     /// 根据点计算折线路径(NSValue点)
     public static func fw_lines(points: [NSValue]) -> UIBezierPath {
-        return Self.__fw_lines(withPoints: points)
+        let path = UIBezierPath()
+        var value = points.first ?? NSValue(cgPoint: .zero)
+        path.move(to: value.cgPointValue)
+        
+        for i in 1 ..< points.count {
+            value = points[i]
+            path.addLine(to: value.cgPointValue)
+        }
+        return path
     }
 
     /// 根据点计算贝塞尔曲线路径
     public static func fw_quadCurvedPath(points: [NSValue]) -> UIBezierPath {
-        return Self.__fw_quadCurvedPath(withPoints: points)
+        let path = UIBezierPath()
+        var value = points.first ?? NSValue(cgPoint: .zero)
+        var p1 = value.cgPointValue
+        path.move(to: p1)
+        
+        if points.count == 2 {
+            value = points[1]
+            path.addLine(to: value.cgPointValue)
+            return path
+        }
+        
+        for i in 1 ..< points.count {
+            value = points[i]
+            let p2 = value.cgPointValue
+            
+            let midPoint = fw_middlePoint(p1, with: p2)
+            path.addQuadCurve(to: midPoint, controlPoint: fw_controlPoint(midPoint, with: p1))
+            path.addQuadCurve(to: p2, controlPoint: fw_controlPoint(midPoint, with: p2))
+            
+            p1 = p2
+        }
+        return path
     }
     
     /// 计算两点的中心点
     public static func fw_middlePoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        return Self.__fw_middlePoint(p1, with: p2)
+        return CGPoint(x: (p1.x + p2.x) / 2.0, y: (p1.y + p2.y) / 2.0)
     }
 
     /// 计算两点的贝塞尔曲线控制点
     public static func fw_controlPoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        return Self.__fw_controlPoint(p1, with: p2)
+        var controlPoint = fw_middlePoint(p1, with: p2)
+        let diffY = abs(p2.y - controlPoint.y)
+        if p1.y < p2.y {
+            controlPoint.y += diffY
+        } else if p1.y > p2.y {
+            controlPoint.y -= diffY
+        }
+        return controlPoint
     }
     
     /// 将角度(0~360)转换为弧度，周长为2*M_PI*r
     public static func fw_radian(degree: CGFloat) -> CGFloat {
-        return Self.__fw_radian(withDegree: degree)
+        return (CGFloat.pi * degree) / 180.0
     }
     
     /// 将弧度转换为角度(0~360)
     public static func fw_degree(radian: CGFloat) -> CGFloat {
-        return Self.__fw_degree(withRadian: radian)
+        return (radian * 180.0) / CGFloat.pi
     }
     
     /// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
     public static func fw_linePoints(rect: CGRect, direction: UISwipeGestureRecognizer.Direction) -> [NSValue] {
-        return Self.__fw_linePoints(with: rect, direction: direction)
+        var startPoint: CGPoint = .zero
+        var endPoint: CGPoint = .zero
+        switch direction {
+        case .right:
+            startPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
+            endPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
+        case .up:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+        case .left:
+            startPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
+            endPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
+        case .down:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+        default:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+        }
+        return [NSValue(cgPoint: startPoint), NSValue(cgPoint: endPoint)]
     }
     
 }
@@ -325,7 +405,8 @@ import AdSupport
     
     /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
     public func fw_setContentModeAspectFill() {
-        self.__fw_setContentModeAspectFill()
+        self.contentMode = .scaleAspectFill
+        self.layer.masksToBounds = true
     }
     
     /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
@@ -680,29 +761,45 @@ import AdSupport
     
     /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
     public var fw_disabledAlpha: CGFloat {
-        get { return self.__fw_disabledAlpha }
-        set { self.__fw_disabledAlpha = newValue }
+        get {
+            return fw_propertyDouble(forName: "fw_disabledAlpha")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_disabledAlpha")
+            if newValue > 0 {
+                self.alpha = self.isEnabled ? 1 : newValue
+            }
+        }
     }
 
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
     public var fw_highlightedAlpha: CGFloat {
-        get { return self.__fw_highlightedAlpha }
-        set { self.__fw_highlightedAlpha = newValue }
+        get {
+            return fw_propertyDouble(forName: "fw_highlightedAlpha")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_highlightedAlpha")
+            if self.isEnabled && newValue > 0 {
+                self.alpha = self.isHighlighted ? newValue : 1
+            }
+        }
     }
 
     /// 快速设置文本按钮
-    public func fw_setTitle(_ title: String?, font: UIFont?, textColor: UIColor?) {
-        self.__fw_setTitle(title, font: font, titleColor: textColor)
+    public func fw_setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
+        if let title = title { self.setTitle(title, for: .normal) }
+        if let font = font { self.titleLabel?.font = font }
+        if let titleColor = titleColor { self.setTitleColor(titleColor, for: .normal) }
     }
 
     /// 快速设置文本
     public func fw_setTitle(_ title: String?) {
-        self.__fw_setTitle(title)
+        self.setTitle(title, for: .normal)
     }
 
     /// 快速设置图片
     public func fw_setImage(_ image: UIImage?) {
-        self.__fw_setImage(image)
+        self.setImage(image, for: .normal)
     }
 
     /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
@@ -710,28 +807,71 @@ import AdSupport
     /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
     /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
     public func fw_setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
-        self.__fw_setImageEdge(edge, spacing: spacing)
+        let imageSize = self.imageView?.image?.size ?? .zero
+        let labelSize = self.titleLabel?.intrinsicContentSize ?? .zero
+        switch edge {
+        case .left:
+            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing / 2.0, bottom: 0, right: spacing / 2.0)
+            self.titleEdgeInsets = UIEdgeInsets(top: 0, left: spacing / 2.0, bottom: 0, right: -spacing / 2.0)
+        case .right:
+            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: labelSize.width + spacing / 2.0, bottom: 0, right: -labelSize.width - spacing / 2.0)
+            self.titleEdgeInsets = UIEdgeInsets(top: 0, left: -imageSize.width - spacing / 2.0, bottom: 0, right: imageSize.width + spacing / 2.0)
+        case .top:
+            self.imageEdgeInsets = UIEdgeInsets(top: -labelSize.height - spacing / 2.0, left: 0, bottom: spacing / 2.0, right: -labelSize.width)
+            self.titleEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: -imageSize.width, bottom: -imageSize.height - spacing / 2.0, right: 0)
+        case .bottom:
+            self.imageEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: 0, bottom: -labelSize.height - spacing / 2.0, right: -labelSize.width)
+            self.titleEdgeInsets = UIEdgeInsets(top: -imageSize.height - spacing / 2.0, left: -imageSize.width, bottom: spacing / 2.0, right: 0)
+        default:
+            break
+        }
     }
     
     /// 设置状态背景色
     public func fw_setBackgroundColor(_ backgroundColor: UIColor?, for state: UIControl.State) {
-        self.__fw_setBackgroundColor(backgroundColor, for: state)
+        var image: UIImage?
+        if let backgroundColor = backgroundColor {
+            let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+            UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+            let context = UIGraphicsGetCurrentContext()
+            context?.setFillColor(backgroundColor.cgColor)
+            context?.fill([rect])
+            image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
+        self.setBackgroundImage(image, for: state)
     }
     
     /// 快速创建文本按钮
     public static func fw_button(title: String?, font: UIFont?, titleColor: UIColor?) -> Self {
-        return Self.__fw_button(withTitle: title, font: font, titleColor: titleColor)
+        let button = Self(type: .custom)
+        button.fw_setTitle(title, font: font, titleColor: titleColor)
+        return button
     }
 
     /// 快速创建图片按钮
     public static func fw_button(image: UIImage?) -> Self {
-        return Self.__fw_button(with: image)
+        let button = Self(type: .custom)
+        button.setImage(image, for: .normal)
+        return button
     }
     
     /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
     @discardableResult
     public func fw_startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSource {
-        return self.__fw_startCountDown(seconds, title: title, waitTitle: waitTitle)
+        return self.fw_startCountDown(seconds) { [weak self] countDown in
+            // 先设置titleLabel，再设置title，防止闪烁
+            if countDown <= 0 {
+                self?.titleLabel?.text = title
+                self?.setTitle(title, for: .normal)
+                self?.isEnabled = true
+            } else {
+                let waitText = String(format: waitTitle, countDown)
+                self?.titleLabel?.text = waitText
+                self?.setTitle(waitText, for: .normal)
+                self?.isEnabled = false
+            }
+        }
     }
     
 }
