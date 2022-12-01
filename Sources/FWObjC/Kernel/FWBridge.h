@@ -140,13 +140,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __Image
+#pragma mark - UIImage+__Bridge
 
-@interface UIImage (__Image)
+@interface UIImage (__Bridge)
 
 @property (nonatomic, readonly) UIImage *__maskImage;
 
 - (nullable UIImage *)__imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
+
+@end
+
+#pragma mark - UIImageView+__Bridge
+
+@interface UIImageView (__Bridge)
+
+- (void)__faceAware;
 
 @end
 

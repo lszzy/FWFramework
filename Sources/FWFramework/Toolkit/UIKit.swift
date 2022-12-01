@@ -583,14 +583,53 @@ import AdSupport
     
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
     @discardableResult
-    public func fw_startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSource {
-        return self.__fw_startCountDown(seconds, block: block)
+    public func fw_startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSourceTimer {
+        let queue = DispatchQueue.global()
+        let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
+        timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
+        
+        let startTime = Date.fw_currentTime
+        var hasWindow = false
+        timer.setEventHandler { [weak self] in
+            DispatchQueue.main.async {
+                var countDown = seconds - Int(round(Date.fw_currentTime - startTime))
+                if countDown <= 0 {
+                    timer.cancel()
+                }
+                
+                // 按钮从window移除时自动cancel倒计时
+                if !hasWindow && self?.window != nil {
+                    hasWindow = true
+                } else if hasWindow && self?.window == nil {
+                    hasWindow = false
+                    countDown = 0
+                    timer.cancel()
+                }
+                
+                block(countDown <= 0 ? 0 : countDown)
+            }
+        }
+        timer.resume()
+        return timer
     }
     
     /// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
     @discardableResult
     public func fw_setBlurEffect(_ style: UIBlurEffect.Style) -> UIVisualEffectView? {
-        return self.__fw_setBlurEffect(style)
+        for subview in self.subviews {
+            if subview is UIVisualEffectView {
+                subview.removeFromSuperview()
+            }
+        }
+        
+        if style.rawValue > -1 {
+            let effect = UIBlurEffect(style: style)
+            let effectView = UIVisualEffectView(effect: effect)
+            self.addSubview(effectView)
+            effectView.fw_pinEdges()
+            return effectView
+        }
+        return nil
     }
     
     /// 移除所有子视图
@@ -600,38 +639,97 @@ import AdSupport
 
     /// 递归查找指定子类的第一个子视图(含自身)
     public func fw_subview(of clazz: AnyClass) -> UIView? {
-        return self.__fw_subview(of: clazz)
+        return fw_subview { view in
+            return view.isKind(of: clazz)
+        }
     }
 
     /// 递归查找指定条件的第一个子视图(含自身)
     public func fw_subview(block: @escaping (UIView) -> Bool) -> UIView? {
-        return self.__fw_subview(of: block)
+        if block(self) { return self }
+        
+        /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
+        for subview in self.subviews {
+            if block(subview) {
+                return subview
+            }
+        } */
+        
+        for subview in self.subviews {
+            if let resultView = subview.fw_subview(block: block) {
+                return resultView
+            }
+        }
+        return nil
     }
     
     /// 递归查找指定条件的第一个父视图(含自身)
     public func fw_superview(block: @escaping (UIView) -> Bool) -> UIView? {
-        return self.__fw_superview(of: block)
+        var resultView: UIView?
+        var superview: UIView? = self
+        while let view = superview {
+            if block(view) {
+                resultView = view
+                break
+            }
+            superview = view.superview
+        }
+        return resultView
     }
 
     /// 图片截图
     public var fw_snapshotImage: UIImage? {
-        return self.__fw_snapshotImage
+        return UIImage.fw_image(view: self)
     }
 
     /// Pdf截图
     public var fw_snapshotPdf: Data? {
-        return self.__fw_snapshotPdf
+        var bounds = self.bounds
+        let data = NSMutableData()
+        guard let consumer = CGDataConsumer(data: data as CFMutableData),
+              let context = CGContext(consumer: consumer, mediaBox: &bounds, nil) else { return nil }
+        context.beginPDFPage(nil)
+        context.translateBy(x: 0, y: bounds.size.height)
+        context.scaleBy(x: 1.0, y: -1.0)
+        self.layer.render(in: context)
+        context.endPDFPage()
+        context.closePDF()
+        return data as Data
     }
     
     /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
     public var fw_sortIndex: Int {
-        get { return self.__fw_sortIndex }
-        set { self.__fw_sortIndex = newValue }
+        get { fw_propertyInt(forName: "fw_sortIndex") }
+        set { fw_setPropertyInt(newValue, forName: "fw_sortIndex") }
     }
 
     /// 根据sortIndex排序subviews，需结合sortIndex使用
     public func fw_sortSubviews() {
-        self.__fw_sortSubviews()
+        let sortViews = NSMutableArray()
+        for view in self.subviews {
+            if view.fw_sortIndex != 0 {
+                sortViews.add(view)
+            }
+        }
+        guard sortViews.count > 0 else { return }
+        
+        sortViews.sort { view1, view2 in
+            guard let view1 = view1 as? UIView,
+                  let view2 = view2 as? UIView else { return .orderedSame }
+            if view1.fw_sortIndex < 0 && view2.fw_sortIndex < 0 {
+                return NSNumber(value: view2.fw_sortIndex).compare(NSNumber(value: view1.fw_sortIndex))
+            } else {
+                return NSNumber(value: view1.fw_sortIndex).compare(NSNumber(value: view2.fw_sortIndex))
+            }
+        }
+        sortViews.enumerateObjects { view, _, _ in
+            guard let view = view as? UIView else { return }
+            if view.fw_sortIndex < 0 {
+                self.sendSubviewToBack(view)
+            } else {
+                self.bringSubviewToFront(view)
+            }
+        }
     }
     
 }
@@ -647,7 +745,7 @@ import AdSupport
     
     /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
     public func fw_faceAware() {
-        self.__fw_faceAware()
+        __faceAware()
     }
 
     /// 倒影效果
@@ -1094,7 +1192,7 @@ import AdSupport
     
     /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
     @discardableResult
-    public func fw_startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSource {
+    public func fw_startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSourceTimer {
         return self.fw_startCountDown(seconds) { [weak self] countDown in
             // 先设置titleLabel，再设置title，防止闪烁
             if countDown <= 0 {
