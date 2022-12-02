@@ -376,15 +376,13 @@
     }
 }
 
-+ (BOOL)swizzleVoidMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier position:(NSInteger)position withBlock:(void (^)(__kindof NSObject *__unsafe_unretained _Nonnull))block {
-    return [self swizzleInstanceMethod:originalClass selector:originalSelector identifier:identifier withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
++ (BOOL)swizzleDeallocMethod:(Class)originalClass identifier:(NSString *)identifier withBlock:(void (^)(__kindof NSObject *__unsafe_unretained _Nonnull))block {
+    return [self swizzleInstanceMethod:originalClass selector:NSSelectorFromString(@"dealloc") identifier:identifier withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
         return ^(__unsafe_unretained NSObject *selfObject) {
-            if (position == 1) block(selfObject);
+            if (block) block(selfObject);
             
             void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
             originalMSG(selfObject, originalCMD);
-            
-            if (position == 0) block(selfObject);
         };
     }];
 }

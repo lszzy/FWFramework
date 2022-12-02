@@ -205,23 +205,19 @@ extension Wrapper where Base: NSObject {
         return base.fw_isSwizzleInstanceMethod(originalSelector, identifier: identifier)
     }
     
-    /// 使用swizzle替换类实例无返回值方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// 使用swizzle替换类实例dealloc方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     /// - Parameters:
     ///   - originalClass: 原始类
-    ///   - selector: 原始方法
     ///   - identifier: 唯一标识，默认nil
-    ///   - position: 实现句柄插入位置，默认after
     ///   - block: 实现句柄，参数为实例对象
     /// - Returns: 是否成功
     @discardableResult
-    public static func swizzleVoidMethod<T: NSObject>(
+    public static func swizzleDeallocMethod<T: NSObject>(
         _ originalClass: T.Type = T.self,
-        selector: Selector,
         identifier: String? = nil,
-        position: SwizzlePosition = .after,
         block: @escaping (T) -> Void
     ) -> Bool {
-        return Base.fw_swizzleVoidMethod(originalClass, selector: selector, identifier: identifier, position: position) { object in
+        return Base.fw_swizzleDeallocMethod(originalClass, identifier: identifier) { object in
             block(object as! T)
         }
     }
