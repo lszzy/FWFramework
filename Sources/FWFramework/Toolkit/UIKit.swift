@@ -1846,14 +1846,30 @@ import AdSupport
     
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
     public var fw_contentInset: UIEdgeInsets {
-        get { return self.__fw_contentInset }
-        set { self.__fw_contentInset = newValue }
+        get {
+            if let value = fw_property(forName: "fw_contentInset") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
+            self.setNeedsLayout()
+        }
     }
 
     /// 自定义取消按钮边距，未设置时为系统默认
     public var fw_cancelButtonInset: UIEdgeInsets {
-        get { return self.__fw_cancelButtonInset }
-        set { self.__fw_cancelButtonInset = newValue }
+        get {
+            if let value = fw_property(forName: "fw_cancelButtonInset") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_cancelButtonInset")
+            self.setNeedsLayout()
+        }
     }
 
     /// 输入框内部视图
@@ -1868,14 +1884,19 @@ import AdSupport
 
     /// 设置整体背景色
     public var fw_backgroundColor: UIColor? {
-        get { return self.__fw_backgroundColor }
-        set { self.__fw_backgroundColor = newValue }
+        get {
+            return fw_property(forName: "fw_backgroundColor") as? UIColor
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_backgroundColor")
+            self.backgroundImage = UIImage.fw_image(color: newValue)
+        }
     }
 
     /// 设置输入框背景色
     public var fw_textFieldBackgroundColor: UIColor? {
-        get { return self.__fw_textFieldBackgroundColor }
-        set { self.__fw_textFieldBackgroundColor = newValue }
+        get { fw_textField?.backgroundColor }
+        set { fw_textField?.backgroundColor = newValue }
     }
 
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
