@@ -271,18 +271,17 @@ extension Wrapper where Base: UIView {
         base.fw_sortSubviews()
     }
     
-    /// 是否显示灰色视图
+    /// 是否显示灰色视图，仅支持iOS13+
     public var hasGrayView: Bool {
         return base.fw_hasGrayView
     }
     
-    /// 显示灰色视图
-    @discardableResult
-    public func showGrayView() -> UIView {
+    /// 显示灰色视图，仅支持iOS13+
+    public func showGrayView() {
         return base.fw_showGrayView()
     }
     
-    /// 隐藏灰色视图
+    /// 隐藏灰色视图，仅支持iOS13+
     public func hideGrayView() {
         base.fw_hideGrayView()
     }
