@@ -1189,13 +1189,13 @@ import FWObjC
     }
     
     /// 从颜色创建UIImage，尺寸默认1x1
-    public static func fw_image(color: UIColor) -> UIImage? {
+    public static func fw_image(color: UIColor?) -> UIImage? {
         return fw_image(color: color, size: CGSize(width: 1.0, height: 1.0))
     }
     
     /// 从颜色创建UIImage，可指定尺寸和圆角，默认圆角0
-    public static func fw_image(color: UIColor, size: CGSize, cornerRadius: CGFloat = 0) -> UIImage? {
-        guard size.width > 0, size.height > 0 else { return nil }
+    public static func fw_image(color: UIColor?, size: CGSize, cornerRadius: CGFloat = 0) -> UIImage? {
+        guard let color = color, size.width > 0, size.height > 0 else { return nil }
         
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
