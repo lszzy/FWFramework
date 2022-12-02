@@ -82,13 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
-+ (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
++ (BOOL)swizzleVoidMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(void (^)(__kindof NSObject *object, void (^originalBlock)(void)))block;
 
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector;
 
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
-
-+ (BOOL)swizzleDeallocMethod:(Class)originalClass withBlock:(void (^)(NSObject *object))block;
 
 @end
 
