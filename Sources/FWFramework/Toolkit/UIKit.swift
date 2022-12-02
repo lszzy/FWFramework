@@ -1901,26 +1901,54 @@ import AdSupport
 
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
     public var fw_searchIconOffset: CGFloat {
-        get { return self.__fw_searchIconOffset }
-        set { self.__fw_searchIconOffset = newValue }
+        get {
+            if let value = fw_property(forName: "fw_searchIconOffset") as? NSNumber {
+                return value.doubleValue
+            }
+            return self.positionAdjustment(for: .search).horizontal
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_searchIconOffset")
+            self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
+        }
     }
 
     /// 设置搜索文本离左侧图标的偏移位置
     public var fw_searchTextOffset: CGFloat {
-        get { return self.__fw_searchTextOffset }
-        set { self.__fw_searchTextOffset = newValue }
+        get { return self.searchTextPositionAdjustment.horizontal }
+        set { self.searchTextPositionAdjustment = UIOffset(horizontal: newValue, vertical: 0) }
     }
 
     /// 设置TextField搜索图标(placeholder)是否居中，否则居左
     public var fw_searchIconCenter: Bool {
-        get { return self.__fw_searchIconCenter }
-        set { self.__fw_searchIconCenter = newValue }
+        get {
+            return fw_propertyBool(forName: "fw_searchIconCenter")
+        }
+        set {
+            fw_setPropertyBool(newValue, forName: "fw_searchIconCenter")
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
     }
 
     /// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
     public var fw_forceCancelButtonEnabled: Bool {
-        get { return self.__fw_forceCancelButtonEnabled }
-        set { self.__fw_forceCancelButtonEnabled = newValue }
+        get {
+            return fw_propertyBool(forName: "fw_forceCancelButtonEnabled")
+        }
+        set {
+            fw_setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
+            let cancelButton = fw_cancelButton
+            if newValue {
+                cancelButton?.isEnabled = true
+                cancelButton?.fw_observeProperty("enabled", block: { object, _ in
+                    guard let object = object as? UIButton else { return }
+                    if !object.isEnabled { object.isEnabled = true }
+                })
+            } else {
+                cancelButton?.fw_unobserveProperty("enabled")
+            }
+        }
     }
     
 }
