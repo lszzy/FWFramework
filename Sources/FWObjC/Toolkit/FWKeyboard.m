@@ -585,12 +585,12 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw_innerKeyboardTarget.keyboardResign = keyboardResign;
 }
 
-- (BOOL)fw_touchResign
+- (BOOL)__touchResign
 {
     return self.fw_innerKeyboardTarget.touchResign;
 }
 
-- (void)setFw_touchResign:(BOOL)touchResign
+- (void)set__touchResign:(BOOL)touchResign
 {
     self.fw_innerKeyboardTarget.touchResign = touchResign;
 }
