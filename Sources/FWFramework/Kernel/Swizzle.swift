@@ -117,11 +117,7 @@ import FWObjC
         guard let target = target else { return false }
 
         if object_isClass(target), let targetClass = target as? AnyClass {
-            if let identifier = identifier, !identifier.isEmpty {
-                return __Swizzle.swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, with: block)
-            } else {
-                return __Swizzle.swizzleInstanceMethod(targetClass, selector: selector, with: block)
-            }
+            return __Swizzle.swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, with: block)
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
@@ -157,11 +153,7 @@ import FWObjC
         identifier: String? = nil,
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
-        if let identifier = identifier, !identifier.isEmpty {
-            return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, with: block)
-        } else {
-            return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, with: block)
-        }
+        return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, with: block)
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -179,11 +171,7 @@ import FWObjC
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
         guard let metaClass = object_getClass(originalClass) else { return false }
-        if let identifier = identifier, !identifier.isEmpty {
-            return __Swizzle.swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, with: block)
-        } else {
-            return __Swizzle.swizzleInstanceMethod(metaClass, selector: selector, with: block)
-        }
+        return __Swizzle.swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, with: block)
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用

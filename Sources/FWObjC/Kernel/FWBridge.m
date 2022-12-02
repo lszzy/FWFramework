@@ -358,6 +358,7 @@
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block {
     if (!originalClass) return NO;
+    if (identifier.length < 1) return [self swizzleInstanceMethod:originalClass selector:originalSelector withBlock:block];
     
     static NSMutableSet *swizzleIdentifiers;
     static dispatch_once_t onceToken;
@@ -373,6 +374,18 @@
         }
         return NO;
     }
+}
+
++ (BOOL)swizzleVoidMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(void (^)(__kindof NSObject *, void (^)(void)))block {
+    return [self swizzleInstanceMethod:originalClass selector:originalSelector withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
+        return ^(__unsafe_unretained NSObject *selfObject) {
+            void (^originalBlock)(void) = ^{
+                void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
+                originalMSG(selfObject, originalCMD);
+            };
+            block(selfObject, originalBlock);
+        };
+    }];
 }
 
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector {
@@ -402,17 +415,6 @@
     class_addMethod(originalClass, swizzleSelector, imp_implementationWithBlock(swizzleBlock), method_getTypeEncoding(originalMethod));
     method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector), class_getInstanceMethod(originalClass, swizzleSelector));
     return YES;
-}
-
-+ (BOOL)swizzleDeallocMethod:(Class)originalClass withBlock:(void (^)(NSObject * _Nonnull))block {
-    return [self swizzleInstanceMethod:originalClass selector:NSSelectorFromString(@"dealloc") withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(__unsafe_unretained NSObject *selfObject) {
-            if (block) block(selfObject);
-            
-            void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-            originalMSG(selfObject, originalCMD);
-        };
-    }];
 }
 
 @end
