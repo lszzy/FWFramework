@@ -1140,8 +1140,8 @@ import AdSupport
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
     public var fw_touchEventInterval: TimeInterval {
-        get { return self.__fw_touchEventInterval }
-        set { self.__fw_touchEventInterval = newValue }
+        get { fw_propertyDouble(forName: "fw_touchEventInterval") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
     
 }
@@ -1595,8 +1595,8 @@ import AdSupport
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var fw_menuDisabled: Bool {
-        get { return self.__fw_menuDisabled }
-        set { self.__fw_menuDisabled = newValue }
+        get { fw_propertyBool(forName: "fw_menuDisabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
     /// 自定义光标大小，不为0才会生效，默认zero不生效
@@ -1668,8 +1668,8 @@ import AdSupport
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var fw_menuDisabled: Bool {
-        get { return self.__fw_menuDisabled }
-        set { self.__fw_menuDisabled = newValue }
+        get { fw_propertyBool(forName: "fw_menuDisabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
     /// 自定义光标大小，不为0才会生效，默认zero不生效
@@ -1858,12 +1858,12 @@ import AdSupport
 
     /// 输入框内部视图
     public weak var fw_textField: UITextField? {
-        return self.__fw_textField
+        return fw_invokeGetter("searchField") as? UITextField
     }
 
     /// 取消按钮内部视图，showsCancelButton开启后才存在
     public weak var fw_cancelButton: UIButton? {
-        return self.__fw_cancelButton
+        return fw_invokeGetter("cancelButton") as? UIButton
     }
 
     /// 设置整体背景色
