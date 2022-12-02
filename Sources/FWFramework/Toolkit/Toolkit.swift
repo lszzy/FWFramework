@@ -1960,9 +1960,7 @@ internal class ToolkitAutoloader: AutoloadProtocol {
             selfObject.fw_visibleState = .didDisappear
         }}
         
-        __Swizzle.swizzleDeallocMethod(UIViewController.self) { selfObject in
-            guard let selfObject = selfObject as? UIViewController else { return }
-            
+        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
             // dealloc时不调用fw，防止释放时动态创建包装器对象
             let completionHandler = selfObject.fw_completionHandler
             if completionHandler != nil {
