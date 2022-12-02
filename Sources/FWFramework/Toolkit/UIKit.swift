@@ -740,28 +740,28 @@ import AdSupport
         }
     }
     
-    /// 是否显示灰色视图
+    /// 是否显示灰色视图，仅支持iOS13+
     public var fw_hasGrayView: Bool {
         let grayView = self.subviews.first { $0 is SaturationGrayView }
         return grayView != nil
     }
     
-    /// 显示灰色视图
-    @discardableResult
-    public func fw_showGrayView() -> UIView {
+    /// 显示灰色视图，仅支持iOS13+
+    public func fw_showGrayView() {
         fw_hideGrayView()
         
-        let overlay = SaturationGrayView()
-        overlay.isUserInteractionEnabled = false
-        overlay.backgroundColor = UIColor.lightGray
-        overlay.layer.compositingFilter = "saturationBlendMode"
-        overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-        self.addSubview(overlay)
-        overlay.fw_pinEdges()
-        return overlay
+        if #available(iOS 13.0, *) {
+            let overlay = SaturationGrayView()
+            overlay.isUserInteractionEnabled = false
+            overlay.backgroundColor = UIColor.lightGray
+            overlay.layer.compositingFilter = "saturationBlendMode"
+            overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+            self.addSubview(overlay)
+            overlay.fw_pinEdges()
+        }
     }
     
-    /// 隐藏灰色视图
+    /// 隐藏灰色视图，仅支持iOS13+
     public func fw_hideGrayView() {
         for subview in self.subviews {
             if subview is SaturationGrayView {
