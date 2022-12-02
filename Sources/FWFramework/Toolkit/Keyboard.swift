@@ -40,8 +40,8 @@ import FWObjC
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     public var fw_touchResign: Bool {
-        get { return self.__fw_touchResign }
-        set { self.__fw_touchResign = newValue }
+        get { return self.__touchResign }
+        set { self.__touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现

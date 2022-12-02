@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL fw_keyboardResign UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
 
 /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-@property (nonatomic, assign) BOOL fw_touchResign UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
+@property (nonatomic, assign) BOOL __touchResign UI_APPEARANCE_SELECTOR;
 
 /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
 @property (nullable, nonatomic, weak) UIScrollView *fw_keyboardScrollView NS_REFINED_FOR_SWIFT;
