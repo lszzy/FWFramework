@@ -377,7 +377,7 @@
 }
 
 + (BOOL)swizzleVoidMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(NSString *)identifier position:(NSInteger)position withBlock:(void (^)(__kindof NSObject *__unsafe_unretained _Nonnull))block {
-    return [self swizzleInstanceMethod:originalClass selector:NSSelectorFromString(@"dealloc") identifier:identifier withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
+    return [self swizzleInstanceMethod:originalClass selector:originalSelector identifier:identifier withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
         return ^(__unsafe_unretained NSObject *selfObject) {
             if (position == 1) block(selfObject);
             

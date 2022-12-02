@@ -221,7 +221,9 @@ extension Wrapper where Base: NSObject {
         position: SwizzlePosition = .after,
         block: @escaping (T) -> Void
     ) -> Bool {
-        return Base.fw_swizzleVoidMethod(originalClass, selector: selector, identifier: identifier, position: position, block: block)
+        return Base.fw_swizzleVoidMethod(originalClass, selector: selector, identifier: identifier, position: position) { object in
+            block(object as! T)
+        }
     }
     
 }
