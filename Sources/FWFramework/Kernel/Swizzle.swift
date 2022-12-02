@@ -92,8 +92,7 @@ import FWObjC
     /// Swift实现代码示例：
     /// NSObject.fw_swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString("viewDidLoad")) { targetClass, originalCMD, originalIMP in
     ///     let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in
-    ///         typealias originalMSGType = @convention(c)(UIViewController, Selector) -> Void
-    ///         let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+    ///         let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(UIViewController, Selector) -> Void).self)
     ///         originalMSG(selfObject, originalCMD)
     ///
     ///         // ...
@@ -131,8 +130,7 @@ import FWObjC
     /// Swift实现代码示例：
     /// NSObject.fw_swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString("viewDidLoad")) { targetClass, originalCMD, originalIMP in
     ///     let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in
-    ///         typealias originalMSGType = @convention(c)(UIViewController, Selector) -> Void
-    ///         let originalMSG: originalMSGType = unsafeBitCast(originalIMP(), to: originalMSGType.self)
+    ///         let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(UIViewController, Selector) -> Void).self)
     ///         originalMSG(selfObject, originalCMD)
     ///
     ///         // ...
@@ -364,6 +362,49 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
             let originalMSG: MethodSignature = unsafeBitCast(originalIMP(), to: MethodSignature.self)
             let swizzleStore = SwizzleStore<MethodSignature, SwizzleSignature>(class: targetClass, selector: originalCMD, original: originalMSG)
             let swizzleIMP: SwizzleSignature = block(swizzleStore)
+            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        }
+    }
+    
+    /// 使用swizzle替换类dealloc为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - identifier: 唯一标识，默认nil
+    ///   - block: 实现句柄，参数为实例对象
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func fw_swizzleDeallocMethod<T: NSObject>(
+        _ originalClass: T.Type = T.self,
+        identifier: String? = nil,
+        block: @escaping (T) -> Void
+    ) -> Bool {
+        return __Swizzle.swizzleDeallocMethod(originalClass, identifier: identifier) { object in
+            block(object as! T)
+        }
+    }
+    
+    /// 使用swizzle替换类实例无返回值方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// - Parameters:
+    ///   - originalClass: 原始类
+    ///   - selector: 原始方法
+    ///   - identifier: 唯一标识，默认nil
+    ///   - block: 实现句柄，参数1为实例对象，参数2为原始实现句柄
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func fw_swizzleVoidMethod<T: NSObject>(
+        _ originalClass: T.Type = T.self,
+        selector: Selector,
+        identifier: String? = nil,
+        block: @escaping (T, @escaping () -> Void) -> Void
+    ) -> Bool {
+        return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier) { targetClass, originalCMD, originalIMP in
+            let swizzleIMP: @convention(block)(NSObject) -> Void = { selfObject in
+                let originalBlock: () -> Void = {
+                    let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(NSObject, Selector) -> Void).self)
+                    originalMSG(selfObject, originalCMD)
+                }
+                block(selfObject as! T, originalBlock)
+            }
             return unsafeBitCast(swizzleIMP, to: AnyObject.self)
         }
     }
