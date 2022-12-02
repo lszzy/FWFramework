@@ -218,33 +218,21 @@ import FWObjC
         return classIdentifier + "_" + NSStringFromSelector(selector) + "_" + identifier
     }
     
-    /// 使用swizzle替换类实例无返回值方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    /// 使用swizzle替换类实例dealloc方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     /// - Parameters:
     ///   - originalClass: 原始类
-    ///   - selector: 原始方法
     ///   - identifier: 唯一标识，默认nil
-    ///   - position: 实现句柄插入位置，默认after
     ///   - block: 实现句柄，参数为实例对象
     /// - Returns: 是否成功
     @discardableResult
-    public static func fw_swizzleVoidMethod(
+    public static func fw_swizzleDeallocMethod(
         _ originalClass: AnyClass,
-        selector: Selector,
         identifier: String? = nil,
-        position: SwizzlePosition = .after,
         block: @escaping (NSObject) -> Void
     ) -> Bool {
-        return __Swizzle.swizzleVoidMethod(originalClass, selector: selector, identifier: identifier, position: position.rawValue, with: block)
+        return __Swizzle.swizzleDeallocMethod(originalClass, identifier: identifier, with: block)
     }
     
-}
-
-// MARK: - SwizzlePosition
-/// swizzle实现句柄插入位置
-@objc(FWSwizzlePosition)
-public enum SwizzlePosition: Int {
-    case after = 0
-    case before = 1
 }
 
 // MARK: - SwizzleStore
