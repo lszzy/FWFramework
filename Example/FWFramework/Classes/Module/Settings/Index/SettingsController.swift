@@ -90,9 +90,13 @@ extension SettingsController {
             }
             cell.detailTextLabel?.text = language
         } else if "onTheme" == action {
-            let mode = ThemeManager.shared.mode
-            let theme = mode == .system ? FW.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(FW.localized("themeDark")))" : "(\(FW.localized("themeLight")))") : (mode == .dark ? FW.localized("themeDark") : FW.localized("themeLight"))
-            cell.detailTextLabel?.text = theme
+            if UIWindow.fw.main?.fw.hasGrayView ?? false {
+                cell.detailTextLabel?.text = FW.localized("themeGray")
+            } else {
+                let mode = ThemeManager.shared.mode
+                let theme = mode == .system ? FW.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(FW.localized("themeDark")))" : "(\(FW.localized("themeLight")))") : (mode == .dark ? FW.localized("themeDark") : FW.localized("themeLight"))
+                cell.detailTextLabel?.text = theme
+            }
         }
         return cell
     }
@@ -143,11 +147,20 @@ private extension SettingsController {
         var actions = [FW.localized("systemTitle"), FW.localized("themeLight")]
         if #available(iOS 13.0, *) {
             actions.append(FW.localized("themeDark"))
+            actions.append(FW.localized("themeGray"))
         }
         
         fw.showSheet(title: FW.localized("themeTitle"), message: nil, cancel: FW.localized("取消"), actions: actions, currentIndex:-1) { (index) in
-            ThemeManager.shared.mode = ThemeMode(index)
-            TabController.refreshController()
+            if #available(iOS 13.0, *), index == actions.count - 1 {
+                if UIWindow.fw.main?.fw.hasGrayView ?? false {
+                    UIWindow.fw.main?.fw.hideGrayView()
+                } else {
+                    UIWindow.fw.main?.fw.showGrayView()
+                }
+            } else {
+                ThemeManager.shared.mode = ThemeMode(index)
+                TabController.refreshController()
+            }
         }
     }
     
