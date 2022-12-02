@@ -240,6 +240,13 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
     
 }
 
+/// swizzle实现句柄插入位置
+@objc(FWSwizzlePosition)
+public enum SwizzlePosition: Int {
+    case after = 0
+    case before = 1
+}
+
 // MARK: - NSObject+SwizzleStore
 @_spi(FW) extension NSObject {
     
@@ -366,46 +373,24 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
         }
     }
     
-    /// 使用swizzle替换类dealloc为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
-    /// - Parameters:
-    ///   - originalClass: 原始类
-    ///   - identifier: 唯一标识，默认nil
-    ///   - block: 实现句柄，参数为实例对象
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func fw_swizzleDeallocMethod<T: NSObject>(
-        _ originalClass: T.Type = T.self,
-        identifier: String? = nil,
-        block: @escaping (T) -> Void
-    ) -> Bool {
-        return __Swizzle.swizzleDeallocMethod(originalClass, identifier: identifier) { object in
-            block(object as! T)
-        }
-    }
-    
     /// 使用swizzle替换类实例无返回值方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     /// - Parameters:
     ///   - originalClass: 原始类
     ///   - selector: 原始方法
     ///   - identifier: 唯一标识，默认nil
-    ///   - block: 实现句柄，参数1为实例对象，参数2为原始实现句柄
+    ///   - position: 实现句柄插入位置，默认after
+    ///   - block: 实现句柄，参数为实例对象
     /// - Returns: 是否成功
     @discardableResult
     public static func fw_swizzleVoidMethod<T: NSObject>(
         _ originalClass: T.Type = T.self,
         selector: Selector,
         identifier: String? = nil,
-        block: @escaping (T, @escaping () -> Void) -> Void
+        position: SwizzlePosition = .after,
+        block: @escaping (T) -> Void
     ) -> Bool {
-        return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier) { targetClass, originalCMD, originalIMP in
-            let swizzleIMP: @convention(block)(NSObject) -> Void = { selfObject in
-                let originalBlock: () -> Void = {
-                    let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(NSObject, Selector) -> Void).self)
-                    originalMSG(selfObject, originalCMD)
-                }
-                block(selfObject as! T, originalBlock)
-            }
-            return unsafeBitCast(swizzleIMP, to: AnyObject.self)
+        return __Swizzle.swizzleVoidMethod(originalClass, selector: selector, identifier: identifier, position: position.rawValue) { object in
+            block(object as! T)
         }
     }
     
