@@ -237,6 +237,9 @@ import FWObjC
 
 // MARK: - SwizzleStore
 /// 方法交换存储器
+///
+/// MethodSignature示例：(@convention(c) (NSObject, Selector) -> Void).self
+/// SwizzleSignature示例：(@convention(block) (NSObject) -> Void).self
 public class SwizzleStore<MethodSignature, SwizzleSignature> {
     
     /// 交换类
