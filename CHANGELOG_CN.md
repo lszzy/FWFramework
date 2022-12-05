@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.3.3] - 2022-12-05
+
+### Changed
+* AlertController支持修改animationType
+* AlertController支持点击Action不关闭界面
+
 ## [4.3.2] - 2022-11-25
 
 ### Changed
