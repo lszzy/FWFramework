@@ -562,91 +562,91 @@
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 199,
+      "line": 201,
       "symbol": "FWAlertController.delegate",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 201,
+      "line": 203,
       "symbol": "FWAlertController.preferredStyle",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 202,
+      "line": 204,
       "symbol": "FWAlertController.animationType",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 208,
+      "line": 210,
       "symbol": "FWAlertController.-customSpacingAfterAction:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 214,
+      "line": 216,
       "symbol": "FWAlertController.-insertComponentView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 266,
+      "line": 268,
       "symbol": "FWAlertControllerDelegate",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 268,
+      "line": 270,
       "symbol": "FWAlertControllerDelegate.-willPresentAlertController:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 269,
+      "line": 271,
       "symbol": "FWAlertControllerDelegate.-didPresentAlertController:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 270,
+      "line": 272,
       "symbol": "FWAlertControllerDelegate.-willDismissAlertController:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 271,
+      "line": 273,
       "symbol": "FWAlertControllerDelegate.-didDismissAlertController:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 275,
+      "line": 277,
       "symbol": "FWAlertPresentationController",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 279,
+      "line": 281,
       "symbol": "FWAlertAnimation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAlertController.h",
-      "line": 280,
+      "line": 282,
       "symbol": "FWAlertAnimation.+animationIsPresenting:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
