@@ -988,7 +988,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, strong) NSMutableArray *headerViewConstraints;
 @property (nonatomic, strong) NSMutableArray *actionSequenceViewConstraints;
 @property (nonatomic, assign) FWAlertControllerStyle preferredStyle;
-@property (nonatomic, assign) FWAlertAnimationType animationType;
 @property (nonatomic, strong) FWAlertControllerAppearance *alertAppearance;
 @property (nonatomic, assign) UIBlurEffectStyle backgroundViewAppearanceStyle;
 @property (nonatomic, assign) CGFloat backgroundViewAlpha;
@@ -1750,6 +1749,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 }
 
 #pragma mark - setterx
+
+- (void)setAnimationType:(FWAlertAnimationType)animationType {
+    // 如果是默认动画，preferredStyle为alert时动画默认为alpha，preferredStyle为actionShee时动画默认为fromBottom
+    if (animationType == FWAlertAnimationTypeDefault) {
+        if (self.preferredStyle == FWAlertControllerStyleAlert) {
+            animationType = FWAlertAnimationTypeShrink;
+        } else {
+            animationType = FWAlertAnimationTypeFromBottom;
+        }
+    }
+    _animationType = animationType;
+}
 
 - (void)setTitle:(NSString *)title {
     _title = title;
