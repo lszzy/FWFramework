@@ -199,7 +199,7 @@ NS_SWIFT_NAME(AlertController)
 @property(nonatomic, weak) id<FWAlertControllerDelegate> delegate;
 
 @property(nonatomic, readonly) FWAlertControllerStyle preferredStyle;
-@property(nonatomic, readonly) FWAlertAnimationType animationType;
+@property(nonatomic, assign) FWAlertAnimationType animationType;
 /** 自定义样式，默认为样式单例 */
 @property (nonatomic, strong, readonly) FWAlertControllerAppearance *alertAppearance;
 
