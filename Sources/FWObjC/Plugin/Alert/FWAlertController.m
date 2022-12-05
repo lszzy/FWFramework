@@ -664,7 +664,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, strong) NSMutableArray<FWAlertAction *> *actions;
 @property (nonatomic, assign) UIStackViewDistribution stackViewDistribution;
 @property (nonatomic, assign) UILayoutConstraintAxis axis;
-@property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index);
+@property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index, FWAlertControllerActionView *actionView);
 @end
 
 @implementation FWInterfaceActionSequenceView
@@ -684,7 +684,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)buttonClickedInActionView:(FWAlertControllerActionView *)actionView {
     NSInteger index = [self.actions indexOfObject:actionView.action];
     if (self.buttonClickedInActionViewBlock) {
-        self.buttonClickedInActionViewBlock(index);
+        self.buttonClickedInActionViewBlock(index, actionView);
     }
 }
 
@@ -988,7 +988,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, strong) NSMutableArray *headerViewConstraints;
 @property (nonatomic, strong) NSMutableArray *actionSequenceViewConstraints;
 @property (nonatomic, assign) FWAlertControllerStyle preferredStyle;
-@property (nonatomic, assign) FWAlertAnimationType animationType;
 @property (nonatomic, strong) FWAlertControllerAppearance *alertAppearance;
 @property (nonatomic, assign) UIBlurEffectStyle backgroundViewAppearanceStyle;
 @property (nonatomic, assign) CGFloat backgroundViewAlpha;
@@ -1270,6 +1269,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     _backgroundViewAppearanceStyle = -1;
     _backgroundViewAlpha = 0.5;
     _tapBackgroundViewDismiss = YES;
+    _tapActionDismiss = YES;
     _needDialogBlur = NO;
 }
 
@@ -1751,6 +1751,18 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 #pragma mark - setterx
 
+- (void)setAnimationType:(FWAlertAnimationType)animationType {
+    // 如果是默认动画，preferredStyle为alert时动画默认为alpha，preferredStyle为actionShee时动画默认为fromBottom
+    if (animationType == FWAlertAnimationTypeDefault) {
+        if (self.preferredStyle == FWAlertControllerStyleAlert) {
+            animationType = FWAlertAnimationTypeShrink;
+        } else {
+            animationType = FWAlertAnimationTypeFromBottom;
+        }
+    }
+    _animationType = animationType;
+}
+
 - (void)setTitle:(NSString *)title {
     _title = title;
     if (self.isViewLoaded) { // 如果条件为真，说明外界在对title赋值之前就已经使用了self.view，先走了viewDidLoad方法，如果先走的viewDidLoad，需要在title的setter方法中重新设置数据,以下setter方法中的条件同理
@@ -2063,13 +2075,16 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         actionSequenceView.cornerRadius = self.cornerRadius;
         actionSequenceView.translatesAutoresizingMaskIntoConstraints = NO;
         __weak typeof(self) weakSelf = self;
-        actionSequenceView.buttonClickedInActionViewBlock = ^(NSInteger index) {
+        actionSequenceView.buttonClickedInActionViewBlock = ^(NSInteger index, FWAlertControllerActionView *actionView) {
             FWAlertAction *action = weakSelf.actions[index];
-            [weakSelf dismissViewControllerAnimated:YES completion:^{
-                if (action.handler) {
-                    action.handler(action);
-                }
-            }];
+            if (weakSelf.tapActionDismiss) {
+                [weakSelf dismissViewControllerAnimated:YES completion:^{
+                    if (action.handler) action.handler(action);
+                }];
+            } else {
+                actionView.actionButton.backgroundColor = [actionView.alertAppearance normalColor];
+                if (action.handler) action.handler(action);
+            }
         };
         if (self.actions.count && !self.customActionSequenceView) {
             [self.alertView addSubview:actionSequenceView];
