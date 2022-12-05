@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.3.3] - 2022-12-05
+
+### Changed
+* AlertController supports modifying animationType
+* AlertController supports clicking Action without closing the interface
+
 ## [4.3.2] - 2022-11-25
 
 ### Changed
