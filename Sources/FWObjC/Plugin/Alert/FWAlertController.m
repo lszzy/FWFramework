@@ -664,7 +664,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @property (nonatomic, strong) NSMutableArray<FWAlertAction *> *actions;
 @property (nonatomic, assign) UIStackViewDistribution stackViewDistribution;
 @property (nonatomic, assign) UILayoutConstraintAxis axis;
-@property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index);
+@property (nonatomic, copy) void (^buttonClickedInActionViewBlock)(NSInteger index, FWAlertControllerActionView *actionView);
 @end
 
 @implementation FWInterfaceActionSequenceView
@@ -684,7 +684,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 - (void)buttonClickedInActionView:(FWAlertControllerActionView *)actionView {
     NSInteger index = [self.actions indexOfObject:actionView.action];
     if (self.buttonClickedInActionViewBlock) {
-        self.buttonClickedInActionViewBlock(index);
+        self.buttonClickedInActionViewBlock(index, actionView);
     }
 }
 
@@ -1269,6 +1269,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     _backgroundViewAppearanceStyle = -1;
     _backgroundViewAlpha = 0.5;
     _tapBackgroundViewDismiss = YES;
+    _tapActionDismiss = YES;
     _needDialogBlur = NO;
 }
 
@@ -2074,13 +2075,16 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         actionSequenceView.cornerRadius = self.cornerRadius;
         actionSequenceView.translatesAutoresizingMaskIntoConstraints = NO;
         __weak typeof(self) weakSelf = self;
-        actionSequenceView.buttonClickedInActionViewBlock = ^(NSInteger index) {
+        actionSequenceView.buttonClickedInActionViewBlock = ^(NSInteger index, FWAlertControllerActionView *actionView) {
             FWAlertAction *action = weakSelf.actions[index];
-            [weakSelf dismissViewControllerAnimated:YES completion:^{
-                if (action.handler) {
-                    action.handler(action);
-                }
-            }];
+            if (weakSelf.tapActionDismiss) {
+                [weakSelf dismissViewControllerAnimated:YES completion:^{
+                    if (action.handler) action.handler(action);
+                }];
+            } else {
+                actionView.actionButton.backgroundColor = [actionView.alertAppearance normalColor];
+                if (action.handler) action.handler(action);
+            }
         };
         if (self.actions.count && !self.customActionSequenceView) {
             [self.alertView addSubview:actionSequenceView];

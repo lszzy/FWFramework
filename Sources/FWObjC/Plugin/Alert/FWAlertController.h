@@ -192,6 +192,8 @@ NS_SWIFT_NAME(AlertController)
 
 /** 是否单击背景退出对话框,默认为YES */
 @property(nonatomic, assign) BOOL tapBackgroundViewDismiss;
+/** 是否点击动作按钮退出动画框,默认为YES */
+@property(nonatomic, assign) BOOL tapActionDismiss;
 
 /** 单击背景dismiss完成回调，默认nil */
 @property (nullable, nonatomic, copy) void(^dismissCompletion)(void);
