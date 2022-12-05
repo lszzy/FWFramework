@@ -192,6 +192,8 @@ NS_SWIFT_NAME(AlertController)
 
 /** 是否单击背景退出对话框,默认为YES */
 @property(nonatomic, assign) BOOL tapBackgroundViewDismiss;
+/** 是否点击动作按钮退出动画框,默认为YES */
+@property(nonatomic, assign) BOOL tapActionDismiss;
 
 /** 单击背景dismiss完成回调，默认nil */
 @property (nullable, nonatomic, copy) void(^dismissCompletion)(void);
@@ -199,7 +201,7 @@ NS_SWIFT_NAME(AlertController)
 @property(nonatomic, weak) id<FWAlertControllerDelegate> delegate;
 
 @property(nonatomic, readonly) FWAlertControllerStyle preferredStyle;
-@property(nonatomic, readonly) FWAlertAnimationType animationType;
+@property(nonatomic, assign) FWAlertAnimationType animationType;
 /** 自定义样式，默认为样式单例 */
 @property (nonatomic, strong, readonly) FWAlertControllerAppearance *alertAppearance;
 
