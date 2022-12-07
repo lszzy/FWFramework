@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '4.3.3'
+  s.version               = '4.4.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
       
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWVendor/Lottie/**/*.{h,m,swift}'
-      sss.dependency 'lottie-ios'
+      sss.dependency 'lottie-ios', '~> 4.0'
       sss.dependency 'FWFramework/FWFramework'
     end
       

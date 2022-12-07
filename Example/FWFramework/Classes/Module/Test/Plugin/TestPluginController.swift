@@ -55,9 +55,9 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         if indexPath.section == 2 {
             let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "cell3")
             cell.selectionStyle = .none
-            var view = cell.viewWithTag(100) as? LottieView
+            var view = cell.viewWithTag(100) as? LottiePluginView
             if view == nil {
-                let lottieView = LottieView()
+                let lottieView = LottiePluginView()
                 view = lottieView
                 lottieView.tag = 100
                 lottieView.setAnimation(name: "Lottie")
@@ -113,7 +113,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         if indexPath.section == 2 {
             let toastPlugin = ToastPluginImpl()
             toastPlugin.customBlock = { toastView in
-                let lottieView = LottieView()
+                let lottieView = LottiePluginView()
                 lottieView.setAnimation(name: "Lottie")
                 toastView.indicatorView = lottieView
             }
@@ -162,27 +162,27 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         
         if indexPath.section == 2 {
             ViewPluginImpl.shared.customIndicatorView = { style in
-                let lottieView = LottieView()
+                let lottieView = LottiePluginView()
                 lottieView.setAnimation(name: "Lottie")
                 return lottieView
             }
             // FWLottieView也支持进度显示
             ViewPluginImpl.shared.customProgressView = { style in
-                let lottieView = LottieView()
+                let lottieView = LottiePluginView()
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
                 return lottieView
             }
             // FWLottieView支持下拉进度显示
             RefreshPluginImpl.shared.pullRefreshBlock = { view in
-                let lottieView = LottieView(frame: CGRect(x: 0, y: 0, width: 54, height: 54))
+                let lottieView = LottiePluginView(frame: CGRect(x: 0, y: 0, width: 54, height: 54))
                 lottieView.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
                 view.setAnimation(lottieView)
             }
             RefreshPluginImpl.shared.infiniteScrollBlock = { view in
-                let lottieView = LottieView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+                let lottieView = LottiePluginView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
                 view.setAnimation(lottieView)
