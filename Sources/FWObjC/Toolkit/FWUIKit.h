@@ -9,13 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIControl+FWUIKit
-
-/// 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等
-@interface UIControl (FWUIKit)
-
-@end
-
 #pragma mark - UIScrollView+FWUIKit
 
 @interface UIScrollView (FWUIKit)
