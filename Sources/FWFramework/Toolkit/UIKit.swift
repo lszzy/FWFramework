@@ -1366,70 +1366,132 @@ import AdSupport
     
     /// 判断当前scrollView内容是否足够滚动
     public var fw_canScroll: Bool {
-        return self.__fw_canScroll
+        return fw_canScrollVertical || fw_canScrollHorizontal
     }
 
     /// 判断当前的scrollView内容是否足够水平滚动
     public var fw_canScrollHorizontal: Bool {
-        return self.__fw_canScrollHorizontal
+        if self.bounds.size.width <= 0 { return false }
+        return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)
     }
 
     /// 判断当前的scrollView内容是否足够纵向滚动
     public var fw_canScrollVertical: Bool {
-        return self.__fw_canScrollVertical
+        if self.bounds.size.height <= 0 { return false }
+        return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds)
     }
 
     /// 当前scrollView滚动到指定边
     public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
-        self.__fw_scroll(to: edge, animated: animated)
+        let contentOffset = fw_contentOffset(of: edge)
+        self.setContentOffset(contentOffset, animated: animated)
     }
 
     /// 是否已滚动到指定边
     public func fw_isScroll(to edge: UIRectEdge) -> Bool {
-        return self.__fw_isScroll(to: edge)
+        let contentOffset = fw_contentOffset(of: edge)
+        switch edge {
+        case .top:
+            return self.contentOffset.y <= contentOffset.y
+        case .left:
+            return self.contentOffset.x <= contentOffset.x
+        case .bottom:
+            return self.contentOffset.y >= contentOffset.y
+        case .right:
+            return self.contentOffset.x >= contentOffset.x
+        default:
+            return false
+        }
     }
 
     /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
     public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
-        return self.__fw_contentOffset(of: edge)
+        var contentOffset = self.contentOffset
+        switch edge {
+        case .top:
+            contentOffset.y = -self.adjustedContentInset.top
+        case .left:
+            contentOffset.x = -self.adjustedContentInset.left
+        case .bottom:
+            contentOffset.y = self.contentSize.height - self.bounds.size.height + self.adjustedContentInset.bottom
+        case .right:
+            contentOffset.x = self.contentSize.width - self.bounds.size.width + self.adjustedContentInset.right
+        default:
+            break
+        }
+        return contentOffset
     }
 
     /// 总页数，自动识别翻页方向
     public var fw_totalPage: Int {
-        return self.__fw_totalPage
+        if fw_canScrollVertical {
+            return Int(ceil(self.contentSize.height / self.frame.size.height))
+        } else {
+            return Int(ceil(self.contentSize.width / self.frame.size.width))
+        }
     }
 
     /// 当前页数，不支持动画，自动识别翻页方向
     public var fw_currentPage: Int {
-        get { return self.__fw_currentPage }
-        set { self.__fw_currentPage = newValue }
+        get {
+            if fw_canScrollVertical {
+                let pageHeight = self.frame.size.height
+                return Int(floor((self.contentOffset.y - pageHeight / 2) / pageHeight)) + 1
+            } else {
+                let pageWidth = self.frame.size.width
+                return Int(floor((self.contentOffset.x - pageWidth / 2) / pageWidth)) + 1
+            }
+        }
+        set {
+            if fw_canScrollVertical {
+                let offset = self.frame.size.height * CGFloat(newValue)
+                self.contentOffset = CGPoint(x: 0, y: offset)
+            } else {
+                let offset = self.frame.size.width * CGFloat(newValue)
+                self.contentOffset = CGPoint(x: offset, y: 0)
+            }
+        }
     }
 
     /// 设置当前页数，支持动画，自动识别翻页方向
     public func fw_setCurrentPage(_ page: Int, animated: Bool = true) {
-        self.__fw_setCurrentPage(page, animated: animated)
+        if fw_canScrollVertical {
+            let offset = self.frame.size.height * CGFloat(page)
+            self.setContentOffset(CGPoint(x: 0, y: offset), animated: animated)
+        } else {
+            let offset = self.frame.size.width * CGFloat(page)
+            self.setContentOffset(CGPoint(x: offset, y: 0), animated: animated)
+        }
     }
 
     /// 是否是最后一页，自动识别翻页方向
     public var fw_isLastPage: Bool {
-        return self.__fw_isLastPage
+        return self.fw_currentPage == self.fw_totalPage - 1
     }
     
     /// 快捷设置contentOffset.x
     public var fw_contentOffsetX: CGFloat {
-        get { return self.__fw_contentOffsetX }
-        set { self.__fw_contentOffsetX = newValue }
+        get { return self.contentOffset.x }
+        set { self.contentOffset = CGPoint(x: newValue, y: self.contentOffset.y) }
     }
 
     /// 快捷设置contentOffset.y
     public var fw_contentOffsetY: CGFloat {
-        get { return self.__fw_contentOffsetY }
-        set { self.__fw_contentOffsetY = newValue }
+        get { return self.contentOffset.y }
+        set { self.contentOffset = CGPoint(x: self.contentOffset.x, y: newValue) }
     }
     
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
     public var fw_contentView: UIView {
-        return self.__fw_contentView
+        if let contentView = fw_property(forName: "fw_contentView") as? UIView {
+            return contentView
+        } else {
+            let contentView = UIView()
+            fw_setProperty(contentView, forName: "fw_contentView")
+            self.addSubview(contentView)
+            contentView.fw_pinEdges()
+            return contentView
+        }
     }
     
     /**
@@ -1443,31 +1505,111 @@ import AdSupport
      */
     @discardableResult
     public func fw_hoverView(_ view: UIView, fromSuperview: UIView, toSuperview: UIView, toPosition: CGFloat) -> CGFloat {
-        return self.__fw_hover(view, fromSuperview: fromSuperview, toSuperview: toSuperview, toPosition: toPosition)
+        let distance = (fromSuperview.superview?.convert(fromSuperview.frame.origin, to: toSuperview) ?? .zero).y - toPosition
+        if distance <= 0 {
+            if view.superview != toSuperview {
+                view.removeFromSuperview()
+                toSuperview.addSubview(view)
+                view.fw_pinEdge(toSuperview: .left, inset: 0)
+                view.fw_pinEdge(toSuperview: .top, inset: toPosition)
+                view.fw_setDimensions(view.bounds.size)
+            }
+        } else {
+            if view.superview != fromSuperview {
+                view.removeFromSuperview()
+                fromSuperview.addSubview(view)
+                view.fw_pinEdges()
+            }
+        }
+        return distance
     }
     
     /// 是否开始识别pan手势
     public var fw_shouldBegin: ((UIGestureRecognizer) -> Bool)? {
-        get { return self.__fw_shouldBegin }
-        set { self.__fw_shouldBegin = newValue }
+        get {
+            return fw_property(forName: "fw_shouldBegin") as? (UIGestureRecognizer) -> Bool
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_shouldBegin")
+            UIScrollView.fw_enablePanProxy()
+        }
     }
 
     /// 是否允许同时识别多个手势
     public var fw_shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return self.__fw_shouldRecognizeSimultaneously }
-        set { self.__fw_shouldRecognizeSimultaneously = newValue }
+        get {
+            return fw_property(forName: "fw_shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
+            UIScrollView.fw_enablePanProxy()
+        }
     }
 
     /// 是否另一个手势识别失败后，才能识别pan手势
     public var fw_shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return self.__fw_shouldRequireFailure }
-        set { self.__fw_shouldRequireFailure = newValue }
+        get {
+            return fw_property(forName: "fw_shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
+            UIScrollView.fw_enablePanProxy()
+        }
     }
 
     /// 是否pan手势识别失败后，才能识别另一个手势
     public var fw_shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return self.__fw_shouldBeRequiredToFail }
-        set { self.__fw_shouldBeRequiredToFail = newValue }
+        get {
+            return fw_property(forName: "fw_shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
+            UIScrollView.fw_enablePanProxy()
+        }
+    }
+    
+    private static func fw_enablePanProxy() {
+        guard !fw_staticPanProxyEnabled else { return }
+        fw_staticPanProxyEnabled = true
+        
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizerShouldBegin(_:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRequireFailureOf:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+    }
+    
+    private static var fw_staticPanProxyEnabled = false
+    
+    private func fw_innerGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = self.fw_shouldBegin {
+            return shouldBlock(gestureRecognizer)
+        }
+        
+        return fw_innerGestureRecognizerShouldBegin(gestureRecognizer)
+    }
+    
+    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
+            return shouldBlock(gestureRecognizer, otherGestureRecognizer)
+        }
+        
+        return fw_innerGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+    }
+    
+    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = self.fw_shouldRequireFailure {
+            return shouldBlock(gestureRecognizer, otherGestureRecognizer)
+        }
+        
+        return fw_innerGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
+    }
+    
+    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = self.fw_shouldBeRequiredToFail {
+            return shouldBlock(gestureRecognizer, otherGestureRecognizer)
+        }
+        
+        return fw_innerGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
     }
     
 }
