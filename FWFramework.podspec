@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
       
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWVendor/Lottie/**/*.{h,m,swift}'
-      sss.dependency 'lottie-ios', '~> 4.0'
+      sss.dependency 'lottie-ios'
       sss.dependency 'FWFramework/FWFramework'
     end
       
