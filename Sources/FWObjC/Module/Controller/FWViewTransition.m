@@ -777,7 +777,7 @@
     BOOL isFailed = NO;
     switch (self.direction) {
         case UISwipeGestureRecognizerDirectionDown: {
-            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOfEdge:UIRectEdgeTop].y;
+            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOf:UIRectEdgeTop].y;
             if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y > prevLocation.y) && (self.scrollView.contentOffset.y <= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.y >= edgeOffset) {
@@ -786,7 +786,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionUp: {
-            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOfEdge:UIRectEdgeBottom].y;
+            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOf:UIRectEdgeBottom].y;
             if ((fabs(velocity.x) < fabs(velocity.y)) && (location.y < prevLocation.y) && (self.scrollView.contentOffset.y >= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.y <= edgeOffset) {
@@ -795,7 +795,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionRight: {
-            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOfEdge:UIRectEdgeLeft].x;
+            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOf:UIRectEdgeLeft].x;
             if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x > prevLocation.x) && (self.scrollView.contentOffset.x <= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.x >= edgeOffset) {
@@ -804,7 +804,7 @@
             break;
         }
         case UISwipeGestureRecognizerDirectionLeft: {
-            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOfEdge:UIRectEdgeRight].x;
+            CGFloat edgeOffset = [self.scrollView fw_contentOffsetOf:UIRectEdgeRight].x;
             if ((fabs(velocity.y) < fabs(velocity.x)) && (location.x < prevLocation.x) && (self.scrollView.contentOffset.x >= edgeOffset)) {
                 isFailed = NO;
             } else if (self.scrollView.contentOffset.x <= edgeOffset) {

@@ -9,6 +9,16 @@
 #import "FWUIKit.h"
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - FWDrawerView
 
 @interface FWDrawerView () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
@@ -276,11 +286,11 @@
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
     
-    if ([self.scrollView fw_isScrollToEdge:self.scrollEdge]) {
+    if ([self.scrollView fw_isScrollTo:self.scrollEdge]) {
         self.panDisabled = NO;
     }
     if (!self.panDisabled) {
-        [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+        [self.scrollView fw_scrollTo:self.scrollEdge animated:NO];
     }
 }
 
