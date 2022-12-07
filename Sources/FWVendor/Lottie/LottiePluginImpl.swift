@@ -12,8 +12,8 @@ import FWObjC
 #endif
 
 /// Lottile插件视图，可用于加载、进度、下拉刷新等
-@objc(FWLottieView)
-@objcMembers open class LottieView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
+@objc(FWLottiePluginView)
+@objcMembers open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     
     // MARK: - Accessor
     /// 设置或获取进度条大小，默认{37,37}
@@ -54,8 +54,8 @@ import FWObjC
     
     // MARK: - Subviews
     /// 当前LottieView视图
-    open lazy var animationView: AnimationView = {
-        let animationView = AnimationView(frame: bounds)
+    open lazy var animationView: LottieAnimationView = {
+        let animationView = LottieAnimationView(frame: bounds)
         animationView.isUserInteractionEnabled = false
         animationView.backgroundBehavior = .pauseAndRestore
         animationView.loopMode = .loop
@@ -110,12 +110,12 @@ import FWObjC
     
     /// 设置动画json文件
     public func setAnimation(name: String, bundle: Bundle? = nil) {
-        animationView.animation = Animation.named(name, bundle: bundle ?? .main)
+        animationView.animation = LottieAnimation.named(name, bundle: bundle ?? .main)
     }
     
     /// 设置动画Data数据
     public func setAnimation(data: Data) {
-        animationView.animation = try? Animation.from(data: data)
+        animationView.animation = try? LottieAnimation.from(data: data)
     }
     
     /// 开始加载动画
