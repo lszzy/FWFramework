@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.4.0] - 2022-12-07
+
+### Changed
+* Upgrade the Lottie component to be compatible with lottie-ios 4.0
+* Rename LottieView to LottiePluginView
+
 ## [4.3.3] - 2022-12-05
 
 ### Changed
