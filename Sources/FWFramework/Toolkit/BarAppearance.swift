@@ -194,7 +194,7 @@ import FWObjC
             fw_setProperty(newValue, forName: "fw_backgroundColor")
             fw_setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -207,7 +207,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = nil
                     self.setBackgroundImage(nil, for: .default)
                 } else {
@@ -328,7 +328,7 @@ import FWObjC
         
         if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = backgroundColor.fw_color
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -338,7 +338,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = backgroundColor.fw_color
                     self.setBackgroundImage(nil, for: .default)
                 } else {
@@ -449,7 +449,7 @@ import FWObjC
             fw_setProperty(newValue, forName: "fw_backgroundColor")
             fw_setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -462,7 +462,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = nil
                     self.backgroundImage = nil
                 } else {
@@ -562,7 +562,7 @@ import FWObjC
         
         if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = backgroundColor.fw_color
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -571,7 +571,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = backgroundColor.fw_color
                     self.backgroundImage = nil
                 } else {
@@ -718,7 +718,7 @@ import FWObjC
             fw_setProperty(newValue, forName: "fw_backgroundColor")
             fw_setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -731,7 +731,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = nil
                     self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
                 } else {
@@ -831,7 +831,7 @@ import FWObjC
         
         if let backgroundColor = fw_backgroundColor, backgroundColor.fw_isThemeColor {
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
-                if isTranslucent {
+                if fw_isTranslucent {
                     fw_appearance.backgroundColor = backgroundColor.fw_color
                     fw_appearance.backgroundImage = nil
                 } else {
@@ -840,7 +840,7 @@ import FWObjC
                 }
                 fw_updateAppearance()
             }} else {
-                if isTranslucent {
+                if fw_isTranslucent {
                     self.barTintColor = backgroundColor.fw_color
                     self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
                 } else {
