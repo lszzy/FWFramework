@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.4.0] - 2022-12-07
+
+### Changed
+* 升级Lottie组件兼容lottie-ios 4.0版本
+* 重命名LottieView为LottiePluginView
+
 ## [4.3.3] - 2022-12-05
 
 ### Changed
