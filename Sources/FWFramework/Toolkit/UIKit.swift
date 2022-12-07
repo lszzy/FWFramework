@@ -2218,6 +2218,22 @@ internal class UIKitAutoloader: AutoloadProtocol {
         }}
         
         NSObject.fw_swizzleInstanceMethod(
+            UIControl.self,
+            selector: #selector(UIControl.sendAction(_:to:for:)),
+            methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
+            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
+        ) { store in { selfObject, action, target, event in
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if let event = event, event.type == .touches, event.subtype == .none,
+               selfObject.fw_touchEventInterval > 0 {
+                if Date().timeIntervalSince1970 - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval { return }
+                selfObject.fw_touchEventTimestamp = Date().timeIntervalSince1970
+            }
+            
+            store.original(selfObject, store.selector, action, target, event)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
             UIButton.self,
             selector: #selector(setter: UIButton.isEnabled),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
