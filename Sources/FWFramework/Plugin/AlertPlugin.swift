@@ -139,8 +139,8 @@ extension Wrapper where Base: UIViewController {
     ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
     ///   - actions: 动作按钮标题列表
-    ///   - promptCount: 输入框数量
-    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index
+    ///   - promptCount: 输入框数量，默认0
+    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index，默认nil
     ///   - actionBlock: 动作按钮点击事件，参数为输入值数组和索引index
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
@@ -150,8 +150,8 @@ extension Wrapper where Base: UIViewController {
         style: AlertStyle = .default,
         cancel: Any?,
         actions: [Any]?,
-        promptCount: Int,
-        promptBlock: ((UITextField, Int) -> Void)?,
+        promptCount: Int = 0,
+        promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?
@@ -376,8 +376,8 @@ extension Wrapper where Base: UIView {
     ///   - style: 弹出框样式
     ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
     ///   - actions: 动作按钮标题列表
-    ///   - promptCount: 输入框数量
-    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index
+    ///   - promptCount: 输入框数量，默认0
+    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index，默认nil
     ///   - actionBlock: 动作按钮点击事件，参数为输入值数组和索引index
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
@@ -387,8 +387,8 @@ extension Wrapper where Base: UIView {
         style: AlertStyle = .default,
         cancel: Any?,
         actions: [Any]?,
-        promptCount: Int,
-        promptBlock: ((UITextField, Int) -> Void)?,
+        promptCount: Int = 0,
+        promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?
