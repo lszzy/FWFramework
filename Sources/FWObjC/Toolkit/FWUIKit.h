@@ -9,36 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIImageView+FWUIKit
-
-@interface UIImageView (FWUIKit)
-
-/// 图片水印
-- (void)fw_setImage:(UIImage *)image watermarkImage:(UIImage *)watermarkImage inRect:(CGRect)rect NS_REFINED_FOR_SWIFT;
-
-/// 文字水印，指定区域
-- (void)fw_setImage:(UIImage *)image watermarkString:(NSAttributedString *)watermarkString inRect:(CGRect)rect NS_REFINED_FOR_SWIFT;
-
-/// 文字水印，指定坐标
-- (void)fw_setImage:(UIImage *)image watermarkString:(NSAttributedString *)watermarkString atPoint:(CGPoint)point NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIWindow+FWUIKit
-
-@interface UIWindow (FWUIKit)
-
-/// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index NS_REFINED_FOR_SWIFT;
-
-/// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarController:(Class)viewController NS_REFINED_FOR_SWIFT;
-
-/// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - UIControl+FWUIKit
 
 /// 防重复点击可以手工控制enabled或userInteractionEnabled，如request开始时禁用，结束时启用等

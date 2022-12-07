@@ -328,14 +328,14 @@ extension Wrapper where Base: UIWindow {
     
     /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
-    public func selectTabBarIndex(_ index: UInt) -> UIViewController? {
+    public func selectTabBarIndex(_ index: Int) -> UIViewController? {
         return base.fw_selectTabBarIndex(index)
     }
 
     /// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
-    public func selectTabBarController(_ viewController: AnyClass) -> UIViewController? {
-        return base.fw_selectTabBarController(viewController)
+    public func selectTabBarController(_ clazz: AnyClass) -> UIViewController? {
+        return base.fw_selectTabBarController(clazz)
     }
 
     /// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil

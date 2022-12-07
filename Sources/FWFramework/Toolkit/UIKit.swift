@@ -811,17 +811,32 @@ import AdSupport
 
     /// 图片水印
     public func fw_setImage(_ image: UIImage, watermarkImage: UIImage, in rect: CGRect) {
-        self.__fw_setImage(image, watermarkImage: watermarkImage, in: rect)
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
+        image.draw(in: self.bounds)
+        watermarkImage.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.image = newImage
     }
 
     /// 文字水印，指定区域
     public func fw_setImage(_ image: UIImage, watermarkString: NSAttributedString, in rect: CGRect) {
-        self.__fw_setImage(image, watermarkString: watermarkString, in: rect)
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
+        image.draw(in: self.bounds)
+        watermarkString.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.image = newImage
     }
 
     /// 文字水印，指定坐标
     public func fw_setImage(_ image: UIImage, watermarkString: NSAttributedString, at point: CGPoint) {
-        self.__fw_setImage(image, watermarkString: watermarkString, at: point)
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
+        image.draw(in: self.bounds)
+        watermarkString.draw(at: point)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.image = newImage
     }
     
 }
@@ -831,20 +846,95 @@ import AdSupport
     
     /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
-    public func fw_selectTabBarIndex(_ index: UInt) -> UIViewController? {
-        return self.__fw_selectTabBarIndex(index)
+    public func fw_selectTabBarIndex(_ index: Int) -> UIViewController? {
+        guard let tabBarController = fw_rootTabBarController() else { return nil }
+        
+        var targetNavigation: UIViewController?
+        if (tabBarController.viewControllers?.count ?? 0) > index {
+            targetNavigation = tabBarController.viewControllers?[index]
+        }
+        guard let targetNavigation = targetNavigation else { return nil }
+        
+        return fw_selectTabBar(tabBarController, navigation: targetNavigation)
     }
 
     /// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
-    public func fw_selectTabBarController(_ viewController: AnyClass) -> UIViewController? {
-        return self.__fw_selectTabBarController(viewController)
+    public func fw_selectTabBarController(_ clazz: AnyClass) -> UIViewController? {
+        guard let tabBarController = fw_rootTabBarController() else { return nil }
+        
+        var targetNavigation: UIViewController?
+        let navigationControllers = tabBarController.viewControllers ?? []
+        for navigationController in navigationControllers {
+            var targetController: UIViewController? = navigationController
+            if let navigationController = navigationController as? UINavigationController {
+                targetController = navigationController.viewControllers.first
+            }
+            if let targetController = targetController,
+               targetController.isKind(of: clazz) {
+                targetNavigation = navigationController
+                break
+            }
+        }
+        guard let targetNavigation = targetNavigation else { return nil }
+        
+        return fw_selectTabBar(tabBarController, navigation: targetNavigation)
     }
 
     /// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
     public func fw_selectTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
-        return self.__fw_selectTabBarBlock(block)
+        guard let tabBarController = fw_rootTabBarController() else { return nil }
+        
+        var targetNavigation: UIViewController?
+        let navigationControllers = tabBarController.viewControllers ?? []
+        for navigationController in navigationControllers {
+            var targetController: UIViewController? = navigationController
+            if let navigationController = navigationController as? UINavigationController {
+                targetController = navigationController.viewControllers.first
+            }
+            if let targetController = targetController,
+               block(targetController) {
+                targetNavigation = navigationController
+                break
+            }
+        }
+        guard let targetNavigation = targetNavigation else { return nil }
+        
+        return fw_selectTabBar(tabBarController, navigation: targetNavigation)
+    }
+    
+    private func fw_rootTabBarController() -> UITabBarController? {
+        if let tabBarController = self.rootViewController as? UITabBarController {
+            return tabBarController
+        }
+        
+        if let navigationController = self.rootViewController as? UINavigationController,
+           let tabBarController = navigationController.viewControllers.first as? UITabBarController {
+            return tabBarController
+        }
+        
+        return nil
+    }
+    
+    private func fw_selectTabBar(_ tabBarController: UITabBarController, navigation targetNavigation: UIViewController) -> UIViewController? {
+        let currentNavigation = tabBarController.selectedViewController
+        if currentNavigation != targetNavigation {
+            if let navigationController = currentNavigation as? UINavigationController,
+               navigationController.viewControllers.count > 1 {
+                navigationController.popToRootViewController(animated: false)
+            }
+            tabBarController.selectedViewController = targetNavigation
+        }
+        
+        var targetController: UIViewController? = targetNavigation
+        if let navigationController = targetNavigation as? UINavigationController {
+            targetController = navigationController.viewControllers.first
+            if navigationController.viewControllers.count > 1 {
+                navigationController.popToRootViewController(animated: false)
+            }
+        }
+        return targetController
     }
     
 }
@@ -1142,6 +1232,11 @@ import AdSupport
     public var fw_touchEventInterval: TimeInterval {
         get { fw_propertyDouble(forName: "fw_touchEventInterval") }
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
+    }
+    
+    fileprivate var fw_touchEventTimestamp: TimeInterval {
+        get { fw_propertyDouble(forName: "fw_touchEventTimestamp") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_touchEventTimestamp") }
     }
     
 }
