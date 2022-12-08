@@ -569,50 +569,6 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UISearchBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
-            
-            if (@available(iOS 13, *)) { } else {
-                CGFloat textFieldMaxX = selfObject.bounds.size.width;
-                NSValue *cancelInsetValue = objc_getAssociatedObject(selfObject, @selector(fw_cancelButtonInset));
-                if (cancelInsetValue) {
-                    UIButton *cancelButton = [selfObject fw_cancelButton];
-                    if (cancelButton) {
-                        UIEdgeInsets cancelInset = [cancelInsetValue UIEdgeInsetsValue];
-                        CGFloat cancelWidth = [cancelButton sizeThatFits:selfObject.bounds.size].width;
-                        textFieldMaxX = selfObject.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right;
-                        UITextField *textField = [selfObject fw_textField];
-                        CGRect frame = textField.frame;
-                        frame.size.width = textFieldMaxX - frame.origin.x;
-                        textField.frame = frame;
-                    }
-                }
-                
-                NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fw_contentInset));
-                if (contentInsetValue) {
-                    UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
-                    UITextField *textField = [selfObject fw_textField];
-                    textField.frame = CGRectMake(contentInset.left, contentInset.top, textFieldMaxX - contentInset.left - contentInset.right, selfObject.bounds.size.height - contentInset.top - contentInset.bottom);
-                }
-            }
-            
-            NSNumber *isCenterValue = objc_getAssociatedObject(selfObject, @selector(fw_searchIconCenter));
-            if (isCenterValue) {
-                if (![isCenterValue boolValue]) {
-                    NSNumber *offset = objc_getAssociatedObject(selfObject, @selector(fw_searchIconOffset));
-                    [selfObject setPositionAdjustment:UIOffsetMake(offset ? offset.doubleValue : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
-                } else {
-                    UITextField *textField = [selfObject fw_textField];
-                    CGFloat placeholdWidth = [selfObject.placeholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:textField.font, NSFontAttributeName, nil] context:nil].size.width;
-                    CGFloat textOffset = 4 + [selfObject searchTextPositionAdjustment].horizontal;
-                    CGFloat iconWidth = textField.leftView ? textField.leftView.frame.size.width : 0;
-                    CGFloat targetWidth = textField.frame.size.width - ceilf(placeholdWidth) - textOffset - iconWidth;
-                    CGFloat position = targetWidth / 2 - 6;
-                    [selfObject setPositionAdjustment:UIOffsetMake(position > 0 ? position : 0, 0) forSearchBarIcon:UISearchBarIconSearch];
-                }
-            }
-        }));
-        
         // iOS13因为层级关系变化，兼容处理
         if (@available(iOS 13, *)) {
             FWSwizzleMethod(objc_getClass("UISearchBarTextField"), @selector(setFrame:), nil, FWSwizzleType(UITextField *), FWSwizzleReturn(void), FWSwizzleArgs(CGRect frame), FWSwizzleCode({
