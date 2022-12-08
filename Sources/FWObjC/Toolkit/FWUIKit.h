@@ -99,10 +99,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UISearchBar+FWUIKit
-
-@interface UISearchBar (FWUIKit)
-
-@end
-
 NS_ASSUME_NONNULL_END
