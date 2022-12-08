@@ -2464,7 +2464,7 @@ internal class UIKitAutoloader: AutoloadProtocol {
                 swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
             ) { store in { selfObject, aFrame in
                 var frame = aFrame
-                var searchBar = selfObject.superview?.superview?.superview as? UISearchBar
+                let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
                 if let searchBar = searchBar {
                     var textFieldMaxX = searchBar.bounds.size.width
                     if let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
@@ -2502,7 +2502,7 @@ internal class UIKitAutoloader: AutoloadProtocol {
                let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue {
                 let cancelInset = cancelInsetValue.uiEdgeInsetsValue
                 let cancelWidth = selfObject.sizeThatFits(searchBar.bounds.size).width
-                frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
+                frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.right
                 frame.origin.y = cancelInset.top
                 frame.size.height = searchBar.bounds.size.height - cancelInset.top - cancelInset.bottom
             }
