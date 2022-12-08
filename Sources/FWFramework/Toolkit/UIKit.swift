@@ -2405,6 +2405,55 @@ internal class UIKitAutoloader: AutoloadProtocol {
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(UISearchBar.layoutSubviews),
+            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if #available(iOS 13.0, *) { } else {
+                var textFieldMaxX = selfObject.bounds.size.width
+                if let cancelInsetValue = selfObject.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
+                   let cancelButton = selfObject.fw_cancelButton {
+                    let cancelInset = cancelInsetValue.uiEdgeInsetsValue
+                    let cancelWidth = cancelButton.sizeThatFits(selfObject.bounds.size).width
+                    textFieldMaxX = selfObject.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
+                    if let textField = selfObject.fw_textField {
+                        var frame = textField.frame
+                        frame.size.width = textFieldMaxX - frame.origin.x
+                        textField.frame = frame
+                    }
+                }
+                
+                if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                    let contentInset = contentInsetValue.uiEdgeInsetsValue
+                    let textField = selfObject.fw_textField
+                    textField?.frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: selfObject.bounds.size.height - contentInset.top - contentInset.bottom)
+                }
+            }
+            
+            if let isCenterValue = selfObject.fw_property(forName: "fw_searchIconCenter") as? NSNumber {
+                if !isCenterValue.boolValue {
+                    let offset = selfObject.fw_property(forName: "fw_searchIconOffset") as? NSNumber
+                    selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
+                } else {
+                    let textField = selfObject.fw_textField
+                    var attributes: [NSAttributedString.Key: Any]?
+                    if let font = textField?.font {
+                        attributes = [.font: font]
+                    }
+                    let placeholderWidth = (selfObject.placeholder as? NSString)?.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attributes, context: nil).size.width ?? .zero
+                    let textOffset = 4 + selfObject.searchTextPositionAdjustment.horizontal
+                    let iconWidth = textField?.leftView?.frame.size.width ?? 0
+                    let targetWidth = (textField?.frame.size.width ?? 0) - ceil(placeholderWidth) - textOffset - iconWidth
+                    let position = targetWidth / 2.0 - 6.0
+                    selfObject.setPositionAdjustment(UIOffset(horizontal: position > 0 ? position : 0, vertical: 0), for: .search)
+                }
+            }
+        }}
     }
     
 }
