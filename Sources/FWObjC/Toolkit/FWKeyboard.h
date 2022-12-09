@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - __KeyboardTarget
 
-@interface __KeyboardTarget : NSObject
+@interface __KeyboardTarget<__covariant TextInputType> : NSObject
 
 @property (nonatomic, assign) BOOL keyboardManager;
 
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL returnNext;
 
-@property (nonatomic, copy, nullable) void (^returnBlock)(id textInput);
+@property (nonatomic, copy, nullable) void (^returnBlock)(TextInputType textInput);
 
 @property (nonatomic, strong) UIToolbar *keyboardToolbar;
 
@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL doneButtonInitialized;
 
-@property (nonatomic, copy, nullable) UIResponder * _Nullable (^previousResponder)(id textInput);
+@property (nonatomic, copy, nullable) UIResponder * _Nullable (^previousResponder)(TextInputType textInput);
 
-@property (nonatomic, copy, nullable) UIResponder * _Nullable (^nextResponder)(id textInput);
+@property (nonatomic, copy, nullable) UIResponder * _Nullable (^nextResponder)(TextInputType textInput);
 
 @property (nonatomic, assign) NSInteger previousResponderTag;
 
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTextInput:(nullable UIView<UITextInput> *)textInput;
 
-- (void)innerReturnAction;
+- (void)invokeReturnAction;
 
 - (void)goPrevious;
 

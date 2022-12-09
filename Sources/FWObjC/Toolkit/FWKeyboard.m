@@ -175,7 +175,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 #pragma mark - Action
 
-- (void)innerReturnAction
+- (void)invokeReturnAction
 {
     // 切换到下一个输入框
     if (self.returnNext) {
