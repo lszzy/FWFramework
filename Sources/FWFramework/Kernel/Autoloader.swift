@@ -39,6 +39,7 @@ public protocol AutoloadProtocol {
 public class Autoloader: NSObject, AutoloadProtocol {
     
     private static var autoloadMethods: [String] = []
+    private static var isAutoloaded = false
     
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
@@ -75,6 +76,9 @@ public class Autoloader: NSObject, AutoloadProtocol {
     // MARK: - AutoloadProtocol
     /// 自动加载load开头objc扩展方法
     public static func autoload() {
+        guard !isAutoloaded else { return }
+        isAutoloaded = true
+        
         // 自动加载Autoloader
         autoloadAutoloader()
         
