@@ -286,8 +286,10 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
-        return base.fw_observeProperty(property, block: block)
+    public func observeProperty(_ property: String, block: @escaping (Base, [NSKeyValueChangeKey: Any]) -> Void) -> String {
+        return base.fw_observeProperty(property) { object, change in
+            block(object as! Base, change)
+        }
     }
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
