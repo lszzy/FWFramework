@@ -462,7 +462,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    public static func fw_item(object: Any?, block: ((Any) -> Void)?) -> Self {
+    public static func fw_item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Self {
         let barItem = fw_item(object: object, target: nil, action: nil)
         barItem.fw_setBlock(block)
         return barItem
@@ -487,12 +487,16 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
     
     /// 设置当前Item触发句柄，nil时清空句柄
-    public func fw_setBlock(_ block: ((Any) -> Void)?) {
+    public func fw_setBlock(_ block: ((UIBarButtonItem) -> Void)?) {
         var target: __BlockTarget?
         var action: Selector?
         if block != nil {
             target = __BlockTarget()
-            target?.block = block
+            target?.block = { sender in
+                if let sender = sender as? UIBarButtonItem {
+                    block?(sender)
+                }
+            }
             action = #selector(__BlockTarget.invoke(_:))
         }
         
@@ -595,7 +599,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
     
     /// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func fw_setLeftBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func fw_setLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.fw_item(object: object, block: block)
     }
     
@@ -605,7 +609,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
     
     /// 快捷设置导航栏右侧按钮，block事件
-    public func fw_setRightBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func fw_setRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.fw_item(object: object, block: block)
     }
 
@@ -618,7 +622,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
 
     /// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func fw_addLeftBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func fw_addLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         let barItem = UIBarButtonItem.fw_item(object: object, block: block)
         var items = self.navigationItem.leftBarButtonItems ?? []
         items.append(barItem)
@@ -634,7 +638,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     }
 
     /// 快捷添加导航栏右侧按钮，block事件
-    public func fw_addRightBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func fw_addRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         let barItem = UIBarButtonItem.fw_item(object: object, block: block)
         var items = self.navigationItem.rightBarButtonItems ?? []
         items.append(barItem)

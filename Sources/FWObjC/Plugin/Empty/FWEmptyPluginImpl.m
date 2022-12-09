@@ -70,7 +70,7 @@
     }
     NSString *emptyMoreAction = actions.count > 1 ? [actions objectAtIndex:1] : nil;
     
-    FWEmptyView *emptyView = [view fw_subviewWithTag:2021];
+    FWEmptyView *emptyView = (FWEmptyView *)[view fw_subviewWithTag:2021];
     BOOL fadeAnimated = self.fadeAnimated && !emptyView;
     if (emptyView) { [emptyView removeFromSuperview]; }
     

@@ -36,7 +36,7 @@ extension TestStateController: ViewControllerProtocol {
             guard let this = self else { return }
             
             this.isLocked = !this.isLocked
-            (sender as? UIBarButtonItem)?.title = this.isLocked ? "解锁" : "锁定"
+            sender.title = this.isLocked ? "解锁" : "锁定"
         }
     }
     

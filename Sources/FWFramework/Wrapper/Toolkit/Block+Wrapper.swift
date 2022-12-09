@@ -202,7 +202,7 @@ extension Wrapper where Base: UIBarButtonItem {
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    public static func item(object: Any?, block: ((Any) -> Void)?) -> Base {
+    public static func item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Base {
         return Base.fw_item(object: object, block: block)
     }
     
@@ -213,7 +213,7 @@ extension Wrapper where Base: UIBarButtonItem {
     }
     
     /// 设置当前Item触发句柄，nil时清空句柄
-    public func setBlock(_ block: ((Any) -> Void)?) {
+    public func setBlock(_ block: ((UIBarButtonItem) -> Void)?) {
         base.fw_setBlock(block)
     }
     
@@ -252,7 +252,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func setLeftBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func setLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         base.fw_setLeftBarItem(object, block: block)
     }
     
@@ -262,7 +262,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 快捷设置导航栏右侧按钮，block事件
-    public func setRightBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func setRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         base.fw_setRightBarItem(object, block: block)
     }
 
@@ -272,7 +272,7 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func addLeftBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func addLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         base.fw_addLeftBarItem(object, block: block)
     }
 
@@ -282,7 +282,7 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 快捷添加导航栏右侧按钮，block事件
-    public func addRightBarItem(_ object: Any?, block: @escaping (Any) -> Void) {
+    public func addRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
         base.fw_addRightBarItem(object, block: block)
     }
     
