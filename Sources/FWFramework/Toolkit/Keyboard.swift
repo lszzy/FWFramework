@@ -16,126 +16,164 @@ import FWObjC
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var fw_keyboardManager: Bool {
-        get { return self.__fw_keyboardManager }
-        set { self.__fw_keyboardManager = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardManager }
+        set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     public var fw_keyboardDistance: CGFloat {
-        get { return self.__fw_keyboardDistance }
-        set { self.__fw_keyboardDistance = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardDistance }
+        set { self.fw_innerKeyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var fw_reboundDistance: CGFloat {
-        get { return self.__fw_reboundDistance }
-        set { self.__fw_reboundDistance = newValue }
+        get { return self.fw_innerKeyboardTarget.reboundDistance }
+        set { self.fw_innerKeyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     public var fw_keyboardResign: Bool {
-        get { return self.__fw_keyboardResign }
-        set { self.__fw_keyboardResign = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardResign }
+        set { self.fw_innerKeyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     public var fw_touchResign: Bool {
-        get { return self.__touchResign }
-        set { self.__touchResign = newValue }
+        get { return self.fw_innerKeyboardTarget.touchResign }
+        set { self.fw_innerKeyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
     public weak var fw_keyboardScrollView: UIScrollView? {
-        get { return self.__fw_keyboardScrollView }
-        set { self.__fw_keyboardScrollView = newValue }
+        get { return self.fw_innerKeyboardTarget.scrollView }
+        set { self.fw_innerKeyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
     public var fw_returnResign: Bool {
-        get { return self.__fw_returnResign }
-        set { self.__fw_returnResign = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnResign
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnResign = newValue
+            self.fw_innerReturnEvent()
+        }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
     public var fw_returnNext: Bool {
-        get { return self.__fw_returnNext }
-        set { self.__fw_returnNext = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnNext
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnNext = newValue
+            self.fw_innerReturnEvent()
+        }
     }
 
     /// 设置点击键盘完成按钮的事件句柄
     public var fw_returnBlock: ((UITextField) -> Void)? {
-        get { return self.__fw_returnBlock }
-        set { self.__fw_returnBlock = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnBlock
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnBlock = newValue
+            self.fw_innerReturnEvent()
+        }
+    }
+    
+    private func fw_innerReturnEvent() {
+        let value = fw_property(forName: "fw_innerReturnEvent") as? NSNumber
+        if value == nil {
+            self.addTarget(self.fw_innerKeyboardTarget, action: #selector(__KeyboardTarget.innerReturnAction), for: .editingDidEndOnExit)
+            fw_setProperty(NSNumber(value: true), forName: "fw_innerReturnEvent")
+        }
     }
     
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
     public var fw_keyboardToolbar: UIToolbar {
-        get { return self.__fw_keyboardToolbar }
-        set { self.__fw_keyboardToolbar = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardToolbar }
+        set { self.fw_innerKeyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
     public var fw_toolbarPreviousButton: Any? {
-        get { return self.__fw_toolbarPreviousButton }
-        set { self.__fw_toolbarPreviousButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarPreviousButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.previousButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarPreviousButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
     public var fw_toolbarNextButton: Any? {
-        get { return self.__fw_toolbarNextButton }
-        set { self.__fw_toolbarNextButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarNextButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.nextButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarNextButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
     public var fw_toolbarDoneButton: Any? {
-        get { return self.__fw_toolbarDoneButton }
-        set { self.__fw_toolbarDoneButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarDoneButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.doneButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarDoneButton = newValue
+        }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
     public var fw_previousResponder: ((UITextField) -> UIResponder?)? {
-        get { return self.__fw_previousResponder }
-        set { self.__fw_previousResponder = newValue }
+        get { return self.fw_innerKeyboardTarget.previousResponder }
+        set { self.fw_innerKeyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
     public var fw_nextResponder: ((UITextField) -> UIResponder?)? {
-        get { return self.__fw_nextResponder }
-        set { self.__fw_nextResponder = newValue }
+        get { return self.fw_innerKeyboardTarget.nextResponder }
+        set { self.fw_innerKeyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_previousResponderTag: Int {
-        get { return self.__fw_previousResponderTag }
-        set { self.__fw_previousResponderTag = newValue }
+        get { return self.fw_innerKeyboardTarget.previousResponderTag }
+        set { self.fw_innerKeyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_nextResponderTag: Int {
-        get { return self.__fw_nextResponderTag }
-        set { self.__fw_nextResponderTag = newValue }
+        get { return self.fw_innerKeyboardTarget.nextResponderTag }
+        set { self.fw_innerKeyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
     public func fw_goPrevious() {
-        self.__fw_goPrevious()
+        self.fw_innerKeyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
     public func fw_goNext() {
-        self.__fw_goNext()
+        self.fw_innerKeyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
     public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
-        return self.__fw_keyboardHeight(notification)
+        return self.fw_innerKeyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
     public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_keyboardAnimate(notification, animations: animations, completion: completion)
+        self.fw_innerKeyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
@@ -143,7 +181,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.__fw_addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_innerKeyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -153,7 +191,17 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.__fw_addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    }
+    
+    private var fw_innerKeyboardTarget: __KeyboardTarget {
+        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __KeyboardTarget {
+            return target
+        } else {
+            let target = __KeyboardTarget(textInput: self)
+            fw_setProperty(target, forName: "fw_innerKeyboardTarget")
+            return target
+        }
     }
     
 }
@@ -161,135 +209,234 @@ import FWObjC
 // MARK: - UITextView+Keyboard
 @_spi(FW) @objc extension UITextView {
     
+    private class TextViewDelegateProxy: DelegateProxy, UITextViewDelegate {
+        
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            var shouldChange = true
+            // 先执行代理方法
+            if let delegateChange = (self.delegate as? UITextViewDelegate)?.textView?(textView, shouldChangeTextIn: range, replacementText: text) {
+                shouldChange = delegateChange
+            }
+            
+            // 再执行内部方法
+            if textView.fw_returnResign || textView.fw_returnNext || textView.fw_returnBlock != nil {
+                // 判断是否输入回车
+                if text == "\n" {
+                    // 切换到下一个输入框
+                    if textView.fw_returnNext {
+                        textView.fw_goNext()
+                    // 关闭键盘
+                    } else if textView.fw_returnResign {
+                        textView.resignFirstResponder()
+                    }
+                    // 执行回调
+                    textView.fw_returnBlock?(textView)
+                    shouldChange = false
+                }
+            }
+            return shouldChange
+        }
+        
+    }
+    
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var fw_keyboardManager: Bool {
-        get { return self.__fw_keyboardManager }
-        set { self.__fw_keyboardManager = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardManager }
+        set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     public var fw_keyboardDistance: CGFloat {
-        get { return self.__fw_keyboardDistance }
-        set { self.__fw_keyboardDistance = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardDistance }
+        set { self.fw_innerKeyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var fw_reboundDistance: CGFloat {
-        get { return self.__fw_reboundDistance }
-        set { self.__fw_reboundDistance = newValue }
+        get { return self.fw_innerKeyboardTarget.reboundDistance }
+        set { self.fw_innerKeyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     public var fw_keyboardResign: Bool {
-        get { return self.__fw_keyboardResign }
-        set { self.__fw_keyboardResign = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardResign }
+        set { self.fw_innerKeyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     public var fw_touchResign: Bool {
-        get { return self.__fw_touchResign }
-        set { self.__fw_touchResign = newValue }
+        get { return self.fw_innerKeyboardTarget.touchResign }
+        set { self.fw_innerKeyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
     public weak var fw_keyboardScrollView: UIScrollView? {
-        get { return self.__fw_keyboardScrollView }
-        set { self.__fw_keyboardScrollView = newValue }
+        get { return self.fw_innerKeyboardTarget.scrollView }
+        set { self.fw_innerKeyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var fw_returnResign: Bool {
-        get { return self.__fw_returnResign }
-        set { self.__fw_returnResign = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnResign
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnResign = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var fw_returnNext: Bool {
-        get { return self.__fw_returnNext }
-        set { self.__fw_returnNext = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnNext
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnNext = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
 
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var fw_returnBlock: ((UITextView) -> Void)? {
-        get { return self.__fw_returnBlock }
-        set { self.__fw_returnBlock = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.returnBlock
+        }
+        set {
+            self.fw_innerKeyboardTarget.returnBlock = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
     
     /// 调用上面三个方法后会修改delegate，此方法始终访问外部delegate
     public weak var fw_delegate: UITextViewDelegate? {
-        get { return self.__fw_delegate }
-        set { self.__fw_delegate = newValue }
+        get {
+            if !self.fw_delegateProxyEnabled {
+                return self.delegate
+            } else {
+                return self.fw_delegateProxy.delegate as? UITextViewDelegate
+            }
+        }
+        set {
+            if !self.fw_delegateProxyEnabled {
+                self.delegate = newValue
+            } else {
+                self.fw_delegateProxy.delegate = newValue
+            }
+        }
+    }
+    
+    private var fw_delegateProxyEnabled: Bool {
+        get {
+            return __Runtime.isEqual(self.delegate, with: self.fw_delegateProxy)
+        }
+        set {
+            if newValue != self.fw_delegateProxyEnabled {
+                if newValue {
+                    self.fw_delegateProxy.delegate = self.delegate
+                    self.delegate = self.fw_delegateProxy
+                } else {
+                    self.delegate = self.fw_delegateProxy.delegate as? UITextViewDelegate
+                    self.fw_delegateProxy.delegate = nil
+                }
+            }
+        }
+    }
+    
+    private var fw_delegateProxy: TextViewDelegateProxy {
+        if let proxy = fw_property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
+            return proxy
+        } else {
+            let proxy = TextViewDelegateProxy()
+            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            return proxy
+        }
     }
     
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
     public var fw_keyboardToolbar: UIToolbar {
-        get { return self.__fw_keyboardToolbar }
-        set { self.__fw_keyboardToolbar = newValue }
+        get { return self.fw_innerKeyboardTarget.keyboardToolbar }
+        set { self.fw_innerKeyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
     public var fw_toolbarPreviousButton: Any? {
-        get { return self.__fw_toolbarPreviousButton }
-        set { self.__fw_toolbarPreviousButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarPreviousButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.previousButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarPreviousButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
     public var fw_toolbarNextButton: Any? {
-        get { return self.__fw_toolbarNextButton }
-        set { self.__fw_toolbarNextButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarNextButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.nextButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarNextButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
     public var fw_toolbarDoneButton: Any? {
-        get { return self.__fw_toolbarDoneButton }
-        set { self.__fw_toolbarDoneButton = newValue }
+        get {
+            return self.fw_innerKeyboardTarget.toolbarDoneButton
+        }
+        set {
+            self.fw_innerKeyboardTarget.doneButtonInitialized = true
+            self.fw_innerKeyboardTarget.toolbarDoneButton = newValue
+        }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
     public var fw_previousResponder: ((UITextView) -> UIResponder?)? {
-        get { return self.__fw_previousResponder }
-        set { self.__fw_previousResponder = newValue }
+        get { return self.fw_innerKeyboardTarget.previousResponder }
+        set { self.fw_innerKeyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
     public var fw_nextResponder: ((UITextView) -> UIResponder?)? {
-        get { return self.__fw_nextResponder }
-        set { self.__fw_nextResponder = newValue }
+        get { return self.fw_innerKeyboardTarget.nextResponder }
+        set { self.fw_innerKeyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_previousResponderTag: Int {
-        get { return self.__fw_previousResponderTag }
-        set { self.__fw_previousResponderTag = newValue }
+        get { return self.fw_innerKeyboardTarget.previousResponderTag }
+        set { self.fw_innerKeyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_nextResponderTag: Int {
-        get { return self.__fw_nextResponderTag }
-        set { self.__fw_nextResponderTag = newValue }
+        get { return self.fw_innerKeyboardTarget.nextResponderTag }
+        set { self.fw_innerKeyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
     public func fw_goPrevious() {
-        self.__fw_goPrevious()
+        self.fw_innerKeyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
     public func fw_goNext() {
-        self.__fw_goNext()
+        self.fw_innerKeyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
     public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
-        return self.__fw_keyboardHeight(notification)
+        return self.fw_innerKeyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
     public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        self.__fw_keyboardAnimate(notification, animations: animations, completion: completion)
+        self.fw_innerKeyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
@@ -297,7 +444,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.__fw_addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_innerKeyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -307,7 +454,17 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.__fw_addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    }
+    
+    private var fw_innerKeyboardTarget: __KeyboardTarget {
+        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __KeyboardTarget {
+            return target
+        } else {
+            let target = __KeyboardTarget(textInput: self)
+            fw_setProperty(target, forName: "fw_innerKeyboardTarget")
+            return target
+        }
     }
     
 }
