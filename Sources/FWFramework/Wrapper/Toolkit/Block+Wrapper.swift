@@ -87,14 +87,18 @@ extension Wrapper where Base: Timer {
 extension Wrapper where Base: UIGestureRecognizer {
     
     /// 从事件句柄初始化
-    public static func gestureRecognizer(block: @escaping (Any) -> Void) -> Base {
-        return Base.fw_gestureRecognizer(block: block)
+    public static func gestureRecognizer(block: @escaping (Base) -> Void) -> Base {
+        return Base.fw_gestureRecognizer { sender in
+            block(sender as! Base)
+        }
     }
     
     /// 添加事件句柄，返回唯一标志
     @discardableResult
-    public func addBlock(_ block: @escaping (Any) -> Void) -> String {
-        return base.fw_addBlock(block)
+    public func addBlock(_ block: @escaping (Base) -> Void) -> String {
+        return base.fw_addBlock { sender in
+            block(sender as! Base)
+        }
     }
 
     /// 根据唯一标志移除事件句柄
@@ -124,8 +128,10 @@ extension Wrapper where Base: UIView {
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    public func addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
-        return base.fw_addTapGesture(block: block, customize: customize)
+    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+        return base.fw_addTapGesture(block: { sender in
+            block(sender as! UITapGestureRecognizer)
+        }, customize: customize)
     }
 
     /// 根据唯一标志移除点击手势句柄
@@ -145,8 +151,10 @@ extension Wrapper where Base: UIControl {
     
     /// 添加事件句柄
     @discardableResult
-    public func addBlock(_ block: @escaping (Any) -> Void, for controlEvents: UIControl.Event) -> String {
-        return base.fw_addBlock(block, for: controlEvents)
+    public func addBlock(_ block: @escaping (Base) -> Void, for controlEvents: UIControl.Event) -> String {
+        return base.fw_addBlock({ sender in
+            block(sender as! Base)
+        }, for: controlEvents)
     }
 
     /// 根据唯一标志移除事件句柄
@@ -166,8 +174,10 @@ extension Wrapper where Base: UIControl {
 
     /// 添加点击句柄
     @discardableResult
-    public func addTouch(block: @escaping (Any) -> Void) -> String {
-        return base.fw_addTouch(block: block)
+    public func addTouch(block: @escaping (Base) -> Void) -> String {
+        return base.fw_addTouch { sender in
+            block(sender as! Base)
+        }
     }
 
     /// 根据唯一标志移除点击句柄
