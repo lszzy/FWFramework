@@ -6,7 +6,6 @@
 //
 
 #import "FWViewTransition.h"
-#import "FWUIKit.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

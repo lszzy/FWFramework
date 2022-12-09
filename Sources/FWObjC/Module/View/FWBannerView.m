@@ -7,7 +7,6 @@
 
 #import "FWBannerView.h"
 #import "FWPageControl.h"
-#import "FWUIKit.h"
 #import "FWImagePlugin.h"
 #import "FWStatisticalManager.h"
 

@@ -10,7 +10,6 @@
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
 #import "FWEncode.h"
-#import "FWUIKit.h"
 #import "FWToolkit.h"
 
 #if FWMacroSPM

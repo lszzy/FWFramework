@@ -6,7 +6,6 @@
 //
 
 #import "FWEmptyPluginImpl.h"
-#import "FWUIKit.h"
 
 #if FWMacroSPM
 
