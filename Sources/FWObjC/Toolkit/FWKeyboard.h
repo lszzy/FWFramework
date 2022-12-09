@@ -200,41 +200,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UITextView+FWPlaceholder
-
-/// 多行输入框占位文本分类
-@interface UITextView (FWPlaceholder)
-
-/// 占位文本，默认nil
-@property (nullable, nonatomic, strong) NSString *fw_placeholder NS_REFINED_FOR_SWIFT;
-
-/// 占位颜色，默认系统颜色
-@property (nullable, nonatomic, strong) UIColor *fw_placeholderColor NS_REFINED_FOR_SWIFT;
-
-/// 带属性占位文本，默认nil
-@property (nullable, nonatomic, strong) NSAttributedString *fw_attributedPlaceholder NS_REFINED_FOR_SWIFT;
-
-/// 自定义占位文本内间距，默认zero与内容一致
-@property (nonatomic, assign) UIEdgeInsets fw_placeholderInset NS_REFINED_FOR_SWIFT;
-
-/// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
-@property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
-
-/// 是否启用自动高度功能，随文字改变高度
-@property (nonatomic, assign) BOOL fw_autoHeightEnabled NS_REFINED_FOR_SWIFT;
-
-/// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
-@property (nonatomic, assign) CGFloat fw_maxHeight NS_REFINED_FOR_SWIFT;
-
-/// 最小高度，默认0，启用自动高度后生效
-@property (nonatomic, assign) CGFloat fw_minHeight NS_REFINED_FOR_SWIFT;
-
-/// 高度改变回调句柄，默认nil，启用自动高度后生效
-@property (nullable, nonatomic, copy) void (^fw_heightDidChange)(CGFloat height) NS_REFINED_FOR_SWIFT;
-
-/// 快捷启用自动高度，并设置最大高度和回调句柄
-- (void)fw_autoHeightWithMaxHeight:(CGFloat)maxHeight didChange:(nullable void (^)(CGFloat height))didChange NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END

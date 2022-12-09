@@ -315,63 +315,251 @@ import FWObjC
 // MARK: - UITextView+Placeholder
 @_spi(FW) @objc extension UITextView {
     
+    private class PlaceholderTarget: NSObject {
+        
+        private(set) weak var textView: UITextView?
+        
+        var lastHeight: CGFloat = 0
+        
+        private static var defaultPlaceholderColor: UIColor?
+        
+        fileprivate static func placeholderColor() -> UIColor? {
+            if defaultPlaceholderColor != nil { return defaultPlaceholderColor }
+            
+            let textField = UITextField()
+            textField.placeholder = " "
+            let placeholderLabel = textField.fw_invokeGetter("_placeholderLabel") as? UILabel
+            defaultPlaceholderColor = placeholderLabel?.textColor
+            return defaultPlaceholderColor
+        }
+        
+        init(textView: UITextView?) {
+            super.init()
+            self.textView = textView
+        }
+        
+        @objc func setNeedsUpdatePlaceholder() {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(updatePlaceholder), object: nil)
+            self.perform(#selector(updatePlaceholder), with: nil, afterDelay: 0)
+        }
+        
+        @objc func setNeedsUpdateText() {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(updateText), object: nil)
+            self.perform(#selector(updateText), with: nil, afterDelay: 0)
+        }
+        
+        @objc func updatePlaceholder() {
+            guard let textView = self.textView else { return }
+            // 调整contentInset实现垂直分布，不使用contentOffset是因为光标移动会不正常
+            var contentInset = textView.contentInset
+            contentInset.top = 0
+            if textView.contentSize.height < textView.bounds.size.height {
+                let height = ceil(textView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .greatestFiniteMagnitude)).height)
+                switch textView.fw_verticalAlignment {
+                case .center:
+                    contentInset.top = (textView.bounds.size.height - height) / 2.0
+                case .bottom:
+                    contentInset.top = textView.bounds.size.height - height
+                default:
+                    break
+                }
+            }
+            textView.contentInset = contentInset
+            
+            let text: String? = textView.text
+            if (text?.count ?? 0) > 0 {
+                textView.fw_placeholderLabel.isHidden = true
+            } else {
+                var targetFrame: CGRect = .zero
+                let inset = textView.fw_placeholderInset
+                if inset != .zero {
+                    targetFrame = CGRect(x: inset.left, y: inset.top, width: CGRectGetWidth(textView.bounds) - inset.left - inset.right, height: CGRectGetHeight(textView.bounds) - inset.top - inset.bottom)
+                } else {
+                    let x = textView.textContainer.lineFragmentPadding + textView.textContainerInset.left
+                    let width = CGRectGetWidth(textView.bounds) - x - textView.textContainer.lineFragmentPadding - textView.textContainerInset.right
+                    var height = ceil(textView.fw_placeholderLabel.sizeThatFits(CGSize(width: width, height: 0)).height)
+                    height = min(height, textView.bounds.size.height - textView.textContainerInset.top - textView.textContainerInset.bottom)
+                    
+                    var y = textView.textContainerInset.top
+                    switch textView.fw_verticalAlignment {
+                    case .center:
+                        y = (textView.bounds.size.height - height) / 2.0 - textView.contentInset.top
+                    case .bottom:
+                        y = textView.bounds.size.height - height - textView.textContainerInset.bottom - textView.contentInset.top
+                    default:
+                        break
+                    }
+                    targetFrame = CGRect(x: x, y: y, width: width, height: height)
+                }
+                
+                textView.fw_placeholderLabel.isHidden = false
+                textView.fw_placeholderLabel.textAlignment = textView.textAlignment
+                textView.fw_placeholderLabel.frame = targetFrame
+            }
+        }
+        
+        @objc func updateText() {
+            updatePlaceholder()
+            guard let textView = self.textView,
+                  textView.fw_autoHeightEnabled else { return }
+            
+            var height = ceil(textView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .greatestFiniteMagnitude)).height)
+            height = max(textView.fw_minHeight, min(height, textView.fw_maxHeight))
+            if height == self.lastHeight { return }
+            
+            var targetFrame = textView.frame
+            targetFrame.size.height = height
+            textView.frame = targetFrame
+            textView.fw_heightDidChange?(height)
+            self.lastHeight = height
+        }
+        
+    }
+    
     /// 占位文本，默认nil
     public var fw_placeholder: String? {
-        get { return self.__fw_placeholder }
-        set { self.__fw_placeholder = newValue }
+        get {
+            return self.fw_placeholderLabel.text
+        }
+        set {
+            self.fw_placeholderLabel.text = newValue
+            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 占位颜色，默认系统颜色
     public var fw_placeholderColor: UIColor? {
-        get { return self.__fw_placeholderColor }
-        set { self.__fw_placeholderColor = newValue }
+        get { return self.fw_placeholderLabel.textColor }
+        set { self.fw_placeholderLabel.textColor = newValue }
     }
 
     /// 带属性占位文本，默认nil
     public var fw_attributedPlaceholder: NSAttributedString? {
-        get { return self.__fw_attributedPlaceholder }
-        set { self.__fw_attributedPlaceholder = newValue }
+        get {
+            return self.fw_placeholderLabel.attributedText
+        }
+        set {
+            self.fw_placeholderLabel.attributedText = newValue
+            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 自定义占位文本内间距，默认zero与内容一致
     public var fw_placeholderInset: UIEdgeInsets {
-        get { return self.__fw_placeholderInset }
-        set { self.__fw_placeholderInset = newValue }
+        get {
+            let value = fw_property(forName: "fw_placeholderInset") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_placeholderInset")
+            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
     public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
-        get { return self.__fw_verticalAlignment }
-        set { self.__fw_verticalAlignment = newValue }
+        get {
+            if let value = fw_property(forName: "fw_verticalAlignment") as? NSNumber {
+                return .init(rawValue: value.intValue) ?? .top
+            }
+            return .top
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
+            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        }
+    }
+    
+    private var fw_placeholderLabel: UILabel {
+        if let label = fw_property(forName: "fw_placeholderLabel") as? UILabel { return label }
+        
+        let originalText = self.attributedText
+        self.text = " "
+        self.attributedText = originalText
+        
+        let label = UILabel()
+        label.textColor = PlaceholderTarget.placeholderColor()
+        label.numberOfLines = 0
+        label.isUserInteractionEnabled = false
+        label.font = self.font
+        fw_setProperty(label, forName: "fw_placeholderLabel")
+        self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        self.insertSubview(label, at: 0)
+        
+        self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("attributedText", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("text", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("bounds", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("frame", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textAlignment", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textContainerInset", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("font") { textView, change in
+            guard let textView = textView as? UITextView else { return }
+            if change[.newKey] != nil {
+                textView.fw_placeholderLabel.font = textView.font
+                textView.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+            }
+        }
+        return label
+    }
+    
+    private var fw_innerPlaceholderTarget: PlaceholderTarget {
+        if let target = fw_property(forName: "fw_innerPlaceholderTarget") as? PlaceholderTarget {
+            return target
+        } else {
+            let target = PlaceholderTarget(textView: self)
+            fw_setProperty(target, forName: "fw_innerPlaceholderTarget")
+            return target
+        }
     }
 
     /// 是否启用自动高度功能，随文字改变高度
     public var fw_autoHeightEnabled: Bool {
-        get { return self.__fw_autoHeightEnabled }
-        set { self.__fw_autoHeightEnabled = newValue }
+        get {
+            return fw_propertyBool(forName: "fw_autoHeightEnabled")
+        }
+        set {
+            fw_setPropertyBool(newValue, forName: "fw_autoHeightEnabled")
+            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
     public var fw_maxHeight: CGFloat {
-        get { return self.__fw_maxHeight }
-        set { self.__fw_maxHeight = newValue }
+        get {
+            if let value = fw_property(forName: "fw_maxHeight") as? NSNumber {
+                return value.doubleValue
+            }
+            return .greatestFiniteMagnitude
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_maxHeight")
+            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 最小高度，默认0，启用自动高度后生效
     public var fw_minHeight: CGFloat {
-        get { return self.__fw_minHeight }
-        set { self.__fw_minHeight = newValue }
+        get {
+            return fw_propertyDouble(forName: "fw_minHeight")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_minHeight")
+            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
     public var fw_heightDidChange: ((CGFloat) -> Void)? {
-        get { return self.__fw_heightDidChange }
-        set { self.__fw_heightDidChange = newValue }
+        get { return fw_property(forName: "fw_heightDidChange") as? (CGFloat) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_heightDidChange") }
     }
 
     /// 快捷启用自动高度，并设置最大高度和回调句柄
-    public func fw_autoHeight(maxHeight: CGFloat, didChange: ((CGFloat) -> Void)?) {
-        self.__fw_autoHeight(withMaxHeight: maxHeight, didChange: didChange)
+    public func fw_autoHeight(maxHeight: CGFloat, didChange: ((CGFloat) -> Void)? = nil) {
+        self.fw_maxHeight = maxHeight
+        if didChange != nil { self.fw_heightDidChange = didChange }
+        self.fw_autoHeightEnabled = true
     }
     
 }
