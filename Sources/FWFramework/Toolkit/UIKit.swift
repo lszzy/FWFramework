@@ -1792,42 +1792,57 @@ import AdSupport
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
-        get { return self.__fw_maxLength }
-        set { self.__fw_maxLength = newValue }
+        get { return fw_innerInputTarget(false)?.maxLength ?? 0 }
+        set { fw_innerInputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var fw_maxUnicodeLength: Int {
-        get { return self.__fw_maxUnicodeLength }
-        set { self.__fw_maxUnicodeLength = newValue }
+        get { return fw_innerInputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { fw_innerInputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return self.__fw_textChangedBlock }
-        set { self.__fw_textChangedBlock = newValue }
+        get { return fw_innerInputTarget(false)?.textChangedBlock }
+        set { fw_innerInputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func fw_textLengthChanged() {
-        self.__fw_textLengthChanged()
+        fw_innerInputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func fw_filterText(_ text: String) -> String {
-        return self.__fw_filterText(text)
+        if let target = fw_innerInputTarget(false) {
+            return target.filterText(text)
+        }
+        return text
     }
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
-        get { return self.__fw_autoCompleteInterval }
-        set { self.__fw_autoCompleteInterval = newValue }
+        get { return fw_innerInputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { fw_innerInputTarget(true)?.autoCompleteInterval = newValue }
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
     public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return self.__fw_autoCompleteBlock }
-        set { self.__fw_autoCompleteBlock = newValue }
+        get { return fw_innerInputTarget(false)?.autoCompleteBlock }
+        set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
+    }
+    
+    private func fw_innerInputTarget(_ lazyload: Bool) -> __InputTarget? {
+        if let target = fw_property(forName: "fw_innerInputTarget") as? __InputTarget {
+            return target
+        } else if lazyload {
+            let target = __InputTarget(textInput: self)
+            self.addTarget(target, action: #selector(__InputTarget.textChangedAction), for: .editingChanged)
+            fw_setProperty(target, forName: "fw_innerInputTarget")
+            return target
+        }
+        return nil
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
@@ -1838,24 +1853,55 @@ import AdSupport
 
     /// 自定义光标大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
-        get { return self.__fw_cursorRect }
-        set { self.__fw_cursorRect = newValue }
+        get {
+            if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
+        }
     }
 
     /// 获取及设置当前选中文字范围
     public var fw_selectedRange: NSRange {
-        get { return self.__fw_selectedRange }
-        set { self.__fw_selectedRange = newValue }
+        get {
+            guard let selectedRange = self.selectedTextRange else {
+                return NSRange(location: NSNotFound, length: 0)
+            }
+            let location = self.offset(from: self.beginningOfDocument, to: selectedRange.start)
+            let length = self.offset(from: selectedRange.start, to: selectedRange.end)
+            return NSRange(location: location, length: length)
+        }
+        set {
+            guard newValue.location != NSNotFound else {
+                self.selectedTextRange = nil
+                return
+            }
+            let start = self.position(from: self.beginningOfDocument, offset: newValue.location)
+            let end = self.position(from: self.beginningOfDocument, offset: NSMaxRange(newValue))
+            if let start = start, let end = end {
+                let selectionRange = self.textRange(from: start, to: end)
+                self.selectedTextRange = selectionRange
+            }
+        }
     }
 
     /// 移动光标到最后
     public func fw_selectAllRange() {
-        self.__fw_selectAllRange()
+        let range = self.textRange(from: self.beginningOfDocument, to: self.endOfDocument)
+        self.selectedTextRange = range
     }
 
     /// 移动光标到指定位置，兼容动态text赋值
     public func fw_moveCursor(_ offset: Int) {
-        self.__fw_moveCursor(offset)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if let position = self.position(from: self.beginningOfDocument, offset: offset) {
+                self.selectedTextRange = self.textRange(from: position, to: position)
+            }
+        }
     }
     
 }
@@ -1865,42 +1911,57 @@ import AdSupport
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
-        get { return self.__fw_maxLength }
-        set { self.__fw_maxLength = newValue }
+        get { return fw_innerInputTarget(false)?.maxLength ?? 0 }
+        set { fw_innerInputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var fw_maxUnicodeLength: Int {
-        get { return self.__fw_maxUnicodeLength }
-        set { self.__fw_maxUnicodeLength = newValue }
+        get { return fw_innerInputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { fw_innerInputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return self.__fw_textChangedBlock }
-        set { self.__fw_textChangedBlock = newValue }
+        get { return fw_innerInputTarget(false)?.textChangedBlock }
+        set { fw_innerInputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func fw_textLengthChanged() {
-        self.__fw_textLengthChanged()
+        fw_innerInputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func fw_filterText(_ text: String) -> String {
-        return self.__fw_filterText(text)
+        if let target = fw_innerInputTarget(false) {
+            return target.filterText(text)
+        }
+        return text
     }
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
-        get { return self.__fw_autoCompleteInterval }
-        set { self.__fw_autoCompleteInterval = newValue }
+        get { return fw_innerInputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { fw_innerInputTarget(true)?.autoCompleteInterval = newValue }
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
     public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return self.__fw_autoCompleteBlock }
-        set { self.__fw_autoCompleteBlock = newValue }
+        get { return fw_innerInputTarget(false)?.autoCompleteBlock }
+        set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
+    }
+    
+    private func fw_innerInputTarget(_ lazyload: Bool) -> __InputTarget? {
+        if let target = fw_property(forName: "fw_innerInputTarget") as? __InputTarget {
+            return target
+        } else if lazyload {
+            let target = __InputTarget(textInput: self)
+            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(__InputTarget.textChangedAction))
+            fw_setProperty(target, forName: "fw_innerInputTarget")
+            return target
+        }
+        return nil
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
@@ -1911,34 +1972,82 @@ import AdSupport
 
     /// 自定义光标大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
-        get { return self.__fw_cursorRect }
-        set { self.__fw_cursorRect = newValue }
+        get {
+            if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            fw_setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
+        }
     }
 
     /// 获取及设置当前选中文字范围
     public var fw_selectedRange: NSRange {
-        get { return self.__fw_selectedRange }
-        set { self.__fw_selectedRange = newValue }
+        get {
+            guard let selectedRange = self.selectedTextRange else {
+                return NSRange(location: NSNotFound, length: 0)
+            }
+            let location = self.offset(from: self.beginningOfDocument, to: selectedRange.start)
+            let length = self.offset(from: selectedRange.start, to: selectedRange.end)
+            return NSRange(location: location, length: length)
+        }
+        set {
+            guard newValue.location != NSNotFound else {
+                self.selectedTextRange = nil
+                return
+            }
+            let start = self.position(from: self.beginningOfDocument, offset: newValue.location)
+            let end = self.position(from: self.beginningOfDocument, offset: NSMaxRange(newValue))
+            if let start = start, let end = end {
+                let selectionRange = self.textRange(from: start, to: end)
+                self.selectedTextRange = selectionRange
+            }
+        }
     }
 
     /// 移动光标到最后
     public func fw_selectAllRange() {
-        self.__fw_selectAllRange()
+        let range = self.textRange(from: self.beginningOfDocument, to: self.endOfDocument)
+        self.selectedTextRange = range
     }
 
     /// 移动光标到指定位置，兼容动态text赋值
     public func fw_moveCursor(_ offset: Int) {
-        self.__fw_moveCursor(offset)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if let position = self.position(from: self.beginningOfDocument, offset: offset) {
+                self.selectedTextRange = self.textRange(from: position, to: position)
+            }
+        }
     }
 
     /// 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
     public var fw_textSize: CGSize {
-        return self.__fw_textSize
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        var attrs: [NSAttributedString.Key: Any] = [:]
+        attrs[.font] = self.font
+
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        let size = (self.text as? NSString)?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + self.textContainerInset.left + self.textContainerInset.right, height: min(drawSize.height, ceil(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom)
     }
 
     /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
     public var fw_attributedTextSize: CGSize {
-        return self.__fw_attributedTextSize
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        let size = self.attributedText?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + self.textContainerInset.left + self.textContainerInset.right, height: min(drawSize.height, ceil(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom)
     }
     
 }
@@ -2405,6 +2514,62 @@ internal class UIKitAutoloader: AutoloadProtocol {
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
         UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
         
         NSObject.fw_swizzleInstanceMethod(
             UISearchBar.self,

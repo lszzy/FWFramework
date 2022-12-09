@@ -8,7 +8,6 @@
 #import "FWAlertPlugin.h"
 #import "FWAlertPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWUIKit.h"
 #import "FWNavigator.h"
 #import "FWAppBundle.h"
 #import <objc/runtime.h>

@@ -39,7 +39,6 @@
 #import "FWQuartzCore.h"
 #import "FWThread.h"
 #import "FWToolkit.h"
-#import "FWUIKit.h"
 
 #import "FWAppDelegate.h"
 #import "FWNavigationController.h"

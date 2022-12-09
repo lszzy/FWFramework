@@ -6,7 +6,6 @@
 //
 
 #import "FWPasscodeView.h"
-#import "FWUIKit.h"
 
 #if FWMacroSPM
 

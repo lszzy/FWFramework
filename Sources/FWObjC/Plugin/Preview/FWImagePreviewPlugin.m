@@ -8,7 +8,6 @@
 #import "FWImagePreviewPlugin.h"
 #import "FWImagePreviewPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWUIKit.h"
 #import "FWNavigator.h"
 #import <objc/runtime.h>
 
