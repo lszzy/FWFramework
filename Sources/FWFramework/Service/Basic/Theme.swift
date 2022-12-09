@@ -389,30 +389,19 @@ import FWObjC
         }
     }
     
-}
-
-@objc extension NSObject {
-    
-    /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func themeChanged(_ style: ThemeStyle) {}
-    
-}
-
-internal class ThemeAutoloader: AutoloadProtocol {
-    
-    static func autoload() {
+    fileprivate static func fw_swizzleThemeClasses() {
         if #available(iOS 13.0, *) {
-            swizzleThemeClass(UIScreen.self)
-            swizzleThemeClass(UIView.self)
-            swizzleThemeClass(UIViewController.self)
+            fw_swizzleThemeClass(UIScreen.self)
+            fw_swizzleThemeClass(UIView.self)
+            fw_swizzleThemeClass(UIViewController.self)
             // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
-            swizzleThemeClass(UIImageView.self)
-            swizzleThemeClass(UILabel.self)
+            fw_swizzleThemeClass(UIImageView.self)
+            fw_swizzleThemeClass(UILabel.self)
         }
     }
     
     @available(iOS 13.0, *)
-    static func swizzleThemeClass(_ themeClass: AnyClass) {
+    private static func fw_swizzleThemeClass(_ themeClass: AnyClass) {
         NSObject.fw_swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
@@ -439,6 +428,21 @@ internal class ThemeAutoloader: AutoloadProtocol {
                 )
             }
         }}
+    }
+    
+}
+
+@objc extension NSObject {
+    
+    /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
+    open func themeChanged(_ style: ThemeStyle) {}
+    
+}
+
+internal class ThemeAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        NSObject.fw_swizzleThemeClasses()
     }
     
 }

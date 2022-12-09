@@ -770,6 +770,24 @@ import AdSupport
         }
     }
     
+    fileprivate static func fw_swizzleUIKitView() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.point(inside:with:)),
+            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
+        ) { store in { selfObject, point, event in
+            if let insetsValue = selfObject.fw_property(forName: "fw_touchInsets") as? NSValue {
+                let touchInsets = insetsValue.uiEdgeInsetsValue
+                var bounds = selfObject.bounds
+                bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
+                return CGRectContainsPoint(bounds, point)
+            }
+            
+            return store.original(selfObject, store.selector, point, event)
+        }}
+    }
+    
 }
 
 // MARK: - UIImageView+UIKit
@@ -1222,6 +1240,71 @@ import AdSupport
         }
     }
     
+    fileprivate static func fw_swizzleUIKitLabel() {
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.drawText(in:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
+        ) { store in { selfObject, aRect in
+            var rect = aRect
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
+            }
+            
+            let verticalAlignment = selfObject.fw_verticalAlignment
+            if verticalAlignment == .top {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.size.width, height: fitsSize.height)
+            } else if verticalAlignment == .bottom {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.size.height - fitsSize.height), width: rect.size.width, height: fitsSize.height)
+            }
+            
+            store.original(selfObject, store.selector, rect)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(getter: UILabel.intrinsicContentSize),
+            methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
+        ) { store in { selfObject in
+            var size = store.original(selfObject, store.selector)
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue,
+               !size.equalTo(.zero) {
+                let contentInset = contentInsetValue.uiEdgeInsetsValue
+                size = CGSize(width: size.width + contentInset.left + contentInset.right, height: size.height + contentInset.top + contentInset.bottom)
+            }
+            return size
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.sizeThatFits(_:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
+        ) { store in { selfObject, aSize in
+            var size = aSize
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                let contentInset = contentInsetValue.uiEdgeInsetsValue
+                size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
+                var fitsSize = store.original(selfObject, store.selector, size)
+                if !fitsSize.equalTo(.zero) {
+                    fitsSize = CGSize(width: fitsSize.width + contentInset.left + contentInset.right, height: fitsSize.height + contentInset.top + contentInset.bottom)
+                }
+                return fitsSize
+            }
+            
+            return store.original(selfObject, store.selector, size)
+        }}
+        
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_innerSetText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
+    }
+    
 }
 
 // MARK: - UIControl+UIKit
@@ -1234,9 +1317,27 @@ import AdSupport
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
     
-    fileprivate var fw_touchEventTimestamp: TimeInterval {
+    private var fw_touchEventTimestamp: TimeInterval {
         get { fw_propertyDouble(forName: "fw_touchEventTimestamp") }
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventTimestamp") }
+    }
+    
+    fileprivate static func fw_swizzleUIKitControl() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIControl.self,
+            selector: #selector(UIControl.sendAction(_:to:for:)),
+            methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
+            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
+        ) { store in { selfObject, action, target, event in
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if let event = event, event.type == .touches, event.subtype == .none,
+               selfObject.fw_touchEventInterval > 0 {
+                if Date().timeIntervalSince1970 - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval { return }
+                selfObject.fw_touchEventTimestamp = Date().timeIntervalSince1970
+            }
+            
+            store.original(selfObject, store.selector, action, target, event)
+        }}
     }
     
 }
@@ -1357,6 +1458,34 @@ import AdSupport
                 self?.isEnabled = false
             }
         }
+    }
+    
+    fileprivate static func fw_swizzleUIKitButton() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isEnabled),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, enabled in
+            store.original(selfObject, store.selector, enabled)
+            
+            if selfObject.fw_disabledAlpha > 0 {
+                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isHighlighted),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, highlighted in
+            store.original(selfObject, store.selector, highlighted)
+            
+            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
+                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
+            }
+        }}
     }
     
 }
@@ -1531,7 +1660,7 @@ import AdSupport
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldBegin")
-            UIScrollView.fw_enablePanProxy()
+            UIScrollView.fw_swizzleUIKitScrollView()
         }
     }
 
@@ -1542,7 +1671,7 @@ import AdSupport
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
-            UIScrollView.fw_enablePanProxy()
+            UIScrollView.fw_swizzleUIKitScrollView()
         }
     }
 
@@ -1553,7 +1682,7 @@ import AdSupport
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
-            UIScrollView.fw_enablePanProxy()
+            UIScrollView.fw_swizzleUIKitScrollView()
         }
     }
 
@@ -1564,21 +1693,9 @@ import AdSupport
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
-            UIScrollView.fw_enablePanProxy()
+            UIScrollView.fw_swizzleUIKitScrollView()
         }
     }
-    
-    private static func fw_enablePanProxy() {
-        guard !fw_staticPanProxyEnabled else { return }
-        fw_staticPanProxyEnabled = true
-        
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldBeRequiredToFailBy:)))
-    }
-    
-    private static var fw_staticPanProxyEnabled = false
     
     private func fw_innerGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
@@ -1610,6 +1727,18 @@ import AdSupport
         }
         
         return fw_innerGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
+    }
+    
+    private static var fw_staticPanProxySwizzled = false
+    
+    private static func fw_swizzleUIKitScrollView() {
+        guard !fw_staticPanProxySwizzled else { return }
+        fw_staticPanProxySwizzled = true
+        
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizerShouldBegin(_:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRequireFailureOf:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
 }
@@ -1904,6 +2033,36 @@ import AdSupport
         }
     }
     
+    fileprivate static func fw_swizzleUIKitTextField() {
+        NSObject.fw_swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
+    }
+    
 }
 
 // MARK: - UITextView+UIKit
@@ -2048,6 +2207,36 @@ import AdSupport
         let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
         let size = self.attributedText?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
         return CGSize(width: min(drawSize.width, ceil(size.width)) + self.textContainerInset.left + self.textContainerInset.right, height: min(drawSize.height, ceil(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom)
+    }
+    
+    fileprivate static func fw_swizzleUIKitTextView() {
+        NSObject.fw_swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
     }
     
 }
@@ -2297,280 +2486,7 @@ import AdSupport
         }
     }
     
-}
-
-// MARK: - UIViewController+UIKit
-@_spi(FW) @objc extension UIViewController {
-    
-    /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-    public var fw_isRoot: Bool {
-        return self.navigationController == nil ||
-            self.navigationController?.viewControllers.first == self
-    }
-
-    /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-    public var fw_isChild: Bool {
-        if let parent = self.parent,
-           !(parent is UINavigationController),
-           !(parent is UITabBarController) {
-            return true
-        }
-        return false
-    }
-
-    /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-    public var fw_isPresented: Bool {
-        var viewController: UIViewController = self
-        if let navigationController = self.navigationController {
-            if navigationController.viewControllers.first != self { return false }
-            viewController = navigationController
-        }
-        return viewController.presentingViewController?.presentedViewController == viewController
-    }
-
-    /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-    public var fw_isPageSheet: Bool {
-        if #available(iOS 13.0, *) {
-            let controller: UIViewController = self.navigationController ?? self
-            if controller.presentingViewController == nil { return false }
-            let style = controller.modalPresentationStyle
-            if style == .automatic || style == .pageSheet { return true }
-        }
-        return false
-    }
-
-    /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-    public var fw_isViewVisible: Bool {
-        return self.isViewLoaded && self.view.window != nil
-    }
-    
-    /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-    public var fw_ancestorView: UIView {
-        if let navigationController = self.tabBarController?.navigationController {
-            return navigationController.view
-        } else if let tabBarController = self.tabBarController {
-            return tabBarController.view
-        } else if let navigationController = self.navigationController {
-            return navigationController.view
-        } else {
-            return self.view
-        }
-    }
-
-    /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-    public var fw_isLoaded: Bool {
-        get { return fw_propertyBool(forName: "fw_isLoaded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isLoaded") }
-    }
-    
-    /// 移除子控制器，解决不能触发viewWillAppear等的bug
-    public func fw_removeChildViewController(_ viewController: UIViewController) {
-        viewController.willMove(toParent: nil)
-        viewController.removeFromParent()
-        viewController.view.removeFromSuperview()
-    }
-    
-    /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChildViewController(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        fw_addChildViewController(viewController, in: nil, layout: layout)
-    }
-
-    /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChildViewController(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
-        self.addChild(viewController)
-        let superview: UIView = view ?? self.view
-        superview.addSubview(viewController.view)
-        if layout != nil {
-            layout?(viewController.view)
-        } else {
-            viewController.view.fw_pinEdges()
-        }
-        viewController.didMove(toParent: self)
-    }
-    
-}
-
-// MARK: - UIKitAutoloader
-internal class UIKitAutoloader: AutoloadProtocol {
-    
-    static func autoload() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.point(inside:with:)),
-            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
-        ) { store in { selfObject, point, event in
-            if let insetsValue = selfObject.fw_property(forName: "fw_touchInsets") as? NSValue {
-                let touchInsets = insetsValue.uiEdgeInsetsValue
-                var bounds = selfObject.bounds
-                bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
-                return CGRectContainsPoint(bounds, point)
-            }
-            
-            return store.original(selfObject, store.selector, point, event)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(UILabel.drawText(in:)),
-            methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
-        ) { store in { selfObject, aRect in
-            var rect = aRect
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
-                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
-            }
-            
-            let verticalAlignment = selfObject.fw_verticalAlignment
-            if verticalAlignment == .top {
-                let fitsSize = selfObject.sizeThatFits(rect.size)
-                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.size.width, height: fitsSize.height)
-            } else if verticalAlignment == .bottom {
-                let fitsSize = selfObject.sizeThatFits(rect.size)
-                rect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.size.height - fitsSize.height), width: rect.size.width, height: fitsSize.height)
-            }
-            
-            store.original(selfObject, store.selector, rect)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(getter: UILabel.intrinsicContentSize),
-            methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
-        ) { store in { selfObject in
-            var size = store.original(selfObject, store.selector)
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue,
-               !size.equalTo(.zero) {
-                let contentInset = contentInsetValue.uiEdgeInsetsValue
-                size = CGSize(width: size.width + contentInset.left + contentInset.right, height: size.height + contentInset.top + contentInset.bottom)
-            }
-            return size
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(UILabel.sizeThatFits(_:)),
-            methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
-        ) { store in { selfObject, aSize in
-            var size = aSize
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
-                let contentInset = contentInsetValue.uiEdgeInsetsValue
-                size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
-                var fitsSize = store.original(selfObject, store.selector, size)
-                if !fitsSize.equalTo(.zero) {
-                    fitsSize = CGSize(width: fitsSize.width + contentInset.left + contentInset.right, height: fitsSize.height + contentInset.top + contentInset.bottom)
-                }
-                return fitsSize
-            }
-            
-            return store.original(selfObject, store.selector, size)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIControl.self,
-            selector: #selector(UIControl.sendAction(_:to:for:)),
-            methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
-        ) { store in { selfObject, action, target, event in
-            // 仅拦截Touch事件，且配置了间隔时间的Event
-            if let event = event, event.type == .touches, event.subtype == .none,
-               selfObject.fw_touchEventInterval > 0 {
-                if Date().timeIntervalSince1970 - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval { return }
-                selfObject.fw_touchEventTimestamp = Date().timeIntervalSince1970
-            }
-            
-            store.original(selfObject, store.selector, action, target, event)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIButton.self,
-            selector: #selector(setter: UIButton.isEnabled),
-            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
-        ) { store in { selfObject, enabled in
-            store.original(selfObject, store.selector, enabled)
-            
-            if selfObject.fw_disabledAlpha > 0 {
-                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIButton.self,
-            selector: #selector(setter: UIButton.isHighlighted),
-            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
-        ) { store in { selfObject, highlighted in
-            store.original(selfObject, store.selector, highlighted)
-            
-            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
-                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
-            }
-        }}
-        
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_innerSetText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITextField.self,
-            selector: #selector(UITextField.canPerformAction(_:withSender:)),
-            methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
-        ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
-            
-            return store.original(selfObject, store.selector, action, sender)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITextField.self,
-            selector: #selector(UITextField.caretRect(for:)),
-            methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
-            swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
-        ) { store in { selfObject, position in
-            var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
-            
-            let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
-            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
-            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
-            return caretRect
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITextView.self,
-            selector: #selector(UITextView.canPerformAction(_:withSender:)),
-            methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
-        ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
-            
-            return store.original(selfObject, store.selector, action, sender)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITextView.self,
-            selector: #selector(UITextView.caretRect(for:)),
-            methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
-            swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
-        ) { store in { selfObject, position in
-            var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
-            
-            let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
-            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
-            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
-            return caretRect
-        }}
-        
+    fileprivate static func fw_swizzleUIKitSearchBar() {
         NSObject.fw_swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(UISearchBar.layoutSubviews),
@@ -2674,6 +2590,112 @@ internal class UIKitAutoloader: AutoloadProtocol {
             
             store.original(selfObject, store.selector, frame)
         }}
+    }
+    
+}
+
+// MARK: - UIViewController+UIKit
+@_spi(FW) @objc extension UIViewController {
+    
+    /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+    public var fw_isRoot: Bool {
+        return self.navigationController == nil ||
+            self.navigationController?.viewControllers.first == self
+    }
+
+    /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
+    public var fw_isChild: Bool {
+        if let parent = self.parent,
+           !(parent is UINavigationController),
+           !(parent is UITabBarController) {
+            return true
+        }
+        return false
+    }
+
+    /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
+    public var fw_isPresented: Bool {
+        var viewController: UIViewController = self
+        if let navigationController = self.navigationController {
+            if navigationController.viewControllers.first != self { return false }
+            viewController = navigationController
+        }
+        return viewController.presentingViewController?.presentedViewController == viewController
+    }
+
+    /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
+    public var fw_isPageSheet: Bool {
+        if #available(iOS 13.0, *) {
+            let controller: UIViewController = self.navigationController ?? self
+            if controller.presentingViewController == nil { return false }
+            let style = controller.modalPresentationStyle
+            if style == .automatic || style == .pageSheet { return true }
+        }
+        return false
+    }
+
+    /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
+    public var fw_isViewVisible: Bool {
+        return self.isViewLoaded && self.view.window != nil
+    }
+    
+    /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
+    public var fw_ancestorView: UIView {
+        if let navigationController = self.tabBarController?.navigationController {
+            return navigationController.view
+        } else if let tabBarController = self.tabBarController {
+            return tabBarController.view
+        } else if let navigationController = self.navigationController {
+            return navigationController.view
+        } else {
+            return self.view
+        }
+    }
+
+    /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
+    public var fw_isLoaded: Bool {
+        get { return fw_propertyBool(forName: "fw_isLoaded") }
+        set { fw_setPropertyBool(newValue, forName: "fw_isLoaded") }
+    }
+    
+    /// 移除子控制器，解决不能触发viewWillAppear等的bug
+    public func fw_removeChildViewController(_ viewController: UIViewController) {
+        viewController.willMove(toParent: nil)
+        viewController.removeFromParent()
+        viewController.view.removeFromSuperview()
+    }
+    
+    /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
+    public func fw_addChildViewController(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
+        fw_addChildViewController(viewController, in: nil, layout: layout)
+    }
+
+    /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
+    public func fw_addChildViewController(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
+        self.addChild(viewController)
+        let superview: UIView = view ?? self.view
+        superview.addSubview(viewController.view)
+        if layout != nil {
+            layout?(viewController.view)
+        } else {
+            viewController.view.fw_pinEdges()
+        }
+        viewController.didMove(toParent: self)
+    }
+    
+}
+
+// MARK: - UIKitAutoloader
+internal class UIKitAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        UIView.fw_swizzleUIKitView()
+        UILabel.fw_swizzleUIKitLabel()
+        UIControl.fw_swizzleUIKitControl()
+        UIButton.fw_swizzleUIKitButton()
+        UITextField.fw_swizzleUIKitTextField()
+        UITextView.fw_swizzleUIKitTextView()
+        UISearchBar.fw_swizzleUIKitSearchBar()
     }
     
 }

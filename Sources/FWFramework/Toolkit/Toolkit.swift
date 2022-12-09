@@ -1687,6 +1687,72 @@ public enum ViewControllerVisibleState: Int {
         set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
     }
     
+    fileprivate static func fw_swizzleToolkitViewController() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            selfObject.fw_visibleState = .didLoad
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willAppear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didAppear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willDisappear
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didDisappear
+        }}
+        
+        NSObject.fw.swizzleDeallocMethod(UIViewController.self) { selfObject in
+            // dealloc时不调用fw，防止释放时动态创建包装器对象
+            let completionHandler = selfObject.fw_completionHandler
+            if completionHandler != nil {
+                let completionResult = selfObject.fw_completionResult
+                completionHandler?(completionResult)
+            }
+        }
+    }
+    
 }
 
 @objc extension UIViewController {
@@ -1798,13 +1864,13 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
     public func fw_enablePopProxy() {
         self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
         fw_setPropertyBool(true, forName: "fw_popProxyEnabled")
-        UINavigationController.fw_swizzlePopProxy()
+        UINavigationController.fw_swizzleToolkitNavigationController()
     }
     
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func fw_enablePopProxy() {
         fw_staticPopProxyEnabled = true
-        fw_swizzlePopProxy()
+        fw_swizzleToolkitNavigationController()
     }
     
     private var fw_popProxyEnabled: Bool {
@@ -1834,7 +1900,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
     private static var fw_staticPopProxyEnabled = false
     private static var fw_staticPopProxySwizzled = false
     
-    private static func fw_swizzlePopProxy() {
+    private static func fw_swizzleToolkitNavigationController() {
         guard !fw_staticPopProxySwizzled else { return }
         fw_staticPopProxySwizzled = true
         
@@ -1905,69 +1971,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
 internal class ToolkitAutoloader: AutoloadProtocol {
     
     static func autoload() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLoad),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            selfObject.fw_visibleState = .didLoad
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .willAppear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .didAppear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .willDisappear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .didDisappear
-        }}
-        
-        NSObject.fw.swizzleDeallocMethod(UIViewController.self) { selfObject in
-            // dealloc时不调用fw，防止释放时动态创建包装器对象
-            let completionHandler = selfObject.fw_completionHandler
-            if completionHandler != nil {
-                let completionResult = selfObject.fw_completionResult
-                completionHandler?(completionResult)
-            }
-        }
+        UIViewController.fw_swizzleToolkitViewController()
     }
     
 }

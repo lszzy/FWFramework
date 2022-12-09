@@ -733,6 +733,43 @@ import FWObjC
         }
     }
     
+    fileprivate static func fw_swizzleAutoLayoutView() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.updateConstraints),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_autoCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
+                // Absent意味着视图没有固有size，即{-1, -1}
+                let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+                // 计算固有尺寸
+                let contentSize = selfObject.intrinsicContentSize
+                // 如果视图没有固定尺寸，自动设置约束
+                if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
+                    selfObject.fw_collapsed = true
+                } else {
+                    selfObject.fw_collapsed = false
+                }
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.isHidden),
+            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+        ) { store in { selfObject, hidden in
+            store.original(selfObject, store.selector, hidden)
+            
+            if selfObject.fw_hiddenCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
+                selfObject.fw_collapsed = hidden
+            }
+        }}
+    }
+    
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
@@ -775,40 +812,7 @@ import FWObjC
 internal class AutoLayoutAutoloader: AutoloadProtocol {
     
     static func autoload() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.updateConstraints),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_autoCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
-                // Absent意味着视图没有固有size，即{-1, -1}
-                let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
-                // 计算固有尺寸
-                let contentSize = selfObject.intrinsicContentSize
-                // 如果视图没有固定尺寸，自动设置约束
-                if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
-                    selfObject.fw_collapsed = true
-                } else {
-                    selfObject.fw_collapsed = false
-                }
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.isHidden),
-            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
-        ) { store in { selfObject, hidden in
-            store.original(selfObject, store.selector, hidden)
-            
-            if selfObject.fw_hiddenCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
-                selfObject.fw_collapsed = hidden
-            }
-        }}
+        UIView.fw_swizzleAutoLayoutView()
     }
     
 }
