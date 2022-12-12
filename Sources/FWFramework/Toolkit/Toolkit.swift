@@ -1750,6 +1750,10 @@ public enum ViewControllerVisibleState: Int {
                 let completionResult = selfObject.fw_completionResult
                 completionHandler?(completionResult)
             }
+            
+            #if DEBUG
+            NSLog("%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
+            #endif
         }
     }
     
