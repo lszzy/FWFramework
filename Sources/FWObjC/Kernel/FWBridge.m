@@ -292,12 +292,6 @@
     }
 }
 
-+ (void)synchronized:(id)object closure:(__attribute__((noescape)) void (^)(void))closure {
-    @synchronized(object) {
-        closure();
-    }
-}
-
 + (BOOL)isEqual:(id)obj1 with:(id)obj2 {
     return obj1 == obj2;
 }

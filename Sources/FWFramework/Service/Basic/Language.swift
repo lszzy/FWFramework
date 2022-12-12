@@ -66,7 +66,7 @@ import FWObjC
     /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
     public func fw_localizedBundle() -> Bundle {
         if self.isKind(of: TargetBundle.self) { return self }
-        __Runtime.synchronized(self) {
+        fw_synchronized {
             if !self.isKind(of: TargetBundle.self) {
                 object_setClass(self, TargetBundle.self)
                 
@@ -134,8 +134,10 @@ import FWObjC
     }
     
     fileprivate static func fw_localizedChanged(_ language: String?) {
-        fw_performOnce(fw_localizedIdentifier) {
-            object_setClass(Bundle.main, TargetBundle.self)
+        fw_synchronized {
+            if object_getClass(Bundle.main) != TargetBundle.self {
+                object_setClass(Bundle.main, TargetBundle.self)
+            }
         }
         
         var bundle: Bundle?
@@ -145,8 +147,6 @@ import FWObjC
         }
         Bundle.main.fw_setProperty(bundle, forName: "fw_localizedBundle")
     }
-    
-    private static let fw_localizedIdentifier = UUID().uuidString
     
     // MARK: - Bundle
     /// 加载指定名称bundle对象，bundle文件需位于mainBundle

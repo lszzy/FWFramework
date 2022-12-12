@@ -488,6 +488,22 @@ extension Wrapper where Base: NSObject {
         base.fw_synchronized(closure)
     }
     
+    /// 同一个token仅执行一次block，全局范围
+    public static func dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        Base.fw_dispatchOnce(token, closure: closure)
+    }
+    
+    /// 同一个token仅执行一次block，对象范围
+    public func dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        base.fw_dispatchOnce(token, closure: closure)
+    }
+    
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
@@ -514,14 +530,6 @@ extension Wrapper where Base: NSObject {
         afterDelay delay: TimeInterval
     ) -> Any {
         return base.fw_performBlock(block, on: on, afterDelay: delay)
-    }
-    
-    /// 同一个identifier仅执行一次block，对象范围
-    public func performOnce(
-        _ identifier: String,
-        with block: @escaping () -> Void
-    ) {
-        base.fw_performOnce(identifier, with: block)
     }
     
     /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
@@ -562,14 +570,6 @@ extension Wrapper where Base: NSObject {
         asyncBlock: @escaping (@escaping () -> Void) -> Void
     ) {
         Base.fw_syncPerform(asyncBlock: asyncBlock)
-    }
-
-    /// 同一个identifier仅执行一次block，全局范围
-    public static func performOnce(
-        _ identifier: String,
-        with block: @escaping () -> Void
-    ) {
-        Base.fw_performOnce(identifier, with: block)
     }
 
     /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
