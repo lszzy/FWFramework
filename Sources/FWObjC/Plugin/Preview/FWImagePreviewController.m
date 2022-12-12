@@ -6,7 +6,6 @@
 //
 
 #import "FWImagePreviewController.h"
-#import "FWToolkit.h"
 
 #if FWMacroSPM
 

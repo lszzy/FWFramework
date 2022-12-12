@@ -6,7 +6,6 @@
 //
 
 #import "FWAnimatedImage.h"
-#import "FWToolkit.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 #import <dlfcn.h>

@@ -7,7 +7,6 @@
 
 #import "FWImagePlugin.h"
 #import "FWPlugin.h"
-#import "FWToolkit.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
