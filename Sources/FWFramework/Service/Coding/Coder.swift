@@ -20,8 +20,8 @@ extension PropertyListEncoder: AnyEncoder {}
 #endif
 
 // MARK: - Data+AnyEncoder
-extension Wrapper where Base == Data {
-    public static func encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+@_spi(FW) extension Data {
+    public static func fw_encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
         return try encoder.encode(value)
     }
 }
@@ -64,10 +64,10 @@ extension PropertyListDecoder: AnyDecoder {}
 #endif
 
 // MARK: - Data+AnyDecoder
-extension Wrapper where Base == Data {
-    public func decoded<T: Decodable>(as type: T.Type = T.self,
+@_spi(FW) extension Data {
+    public func fw_decoded<T: Decodable>(as type: T.Type = T.self,
                                       using decoder: AnyDecoder = JSONDecoder()) throws -> T {
-        return try decoder.decode(T.self, from: self.base)
+        return try decoder.decode(T.self, from: self)
     }
 }
 
