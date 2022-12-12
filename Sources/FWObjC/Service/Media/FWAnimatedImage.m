@@ -25,264 +25,6 @@
 
 #endif
 
-#pragma mark - UIImage+FWAnimated
-
-@implementation UIImage (FWAnimated)
-
-- (NSUInteger)fw_imageLoopCount
-{
-    return [objc_getAssociatedObject(self, @selector(fw_imageLoopCount)) unsignedIntegerValue];
-}
-
-- (void)setFw_imageLoopCount:(NSUInteger)imageLoopCount
-{
-    objc_setAssociatedObject(self, @selector(fw_imageLoopCount), @(imageLoopCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)fw_isAnimated
-{
-    return self.images != nil;
-}
-
-- (BOOL)fw_isVector
-{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if (@available(iOS 13.0, *)) {
-        // Xcode 11 supports symbol image, keep Xcode 10 compatible currently
-        SEL SymbolSelector = NSSelectorFromString(@"isSymbolImage");
-        if ([self respondsToSelector:SymbolSelector] && [self performSelector:SymbolSelector]) {
-            return YES;
-        }
-        // SVG
-        SEL SVGSelector = NSSelectorFromString([NSString stringWithFormat:@"_%@", @"CGSVGDocument"]);
-        if ([self respondsToSelector:SVGSelector] && [self performSelector:SVGSelector]) {
-            return YES;
-        }
-    }
-    // PDF
-    SEL PDFSelector = NSSelectorFromString([NSString stringWithFormat:@"_%@", @"CGPDFPage"]);
-    if ([self respondsToSelector:PDFSelector] && [self performSelector:PDFSelector]) {
-        return YES;
-    }
-    return NO;
-#pragma clang diagnostic pop
-}
-
-- (FWImageFormat)fw_imageFormat
-{
-    NSNumber *value = objc_getAssociatedObject(self, @selector(fw_imageFormat));
-    if (value) {
-        return [value integerValue];
-    }
-    CFStringRef uttype = CGImageGetUTType(self.CGImage);
-    return [NSData fw_imageFormatFromUTType:uttype];
-}
-
-- (void)setFw_imageFormat:(FWImageFormat)imageFormat
-{
-    objc_setAssociatedObject(self, @selector(fw_imageFormat), @(imageFormat), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-#pragma mark - NSData+FWAnimated
-
-#define kSVGTagEnd @"</svg>"
-
-@implementation NSData (FWAnimated)
-
-+ (FWImageFormat)fw_imageFormatForImageData:(NSData *)data
-{
-    if (data.length < 1) {
-        return FWImageFormatUndefined;
-    }
-    
-    // File signatures table: http://www.garykessler.net/library/file_sigs.html
-    uint8_t c;
-    [data getBytes:&c length:1];
-    switch (c) {
-        case 0xFF:
-            return FWImageFormatJPEG;
-        case 0x89:
-            return FWImageFormatPNG;
-        case 0x47:
-            return FWImageFormatGIF;
-        case 0x49:
-        case 0x4D:
-            return FWImageFormatTIFF;
-        case 0x52: {
-            if (data.length >= 12) {
-                //RIFF....WEBP
-                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, 12)] encoding:NSASCIIStringEncoding];
-                if ([testString hasPrefix:@"RIFF"] && [testString hasSuffix:@"WEBP"]) {
-                    return FWImageFormatWebP;
-                }
-            }
-            break;
-        }
-        case 0x00: {
-            if (data.length >= 12) {
-                //....ftypheic ....ftypheix ....ftyphevc ....ftyphevx
-                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(4, 8)] encoding:NSASCIIStringEncoding];
-                if ([testString isEqualToString:@"ftypheic"]
-                    || [testString isEqualToString:@"ftypheix"]
-                    || [testString isEqualToString:@"ftyphevc"]
-                    || [testString isEqualToString:@"ftyphevx"]) {
-                    return FWImageFormatHEIC;
-                }
-                //....ftypmif1 ....ftypmsf1
-                if ([testString isEqualToString:@"ftypmif1"] || [testString isEqualToString:@"ftypmsf1"]) {
-                    return FWImageFormatHEIF;
-                }
-            }
-            break;
-        }
-        case 0x25: {
-            if (data.length >= 4) {
-                //%PDF
-                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(1, 3)] encoding:NSASCIIStringEncoding];
-                if ([testString isEqualToString:@"PDF"]) {
-                    return FWImageFormatPDF;
-                }
-            }
-        }
-        case 0x3C: {
-            // Check end with SVG tag
-            if ([data rangeOfData:[kSVGTagEnd dataUsingEncoding:NSUTF8StringEncoding] options:NSDataSearchBackwards range: NSMakeRange(data.length - MIN(100, data.length), MIN(100, data.length))].location != NSNotFound) {
-                return FWImageFormatSVG;
-            }
-        }
-    }
-    return FWImageFormatUndefined;
-}
-
-+ (nonnull CFStringRef)fw_UTTypeFromImageFormat:(FWImageFormat)format
-{
-    CFStringRef UTType;
-    switch (format) {
-        case FWImageFormatJPEG:
-            UTType = kUTTypeJPEG;
-            break;
-        case FWImageFormatPNG:
-            UTType = kUTTypePNG;
-            break;
-        case FWImageFormatGIF:
-            UTType = kUTTypeGIF;
-            break;
-        case FWImageFormatTIFF:
-            UTType = kUTTypeTIFF;
-            break;
-        case FWImageFormatWebP:
-            UTType = kFWUTTypeWebP;
-            break;
-        case FWImageFormatHEIC:
-            UTType = kFWUTTypeHEIC;
-            break;
-        case FWImageFormatHEIF:
-            UTType = kFWUTTypeHEIF;
-            break;
-        case FWImageFormatPDF:
-            UTType = kUTTypePDF;
-            break;
-        case FWImageFormatSVG:
-            UTType = kUTTypeScalableVectorGraphics;
-            break;
-        default:
-            // default is kUTTypeImage abstract type
-            UTType = kUTTypeImage;
-            break;
-    }
-    return UTType;
-}
-
-+ (FWImageFormat)fw_imageFormatFromUTType:(CFStringRef)uttype
-{
-    if (!uttype) {
-        return FWImageFormatUndefined;
-    }
-    FWImageFormat imageFormat;
-    if (CFStringCompare(uttype, kUTTypeJPEG, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatJPEG;
-    } else if (CFStringCompare(uttype, kUTTypePNG, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatPNG;
-    } else if (CFStringCompare(uttype, kUTTypeGIF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatGIF;
-    } else if (CFStringCompare(uttype, kUTTypeTIFF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatTIFF;
-    } else if (CFStringCompare(uttype, kFWUTTypeWebP, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatWebP;
-    } else if (CFStringCompare(uttype, kFWUTTypeHEIC, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatHEIC;
-    } else if (CFStringCompare(uttype, kFWUTTypeHEIF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatHEIF;
-    } else if (CFStringCompare(uttype, kUTTypePDF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatPDF;
-    } else if (CFStringCompare(uttype, kUTTypeScalableVectorGraphics, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatSVG;
-    } else {
-        imageFormat = FWImageFormatUndefined;
-    }
-    return imageFormat;
-}
-
-+ (NSString *)fw_mimeTypeFromImageFormat:(FWImageFormat)format
-{
-    NSString *mimeType;
-    switch (format) {
-        case FWImageFormatJPEG:
-            mimeType = @"image/jpeg";
-            break;
-        case FWImageFormatPNG:
-            mimeType = @"image/png";
-            break;
-        case FWImageFormatGIF:
-            mimeType = @"image/gif";
-            break;
-        case FWImageFormatTIFF:
-            mimeType = @"image/tiff";
-            break;
-        case FWImageFormatWebP:
-            mimeType = @"image/webp";
-            break;
-        case FWImageFormatHEIC:
-            mimeType = @"image/heic";
-            break;
-        case FWImageFormatHEIF:
-            mimeType = @"image/heif";
-            break;
-        case FWImageFormatPDF:
-            mimeType = @"application/pdf";
-            break;
-        case FWImageFormatSVG:
-            mimeType = @"image/svg+xml";
-            break;
-        default:
-            mimeType = @"application/octet-stream";
-            break;
-    }
-    return mimeType;
-}
-
-+ (NSString *)fw_mimeTypeFromExtension:(NSString *)extension
-{
-    NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
-    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
-    if (!mimeType) mimeType = @"application/octet-stream";
-    return mimeType;
-}
-
-+ (NSString *)fw_base64StringForImageData:(NSData *)data
-{
-    if (data.length < 1) return nil;
-    NSString *base64String = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-    NSString *mimeType = [NSData fw_mimeTypeFromImageFormat:[NSData fw_imageFormatForImageData:data]];
-    NSString *base64Prefix = [NSString stringWithFormat:@"data:%@;base64,", mimeType];
-    return [base64Prefix stringByAppendingString:base64String];
-}
-
-@end
-
 #pragma mark - FWImageFrame
 
 @implementation FWImageFrame
@@ -402,6 +144,8 @@
 
 #pragma mark - FWImageCoder
 
+#define kSVGTagEnd @"</svg>"
+
 typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
 static void (*FWCGSVGDocumentRelease)(CGSVGDocumentRef);
 static CGSVGDocumentRef (*FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
@@ -449,7 +193,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
     
     UIImage *animatedImage;
     size_t count = CGImageSourceGetCount(source);
-    FWImageFormat format = [NSData fw_imageFormatForImageData:data];
+    FWImageFormat format = [FWImageCoder imageFormatForImageData:data];
     if (format == FWImageFormatSVG) {
         if (@available(iOS 13.0, *)) {
             if ([UIImage respondsToSelector:FWImageWithCGSVGDocumentSEL]) {
@@ -507,7 +251,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
     if (!imageRef) return nil;
     
     NSMutableData *imageData = [NSMutableData data];
-    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
+    CFStringRef imageUTType = [FWImageCoder utTypeFromImageFormat:format];
     BOOL isAnimated = [self isAnimated:format forDecode:NO];
     NSArray<FWImageFrame *> *frames = isAnimated ? [FWImageFrame framesFromAnimatedImage:image] : nil;
     size_t count = frames.count > 0 ? frames.count : 1;
@@ -576,7 +320,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
         NSArray *encodeUTTypes = (__bridge_transfer NSArray *)CGImageDestinationCopyTypeIdentifiers();
         encodeUTTypeSet = [NSSet setWithArray:encodeUTTypes];
     });
-    CFStringRef imageUTType = [NSData fw_UTTypeFromImageFormat:format];
+    CFStringRef imageUTType = [FWImageCoder utTypeFromImageFormat:format];
     NSSet *imageUTTypeSet = forDecode ? decodeUTTypeSet : encodeUTTypeSet;
     if ([imageUTTypeSet containsObject:(__bridge NSString *)(imageUTType)]) {
         return YES;
@@ -772,7 +516,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
 - (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale
 {
     CFStringRef uttype = CGImageSourceGetType(source);
-    BOOL isVector = ([NSData fw_imageFormatFromUTType:uttype] == FWImageFormatPDF);
+    BOOL isVector = ([FWImageCoder imageFormatFromUTType:uttype] == FWImageFormatPDF);
 
     NSMutableDictionary *decodingOptions = [NSMutableDictionary dictionary];
     if (isVector) {
@@ -786,6 +530,221 @@ static SEL FWCGSVGDocumentSEL = NULL;
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
     CGImageRelease(imageRef);
     return image;
+}
+
++ (FWImageFormat)imageFormatForImageData:(NSData *)data
+{
+    if (data.length < 1) {
+        return FWImageFormatUndefined;
+    }
+    
+    // File signatures table: http://www.garykessler.net/library/file_sigs.html
+    uint8_t c;
+    [data getBytes:&c length:1];
+    switch (c) {
+        case 0xFF:
+            return FWImageFormatJPEG;
+        case 0x89:
+            return FWImageFormatPNG;
+        case 0x47:
+            return FWImageFormatGIF;
+        case 0x49:
+        case 0x4D:
+            return FWImageFormatTIFF;
+        case 0x52: {
+            if (data.length >= 12) {
+                //RIFF....WEBP
+                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, 12)] encoding:NSASCIIStringEncoding];
+                if ([testString hasPrefix:@"RIFF"] && [testString hasSuffix:@"WEBP"]) {
+                    return FWImageFormatWebP;
+                }
+            }
+            break;
+        }
+        case 0x00: {
+            if (data.length >= 12) {
+                //....ftypheic ....ftypheix ....ftyphevc ....ftyphevx
+                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(4, 8)] encoding:NSASCIIStringEncoding];
+                if ([testString isEqualToString:@"ftypheic"]
+                    || [testString isEqualToString:@"ftypheix"]
+                    || [testString isEqualToString:@"ftyphevc"]
+                    || [testString isEqualToString:@"ftyphevx"]) {
+                    return FWImageFormatHEIC;
+                }
+                //....ftypmif1 ....ftypmsf1
+                if ([testString isEqualToString:@"ftypmif1"] || [testString isEqualToString:@"ftypmsf1"]) {
+                    return FWImageFormatHEIF;
+                }
+            }
+            break;
+        }
+        case 0x25: {
+            if (data.length >= 4) {
+                //%PDF
+                NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(1, 3)] encoding:NSASCIIStringEncoding];
+                if ([testString isEqualToString:@"PDF"]) {
+                    return FWImageFormatPDF;
+                }
+            }
+        }
+        case 0x3C: {
+            // Check end with SVG tag
+            if ([data rangeOfData:[kSVGTagEnd dataUsingEncoding:NSUTF8StringEncoding] options:NSDataSearchBackwards range: NSMakeRange(data.length - MIN(100, data.length), MIN(100, data.length))].location != NSNotFound) {
+                return FWImageFormatSVG;
+            }
+        }
+    }
+    return FWImageFormatUndefined;
+}
+
++ (nonnull CFStringRef)utTypeFromImageFormat:(FWImageFormat)format
+{
+    CFStringRef UTType;
+    switch (format) {
+        case FWImageFormatJPEG:
+            UTType = kUTTypeJPEG;
+            break;
+        case FWImageFormatPNG:
+            UTType = kUTTypePNG;
+            break;
+        case FWImageFormatGIF:
+            UTType = kUTTypeGIF;
+            break;
+        case FWImageFormatTIFF:
+            UTType = kUTTypeTIFF;
+            break;
+        case FWImageFormatWebP:
+            UTType = kFWUTTypeWebP;
+            break;
+        case FWImageFormatHEIC:
+            UTType = kFWUTTypeHEIC;
+            break;
+        case FWImageFormatHEIF:
+            UTType = kFWUTTypeHEIF;
+            break;
+        case FWImageFormatPDF:
+            UTType = kUTTypePDF;
+            break;
+        case FWImageFormatSVG:
+            UTType = kUTTypeScalableVectorGraphics;
+            break;
+        default:
+            // default is kUTTypeImage abstract type
+            UTType = kUTTypeImage;
+            break;
+    }
+    return UTType;
+}
+
++ (FWImageFormat)imageFormatFromUTType:(CFStringRef)uttype
+{
+    if (!uttype) {
+        return FWImageFormatUndefined;
+    }
+    FWImageFormat imageFormat;
+    if (CFStringCompare(uttype, kUTTypeJPEG, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatJPEG;
+    } else if (CFStringCompare(uttype, kUTTypePNG, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatPNG;
+    } else if (CFStringCompare(uttype, kUTTypeGIF, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatGIF;
+    } else if (CFStringCompare(uttype, kUTTypeTIFF, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatTIFF;
+    } else if (CFStringCompare(uttype, kFWUTTypeWebP, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatWebP;
+    } else if (CFStringCompare(uttype, kFWUTTypeHEIC, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatHEIC;
+    } else if (CFStringCompare(uttype, kFWUTTypeHEIF, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatHEIF;
+    } else if (CFStringCompare(uttype, kUTTypePDF, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatPDF;
+    } else if (CFStringCompare(uttype, kUTTypeScalableVectorGraphics, 0) == kCFCompareEqualTo) {
+        imageFormat = FWImageFormatSVG;
+    } else {
+        imageFormat = FWImageFormatUndefined;
+    }
+    return imageFormat;
+}
+
++ (NSString *)mimeTypeFromImageFormat:(FWImageFormat)format
+{
+    NSString *mimeType;
+    switch (format) {
+        case FWImageFormatJPEG:
+            mimeType = @"image/jpeg";
+            break;
+        case FWImageFormatPNG:
+            mimeType = @"image/png";
+            break;
+        case FWImageFormatGIF:
+            mimeType = @"image/gif";
+            break;
+        case FWImageFormatTIFF:
+            mimeType = @"image/tiff";
+            break;
+        case FWImageFormatWebP:
+            mimeType = @"image/webp";
+            break;
+        case FWImageFormatHEIC:
+            mimeType = @"image/heic";
+            break;
+        case FWImageFormatHEIF:
+            mimeType = @"image/heif";
+            break;
+        case FWImageFormatPDF:
+            mimeType = @"application/pdf";
+            break;
+        case FWImageFormatSVG:
+            mimeType = @"image/svg+xml";
+            break;
+        default:
+            mimeType = @"application/octet-stream";
+            break;
+    }
+    return mimeType;
+}
+
++ (NSString *)mimeTypeFromExtension:(NSString *)extension
+{
+    NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+    if (!mimeType) mimeType = @"application/octet-stream";
+    return mimeType;
+}
+
++ (NSString *)base64StringForImageData:(NSData *)data
+{
+    if (data.length < 1) return nil;
+    NSString *base64String = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    NSString *mimeType = [FWImageCoder mimeTypeFromImageFormat:[FWImageCoder imageFormatForImageData:data]];
+    NSString *base64Prefix = [NSString stringWithFormat:@"data:%@;base64,", mimeType];
+    return [base64Prefix stringByAppendingString:base64String];
+}
+
++ (BOOL)isVectorImage:(UIImage *)image
+{
+    if (!image) return NO;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if (@available(iOS 13.0, *)) {
+        // Xcode 11 supports symbol image, keep Xcode 10 compatible currently
+        SEL SymbolSelector = NSSelectorFromString(@"isSymbolImage");
+        if ([image respondsToSelector:SymbolSelector] && [image performSelector:SymbolSelector]) {
+            return YES;
+        }
+        // SVG
+        SEL SVGSelector = NSSelectorFromString([NSString stringWithFormat:@"_%@", @"CGSVGDocument"]);
+        if ([image respondsToSelector:SVGSelector] && [image performSelector:SVGSelector]) {
+            return YES;
+        }
+    }
+    // PDF
+    SEL PDFSelector = NSSelectorFromString([NSString stringWithFormat:@"_%@", @"CGPDFPage"]);
+    if ([image respondsToSelector:PDFSelector] && [image performSelector:PDFSelector]) {
+        return YES;
+    }
+    return NO;
+#pragma clang diagnostic pop
 }
 
 @end

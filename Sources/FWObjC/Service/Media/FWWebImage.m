@@ -10,6 +10,16 @@
 #import "FWPlugin.h"
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - FWAutoPurgingImageCache
 
 @interface FWCachedImage : NSObject
