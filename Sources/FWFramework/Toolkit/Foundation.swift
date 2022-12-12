@@ -10,6 +10,16 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - FW+Foundation
+extension FW {
+
+    /// 通用互斥锁方法
+    public static func synchronized(_ object: AnyObject, closure: () -> Void) {
+        __Runtime.synchronized(object, closure: closure)
+    }
+    
+}
+
 // MARK: - Data+Foundation
 @_spi(FW) extension Data {
     /// 使用NSKeyedArchiver压缩对象
@@ -792,6 +802,16 @@ import FWObjC
         }
     }
     
+    /// 通用互斥锁方法
+    public static func fw_synchronized(_ closure: () -> Void) {
+        __Runtime.synchronized(self, closure: closure)
+    }
+    
+    /// 通用互斥锁方法
+    public func fw_synchronized(_ closure: () -> Void) {
+        __Runtime.synchronized(self, closure: closure)
+    }
+    
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func fw_performBlock(
@@ -849,8 +869,8 @@ import FWObjC
             }
             
             if !identifiers.contains(identifier) {
-                block()
                 identifiers.add(identifier)
+                block()
             }
         }
     }
@@ -921,15 +941,17 @@ import FWObjC
         _ identifier: String,
         with block: @escaping () -> Void
     ) {
-        __Runtime.synchronized(fw_staticIdentifiers) {
-            if !fw_staticIdentifiers.contains(identifier) {
-                block()
-                fw_staticIdentifiers.add(identifier)
-            }
+        objc_sync_enter(NSObject.self)
+        defer {
+            objc_sync_exit(NSObject.self)
         }
+        
+        guard !fw_staticIdentifiers.contains(identifier) else { return }
+        fw_staticIdentifiers.append(identifier)
+        block()
     }
     
-    private static var fw_staticIdentifiers = NSMutableSet()
+    private static var fw_staticIdentifiers = [String]()
 
     /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func fw_performBlock(

@@ -478,6 +478,16 @@ extension Wrapper where Base: NSObject {
         base.fw_unlock()
     }
     
+    /// 通用互斥锁方法
+    public static func synchronized(_ closure: () -> Void) {
+        Base.fw_synchronized(closure)
+    }
+    
+    /// 通用互斥锁方法
+    public func synchronized(_ closure: () -> Void) {
+        base.fw_synchronized(closure)
+    }
+    
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(

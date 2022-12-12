@@ -10,25 +10,6 @@ import UIKit
 import FWObjC
 #endif
 
-// MARK: - FW+Block
-extension FW {
-
-    /// 通用互斥锁方法
-    public static func synchronized(_ object: AnyObject, closure: () -> Void) {
-        __Runtime.synchronized(object, closure: closure)
-    }
-    
-    /// 通用互斥锁泛型方法
-    public static func synchronized<T>(_ object: AnyObject, closure: () -> T) -> T {
-        var result: T? = nil
-        __Runtime.synchronized(object) {
-            result = closure()
-        }
-        return result!
-    }
-    
-}
-
 // MARK: - Block
 /// 通用无参数block
 public typealias BlockVoid = () -> ()

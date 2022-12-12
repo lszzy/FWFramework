@@ -15,7 +15,6 @@
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
 #import "FWAppBundle.h"
-#import "FWToolkit.h"
 #import "FWEncode.h"
 #import <objc/runtime.h>
 
