@@ -14,8 +14,21 @@ import FWObjC
 extension FW {
 
     /// 通用互斥锁方法
-    public static func synchronized(_ object: AnyObject, closure: () -> Void) {
-        __Runtime.synchronized(object, closure: closure)
+    public static func synchronized(_ object: Any, closure: () -> Void) {
+        objc_sync_enter(object)
+        defer {
+            objc_sync_exit(object)
+        }
+        
+        closure()
+    }
+    
+    /// 同一个token仅执行一次block，全局范围
+    public static func dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        NSObject.fw_dispatchOnce(token, closure: closure)
     }
     
 }
@@ -791,7 +804,7 @@ extension FW {
             return semaphore
         } else {
             var semaphore: DispatchSemaphore?
-            __Runtime.synchronized(self) {
+            fw_synchronized {
                 semaphore = fw_property(forName: "fw_lockSemaphore") as? DispatchSemaphore
                 if semaphore == nil {
                     semaphore = DispatchSemaphore(value: 1)
@@ -804,12 +817,59 @@ extension FW {
     
     /// 通用互斥锁方法
     public static func fw_synchronized(_ closure: () -> Void) {
-        __Runtime.synchronized(self, closure: closure)
+        objc_sync_enter(self)
+        defer {
+            objc_sync_exit(self)
+        }
+        
+        closure()
     }
     
     /// 通用互斥锁方法
     public func fw_synchronized(_ closure: () -> Void) {
-        __Runtime.synchronized(self, closure: closure)
+        objc_sync_enter(self)
+        defer {
+            objc_sync_exit(self)
+        }
+        
+        closure()
+    }
+    
+    /// 同一个token仅执行一次闭包，全局范围
+    public static func fw_dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        objc_sync_enter(NSObject.self)
+        defer {
+            objc_sync_exit(NSObject.self)
+        }
+        
+        guard !fw_staticTokens.contains(token) else { return }
+        fw_staticTokens.append(token)
+        closure()
+    }
+    
+    private static var fw_staticTokens = [String]()
+    
+    /// 同一个token仅执行一次block，对象范围
+    public func fw_dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        fw_synchronized {
+            var tokens: NSMutableSet
+            if let mutableSet = fw_property(forName: "fw_dispatchOnce") as? NSMutableSet {
+                tokens = mutableSet
+            } else {
+                tokens = NSMutableSet()
+                fw_setProperty(tokens, forName: "fw_dispatchOnce")
+            }
+            
+            guard !tokens.contains(token) else { return }
+            tokens.add(token)
+            closure()
+        }
     }
     
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
@@ -852,27 +912,6 @@ extension FW {
             wrapper(false)
         }
         return wrapper
-    }
-    
-    /// 同一个identifier仅执行一次block，对象范围
-    public func fw_performOnce(
-        _ identifier: String,
-        with block: @escaping () -> Void
-    ) {
-        __Runtime.synchronized(self) {
-            var identifiers: NSMutableSet
-            if let mutableSet = fw_property(forName: "fw_performOnce") as? NSMutableSet {
-                identifiers = mutableSet
-            } else {
-                identifiers = NSMutableSet()
-                fw_setProperty(identifiers, forName: "fw_performOnce")
-            }
-            
-            if !identifiers.contains(identifier) {
-                identifiers.add(identifier)
-                block()
-            }
-        }
     }
     
     /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
@@ -935,23 +974,6 @@ extension FW {
         asyncBlock(completionHandler)
         semaphore.wait()
     }
-
-    /// 同一个identifier仅执行一次block，全局范围
-    public static func fw_performOnce(
-        _ identifier: String,
-        with block: @escaping () -> Void
-    ) {
-        objc_sync_enter(NSObject.self)
-        defer {
-            objc_sync_exit(NSObject.self)
-        }
-        
-        guard !fw_staticIdentifiers.contains(identifier) else { return }
-        fw_staticIdentifiers.append(identifier)
-        block()
-    }
-    
-    private static var fw_staticIdentifiers = [String]()
 
     /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func fw_performBlock(
