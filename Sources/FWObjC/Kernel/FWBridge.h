@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) id delegate;
 
-@property (nonatomic, readwrite, nullable) Protocol *protocol;
-
 @end
 
 #pragma mark - __WeakObject
