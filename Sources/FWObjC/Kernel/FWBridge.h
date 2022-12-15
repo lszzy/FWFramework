@@ -30,11 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface __DelegateProxy : NSObject
 
-@property (nonatomic, readonly) Protocol *protocol;
-
 @property (nonatomic, weak, nullable) id delegate;
 
-- (instancetype)initWithProtocol:(Protocol *)protocol;
+@property (nonatomic, readwrite, nullable) Protocol *protocol;
 
 @end
 

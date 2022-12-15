@@ -334,7 +334,7 @@ typedef struct FWProxyBlock {
 
 - (BOOL)conformsToProtocol:(Protocol *)aProtocol
 {
-    if (protocol_isEqual(aProtocol, self.protocol)) {
+    if (self.protocol && protocol_isEqual(aProtocol, self.protocol)) {
         return YES;
     }
     if ([self.delegate conformsToProtocol:aProtocol]) {

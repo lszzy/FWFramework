@@ -121,7 +121,7 @@ NS_SWIFT_UNAVAILABLE("")
 @interface FWDelegateProxy : NSObject
 
 /** 代理事件协议 */
-@property (nonatomic, readonly) Protocol *protocol;
+@property (nullable, nonatomic, readwrite) Protocol *protocol;
 
 /** 事件代理对象 */
 @property (nullable, nonatomic, weak) id delegate;
