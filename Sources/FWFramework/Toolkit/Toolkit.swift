@@ -1780,9 +1780,9 @@ public enum ViewControllerVisibleState: Int {
 }
 
 // MARK: - UINavigationController+Toolkit
-fileprivate protocol GestureRecognizerDelegateCompatible {
+@objc fileprivate protocol GestureRecognizerDelegateCompatible {
     
-    func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
+    @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
     
 }
 
@@ -1812,7 +1812,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
         
     }
     
-    private class GestureRecognizerDelegateProxy: DelegateProxy, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
+    private class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
         
         weak var navigationController: UINavigationController?
         
@@ -1827,7 +1827,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
                 // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
                 let shouldPop = navigationController?.topViewController?.shouldPopController ?? false
                 if shouldPop {
-                    if let shouldBegin = (self.delegate as? UIGestureRecognizerDelegate)?.gestureRecognizerShouldBegin?(gestureRecognizer) {
+                    if let shouldBegin = self.delegate?.gestureRecognizerShouldBegin?(gestureRecognizer) {
                         return shouldBegin
                     }
                 }
@@ -1838,7 +1838,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
         
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
             if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
-                if let shouldReceive = (self.delegate as? UIGestureRecognizerDelegate)?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
+                if let shouldReceive = self.delegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
                     if !shouldReceive && shouldForceReceive() {
                         return true
                     }
@@ -1852,7 +1852,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
             // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
             if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
                 if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
-                   let shouldReceive = self.delegate?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
+                   let shouldReceive = self.proxyDelegate?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
                     if !shouldReceive && shouldForceReceive() {
                         return true
                     }
@@ -1891,7 +1891,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
         }
     }
     
-    private var fw_delegateProxy: GestureRecognizerDelegateProxy {
+    @nonobjc private var fw_delegateProxy: GestureRecognizerDelegateProxy {
         if let proxy = fw_property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
             return proxy
         } else {

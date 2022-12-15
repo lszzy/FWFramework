@@ -209,12 +209,12 @@ import FWObjC
 // MARK: - UITextView+Keyboard
 @_spi(FW) @objc extension UITextView {
     
-    private class TextViewDelegateProxy: DelegateProxy, UITextViewDelegate {
+    private class TextViewDelegateProxy: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             var shouldChange = true
             // 先执行代理方法
-            if let delegateChange = (self.delegate as? UITextViewDelegate)?.textView?(textView, shouldChangeTextIn: range, replacementText: text) {
+            if let delegateChange = self.delegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) {
                 shouldChange = delegateChange
             }
             
@@ -316,7 +316,7 @@ import FWObjC
             if !self.fw_delegateProxyEnabled {
                 return self.delegate
             } else {
-                return self.fw_delegateProxy.delegate as? UITextViewDelegate
+                return self.fw_delegateProxy.delegate
             }
         }
         set {
@@ -338,14 +338,14 @@ import FWObjC
                     self.fw_delegateProxy.delegate = self.delegate
                     self.delegate = self.fw_delegateProxy
                 } else {
-                    self.delegate = self.fw_delegateProxy.delegate as? UITextViewDelegate
+                    self.delegate = self.fw_delegateProxy.delegate
                     self.fw_delegateProxy.delegate = nil
                 }
             }
         }
     }
     
-    private var fw_delegateProxy: TextViewDelegateProxy {
+    @nonobjc private var fw_delegateProxy: TextViewDelegateProxy {
         if let proxy = fw_property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
             return proxy
         } else {
