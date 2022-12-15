@@ -14,9 +14,21 @@ import FWObjC
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
 public class WeakProxy: __WeakProxy {}
 
+// MARK: - BlockProxy
+/// 闭包代理类，可用于闭包动态实现代理方法等
+open class BlockProxy: __BlockProxy {}
+
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
-open class DelegateProxy: __DelegateProxy {}
+open class DelegateProxy<T: AnyObject>: __DelegateProxy {
+    
+    /// 泛型事件代理对象
+    open weak var delegate: T? {
+        get { return proxyDelegate as? T }
+        set { proxyDelegate = newValue }
+    }
+    
+}
 
 // MARK: - MulticastDelegate
 /// 多代理转发类
