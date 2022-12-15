@@ -111,14 +111,6 @@
 
 @implementation __DelegateProxy
 
-- (instancetype)initWithProtocol:(Protocol *)protocol {
-    self = [super init];
-    if (self) {
-        _protocol = protocol;
-    }
-    return self;
-}
-
 - (BOOL)isProxy {
     return YES;
 }
