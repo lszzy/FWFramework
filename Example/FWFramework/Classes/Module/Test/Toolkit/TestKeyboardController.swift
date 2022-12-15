@@ -77,7 +77,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.backgroundColor = AppTheme.backgroundColor
         result.fw.maxLength = 20
         result.fw.menuDisabled = true
-        result.fw.placeholder = "建议，最多20个英文"
+        result.fw.placeholder = "仅数字和字母转大写，最多20个英文"
         result.returnKeyType = .done
         result.fw.returnResign = true
         result.fw.keyboardDistance = 80
@@ -249,6 +249,38 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
                 offset = textField.fw.maxLength
             }
             textField.fw.moveCursor(offset)
+            return false
+        }
+        
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
+        if string == "\n" {
+            return true
+        }
+        
+        let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        let characterSet = CharacterSet(charactersIn: allowedChars).inverted
+        let filterString = string.components(separatedBy: characterSet).joined(separator: "")
+        if string != filterString {
+            return false
+        }
+        
+        if !string.isEmpty {
+            var replaceString = string.uppercased()
+            if !appendString.isEmpty {
+                replaceString = replaceString.appending(appendString)
+            }
+            let curText = (textView.text ?? "") as NSString
+            let filterText = curText.replacingCharacters(in: range, with: replaceString)
+            textView.text = textView.fw.filterText(filterText)
+            
+            var offset = range.location + replaceString.count
+            if offset > textView.fw.maxLength {
+                offset = textView.fw.maxLength
+            }
+            textView.fw.moveCursor(offset)
             return false
         }
         
