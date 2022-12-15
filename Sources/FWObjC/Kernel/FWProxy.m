@@ -303,21 +303,6 @@ typedef struct FWProxyBlock {
 
 @implementation FWDelegateProxy
 
-+ (instancetype)proxyWithProtocol:(Protocol *)protocol
-{
-    return [[self alloc] initWithProtocol:protocol];
-}
-
-- (instancetype)initWithProtocol:(Protocol *)protocol
-{
-    self = [super init];
-    if (self) {
-        _protocol = protocol;
-        _blockProxies = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
-
 - (instancetype)init
 {
     self = [super init];
@@ -334,9 +319,6 @@ typedef struct FWProxyBlock {
 
 - (BOOL)conformsToProtocol:(Protocol *)aProtocol
 {
-    if (self.protocol && protocol_isEqual(aProtocol, self.protocol)) {
-        return YES;
-    }
     if ([self.delegate conformsToProtocol:aProtocol]) {
         return YES;
     }

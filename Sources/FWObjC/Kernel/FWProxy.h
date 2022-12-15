@@ -120,27 +120,8 @@ NS_SWIFT_NAME(BlockProxy)
 NS_SWIFT_UNAVAILABLE("")
 @interface FWDelegateProxy : NSObject
 
-/** 代理事件协议 */
-@property (nullable, nonatomic, readwrite) Protocol *protocol;
-
 /** 事件代理对象 */
 @property (nullable, nonatomic, weak) id delegate;
-
-/**
- 初始化事件协议代理对象
- 
- @param protocol 代理协议
- @return 代理对象
- */
-- (instancetype)initWithProtocol:(Protocol *)protocol;
-
-/**
- 初始化事件协议代理对象
- 
- @param protocol 代理协议
- @return 代理对象
- */
-+ (instancetype)proxyWithProtocol:(Protocol *)protocol;
 
 /**
  使用block动态实现selector
