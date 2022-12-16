@@ -152,10 +152,10 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     ///   - block: 每秒执行block，为0时自动停止
     /// - Returns: 定时器，可手工停止
     public static func fw_commonTimer(countDown: Int, block: @escaping (Int) -> Void) -> Timer {
-        let startTime = Date.fw.currentTime
+        let startTime = Date.fw_currentTime
         let timer = fw_commonTimer(timeInterval: 1, block: { timer in
             DispatchQueue.main.async {
-                let remainTime = countDown - Int(round(Date.fw.currentTime - startTime))
+                let remainTime = countDown - Int(round(Date.fw_currentTime - startTime))
                 if remainTime <= 0 {
                     block(0)
                     timer.invalidate()

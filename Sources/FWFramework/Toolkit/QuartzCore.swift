@@ -294,7 +294,7 @@ import FWObjC
         locations: UnsafePointer<CGFloat>?,
         direction: UISwipeGestureRecognizer.Direction
     ) {
-        let linePoints = UIBezierPath.fw.linePoints(rect: rect, direction: direction)
+        let linePoints = UIBezierPath.fw_linePoints(rect: rect, direction: direction)
         let startPoint = linePoints.first?.cgPointValue ?? .zero
         let endPoint = linePoints.last?.cgPointValue ?? .zero
         return fw_drawLinearGradient(rect, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)

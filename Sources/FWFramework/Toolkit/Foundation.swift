@@ -1194,7 +1194,7 @@ extension FW {
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             urlString += "\(FW.safeString(key))=\(valueStr ?? "")&"
         }
-        return URL(string: urlString.fw.substring(to: urlString.count - 1))
+        return URL(string: urlString.fw_substring(to: urlString.count - 1))
     }
     
 }
