@@ -357,7 +357,7 @@ public enum ScreenInch: Int {
         
         if UIDevice.fw_isLandscape { return 0 }
         if !fw_isNotchedScreen { return 20 }
-        if UIDevice.fw.deviceModel == "iPhone12,1" { return 48 }
+        if UIDevice.fw_deviceModel == "iPhone12,1" { return 48 }
         if UIDevice.fw_deviceSize.equalTo(CGSize(width: 390, height: 848)) { return 47 }
         if fw_isScreenInch(.inch67) { return 47 }
         if fw_isScreenInch(.inch54) && UIDevice.fw_iosVersion >= 15.0 { return 50 }

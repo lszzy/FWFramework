@@ -200,7 +200,7 @@ import FWObjC
                 } else {
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     fw_appearance.backgroundColor = nil
                     fw_appearance.backgroundImage = image ?? UIImage()
@@ -214,7 +214,7 @@ import FWObjC
                     self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     self.setBackgroundImage(image ?? UIImage(), for: .default)
                 }
@@ -278,7 +278,7 @@ import FWObjC
             }} else {
                 var image: UIImage?
                 if let color = newValue {
-                    image = UIImage.fw.image(color: color)
+                    image = UIImage.fw_image(color: color)
                 }
                 self.shadowImage = image ?? UIImage()
             }
@@ -312,7 +312,7 @@ import FWObjC
             return self.backIndicatorImage
         }
         set {
-            let image = newValue?.fw.image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0), color: nil)
+            let image = newValue?.fw_image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0), color: nil)
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 fw_appearance.setBackIndicatorImage(image, transitionMaskImage: image)
                 fw_updateAppearance()
@@ -332,7 +332,7 @@ import FWObjC
                     fw_appearance.backgroundColor = backgroundColor.fw_color
                     fw_appearance.backgroundImage = nil
                 } else {
-                    let image = UIImage.fw.image(color: backgroundColor.fw_color) ?? UIImage()
+                    let image = UIImage.fw_image(color: backgroundColor.fw_color) ?? UIImage()
                     fw_appearance.backgroundColor = nil
                     fw_appearance.backgroundImage = image
                 }
@@ -342,7 +342,7 @@ import FWObjC
                     self.barTintColor = backgroundColor.fw_color
                     self.setBackgroundImage(nil, for: .default)
                 } else {
-                    let image = UIImage.fw.image(color: backgroundColor.fw_color) ?? UIImage()
+                    let image = UIImage.fw_image(color: backgroundColor.fw_color) ?? UIImage()
                     self.barTintColor = nil
                     self.setBackgroundImage(image, for: .default)
                 }
@@ -367,7 +367,7 @@ import FWObjC
                 fw_appearance.shadowImage = nil
                 fw_updateAppearance()
             }} else {
-                self.shadowImage = UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage()
+                self.shadowImage = UIImage.fw_image(color: shadowColor.fw_color) ?? UIImage()
             }
         }
         
@@ -455,7 +455,7 @@ import FWObjC
                 } else {
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     fw_appearance.backgroundColor = nil
                     fw_appearance.backgroundImage = image
@@ -469,7 +469,7 @@ import FWObjC
                     self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     self.backgroundImage = image
                 }
@@ -532,7 +532,7 @@ import FWObjC
             }} else {
                 var image: UIImage?
                 if let color = newValue {
-                    image = UIImage.fw.image(color: color)
+                    image = UIImage.fw_image(color: color)
                 }
                 self.shadowImage = image ?? UIImage()
             }
@@ -567,7 +567,7 @@ import FWObjC
                     fw_appearance.backgroundImage = nil
                 } else {
                     fw_appearance.backgroundColor = nil
-                    fw_appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                    fw_appearance.backgroundImage = UIImage.fw_image(color: backgroundColor.fw_color)
                 }
                 fw_updateAppearance()
             }} else {
@@ -576,7 +576,7 @@ import FWObjC
                     self.backgroundImage = nil
                 } else {
                     self.barTintColor = nil
-                    self.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                    self.backgroundImage = UIImage.fw_image(color: backgroundColor.fw_color)
                 }
             }
         }
@@ -598,7 +598,7 @@ import FWObjC
                 fw_appearance.shadowImage = nil
                 fw_updateAppearance()
             }} else {
-                self.shadowImage = UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage()
+                self.shadowImage = UIImage.fw_image(color: shadowColor.fw_color) ?? UIImage()
             }
         }
         
@@ -724,7 +724,7 @@ import FWObjC
                 } else {
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     fw_appearance.backgroundColor = nil
                     fw_appearance.backgroundImage = image
@@ -738,7 +738,7 @@ import FWObjC
                     self.barTintColor = nil
                     var image: UIImage?
                     if let color = newValue {
-                        image = UIImage.fw.image(color: color)
+                        image = UIImage.fw_image(color: color)
                     }
                     self.setBackgroundImage(image, forToolbarPosition: .any, barMetrics: .default)
                 }
@@ -801,7 +801,7 @@ import FWObjC
             }} else {
                 var image: UIImage?
                 if let color = newValue {
-                    image = UIImage.fw.image(color: color)
+                    image = UIImage.fw_image(color: color)
                 }
                 self.setShadowImage(image ?? UIImage(), forToolbarPosition: .any)
             }
@@ -836,7 +836,7 @@ import FWObjC
                     fw_appearance.backgroundImage = nil
                 } else {
                     fw_appearance.backgroundColor = nil
-                    fw_appearance.backgroundImage = UIImage.fw.image(color: backgroundColor.fw_color)
+                    fw_appearance.backgroundImage = UIImage.fw_image(color: backgroundColor.fw_color)
                 }
                 fw_updateAppearance()
             }} else {
@@ -845,7 +845,7 @@ import FWObjC
                     self.setBackgroundImage(nil, forToolbarPosition: .any, barMetrics: .default)
                 } else {
                     self.barTintColor = nil
-                    self.setBackgroundImage(UIImage.fw.image(color: backgroundColor.fw_color), forToolbarPosition: .any, barMetrics: .default)
+                    self.setBackgroundImage(UIImage.fw_image(color: backgroundColor.fw_color), forToolbarPosition: .any, barMetrics: .default)
                 }
             }
         }
@@ -867,7 +867,7 @@ import FWObjC
                 fw_appearance.shadowImage = nil
                 fw_updateAppearance()
             }} else {
-                self.setShadowImage(UIImage.fw.image(color: shadowColor.fw_color) ?? UIImage(), forToolbarPosition: .any)
+                self.setShadowImage(UIImage.fw_image(color: shadowColor.fw_color) ?? UIImage(), forToolbarPosition: .any)
             }
         }
         

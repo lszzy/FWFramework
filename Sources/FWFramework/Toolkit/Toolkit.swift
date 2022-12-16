@@ -398,7 +398,7 @@ import FWObjC
         if let url = string as? URL {
             return url
         } else {
-            return URL.fw.url(string: string as? String)
+            return URL.fw_url(string: string as? String)
         }
     }
     
@@ -578,10 +578,10 @@ import FWObjC
         // 处理参数
         var string = hexString.uppercased()
         if string.hasPrefix("0X") {
-            string = string.fw.substring(from: 2)
+            string = string.fw_substring(from: 2)
         }
         if string.hasPrefix("#") {
-            string = string.fw.substring(from: 1)
+            string = string.fw_substring(from: 1)
         }
         
         // 检查长度
@@ -598,30 +598,30 @@ import FWObjC
         if length < 5 {
             // ARGB
             if fw_colorStandardARGB && length == 4 {
-                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
+                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(1, 3)), string.fw_substring(with: NSMakeRange(0, 1)))
             }
             // RGB|RGBA
-            let tmpR = string.fw.substring(with: NSMakeRange(0, 1))
-            let tmpG = string.fw.substring(with: NSMakeRange(1, 1))
-            let tmpB = string.fw.substring(with: NSMakeRange(2, 1))
+            let tmpR = string.fw_substring(with: NSMakeRange(0, 1))
+            let tmpG = string.fw_substring(with: NSMakeRange(1, 1))
+            let tmpB = string.fw_substring(with: NSMakeRange(2, 1))
             strR = String(format: "%@%@", tmpR, tmpR)
             strG = String(format: "%@%@", tmpG, tmpG)
             strB = String(format: "%@%@", tmpB, tmpB)
             if length == 4 {
-                let tmpA = string.fw.substring(with: NSMakeRange(3, 1))
+                let tmpA = string.fw_substring(with: NSMakeRange(3, 1))
                 strA = String(format: "%@%@", tmpA, tmpA)
             }
         } else {
             // AARRGGBB
             if fw_colorStandardARGB && length == 8 {
-                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
+                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(2, 6)), string.fw_substring(with: NSMakeRange(0, 2)))
             }
             // RRGGBB|RRGGBBAA
-            strR = string.fw.substring(with: NSMakeRange(0, 2))
-            strG = string.fw.substring(with: NSMakeRange(2, 2))
-            strB = string.fw.substring(with: NSMakeRange(4, 2))
+            strR = string.fw_substring(with: NSMakeRange(0, 2))
+            strG = string.fw_substring(with: NSMakeRange(2, 2))
+            strB = string.fw_substring(with: NSMakeRange(4, 2))
             if length == 8 {
-                strA = string.fw.substring(with: NSMakeRange(6, 2))
+                strA = string.fw_substring(with: NSMakeRange(6, 2))
             }
         }
         
@@ -1743,11 +1743,12 @@ public enum ViewControllerVisibleState: Int {
             selfObject.fw_visibleState = .didDisappear
         }}
         
-        NSObject.fw.swizzleDeallocMethod(UIViewController.self) { selfObject in
+        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
             // dealloc时不调用fw，防止释放时动态创建包装器对象
-            let completionHandler = selfObject.fw_completionHandler
+            let viewController = selfObject as? UIViewController
+            let completionHandler = viewController?.fw_completionHandler
             if completionHandler != nil {
-                let completionResult = selfObject.fw_completionResult
+                let completionResult = viewController?.fw_completionResult
                 completionHandler?(completionResult)
             }
             
