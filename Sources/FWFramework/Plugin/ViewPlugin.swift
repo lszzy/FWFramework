@@ -13,7 +13,7 @@ import FWObjC
 @_spi(FW) @objc extension UIView {
     
     /// 自定义视图插件，未设置时自动从插件池加载
-    public var fw_viewPlugin: ViewPlugin? {
+    public var fw_viewPlugin: ViewPlugin! {
         get {
             if let viewPlugin = fw_property(forName: "fw_viewPlugin") as? ViewPlugin {
                 return viewPlugin

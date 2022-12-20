@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIView {
     
     /// 自定义视图插件，未设置时自动从插件池加载
-    public var viewPlugin: ViewPlugin? {
+    public var viewPlugin: ViewPlugin! {
         get { return base.fw_viewPlugin }
         set { base.fw_viewPlugin = newValue }
     }
