@@ -304,7 +304,7 @@
     if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillStartLoading:)]) {
         [self.albumControllerDelegate albumControllerWillStartLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_showLoading];
+        [self fw_showLoadingWithText:nil cancel:nil];
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -1345,7 +1345,7 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillStartLoading:)]) {
             [self.delegate imagePickerPreviewControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoading];
+            [self fw_showLoadingWithText:nil cancel:nil];
         }
         [FWImagePickerController requestImagesAssetArray:self.selectedImageAssetArray filterType:self.imagePickerController.filterType useOrigin:self.shouldUseOriginImage completion:^{
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerDidFinishLoading:)]) {
@@ -1989,7 +1989,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoading];
+            [self fw_showLoadingWithText:nil cancel:nil];
         }
     }
     if (!assetsGroup) {
@@ -2017,7 +2017,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
         [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_showLoading];
+        [self fw_showLoadingWithText:nil cancel:nil];
     }
     self.isImagesAssetLoading = YES;
     [self initAlbumControllerIfNeeded];
@@ -2399,7 +2399,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoading];
+            [self fw_showLoadingWithText:nil cancel:nil];
         }
         [self initPreviewViewControllerIfNeeded];
         [FWImagePickerController requestImagesAssetArray:self.selectedImageAssetArray filterType:self.filterType useOrigin:self.imagePickerPreviewController.shouldUseOriginImage completion:^{
