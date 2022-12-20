@@ -13,7 +13,7 @@ import FWObjC
 @_spi(FW) @objc extension UIView {
     
     /// 自定义吐司插件，未设置时自动从插件池加载
-    public var fw_toastPlugin: ToastPlugin? {
+    public var fw_toastPlugin: ToastPlugin! {
         get {
             if let toastPlugin = fw_property(forName: "fw_toastPlugin") as? ToastPlugin {
                 return toastPlugin

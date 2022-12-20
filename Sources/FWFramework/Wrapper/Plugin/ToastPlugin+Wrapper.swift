@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIView {
     
     /// 自定义吐司插件，未设置时自动从插件池加载
-    public var toastPlugin: ToastPlugin? {
+    public var toastPlugin: ToastPlugin! {
         get { return base.fw_toastPlugin }
         set { base.fw_toastPlugin = newValue }
     }
