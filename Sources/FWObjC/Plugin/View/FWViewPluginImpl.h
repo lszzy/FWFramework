@@ -25,9 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:
 - (void)setProgress:(CGFloat)progress animated:(BOOL)animated;
 
-/// 快速创建指示器，可指定颜色，默认白色
-+ (UIActivityIndicatorView *)fw_indicatorViewWithColor:(nullable UIColor *)color NS_REFINED_FOR_SWIFT;
-
 @end
 
 #pragma mark - FWViewPluginImpl

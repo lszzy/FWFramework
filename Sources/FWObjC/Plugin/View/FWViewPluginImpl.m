@@ -8,6 +8,16 @@
 #import "FWViewPluginImpl.h"
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - UIActivityIndicatorView+FWViewPlugin
 
 @implementation UIActivityIndicatorView (FWViewPlugin)
@@ -41,19 +51,6 @@
     } else {
         if (self.isAnimating) [self stopAnimating];
     }
-}
-
-+ (UIActivityIndicatorView *)fw_indicatorViewWithColor:(UIColor *)color {
-    UIActivityIndicatorViewStyle indicatorStyle;
-    if (@available(iOS 13.0, *)) {
-        indicatorStyle = UIActivityIndicatorViewStyleMedium;
-    } else {
-        indicatorStyle = UIActivityIndicatorViewStyleWhite;
-    }
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:indicatorStyle];
-    indicatorView.color = color ?: UIColor.whiteColor;
-    indicatorView.hidesWhenStopped = YES;
-    return indicatorView;
 }
 
 @end
