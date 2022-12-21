@@ -67,63 +67,63 @@ extension FW {
     // MARK: - Encrypt
     /// 利用AES加密数据
     public func fw_aesEncrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__AESEncrypt(withKey: key, andIV: iv)
+        return (self as NSData).__fw_AESEncrypt(withKey: key, andIV: iv)
     }
 
     /// 利用AES解密数据
     public func fw_aesDecrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__AESDecrypt(withKey: key, andIV: iv)
+        return (self as NSData).__fw_AESDecrypt(withKey: key, andIV: iv)
     }
 
     /// 利用3DES加密数据
     public func fw_des3Encrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__DES3Encrypt(withKey: key, andIV: iv)
+        return (self as NSData).__fw_DES3Encrypt(withKey: key, andIV: iv)
     }
 
     /// 利用3DES解密数据
     public func fw_des3Decrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__DES3Decrypt(withKey: key, andIV: iv)
+        return (self as NSData).__fw_DES3Decrypt(withKey: key, andIV: iv)
     }
 
     // MARK: - RSA
     /// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
     public func fw_rsaEncrypt(publicKey: String) -> Data? {
-        return (self as NSData).__RSAEncrypt(withPublicKey: publicKey)
+        return (self as NSData).__fw_RSAEncrypt(withPublicKey: publicKey)
     }
 
     /// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
     public func fw_rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
-        return (self as NSData).__RSAEncrypt(withPublicKey: publicKey, andTag: tag, base64Encode: base64Encode)
+        return (self as NSData).__fw_RSAEncrypt(withPublicKey: publicKey, andTag: tag, base64Encode: base64Encode)
     }
 
     /// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
     public func fw_rsaDecrypt(privateKey: String) -> Data? {
-        return (self as NSData).__RSADecrypt(withPrivateKey: privateKey)
+        return (self as NSData).__fw_RSADecrypt(withPrivateKey: privateKey)
     }
 
     /// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
     public func fw_rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
-        return (self as NSData).__RSADecrypt(withPrivateKey: privateKey, andTag: tag, base64Decode: base64Decode)
+        return (self as NSData).__fw_RSADecrypt(withPrivateKey: privateKey, andTag: tag, base64Decode: base64Decode)
     }
 
     /// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
     public func fw_rsaSign(privateKey: String) -> Data? {
-        return (self as NSData).__RSASign(withPrivateKey: privateKey)
+        return (self as NSData).__fw_RSASign(withPrivateKey: privateKey)
     }
 
     /// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
     public func fw_rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
-        return (self as NSData).__RSASign(withPrivateKey: privateKey, andTag: tag, base64Encode: base64Encode)
+        return (self as NSData).__fw_RSASign(withPrivateKey: privateKey, andTag: tag, base64Encode: base64Encode)
     }
 
     /// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
     public func fw_rsaVerify(publicKey: String) -> Data? {
-        return (self as NSData).__RSAVerify(withPublicKey: publicKey)
+        return (self as NSData).__fw_RSAVerify(withPublicKey: publicKey)
     }
 
     /// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
     public func fw_rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
-        return (self as NSData).__RSAVerify(withPublicKey: publicKey, andTag: tag, base64Decode: base64Decode)
+        return (self as NSData).__fw_RSAVerify(withPublicKey: publicKey, andTag: tag, base64Decode: base64Decode)
     }
 }
 

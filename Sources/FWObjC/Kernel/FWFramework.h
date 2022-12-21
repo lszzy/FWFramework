@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/18.
 //
 
-#import "FWBridge.h"
+#import "Bridge.h"
 #import "FWConfiguration.h"
 #import "FWLoader.h"
 #import "FWLogger.h"
