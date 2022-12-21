@@ -1,5 +1,5 @@
 //
-//  FWQuartzCore.h
+//  QuartzCore.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -10,11 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWGradientView
+#pragma mark - __FWGradientView
 
 /// 渐变View，无需设置渐变Layer的frame等，支持自动布局
 NS_SWIFT_NAME(GradientView)
-@interface FWGradientView : UIView
+@interface __FWGradientView : UIView
 
 @property (nonatomic, strong, readonly) CAGradientLayer *gradientLayer;
 

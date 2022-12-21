@@ -1,15 +1,15 @@
 //
-//  FWQuartzCore.m
+//  QuartzCore.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWQuartzCore.h"
+#import "QuartzCore.h"
 
-#pragma mark - FWGradientView
+#pragma mark - __FWGradientView
 
-@implementation FWGradientView
+@implementation __FWGradientView
 
 + (Class)layerClass
 {

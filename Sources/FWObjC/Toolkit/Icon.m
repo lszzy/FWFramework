@@ -1,23 +1,15 @@
 //
-//  FWIcon.m
+//  Icon.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWIcon.h"
+#import "Icon.h"
 #import "Loader.h"
 #import <CoreText/CoreText.h>
 
-FWIcon * FWIconNamed(NSString *name, CGFloat size) {
-    return [FWIcon iconNamed:name size:size];
-}
-
-UIImage * FWIconImage(NSString *name, CGFloat size) {
-    return [FWIcon iconImage:name size:size];
-}
-
-@interface FWIcon ()
+@interface __FWIcon ()
 
 @property (nonatomic, strong) NSMutableAttributedString *mutableAttributedString;
 
@@ -26,16 +18,16 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 @end
 
-@implementation FWIcon
+@implementation __FWIcon
 
 #pragma mark - Static
 
-+ (FWIcon *)sharedInstance
++ (__FWIcon *)sharedInstance
 {
-    static FWIcon *instance = nil;
+    static __FWIcon *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWIcon alloc] init];
+        instance = [[__FWIcon alloc] init];
         instance.iconLoader = [[__FWLoader<NSString *, Class> alloc] init];
         instance.iconMapper = [[NSMutableDictionary<NSString *, Class> alloc] init];
     });
@@ -49,14 +41,14 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 + (BOOL)registerClass:(Class)iconClass
 {
-    if (!iconClass || ![iconClass isSubclassOfClass:[FWIcon class]]) return NO;
+    if (!iconClass || ![iconClass isSubclassOfClass:[__FWIcon class]]) return NO;
     [[iconClass iconMapper] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-        [FWIcon sharedInstance].iconMapper[key] = iconClass;
+        [__FWIcon sharedInstance].iconMapper[key] = iconClass;
     }];
     return YES;
 }
 
-+ (FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size
++ (__FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size
 {
     Class iconClass = [[self sharedInstance].iconMapper objectForKey:name];
     if (!iconClass) {
@@ -241,14 +233,14 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 + (NSDictionary<NSString *,NSString *> *)iconMapper
 {
-    @throw [NSException exceptionWithName:@"FWIcon"
+    @throw [NSException exceptionWithName:@"__FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }
 
 + (UIFont *)iconFontWithSize:(CGFloat)size
 {
-    @throw [NSException exceptionWithName:@"FWIcon"
+    @throw [NSException exceptionWithName:@"__FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }

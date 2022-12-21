@@ -1,11 +1,11 @@
 //
-//  FWThread.m
+//  Thread.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWThread.h"
+#import "Thread.h"
 
 #define INIT_ARRAY(...) \
     self = super.init; \
@@ -28,9 +28,9 @@
     __VA_ARGS__; \
     dispatch_semaphore_signal(_lock);
 
-#pragma mark - FWMutableArray
+#pragma mark - __FWMutableArray
 
-@implementation FWMutableArray {
+@implementation __FWMutableArray {
     NSMutableArray *_arr;
     dispatch_semaphore_t _lock;
 }
@@ -327,8 +327,8 @@
 
 - (BOOL)isEqualToArray:(NSArray *)otherArray {
     if (otherArray == self) return YES;
-    if ([otherArray isKindOfClass:FWMutableArray.class]) {
-        FWMutableArray *other = (id)otherArray;
+    if ([otherArray isKindOfClass:__FWMutableArray.class]) {
+        __FWMutableArray *other = (id)otherArray;
         BOOL isEqual;
         dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(other->_lock, DISPATCH_TIME_FOREVER);
@@ -361,8 +361,8 @@
 - (BOOL)isEqual:(id)object {
     if (object == self) return YES;
     
-    if ([object isKindOfClass:FWMutableArray.class]) {
-        FWMutableArray *other = object;
+    if ([object isKindOfClass:__FWMutableArray.class]) {
+        __FWMutableArray *other = object;
         BOOL isEqual;
         dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(other->_lock, DISPATCH_TIME_FOREVER);
@@ -381,9 +381,9 @@
 
 @end
 
-#pragma mark - FWMutableDictionary
+#pragma mark - __FWMutableDictionary
 
-@implementation FWMutableDictionary {
+@implementation __FWMutableDictionary {
     NSMutableDictionary *_dic;
     dispatch_semaphore_t _lock;
 }
@@ -460,8 +460,8 @@
 - (BOOL)isEqualToDictionary:(NSDictionary *)otherDictionary {
     if (otherDictionary == self) return YES;
     
-    if ([otherDictionary isKindOfClass:FWMutableDictionary.class]) {
-        FWMutableDictionary *other = (id)otherDictionary;
+    if ([otherDictionary isKindOfClass:__FWMutableDictionary.class]) {
+        __FWMutableDictionary *other = (id)otherDictionary;
         BOOL isEqual;
         dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(other->_lock, DISPATCH_TIME_FOREVER);
@@ -564,8 +564,8 @@
 - (BOOL)isEqual:(id)object {
     if (object == self) return YES;
     
-    if ([object isKindOfClass:FWMutableDictionary.class]) {
-        FWMutableDictionary *other = object;
+    if ([object isKindOfClass:__FWMutableDictionary.class]) {
+        __FWMutableDictionary *other = object;
         BOOL isEqual;
         dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(other->_lock, DISPATCH_TIME_FOREVER);

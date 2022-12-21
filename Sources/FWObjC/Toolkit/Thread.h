@@ -1,5 +1,5 @@
 //
-//  FWThread.h
+//  Thread.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWMutableArray
+#pragma mark - __FWMutableArray
 
 /**
  线程安全的可变数组，参考自YYKit
@@ -17,11 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://github.com/ibireme/YYKit
  */
 NS_SWIFT_NAME(MutableArray)
-@interface FWMutableArray<__covariant ObjectType> : NSMutableArray<ObjectType>
+@interface __FWMutableArray<__covariant ObjectType> : NSMutableArray<ObjectType>
 
 @end
 
-#pragma mark - FWMutableDictionary
+#pragma mark - __FWMutableDictionary
 
 /**
  线程安全的可变字典，参考自YYKit
@@ -29,7 +29,7 @@ NS_SWIFT_NAME(MutableArray)
  @see https://github.com/ibireme/YYKit
  */
 NS_SWIFT_NAME(MutableDictionary)
-@interface FWMutableDictionary<__covariant KeyType, __covariant ObjectType> : NSMutableDictionary<KeyType, ObjectType>
+@interface __FWMutableDictionary<__covariant KeyType, __covariant ObjectType> : NSMutableDictionary<KeyType, ObjectType>
 
 @end
 
