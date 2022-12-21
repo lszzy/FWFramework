@@ -147,14 +147,14 @@ extension FW {
                 }
             // 同步过计算当前服务器时间
             } else {
-                let offsetTime = __Bridge.systemUptime() - fw_staticLocalBaseTime
+                let offsetTime = __FWBridge.systemUptime() - fw_staticLocalBaseTime
                 return fw_staticCurrentBaseTime + offsetTime
             }
         }
         set {
             fw_staticCurrentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
-            fw_staticLocalBaseTime = __Bridge.systemUptime()
+            fw_staticLocalBaseTime = __FWBridge.systemUptime()
             
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
@@ -412,7 +412,7 @@ extension FW {
     
     /// 转义Html，如"a<"转义为"a&lt;"
     public var fw_escapeHtml: String {
-        return __Bridge.escapeHtml(self)
+        return __FWBridge.escapeHtml(self)
     }
     
     /**
@@ -455,12 +455,12 @@ extension FW {
     
     /// 是否是身份证号
     public var fw_isFormatIdcard: Bool {
-        return __Bridge.isIdcard(self)
+        return __FWBridge.isIdcard(self)
     }
     
     /// 是否是银行卡号
     public var fw_isFormatBankcard: Bool {
-        return __Bridge.isBankcard(self)
+        return __FWBridge.isBankcard(self)
     }
     
     /// 是否是车牌号

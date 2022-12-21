@@ -262,12 +262,12 @@ import AdSupport
     
     /// 本地IP地址
     public static var fw_ipAddress: String? {
-        return __Bridge.ipAddress()
+        return __FWBridge.ipAddress()
     }
     
     /// 本地主机名称
     public static var fw_hostName: String? {
-        return __Bridge.hostName()
+        return __FWBridge.hostName()
     }
     
     /// 手机运营商名称
@@ -986,7 +986,7 @@ import AdSupport
                     }
                     if !NSEqualRanges(range, fullRange) { return }
                     for (attr, value) in attrs {
-                        if __Runtime.isEqual(prevTextAttributes[attr], with: value) {
+                        if __FWRuntime.isEqual(prevTextAttributes[attr], with: value) {
                             removeAttributes.append(attr)
                         }
                     }
@@ -1962,12 +1962,12 @@ import AdSupport
         set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_innerInputTarget(_ lazyload: Bool) -> __InputTarget? {
-        if let target = fw_property(forName: "fw_innerInputTarget") as? __InputTarget {
+    private func fw_innerInputTarget(_ lazyload: Bool) -> __FWInputTarget? {
+        if let target = fw_property(forName: "fw_innerInputTarget") as? __FWInputTarget {
             return target
         } else if lazyload {
-            let target = __InputTarget(textInput: self)
-            self.addTarget(target, action: #selector(__InputTarget.textChangedAction), for: .editingChanged)
+            let target = __FWInputTarget(textInput: self)
+            self.addTarget(target, action: #selector(__FWInputTarget.textChangedAction), for: .editingChanged)
             fw_setProperty(target, forName: "fw_innerInputTarget")
             return target
         }
@@ -2111,12 +2111,12 @@ import AdSupport
         set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_innerInputTarget(_ lazyload: Bool) -> __InputTarget? {
-        if let target = fw_property(forName: "fw_innerInputTarget") as? __InputTarget {
+    private func fw_innerInputTarget(_ lazyload: Bool) -> __FWInputTarget? {
+        if let target = fw_property(forName: "fw_innerInputTarget") as? __FWInputTarget {
             return target
         } else if lazyload {
-            let target = __InputTarget(textInput: self)
-            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(__InputTarget.textChangedAction))
+            let target = __FWInputTarget(textInput: self)
+            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(__FWInputTarget.textChangedAction))
             fw_setProperty(target, forName: "fw_innerInputTarget")
             return target
         }

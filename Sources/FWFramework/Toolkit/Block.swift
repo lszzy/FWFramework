@@ -230,9 +230,9 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     /// 添加事件句柄，返回唯一标志
     @discardableResult
     public func fw_addBlock(_ block: @escaping (Any) -> Void) -> String {
-        let target = __BlockTarget()
+        let target = __FWBlockTarget()
         target.block = block
-        self.addTarget(target, action: #selector(__BlockTarget.invoke(_:)))
+        self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
         fw_innerBlockTargets.add(target)
         return target.identifier
     }
@@ -242,9 +242,9 @@ public typealias BlockIntParam = (Int, Any?) -> ()
         guard let identifier = identifier else { return }
         let targets = fw_innerBlockTargets
         targets.enumerateObjects { target, _, _ in
-            guard let target = target as? __BlockTarget else { return }
+            guard let target = target as? __FWBlockTarget else { return }
             if identifier == target.identifier {
-                self.removeTarget(target, action: #selector(__BlockTarget.invoke(_:)))
+                self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
                 targets.remove(target)
             }
         }
@@ -254,8 +254,8 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     public func fw_removeAllBlocks() {
         let targets = fw_innerBlockTargets
         targets.enumerateObjects { target, _, _ in
-            guard let target = target as? __BlockTarget else { return }
-            self.removeTarget(target, action: #selector(__BlockTarget.invoke(_:)))
+            guard let target = target as? __FWBlockTarget else { return }
+            self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
         }
         targets.removeAllObjects()
     }
@@ -333,10 +333,10 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     /// 添加事件句柄
     @discardableResult
     public func fw_addBlock(_ block: @escaping (Any) -> Void, for controlEvents: UIControl.Event) -> String {
-        let target = __BlockTarget()
+        let target = __FWBlockTarget()
         target.block = block
         target.events = controlEvents
-        self.addTarget(target, action: #selector(__BlockTarget.invoke(_:)), for: controlEvents)
+        self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: controlEvents)
         fw_innerBlockTargets.add(target)
         return target.identifier
     }
@@ -354,9 +354,9 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     
     private func fw_removeAllBlocks(for controlEvents: UIControl.Event, identifier: String?) {
         let targets = fw_innerBlockTargets
-        var removes: [__BlockTarget] = []
+        var removes: [__FWBlockTarget] = []
         for target in targets {
-            if let target = target as? __BlockTarget,
+            if let target = target as? __FWBlockTarget,
                !target.events.intersection(controlEvents).isEmpty {
                 let shouldRemove = identifier == nil || target.identifier == identifier
                 if !shouldRemove { continue }
@@ -364,11 +364,11 @@ public typealias BlockIntParam = (Int, Any?) -> ()
                 var newEvent = target.events
                 newEvent.remove(controlEvents)
                 if !newEvent.isEmpty {
-                    self.removeTarget(target, action: #selector(__BlockTarget.invoke(_:)), for: target.events)
+                    self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: target.events)
                     target.events = newEvent
-                    self.addTarget(target, action: #selector(__BlockTarget.invoke(_:)), for: target.events)
+                    self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: target.events)
                 } else {
-                    self.removeTarget(target, action: #selector(__BlockTarget.invoke(_:)), for: target.events)
+                    self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: target.events)
                     removes.append(target)
                 }
             }
@@ -469,16 +469,16 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     
     /// 设置当前Item触发句柄，nil时清空句柄
     public func fw_setBlock(_ block: ((UIBarButtonItem) -> Void)?) {
-        var target: __BlockTarget?
+        var target: __FWBlockTarget?
         var action: Selector?
         if block != nil {
-            target = __BlockTarget()
+            target = __FWBlockTarget()
             target?.block = { sender in
                 if let sender = sender as? UIBarButtonItem {
                     block?(sender)
                 }
             }
-            action = #selector(__BlockTarget.invoke(_:))
+            action = #selector(__FWBlockTarget.invoke(_:))
         }
         
         self.target = target
