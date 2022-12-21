@@ -6,7 +6,7 @@
 //
 
 #import "FWAutoLayout.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

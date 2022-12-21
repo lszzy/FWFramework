@@ -6,7 +6,7 @@
 //
 
 #import "FWViewController.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -272,28 +272,28 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIViewController, @selector(initWithNibName:bundle:), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(NSString *nibNameOrNil, NSBundle *nibBundleOrNil), FWSwizzleCode({
-            UIViewController *viewController = FWSwizzleOriginal(nibNameOrNil, nibBundleOrNil);
+        __FWSwizzleClass(UIViewController, @selector(initWithNibName:bundle:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSString *nibNameOrNil, NSBundle *nibBundleOrNil), __FWSwizzleCode({
+            UIViewController *viewController = __FWSwizzleOriginal(nibNameOrNil, nibBundleOrNil);
             if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
                 [[FWViewControllerManager sharedInstance] hookInit:viewController];
             }
             return viewController;
         }));
-        FWSwizzleClass(UIViewController, @selector(initWithCoder:), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(NSCoder *coder), FWSwizzleCode({
-            UIViewController *viewController = FWSwizzleOriginal(coder);
+        __FWSwizzleClass(UIViewController, @selector(initWithCoder:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSCoder *coder), __FWSwizzleCode({
+            UIViewController *viewController = __FWSwizzleOriginal(coder);
             if (viewController && [viewController conformsToProtocol:@protocol(FWViewController)]) {
                 [[FWViewControllerManager sharedInstance] hookInit:viewController];
             }
             return viewController;
         }));
-        FWSwizzleClass(UIViewController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleClass(UIViewController, @selector(viewDidLoad), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             if ([selfObject conformsToProtocol:@protocol(FWViewController)]) {
                 [[FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
             }
         }));
-        FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             if ([selfObject conformsToProtocol:@protocol(FWViewController)]) {
                 [[FWViewControllerManager sharedInstance] hookViewDidLayoutSubviews:selfObject];
             }

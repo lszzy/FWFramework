@@ -9,7 +9,7 @@
 #import "FWEmptyPluginImpl.h"
 #import "Bridge.h"
 #import "Plugin.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -220,19 +220,19 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UITableView, @selector(reloadData), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
-            FWSwizzleOriginal();
+            __FWSwizzleOriginal();
         }));
         
-        FWSwizzleClass(UITableView, @selector(endUpdates), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UITableView, @selector(endUpdates), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
-            FWSwizzleOriginal();
+            __FWSwizzleOriginal();
         }));
         
-        FWSwizzleClass(UICollectionView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UICollectionView, @selector(reloadData), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
-            FWSwizzleOriginal();
+            __FWSwizzleOriginal();
         }));
     });
 }

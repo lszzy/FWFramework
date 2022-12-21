@@ -7,7 +7,7 @@
 
 #import "FWNavigationController.h"
 #import "FWNavigationStyle.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import "Bridge.h"
 #import <objc/runtime.h>
 
@@ -254,8 +254,8 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             
             UIView *backgroundView = selfObject.fw_backgroundView;
             CGRect frame = backgroundView.frame;
@@ -263,23 +263,23 @@
             backgroundView.frame = frame;
         }));
         
-        FWSwizzleMethod(objc_getClass("_UIBarBackground"), @selector(setHidden:), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(BOOL hidden), FWSwizzleCode({
+        __FWSwizzleMethod(objc_getClass("_UIBarBackground"), @selector(setHidden:), nil, __FWSwizzleType(UIView *), __FWSwizzleReturn(void), __FWSwizzleArgs(BOOL hidden), __FWSwizzleCode({
             UIResponder *responder = (UIResponder *)selfObject;
             while (responder) {
                 if ([responder isKindOfClass:[UINavigationBar class]] && ((UINavigationBar *)responder).fw_isFakeBar) {
                     return;
                 }
                 if ([responder isKindOfClass:[UINavigationController class]]) {
-                    FWSwizzleOriginal(((UINavigationController *)responder).fw_backgroundViewHidden);
+                    __FWSwizzleOriginal(((UINavigationController *)responder).fw_backgroundViewHidden);
                     return;
                 }
                 responder = responder.nextResponder;
             }
             
-            FWSwizzleOriginal(hidden);
+            __FWSwizzleOriginal(hidden);
         }));
-        FWSwizzleMethod(objc_getClass("_UIParallaxDimmingView"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleMethod(objc_getClass("_UIParallaxDimmingView"), @selector(layoutSubviews), nil, __FWSwizzleType(UIView *), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             
             // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
             if ([selfObject.subviews.firstObject isKindOfClass:[UIImageView class]] ||
@@ -294,7 +294,7 @@
             }
         }));
         
-        FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UIViewController, @selector(viewDidAppear:), __FWSwizzleReturn(void), __FWSwizzleArgs(BOOL animated), __FWSwizzleCode({
             UIViewController *transitionViewController = selfObject.navigationController.fw_transitionContextToViewController;
             if (selfObject.fw_transitionNavigationBar) {
                 [selfObject.navigationController.navigationBar fw_replaceStyleWithNavigationBar:selfObject.fw_transitionNavigationBar];
@@ -307,14 +307,14 @@
                 selfObject.navigationController.fw_transitionContextToViewController = nil;
             }
             selfObject.navigationController.fw_backgroundViewHidden = NO;
-            FWSwizzleOriginal(animated);
+            __FWSwizzleOriginal(animated);
         }));
-        FWSwizzleClass(UIViewController, @selector(viewWillLayoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UIViewController, @selector(viewWillLayoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             id<UIViewControllerTransitionCoordinator> tc = selfObject.transitionCoordinator;
             UIViewController *fromViewController = [tc viewControllerForKey:UITransitionContextFromViewControllerKey];
             UIViewController *toViewController = [tc viewControllerForKey:UITransitionContextToViewControllerKey];
             if (![selfObject fw_shouldCustomTransitionFrom:fromViewController to:toViewController]) {
-                FWSwizzleOriginal();
+                __FWSwizzleOriginal();
                 return;
             }
             
@@ -333,16 +333,16 @@
             if (selfObject.fw_transitionNavigationBar) {
                 [selfObject.view bringSubviewToFront:selfObject.fw_transitionNavigationBar];
             }
-            FWSwizzleOriginal();
+            __FWSwizzleOriginal();
         }));
         
-        FWSwizzleClass(UINavigationController, @selector(pushViewController:animated:), FWSwizzleReturn(void), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationController, @selector(pushViewController:animated:), __FWSwizzleReturn(void), __FWSwizzleArgs(UIViewController *viewController, BOOL animated), __FWSwizzleCode({
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             if (!disappearingViewController) {
-                return FWSwizzleOriginal(viewController, animated);
+                return __FWSwizzleOriginal(viewController, animated);
             }
             if (![selfObject fw_shouldCustomTransitionFrom:disappearingViewController to:viewController]) {
-                return FWSwizzleOriginal(viewController, animated);
+                return __FWSwizzleOriginal(viewController, animated);
             }
             
             if (viewController && [selfObject.viewControllers containsObject:viewController]) return;
@@ -355,16 +355,16 @@
                     disappearingViewController.navigationController.fw_backgroundViewHidden = YES;
                 }
             }
-            return FWSwizzleOriginal(viewController, animated);
+            return __FWSwizzleOriginal(viewController, animated);
         }));
-        FWSwizzleClass(UINavigationController, @selector(popViewControllerAnimated:), FWSwizzleReturn(UIViewController *), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationController, @selector(popViewControllerAnimated:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(BOOL animated), __FWSwizzleCode({
             if (selfObject.viewControllers.count < 2) {
-                return FWSwizzleOriginal(animated);
+                return __FWSwizzleOriginal(animated);
             }
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             UIViewController *appearingViewController = selfObject.viewControllers[selfObject.viewControllers.count - 2];
             if (![selfObject fw_shouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
-                return FWSwizzleOriginal(animated);
+                return __FWSwizzleOriginal(animated);
             }
             
             [disappearingViewController fw_addTransitionNavigationBarIfNeeded];
@@ -375,15 +375,15 @@
             if (animated) {
                 disappearingViewController.navigationController.fw_backgroundViewHidden = YES;
             }
-            return FWSwizzleOriginal(animated);
+            return __FWSwizzleOriginal(animated);
         }));
-        FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), __FWSwizzleReturn(NSArray<UIViewController *> *), __FWSwizzleArgs(UIViewController *viewController, BOOL animated), __FWSwizzleCode({
             if (![selfObject.viewControllers containsObject:viewController] || selfObject.viewControllers.count < 2) {
-                return FWSwizzleOriginal(viewController, animated);
+                return __FWSwizzleOriginal(viewController, animated);
             }
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             if (![selfObject fw_shouldCustomTransitionFrom:disappearingViewController to:viewController]) {
-                return FWSwizzleOriginal(viewController, animated);
+                return __FWSwizzleOriginal(viewController, animated);
             }
             
             [disappearingViewController fw_addTransitionNavigationBarIfNeeded];
@@ -394,16 +394,16 @@
             if (animated) {
                 disappearingViewController.navigationController.fw_backgroundViewHidden = YES;
             }
-            return FWSwizzleOriginal(viewController, animated);
+            return __FWSwizzleOriginal(viewController, animated);
         }));
-        FWSwizzleClass(UINavigationController, @selector(popToRootViewControllerAnimated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationController, @selector(popToRootViewControllerAnimated:), __FWSwizzleReturn(NSArray<UIViewController *> *), __FWSwizzleArgs(BOOL animated), __FWSwizzleCode({
             if (selfObject.viewControllers.count < 2) {
-                return FWSwizzleOriginal(animated);
+                return __FWSwizzleOriginal(animated);
             }
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             UIViewController *rootViewController = selfObject.viewControllers.firstObject;
             if (![selfObject fw_shouldCustomTransitionFrom:disappearingViewController to:rootViewController]) {
-                return FWSwizzleOriginal(animated);
+                return __FWSwizzleOriginal(animated);
             }
             
             [disappearingViewController fw_addTransitionNavigationBarIfNeeded];
@@ -414,13 +414,13 @@
             if (animated) {
                 disappearingViewController.navigationController.fw_backgroundViewHidden = YES;
             }
-            return FWSwizzleOriginal(animated);
+            return __FWSwizzleOriginal(animated);
         }));
-        FWSwizzleClass(UINavigationController, @selector(setViewControllers:animated:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<UIViewController *> *viewControllers, BOOL animated), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationController, @selector(setViewControllers:animated:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSArray<UIViewController *> *viewControllers, BOOL animated), __FWSwizzleCode({
             UIViewController *disappearingViewController = selfObject.viewControllers.lastObject;
             UIViewController *appearingViewController = viewControllers.count > 0 ? viewControllers.lastObject : nil;
             if (![selfObject fw_shouldCustomTransitionFrom:disappearingViewController to:appearingViewController]) {
-                return FWSwizzleOriginal(viewControllers, animated);
+                return __FWSwizzleOriginal(viewControllers, animated);
             }
             
             if (animated && disappearingViewController && ![disappearingViewController isEqual:viewControllers.lastObject]) {
@@ -429,7 +429,7 @@
                     disappearingViewController.navigationController.fw_backgroundViewHidden = YES;
                 }
             }
-            return FWSwizzleOriginal(viewControllers, animated);
+            return __FWSwizzleOriginal(viewControllers, animated);
         }));
     });
 }
@@ -452,7 +452,7 @@
     dispatch_once(&onceToken, ^{
         // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
         if (@available(iOS 14.2, *)) {} else if (@available(iOS 14.0, *)) {
-            FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(UIViewController *viewController, BOOL animated), FWSwizzleCode({
+            __FWSwizzleClass(UINavigationController, @selector(popToViewController:animated:), __FWSwizzleReturn(NSArray<UIViewController *> *), __FWSwizzleArgs(UIViewController *viewController, BOOL animated), __FWSwizzleCode({
                 if (animated && selfObject.tabBarController && !viewController.hidesBottomBarWhenPushed) {
                     BOOL systemShouldHideTabBar = NO;
                     NSUInteger index = [selfObject.viewControllers indexOfObject:viewController];
@@ -469,20 +469,20 @@
                     }
                 }
                 
-                NSArray<UIViewController *> *result = FWSwizzleOriginal(viewController, animated);
+                NSArray<UIViewController *> *result = __FWSwizzleOriginal(viewController, animated);
                 selfObject.fw_shouldBottomBarBeHidden = NO;
                 return result;
             }));
-            FWSwizzleClass(UINavigationController, @selector(popToRootViewControllerAnimated:), FWSwizzleReturn(NSArray<UIViewController *> *), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
+            __FWSwizzleClass(UINavigationController, @selector(popToRootViewControllerAnimated:), __FWSwizzleReturn(NSArray<UIViewController *> *), __FWSwizzleArgs(BOOL animated), __FWSwizzleCode({
                 if (animated && selfObject.tabBarController && !selfObject.viewControllers.firstObject.hidesBottomBarWhenPushed && selfObject.viewControllers.count > 2) {
                     selfObject.fw_shouldBottomBarBeHidden = YES;
                 }
                 
-                NSArray<UIViewController *> *result = FWSwizzleOriginal(animated);
+                NSArray<UIViewController *> *result = __FWSwizzleOriginal(animated);
                 selfObject.fw_shouldBottomBarBeHidden = NO;
                 return result;
             }));
-            FWSwizzleClass(UINavigationController, @selector(setViewControllers:animated:), FWSwizzleReturn(void), FWSwizzleArgs(NSArray<UIViewController *> *viewControllers, BOOL animated), FWSwizzleCode({
+            __FWSwizzleClass(UINavigationController, @selector(setViewControllers:animated:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSArray<UIViewController *> *viewControllers, BOOL animated), __FWSwizzleCode({
                 UIViewController *viewController = viewControllers.lastObject;
                 if (animated && selfObject.tabBarController && !viewController.hidesBottomBarWhenPushed) {
                     BOOL systemShouldHideTabBar = NO;
@@ -496,11 +496,11 @@
                     }
                 }
                 
-                FWSwizzleOriginal(viewControllers, animated);
+                __FWSwizzleOriginal(viewControllers, animated);
                 selfObject.fw_shouldBottomBarBeHidden = NO;
             }));
-            FWSwizzleClass(UINavigationController, NSSelectorFromString(@"_shouldBottomBarBeHidden"), FWSwizzleReturn(BOOL), FWSwizzleArgs(), FWSwizzleCode({
-                BOOL result = FWSwizzleOriginal();
+            __FWSwizzleClass(UINavigationController, NSSelectorFromString(@"_shouldBottomBarBeHidden"), __FWSwizzleReturn(BOOL), __FWSwizzleArgs(), __FWSwizzleCode({
+                BOOL result = __FWSwizzleOriginal();
                 if (selfObject.fw_shouldBottomBarBeHidden) {
                     result = NO;
                 }

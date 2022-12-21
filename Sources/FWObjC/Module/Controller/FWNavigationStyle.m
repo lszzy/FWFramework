@@ -6,7 +6,7 @@
 //
 
 #import "FWNavigationStyle.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -120,26 +120,26 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIViewController, @selector(prefersStatusBarHidden), FWSwizzleReturn(BOOL), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UIViewController, @selector(prefersStatusBarHidden), __FWSwizzleReturn(BOOL), __FWSwizzleArgs(), __FWSwizzleCode({
             NSNumber *hiddenValue = objc_getAssociatedObject(selfObject, @selector(fw_statusBarHidden));
             if (hiddenValue) {
                 return [hiddenValue boolValue];
             } else {
-                return FWSwizzleOriginal();
+                return __FWSwizzleOriginal();
             }
         }));
         
-        FWSwizzleClass(UIViewController, @selector(preferredStatusBarStyle), FWSwizzleReturn(UIStatusBarStyle), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UIViewController, @selector(preferredStatusBarStyle), __FWSwizzleReturn(UIStatusBarStyle), __FWSwizzleArgs(), __FWSwizzleCode({
             NSNumber *styleValue = objc_getAssociatedObject(selfObject, @selector(fw_statusBarStyle));
             if (styleValue) {
                 return [styleValue integerValue];
             } else {
-                return FWSwizzleOriginal();
+                return __FWSwizzleOriginal();
             }
         }));
         
-        FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
-            FWSwizzleOriginal(animated);
+        __FWSwizzleClass(UIViewController, @selector(viewWillAppear:), __FWSwizzleReturn(void), __FWSwizzleArgs(BOOL animated), __FWSwizzleCode({
+            __FWSwizzleOriginal(animated);
             [selfObject fw_updateNavigationBarStyle:animated];
         }));
     });

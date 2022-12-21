@@ -6,7 +6,7 @@
 //
 
 #import "FWException.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import "Logger.h"
 #import <objc/runtime.h>
 
@@ -107,8 +107,8 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSObject
 
 + (void)captureObjectException {
-    FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), FWSwizzleReturn(NSMethodSignature *), FWSwizzleArgs(SEL selector), FWSwizzleCode({
-        NSMethodSignature *methodSignature = FWSwizzleOriginal(selector);
+    __FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), __FWSwizzleReturn(NSMethodSignature *), __FWSwizzleArgs(SEL selector), __FWSwizzleCode({
+        NSMethodSignature *methodSignature = __FWSwizzleOriginal(selector);
         if (!methodSignature) {
             for (Class captureClass in [self captureClasses]) {
                 if ([selfObject isKindOfClass:captureClass]) {
@@ -120,7 +120,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         return methodSignature;
     }));
     
-    FWSwizzleClass(NSObject, @selector(forwardInvocation:), FWSwizzleReturn(void), FWSwizzleArgs(NSInvocation *invocation), FWSwizzleCode({
+    __FWSwizzleClass(NSObject, @selector(forwardInvocation:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSInvocation *invocation), __FWSwizzleCode({
         BOOL isCaptured = NO;
         for (Class captureClass in [self captureClasses]) {
             if ([selfObject isKindOfClass:captureClass]) {
@@ -131,44 +131,44 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         
         if (isCaptured) {
             @try {
-                FWSwizzleOriginal(invocation);
+                __FWSwizzleOriginal(invocation);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark(selfObject.class, invocation.selector)];
             } @finally { }
         } else {
-            FWSwizzleOriginal(invocation);
+            __FWSwizzleOriginal(invocation);
         }
     }));
 }
 
 + (void)captureKvcException {
-    FWSwizzleClass(NSObject, @selector(setValue:forKey:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *key), FWSwizzleCode({
+    __FWSwizzleClass(NSObject, @selector(setValue:forKey:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *key), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(value, key);
+            __FWSwizzleOriginal(value, key);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
         } @finally { }
     }));
     
-    FWSwizzleClass(NSObject, @selector(setValue:forKeyPath:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *keyPath), FWSwizzleCode({
+    __FWSwizzleClass(NSObject, @selector(setValue:forKeyPath:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *keyPath), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(value, keyPath);
+            __FWSwizzleOriginal(value, keyPath);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
         } @finally { }
     }));
     
-    FWSwizzleClass(NSObject, @selector(setValue:forUndefinedKey:), FWSwizzleReturn(void), FWSwizzleArgs(id value, NSString *key), FWSwizzleCode({
+    __FWSwizzleClass(NSObject, @selector(setValue:forUndefinedKey:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *key), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(value, key);
+            __FWSwizzleOriginal(value, key);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
         } @finally { }
     }));
     
-    FWSwizzleClass(NSObject, @selector(setValuesForKeysWithDictionary:), FWSwizzleReturn(void), FWSwizzleArgs(NSDictionary<NSString *, id> *keyValues), FWSwizzleCode({
+    __FWSwizzleClass(NSObject, @selector(setValuesForKeysWithDictionary:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSDictionary<NSString *, id> *keyValues), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(keyValues);
+            __FWSwizzleOriginal(keyValues);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
         } @finally { }
@@ -180,10 +180,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 + (void)captureStringException {
     NSArray<NSString *> *stringClasses = @[@"__NSCFConstantString", @"NSTaggedPointerString", @"__NSCFString"];
     for (NSString *stringClass in stringClasses) {
-        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringFromIndex:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSUInteger from), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringFromIndex:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSUInteger from), __FWSwizzleCode({
             NSString *result;
             @try {
-                result = FWSwizzleOriginal(from);
+                result = __FWSwizzleOriginal(from);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
             } @finally {
@@ -191,10 +191,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             }
         }));
         
-        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringToIndex:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSUInteger to), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringToIndex:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSUInteger to), __FWSwizzleCode({
             NSString *result;
             @try {
-                result = FWSwizzleOriginal(to);
+                result = __FWSwizzleOriginal(to);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
             } @finally {
@@ -202,10 +202,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             }
         }));
         
-        FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringWithRange:), nil, NSString *, FWSwizzleReturn(NSString *), FWSwizzleArgs(NSRange range), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringWithRange:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
             NSString *result;
             @try {
-                result = FWSwizzleOriginal(range);
+                result = __FWSwizzleOriginal(range);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
             } @finally {
@@ -218,10 +218,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSArray
 
 + (void)captureArrayException {
-    FWSwizzleMethod(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:), nil, Class, FWSwizzleReturn(NSArray *), FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, NSUInteger cnt), FWSwizzleCode({
+    __FWSwizzleMethod(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:), nil, Class, __FWSwizzleReturn(NSArray *), __FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, NSUInteger cnt), __FWSwizzleCode({
         NSArray *result;
         @try {
-            result = FWSwizzleOriginal(objects, cnt);
+            result = __FWSwizzleOriginal(objects, cnt);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:))];
             
@@ -233,7 +233,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
                     newCnt++;
                 }
             }
-            result = FWSwizzleOriginal(newObjects, newCnt);
+            result = __FWSwizzleOriginal(newObjects, newCnt);
         } @finally {
             return result;
         }
@@ -241,10 +241,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     
     NSArray<NSString *> *arrayClasses = @[@"__NSArray0", @"__NSArrayI", @"__NSSingleObjectArrayI", @"__NSArrayM"];
     for (NSString *arrayClass in arrayClasses) {
-        FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndex:), nil, NSArray *, FWSwizzleReturn(id), FWSwizzleArgs(NSUInteger index), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndex:), nil, NSArray *, __FWSwizzleReturn(id), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
             id result = nil;
             @try {
-                result = FWSwizzleOriginal(index);
+                result = __FWSwizzleOriginal(index);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(objectAtIndex:))];
             } @finally {
@@ -252,10 +252,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             }
         }));
         
-        FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndexedSubscript:), nil, NSArray *, FWSwizzleReturn(id), FWSwizzleArgs(NSUInteger index), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndexedSubscript:), nil, NSArray *, __FWSwizzleReturn(id), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
             id result = nil;
             @try {
-                result = FWSwizzleOriginal(index);
+                result = __FWSwizzleOriginal(index);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(objectAtIndexedSubscript:))];
             } @finally {
@@ -263,10 +263,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             }
         }));
         
-        FWSwizzleMethod(NSClassFromString(arrayClass), @selector(subarrayWithRange:), nil, NSArray *, FWSwizzleReturn(NSArray *), FWSwizzleArgs(NSRange range), FWSwizzleCode({
+        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(subarrayWithRange:), nil, NSArray *, __FWSwizzleReturn(NSArray *), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
             NSArray *result = nil;
             @try {
-                result = FWSwizzleOriginal(range);
+                result = __FWSwizzleOriginal(range);
             } @catch (NSException *exception) {
                 [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(subarrayWithRange:))];
             } @finally {
@@ -275,49 +275,49 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         }));
     }
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(addObject:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(addObject:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object);
+            __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(addObject:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(insertObject:atIndex:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(id object, NSUInteger index), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(insertObject:atIndex:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, NSUInteger index), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object, index);
+            __FWSwizzleOriginal(object, index);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(insertObject:atIndex:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectAtIndex:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(NSUInteger index), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectAtIndex:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(index);
+            __FWSwizzleOriginal(index);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(removeObjectAtIndex:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(replaceObjectAtIndex:withObject:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(NSUInteger index, id object), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(replaceObjectAtIndex:withObject:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSUInteger index, id object), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(index, object);
+            __FWSwizzleOriginal(index, object);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(replaceObjectAtIndex:withObject:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(setObject:atIndexedSubscript:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(id object, NSUInteger index), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(setObject:atIndexedSubscript:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, NSUInteger index), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object, index);
+            __FWSwizzleOriginal(object, index);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(setObject:atIndexedSubscript:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectsInRange:), nil, NSMutableArray *, FWSwizzleReturn(void), FWSwizzleArgs(NSRange range), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectsInRange:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(range);
+            __FWSwizzleOriginal(range);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(removeObjectsInRange:))];
         } @finally { }
@@ -327,17 +327,17 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSSet
 
 + (void)captureSetException {
-    FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(addObject:), nil, NSMutableSet *, FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(addObject:), nil, NSMutableSet *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object);
+            __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableSet class], @selector(addObject:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(removeObject:), nil, NSMutableSet *, FWSwizzleReturn(void), FWSwizzleArgs(id object), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(removeObject:), nil, NSMutableSet *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object);
+            __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableSet class], @selector(removeObject:))];
         } @finally { }
@@ -347,10 +347,10 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSDictionary
 
 + (void)captureDictionaryException {
-    FWSwizzleMethod(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:), nil, Class, FWSwizzleReturn(NSDictionary *), FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, const id<NSCopying> _Nonnull __unsafe_unretained *keys, NSUInteger cnt), FWSwizzleCode({
+    __FWSwizzleMethod(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:), nil, Class, __FWSwizzleReturn(NSDictionary *), __FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, const id<NSCopying> _Nonnull __unsafe_unretained *keys, NSUInteger cnt), __FWSwizzleCode({
         NSDictionary *result;
         @try {
-            result = FWSwizzleOriginal(objects, keys, cnt);
+            result = __FWSwizzleOriginal(objects, keys, cnt);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:))];
             
@@ -364,31 +364,31 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
                     newCnt++;
                 }
             }
-            result = FWSwizzleOriginal(newObjects, newKeys, newCnt);
+            result = __FWSwizzleOriginal(newObjects, newKeys, newCnt);
         } @finally {
             return result;
         }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKey:), nil, NSMutableDictionary *, FWSwizzleReturn(void), FWSwizzleArgs(id object, id key), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKey:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, id key), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object, key);
+            __FWSwizzleOriginal(object, key);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKey:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(removeObjectForKey:), nil, NSMutableDictionary *, FWSwizzleReturn(void), FWSwizzleArgs(id key), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(removeObjectForKey:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id key), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(key);
+            __FWSwizzleOriginal(key);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(removeObjectForKey:))];
         } @finally { }
     }));
     
-    FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKeyedSubscript:), nil, NSMutableDictionary *, FWSwizzleReturn(void), FWSwizzleArgs(id object, id<NSCopying> key), FWSwizzleCode({
+    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKeyedSubscript:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, id<NSCopying> key), __FWSwizzleCode({
         @try {
-            FWSwizzleOriginal(object, key);
+            __FWSwizzleOriginal(object, key);
         } @catch (NSException *exception) {
             [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKeyedSubscript:))];
         } @finally { }
