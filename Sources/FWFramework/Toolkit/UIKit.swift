@@ -801,7 +801,7 @@ import AdSupport
     
     /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
     public func fw_faceAware() {
-        __faceAware()
+        __fw_faceAware()
     }
 
     /// 倒影效果

@@ -16,7 +16,7 @@ import UIKit
     
     /// 使用NSKeyedUnarchiver解压数据
     public func fw_unarchiveObject(_ clazz: AnyClass) -> Any? {
-        return __unarchiveObject(clazz)
+        return __fw_unarchiveObject(clazz)
     }
     
     /// 保存对象归档

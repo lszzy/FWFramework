@@ -1341,12 +1341,12 @@ import FWObjC
 
     /// 获取装饰图片
     public var fw_maskImage: UIImage {
-        return self.__mask
+        return self.__fw_mask
     }
 
     /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
     public func fw_image(blurRadius: CGFloat, saturationDelta: CGFloat, tintColor: UIColor?, maskImage: UIImage?) -> UIImage? {
-        return self.__image(withBlurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
+        return self.__fw_image(withBlurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
     }
 
     /// 如果没有透明通道，增加透明通道

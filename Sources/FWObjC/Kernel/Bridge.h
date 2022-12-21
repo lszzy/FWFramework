@@ -1,5 +1,5 @@
 //
-//  FWBridge.h
+//  Bridge.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/11/11.
@@ -128,35 +128,35 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __Encrypt
+#pragma mark - __FWEncrypt
 
-@interface NSData (__Encrypt)
+@interface NSData (__FWEncrypt)
 
-- (nullable id)__unarchiveObject:(Class)clazz;
+- (nullable id)__fw_unarchiveObject:(Class)clazz;
 
-- (nullable NSData *)__AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)__fw_AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
-- (nullable NSData *)__AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)__fw_AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
-- (nullable NSData *)__DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)__fw_DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
-- (nullable NSData *)__DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv;
+- (nullable NSData *)__fw_DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
-- (nullable NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey;
+- (nullable NSData *)__fw_RSAEncryptWithPublicKey:(NSString *)publicKey;
 
-- (nullable NSData *)__RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
+- (nullable NSData *)__fw_RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
 
-- (nullable NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey;
+- (nullable NSData *)__fw_RSADecryptWithPrivateKey:(NSString *)privateKey;
 
-- (nullable NSData *)__RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
+- (nullable NSData *)__fw_RSADecryptWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
 
-- (nullable NSData *)__RSASignWithPrivateKey:(NSString *)privateKey;
+- (nullable NSData *)__fw_RSASignWithPrivateKey:(NSString *)privateKey;
 
-- (nullable NSData *)__RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
+- (nullable NSData *)__fw_RSASignWithPrivateKey:(NSString *)privateKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
 
-- (nullable NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey;
+- (nullable NSData *)__fw_RSAVerifyWithPublicKey:(NSString *)publicKey;
 
-- (nullable NSData *)__RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
+- (nullable NSData *)__fw_RSAVerifyWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Decode:(BOOL)base64Decode;
 
 @end
 
@@ -164,9 +164,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (__FWBridge)
 
-@property (nonatomic, readonly) UIImage *__maskImage;
+@property (nonatomic, readonly) UIImage *__fw_maskImage;
 
-- (nullable UIImage *)__imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
+- (nullable UIImage *)__fw_imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
 
 @end
 
@@ -174,7 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImageView (__FWBridge)
 
-- (void)__faceAware;
+- (void)__fw_faceAware;
 
 @end
 
