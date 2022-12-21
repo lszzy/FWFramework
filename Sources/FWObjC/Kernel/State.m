@@ -1,48 +1,48 @@
 //
-//  FWState.m
+//  State.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWState.h"
+#import "State.h"
 
-#pragma mark - FWStateObject
+#pragma mark - __FWStateObject
 
-@interface FWStateObject ()
+@interface __FWStateObject ()
 
 @property (nonatomic, copy) NSString *name;
 
 @end
 
-@implementation FWStateObject
+@implementation __FWStateObject
 
 + (instancetype)stateWithName:(NSString *)name
 {
-    FWStateObject *state = [[self alloc] init];
+    __FWStateObject *state = [[self alloc] init];
     state.name = name;
     return state;
 }
 
 @end
 
-#pragma mark - FWStateEvent
+#pragma mark - __FWStateEvent
 
-@interface FWStateEvent ()
+@interface __FWStateEvent ()
 
 @property (nonatomic, copy) NSString *name;
 
-@property (nonatomic, copy) NSArray<FWStateObject *> *sourceStates;
+@property (nonatomic, copy) NSArray<__FWStateObject *> *sourceStates;
 
-@property (nonatomic, strong) FWStateObject *targetState;
+@property (nonatomic, strong) __FWStateObject *targetState;
 
 @end
 
-@implementation FWStateEvent
+@implementation __FWStateEvent
 
-+ (instancetype)eventWithName:(NSString *)name fromStates:(NSArray<FWStateObject *> *)sourceStates toState:(FWStateObject *)targetState
++ (instancetype)eventWithName:(NSString *)name fromStates:(NSArray<__FWStateObject *> *)sourceStates toState:(__FWStateObject *)targetState
 {
-    FWStateEvent *event = [[self alloc] init];
+    __FWStateEvent *event = [[self alloc] init];
     event.name = name;
     event.sourceStates = sourceStates;
     event.targetState = targetState;
@@ -51,25 +51,25 @@
 
 @end
 
-#pragma mark - FWStateTransition
+#pragma mark - __FWStateTransition
 
-@interface FWStateTransition ()
+@interface __FWStateTransition ()
 
-@property (nonatomic, strong) FWStateMachine *machine;
+@property (nonatomic, strong) __FWStateMachine *machine;
 
-@property (nonatomic, strong) FWStateEvent *event;
+@property (nonatomic, strong) __FWStateEvent *event;
 
-@property (nonatomic, strong) FWStateObject *sourceState;
+@property (nonatomic, strong) __FWStateObject *sourceState;
 
 @property (nonatomic, strong) id object;
 
 @end
 
-@implementation FWStateTransition
+@implementation __FWStateTransition
 
-+ (instancetype)transitionInMachine:(FWStateMachine *)machine forEvent:(FWStateEvent *)event fromState:(FWStateObject *)sourceState withObject:(id)object
++ (instancetype)transitionInMachine:(__FWStateMachine *)machine forEvent:(__FWStateEvent *)event fromState:(__FWStateObject *)sourceState withObject:(id)object
 {
-    FWStateTransition *transition = [[FWStateTransition alloc] init];
+    __FWStateTransition *transition = [[__FWStateTransition alloc] init];
     transition.machine = machine;
     transition.event = event;
     transition.sourceState = sourceState;
@@ -77,24 +77,24 @@
     return transition;
 }
 
-- (FWStateObject *)targetState
+- (__FWStateObject *)targetState
 {
     return self.event.targetState;
 }
 
 @end
 
-#pragma mark - FWStateMachine
+#pragma mark - __FWStateMachine
 
-NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotification";
+NSNotificationName const __FWStateChangedNotification = @"__FWStateChangedNotification";
 
-@interface FWStateMachine ()
+@interface __FWStateMachine ()
 
 @property (nonatomic, strong) NSMutableSet *mutableStates;
 
 @property (nonatomic, strong) NSMutableSet *mutableEvents;
 
-@property (nonatomic, strong) FWStateObject *state;
+@property (nonatomic, strong) __FWStateObject *state;
 
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
@@ -102,7 +102,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 
 @end
 
-@implementation FWStateMachine
+@implementation __FWStateMachine
 
 - (instancetype)init
 {
@@ -118,18 +118,18 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 - (void)checkActive
 {
     if (self.isActive) {
-        @throw [NSException exceptionWithName:@"FWState" reason:@"FWStateMachine is activated" userInfo:nil];
+        @throw [NSException exceptionWithName:@"__FWState" reason:@"__FWStateMachine is activated" userInfo:nil];
     }
 }
 
-- (void)setInitialState:(FWStateObject *)initialState
+- (void)setInitialState:(__FWStateObject *)initialState
 {
     [self checkActive];
     
     _initialState = initialState;
 }
 
-- (void)setState:(FWStateObject *)state
+- (void)setState:(__FWStateObject *)state
 {
     if (!state) return;
     
@@ -141,7 +141,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
     return [NSSet setWithSet:_mutableStates];
 }
 
-- (void)addState:(FWStateObject *)state
+- (void)addState:(__FWStateObject *)state
 {
     [self checkActive];
     
@@ -157,14 +157,14 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 {
     [self checkActive];
     
-    for (FWStateObject *state in states) {
+    for (__FWStateObject *state in states) {
         [self addState:state];
     }
 }
 
-- (FWStateObject *)stateNamed:(NSString *)name
+- (__FWStateObject *)stateNamed:(NSString *)name
 {
-    for (FWStateObject *state in _mutableStates) {
+    for (__FWStateObject *state in _mutableStates) {
         if ([state.name isEqualToString:name]) {
             return state;
         }
@@ -174,7 +174,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 
 - (BOOL)isState:(id)state
 {
-    FWStateObject *targetState = [state isKindOfClass:[FWStateObject class]] ? state : [self stateNamed:state];
+    __FWStateObject *targetState = [state isKindOfClass:[__FWStateObject class]] ? state : [self stateNamed:state];
     if (!targetState) return NO;
     return [self.state isEqual:targetState];
 }
@@ -184,7 +184,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
     return [NSSet setWithSet:_mutableEvents];
 }
 
-- (void)addEvent:(FWStateEvent *)event
+- (void)addEvent:(__FWStateEvent *)event
 {
     [self checkActive];
     
@@ -197,14 +197,14 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 {
     [self checkActive];
     
-    for (FWStateEvent *event in events) {
+    for (__FWStateEvent *event in events) {
         [self addEvent:event];
     }
 }
 
-- (FWStateEvent *)eventNamed:(NSString *)name
+- (__FWStateEvent *)eventNamed:(NSString *)name
 {
-    for (FWStateEvent *event in _mutableEvents) {
+    for (__FWStateEvent *event in _mutableEvents) {
         if ([event.name isEqualToString:name]) {
             return event;
         }
@@ -231,7 +231,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
 
 - (BOOL)canFireEvent:(id)name
 {
-    FWStateEvent *event = [name isKindOfClass:[FWStateEvent class]] ? name : [self eventNamed:name];
+    __FWStateEvent *event = [name isKindOfClass:[__FWStateEvent class]] ? name : [self eventNamed:name];
     if (!event) return NO;
     return event.sourceStates == nil || [event.sourceStates containsObject:self.state];
 }
@@ -254,8 +254,8 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
     }
     
     // 能否触发，event.shouldFire
-    FWStateEvent *event = [name isKindOfClass:[FWStateEvent class]] ? name : [self eventNamed:name];
-    FWStateTransition *transition = [FWStateTransition transitionInMachine:self forEvent:event fromState:self.state withObject:object];
+    __FWStateEvent *event = [name isKindOfClass:[__FWStateEvent class]] ? name : [self eventNamed:name];
+    __FWStateTransition *transition = [__FWStateTransition transitionInMachine:self forEvent:event fromState:self.state withObject:object];
     if (event.shouldFireBlock) {
         if (!event.shouldFireBlock(transition)) {
             [_lock unlock];
@@ -269,7 +269,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
     return YES;
 }
 
-- (void)fireBegin:(FWStateTransition *)transition
+- (void)fireBegin:(__FWStateTransition *)transition
 {
     // event.willFire
     if (transition.event.willFireBlock) {
@@ -286,12 +286,12 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
     }
 }
 
-- (void)fireEnd:(FWStateTransition *)transition finished:(BOOL)finished
+- (void)fireEnd:(__FWStateTransition *)transition finished:(BOOL)finished
 {
     [_lock lock];
     if (finished) {
-        FWStateObject *oldState = self.state;
-        FWStateObject *newState = transition.event.targetState;
+        __FWStateObject *oldState = self.state;
+        __FWStateObject *newState = transition.event.targetState;
         
         // oldState.willExit
         if (oldState.willExitBlock) {
@@ -309,7 +309,7 @@ NSNotificationName const FWStateChangedNotification = @"FWStateChangedNotificati
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         if (oldState) [userInfo setObject:oldState forKey:NSKeyValueChangeOldKey];
         if (newState) [userInfo setObject:newState forKey:NSKeyValueChangeNewKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStateChangedNotification object:self userInfo:userInfo.copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWStateChangedNotification object:self userInfo:userInfo.copy];
         
         // oldState.didExit
         if (oldState.didExitBlock) {

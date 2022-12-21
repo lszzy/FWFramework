@@ -1,5 +1,5 @@
 //
-//  FWTest.h
+//  Test.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
@@ -12,42 +12,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- 执行同步测试断言
- 
- @param ... 断言表达式
- */
-#define FWAssertTrue( ... ) \
-    [self assertTrue:__VA_ARGS__ expression:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
-
-/**
- 异步测试断言开始
- */
-#define FWAssertBegin( ) \
-    [self assertBegin];
-
-/**
- 执行异步测试断言并退出，一个异步周期仅支持一次异步断言
- 
- @param ... 断言表达式
- */
-#define FWAssertAsync( ... ) \
-    [self assertAsync:__VA_ARGS__ expression:@(#__VA_ARGS__) file:@(__FILE__) line:__LINE__];
-
-/**
- 异步测试断言结束
- */
-#define FWAssertEnd( ) \
-    [self assertEnd];
-
-#pragma mark - FWTestCase
+#pragma mark - __FWTestCase
 
 /**
  单元测试用例基类，所有单元测试用例必须继承
- @note 调试模式下自动执行，按模块单元测试命名格式：FWTestCase_module_name
+ @note 调试模式下自动执行，按模块单元测试命名格式：__FWTestCase_module_name
  */
 NS_SWIFT_NAME(TestCase)
-@interface FWTestCase : NSObject
+@interface __FWTestCase : NSObject
 
 /**
  测试初始化，每次执行测试方法开始都会调用
