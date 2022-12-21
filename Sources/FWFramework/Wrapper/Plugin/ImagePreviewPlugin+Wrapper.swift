@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIViewController {
     
     /// 自定义图片预览插件，未设置时自动从插件池加载
-    public var imagePreviewPlugin: ImagePreviewPlugin? {
+    public var imagePreviewPlugin: ImagePreviewPlugin! {
         get { return base.__fw_imagePreviewPlugin }
         set { base.__fw_imagePreviewPlugin = newValue }
     }

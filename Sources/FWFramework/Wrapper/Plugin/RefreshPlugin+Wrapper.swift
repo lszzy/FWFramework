@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIScrollView {
     
     /// 自定义刷新插件，未设置时自动从插件池加载
-    public var refreshPlugin: RefreshPlugin? {
+    public var refreshPlugin: RefreshPlugin! {
         get { return base.__fw_refreshPlugin }
         set { base.__fw_refreshPlugin = newValue }
     }

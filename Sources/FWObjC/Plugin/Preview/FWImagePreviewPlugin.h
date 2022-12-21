@@ -42,7 +42,7 @@ NS_SWIFT_NAME(ImagePreviewPlugin)
 @interface UIViewController (FWImagePreviewPlugin)
 
 /// 自定义图片预览插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWImagePreviewPlugin> fw_imagePreviewPlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWImagePreviewPlugin> fw_imagePreviewPlugin NS_REFINED_FOR_SWIFT;
 
 /// 显示图片预览(简单版)
 /// @param imageURLs 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型

@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIViewController {
     
     /// 自定义弹窗插件，未设置时自动从插件池加载
-    public var alertPlugin: AlertPlugin? {
+    public var alertPlugin: AlertPlugin! {
         get { return base.__fw_alertPlugin }
         set { base.__fw_alertPlugin = newValue }
     }

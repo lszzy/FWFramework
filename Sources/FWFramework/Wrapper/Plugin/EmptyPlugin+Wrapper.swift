@@ -13,7 +13,7 @@ import FWObjC
 extension Wrapper where Base: UIView {
     
     /// 自定义空界面插件，未设置时自动从插件池加载
-    public var emptyPlugin: EmptyPlugin? {
+    public var emptyPlugin: EmptyPlugin! {
         get { return base .__fw_emptyPlugin }
         set { base .__fw_emptyPlugin = newValue }
     }
