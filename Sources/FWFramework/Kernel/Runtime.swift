@@ -142,7 +142,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return __Runtime.invokeMethod(self, selector: selector)
+        return __FWRuntime.invokeMethod(self, selector: selector)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -152,7 +152,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return __Runtime.invokeMethod(self, selector: selector, object: object)
+        return __FWRuntime.invokeMethod(self, selector: selector, object: object)
     }
     
     /// 安全调用方法，支持多个参数
@@ -162,7 +162,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return __Runtime.invokeMethod(self, selector: selector, objects: objects)
+        return __FWRuntime.invokeMethod(self, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -171,7 +171,7 @@ import FWObjC
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func fw_invokeGetter(_ name: String) -> Any? {
-        return __Runtime.invokeGetter(self, name: name)
+        return __FWRuntime.invokeGetter(self, name: name)
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -183,7 +183,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func fw_invokeSetter(_ name: String, object: Any?) -> Any? {
-        return __Runtime.invokeSetter(self, name: name, object: object)
+        return __FWRuntime.invokeSetter(self, name: name, object: object)
     }
     
     // MARK: - Property
@@ -197,7 +197,7 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_property(forName: String) -> Any? {
-        return __Runtime.getProperty(self, forName: forName)
+        return __FWRuntime.getProperty(self, forName: forName)
     }
     
     /// 读取Bool关联属性，默认false
@@ -235,7 +235,7 @@ import FWObjC
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func fw_setProperty(_ object: Any?, forName: String) {
-        __Runtime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+        __FWRuntime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     /// 设置赋值关联属性，支持KVO，注意可能会产生野指针
@@ -243,7 +243,7 @@ import FWObjC
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyAssign(_ object: Any?, forName: String) {
-        __Runtime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_ASSIGN, forName: forName)
+        __FWRuntime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_ASSIGN, forName: forName)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -251,7 +251,7 @@ import FWObjC
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyCopy(_ object: Any?, forName: String) {
-        __Runtime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+        __FWRuntime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -259,7 +259,7 @@ import FWObjC
     ///   - object: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyWeak(_ object: Any?, forName: String) {
-        __Runtime.setPropertyWeak(self, with: object, forName: forName)
+        __FWRuntime.setPropertyWeak(self, with: object, forName: forName)
     }
     
     /// 设置Bool关联属性
@@ -306,7 +306,7 @@ import FWObjC
     ///   - forKey: 键名
     public func fw_bindObjectWeak(_ object: Any?, forKey: String) {
         if let object = object {
-            fw_allBoundObjects.setObject(__WeakObject(object: object), forKey: forKey as NSString)
+            fw_allBoundObjects.setObject(__FWWeakObject(object: object), forKey: forKey as NSString)
         } else {
             fw_allBoundObjects.removeObject(forKey: forKey)
         }
@@ -317,7 +317,7 @@ import FWObjC
     /// - Returns: 绑定的对象
     public func fw_boundObject(forKey: String) -> Any? {
         let object = fw_allBoundObjects.object(forKey: forKey)
-        if let weakObject = object as? __WeakObject {
+        if let weakObject = object as? __FWWeakObject {
             return weakObject.object
         }
         return object

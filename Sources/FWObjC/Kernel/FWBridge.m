@@ -13,7 +13,7 @@
 #import <ifaddrs.h>
 #import <net/if.h>
 
-#pragma mark - __Autoloader
+#pragma mark - __FWAutoloader
 
 @protocol __AutoloadProtocol <NSObject>
 @optional
@@ -22,26 +22,26 @@
 
 @end
 
-@interface __Autoloader () <__AutoloadProtocol>
+@interface __FWAutoloader () <__AutoloadProtocol>
 
 @end
 
-@implementation __Autoloader
+@implementation __FWAutoloader
 
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if ([__Autoloader respondsToSelector:@selector(autoload)]) {
-            [__Autoloader autoload];
+        if ([__FWAutoloader respondsToSelector:@selector(autoload)]) {
+            [__FWAutoloader autoload];
         }
     });
 }
 
 @end
 
-#pragma mark - __WeakProxy
+#pragma mark - __FWWeakProxy
 
-@implementation __WeakProxy
+@implementation __FWWeakProxy
 
 - (instancetype)initWithTarget:(id)target {
     _target = target;
@@ -107,7 +107,7 @@
 
 @end
 
-#pragma mark - __BlockProxy
+#pragma mark - __FWBlockProxy
 
 typedef NS_OPTIONS(int, __ProxyBlockFlags) {
     __ProxyBlockFlagsHasCopyDisposeHelpers = (1 << 25),
@@ -129,13 +129,13 @@ typedef struct __ProxyBlock {
     } *descriptor;
 } *__ProxyBlockRef;
 
-@interface __BlockProxy ()
+@interface __FWBlockProxy ()
 
 @property (nonatomic, readonly) NSMethodSignature *blockSignature;
 
 @end
 
-@implementation __BlockProxy
+@implementation __FWBlockProxy
 
 + (NSMethodSignature *)typeSignatureForBlock:(id)block __attribute__((pure, nonnull(1))) {
     __ProxyBlockRef layout = (__bridge void *)block;
@@ -277,15 +277,15 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __DelegateProxy
+#pragma mark - __FWDelegateProxy
 
-@interface __DelegateProxy ()
+@interface __FWDelegateProxy ()
 
 @property (nonatomic, strong) NSMutableDictionary *blockProxies;
 
 @end
 
-@implementation __DelegateProxy
+@implementation __FWDelegateProxy
 
 - (instancetype)init {
     self = [super init];
@@ -307,7 +307,7 @@ typedef struct __ProxyBlock {
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
-    __BlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(invocation.selector)];
+    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(invocation.selector)];
     if (blockProxy) {
         [blockProxy invokeWithInvocation:invocation];
     } else if ([self.proxyDelegate respondsToSelector:invocation.selector]) {
@@ -316,7 +316,7 @@ typedef struct __ProxyBlock {
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    __BlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
+    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
     if (blockProxy) {
         return blockProxy.methodSignature;
     }
@@ -345,20 +345,20 @@ typedef struct __ProxyBlock {
         return;
     }
     
-    __BlockProxy *blockProxy = [[__BlockProxy alloc] initWithBlock:block];
+    __FWBlockProxy *blockProxy = [[__FWBlockProxy alloc] initWithBlock:block];
     [self.blockProxies setObject:blockProxy forKey:blockKey];
 }
 
 - (id)blockForSelector:(SEL)selector {
-    __BlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
+    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
     return blockProxy ? blockProxy.block : nil;
 }
 
 @end
 
-#pragma mark - __WeakObject
+#pragma mark - __FWWeakObject
 
-@implementation __WeakObject
+@implementation __FWWeakObject
 
 - (instancetype)initWithObject:(id)object {
     self = [super init];
@@ -370,15 +370,15 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __Runtime
+#pragma mark - __FWRuntime
 
-@implementation __Runtime
+@implementation __FWRuntime
 
 + (id)getProperty:(id)target forName:(NSString *)name {
     if (!target) return nil;
     id object = objc_getAssociatedObject(target, NSSelectorFromString(name));
-    if ([object isKindOfClass:[__WeakObject class]]) {
-        object = [(__WeakObject *)object object];
+    if ([object isKindOfClass:[__FWWeakObject class]]) {
+        object = [(__FWWeakObject *)object object];
     }
     return object;
 }
@@ -390,7 +390,7 @@ typedef struct __ProxyBlock {
 
 + (void)setPropertyWeak:(id)target withObject:(id)object forName:(NSString *)name {
     if (!target || [self getProperty:target forName:name] == object) return;
-    objc_setAssociatedObject(target, NSSelectorFromString(name), [[__WeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(target, NSSelectorFromString(name), [[__FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (id)invokeMethod:(id)target selector:(SEL)aSelector {
@@ -499,9 +499,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __Swizzle
+#pragma mark - __FWSwizzle
 
-@implementation __Swizzle
+@implementation __FWSwizzle
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block {
     if (!originalClass) return NO;
@@ -613,9 +613,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __Bridge
+#pragma mark - __FWBridge
 
-@implementation __Bridge
+@implementation __FWBridge
 
 + (NSTimeInterval)systemUptime {
     struct timeval bootTime;
@@ -1336,9 +1336,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - UIImage+__Bridge
+#pragma mark - UIImage+__FWBridge
 
-@implementation UIImage (__Bridge)
+@implementation UIImage (__FWBridge)
 
 - (UIImage *)__maskImage {
     NSInteger width = CGImageGetWidth(self.CGImage);
@@ -1474,9 +1474,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - UIImageView+__Bridge
+#pragma mark - UIImageView+__FWBridge
 
-@implementation UIImageView (__Bridge)
+@implementation UIImageView (__FWBridge)
 
 - (void)__faceAware {
     if (self.image == nil) {
@@ -1594,9 +1594,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __NotificationTarget
+#pragma mark - __FWNotificationTarget
 
-@implementation __NotificationTarget
+@implementation __FWNotificationTarget
 
 - (instancetype)init {
     self = [super init];
@@ -1636,9 +1636,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __KvoTarget
+#pragma mark - __FWKvoTarget
 
-@implementation __KvoTarget
+@implementation __FWKvoTarget
 
 - (instancetype)init {
     self = [super init];
@@ -1703,9 +1703,9 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __BlockTarget
+#pragma mark - __FWBlockTarget
 
-@implementation __BlockTarget
+@implementation __FWBlockTarget
 
 - (instancetype)init {
     self = [super init];
@@ -1723,15 +1723,15 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __InputTarget
+#pragma mark - __FWInputTarget
 
-@interface __InputTarget ()
+@interface __FWInputTarget ()
 
 @property (nonatomic, weak, nullable, readonly) UITextField *textField;
 
 @end
 
-@implementation __InputTarget
+@implementation __FWInputTarget
 
 - (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput {
     self = [super init];
@@ -1817,13 +1817,13 @@ typedef struct __ProxyBlock {
     if (self.maxUnicodeLength > 0) {
         if (self.textInput.markedTextRange) {
             if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
-                if ([__InputTarget unicodeLength:self.textField.text] > self.maxUnicodeLength) {
-                    self.textField.text = [__InputTarget unicodeSubstring:self.textField.text length:self.maxUnicodeLength];
+                if ([__FWInputTarget unicodeLength:self.textField.text] > self.maxUnicodeLength) {
+                    self.textField.text = [__FWInputTarget unicodeSubstring:self.textField.text length:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([__InputTarget unicodeLength:self.textField.text] > self.maxUnicodeLength) {
-                self.textField.text = [__InputTarget unicodeSubstring:self.textField.text length:self.maxUnicodeLength];
+            if ([__FWInputTarget unicodeLength:self.textField.text] > self.maxUnicodeLength) {
+                self.textField.text = [__FWInputTarget unicodeSubstring:self.textField.text length:self.maxUnicodeLength];
             }
         }
     }
@@ -1857,13 +1857,13 @@ typedef struct __ProxyBlock {
     if (self.maxUnicodeLength > 0) {
         if (self.textInput.markedTextRange) {
             if (![self.textInput positionFromPosition:self.textInput.markedTextRange.start offset:0]) {
-                if ([__InputTarget unicodeLength:filterText] > self.maxUnicodeLength) {
-                    filterText = [__InputTarget unicodeSubstring:filterText length:self.maxUnicodeLength];
+                if ([__FWInputTarget unicodeLength:filterText] > self.maxUnicodeLength) {
+                    filterText = [__FWInputTarget unicodeSubstring:filterText length:self.maxUnicodeLength];
                 }
             }
         } else {
-            if ([__InputTarget unicodeLength:filterText] > self.maxUnicodeLength) {
-                filterText = [__InputTarget unicodeSubstring:filterText length:self.maxUnicodeLength];
+            if ([__FWInputTarget unicodeLength:filterText] > self.maxUnicodeLength) {
+                filterText = [__FWInputTarget unicodeSubstring:filterText length:self.maxUnicodeLength];
             }
         }
     }

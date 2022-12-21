@@ -112,8 +112,8 @@ public class Autoloader: NSObject, AutoloadProtocol {
     
 }
 
-// MARK: - __Autoloader
-@objc extension __Autoloader: AutoloadProtocol {
+// MARK: - __FWAutoloader
+@objc extension __FWAutoloader: AutoloadProtocol {
     
     /// 自动加载Autoloader
     public static func autoload() {

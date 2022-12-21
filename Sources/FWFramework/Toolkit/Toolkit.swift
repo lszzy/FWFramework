@@ -1231,7 +1231,7 @@ import FWObjC
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
-        __Runtime.setPropertyPolicy(UIImage.classForCoder(), with: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
+        __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_innerVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
@@ -1244,8 +1244,8 @@ import FWObjC
     }
     
     private static func fw_innerVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = __Runtime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
-        __Runtime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
+        let block = __FWRuntime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
+        __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         block?(error)
     }
     

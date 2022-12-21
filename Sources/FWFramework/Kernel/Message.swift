@@ -39,7 +39,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = __NotificationTarget()
+        let messageTarget = __FWNotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.block = block
@@ -74,7 +74,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = __NotificationTarget()
+        let messageTarget = __FWNotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.target = target
@@ -111,7 +111,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __NotificationTarget,
+                if let obj = elem as? __FWNotificationTarget,
                    obj.equalsObject(object) {
                     array.remove(obj)
                 }
@@ -119,7 +119,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __NotificationTarget,
+                if let obj = elem as? __FWNotificationTarget,
                    obj.equalsObject(object, target: target, action: action) {
                     array.remove(obj)
                 }
@@ -136,7 +136,7 @@ import FWObjC
               let array = dict[name] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __NotificationTarget,
+            if let obj = elem as? __FWNotificationTarget,
                obj.identifier == identifier {
                 array.remove(obj)
             }
@@ -231,7 +231,7 @@ import FWObjC
         let notification = Notification(name: name, object: object, userInfo: userInfo)
         for (_, elem) in array.enumerated() {
             // obj.object为nil或者obj.object和object相同才触发
-            if let obj = elem as? __NotificationTarget,
+            if let obj = elem as? __FWNotificationTarget,
                (obj.object == nil || obj.equalsObject(object)) {
                 obj.handle(notification)
             }
@@ -269,12 +269,12 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = __NotificationTarget()
+        let notificationTarget = __FWNotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.block = block
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__NotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget.identifier
     }
     
@@ -305,13 +305,13 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = __NotificationTarget()
+        let notificationTarget = __FWNotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.target = target
         notificationTarget.action = action
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__NotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget.identifier
     }
     
@@ -348,7 +348,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __NotificationTarget,
+                if let obj = elem as? __FWNotificationTarget,
                    obj.equalsObject(object) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -357,7 +357,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __NotificationTarget,
+                if let obj = elem as? __FWNotificationTarget,
                    obj.equalsObject(object, target: target, action: action) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -375,7 +375,7 @@ import FWObjC
               let array = dict[name] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __NotificationTarget,
+            if let obj = elem as? __FWNotificationTarget,
                obj.identifier == identifier {
                 NotificationCenter.default.removeObserver(obj)
                 array.remove(obj)
@@ -459,7 +459,7 @@ import FWObjC
             dict?[property] = array
         }
         
-        let kvoTarget = __KvoTarget()
+        let kvoTarget = __FWKvoTarget()
         kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.block = block
@@ -483,7 +483,7 @@ import FWObjC
             dict?[property] = array
         }
         
-        let kvoTarget = __KvoTarget()
+        let kvoTarget = __FWKvoTarget()
         kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.target = target
@@ -505,7 +505,7 @@ import FWObjC
         if target == nil {
             if let array = dict[property] as? NSMutableArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? __KvoTarget {
+                    if let obj = elem as? __FWKvoTarget {
                         obj.removeObserver()
                     }
                 }
@@ -517,7 +517,7 @@ import FWObjC
         guard let array = dict[property] as? NSMutableArray else { return }
         // target相同且action为NULL或者action相同才移除
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __KvoTarget,
+            if let obj = elem as? __FWKvoTarget,
                obj.equalsTarget(target, action: action) {
                 obj.removeObserver()
                 array.remove(obj)
@@ -534,7 +534,7 @@ import FWObjC
               let array = dict[property] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __KvoTarget,
+            if let obj = elem as? __FWKvoTarget,
                obj.identifier == identifier {
                 obj.removeObserver()
                 array.remove(obj)
@@ -555,7 +555,7 @@ import FWObjC
         for (_, value) in dict {
             if let array = value as? NSArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? __KvoTarget {
+                    if let obj = elem as? __FWKvoTarget {
                         obj.removeObserver()
                     }
                 }

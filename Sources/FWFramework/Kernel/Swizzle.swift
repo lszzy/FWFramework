@@ -25,7 +25,7 @@ import FWObjC
         _ originalSelector: Selector,
         swizzleMethod: Selector
     ) -> Bool {
-        return __Swizzle.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return __FWSwizzle.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类静态方法。复杂情况可能会冲突
@@ -39,7 +39,7 @@ import FWObjC
         swizzleMethod: Selector
     ) -> Bool {
         guard let metaClass = object_getClass(Self.classForCoder()) else { return false }
-        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return __FWSwizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
@@ -56,7 +56,7 @@ import FWObjC
         swizzleMethod: Selector,
         block: Any
     ) -> Bool {
-        return __Swizzle.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
+        return __FWSwizzle.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
     }
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
@@ -74,7 +74,7 @@ import FWObjC
         block: Any
     ) -> Bool {
         guard let metaClass = object_getClass(Self.classForCoder()) else { return false }
-        return __Swizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
+        return __FWSwizzle.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
     }
     
     /// 生成原始方法对应的随机交换方法
@@ -116,12 +116,12 @@ import FWObjC
         guard let target = target else { return false }
 
         if object_isClass(target), let targetClass = target as? AnyClass {
-            return __Swizzle.swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, with: block)
+            return __FWSwizzle.swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, with: block)
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
-            __Runtime.setPropertyPolicy(target, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
-            return __Swizzle.swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", with: block)
+            __FWRuntime.setPropertyPolicy(target, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
+            return __FWSwizzle.swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", with: block)
         }
     }
     
@@ -151,7 +151,7 @@ import FWObjC
         identifier: String? = nil,
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
-        return __Swizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, with: block)
+        return __FWSwizzle.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, with: block)
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -169,7 +169,7 @@ import FWObjC
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
         guard let metaClass = object_getClass(originalClass) else { return false }
-        return __Swizzle.swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, with: block)
+        return __FWSwizzle.swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, with: block)
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
@@ -186,8 +186,8 @@ import FWObjC
     ) -> Bool {
         guard let objectClass = object_getClass(self) else { return false }
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        __Runtime.setPropertyPolicy(self, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
-        return __Swizzle.swizzleInstanceMethod(
+        __FWRuntime.setPropertyPolicy(self, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
+        return __FWSwizzle.swizzleInstanceMethod(
             objectClass,
             selector: originalSelector,
             identifier: identifier,
@@ -207,7 +207,7 @@ import FWObjC
         identifier: String = ""
     ) -> Bool {
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        return __Runtime.getProperty(self, forName: swizzleIdentifier) != nil
+        return __FWRuntime.getProperty(self, forName: swizzleIdentifier) != nil
     }
     
     private static func fw_swizzleIdentifier(_ object: Any, selector: Selector, identifier: String) -> String {
@@ -230,7 +230,7 @@ import FWObjC
         identifier: String? = nil,
         block: @escaping (NSObject) -> Void
     ) -> Bool {
-        return __Swizzle.swizzleDeallocMethod(originalClass, identifier: identifier, with: block)
+        return __FWSwizzle.swizzleDeallocMethod(originalClass, identifier: identifier, with: block)
     }
     
 }

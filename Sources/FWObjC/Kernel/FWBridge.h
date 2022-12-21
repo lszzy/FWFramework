@@ -10,15 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __Autoloader
+#pragma mark - __FWAutoloader
 
-@interface __Autoloader : NSObject
+@interface __FWAutoloader : NSObject
 
 @end
 
-#pragma mark - __WeakProxy
+#pragma mark - __FWWeakProxy
 
-@interface __WeakProxy : NSProxy
+@interface __FWWeakProxy : NSProxy
 
 @property (nonatomic, weak, readonly, nullable) id target;
 
@@ -26,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __BlockProxy
+#pragma mark - __FWBlockProxy
 
-@interface __BlockProxy : NSObject
+@interface __FWBlockProxy : NSObject
 
 @property (nonatomic, copy, readonly) id block;
 
@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __DelegateProxy
+#pragma mark - __FWDelegateProxy
 
-@interface __DelegateProxy : NSObject
+@interface __FWDelegateProxy : NSObject
 
 @property (nonatomic, weak, nullable) id proxyDelegate;
 
@@ -58,9 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __WeakObject
+#pragma mark - __FWWeakObject
 
-@interface __WeakObject : NSObject
+@interface __FWWeakObject : NSObject
 
 @property (nonatomic, weak, readonly, nullable) id object;
 
@@ -68,9 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __Runtime
+#pragma mark - __FWRuntime
 
-@interface __Runtime : NSObject
+@interface __FWRuntime : NSObject
 
 + (nullable id)getProperty:(id)target forName:(NSString *)name;
 
@@ -94,9 +94,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __Swizzle
+#pragma mark - __FWSwizzle
 
-@interface __Swizzle : NSObject
+@interface __FWSwizzle : NSObject
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
@@ -110,9 +110,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __Bridge
+#pragma mark - __FWBridge
 
-@interface __Bridge : NSObject
+@interface __FWBridge : NSObject
 
 + (NSTimeInterval)systemUptime;
 
@@ -160,9 +160,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIImage+__Bridge
+#pragma mark - UIImage+__FWBridge
 
-@interface UIImage (__Bridge)
+@interface UIImage (__FWBridge)
 
 @property (nonatomic, readonly) UIImage *__maskImage;
 
@@ -170,17 +170,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIImageView+__Bridge
+#pragma mark - UIImageView+__FWBridge
 
-@interface UIImageView (__Bridge)
+@interface UIImageView (__FWBridge)
 
 - (void)__faceAware;
 
 @end
 
-#pragma mark - __NotificationTarget
+#pragma mark - __FWNotificationTarget
 
-@interface __NotificationTarget : NSObject
+@interface __FWNotificationTarget : NSObject
 
 @property (nonatomic, copy, readonly) NSString *identifier;
 
@@ -202,9 +202,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __KvoTarget
+#pragma mark - __FWKvoTarget
 
-@interface __KvoTarget : NSObject
+@interface __FWKvoTarget : NSObject
 
 @property (nonatomic, copy, readonly) NSString *identifier;
 
@@ -228,9 +228,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __BlockTarget
+#pragma mark - __FWBlockTarget
 
-@interface __BlockTarget : NSObject
+@interface __FWBlockTarget : NSObject
 
 @property (nonatomic, copy) NSString *identifier;
 
@@ -242,9 +242,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __InputTarget
+#pragma mark - __FWInputTarget
 
-@interface __InputTarget : NSObject
+@interface __FWInputTarget : NSObject
 
 @property (nonatomic, weak, nullable, readonly) UIView<UITextInput> *textInput;
 

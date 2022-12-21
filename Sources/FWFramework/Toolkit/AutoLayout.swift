@@ -793,7 +793,7 @@ import FWObjC
             return self.priority
         }
         set {
-            __Runtime.tryCatch {
+            __FWRuntime.tryCatch {
                 self.priority = newValue
             } exceptionHandler: { exception in
                 NSLog("%@", exception)
