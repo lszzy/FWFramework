@@ -1,11 +1,11 @@
 //
-//  FWKeyboard.m
+//  Keyboard.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWKeyboard.h"
+#import "Keyboard.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -29,14 +29,14 @@
 
 #endif
 
-#pragma mark - __KeyboardTarget
+#pragma mark - __FWKeyboardTarget
 
 static BOOL fwStaticKeyboardShowing = NO;
 static CGFloat fwStaticKeyboardOrigin = 0;
 static CGFloat fwStaticKeyboardOffset = 0;
 static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
-@interface __KeyboardTarget ()
+@interface __FWKeyboardTarget ()
 
 @property (nonatomic, strong) UIBarButtonItem *previousItem;
 @property (nonatomic, strong) UIBarButtonItem *nextItem;
@@ -47,7 +47,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @end
 
-@implementation __KeyboardTarget
+@implementation __FWKeyboardTarget
 
 - (instancetype)initWithTextInput:(UIView<UITextInput> *)textInput
 {

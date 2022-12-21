@@ -1,14 +1,14 @@
 //
-//  FWAppearance.m
+//  Appearance.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWAppearance.h"
+#import "Appearance.h"
 #import <objc/runtime.h>
 
-@implementation FWAppearance
+@implementation __FWAppearance
 
 + (id)appearanceForClass:(Class)aClass {
     static NSMutableDictionary *appearances = nil;

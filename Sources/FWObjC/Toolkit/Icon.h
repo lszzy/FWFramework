@@ -1,5 +1,5 @@
 //
-//  FWIcon.h
+//  Icon.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -9,14 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWIcon;
 @class __FWLoader<InputType, OutputType>;
-
-/// 指定名称和大小初始化图标对象
-FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size) NS_SWIFT_UNAVAILABLE("");
-
-/// 指定名称和大小初始化图标图像
-FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /**
  字体图标抽象基类，子类需继承
@@ -29,18 +22,18 @@ FOUNDATION_EXPORT UIImage * _Nullable FWIconImage(NSString *name, CGFloat size) 
  @see https://github.com/PrideChung/FontAwesomeKit
  */
 NS_SWIFT_NAME(Icon)
-@interface FWIcon : NSObject
+@interface __FWIcon : NSObject
 
 #pragma mark - Static
 
 /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
 @property (class, nonatomic, readonly) __FWLoader<NSString *, Class> *sharedLoader;
 
-/// 注册图标实现类，必须继承FWIcon，用于name快速查找，注意name不要重复
+/// 注册图标实现类，必须继承__FWIcon，用于name快速查找，注意name不要重复
 + (BOOL)registerClass:(Class)iconClass;
 
 /// 指定名称和大小初始化图标对象
-+ (nullable FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size;
++ (nullable __FWIcon *)iconNamed:(NSString *)name size:(CGFloat)size;
 
 /// 指定名称和大小初始化图标图像
 + (nullable UIImage *)iconImage:(NSString *)name size:(CGFloat)size;

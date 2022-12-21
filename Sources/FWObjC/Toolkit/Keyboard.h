@@ -1,5 +1,5 @@
 //
-//  FWKeyboard.h
+//  Keyboard.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -9,9 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __KeyboardTarget
+#pragma mark - __FWKeyboardTarget
 
-@interface __KeyboardTarget<__covariant TextInputType> : NSObject
+@interface __FWKeyboardTarget<__covariant TextInputType> : NSObject
 
 @property (nonatomic, assign) BOOL keyboardManager;
 

@@ -87,7 +87,7 @@ import FWObjC
     private func fw_innerReturnEvent() {
         let value = fw_property(forName: "fw_innerReturnEvent") as? NSNumber
         if value == nil {
-            self.addTarget(self.fw_innerKeyboardTarget, action: #selector(__KeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
+            self.addTarget(self.fw_innerKeyboardTarget, action: #selector(__FWKeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
             fw_setProperty(NSNumber(value: true), forName: "fw_innerReturnEvent")
         }
     }
@@ -194,11 +194,11 @@ import FWObjC
         self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_innerKeyboardTarget: __KeyboardTarget<UITextField> {
-        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __KeyboardTarget<UITextField> {
+    private var fw_innerKeyboardTarget: __FWKeyboardTarget<UITextField> {
+        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __FWKeyboardTarget<UITextField> {
             return target
         } else {
-            let target = __KeyboardTarget<UITextField>(textInput: self)
+            let target = __FWKeyboardTarget<UITextField>(textInput: self)
             fw_setProperty(target, forName: "fw_innerKeyboardTarget")
             return target
         }
@@ -457,11 +457,11 @@ import FWObjC
         self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_innerKeyboardTarget: __KeyboardTarget<UITextView> {
-        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __KeyboardTarget<UITextView> {
+    private var fw_innerKeyboardTarget: __FWKeyboardTarget<UITextView> {
+        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __FWKeyboardTarget<UITextView> {
             return target
         } else {
-            let target = __KeyboardTarget<UITextView>(textInput: self)
+            let target = __FWKeyboardTarget<UITextView>(textInput: self)
             fw_setProperty(target, forName: "fw_innerKeyboardTarget")
             return target
         }
