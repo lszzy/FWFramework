@@ -7,7 +7,7 @@
 
 #import "FWAlertPlugin.h"
 #import "FWAlertPluginImpl.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "Navigator.h"
 #import "FWAppBundle.h"
 #import <objc/runtime.h>
@@ -34,7 +34,7 @@
 - (id<FWAlertPlugin>)fw_alertPlugin
 {
     id<FWAlertPlugin> alertPlugin = objc_getAssociatedObject(self, @selector(fw_alertPlugin));
-    if (!alertPlugin) alertPlugin = [FWPluginManager loadPlugin:@protocol(FWAlertPlugin)];
+    if (!alertPlugin) alertPlugin = [__FWPluginManager loadPlugin:@protocol(FWAlertPlugin)];
     if (!alertPlugin) alertPlugin = FWAlertPluginImpl.sharedInstance;
     return alertPlugin;
 }

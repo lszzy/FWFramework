@@ -11,7 +11,7 @@
 #import "Logger.h"
 #import "Mediator.h"
 #import "Navigator.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "FWProxy.h"
 #import "FWRouter.h"
 #import "FWState.h"

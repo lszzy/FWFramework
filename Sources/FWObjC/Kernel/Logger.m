@@ -6,7 +6,7 @@
 //
 
 #import "Logger.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 
 #ifdef DEBUG
 
@@ -128,7 +128,7 @@ static __FWLogLevel fwStaticLogLevel = __FWLogLevelOff;
     if (![self check:type]) return;
     
     // 插件存在，调用插件；否则使用默认插件
-    id<__FWLoggerPlugin> plugin = [FWPluginManager loadPlugin:@protocol(__FWLoggerPlugin)];
+    id<__FWLoggerPlugin> plugin = [__FWPluginManager loadPlugin:@protocol(__FWLoggerPlugin)];
     if (!plugin || ![plugin respondsToSelector:@selector(log:message:group:userInfo:)]) {
         plugin = __FWLoggerPluginImpl.sharedInstance;
     }

@@ -7,7 +7,7 @@
 
 #import "FWWebImage.h"
 #import "FWHTTPSessionManager.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -802,7 +802,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[FWImagePluginImpl class]];
+        [__FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[FWImagePluginImpl class]];
     });
 }
 

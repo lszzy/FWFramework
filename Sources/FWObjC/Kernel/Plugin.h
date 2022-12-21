@@ -1,5 +1,5 @@
 //
-//  FWPlugin.h
+//  Plugin.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
@@ -9,21 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Macro
-
-/// 加载指定插件
-#define FWPlugin(pluginProtocol) \
-    ((id<pluginProtocol>)[FWPluginManager loadPlugin:@protocol(pluginProtocol)])
-
-/// 注册指定插件
-#define FWRegPlugin(pluginProtocol) \
-    [FWPluginManager registerPlugin:@protocol(pluginProtocol) withObject:self.class];
-
-#pragma mark - FWPluginProtocol
+#pragma mark - __FWPluginProtocol
 
 /// 可选插件协议，可不实现。未实现时默认调用sharedInstance > init方法
 NS_SWIFT_NAME(PluginProtocol)
-@protocol FWPluginProtocol <NSObject>
+@protocol __FWPluginProtocol <NSObject>
 @optional
 
 /// 可选插件单例方法，优先级高，仅调用一次
@@ -40,7 +30,7 @@ NS_SWIFT_NAME(PluginProtocol)
 
 @end
 
-#pragma mark - FWPluginManager
+#pragma mark - __FWPluginManager
 
 @class __FWLoader<InputType, OutputType>;
 
@@ -51,7 +41,7 @@ NS_SWIFT_NAME(PluginProtocol)
     Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
  */
 NS_SWIFT_NAME(PluginManager)
-@interface FWPluginManager : NSObject
+@interface __FWPluginManager : NSObject
 
 /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
 @property (class, nonatomic, readonly) __FWLoader<Protocol *, id> *sharedLoader;
