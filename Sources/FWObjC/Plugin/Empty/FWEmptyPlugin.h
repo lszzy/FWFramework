@@ -34,7 +34,7 @@ NS_SWIFT_NAME(EmptyPlugin)
 @interface UIView (FWEmptyPlugin)
 
 /// 自定义空界面插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWEmptyPlugin> fw_emptyPlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWEmptyPlugin> fw_emptyPlugin NS_REFINED_FOR_SWIFT;
 
 /// 设置空界面外间距，默认zero
 @property (nonatomic, assign) UIEdgeInsets fw_emptyInsets NS_REFINED_FOR_SWIFT;

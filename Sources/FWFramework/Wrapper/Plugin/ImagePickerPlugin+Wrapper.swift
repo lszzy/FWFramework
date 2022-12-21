@@ -117,7 +117,7 @@ extension Wrapper where Base: UIImage {
 extension Wrapper where Base: UIViewController {
     
     /// 自定义图片选取插件，未设置时自动从插件池加载
-    public var imagePickerPlugin: ImagePickerPlugin? {
+    public var imagePickerPlugin: ImagePickerPlugin! {
         get { return base.__fw_imagePickerPlugin }
         set { base.__fw_imagePickerPlugin = newValue }
     }

@@ -77,7 +77,7 @@ NS_SWIFT_NAME(RefreshPlugin)
 @interface UIScrollView (FWRefreshPlugin)
 
 /// 自定义刷新插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWRefreshPlugin> fw_refreshPlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWRefreshPlugin> fw_refreshPlugin NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Refreshing
 

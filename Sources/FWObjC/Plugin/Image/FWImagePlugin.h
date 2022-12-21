@@ -126,7 +126,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 @interface UIImageView (FWImagePlugin)
 
 /// 自定义图片插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWImagePlugin> fw_imagePlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWImagePlugin> fw_imagePlugin NS_REFINED_FOR_SWIFT;
 
 /// 当前正在加载的网络图片URL
 @property (nonatomic, copy, readonly, nullable) NSURL *fw_imageURL NS_REFINED_FOR_SWIFT;

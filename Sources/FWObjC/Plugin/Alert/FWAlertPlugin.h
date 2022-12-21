@@ -66,7 +66,7 @@ NS_SWIFT_NAME(AlertPlugin)
 @interface UIViewController (FWAlertPlugin)
 
 /// 自定义弹窗插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWAlertPlugin> fw_alertPlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWAlertPlugin> fw_alertPlugin NS_REFINED_FOR_SWIFT;
 
 /**
  *  显示警告框(精简版)，默认关闭按钮

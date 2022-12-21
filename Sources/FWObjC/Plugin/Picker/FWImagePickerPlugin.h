@@ -57,7 +57,7 @@ NS_SWIFT_NAME(ImagePickerPlugin)
 @interface UIViewController (FWImagePickerPlugin)
 
 /// 自定义图片选取插件，未设置时自动从插件池加载
-@property (nonatomic, strong, nullable) id<FWImagePickerPlugin> fw_imagePickerPlugin NS_REFINED_FOR_SWIFT;
+@property (nonatomic, strong, null_resettable) id<FWImagePickerPlugin> fw_imagePickerPlugin NS_REFINED_FOR_SWIFT;
 
 /// 从Camera选取单张图片(简单版)
 /// @param allowsEditing 是否允许编辑
