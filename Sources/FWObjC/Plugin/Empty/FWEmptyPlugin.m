@@ -7,8 +7,8 @@
 
 #import "FWEmptyPlugin.h"
 #import "FWEmptyPluginImpl.h"
+#import "Bridge.h"
 #import "Plugin.h"
-#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
@@ -239,14 +239,14 @@
 
 - (id<FWEmptyViewDelegate>)fw_emptyViewDelegate
 {
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fw_emptyViewDelegate));
+    __FWWeakObject *value = objc_getAssociatedObject(self, @selector(fw_emptyViewDelegate));
     return value.object;
 }
 
 - (void)setFw_emptyViewDelegate:(id<FWEmptyViewDelegate>)delegate
 {
     if (!delegate) [self fw_invalidateEmptyView];
-    objc_setAssociatedObject(self, @selector(fw_emptyViewDelegate), [[FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_emptyViewDelegate), [[__FWWeakObject alloc] initWithObject:delegate], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     [UIScrollView fw_enableEmptyPlugin];
 }

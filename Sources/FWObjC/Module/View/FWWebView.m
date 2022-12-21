@@ -6,7 +6,7 @@
 //
 
 #import "FWWebView.h"
-#import "FWProxy.h"
+#import "Bridge.h"
 #import "FWAlertPlugin.h"
 #import "FWEncode.h"
 #import <objc/runtime.h>
@@ -47,11 +47,23 @@
 
 #pragma mark - FWWebView
 
-@interface FWWebViewDelegateProxy : FWDelegateProxy <FWWebViewDelegate>
+@interface FWWebViewDelegateProxy : __FWDelegateProxy <FWWebViewDelegate>
+
+@property (nonatomic, weak, nullable) id delegate;
 
 @end
 
 @implementation FWWebViewDelegateProxy
+
+- (id)delegate
+{
+    return self.proxyDelegate;
+}
+
+- (void)setDelegate:(id)delegate
+{
+    self.proxyDelegate = delegate;
+}
 
 #pragma mark - WKNavigationDelegate
 

@@ -7,7 +7,6 @@
 
 #import "FWTheme.h"
 #import "Navigator.h"
-#import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
 
