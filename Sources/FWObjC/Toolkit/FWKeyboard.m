@@ -6,7 +6,6 @@
 //
 
 #import "FWKeyboard.h"
-#import "FWProxy.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

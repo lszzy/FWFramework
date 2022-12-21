@@ -7,8 +7,8 @@
 
 #import "FWNavigationController.h"
 #import "FWNavigationStyle.h"
-#import "FWProxy.h"
 #import "FWSwizzle.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -241,13 +241,13 @@
 
 - (UIViewController *)fw_transitionContextToViewController
 {
-    FWWeakObject *value = objc_getAssociatedObject(self, @selector(fw_transitionContextToViewController));
+    __FWWeakObject *value = objc_getAssociatedObject(self, @selector(fw_transitionContextToViewController));
     return value.object;
 }
 
 - (void)setFw_transitionContextToViewController:(UIViewController *)viewController
 {
-    objc_setAssociatedObject(self, @selector(fw_transitionContextToViewController), [[FWWeakObject alloc] initWithObject:viewController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_transitionContextToViewController), [[__FWWeakObject alloc] initWithObject:viewController], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (void)fw_enableBarTransition
