@@ -6,7 +6,7 @@
 //
 
 #import "FWImagePlugin.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -135,7 +135,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 {
     if (data.length < 1) return nil;
     
-    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(imageDecode:scale:options:)]) {
         return [imagePlugin imageDecode:data scale:scale options:options];
     }
@@ -154,7 +154,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 {
     if (!image) return nil;
     
-    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(imageEncode:options:)]) {
         return [imagePlugin imageEncode:image options:options];
     }
@@ -179,7 +179,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
            completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(downloadImage:options:context:completion:progress:)]) {
         NSURL *imageURL = nil;
         if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
@@ -200,7 +200,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 
 + (void)fw_cancelImageDownload:(id)receipt
 {
-    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(cancelImageDownload:)]) {
         [imagePlugin cancelImageDownload:receipt];
     }
@@ -215,7 +215,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 - (id<FWImagePlugin>)fw_imagePlugin
 {
     id<FWImagePlugin> imagePlugin = objc_getAssociatedObject(self, @selector(fw_imagePlugin));
-    if (!imagePlugin) imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    if (!imagePlugin) imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     return imagePlugin;
 }
 
@@ -286,7 +286,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 
 + (UIImageView *)fw_animatedImageView
 {
-    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    id<FWImagePlugin> imagePlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(animatedImageView)]) {
         return [imagePlugin animatedImageView];
     }

@@ -7,7 +7,7 @@
 
 #import "FWImagePreviewPlugin.h"
 #import "FWImagePreviewPluginImpl.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "Navigator.h"
 #import <objc/runtime.h>
 
@@ -33,7 +33,7 @@
 - (id<FWImagePreviewPlugin>)fw_imagePreviewPlugin
 {
     id<FWImagePreviewPlugin> previewPlugin = objc_getAssociatedObject(self, @selector(fw_imagePreviewPlugin));
-    if (!previewPlugin) previewPlugin = [FWPluginManager loadPlugin:@protocol(FWImagePreviewPlugin)];
+    if (!previewPlugin) previewPlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePreviewPlugin)];
     if (!previewPlugin) previewPlugin = FWImagePreviewPluginImpl.sharedInstance;
     return previewPlugin;
 }

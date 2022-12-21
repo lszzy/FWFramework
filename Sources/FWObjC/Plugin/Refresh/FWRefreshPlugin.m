@@ -7,7 +7,7 @@
 
 #import "FWRefreshPlugin.h"
 #import "FWRefreshPluginImpl.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIScrollView+FWRefreshPlugin
@@ -17,7 +17,7 @@
 - (id<FWRefreshPlugin>)fw_refreshPlugin
 {
     id<FWRefreshPlugin> refreshPlugin = objc_getAssociatedObject(self, @selector(fw_refreshPlugin));
-    if (!refreshPlugin) refreshPlugin = [FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
+    if (!refreshPlugin) refreshPlugin = [__FWPluginManager loadPlugin:@protocol(FWRefreshPlugin)];
     if (!refreshPlugin) refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     return refreshPlugin;
 }

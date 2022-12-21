@@ -1,17 +1,17 @@
 //
-//  FWPlugin.m
+//  Plugin.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
 //
 
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "Loader.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWInnerPluginTarget
+#pragma mark - __FWPluginTarget
 
-@interface FWInnerPluginTarget : NSObject
+@interface __FWPluginTarget : NSObject
 
 @property (nonatomic, strong, nullable) id object;
 @property (nonatomic, strong, nullable) id instance;
@@ -20,29 +20,29 @@
 
 @end
 
-@implementation FWInnerPluginTarget
+@implementation __FWPluginTarget
 
 @end
 
-#pragma mark - FWPluginManager
+#pragma mark - __FWPluginManager
 
-@interface FWPluginManager ()
+@interface __FWPluginManager ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, FWInnerPluginTarget *> *pluginPool;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, __FWPluginTarget *> *pluginPool;
 @property (nonatomic, strong) __FWLoader<Protocol *, id> *pluginLoader;
 
 @end
 
-@implementation FWPluginManager
+@implementation __FWPluginManager
 
 #pragma mark - Lifecycle
 
-+ (FWPluginManager *)sharedInstance
++ (__FWPluginManager *)sharedInstance
 {
-    static FWPluginManager *instance = nil;
+    static __FWPluginManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWPluginManager alloc] init];
+        instance = [[__FWPluginManager alloc] init];
     });
     return instance;
 }
@@ -61,8 +61,8 @@
 {
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
     NSInteger debugCount = 0;
-    for (NSString *protocolName in FWPluginManager.sharedInstance.pluginPool) {
-        FWInnerPluginTarget *plugin = [FWPluginManager.sharedInstance.pluginPool objectForKey:protocolName];
+    for (NSString *protocolName in __FWPluginManager.sharedInstance.pluginPool) {
+        __FWPluginTarget *plugin = [__FWPluginManager.sharedInstance.pluginPool objectForKey:protocolName];
         [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, (plugin.instance ?: plugin.object)];
     }
     return [NSString stringWithFormat:@"\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription];
@@ -90,13 +90,13 @@
     if (!pluginProtocol || !object) return NO;
     
     NSString *protocolName = NSStringFromProtocol(pluginProtocol);
-    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    __FWPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (plugin) {
         if (plugin.locked) return NO;
         if (isPreset) return NO;
     }
     
-    FWInnerPluginTarget *newPlugin = [[FWInnerPluginTarget alloc] init];
+    __FWPluginTarget *newPlugin = [[__FWPluginTarget alloc] init];
     newPlugin.object = object;
     [[self sharedInstance].pluginPool setObject:newPlugin forKey:protocolName];
     return YES;
@@ -105,7 +105,7 @@
 + (void)unregisterPlugin:(Protocol *)pluginProtocol
 {
     NSString *protocolName = NSStringFromProtocol(pluginProtocol);
-    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    __FWPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin || plugin.locked) {
         return;
     }
@@ -116,7 +116,7 @@
 + (id)loadPlugin:(Protocol *)pluginProtocol
 {
     NSString *protocolName = NSStringFromProtocol(pluginProtocol);
-    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    __FWPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) {
         id object = [[self sharedLoader] load:pluginProtocol];
         if (!object) return nil;
@@ -160,7 +160,7 @@
 + (void)unloadPlugin:(Protocol *)pluginProtocol
 {
     NSString *protocolName = NSStringFromProtocol(pluginProtocol);
-    FWInnerPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
+    __FWPluginTarget *plugin = [[self sharedInstance].pluginPool objectForKey:protocolName];
     if (!plugin) return;
     
     if (plugin.instance && [plugin.instance respondsToSelector:@selector(pluginDidUnload)]) {

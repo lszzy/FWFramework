@@ -7,7 +7,7 @@
 
 #import "FWEmptyPlugin.h"
 #import "FWEmptyPluginImpl.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
 #import <objc/runtime.h>
@@ -33,7 +33,7 @@
 - (id<FWEmptyPlugin>)fw_emptyPlugin
 {
     id<FWEmptyPlugin> emptyPlugin = objc_getAssociatedObject(self, @selector(fw_emptyPlugin));
-    if (!emptyPlugin) emptyPlugin = [FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
+    if (!emptyPlugin) emptyPlugin = [__FWPluginManager loadPlugin:@protocol(FWEmptyPlugin)];
     if (!emptyPlugin) emptyPlugin = FWEmptyPluginImpl.sharedInstance;
     return emptyPlugin;
 }

@@ -7,7 +7,7 @@
 
 #import "FWImagePickerPlugin.h"
 #import "FWImagePickerPluginImpl.h"
-#import "FWPlugin.h"
+#import "Plugin.h"
 #import "Navigator.h"
 #import <objc/runtime.h>
 
@@ -33,7 +33,7 @@
 - (id<FWImagePickerPlugin>)fw_imagePickerPlugin
 {
     id<FWImagePickerPlugin> pickerPlugin = objc_getAssociatedObject(self, @selector(fw_imagePickerPlugin));
-    if (!pickerPlugin) pickerPlugin = [FWPluginManager loadPlugin:@protocol(FWImagePickerPlugin)];
+    if (!pickerPlugin) pickerPlugin = [__FWPluginManager loadPlugin:@protocol(FWImagePickerPlugin)];
     if (!pickerPlugin) pickerPlugin = FWImagePickerPluginImpl.sharedInstance;
     return pickerPlugin;
 }

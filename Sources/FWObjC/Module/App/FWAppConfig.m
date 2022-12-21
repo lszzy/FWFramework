@@ -31,7 +31,7 @@
     // }
     
     // 配置弹窗插件及默认文案
-    // [FWPluginManager registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
+    // [__FWPluginManager registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
     // FWAlertPluginImpl.sharedInstance.defaultCloseButton = nil;
     // FWAlertPluginImpl.sharedInstance.defaultCancelButton = nil;
     // FWAlertPluginImpl.sharedInstance.defaultConfirmButton = nil;
@@ -43,9 +43,9 @@
     // FWEmptyPluginImpl.sharedInstance.defaultAction = nil;
     
     // 配置图片选择、浏览和下拉刷新插件
-    // [FWPluginManager registerPlugin:@protocol(FWImagePickerPlugin) withObject:[FWImagePickerControllerImpl class]];
-    // [FWPluginManager registerPlugin:@protocol(FWImagePreviewPlugin) withObject:[FWImagePreviewPluginImpl class]];
-    // [FWPluginManager registerPlugin:@protocol(FWRefreshPlugin) withObject:[FWRefreshPluginImpl class]];
+    // [__FWPluginManager registerPlugin:@protocol(FWImagePickerPlugin) withObject:[FWImagePickerControllerImpl class]];
+    // [__FWPluginManager registerPlugin:@protocol(FWImagePreviewPlugin) withObject:[FWImagePreviewPluginImpl class]];
+    // [__FWPluginManager registerPlugin:@protocol(FWRefreshPlugin) withObject:[FWRefreshPluginImpl class]];
     
     // 配置吐司插件
     // FWToastPluginImpl.sharedInstance.delayTime = 2.0;
