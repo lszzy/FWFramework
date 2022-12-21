@@ -1,31 +1,31 @@
 //
-//  FWTask.m
+//  Task.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWTask.h"
+#import "Task.h"
 
-#pragma mark - FWTask
+#pragma mark - __FWTask
 
-typedef NS_ENUM(NSInteger, FWTaskState) {
-    FWTaskStateCreated,
-    FWTaskStateReady = 1,
-    FWTaskStateLoading,
-    FWTaskStateSuccess,
-    FWTaskStateFailure,
-    FWTaskStateCanceled,
+typedef NS_ENUM(NSInteger, __FWTaskState) {
+    __FWTaskStateCreated,
+    __FWTaskStateReady = 1,
+    __FWTaskStateLoading,
+    __FWTaskStateSuccess,
+    __FWTaskStateFailure,
+    __FWTaskStateCanceled,
 };
 
-@interface FWTask ()
+@interface __FWTask ()
 
-@property (nonatomic, assign) FWTaskState state;
+@property (nonatomic, assign) __FWTaskState state;
 @property (nonatomic, strong, readonly) NSRecursiveLock *lock;
 
 @end
 
-@implementation FWTask
+@implementation __FWTask
 
 @synthesize lock = _lock;
 
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 {
     self = [super init];
     if (self) {
-        self.state = FWTaskStateReady;
+        self.state = __FWTaskStateReady;
     }
     return self;
 }
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 {
     [self.lock lock];
     if ([self isReady]) {
-        self.state = FWTaskStateLoading;
+        self.state = __FWTaskStateLoading;
         
         // 调试日志
         NSLog(@"\n********** TASK %@ STARTED", NSStringFromClass(self.class));
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 - (void)executeTask
 {
-    @throw [NSException exceptionWithName:@"FWTask"
+    @throw [NSException exceptionWithName:@"__FWTask"
                                    reason:[NSString stringWithFormat:@"task %@ must override executeTask", [self.class description]]
                                  userInfo:nil];
 }
@@ -84,12 +84,12 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     if (![self isFinished]) {
         if (error) {
             _error = error;
-            self.state = FWTaskStateFailure;
+            self.state = __FWTaskStateFailure;
             
             // 调试日志
             NSLog(@"\n********** TASK %@ FAILED", NSStringFromClass(self.class));
         } else {
-            self.state = FWTaskStateSuccess;
+            self.state = __FWTaskStateSuccess;
             
             // 调试日志
             NSLog(@"\n********** TASK %@ FINISHED", NSStringFromClass(self.class));
@@ -108,7 +108,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     [self.lock lock];
     
     if (![self isFinished]) {
-        self.state = FWTaskStateCanceled;
+        self.state = __FWTaskStateCanceled;
         [super cancel];
         
         // 调试日志
@@ -125,29 +125,29 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 - (BOOL)isReady
 {
-    return self.state == FWTaskStateReady && [super isReady];
+    return self.state == __FWTaskStateReady && [super isReady];
 }
 
 - (BOOL)isFinished
 {
-    return self.state == FWTaskStateSuccess || self.state == FWTaskStateFailure || self.state == FWTaskStateCanceled;
+    return self.state == __FWTaskStateSuccess || self.state == __FWTaskStateFailure || self.state == __FWTaskStateCanceled;
 }
 
 - (BOOL)isExecuting
 {
-    return self.state == FWTaskStateLoading;
+    return self.state == __FWTaskStateLoading;
 }
 
-- (BOOL)isValidTransition:(FWTaskState)fromState toState:(FWTaskState)toState
+- (BOOL)isValidTransition:(__FWTaskState)fromState toState:(__FWTaskState)toState
 {
     switch (fromState) {
-        case FWTaskStateReady:
+        case __FWTaskStateReady:
         {
             switch (toState) {
-                case FWTaskStateLoading:
-                case FWTaskStateSuccess:
-                case FWTaskStateFailure:
-                case FWTaskStateCanceled:
+                case __FWTaskStateLoading:
+                case __FWTaskStateSuccess:
+                case __FWTaskStateFailure:
+                case __FWTaskStateCanceled:
                     return YES;
                     break;
                 default:
@@ -156,12 +156,12 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
             }
             break;
         }
-        case FWTaskStateLoading:
+        case __FWTaskStateLoading:
         {
             switch (toState) {
-                case FWTaskStateSuccess:
-                case FWTaskStateFailure:
-                case FWTaskStateCanceled:
+                case __FWTaskStateSuccess:
+                case __FWTaskStateFailure:
+                case __FWTaskStateCanceled:
                     return YES;
                     break;
                 default:
@@ -169,9 +169,9 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
                     break;
             }
         }
-        case (FWTaskState)0:
+        case (__FWTaskState)0:
         {
-            if (toState == FWTaskStateReady) {
+            if (toState == __FWTaskStateReady) {
                 return YES;
             } else {
                 return NO;
@@ -183,7 +183,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     }
 }
 
-- (void)setState:(FWTaskState)state
+- (void)setState:(__FWTaskState)state
 {
     [self.lock lock];
     if (![self isValidTransition:_state toState:state]) {
@@ -192,7 +192,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     }
     
     switch (state) {
-        case FWTaskStateCanceled:
+        case __FWTaskStateCanceled:
         {
             [self willChangeValueForKey:@"isExecuting"];
             [self willChangeValueForKey:@"isFinished"];
@@ -203,15 +203,15 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
             [self didChangeValueForKey:@"isCancelled"];
             break;
         }
-        case FWTaskStateLoading:
+        case __FWTaskStateLoading:
         {
             [self willChangeValueForKey:@"isExecuting"];
             _state = state;
             [self didChangeValueForKey:@"isExecuting"];
             break;
         }
-        case FWTaskStateSuccess:
-        case FWTaskStateFailure:
+        case __FWTaskStateSuccess:
+        case __FWTaskStateFailure:
         {
             [self willChangeValueForKey:@"isFinished"];
             [self willChangeValueForKey:@"isExecuting"];
@@ -220,7 +220,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
             [self didChangeValueForKey:@"isExecuting"];
             break;
         }
-        case FWTaskStateReady:
+        case __FWTaskStateReady:
         {
             [self willChangeValueForKey:@"isReady"];
             _state = state;
@@ -239,19 +239,19 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 @end
 
-#pragma mark - FWTaskManager
+#pragma mark - __FWTaskManager
 
-@implementation FWTaskManager
+@implementation __FWTaskManager
 {
     NSOperationQueue *_taskQueue;
 }
 
-+ (FWTaskManager *)sharedInstance
++ (__FWTaskManager *)sharedInstance
 {
-    static FWTaskManager *instance = nil;
+    static __FWTaskManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWTaskManager alloc] init];
+        instance = [[__FWTaskManager alloc] init];
     });
     return instance;
 }
@@ -261,7 +261,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
     self = [super init];
     if (self) {
         _taskQueue = [[NSOperationQueue alloc] init];
-        _taskQueue.name = @"FWTaskManager.taskQueue";
+        _taskQueue.name = @"__FWTaskManager.taskQueue";
     }
     return self;
 }

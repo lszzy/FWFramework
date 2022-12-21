@@ -1,5 +1,5 @@
 //
-//  FWRouter.h
+//  Router.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -9,35 +9,35 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRouterContext
+#pragma mark - __FWRouterContext
 
-@class FWRouterContext;
+@class __FWRouterContext;
 @class __FWLoader<InputType, OutputType>;
 
 /** 路由处理句柄，仅支持openURL时可返回nil */
-typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context) NS_SWIFT_NAME(RouterHandler);
+typedef id _Nullable (^__FWRouterHandler)(__FWRouterContext *context) NS_SWIFT_NAME(RouterHandler);
 /** 路由完成句柄，openURL时可设置完成回调 */
-typedef void (^FWRouterCompletion)(id _Nullable result) NS_SWIFT_NAME(RouterCompletion);
+typedef void (^__FWRouterCompletion)(id _Nullable result) NS_SWIFT_NAME(RouterCompletion);
 
 /** 路由用户信息Key定义 */
-typedef NSString *FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
+typedef NSString *__FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
 /** 路由信息来源Key，默认未处理 */
-FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
+FOUNDATION_EXPORT __FWRouterUserInfoKey const __FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
 /** 路由信息选项Key，默认支持NavigationOptions */
-FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterOptionsKey NS_SWIFT_NAME(RouterOptionsKey);
+FOUNDATION_EXPORT __FWRouterUserInfoKey const __FWRouterOptionsKey NS_SWIFT_NAME(RouterOptionsKey);
 /** 路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效 */
-FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterHandlerKey NS_SWIFT_NAME(RouterHandlerKey);
+FOUNDATION_EXPORT __FWRouterUserInfoKey const __FWRouterHandlerKey NS_SWIFT_NAME(RouterHandlerKey);
 
 /** URL路由上下文 */
 NS_SWIFT_NAME(RouterContext)
-@interface FWRouterContext : NSObject <NSCopying>
+@interface __FWRouterContext : NSObject <NSCopying>
 
 /** 路由URL */
 @property (nonatomic, copy, readonly) NSString *URL;
 /** 路由用户信息 */
 @property (nonatomic, copy, readonly, nullable) NSDictionary *userInfo;
 /** 路由完成回调 */
-@property (nonatomic, copy, readonly, nullable) FWRouterCompletion completion;
+@property (nonatomic, copy, readonly, nullable) __FWRouterCompletion completion;
 
 /** 路由URL解析参数字典 */
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *URLParameters;
@@ -47,11 +47,11 @@ NS_SWIFT_NAME(RouterContext)
 @property (nonatomic, assign, readonly) BOOL isOpening;
 
 /** 创建路由参数对象 */
-- (instancetype)initWithURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
+- (instancetype)initWithURL:(NSString *)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable __FWRouterCompletion)completion;
 
 @end
 
-#pragma mark - FWRouter
+#pragma mark - __FWRouter
 
 /**
  URL路由器
@@ -60,7 +60,7 @@ NS_SWIFT_NAME(RouterContext)
  @see https://github.com/imlifengfeng/FFRouter
  */
 NS_SWIFT_NAME(Router)
-@interface FWRouter : NSObject
+@interface __FWRouter : NSObject
 
 /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
 @property (class, nonatomic, readonly) __FWLoader<NSString *, id> *sharedLoader;
@@ -100,7 +100,7 @@ NS_SWIFT_NAME(Router)
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
  */
-+ (BOOL)registerURL:(id)pattern withHandler:(FWRouterHandler)handler;
++ (BOOL)registerURL:(id)pattern withHandler:(__FWRouterHandler)handler;
 
 /**
  *  预置 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil，仅当路由未被注册时生效
@@ -109,7 +109,7 @@ NS_SWIFT_NAME(Router)
  *  @param handler    该 block 会传一个字典，包含了注册的 URL 中对应的变量。
  *                    假如注册的 URL 为 app://beauty/:id 那么，就会传一个 @{@"id": 4} 这样的字典过来
  */
-+ (BOOL)presetURL:(id)pattern withHandler:(FWRouterHandler)handler;
++ (BOOL)presetURL:(id)pattern withHandler:(__FWRouterHandler)handler;
 
 /**
  *  取消注册某个 pattern
@@ -128,22 +128,22 @@ NS_SWIFT_NAME(Router)
 /**
  *  设置全局路由过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
  */
-+ (void)setRouteFilter:(nullable BOOL (^)(FWRouterContext *context))filter;
++ (void)setRouteFilter:(nullable BOOL (^)(__FWRouterContext *context))filter;
 
 /**
  *  设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
  */
-+ (void)setRouteHandler:(nullable id _Nullable (^)(FWRouterContext *context, id object))handler;
++ (void)setRouteHandler:(nullable id _Nullable (^)(__FWRouterContext *context, id object))handler;
 
 /**
  *  预置全局路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
  */
-+ (void)presetRouteHandler:(nullable id _Nullable (^)(FWRouterContext *context, id object))handler;
++ (void)presetRouteHandler:(nullable id _Nullable (^)(__FWRouterContext *context, id object))handler;
 
 /**
  *  设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
  */
-+ (void)setErrorHandler:(nullable void (^)(FWRouterContext *context))handler;
++ (void)setErrorHandler:(nullable void (^)(__FWRouterContext *context))handler;
 
 #pragma mark - Open
 
@@ -178,7 +178,7 @@ NS_SWIFT_NAME(Router)
  *  @param URL        带 Scheme 的 URL，如 app://beauty/4，支持NSURL和NSString
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(id)URL completion:(nullable FWRouterCompletion)completion;
++ (void)openURL:(id)URL completion:(nullable __FWRouterCompletion)completion;
 
 /**
  *  打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
@@ -187,15 +187,15 @@ NS_SWIFT_NAME(Router)
  *  @param userInfo   附加参数
  *  @param completion URL 处理完成后的 callback，完成的判定跟具体的业务相关
  */
-+ (void)openURL:(id)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable FWRouterCompletion)completion;
++ (void)openURL:(id)URL userInfo:(nullable NSDictionary *)userInfo completion:(nullable __FWRouterCompletion)completion;
 
 /**
- *  快速调用FWRouterHandler参数中的回调句柄，指定回调结果
+ *  快速调用__FWRouterHandler参数中的回调句柄，指定回调结果
  *
- *  @param context FWRouterHandler中的模型参数
+ *  @param context __FWRouterHandler中的模型参数
  *  @param result URL处理完成后的回调结果
  */
-+ (void)completeURL:(FWRouterContext *)context result:(nullable id)result;
++ (void)completeURL:(__FWRouterContext *)context result:(nullable id)result;
 
 #pragma mark - Object
 
@@ -220,8 +220,8 @@ NS_SWIFT_NAME(Router)
  *  调用此方法来拼接 pattern 和 parameters
  *
  *  #define APP_ROUTE_BEAUTY @"beauty/:id"
- *  [FWRouter generateURL:APP_ROUTE_BEAUTY, @[@13]];
- *  [FWRouter generateURL:APP_ROUTE_BEAUTY, @{@"id":@13}];
+ *  [__FWRouter generateURL:APP_ROUTE_BEAUTY, @[@13]];
+ *  [__FWRouter generateURL:APP_ROUTE_BEAUTY, @{@"id":@13}];
  *
  *  @param pattern    url pattern 比如 @"beauty/:id"
  *  @param parameters 一个数组(数量和变量一致)或一个字典(key为变量名称)或单个值(替换所有参数)

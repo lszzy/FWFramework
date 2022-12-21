@@ -1,5 +1,5 @@
 //
-//  FWTask.h
+//  Task.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWTask
+#pragma mark - __FWTask
 
 /// 任务基类
 NS_SWIFT_NAME(Task)
-@interface FWTask : NSOperation
+@interface __FWTask : NSOperation
 
 /** 错误信息 */
 @property (nonatomic, readonly, nullable) NSError *error;
@@ -29,14 +29,14 @@ NS_SWIFT_NAME(Task)
 
 @end
 
-#pragma mark - FWTaskManager
+#pragma mark - __FWTaskManager
 
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 NS_SWIFT_NAME(TaskManager)
-@interface FWTaskManager : NSObject
+@interface __FWTaskManager : NSObject
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWTaskManager *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWTaskManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /** 并发操作的最大任务数 */
 @property (nonatomic, assign) NSInteger maxConcurrentTaskCount;

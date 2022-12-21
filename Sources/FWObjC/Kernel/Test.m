@@ -1,11 +1,11 @@
 //
-//  FWTest.m
+//  Test.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
 //
 
-#import "FWTest.h"
+#import "Test.h"
 #import "Logger.h"
 #import <objc/runtime.h>
 
@@ -25,9 +25,9 @@
 
 #ifdef DEBUG
 
-#pragma mark - FWTestCase
+#pragma mark - __FWTestCase
 
-@interface FWTestCase ()
+@interface __FWTestCase ()
 
 @property (nonatomic, strong) NSError *assertError;
 @property (nonatomic, assign) BOOL isAssertAsync;
@@ -35,7 +35,7 @@
 
 @end
 
-@implementation FWTestCase
+@implementation __FWTestCase
 
 - (void)setUp
 {
@@ -85,16 +85,16 @@
 
 @end
 
-#pragma mark - FWUnitTest
+#pragma mark - __FWUnitTest
 
-@interface FWUnitTest : NSObject
+@interface __FWUnitTest : NSObject
 
 @property (nonatomic, strong) NSMutableArray<Class> *testCases;
 @property (nonatomic, strong) NSString *testLogs;
 
 @end
 
-@implementation FWUnitTest
+@implementation __FWUnitTest
 
 #pragma mark - Static
 
@@ -103,12 +103,12 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
-            if ([FWUnitTest sharedInstance].testCases.count > 0) {
+            [[__FWUnitTest sharedInstance].testCases addObjectsFromArray:[self testSuite]];
+            if ([__FWUnitTest sharedInstance].testCases.count > 0) {
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.queue.test.async", NULL);
                 dispatch_async(queue, ^{
-                    [[FWUnitTest sharedInstance] runTests];
-                    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);
+                    [[__FWUnitTest sharedInstance] runTests];
+                    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", __FWUnitTest.debugDescription);
                 });
             }
         });
@@ -117,8 +117,8 @@
 
 + (NSString *)debugDescription
 {
-    if ([FWUnitTest sharedInstance].testLogs) {
-        return [FWUnitTest sharedInstance].testLogs;
+    if ([__FWUnitTest sharedInstance].testLogs) {
+        return [__FWUnitTest sharedInstance].testLogs;
     }
     return [super debugDescription];
 }
@@ -128,7 +128,7 @@
     NSMutableArray *testCases = [[NSMutableArray alloc] init];
     unsigned int classesCount = 0;
     Class *classes = objc_copyClassList(&classesCount);
-    Class testClass = [FWTestCase class], objectClass = [NSObject class];
+    Class testClass = [__FWTestCase class], objectClass = [NSObject class];
     Class classType = Nil, superClass = Nil;
     for (unsigned int i = 0; i < classesCount; ++i) {
         classType = classes[i];
@@ -163,12 +163,12 @@
 
 #pragma mark - Lifecycle
 
-+ (FWUnitTest *)sharedInstance
++ (__FWUnitTest *)sharedInstance
 {
-    static FWUnitTest *instance = nil;
+    static __FWUnitTest *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWUnitTest alloc] init];
+        instance = [[__FWUnitTest alloc] init];
     });
     return instance;
 }
@@ -198,7 +198,7 @@
     for (Class classType in testCases) {
         NSTimeInterval time1 = [[NSDate date] timeIntervalSince1970];
         
-        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"FWTestCase_" withString:@""];
+        NSString *formatClass = [NSStringFromClass(classType) stringByReplacingOccurrencesOfString:@"__FWTestCase_" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"TestCase_" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"TestCase" withString:@""];
         formatClass = [formatClass stringByReplacingOccurrencesOfString:@"_" withString:@"."];
@@ -214,7 +214,7 @@
         BOOL assertAsync = NO;
         if (selectorNames && selectorNames.count > 0) {
             // 执行初始化，同一个对象
-            FWTestCase *testCase = [[classType alloc] init];
+            __FWTestCase *testCase = [[classType alloc] init];
             for (NSString *selectorName in selectorNames) {
                 currentTestCount++;
                 formatMethod = selectorName;
