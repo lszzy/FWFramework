@@ -6,7 +6,7 @@
 //
 
 #import "FWDatabase.h"
-#import "FWLogger.h"
+#import "Logger.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -1752,7 +1752,7 @@ static sqlite3 * _fw_database;
 }
 
 + (void)log:(NSString *)msg {
-    FWLogDebug(@"FWDatabase: [%@]", msg);
+    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"FWDatabase: [%@]", msg);
 }
 
 @end

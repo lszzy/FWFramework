@@ -7,7 +7,7 @@
 
 #import "FWException.h"
 #import "FWSwizzle.h"
-#import "FWLogger.h"
+#import "Logger.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -89,7 +89,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     
 #ifdef DEBUG
     NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
-    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", errorMessage);
+    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", errorMessage);
 #endif
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
