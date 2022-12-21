@@ -7,7 +7,7 @@
 
 #import "FWTheme.h"
 #import "Navigator.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

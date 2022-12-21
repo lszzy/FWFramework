@@ -6,7 +6,7 @@
 //
 
 #import "FWBadgeView.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -217,8 +217,8 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleMethod(objc_getClass("UITabBarButton"), @selector(layoutSubviews), nil, __FWSwizzleType(UIView *), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             
             // 解决因为层级关系变化导致的badgeView被遮挡问题
             for (UIView *subview in selfObject.subviews) {

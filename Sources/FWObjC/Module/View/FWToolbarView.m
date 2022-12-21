@@ -7,7 +7,7 @@
 
 #import "FWToolbarView.h"
 #import "FWViewPluginImpl.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -489,10 +489,10 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+        __FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             UIView *titleView = selfObject.topItem.titleView;
             if (![titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
-                FWSwizzleOriginal();
+                __FWSwizzleOriginal();
                 return;
             }
             
@@ -511,27 +511,27 @@
                 titleView.frame = titleFrame;
             }
             
-            FWSwizzleOriginal();
+            __FWSwizzleOriginal();
         }));
         
-        FWSwizzleClass(UIViewController, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
-            FWSwizzleOriginal(title);
+        __FWSwizzleClass(UIViewController, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
+            __FWSwizzleOriginal(title);
             
             if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
                 ((id<FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
             }
         }));
         
-        FWSwizzleClass(UINavigationItem, @selector(setTitle:), FWSwizzleReturn(void), FWSwizzleArgs(NSString *title), FWSwizzleCode({
-            FWSwizzleOriginal(title);
+        __FWSwizzleClass(UINavigationItem, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
+            __FWSwizzleOriginal(title);
             
             if ([selfObject.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
                 ((id<FWTitleViewProtocol>)selfObject.titleView).title = title;
             }
         }));
         
-        FWSwizzleClass(UINavigationItem, @selector(setTitleView:), FWSwizzleReturn(void), FWSwizzleArgs(UIView<FWTitleViewProtocol> *titleView), FWSwizzleCode({
-            FWSwizzleOriginal(titleView);
+        __FWSwizzleClass(UINavigationItem, @selector(setTitleView:), __FWSwizzleReturn(void), __FWSwizzleArgs(UIView<FWTitleViewProtocol> *titleView), __FWSwizzleCode({
+            __FWSwizzleOriginal(titleView);
             
             if ([titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
                 if (titleView.title.length <= 0) {

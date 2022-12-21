@@ -7,7 +7,7 @@
 
 #import "FWAlertPluginImpl.h"
 #import "FWAlertController.h"
-#import "FWSwizzle.h"
+#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -156,8 +156,8 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        FWSwizzleClass(UIAlertController, @selector(viewDidLoad), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
-            FWSwizzleOriginal();
+        __FWSwizzleClass(UIAlertController, @selector(viewDidLoad), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
+            __FWSwizzleOriginal();
             
             if (selfObject.preferredStyle != UIAlertControllerStyleActionSheet) return;
             if (!selfObject.fw_attributedTitle && !selfObject.fw_attributedMessage) return;
