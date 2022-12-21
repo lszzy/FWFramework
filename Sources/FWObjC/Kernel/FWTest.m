@@ -6,7 +6,7 @@
 //
 
 #import "FWTest.h"
-#import "FWLogger.h"
+#import "Logger.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -108,7 +108,7 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.queue.test.async", NULL);
                 dispatch_async(queue, ^{
                     [[FWUnitTest sharedInstance] runTests];
-                    FWLogGroup(@"FWFramework", FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);
+                    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", FWUnitTest.debugDescription);
                 });
             }
         });
