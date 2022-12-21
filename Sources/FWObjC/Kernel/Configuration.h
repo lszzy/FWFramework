@@ -1,5 +1,5 @@
 //
-//  FWConfiguration.h
+//  Configuration.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 配置模板协议，配置模板类需实现
 NS_SWIFT_NAME(ConfigurationTemplateProtocol)
-@protocol FWConfigurationTemplateProtocol <NSObject>
+@protocol __FWConfigurationTemplateProtocol <NSObject>
 
 @required
 /// 应用配置方法，必须实现
@@ -26,10 +26,10 @@ NS_SWIFT_NAME(ConfigurationTemplateProtocol)
 /// 2. 主项目.[配置类]+Template
 /// 3. 当前模块.[配置类]+DefaultTemplate
 NS_SWIFT_NAME(Configuration)
-@interface FWConfiguration : NSObject
+@interface __FWConfiguration : NSObject
 
 /// 当前所使用配置版本
-@property (nonatomic, strong, nullable) id<FWConfigurationTemplateProtocol> configurationTemplate;
+@property (nonatomic, strong, nullable) id<__FWConfigurationTemplateProtocol> configurationTemplate;
 
 /// 单例模式对象
 + (instancetype)sharedInstance NS_REFINED_FOR_SWIFT;

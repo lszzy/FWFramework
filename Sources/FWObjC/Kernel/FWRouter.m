@@ -6,7 +6,7 @@
 //
 
 #import "FWRouter.h"
-#import "FWLoader.h"
+#import "Loader.h"
 #import "FWNavigator.h"
 #import <objc/runtime.h>
 
@@ -138,7 +138,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 @property (nonatomic, copy) NSString * (^rewriteFilter)(NSString *url);
 @property (nonatomic, strong) NSMutableArray *rewriteRules;
 
-@property (nonatomic, strong) FWLoader<NSString *, id> *routeLoader;
+@property (nonatomic, strong) __FWLoader<NSString *, id> *routeLoader;
 
 @end
 
@@ -160,12 +160,12 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     if (self) {
         _routes = [[NSMutableDictionary alloc] init];
         _rewriteRules = [[NSMutableArray alloc] init];
-        _routeLoader = [[FWLoader<NSString *, id> alloc] init];
+        _routeLoader = [[__FWLoader<NSString *, id> alloc] init];
     }
     return self;
 }
 
-+ (FWLoader<NSString *,id> *)sharedLoader
++ (__FWLoader<NSString *,id> *)sharedLoader
 {
     return [self sharedInstance].routeLoader;
 }

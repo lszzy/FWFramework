@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWIcon;
-@class FWLoader<InputType, OutputType>;
+@class __FWLoader<InputType, OutputType>;
 
 /// 指定名称和大小初始化图标对象
 FOUNDATION_EXPORT FWIcon * _Nullable FWIconNamed(NSString *name, CGFloat size) NS_SWIFT_UNAVAILABLE("");
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(Icon)
 #pragma mark - Static
 
 /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
-@property (class, nonatomic, readonly) FWLoader<NSString *, Class> *sharedLoader;
+@property (class, nonatomic, readonly) __FWLoader<NSString *, Class> *sharedLoader;
 
 /// 注册图标实现类，必须继承FWIcon，用于name快速查找，注意name不要重复
 + (BOOL)registerClass:(Class)iconClass;

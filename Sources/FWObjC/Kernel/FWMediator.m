@@ -6,7 +6,7 @@
 //
 
 #import "FWMediator.h"
-#import "FWLoader.h"
+#import "Loader.h"
 #import "FWPlugin.h"
 #import "FWLogger.h"
 #import <objc/message.h>
@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
 @property (nonatomic, strong) NSMutableDictionary *moduleInvokeDict;
-@property (nonatomic, strong) FWLoader<Protocol *, id> *moduleLoader;
+@property (nonatomic, strong) __FWLoader<Protocol *, id> *moduleLoader;
 
 @end
 
@@ -32,7 +32,7 @@
         instance = [[self alloc] init];
         instance.moduleDict = [NSMutableDictionary dictionary];
         instance.moduleInvokeDict = [NSMutableDictionary dictionary];
-        instance.moduleLoader = [[FWLoader<Protocol *, id> alloc] init];
+        instance.moduleLoader = [[__FWLoader<Protocol *, id> alloc] init];
     });
     return instance;
 }
@@ -53,7 +53,7 @@
     return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription];
 }
 
-+ (FWLoader<Protocol *,id> *)sharedLoader
++ (__FWLoader<Protocol *,id> *)sharedLoader
 {
     return [FWMediator sharedInstance].moduleLoader;
 }

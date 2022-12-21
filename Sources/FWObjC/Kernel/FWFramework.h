@@ -6,8 +6,8 @@
 //
 
 #import "Bridge.h"
-#import "FWConfiguration.h"
-#import "FWLoader.h"
+#import "Configuration.h"
+#import "Loader.h"
 #import "FWLogger.h"
 #import "FWMacro.h"
 #import "FWMediator.h"

@@ -42,7 +42,7 @@ NS_SWIFT_NAME(PluginProtocol)
 
 #pragma mark - FWPluginManager
 
-@class FWLoader<InputType, OutputType>;
+@class __FWLoader<InputType, OutputType>;
 
 /**
  插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(PluginManager)
 @interface FWPluginManager : NSObject
 
 /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
-@property (class, nonatomic, readonly) FWLoader<Protocol *, id> *sharedLoader;
+@property (class, nonatomic, readonly) __FWLoader<Protocol *, id> *sharedLoader;
 
 /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
 + (BOOL)registerPlugin:(Protocol *)pluginProtocol withObject:(id)object;

@@ -1,23 +1,23 @@
 //
-//  FWConfiguration.m
+//  Configuration.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWConfiguration.h"
+#import "Configuration.h"
 #import <objc/runtime.h>
 
-@interface FWConfiguration ()
+@interface __FWConfiguration ()
 
 @property (nonatomic, assign) BOOL configurationInitialized;
 
 @end
 
-@implementation FWConfiguration
+@implementation __FWConfiguration
 
 + (instancetype)sharedInstance {
-    FWConfiguration *instance = objc_getAssociatedObject([self class], @selector(sharedInstance));
+    __FWConfiguration *instance = objc_getAssociatedObject([self class], @selector(sharedInstance));
     if (instance) return instance;
     
     @synchronized ([self class]) {
@@ -49,7 +49,7 @@
     }
 }
 
-- (void)setConfigurationTemplate:(id<FWConfigurationTemplateProtocol>)configurationTemplate {
+- (void)setConfigurationTemplate:(id<__FWConfigurationTemplateProtocol>)configurationTemplate {
     _configurationTemplate = configurationTemplate;
     
     if ([configurationTemplate respondsToSelector:@selector(applyConfiguration)]) {

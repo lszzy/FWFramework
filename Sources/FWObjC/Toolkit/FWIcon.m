@@ -6,7 +6,7 @@
 //
 
 #import "FWIcon.h"
-#import "FWLoader.h"
+#import "Loader.h"
 #import <CoreText/CoreText.h>
 
 FWIcon * FWIconNamed(NSString *name, CGFloat size) {
@@ -21,7 +21,7 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
 
 @property (nonatomic, strong) NSMutableAttributedString *mutableAttributedString;
 
-@property (nonatomic, strong) FWLoader<NSString *, Class> *iconLoader;
+@property (nonatomic, strong) __FWLoader<NSString *, Class> *iconLoader;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, Class> *iconMapper;
 
 @end
@@ -36,13 +36,13 @@ UIImage * FWIconImage(NSString *name, CGFloat size) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[FWIcon alloc] init];
-        instance.iconLoader = [[FWLoader<NSString *, Class> alloc] init];
+        instance.iconLoader = [[__FWLoader<NSString *, Class> alloc] init];
         instance.iconMapper = [[NSMutableDictionary<NSString *, Class> alloc] init];
     });
     return instance;
 }
 
-+ (FWLoader<NSString *,Class> *)sharedLoader
++ (__FWLoader<NSString *,Class> *)sharedLoader
 {
     return [self sharedInstance].iconLoader;
 }
