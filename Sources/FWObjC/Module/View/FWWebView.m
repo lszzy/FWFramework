@@ -343,37 +343,6 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 @end
 
-@implementation UIProgressView (FWWebView)
-
-- (float)fw_webProgress
-{
-    return self.progress;
-}
-
-- (void)setFw_webProgress:(float)progress
-{
-    if (progress <= 0) {
-        self.alpha = 0;
-    } else if (progress > 0 && progress < 1.0) {
-        if (self.alpha == 0) {
-            self.progress = 0;
-            [UIView animateWithDuration:0.2 animations:^{
-                self.alpha = 1.0;
-            }];
-        }
-    } else {
-        self.alpha = 1.0;
-        [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 0.0;
-        } completion:^(BOOL finished) {
-            self.progress = 0;
-        }];
-    }
-    [self setProgress:progress animated:YES];
-}
-
-@end
-
 #pragma mark - FWWebViewCookieManager
 
 @implementation FWWebViewCookieManager
@@ -1144,53 +1113,3 @@ NSString * FWWebViewJsBridge_js() {
     #undef __wvjb_js_func__
     return preprocessorJSCode;
 };
-
-@implementation WKWebView (FWWebViewBridge)
-
-- (FWWebViewJsBridge *)fw_jsBridge
-{
-    return objc_getAssociatedObject(self, @selector(fw_jsBridge));
-}
-
-- (void)setFw_jsBridge:(FWWebViewJsBridge *)jsBridge
-{
-    objc_setAssociatedObject(self, @selector(fw_jsBridge), jsBridge, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSString *)fw_userAgent
-{
-    if (self.customUserAgent.length > 0) return self.customUserAgent;
-    NSString *userAgent = [self fw_invokeGetter:@"userAgent"];
-    if ([userAgent isKindOfClass:[NSString class]] && userAgent.length > 0) return userAgent;
-    return [WKWebView fw_browserUserAgent];
-}
-
-+ (NSString *)fw_browserUserAgent
-{
-    NSString *platformUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", [[UIDevice currentDevice] model], [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@"." withString:@"_"]];
-    NSString *userAgent = [NSString stringWithFormat:@"%@ %@", platformUserAgent, [self fw_extensionUserAgent]];
-    return userAgent;
-}
-
-+ (NSString *)fw_extensionUserAgent
-{
-    NSString *userAgent = [NSString stringWithFormat:@"Mobile/15E148 Safari/605.1.15 %@/%@", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey]];
-    return userAgent;
-}
-
-+ (NSString *)fw_requestUserAgent
-{
-    NSString *userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
-    return userAgent;
-}
-
-+ (void)fw_clearCache:(void (^)(void))completion
-{
-    NSSet<NSString *> *dataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-    NSDate *sinceDate = [NSDate dateWithTimeIntervalSince1970:0];
-    [WKWebsiteDataStore.defaultDataStore removeDataOfTypes:dataTypes modifiedSince:sinceDate completionHandler:^{
-        if (completion) completion();
-    }];
-}
-
-@end

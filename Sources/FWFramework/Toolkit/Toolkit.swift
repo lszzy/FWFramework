@@ -123,7 +123,7 @@ import FWObjC
     /// 读取应用主版本号，示例：1.0.0
     public static var fw_appVersion: String {
         let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        return appVersion ?? ""
+        return appVersion ?? fw_appBuildVersion
     }
 
     /// 读取应用构建版本号，示例：1.0.0.1

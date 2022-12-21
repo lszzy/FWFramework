@@ -56,13 +56,6 @@ NS_SWIFT_NAME(WebView)
 
 @end
 
-@interface UIProgressView (FWWebView)
-
-/// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-@property (nonatomic, assign) float fw_webProgress NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - FWWebViewCookieManager
 
 /**
@@ -163,27 +156,5 @@ NS_SWIFT_NAME(WebViewJsBridge)
 @end
 
 NSString * FWWebViewJsBridge_js(void) NS_SWIFT_NAME(WebViewJsBridge_js());
-
-@interface WKWebView (FWWebViewBridge)
-
-/// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-@property (nonatomic, strong, nullable) FWWebViewJsBridge *fw_jsBridge NS_REFINED_FOR_SWIFT;
-
-/// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-@property (nonatomic, copy, readonly) NSString *fw_userAgent NS_REFINED_FOR_SWIFT;
-
-/// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
-@property (class, nonatomic, copy, readonly) NSString *fw_browserUserAgent NS_REFINED_FOR_SWIFT;
-
-/// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-@property (class, nonatomic, copy, readonly) NSString *fw_extensionUserAgent NS_REFINED_FOR_SWIFT;
-
-/// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
-@property (class, nonatomic, copy, readonly) NSString *fw_requestUserAgent NS_REFINED_FOR_SWIFT;
-
-/// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
-+ (void)fw_clearCache:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;
-
-@end
 
 NS_ASSUME_NONNULL_END
