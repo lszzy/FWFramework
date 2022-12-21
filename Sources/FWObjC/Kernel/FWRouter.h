@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWRouterContext
 
 @class FWRouterContext;
-@class FWLoader<InputType, OutputType>;
+@class __FWLoader<InputType, OutputType>;
 
 /** 路由处理句柄，仅支持openURL时可返回nil */
 typedef id _Nullable (^FWRouterHandler)(FWRouterContext *context) NS_SWIFT_NAME(RouterHandler);
@@ -63,7 +63,7 @@ NS_SWIFT_NAME(Router)
 @interface FWRouter : NSObject
 
 /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
-@property (class, nonatomic, readonly) FWLoader<NSString *, id> *sharedLoader;
+@property (class, nonatomic, readonly) __FWLoader<NSString *, id> *sharedLoader;
 
 #pragma mark - Class
 

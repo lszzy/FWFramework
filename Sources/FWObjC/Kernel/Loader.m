@@ -1,15 +1,15 @@
 //
-//  FWLoader.m
+//  Loader.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
 //
 
-#import "FWLoader.h"
+#import "Loader.h"
 
-#pragma mark - FWInnerLoaderTarget
+#pragma mark - __FWLoaderTarget
 
-@interface FWInnerLoaderTarget : NSObject
+@interface __FWLoaderTarget : NSObject
 
 @property (nonatomic, copy) NSString *identifier;
 
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation FWInnerLoaderTarget
+@implementation __FWLoaderTarget
 
 - (instancetype)init
 {
@@ -52,15 +52,15 @@
 
 @end
 
-#pragma mark - FWLoader
+#pragma mark - __FWLoader
 
-@interface FWLoader ()
+@interface __FWLoader ()
 
 @property (nonatomic, strong) NSMutableArray *allLoaders;
 
 @end
 
-@implementation FWLoader
+@implementation __FWLoader
 
 - (instancetype)init
 {
@@ -73,7 +73,7 @@
 
 - (NSString *)addBlock:(id (^)(id))block
 {
-    FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
+    __FWLoaderTarget *loader = [[__FWLoaderTarget alloc] init];
     loader.block = block;
     [self.allLoaders addObject:loader];
     return loader.identifier;
@@ -81,7 +81,7 @@
 
 - (NSString *)addTarget:(id)target action:(SEL)action
 {
-    FWInnerLoaderTarget *loader = [[FWInnerLoaderTarget alloc] init];
+    __FWLoaderTarget *loader = [[__FWLoaderTarget alloc] init];
     loader.target = target;
     loader.action = action;
     [self.allLoaders addObject:loader];
@@ -91,7 +91,7 @@
 - (void)remove:(NSString *)identifier
 {
     NSMutableArray *loaders = self.allLoaders;
-    [loaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
+    [loaders enumerateObjectsUsingBlock:^(__FWLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
         if ([loader.identifier isEqualToString:identifier]) {
             [loaders removeObject:loader];
         }
@@ -106,7 +106,7 @@
 - (id)load:(id)input
 {
     __block id output = nil;
-    [self.allLoaders enumerateObjectsUsingBlock:^(FWInnerLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
+    [self.allLoaders enumerateObjectsUsingBlock:^(__FWLoaderTarget *loader, NSUInteger idx, BOOL *stop) {
         output = [loader invoke:input];
         if (output) *stop = YES;
     }];

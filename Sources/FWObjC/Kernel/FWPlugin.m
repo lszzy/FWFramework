@@ -6,7 +6,7 @@
 //
 
 #import "FWPlugin.h"
-#import "FWLoader.h"
+#import "Loader.h"
 #import <objc/runtime.h>
 
 #pragma mark - FWInnerPluginTarget
@@ -29,7 +29,7 @@
 @interface FWPluginManager ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, FWInnerPluginTarget *> *pluginPool;
-@property (nonatomic, strong) FWLoader<Protocol *, id> *pluginLoader;
+@property (nonatomic, strong) __FWLoader<Protocol *, id> *pluginLoader;
 
 @end
 
@@ -52,7 +52,7 @@
     self = [super init];
     if (self) {
         self.pluginPool = [[NSMutableDictionary alloc] init];
-        self.pluginLoader = [[FWLoader<Protocol *, id> alloc] init];
+        self.pluginLoader = [[__FWLoader<Protocol *, id> alloc] init];
     }
     return self;
 }
@@ -70,7 +70,7 @@
 
 #pragma mark - Public
 
-+ (FWLoader *)sharedLoader
++ (__FWLoader<Protocol *,id> *)sharedLoader
 {
     return [self sharedInstance].pluginLoader;
 }

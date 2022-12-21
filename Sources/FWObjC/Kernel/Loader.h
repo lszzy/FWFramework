@@ -1,5 +1,5 @@
 //
-//  FWLoader.h
+//  Loader.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/20.
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  通用加载器，添加处理句柄后指定输入即可加载输出结果
  */
 NS_SWIFT_NAME(Loader)
-@interface FWLoader<__covariant InputType, __covariant OutputType> : NSObject
+@interface __FWLoader<__covariant InputType, __covariant OutputType> : NSObject
 
 /// 添加block加载器，返回标志id
 - (NSString *)addBlock:(OutputType _Nullable (^)(InputType input))block;
