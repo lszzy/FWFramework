@@ -8,7 +8,7 @@
 #import "FWImagePreviewPlugin.h"
 #import "FWImagePreviewPluginImpl.h"
 #import "FWPlugin.h"
-#import "FWNavigator.h"
+#import "Navigator.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

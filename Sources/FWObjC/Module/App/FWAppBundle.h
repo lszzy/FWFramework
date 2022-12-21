@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWMediator.h"
+#import "Mediator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  FWFramework所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
  */
 NS_SWIFT_NAME(AppBundle)
-@interface FWAppBundle : FWModuleBundle
+@interface FWAppBundle : __FWModuleBundle
 
 #pragma mark - Image
 

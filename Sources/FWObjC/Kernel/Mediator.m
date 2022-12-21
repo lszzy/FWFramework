@@ -1,20 +1,20 @@
 //
-//  FWMediator.m
+//  Mediator.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWMediator.h"
+#import "Mediator.h"
 #import "Loader.h"
 #import "FWPlugin.h"
 #import "Logger.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 
-#pragma mark - FWMediator
+#pragma mark - __FWMediator
 
-@interface FWMediator ()
+@interface __FWMediator ()
 
 @property (nonatomic, strong) NSMutableDictionary *moduleDict;
 @property (nonatomic, strong) NSMutableDictionary *moduleInvokeDict;
@@ -22,11 +22,11 @@
 
 @end
 
-@implementation FWMediator
+@implementation __FWMediator
 
 + (instancetype)sharedInstance
 {
-    static FWMediator *instance = nil;
+    static __FWMediator *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
@@ -40,35 +40,35 @@
 + (NSString *)debugDescription
 {
     NSMutableString *debugDescription = [[NSMutableString alloc] init];
-    NSArray *sortedKeys = [FWMediator.sharedInstance.moduleDict keysSortedByValueUsingComparator:^NSComparisonResult(Class class1, Class class2) {
-        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : FWModulePriorityDefault;
-        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : FWModulePriorityDefault;
+    NSArray *sortedKeys = [__FWMediator.sharedInstance.moduleDict keysSortedByValueUsingComparator:^NSComparisonResult(Class class1, Class class2) {
+        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : __FWModulePriorityDefault;
+        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : __FWModulePriorityDefault;
         if (priority1 == priority2) return NSOrderedSame;
         return priority1 < priority2 ? NSOrderedDescending : NSOrderedAscending;
     }];
     NSInteger debugCount = 0;
     for (NSString *protocolName in sortedKeys) {
-        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, NSStringFromClass([FWMediator.sharedInstance.moduleDict objectForKey:protocolName])];
+        [debugDescription appendFormat:@"%@. %@ : %@\n", @(++debugCount), protocolName, NSStringFromClass([__FWMediator.sharedInstance.moduleDict objectForKey:protocolName])];
     }
     return [NSString stringWithFormat:@"\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription];
 }
 
 + (__FWLoader<Protocol *,id> *)sharedLoader
 {
-    return [FWMediator sharedInstance].moduleLoader;
+    return [__FWMediator sharedInstance].moduleLoader;
 }
 
-+ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
++ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<__FWModuleProtocol>)moduleClass
 {
     return [self registerService:serviceProtocol withModule:moduleClass isPreset:NO];
 }
 
-+ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass
++ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<__FWModuleProtocol>)moduleClass
 {
     return [self registerService:serviceProtocol withModule:moduleClass isPreset:YES];
 }
 
-+ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass isPreset:(BOOL)isPreset
++ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<__FWModuleProtocol>)moduleClass isPreset:(BOOL)isPreset
 {
     NSString *protocolName = NSStringFromProtocol(serviceProtocol);
     if (protocolName.length == 0 || !moduleClass ||
@@ -76,11 +76,11 @@
         return NO;
     }
     
-    if (isPreset && ([[FWMediator sharedInstance].moduleDict objectForKey:protocolName] != nil)) {
+    if (isPreset && ([[__FWMediator sharedInstance].moduleDict objectForKey:protocolName] != nil)) {
         return NO;
     }
     
-    [[FWMediator sharedInstance].moduleDict setObject:moduleClass forKey:protocolName];
+    [[__FWMediator sharedInstance].moduleDict setObject:moduleClass forKey:protocolName];
     return YES;
 }
 
@@ -88,28 +88,28 @@
 {
     NSString *protocolName = NSStringFromProtocol(serviceProtocol);
     if (protocolName.length > 0) {
-        [[FWMediator sharedInstance].moduleDict removeObjectForKey:protocolName];
+        [[__FWMediator sharedInstance].moduleDict removeObjectForKey:protocolName];
     }
 }
 
-+ (id<FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol
++ (id<__FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol
 {
     NSString *protocolName = NSStringFromProtocol(serviceProtocol);
     if (protocolName.length == 0) {
         return nil;
     }
     
-    Class moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
+    Class moduleClass = [__FWMediator sharedInstance].moduleDict[protocolName];
     if (!moduleClass) {
-        id object = [[FWMediator sharedLoader] load:serviceProtocol];
+        id object = [[__FWMediator sharedLoader] load:serviceProtocol];
         if (!object) return nil;
         
-        [FWMediator registerService:serviceProtocol withModule:object];
-        moduleClass = [FWMediator sharedInstance].moduleDict[protocolName];
+        [__FWMediator registerService:serviceProtocol withModule:object];
+        moduleClass = [__FWMediator sharedInstance].moduleDict[protocolName];
         if (!moduleClass) return nil;
     }
     
-    if (![moduleClass conformsToProtocol:@protocol(FWModuleProtocol)]) {
+    if (![moduleClass conformsToProtocol:@protocol(__FWModuleProtocol)]) {
         return nil;
     }
     
@@ -120,12 +120,12 @@
     }
 }
 
-+ (NSArray<Class<FWModuleProtocol>> *)allRegisteredModules
++ (NSArray<Class<__FWModuleProtocol>> *)allRegisteredModules
 {
-    NSArray *modules = [FWMediator sharedInstance].moduleDict.allValues;
+    NSArray *modules = [__FWMediator sharedInstance].moduleDict.allValues;
     NSArray *sortedModules = [modules sortedArrayUsingComparator:^NSComparisonResult(Class class1, Class class2) {
-        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : FWModulePriorityDefault;
-        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : FWModulePriorityDefault;
+        NSUInteger priority1 = [class1 respondsToSelector:@selector(priority)] ? [class1 priority] : __FWModulePriorityDefault;
+        NSUInteger priority2 = [class2 respondsToSelector:@selector(priority)] ? [class2 priority] : __FWModulePriorityDefault;
         if (priority1 == priority2) return NSOrderedSame;
         return priority1 < priority2 ? NSOrderedDescending : NSOrderedAscending;
     }];
@@ -135,7 +135,7 @@
 + (void)setupAllModules
 {
     NSArray *modules = [self allRegisteredModules];
-    for (Class<FWModuleProtocol> moduleClass in modules) {
+    for (Class<__FWModuleProtocol> moduleClass in modules) {
         @try {
             if (![[moduleClass sharedInstance] respondsToSelector:@selector(setup)]) continue;
             BOOL setupSync = NO;
@@ -153,7 +153,7 @@
     }
     
 #ifdef DEBUG
-    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", FWMediator.debugDescription);
+    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", __FWMediator.debugDescription);
     __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", FWPluginManager.debugDescription);
 #endif
 }
@@ -162,11 +162,11 @@
 {
     BOOL result = NO;
     NSArray *modules = [self allRegisteredModules];
-    for (Class<FWModuleProtocol> class in modules) {
-        id<FWModuleProtocol> moduleItem = [class sharedInstance];
+    for (Class<__FWModuleProtocol> class in modules) {
+        id<__FWModuleProtocol> moduleItem = [class sharedInstance];
         if ([moduleItem respondsToSelector:selector]) {
             __block BOOL shouldInvoke = YES;
-            if (![[FWMediator sharedInstance].moduleInvokeDict objectForKey:NSStringFromClass([moduleItem class])]) {
+            if (![[__FWMediator sharedInstance].moduleInvokeDict objectForKey:NSStringFromClass([moduleItem class])]) {
                 [modules enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     if ([NSStringFromClass([obj superclass]) isEqualToString:NSStringFromClass([moduleItem class])]) {
                         shouldInvoke = NO;
@@ -176,8 +176,8 @@
             }
             
             if (shouldInvoke) {
-                if (![[FWMediator sharedInstance].moduleInvokeDict objectForKey:NSStringFromClass([moduleItem class])]) {
-                    [[FWMediator sharedInstance].moduleInvokeDict setObject:moduleItem forKey:NSStringFromClass([moduleItem class])];
+                if (![[__FWMediator sharedInstance].moduleInvokeDict objectForKey:NSStringFromClass([moduleItem class])]) {
+                    [[__FWMediator sharedInstance].moduleInvokeDict setObject:moduleItem forKey:NSStringFromClass([moduleItem class])];
                 }
                 
                 BOOL returnValue = NO;
@@ -268,7 +268,7 @@
 
 @end
 
-#pragma mark - FWModuleBundle
+#pragma mark - __FWModuleBundle
 
 @interface UIImage ()
 
@@ -276,7 +276,7 @@
 
 @end
 
-@implementation FWModuleBundle
+@implementation __FWModuleBundle
 
 + (NSBundle *)bundle
 {

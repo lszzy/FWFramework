@@ -1,5 +1,5 @@
 //
-//  FWMediator.h
+//  Mediator.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -9,31 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Macro
-
-/// 加载指定业务模块
-#define FWModule(serviceProtocol) \
-    ((id<serviceProtocol>)[FWMediator loadModule:@protocol(serviceProtocol)])
-
-/// 注册指定业务模块
-#define FWRegModule(serviceProtocol) \
-    [FWMediator registerService:@protocol(serviceProtocol) withModule:self.class];
-
-#pragma mark - FWModulePriority
+#pragma mark - __FWModulePriority
 
 /// 模块优先级可扩展枚举
-typedef NSUInteger FWModulePriority NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ModulePriority);
-static const FWModulePriority FWModulePriorityLow = 250;
-static const FWModulePriority FWModulePriorityDefault = 500;
-static const FWModulePriority FWModulePriorityHigh = 750;
+typedef NSUInteger __FWModulePriority NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ModulePriority);
+static const __FWModulePriority __FWModulePriorityLow = 250;
+static const __FWModulePriority __FWModulePriorityDefault = 500;
+static const __FWModulePriority __FWModulePriorityHigh = 750;
 
-#pragma mark - FWModuleProtocol
+#pragma mark - __FWModuleProtocol
 
 /**
  业务模块协议，各业务必须实现
  */
 NS_SWIFT_NAME(ModuleProtocol)
-@protocol FWModuleProtocol <UIApplicationDelegate, NSObject>
+@protocol __FWModuleProtocol <UIApplicationDelegate, NSObject>
 
 @required
 
@@ -53,7 +43,7 @@ NS_SWIFT_NAME(ModuleProtocol)
 
 @end
 
-#pragma mark - FWMediator
+#pragma mark - __FWMediator
 
 @class __FWLoader<InputType, OutputType>;
 
@@ -63,25 +53,25 @@ NS_SWIFT_NAME(ModuleProtocol)
  @see https://github.com/youzan/Bifrost
  */
 NS_SWIFT_NAME(Mediator)
-@interface FWMediator : NSObject
+@interface __FWMediator : NSObject
 
 /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
 @property (class, nonatomic, readonly) __FWLoader<Protocol *, id> *sharedLoader;
 
 /// 注册指定模块服务，返回注册结果
-+ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass;
++ (BOOL)registerService:(Protocol *)serviceProtocol withModule:(Class<__FWModuleProtocol>)moduleClass;
 
 /// 预置指定模块服务，仅当模块未注册时生效
-+ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<FWModuleProtocol>)moduleClass;
++ (BOOL)presetService:(Protocol *)serviceProtocol withModule:(Class<__FWModuleProtocol>)moduleClass;
 
 /// 取消注册指定模块服务
 + (void)unregisterService:(Protocol *)serviceProtocol;
 
 /// 通过服务协议获取指定模块实例
-+ (nullable id<FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol;
++ (nullable id<__FWModuleProtocol>)loadModule:(Protocol *)serviceProtocol;
 
 /// 获取所有已注册模块类数组，按照优先级排序
-+ (NSArray<Class<FWModuleProtocol>> *)allRegisteredModules;
++ (NSArray<Class<__FWModuleProtocol>> *)allRegisteredModules;
 
 /// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
 + (void)setupAllModules;
@@ -91,13 +81,13 @@ NS_SWIFT_NAME(Mediator)
 
 @end
 
-#pragma mark - FWModuleBundle
+#pragma mark - __FWModuleBundle
 
 /**
  业务模块Bundle基类，各模块可继承
  */
 NS_SWIFT_NAME(ModuleBundle)
-@interface FWModuleBundle : NSObject
+@interface __FWModuleBundle : NSObject
 
 /// 获取当前模块Bundle，默认主Bundle，子类可重写
 + (NSBundle *)bundle;
