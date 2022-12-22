@@ -18,8 +18,7 @@
 #import "Task.h"
 #import "Test.h"
 
-#import "FWLanguage.h"
-#import "FWLocation.h"
+#import "Location.h"
 #import "FWTheme.h"
 #import "FWEncode.h"
 #import "FWException.h"

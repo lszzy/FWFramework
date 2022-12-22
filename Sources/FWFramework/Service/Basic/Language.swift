@@ -12,6 +12,7 @@ import FWObjC
 
 // MARK: - FW+Language
 @objc extension FW {
+    
     /// 读取本地化字符串
     ///
     /// - Parameters:
@@ -21,10 +22,20 @@ import FWObjC
     public static func localized(_ key: String, _ table: String? = nil) -> String {
         return Bundle.fw_localizedString(key, table: table)
     }
+    
+}
+
+// MARK: - Notification+Language
+extension Notification.Name {
+    
+    /// 本地化语言改变通知，object为本地化语言名称
+    public static let FWLanguageChanged = Notification.Name("FWLanguageChangedNotification")
+    
 }
 
 // MARK: - String+Language
 @_spi(FW) extension String {
+    
     /// 快速读取本地化语言
     public var fw_localized: String {
         return Bundle.fw_localizedString(self)
@@ -45,6 +56,7 @@ import FWObjC
     public func fw_localized(_ table: String?, _ bundle: Bundle? = nil) -> String {
         return Bundle.fw_localizedString(self, table: table, bundle: bundle)
     }
+    
 }
 
 // MARK: - Bundle+Language
@@ -71,10 +83,10 @@ import FWObjC
                 object_setClass(self, TargetBundle.self)
                 
                 if let language = Bundle.fw_localizedLanguage {
-                    self.fw_languageChanged(Notification(name: .LanguageChanged, object: language))
+                    self.fw_languageChanged(Notification(name: .FWLanguageChanged, object: language))
                 }
                 
-                NotificationCenter.default.addObserver(self, selector: #selector(Bundle.fw_languageChanged(_:)), name: .LanguageChanged, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(Bundle.fw_languageChanged(_:)), name: .FWLanguageChanged, object: nil)
             }
         }
         return self
@@ -124,7 +136,7 @@ import FWObjC
             }
             fw_localizedChanged(newValue)
             
-            NotificationCenter.default.post(name: .LanguageChanged, object: newValue)
+            NotificationCenter.default.post(name: .FWLanguageChanged, object: newValue)
         }
     }
 

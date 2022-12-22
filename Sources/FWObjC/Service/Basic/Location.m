@@ -1,32 +1,32 @@
 //
-//  FWLocation.m
+//  Location.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWLocation.h"
+#import "Location.h"
 
-#pragma mark - FWLocationManager
+#pragma mark - __FWLocationManager
 
-NSNotificationName const FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
-NSNotificationName const FWLocationFailedNotification = @"FWLocationFailedNotification";
-NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
+NSNotificationName const __FWLocationUpdatedNotification = @"FWLocationUpdatedNotification";
+NSNotificationName const __FWLocationFailedNotification = @"FWLocationFailedNotification";
+NSNotificationName const __FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotification";
 
-@interface FWLocationManager () <CLLocationManagerDelegate>
+@interface __FWLocationManager () <CLLocationManagerDelegate>
 
 @property (nonatomic, assign) BOOL isCompleted;
 
 @end
 
-@implementation FWLocationManager
+@implementation __FWLocationManager
 
-+ (FWLocationManager *)sharedInstance
++ (__FWLocationManager *)sharedInstance
 {
-    static FWLocationManager *instance = nil;
+    static __FWLocationManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWLocationManager alloc] init];
+        instance = [[__FWLocationManager alloc] init];
     });
     return instance;
 }
@@ -129,7 +129,7 @@ NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotifi
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         if (oldLocation) [userInfo setObject:oldLocation forKey:NSKeyValueChangeOldKey];
         if (newLocation) [userInfo setObject:newLocation forKey:NSKeyValueChangeNewKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationUpdatedNotification object:self userInfo:userInfo.copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWLocationUpdatedNotification object:self userInfo:userInfo.copy];
     }
     
     if (self.stopWhenCompleted) {
@@ -155,7 +155,7 @@ NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotifi
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         if (oldHeading) [userInfo setObject:oldHeading forKey:NSKeyValueChangeOldKey];
         if (newHeading) [userInfo setObject:newHeading forKey:NSKeyValueChangeNewKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWHeadingUpdatedNotification object:self userInfo:userInfo.copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWHeadingUpdatedNotification object:self userInfo:userInfo.copy];
     }
     
     if (self.stopWhenCompleted) {
@@ -179,7 +179,7 @@ NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotifi
     if (self.notificationEnabled) {
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         if (error) [userInfo setObject:error forKey:NSUnderlyingErrorKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWLocationFailedNotification object:self userInfo:userInfo.copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWLocationFailedNotification object:self userInfo:userInfo.copy];
     }
     
     if (self.stopWhenCompleted) {
