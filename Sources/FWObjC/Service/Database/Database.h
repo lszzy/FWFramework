@@ -1,5 +1,5 @@
 //
-//  FWDatabase.h
+//  Database.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 数据库模型协议信息
 NS_SWIFT_NAME(DatabaseModel)
-@protocol FWDatabaseModel <NSObject>
+@protocol __FWDatabaseModel <NSObject>
 @optional
 
 /**
@@ -80,7 +80,7 @@ NS_SWIFT_NAME(DatabaseModel)
  @see https://github.com/netyouli/WHC_ModelSqliteKit
  */
 NS_SWIFT_NAME(DatabaseManager)
-@interface FWDatabaseManager : NSObject
+@interface __FWDatabaseManager : NSObject
 
 /**
  * 全局数据库模型版本号，默认1.0。如果模型实现了fwDatabaseVersion且不为空，则会忽略全局版本号

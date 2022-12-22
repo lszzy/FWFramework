@@ -24,7 +24,7 @@
 #import "CacheManager.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
-#import "FWDatabase.h"
+#import "Database.h"
 #import "FWWebImage.h"
 
 #import "Appearance.h"
