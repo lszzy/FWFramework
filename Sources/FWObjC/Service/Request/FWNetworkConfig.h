@@ -100,6 +100,10 @@ NS_SWIFT_NAME(NetworkConfig)
 @property (nonatomic) BOOL debugLogEnabled;
 ///  Whether to enable mock response when failed in debug mode. Default is NO.
 @property (nonatomic, assign) BOOL debugMockEnabled;
+///  Global mock validator when debug mock enabled. Default is nil.
+@property (nonatomic, copy, nullable) BOOL (^debugMockValidator)(FWBaseRequest *request);
+///  Global mock processor when debug mock enabled. Default is nil.
+@property (nonatomic, copy, nullable) BOOL (^debugMockProcessor)(FWBaseRequest *request);
 ///  SessionConfiguration will be used to initialize FWHTTPSessionManager. Default is nil.
 @property (nonatomic, strong, nullable) NSURLSessionConfiguration *sessionConfiguration;
 ///  NSURLSessionTaskMetrics
