@@ -1,11 +1,11 @@
 //
-//  FWException.m
+//  Exception.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "FWException.h"
+#import "Exception.h"
 #import "Swizzle.h"
 #import "Logger.h"
 #import <objc/runtime.h>
@@ -24,14 +24,14 @@
 
 #endif
 
-NSNotificationName const FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
+NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
 
-#define FWExceptionRemark(clazz, selector) \
+#define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 
-@implementation FWExceptionManager
+@implementation __FWExceptionManager
 
 #pragma mark - Capture
 
@@ -100,7 +100,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     userInfo[@"symbols"] = callStackSymbols;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWExceptionCapturedNotification object:exception userInfo:userInfo.copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWExceptionCapturedNotification object:exception userInfo:userInfo.copy];
     });
 }
 
@@ -133,7 +133,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 __FWSwizzleOriginal(invocation);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark(selfObject.class, invocation.selector)];
+                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, invocation.selector)];
             } @finally { }
         } else {
             __FWSwizzleOriginal(invocation);
@@ -146,7 +146,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(value, key);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
+            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
         } @finally { }
     }));
     
@@ -154,7 +154,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(value, keyPath);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
+            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
         } @finally { }
     }));
     
@@ -162,7 +162,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(value, key);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
+            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
         } @finally { }
     }));
     
@@ -170,7 +170,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(keyValues);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
+            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
         } @finally { }
     }));
 }
@@ -185,7 +185,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(from);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
+                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
             } @finally {
                 return result;
             }
@@ -196,7 +196,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(to);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
+                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
             } @finally {
                 return result;
             }
@@ -207,7 +207,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(range);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
+                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
             } @finally {
                 return result;
             }
@@ -223,7 +223,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             result = __FWSwizzleOriginal(objects, cnt);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:))];
+            [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:))];
             
             NSInteger newCnt = 0;
             id _Nonnull __unsafe_unretained newObjects[cnt];
@@ -246,7 +246,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(index);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(objectAtIndex:))];
+                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndex:))];
             } @finally {
                 return result;
             }
@@ -257,7 +257,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(index);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(objectAtIndexedSubscript:))];
+                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndexedSubscript:))];
             } @finally {
                 return result;
             }
@@ -268,7 +268,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
             @try {
                 result = __FWSwizzleOriginal(range);
             } @catch (NSException *exception) {
-                [self captureException:exception remark:FWExceptionRemark([NSArray class], @selector(subarrayWithRange:))];
+                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(subarrayWithRange:))];
             } @finally {
                 return result;
             }
@@ -279,7 +279,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(addObject:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(addObject:))];
         } @finally { }
     }));
     
@@ -287,7 +287,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object, index);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(insertObject:atIndex:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(insertObject:atIndex:))];
         } @finally { }
     }));
     
@@ -295,7 +295,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(index);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(removeObjectAtIndex:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectAtIndex:))];
         } @finally { }
     }));
     
@@ -303,7 +303,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(index, object);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(replaceObjectAtIndex:withObject:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(replaceObjectAtIndex:withObject:))];
         } @finally { }
     }));
     
@@ -311,7 +311,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object, index);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(setObject:atIndexedSubscript:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(setObject:atIndexedSubscript:))];
         } @finally { }
     }));
     
@@ -319,7 +319,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(range);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableArray class], @selector(removeObjectsInRange:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectsInRange:))];
         } @finally { }
     }));
 }
@@ -331,7 +331,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableSet class], @selector(addObject:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(addObject:))];
         } @finally { }
     }));
     
@@ -339,7 +339,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableSet class], @selector(removeObject:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(removeObject:))];
         } @finally { }
     }));
 }
@@ -352,7 +352,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             result = __FWSwizzleOriginal(objects, keys, cnt);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:))];
+            [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:))];
             
             NSInteger newCnt = 0;
             id _Nonnull __unsafe_unretained newObjects[cnt];
@@ -374,7 +374,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object, key);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKey:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKey:))];
         } @finally { }
     }));
     
@@ -382,7 +382,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(key);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(removeObjectForKey:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(removeObjectForKey:))];
         } @finally { }
     }));
     
@@ -390,7 +390,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         @try {
             __FWSwizzleOriginal(object, key);
         } @catch (NSException *exception) {
-            [self captureException:exception remark:FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKeyedSubscript:))];
+            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKeyedSubscript:))];
         } @finally { }
     }));
 }

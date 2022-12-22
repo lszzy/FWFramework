@@ -20,8 +20,7 @@
 
 #import "Location.h"
 #import "Theme.h"
-#import "FWEncode.h"
-#import "FWException.h"
+#import "Exception.h"
 #import "CacheManager.h"
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
