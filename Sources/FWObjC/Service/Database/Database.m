@@ -1,11 +1,11 @@
 //
-//  FWDatabase.m
+//  Database.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWDatabase.h"
+#import "Database.h"
 #import "Logger.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -16,57 +16,57 @@
 #import <sqlite3.h>
 #endif
 
-static const NSString * FWDatabaseSqliteString            = @"TEXT";
-static const NSString * FWDatabaseSqliteInt               = @"INTERGER";
-static const NSString * FWDatabaseSqliteBoolean           = @"INTERGER";
-static const NSString * FWDatabaseSqliteDouble            = @"DOUBLE";
-static const NSString * FWDatabaseSqliteFloat             = @"DOUBLE";
-static const NSString * FWDatabaseSqliteChar              = @"NVARCHAR";
-static const NSString * FWDatabaseSqliteData              = @"BLOB";
-static const NSString * FWDatabaseSqliteArray             = @"BLOB";
-static const NSString * FWDatabaseSqliteDictionary        = @"BLOB";
-static const NSString * FWDatabaseSqliteMutableArray      = @"BLOB";
-static const NSString * FWDatabaseSqliteMutableDictionary = @"BLOB";
-static const NSString * FWDatabaseSqliteDate              = @"DOUBLE";
+static const NSString * __FWDatabaseSqliteString            = @"TEXT";
+static const NSString * __FWDatabaseSqliteInt               = @"INTERGER";
+static const NSString * __FWDatabaseSqliteBoolean           = @"INTERGER";
+static const NSString * __FWDatabaseSqliteDouble            = @"DOUBLE";
+static const NSString * __FWDatabaseSqliteFloat             = @"DOUBLE";
+static const NSString * __FWDatabaseSqliteChar              = @"NVARCHAR";
+static const NSString * __FWDatabaseSqliteData              = @"BLOB";
+static const NSString * __FWDatabaseSqliteArray             = @"BLOB";
+static const NSString * __FWDatabaseSqliteDictionary        = @"BLOB";
+static const NSString * __FWDatabaseSqliteMutableArray      = @"BLOB";
+static const NSString * __FWDatabaseSqliteMutableDictionary = @"BLOB";
+static const NSString * __FWDatabaseSqliteDate              = @"DOUBLE";
 
 typedef enum : NSUInteger {
-    FWDatabaseFieldTypeString,
-    FWDatabaseFieldTypeInt,
-    FWDatabaseFieldTypeBoolean,
-    FWDatabaseFieldTypeDouble,
-    FWDatabaseFieldTypeFloat,
-    FWDatabaseFieldTypeChar,
-    FWDatabaseFieldTypeNumber,
-    FWDatabaseFieldTypeData,
-    FWDatabaseFieldTypeDate,
-    FWDatabaseFieldTypeArray,
-    FWDatabaseFieldTypeDictionary,
-    FWDatabaseFieldTypeMutableArray,
-    FWDatabaseFieldTypeMutableDictionary,
-} FWDatabaseFieldType;
+    __FWDatabaseFieldTypeString,
+    __FWDatabaseFieldTypeInt,
+    __FWDatabaseFieldTypeBoolean,
+    __FWDatabaseFieldTypeDouble,
+    __FWDatabaseFieldTypeFloat,
+    __FWDatabaseFieldTypeChar,
+    __FWDatabaseFieldTypeNumber,
+    __FWDatabaseFieldTypeData,
+    __FWDatabaseFieldTypeDate,
+    __FWDatabaseFieldTypeArray,
+    __FWDatabaseFieldTypeDictionary,
+    __FWDatabaseFieldTypeMutableArray,
+    __FWDatabaseFieldTypeMutableDictionary,
+} __FWDatabaseFieldType;
 
 typedef enum : NSUInteger {
-    FWDatabaseQueryTypeWhere,
-    FWDatabaseQueryTypeOrder,
-    FWDatabaseQueryTypeLimit,
-    FWDatabaseQueryTypeWhereOrder,
-    FWDatabaseQueryTypeWhereLimit,
-    FWDatabaseQueryTypeOrderLimit,
-    FWDatabaseQueryTypeWhereOrderLimit
-} FWDatabaseQueryType;
+    __FWDatabaseQueryTypeWhere,
+    __FWDatabaseQueryTypeOrder,
+    __FWDatabaseQueryTypeLimit,
+    __FWDatabaseQueryTypeWhereOrder,
+    __FWDatabaseQueryTypeWhereLimit,
+    __FWDatabaseQueryTypeOrderLimit,
+    __FWDatabaseQueryTypeWhereOrderLimit
+} __FWDatabaseQueryType;
 
 static sqlite3 * _fw_database;
 
-@interface FWDatabasePropertyInfo : NSObject
+@interface __FWDatabasePropertyInfo : NSObject
 
-@property (nonatomic, assign, readonly) FWDatabaseFieldType type;
+@property (nonatomic, assign, readonly) __FWDatabaseFieldType type;
 @property (nonatomic, copy, readonly) NSString * name;
 @property (nonatomic, assign, readonly) SEL setter;
 @property (nonatomic, assign, readonly) SEL getter;
 
 @end
 
-@implementation FWDatabasePropertyInfo
+@implementation __FWDatabasePropertyInfo
 
 + (SEL)setterWithProperyName:(NSString *)property_name {
     if (property_name.length > 1) {
@@ -76,14 +76,14 @@ static sqlite3 * _fw_database;
     }
 }
 
-- (FWDatabasePropertyInfo *)initWithType:(FWDatabaseFieldType)type
+- (__FWDatabasePropertyInfo *)initWithType:(__FWDatabaseFieldType)type
                       propertyName:(NSString *)property_name
                               name:(NSString *)name {
     self = [super init];
     if (self) {
         _name = name.mutableCopy;
         _type = type;
-        _setter = [FWDatabasePropertyInfo setterWithProperyName:property_name];
+        _setter = [__FWDatabasePropertyInfo setterWithProperyName:property_name];
         _getter = NSSelectorFromString(property_name);
     }
     return self;
@@ -91,7 +91,7 @@ static sqlite3 * _fw_database;
 
 @end
 
-@interface FWDatabaseManager ()
+@interface __FWDatabaseManager ()
 
 @property (nonatomic, strong) dispatch_semaphore_t dsema;
 @property (nonatomic, assign) BOOL check_update;
@@ -99,9 +99,9 @@ static sqlite3 * _fw_database;
 
 @end
 
-@implementation FWDatabaseManager
+@implementation __FWDatabaseManager
 
-- (FWDatabaseManager *)init {
+- (__FWDatabaseManager *)init {
     self = [super init];
     if (self) {
         _dsema = dispatch_semaphore_create(1);
@@ -111,11 +111,11 @@ static sqlite3 * _fw_database;
     return self;
 }
 
-+ (FWDatabaseManager *)shareInstance {
-    static FWDatabaseManager * instance = nil;
++ (__FWDatabaseManager *)shareInstance {
+    static __FWDatabaseManager * instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [FWDatabaseManager new];
+        instance = [__FWDatabaseManager new];
     });
     return instance;
 }
@@ -141,19 +141,19 @@ static sqlite3 * _fw_database;
     return [NSString stringWithFormat:@"%@/FWDatabase/", cacheDirectory];
 }
 
-+ (FWDatabaseFieldType)parserFieldTypeWithAttr:(NSString *)attr {
++ (__FWDatabaseFieldType)parserFieldTypeWithAttr:(NSString *)attr {
     NSArray * sub_attrs = [attr componentsSeparatedByString:@","];
     NSString * first_sub_attr = sub_attrs.firstObject;
     first_sub_attr = [first_sub_attr substringFromIndex:1];
-    FWDatabaseFieldType field_type = FWDatabaseFieldTypeString;
+    __FWDatabaseFieldType field_type = __FWDatabaseFieldTypeString;
     const char type = *[first_sub_attr UTF8String];
     switch (type) {
         case 'B':
-            field_type = FWDatabaseFieldTypeBoolean;
+            field_type = __FWDatabaseFieldTypeBoolean;
             break;
         case 'c':
         case 'C':
-            field_type = FWDatabaseFieldTypeChar;
+            field_type = __FWDatabaseFieldTypeChar;
             break;
         case 's':
         case 'S':
@@ -163,14 +163,14 @@ static sqlite3 * _fw_database;
         case 'L':
         case 'q':
         case 'Q':
-            field_type = FWDatabaseFieldTypeInt;
+            field_type = __FWDatabaseFieldTypeInt;
             break;
         case 'f':
-            field_type = FWDatabaseFieldTypeFloat;
+            field_type = __FWDatabaseFieldTypeFloat;
             break;
         case 'd':
         case 'D':
-            field_type = FWDatabaseFieldTypeDouble;
+            field_type = __FWDatabaseFieldTypeDouble;
             break;
         default:
             break;
@@ -178,45 +178,45 @@ static sqlite3 * _fw_database;
     return field_type;
 }
 
-+ (const NSString *)databaseFieldTypeWithType:(FWDatabaseFieldType)type {
++ (const NSString *)databaseFieldTypeWithType:(__FWDatabaseFieldType)type {
     switch (type) {
-        case FWDatabaseFieldTypeString:
-            return FWDatabaseSqliteString;
-        case FWDatabaseFieldTypeInt:
-            return FWDatabaseSqliteInt;
-        case FWDatabaseFieldTypeNumber:
-            return FWDatabaseSqliteDouble;
-        case FWDatabaseFieldTypeDouble:
-            return FWDatabaseSqliteDouble;
-        case FWDatabaseFieldTypeFloat:
-            return FWDatabaseSqliteFloat;
-        case FWDatabaseFieldTypeChar:
-            return FWDatabaseSqliteChar;
-        case FWDatabaseFieldTypeBoolean:
-            return FWDatabaseSqliteBoolean;
-        case FWDatabaseFieldTypeData:
-            return FWDatabaseSqliteData;
-        case FWDatabaseFieldTypeDate:
-            return FWDatabaseSqliteDate;
-        case FWDatabaseFieldTypeArray:
-            return FWDatabaseSqliteArray;
-        case FWDatabaseFieldTypeDictionary:
-            return FWDatabaseSqliteDictionary;
-        case FWDatabaseFieldTypeMutableArray:
-            return FWDatabaseSqliteMutableArray;
-        case FWDatabaseFieldTypeMutableDictionary:
-            return FWDatabaseSqliteMutableDictionary;
+        case __FWDatabaseFieldTypeString:
+            return __FWDatabaseSqliteString;
+        case __FWDatabaseFieldTypeInt:
+            return __FWDatabaseSqliteInt;
+        case __FWDatabaseFieldTypeNumber:
+            return __FWDatabaseSqliteDouble;
+        case __FWDatabaseFieldTypeDouble:
+            return __FWDatabaseSqliteDouble;
+        case __FWDatabaseFieldTypeFloat:
+            return __FWDatabaseSqliteFloat;
+        case __FWDatabaseFieldTypeChar:
+            return __FWDatabaseSqliteChar;
+        case __FWDatabaseFieldTypeBoolean:
+            return __FWDatabaseSqliteBoolean;
+        case __FWDatabaseFieldTypeData:
+            return __FWDatabaseSqliteData;
+        case __FWDatabaseFieldTypeDate:
+            return __FWDatabaseSqliteDate;
+        case __FWDatabaseFieldTypeArray:
+            return __FWDatabaseSqliteArray;
+        case __FWDatabaseFieldTypeDictionary:
+            return __FWDatabaseSqliteDictionary;
+        case __FWDatabaseFieldTypeMutableArray:
+            return __FWDatabaseSqliteMutableArray;
+        case __FWDatabaseFieldTypeMutableDictionary:
+            return __FWDatabaseSqliteMutableDictionary;
         default:
             break;
     }
-    return FWDatabaseSqliteString;
+    return __FWDatabaseSqliteString;
 }
 
 + (NSDictionary *)parserModelObjectFieldsWithModelClass:(Class)model_class hasPrimary:(BOOL)hasPrimary {
     return [self parserSubModelObjectFieldsWithModelClass:model_class propertyName:nil hasPrimary:hasPrimary complete:nil];
 }
 
-+ (NSDictionary *)parserSubModelObjectFieldsWithModelClass:(Class)model_class propertyName:(NSString *)main_property_name hasPrimary:(BOOL)hasPrimary complete:(void(^)(NSString * key, FWDatabasePropertyInfo * property_object))complete {
++ (NSDictionary *)parserSubModelObjectFieldsWithModelClass:(Class)model_class propertyName:(NSString *)main_property_name hasPrimary:(BOOL)hasPrimary complete:(void(^)(NSString * key, __FWDatabasePropertyInfo * property_object))complete {
     BOOL need_dictionary_save = !main_property_name && !complete;
     NSMutableDictionary * fields = need_dictionary_save ? [NSMutableDictionary dictionary] : nil;
     Class super_class = class_getSuperclass(model_class);
@@ -255,37 +255,37 @@ static sqlite3 * _fw_database;
         NSArray * property_attributes_list = [property_attributes_string componentsSeparatedByString:@"\""];
         NSString * name = property_name_string;
         
-        SEL property_setter = [FWDatabasePropertyInfo setterWithProperyName:property_name_string];
+        SEL property_setter = [__FWDatabasePropertyInfo setterWithProperyName:property_name_string];
         if (![model_class instancesRespondToSelector:property_setter]) {
             continue;
         }
         if (!need_dictionary_save) {
             name = [NSString stringWithFormat:@"%@$%@",main_property_name,property_name_string];
         }
-        FWDatabasePropertyInfo * property_info = nil;
+        __FWDatabasePropertyInfo * property_info = nil;
         if (property_attributes_list.count == 1) {
             // base type
-            FWDatabaseFieldType type = [self parserFieldTypeWithAttr:property_attributes_list[0]];
-            property_info = [[FWDatabasePropertyInfo alloc] initWithType:type propertyName:property_name_string name:name];
+            __FWDatabaseFieldType type = [self parserFieldTypeWithAttr:property_attributes_list[0]];
+            property_info = [[__FWDatabasePropertyInfo alloc] initWithType:type propertyName:property_name_string name:name];
         }else {
             // refernece type
             Class class_type = NSClassFromString(property_attributes_list[1]);
             if (class_type == [NSNumber class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeNumber propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeNumber propertyName:property_name_string name:name];
             }else if (class_type == [NSString class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeString propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeString propertyName:property_name_string name:name];
             }else if (class_type == [NSData class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeData propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeData propertyName:property_name_string name:name];
             }else if (class_type == [NSArray class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeArray propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeArray propertyName:property_name_string name:name];
             }else if (class_type == [NSDictionary class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeDictionary propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeDictionary propertyName:property_name_string name:name];
             }else if (class_type == [NSDate class]) {
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeDate propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeDate propertyName:property_name_string name:name];
             }else if (class_type == [NSMutableArray class]){
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeMutableArray propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeMutableArray propertyName:property_name_string name:name];
             }else if (class_type == [NSMutableDictionary class]){
-                property_info = [[FWDatabasePropertyInfo alloc] initWithType:FWDatabaseFieldTypeMutableDictionary propertyName:property_name_string name:name];
+                property_info = [[__FWDatabasePropertyInfo alloc] initWithType:__FWDatabaseFieldTypeMutableDictionary propertyName:property_name_string name:name];
             }else if (class_type == [NSSet class] ||
                       class_type == [NSValue class] ||
                       class_type == [NSError class] ||
@@ -297,7 +297,7 @@ static sqlite3 * _fw_database;
                 [self log:@"检查模型类异常数据类型"];
             }else {
                 if (need_dictionary_save) {
-                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name hasPrimary:hasPrimary complete:^(NSString * key, FWDatabasePropertyInfo *property_object) {
+                    [self parserSubModelObjectFieldsWithModelClass:class_type propertyName:name hasPrimary:hasPrimary complete:^(NSString * key, __FWDatabasePropertyInfo *property_object) {
                         [fields setObject:property_object forKey:key];
                     }];
                 }else {
@@ -406,7 +406,7 @@ static sqlite3 * _fw_database;
                     [delete_field_names appendString:@","];
                 }
             }];
-            [new_model_info enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, FWDatabasePropertyInfo * obj, BOOL * _Nonnull stop) {
+            [new_model_info enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, __FWDatabasePropertyInfo * obj, BOOL * _Nonnull stop) {
                 if (![old_model_field_name_array containsObject:key]) {
                     [add_field_names appendFormat:@"%@ %@,",key,[self databaseFieldTypeWithType:obj.type]];
                 }
@@ -425,7 +425,7 @@ static sqlite3 * _fw_database;
                 NSString * default_key = [self getPrimaryKeyWithClass:model_class];
                 if (![default_key isEqualToString:delete_field_names]) {
                     [self shareInstance].check_update = NO;
-                    NSArray * old_model_data_array = [self commonQuery:model_class conditions:@[@""] queryType:FWDatabaseQueryTypeWhere];
+                    NSArray * old_model_data_array = [self commonQuery:model_class conditions:@[@""] queryType:__FWDatabaseQueryTypeWhere];
                     [self close];
                     NSFileManager * file_manager = [NSFileManager defaultManager];
                     NSString * file_path = [self localPathWithModel:model_class];
@@ -652,26 +652,26 @@ static sqlite3 * _fw_database;
     if (field_dictionary.count > 0) {
         NSString * primary_key = [self getPrimaryKeyWithClass:model_class];
         __block NSString * create_table_sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,",table_name,primary_key];
-        [field_dictionary enumerateKeysAndObjectsUsingBlock:^(NSString * field, FWDatabasePropertyInfo * property_info, BOOL * _Nonnull stop) {
+        [field_dictionary enumerateKeysAndObjectsUsingBlock:^(NSString * field, __FWDatabasePropertyInfo * property_info, BOOL * _Nonnull stop) {
             create_table_sql = [create_table_sql stringByAppendingFormat:@"%@ %@ DEFAULT ",field, [self databaseFieldTypeWithType:property_info.type]];
             switch (property_info.type) {
-                case FWDatabaseFieldTypeData:
-                case FWDatabaseFieldTypeString:
-                case FWDatabaseFieldTypeChar:
-                case FWDatabaseFieldTypeDictionary:
-                case FWDatabaseFieldTypeArray:
-                case FWDatabaseFieldTypeMutableArray:
-                case FWDatabaseFieldTypeMutableDictionary:
+                case __FWDatabaseFieldTypeData:
+                case __FWDatabaseFieldTypeString:
+                case __FWDatabaseFieldTypeChar:
+                case __FWDatabaseFieldTypeDictionary:
+                case __FWDatabaseFieldTypeArray:
+                case __FWDatabaseFieldTypeMutableArray:
+                case __FWDatabaseFieldTypeMutableDictionary:
                     create_table_sql = [create_table_sql stringByAppendingString:@"NULL,"];
                     break;
-                case FWDatabaseFieldTypeBoolean:
-                case FWDatabaseFieldTypeInt:
+                case __FWDatabaseFieldTypeBoolean:
+                case __FWDatabaseFieldTypeInt:
                     create_table_sql = [create_table_sql stringByAppendingString:@"0,"];
                     break;
-                case FWDatabaseFieldTypeFloat:
-                case FWDatabaseFieldTypeDouble:
-                case FWDatabaseFieldTypeNumber:
-                case FWDatabaseFieldTypeDate:
+                case __FWDatabaseFieldTypeFloat:
+                case __FWDatabaseFieldTypeDouble:
+                case __FWDatabaseFieldTypeNumber:
+                case __FWDatabaseFieldTypeDate:
                     create_table_sql = [create_table_sql stringByAppendingString:@"0.0,"];
                     break;
                 default:
@@ -703,7 +703,7 @@ static sqlite3 * _fw_database;
     NSMutableArray * value_array = [NSMutableArray array];
     NSMutableArray * insert_field_array = [NSMutableArray array];
     [field_array enumerateObjectsUsingBlock:^(NSString * field, NSUInteger idx, BOOL * _Nonnull stop) {
-        FWDatabasePropertyInfo * property_info = field_dictionary[field];
+        __FWDatabasePropertyInfo * property_info = field_dictionary[field];
         [insert_field_array addObject:field];
         insert_sql = [insert_sql stringByAppendingFormat:@"%@,",field];
         id value = nil;
@@ -713,35 +713,35 @@ static sqlite3 * _fw_database;
             value = [model_object valueForKeyPath:[field stringByReplacingOccurrencesOfString:@"$" withString:@"."]];
             if (!value) {
                 switch (property_info.type) {
-                    case FWDatabaseFieldTypeMutableDictionary:
+                    case __FWDatabaseFieldTypeMutableDictionary:
                         value = [NSMutableDictionary dictionary];
                         break;
-                    case FWDatabaseFieldTypeMutableArray:
+                    case __FWDatabaseFieldTypeMutableArray:
                         value = [NSMutableArray array];
                         break;
-                    case FWDatabaseFieldTypeDictionary:
+                    case __FWDatabaseFieldTypeDictionary:
                         value = [NSDictionary dictionary];
                         break;
-                    case FWDatabaseFieldTypeArray:
+                    case __FWDatabaseFieldTypeArray:
                         value = [NSArray array];
                         break;
-                    case FWDatabaseFieldTypeInt:
-                    case FWDatabaseFieldTypeFloat:
-                    case FWDatabaseFieldTypeDouble:
-                    case FWDatabaseFieldTypeNumber:
-                    case FWDatabaseFieldTypeChar:
+                    case __FWDatabaseFieldTypeInt:
+                    case __FWDatabaseFieldTypeFloat:
+                    case __FWDatabaseFieldTypeDouble:
+                    case __FWDatabaseFieldTypeNumber:
+                    case __FWDatabaseFieldTypeChar:
                         value = @(0);
                         break;
-                    case FWDatabaseFieldTypeData:
+                    case __FWDatabaseFieldTypeData:
                         value = [NSData data];
                         break;
-                    case FWDatabaseFieldTypeDate:
+                    case __FWDatabaseFieldTypeDate:
                         value = [NSDate date];
                         break;
-                    case FWDatabaseFieldTypeString:
+                    case __FWDatabaseFieldTypeString:
                         value = @"";
                         break;
-                    case FWDatabaseFieldTypeBoolean:
+                    case __FWDatabaseFieldTypeBoolean:
                         value = @(NO);
                         break;
                     default:
@@ -754,60 +754,60 @@ static sqlite3 * _fw_database;
             [value_array addObject:value];
         }else {
             switch (property_info.type) {
-                case FWDatabaseFieldTypeMutableArray: {
+                case __FWDatabaseFieldTypeMutableArray: {
                     NSData * array_value = [NSKeyedArchiver archivedDataWithRootObject:[NSMutableArray array]];
                     [value_array addObject:array_value];
                 }
                     break;
-                case FWDatabaseFieldTypeMutableDictionary: {
+                case __FWDatabaseFieldTypeMutableDictionary: {
                     NSData * dictionary_value = [NSKeyedArchiver archivedDataWithRootObject:[NSMutableDictionary dictionary]];
                     [value_array addObject:dictionary_value];
                 }
                     break;
-                case FWDatabaseFieldTypeArray: {
+                case __FWDatabaseFieldTypeArray: {
                     NSData * array_value = [NSKeyedArchiver archivedDataWithRootObject:[NSArray array]];
                     [value_array addObject:array_value];
                 }
                     break;
-                case FWDatabaseFieldTypeDictionary: {
+                case __FWDatabaseFieldTypeDictionary: {
                     NSData * dictionary_value = [NSKeyedArchiver archivedDataWithRootObject:[NSDictionary dictionary]];
                     [value_array addObject:dictionary_value];
                 }
                     break;
-                case FWDatabaseFieldTypeData: {
+                case __FWDatabaseFieldTypeData: {
                     [value_array addObject:[NSData data]];
                 }
                     break;
-                case FWDatabaseFieldTypeString: {
+                case __FWDatabaseFieldTypeString: {
                     [value_array addObject:@""];
                 }
                     break;
-                case FWDatabaseFieldTypeDate:
-                case FWDatabaseFieldTypeNumber: {
+                case __FWDatabaseFieldTypeDate:
+                case __FWDatabaseFieldTypeNumber: {
                     [value_array addObject:@(0.0)];
                 }
                     break;
-                case FWDatabaseFieldTypeInt: {
+                case __FWDatabaseFieldTypeInt: {
                     NSNumber * value = @(((int64_t (*)(id, SEL))(void *) objc_msgSend)((id)model_object, property_info.getter));
                     [value_array addObject:value];
                 }
                     break;
-                case FWDatabaseFieldTypeBoolean: {
+                case __FWDatabaseFieldTypeBoolean: {
                     NSNumber * value = @(((Boolean (*)(id, SEL))(void *) objc_msgSend)((id)model_object, property_info.getter));
                     [value_array addObject:value];
                 }
                     break;
-                case FWDatabaseFieldTypeChar: {
+                case __FWDatabaseFieldTypeChar: {
                     NSNumber * value = @(((int8_t (*)(id, SEL))(void *) objc_msgSend)((id)model_object, property_info.getter));
                     [value_array addObject:value];
                 }
                     break;
-                case FWDatabaseFieldTypeDouble: {
+                case __FWDatabaseFieldTypeDouble: {
                     NSNumber * value = @(((double (*)(id, SEL))(void *) objc_msgSend)((id)model_object, property_info.getter));
                     [value_array addObject:value];
                 }
                     break;
-                case FWDatabaseFieldTypeFloat: {
+                case __FWDatabaseFieldTypeFloat: {
                     NSNumber * value = @(((float (*)(id, SEL))(void *) objc_msgSend)((id)model_object, property_info.getter));
                     [value_array addObject:value];
                 }
@@ -829,14 +829,14 @@ static sqlite3 * _fw_database;
     
     if (sqlite3_prepare_v2(_fw_database, [insert_sql UTF8String], -1, &pp_stmt, nil) == SQLITE_OK) {
         [field_array enumerateObjectsUsingBlock:^(NSString *  _Nonnull field, NSUInteger idx, BOOL * _Nonnull stop) {
-            FWDatabasePropertyInfo * property_info = field_dictionary[field];
+            __FWDatabasePropertyInfo * property_info = field_dictionary[field];
             id value = value_array[idx];
             int index = (int)[insert_field_array indexOfObject:field] + 1;
             switch (property_info.type) {
-                case FWDatabaseFieldTypeMutableDictionary:
-                case FWDatabaseFieldTypeMutableArray:
-                case FWDatabaseFieldTypeDictionary:
-                case FWDatabaseFieldTypeArray: {
+                case __FWDatabaseFieldTypeMutableDictionary:
+                case __FWDatabaseFieldTypeMutableArray:
+                case __FWDatabaseFieldTypeDictionary:
+                case __FWDatabaseFieldTypeArray: {
                     @try {
                         if ([value isKindOfClass:[NSArray class]] ||
                             [value isKindOfClass:[NSDictionary class]]) {
@@ -850,35 +850,35 @@ static sqlite3 * _fw_database;
                     }
                 }
                     break;
-                case FWDatabaseFieldTypeData:
+                case __FWDatabaseFieldTypeData:
                     sqlite3_bind_blob(pp_stmt, index, [value bytes], (int)[value length], SQLITE_TRANSIENT);
                     break;
-                case FWDatabaseFieldTypeString:
+                case __FWDatabaseFieldTypeString:
                     if ([value respondsToSelector:@selector(UTF8String)]) {
                         sqlite3_bind_text(pp_stmt, index, [value UTF8String], -1, SQLITE_TRANSIENT);
                     }else {
                         sqlite3_bind_text(pp_stmt, index, [[NSString stringWithFormat:@"%@",value] UTF8String], -1, SQLITE_TRANSIENT);
                     }
                     break;
-                case FWDatabaseFieldTypeNumber:
+                case __FWDatabaseFieldTypeNumber:
                     sqlite3_bind_double(pp_stmt, index, [value doubleValue]);
                     break;
-                case FWDatabaseFieldTypeInt:
+                case __FWDatabaseFieldTypeInt:
                     sqlite3_bind_int64(pp_stmt, index, (sqlite3_int64)[value longLongValue]);
                     break;
-                case FWDatabaseFieldTypeBoolean:
+                case __FWDatabaseFieldTypeBoolean:
                     sqlite3_bind_int(pp_stmt, index, [value boolValue]);
                     break;
-                case FWDatabaseFieldTypeChar:
+                case __FWDatabaseFieldTypeChar:
                     sqlite3_bind_int(pp_stmt, index, [value intValue]);
                     break;
-                case FWDatabaseFieldTypeFloat:
+                case __FWDatabaseFieldTypeFloat:
                     sqlite3_bind_double(pp_stmt, index, [value floatValue]);
                     break;
-                case FWDatabaseFieldTypeDouble:
+                case __FWDatabaseFieldTypeDouble:
                     sqlite3_bind_double(pp_stmt, index, [value doubleValue]);
                     break;
-                case FWDatabaseFieldTypeDate: {
+                case __FWDatabaseFieldTypeDate: {
                     if ([value isKindOfClass:[NSDate class]]) {
                         sqlite3_bind_double(pp_stmt, index, [(NSDate *)value timeIntervalSince1970]);
                     }else {
@@ -909,7 +909,7 @@ static sqlite3 * _fw_database;
             NSInteger value = result ? [self getPrimaryValueWithObject:model_object] : -1;
             if (result && value == 0) {
                 NSInteger rowid = (NSInteger)sqlite3_last_insert_rowid(_fw_database);
-                SEL primary_setter = [FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:[model_object class]]];
+                SEL primary_setter = [__FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:[model_object class]]];
                 if (primary_setter && [model_object respondsToSelector:primary_setter]) {
                     ((void (*)(id, SEL, NSInteger))(void *) objc_msgSend)(model_object, primary_setter, rowid);
                 }
@@ -1021,7 +1021,7 @@ static sqlite3 * _fw_database;
     return where_string;
 }
 
-+ (NSArray *)commonQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
++ (NSArray *)commonQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(__FWDatabaseQueryType)query_type {
     NSString * table_name = [self getTableName:model_class];
     NSString * select_sql = [NSString stringWithFormat:@"SELECT * FROM %@",table_name];
     NSString * where = nil;
@@ -1029,27 +1029,27 @@ static sqlite3 * _fw_database;
     NSString * limit = nil;
     if (conditions != nil && conditions.count > 0) {
         switch (query_type) {
-            case FWDatabaseQueryTypeWhere: {
+            case __FWDatabaseQueryTypeWhere: {
                 where = [self handleWhere:conditions.firstObject];
                 if (where.length > 0) {
                     select_sql = [select_sql stringByAppendingFormat:@" WHERE %@",where];
                 }
             }
                 break;
-            case FWDatabaseQueryTypeOrder: {
+            case __FWDatabaseQueryTypeOrder: {
                 order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                 if (order.length > 0) {
                     select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
                 }
             }
                 break;
-            case FWDatabaseQueryTypeLimit:
+            case __FWDatabaseQueryTypeLimit:
                 limit = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                 if (limit.length > 0) {
                     select_sql = [select_sql stringByAppendingFormat:@" LIMIT %@",limit];
                 }
                 break;
-            case FWDatabaseQueryTypeWhereOrder: {
+            case __FWDatabaseQueryTypeWhereOrder: {
                 if (conditions.count > 0) {
                     where = [self handleWhere:conditions.firstObject];
                     if (where.length > 0) {
@@ -1064,7 +1064,7 @@ static sqlite3 * _fw_database;
                 }
             }
                 break;
-            case FWDatabaseQueryTypeWhereLimit: {
+            case __FWDatabaseQueryTypeWhereLimit: {
                 if (conditions.count > 0) {
                     where = [self handleWhere:conditions.firstObject];
                     if (where.length > 0) {
@@ -1079,7 +1079,7 @@ static sqlite3 * _fw_database;
                 }
             }
                 break;
-            case FWDatabaseQueryTypeOrderLimit: {
+            case __FWDatabaseQueryTypeOrderLimit: {
                 if (conditions.count > 0) {
                     order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
                     if (order.length > 0) {
@@ -1094,7 +1094,7 @@ static sqlite3 * _fw_database;
                 }
             }
                 break;
-            case FWDatabaseQueryTypeWhereOrderLimit: {
+            case __FWDatabaseQueryTypeWhereOrderLimit: {
                 if (conditions.count > 0) {
                     where = [self handleWhere:conditions.firstObject];
                     if (where.length > 0) {
@@ -1131,14 +1131,14 @@ static sqlite3 * _fw_database;
         while (sqlite3_step(pp_stmt) == SQLITE_ROW) {
             id model_object = [self autoNewSubmodelWithClass:model_class];
             if (!model_object) {break;}
-            SEL primary_setter = [FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:model_class]];;
+            SEL primary_setter = [__FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:model_class]];;
             if (primary_setter && [model_object respondsToSelector:primary_setter]) {
                 sqlite3_int64 value = sqlite3_column_int64(pp_stmt, 0);
                 ((void (*)(id, SEL, int64_t))(void *) objc_msgSend)((id)model_object, primary_setter, value);
             }
             for (int column = 1; column < colum_count; column++) {
                 NSString * field_name = [NSString stringWithCString:sqlite3_column_name(pp_stmt, column) encoding:NSUTF8StringEncoding];
-                FWDatabasePropertyInfo * property_info = field_dictionary[field_name];
+                __FWDatabasePropertyInfo * property_info = field_dictionary[field_name];
                 if (property_info == nil) continue;
                 id current_model_object = model_object;
                 if ([field_name rangeOfString:@"$"].location != NSNotFound) {
@@ -1150,10 +1150,10 @@ static sqlite3 * _fw_database;
                     if (!current_model_object) continue;
                 }
                 switch (property_info.type) {
-                    case FWDatabaseFieldTypeMutableArray:
-                    case FWDatabaseFieldTypeMutableDictionary:
-                    case FWDatabaseFieldTypeDictionary:
-                    case FWDatabaseFieldTypeArray: {
+                    case __FWDatabaseFieldTypeMutableArray:
+                    case __FWDatabaseFieldTypeMutableDictionary:
+                    case __FWDatabaseFieldTypeDictionary:
+                    case __FWDatabaseFieldTypeArray: {
                         int length = sqlite3_column_bytes(pp_stmt, column);
                         const void * blob = sqlite3_column_blob(pp_stmt, column);
                         if (blob != NULL) {
@@ -1162,12 +1162,12 @@ static sqlite3 * _fw_database;
                                 id set_value = [NSKeyedUnarchiver unarchiveObjectWithData:value];
                                 if (set_value) {
                                     switch (property_info.type) {
-                                        case FWDatabaseFieldTypeMutableArray:
+                                        case __FWDatabaseFieldTypeMutableArray:
                                             if ([set_value isKindOfClass:[NSArray class]]) {
                                                 set_value = [NSMutableArray arrayWithArray:set_value];
                                             }
                                             break;
-                                        case FWDatabaseFieldTypeMutableDictionary:
+                                        case __FWDatabaseFieldTypeMutableDictionary:
                                             if ([set_value isKindOfClass:[NSDictionary class]]) {
                                                 set_value = [NSMutableDictionary dictionaryWithDictionary:set_value];
                                             }
@@ -1183,7 +1183,7 @@ static sqlite3 * _fw_database;
                         }
                     }
                         break;
-                    case FWDatabaseFieldTypeDate: {
+                    case __FWDatabaseFieldTypeDate: {
                         double value = sqlite3_column_double(pp_stmt, column);
                         if (value > 0) {
                             NSDate * date_value = [NSDate dateWithTimeIntervalSince1970:value];
@@ -1193,7 +1193,7 @@ static sqlite3 * _fw_database;
                         }
                     }
                         break;
-                    case FWDatabaseFieldTypeData: {
+                    case __FWDatabaseFieldTypeData: {
                         int length = sqlite3_column_bytes(pp_stmt, column);
                         const void * blob = sqlite3_column_blob(pp_stmt, column);
                         if (blob != NULL) {
@@ -1202,7 +1202,7 @@ static sqlite3 * _fw_database;
                         }
                     }
                         break;
-                    case FWDatabaseFieldTypeString: {
+                    case __FWDatabaseFieldTypeString: {
                         const unsigned char * text = sqlite3_column_text(pp_stmt, column);
                         if (text != NULL) {
                             NSString * value = [NSString stringWithCString:(const char *)text encoding:NSUTF8StringEncoding];
@@ -1210,32 +1210,32 @@ static sqlite3 * _fw_database;
                         }
                     }
                         break;
-                    case FWDatabaseFieldTypeNumber: {
+                    case __FWDatabaseFieldTypeNumber: {
                         double value = sqlite3_column_double(pp_stmt, column);
                         [current_model_object setValue:@(value) forKey:field_name];
                     }
                         break;
-                    case FWDatabaseFieldTypeInt: {
+                    case __FWDatabaseFieldTypeInt: {
                         sqlite3_int64 value = sqlite3_column_int64(pp_stmt, column);
                         ((void (*)(id, SEL, int64_t))(void *) objc_msgSend)((id)current_model_object, property_info.setter, value);
                     }
                         break;
-                    case FWDatabaseFieldTypeFloat: {
+                    case __FWDatabaseFieldTypeFloat: {
                         double value = sqlite3_column_double(pp_stmt, column);
                         ((void (*)(id, SEL, float))(void *) objc_msgSend)((id)current_model_object, property_info.setter, value);
                     }
                         break;
-                    case FWDatabaseFieldTypeDouble: {
+                    case __FWDatabaseFieldTypeDouble: {
                         double value = sqlite3_column_double(pp_stmt, column);
                         ((void (*)(id, SEL, double))(void *) objc_msgSend)((id)current_model_object, property_info.setter, value);
                     }
                         break;
-                    case FWDatabaseFieldTypeChar: {
+                    case __FWDatabaseFieldTypeChar: {
                         int value = sqlite3_column_int(pp_stmt, column);
                         ((void (*)(id, SEL, int))(void *) objc_msgSend)((id)current_model_object, property_info.setter, value);
                     }
                         break;
-                    case FWDatabaseFieldTypeBoolean: {
+                    case __FWDatabaseFieldTypeBoolean: {
                         int value = sqlite3_column_int(pp_stmt, column);
                         ((void (*)(id, SEL, int))(void *) objc_msgSend)((id)current_model_object, property_info.setter, value);
                     }
@@ -1253,14 +1253,14 @@ static sqlite3 * _fw_database;
     return model_object_array;
 }
 
-+ (NSArray *)startQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
++ (NSArray *)startQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(__FWDatabaseQueryType)query_type {
     if (![self openTable:model_class]) return @[];
     NSArray * model_object_array = [self commonQuery:model_class conditions:conditions queryType:query_type];
     [self close];
     return model_object_array;
 }
 
-+ (NSArray *)queryModel:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
++ (NSArray *)queryModel:(Class)model_class conditions:(NSArray *)conditions queryType:(__FWDatabaseQueryType)query_type {
     if (![self localNameWithModel:model_class]) {return @[];}
     dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
     NSArray * model_array = [self startQuery:model_class conditions:conditions queryType:query_type];
@@ -1273,37 +1273,37 @@ static sqlite3 * _fw_database;
 }
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where {
-    return [self queryModel:model_class conditions:@[where == nil ? @"" : where] queryType:FWDatabaseQueryTypeWhere];
+    return [self queryModel:model_class conditions:@[where == nil ? @"" : where] queryType:__FWDatabaseQueryTypeWhere];
 }
 
 + (NSArray *)query:(Class)model_class order:(NSString *)order {
-    return [self queryModel:model_class conditions:@[order == nil ? @"" : order] queryType:FWDatabaseQueryTypeOrder];
+    return [self queryModel:model_class conditions:@[order == nil ? @"" : order] queryType:__FWDatabaseQueryTypeOrder];
 }
 
 
 + (NSArray *)query:(Class)model_class limit:(NSString *)limit {
-    return [self queryModel:model_class conditions:@[limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeLimit];
+    return [self queryModel:model_class conditions:@[limit == nil ? @"" : limit] queryType:__FWDatabaseQueryTypeLimit];
 }
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order {
     return [self queryModel:model_class conditions:@[where == nil ? @"" : where,
-                                                     order == nil ? @"" : order] queryType:FWDatabaseQueryTypeWhereOrder];
+                                                     order == nil ? @"" : order] queryType:__FWDatabaseQueryTypeWhereOrder];
 }
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where limit:(NSString *)limit {
     return [self queryModel:model_class conditions:@[where == nil ? @"" : where,
-                                                     limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeWhereLimit];
+                                                     limit == nil ? @"" : limit] queryType:__FWDatabaseQueryTypeWhereLimit];
 }
 
 + (NSArray *)query:(Class)model_class order:(NSString *)order limit:(NSString *)limit {
     return [self queryModel:model_class conditions:@[order == nil ? @"" : order,
-                                                     limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeOrderLimit];
+                                                     limit == nil ? @"" : limit] queryType:__FWDatabaseQueryTypeOrderLimit];
 }
 
 + (NSArray *)query:(Class)model_class where:(NSString *)where order:(NSString *)order limit:(NSString *)limit {
     return [self queryModel:model_class conditions:@[where == nil ? @"" : where,
                                                      order == nil ? @"" : order,
-                                                     limit == nil ? @"" : limit] queryType:FWDatabaseQueryTypeWhereOrderLimit];
+                                                     limit == nil ? @"" : limit] queryType:__FWDatabaseQueryTypeWhereOrderLimit];
 }
 
 + (id)query:(Class)model_class key:(NSInteger)key
@@ -1460,7 +1460,7 @@ static sqlite3 * _fw_database;
     }
     if (sqlite3_prepare_v2(_fw_database, [update_sql UTF8String], -1, &pp_stmt, nil) == SQLITE_OK) {
         [field_array enumerateObjectsUsingBlock:^(id  _Nonnull field, NSUInteger idx, BOOL * _Nonnull stop) {
-            FWDatabasePropertyInfo * property_info = field_dictionary[field];
+            __FWDatabasePropertyInfo * property_info = field_dictionary[field];
             id current_model_object = model_object;
             NSString * actual_field = field;
             if ([field rangeOfString:@"$"].location != NSNotFound) {
@@ -1473,11 +1473,11 @@ static sqlite3 * _fw_database;
             }
             int index = (int)[update_field_array indexOfObject:field] + 1;
             switch (property_info.type) {
-                case FWDatabaseFieldTypeMutableDictionary:
-                case FWDatabaseFieldTypeMutableArray: {
+                case __FWDatabaseFieldTypeMutableDictionary:
+                case __FWDatabaseFieldTypeMutableArray: {
                     id value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
-                        value = property_info.type == FWDatabaseFieldTypeMutableDictionary ? [NSMutableDictionary dictionary] : [NSMutableArray array];
+                        value = property_info.type == __FWDatabaseFieldTypeMutableDictionary ? [NSMutableDictionary dictionary] : [NSMutableArray array];
                     }
                     @try {
                         NSData * set_value = [NSKeyedArchiver archivedDataWithRootObject:value];
@@ -1487,11 +1487,11 @@ static sqlite3 * _fw_database;
                     }
                 }
                     break;
-                case FWDatabaseFieldTypeDictionary:
-                case FWDatabaseFieldTypeArray: {
+                case __FWDatabaseFieldTypeDictionary:
+                case __FWDatabaseFieldTypeArray: {
                     id value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
-                        value = property_info.type == FWDatabaseFieldTypeDictionary ? [NSDictionary dictionary] : [NSArray array];
+                        value = property_info.type == __FWDatabaseFieldTypeDictionary ? [NSDictionary dictionary] : [NSArray array];
                     }
                     @try {
                         NSData * set_value = [NSKeyedArchiver archivedDataWithRootObject:value];
@@ -1501,7 +1501,7 @@ static sqlite3 * _fw_database;
                     }
                 }
                     break;
-                case FWDatabaseFieldTypeDate: {
+                case __FWDatabaseFieldTypeDate: {
                     NSDate * value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
                         sqlite3_bind_double(pp_stmt, index, 0.0);
@@ -1510,7 +1510,7 @@ static sqlite3 * _fw_database;
                     }
                 }
                     break;
-                case FWDatabaseFieldTypeData: {
+                case __FWDatabaseFieldTypeData: {
                     NSData * value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
                         value = [NSData data];
@@ -1518,7 +1518,7 @@ static sqlite3 * _fw_database;
                     sqlite3_bind_blob(pp_stmt, index, [value bytes], (int)[value length], SQLITE_TRANSIENT);
                 }
                     break;
-                case FWDatabaseFieldTypeString: {
+                case __FWDatabaseFieldTypeString: {
                     NSString * value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
                         value = @"";
@@ -1530,7 +1530,7 @@ static sqlite3 * _fw_database;
                     }
                 }
                     break;
-                case FWDatabaseFieldTypeNumber: {
+                case __FWDatabaseFieldTypeNumber: {
                     NSNumber * value = [current_model_object valueForKey:actual_field];
                     if (value == nil) {
                         value = @(0.0);
@@ -1538,27 +1538,27 @@ static sqlite3 * _fw_database;
                     sqlite3_bind_double(pp_stmt, index, [value doubleValue]);
                 }
                     break;
-                case FWDatabaseFieldTypeInt: {
+                case __FWDatabaseFieldTypeInt: {
                     NSNumber * value = [current_model_object valueForKey:actual_field];
                     sqlite3_bind_int64(pp_stmt, index, (sqlite3_int64)[value longLongValue]);
                 }
                     break;
-                case FWDatabaseFieldTypeChar: {
+                case __FWDatabaseFieldTypeChar: {
                     char value = ((char (*)(id, SEL))(void *) objc_msgSend)((id)current_model_object, property_info.getter);
                     sqlite3_bind_int(pp_stmt, index, value);
                 }
                     break;
-                case FWDatabaseFieldTypeFloat: {
+                case __FWDatabaseFieldTypeFloat: {
                     float value = ((float (*)(id, SEL))(void *) objc_msgSend)((id)current_model_object, property_info.getter);
                     sqlite3_bind_double(pp_stmt, index, value);
                 }
                     break;
-                case FWDatabaseFieldTypeDouble: {
+                case __FWDatabaseFieldTypeDouble: {
                     double value = ((double (*)(id, SEL))(void *) objc_msgSend)((id)current_model_object, property_info.getter);
                     sqlite3_bind_double(pp_stmt, index, value);
                 }
                     break;
-                case FWDatabaseFieldTypeBoolean: {
+                case __FWDatabaseFieldTypeBoolean: {
                     BOOL value = ((BOOL (*)(id, SEL))(void *) objc_msgSend)((id)current_model_object, property_info.getter);
                     sqlite3_bind_int(pp_stmt, index, value);
                 }
