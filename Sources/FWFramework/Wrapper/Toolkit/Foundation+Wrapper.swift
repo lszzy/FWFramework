@@ -448,7 +448,7 @@ extension Wrapper where Base: NSAttributedString {
         return Base.fw_attributedString(htmlString: htmlString, defaultAttributes: defaultAttributes)
     }
 
-    /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
+    /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见ThemeObject
     public static func themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
         return Base.fw_themeObject(htmlString: htmlString, defaultAttributes: defaultAttributes)
     }

@@ -711,7 +711,7 @@ extension FW {
         return fw_attributedString(htmlString: htmlString)
     }
 
-    /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见FWThemeObject
+    /// html字符串转换为NSAttributedString主题对象，可设置默认系统字体和动态颜色，详见ThemeObject
     public static func fw_themeObject(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> ThemeObject<NSAttributedString> {
         var lightAttributes: [NSAttributedString.Key: Any] = [:]
         var darkAttributes: [NSAttributedString.Key: Any] = [:]

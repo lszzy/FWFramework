@@ -288,7 +288,7 @@ import FWObjC
         }
     }
 
-    /// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
+    /// 创建主题动态图片资源，指定提供句柄，内部使用ThemeObject实现
     public static func fw_themeAsset(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImageAsset {
         let asset = UIImageAsset()
         asset.fw_themeObject = ThemeObject(provider: provider)
@@ -419,7 +419,7 @@ import FWObjC
             notifyObject.fw_notifyThemeChanged(style)
             if selfObject == UIScreen.main {
                 NotificationCenter.default.post(
-                    name: .ThemeChanged,
+                    name: .FWThemeChanged,
                     object: selfObject,
                     userInfo: [
                         NSKeyValueChangeKey.oldKey.rawValue: oldStyle.rawValue,
