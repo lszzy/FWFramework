@@ -1,5 +1,5 @@
 //
-//  FWCacheEngine.h
+//  CacheEngine.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -9,13 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWCacheProtocol
+#pragma mark - __FWCacheProtocol
 
 /**
  *  缓存调用协议
  */
 NS_SWIFT_NAME(CacheProtocol)
-@protocol FWCacheProtocol <NSObject>
+@protocol __FWCacheProtocol <NSObject>
 @required
 
 /// 读取某个缓存
@@ -35,11 +35,11 @@ NS_SWIFT_NAME(CacheProtocol)
 
 @end
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 /// 缓存引擎内部协议
 NS_SWIFT_NAME(CacheEngineProtocol)
-@protocol FWCacheEngineProtocol <NSObject>
+@protocol __FWCacheEngineProtocol <NSObject>
 @required
 
 /// 从引擎读取某个缓存，内部方法，必须实现
@@ -56,13 +56,13 @@ NS_SWIFT_NAME(CacheEngineProtocol)
 
 @end
 
-#pragma mark - FWCacheEngine
+#pragma mark - __FWCacheEngine
 
 /**
  *  缓存引擎基类，自动管理缓存有效期，线程安全
  */
 NS_SWIFT_NAME(CacheEngine)
-@interface FWCacheEngine : NSObject <FWCacheProtocol>
+@interface __FWCacheEngine : NSObject <__FWCacheProtocol>
 
 @end
 

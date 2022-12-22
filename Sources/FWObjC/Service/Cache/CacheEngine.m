@@ -1,19 +1,19 @@
 //
-//  FWCacheEngine.m
+//  CacheEngine.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheEngine.h"
+#import "CacheEngine.h"
 
-@interface FWCacheEngine () <FWCacheEngineProtocol>
+@interface __FWCacheEngine () <__FWCacheEngineProtocol>
 
 @property (nonatomic, strong) dispatch_semaphore_t semaphore;
 
 @end
 
-@implementation FWCacheEngine
+@implementation __FWCacheEngine
 
 - (instancetype)init
 {
@@ -103,7 +103,7 @@
     return [key stringByAppendingString:@".__EXPIRE__"];
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {

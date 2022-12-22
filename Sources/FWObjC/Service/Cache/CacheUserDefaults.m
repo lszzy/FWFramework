@@ -1,26 +1,26 @@
 //
-//  FWCacheUserDefaults.m
+//  CacheUserDefaults.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheUserDefaults.h"
+#import "CacheUserDefaults.h"
 
-@interface FWCacheUserDefaults () <FWCacheEngineProtocol>
+@interface __FWCacheUserDefaults () <__FWCacheEngineProtocol>
 
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 
 @end
 
-@implementation FWCacheUserDefaults
+@implementation __FWCacheUserDefaults
 
-+ (FWCacheUserDefaults *)sharedInstance
++ (__FWCacheUserDefaults *)sharedInstance
 {
-    static FWCacheUserDefaults *instance = nil;
+    static __FWCacheUserDefaults *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheUserDefaults alloc] init];
+        instance = [[__FWCacheUserDefaults alloc] init];
     });
     return instance;
 }
@@ -51,7 +51,7 @@
     return [NSString stringWithFormat:@"FWCache.%@", key];
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {
