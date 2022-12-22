@@ -42,7 +42,6 @@
 #import "FWCollectionViewController.h"
 #import "FWScrollViewController.h"
 #import "FWTableViewController.h"
-#import "FWModel.h"
 #import "FWAttributedLabel.h"
 #import "FWBadgeView.h"
 #import "FWBannerView.h"
