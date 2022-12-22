@@ -168,10 +168,16 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 #pragma mark - Subclass Override
 
 - (BOOL)responseMockValidator {
+    if (FWNetworkConfig.sharedConfig.debugMockValidator) {
+        return FWNetworkConfig.sharedConfig.debugMockValidator(self);
+    }
     return [self responseStatusCode] == 404;
 }
 
 - (BOOL)responseMockProcessor {
+    if (FWNetworkConfig.sharedConfig.debugMockProcessor) {
+        return FWNetworkConfig.sharedConfig.debugMockProcessor(self);
+    }
     return NO;
 }
 
