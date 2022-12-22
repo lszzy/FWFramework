@@ -1,26 +1,26 @@
 //
-//  FWCacheMemory.m
+//  CacheMemory.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheMemory.h"
+#import "CacheMemory.h"
 
-@interface FWCacheMemory () <FWCacheEngineProtocol>
+@interface __FWCacheMemory () <__FWCacheEngineProtocol>
 
 @property (nonatomic, strong) NSMutableDictionary *cachePool;
 
 @end
 
-@implementation FWCacheMemory
+@implementation __FWCacheMemory
 
-+ (FWCacheMemory *)sharedInstance
++ (__FWCacheMemory *)sharedInstance
 {
-    static FWCacheMemory *instance = nil;
+    static __FWCacheMemory *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheMemory alloc] init];
+        instance = [[__FWCacheMemory alloc] init];
     });
     return instance;
 }
@@ -34,7 +34,7 @@
     return self;
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {

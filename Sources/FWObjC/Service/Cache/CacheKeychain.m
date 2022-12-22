@@ -1,27 +1,27 @@
 //
-//  FWCacheKeychain.m
+//  CacheKeychain.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheKeychain.h"
+#import "CacheKeychain.h"
 #import <Security/Security.h>
 
-@interface FWCacheKeychain () <FWCacheEngineProtocol>
+@interface __FWCacheKeychain () <__FWCacheEngineProtocol>
 
 @property (nonatomic, copy, readonly) NSString *group;
 
 @end
 
-@implementation FWCacheKeychain
+@implementation __FWCacheKeychain
 
-+ (FWCacheKeychain *)sharedInstance
++ (__FWCacheKeychain *)sharedInstance
 {
-    static FWCacheKeychain *instance = nil;
+    static __FWCacheKeychain *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheKeychain alloc] init];
+        instance = [[__FWCacheKeychain alloc] init];
     });
     return instance;
 }
@@ -35,7 +35,7 @@
     return self;
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {

@@ -1,28 +1,28 @@
 //
-//  FWCacheSqlite.m
+//  CacheSqlite.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheSqlite.h"
+#import "CacheSqlite.h"
 #import <sqlite3.h>
 
-@interface FWCacheSqlite () <FWCacheEngineProtocol>
+@interface __FWCacheSqlite () <__FWCacheEngineProtocol>
 
 @property (nonatomic, strong) NSString *dbPath;
 @property (nonatomic) sqlite3 *database;
 
 @end
 
-@implementation FWCacheSqlite
+@implementation __FWCacheSqlite
 
-+ (FWCacheSqlite *)sharedInstance
++ (__FWCacheSqlite *)sharedInstance
 {
-    static FWCacheSqlite *instance = nil;
+    static __FWCacheSqlite *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheSqlite alloc] init];
+        instance = [[__FWCacheSqlite alloc] init];
     });
     return instance;
 }
@@ -78,7 +78,7 @@
     }
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {

@@ -1,27 +1,27 @@
 //
-//  FWCacheFile.m
+//  CacheFile.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWCacheFile.h"
+#import "CacheFile.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@interface FWCacheFile () <FWCacheEngineProtocol>
+@interface __FWCacheFile () <__FWCacheEngineProtocol>
 
 @property (nonatomic, copy, readonly) NSString *path;
 
 @end
 
-@implementation FWCacheFile
+@implementation __FWCacheFile
 
-+ (FWCacheFile *)sharedInstance
++ (__FWCacheFile *)sharedInstance
 {
-    static FWCacheFile *instance = nil;
+    static __FWCacheFile *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWCacheFile alloc] init];
+        instance = [[__FWCacheFile alloc] init];
     });
     return instance;
 }
@@ -65,7 +65,7 @@
     return [self.path stringByAppendingPathComponent:fileName];
 }
 
-#pragma mark - FWCacheEngineProtocol
+#pragma mark - __FWCacheEngineProtocol
 
 - (id)readCacheForKey:(NSString *)key
 {
