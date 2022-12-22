@@ -1,5 +1,5 @@
 //
-//  FWLocation.h
+//  Location.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -10,14 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWLocationManager
+#pragma mark - __FWLocationManager
 
 /// 定位更新通知
-extern NSNotificationName const FWLocationUpdatedNotification NS_SWIFT_NAME(LocationUpdated);
+extern NSNotificationName const __FWLocationUpdatedNotification NS_SWIFT_NAME(FWLocationUpdated);
 /// 定位失败通知
-extern NSNotificationName const FWLocationFailedNotification NS_SWIFT_NAME(LocationFailed);
+extern NSNotificationName const __FWLocationFailedNotification NS_SWIFT_NAME(FWLocationFailed);
 /// 方向改变通知
-extern NSNotificationName const FWHeadingUpdatedNotification NS_SWIFT_NAME(HeadingUpdated);
+extern NSNotificationName const __FWHeadingUpdatedNotification NS_SWIFT_NAME(FWHeadingUpdated);
 
 /**
  位置服务
@@ -26,10 +26,10 @@ extern NSNotificationName const FWHeadingUpdatedNotification NS_SWIFT_NAME(Headi
  iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
  */
 NS_SWIFT_NAME(LocationManager)
-@interface FWLocationManager : NSObject
+@interface __FWLocationManager : NSObject
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWLocationManager *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWLocationManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 是否启用Always定位，默认NO，请求WhenInUse定位
 @property (nonatomic, assign) BOOL alwaysLocation;
@@ -59,7 +59,7 @@ NS_SWIFT_NAME(LocationManager)
 @property (nullable, nonatomic, readonly) NSError *error;
 
 /// 定位改变block方式回调，可通过error判断是否定位成功
-@property (nullable, nonatomic, copy) void (^locationChanged)(FWLocationManager *manager);
+@property (nullable, nonatomic, copy) void (^locationChanged)(__FWLocationManager *manager);
 
 /// 坐标转"纬度,经度"字符串
 + (NSString *)locationString:(CLLocationCoordinate2D)coordinate;
