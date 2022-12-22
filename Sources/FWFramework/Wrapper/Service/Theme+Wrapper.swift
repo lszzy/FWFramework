@@ -154,7 +154,7 @@ extension Wrapper where Base: UIImageAsset {
         return Base.fw_themeLight(light, dark: dark)
     }
 
-    /// 创建主题动态图片资源，指定提供句柄，内部使用FWThemeObject实现
+    /// 创建主题动态图片资源，指定提供句柄，内部使用ThemeObject实现
     public static func themeAsset(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImageAsset {
         return Base.fw_themeAsset(provider)
     }

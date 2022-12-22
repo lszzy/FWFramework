@@ -19,7 +19,7 @@
 #import "Test.h"
 
 #import "Location.h"
-#import "FWTheme.h"
+#import "Theme.h"
 #import "FWEncode.h"
 #import "FWException.h"
 #import "FWCacheManager.h"
