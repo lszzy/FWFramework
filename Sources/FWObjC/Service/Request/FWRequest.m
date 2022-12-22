@@ -24,7 +24,6 @@
 #import "FWNetworkConfig.h"
 #import "FWRequest.h"
 #import "FWNetworkPrivate.h"
-#import "FWEncode.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11
@@ -327,7 +326,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
                 // 兼容\uD800-\uDFFF引起JSON解码报错3840问题
                 if (error && error.code == 3840) {
                     NSString *escapeString = [[NSString alloc] initWithData:_cacheData encoding:NSUTF8StringEncoding];
-                    NSData *escapeData = [escapeString.fw_escapeJson dataUsingEncoding:NSUTF8StringEncoding];
+                    NSData *escapeData = [[self escapeJsonString:escapeString] dataUsingEncoding:NSUTF8StringEncoding];
                     if (escapeData && escapeData.length != _cacheData.length) {
                         error = nil;
                         _cacheJSON = [NSJSONSerialization JSONObjectWithData:escapeData options:(NSJSONReadingOptions)0 error:&error];
@@ -440,6 +439,23 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     NSString *path = [self cacheBasePath];
     path = [path stringByAppendingPathComponent:cacheMetadataFileName];
     return path;
+}
+
+- (NSString *)escapeJsonString:(NSString *)string {
+    if (string.length < 1) return string;
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+    int count = (int)matches.count;
+    if (count < 1) return string;
+    
+    // 倒序循环，避免replace越界
+    for (int i = count - 1; i >= 0; i--) {
+        NSRange range = [matches objectAtIndex:i].range;
+        NSString *substr = [[string substringWithRange:range] uppercaseString];
+        if (range.length == 12 && [substr characterAtIndex:3] <= 'B' && [substr characterAtIndex:9] > 'B') continue;
+        string = [string stringByReplacingCharactersInRange:range withString:@""];
+    }
+    return string;
 }
 
 @end

@@ -8,7 +8,6 @@
 #import "FWWebView.h"
 #import "Bridge.h"
 #import "FWAlertPlugin.h"
-#import "FWEncode.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -325,7 +324,10 @@ static WKProcessPool *fwStaticProcessPool = nil;
     
     NSURL *requestUrl = [webRequest isKindOfClass:[NSURL class]] ? webRequest : nil;
     if (!requestUrl && [webRequest isKindOfClass:[NSString class]]) {
-        requestUrl = [NSURL fw_urlWithString:webRequest];
+        requestUrl = [NSURL URLWithString:webRequest];
+        if (!requestUrl && [webRequest length] > 0) {
+            requestUrl = [NSURL URLWithString:[webRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+        }
     }
     if (requestUrl.absoluteString.length < 1) return;
     

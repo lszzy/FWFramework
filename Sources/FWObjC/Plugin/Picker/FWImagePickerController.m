@@ -15,8 +15,8 @@
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
 #import "FWAppBundle.h"
-#import "FWEncode.h"
 #import <objc/runtime.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #if FWMacroSPM
 
@@ -2648,7 +2648,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (checkVideo && asset.assetType == FWAssetTypeVideo) {
             NSString *filePath = [PHPhotoLibrary fw_pickerControllerVideoCachePath];
             [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
-            filePath = [[filePath stringByAppendingPathComponent:[[NSUUID UUID].UUIDString fw_md5Encode]] stringByAppendingPathExtension:@"mp4"];
+            filePath = [[filePath stringByAppendingPathComponent:[self md5EncodeString:[NSUUID UUID].UUIDString]] stringByAppendingPathExtension:@"mp4"];
             NSURL *fileURL = [NSURL fileURLWithPath:filePath];
             [asset requestVideoURLWithOutputURL:fileURL exportPreset:useOrigin ? AVAssetExportPresetHighestQuality : AVAssetExportPresetMediumQuality completion:^(NSURL * _Nullable videoURL, NSDictionary<NSString *,id> * _Nullable info) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2695,6 +2695,18 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             }
         }
     }];
+}
+
++ (NSString *)md5EncodeString:(NSString *)string {
+    const char *cStr = [string UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++){
+        [output appendFormat:@"%02x", digest[i]];
+    }
+    return [NSString stringWithString:output];
 }
 
 @end

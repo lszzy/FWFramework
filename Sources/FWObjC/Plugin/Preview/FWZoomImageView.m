@@ -9,7 +9,6 @@
 #import "FWAppBundle.h"
 #import "FWViewPlugin.h"
 #import "FWImagePlugin.h"
-#import "FWEncode.h"
 
 #if FWMacroSPM
 
@@ -834,7 +833,11 @@
         if ([imageURL isAbsolutePath]) {
             imageURL = [NSURL fileURLWithPath:imageURL];
         } else {
-            imageURL = [NSURL fw_urlWithString:imageURL];
+            NSURL *url = [NSURL URLWithString:imageURL];
+            if (!url && [imageURL length] > 0) {
+                url = [NSURL URLWithString:[imageURL stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            }
+            imageURL = url;
         }
     }
     if ([imageURL isKindOfClass:[NSURL class]]) {

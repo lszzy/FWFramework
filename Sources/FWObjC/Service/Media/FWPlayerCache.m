@@ -6,9 +6,9 @@
 //
 
 #import "FWPlayerCache.h"
-#import "FWEncode.h"
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #pragma mark - FWPlayerCacheLoaderManager
 
@@ -1164,10 +1164,22 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
     if (kPlayerFileNameRules) {
         pathComponent = kPlayerFileNameRules(url);
     } else {
-        pathComponent = [url.absoluteString fw_md5Encode];
+        pathComponent = [self md5EncodeString:url.absoluteString];
         pathComponent = [pathComponent stringByAppendingPathExtension:url.pathExtension];
     }
     return [[self cacheDirectory] stringByAppendingPathComponent:pathComponent];
+}
+
++ (NSString *)md5EncodeString:(NSString *)string {
+    const char *cStr = [string UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++){
+        [output appendFormat:@"%02x", digest[i]];
+    }
+    return [NSString stringWithString:output];
 }
 
 + (FWPlayerCacheConfiguration *)cacheConfigurationForURL:(NSURL *)url {

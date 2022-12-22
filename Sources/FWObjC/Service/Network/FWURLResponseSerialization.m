@@ -24,7 +24,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
-#import "FWEncode.h"
 
 NSString * const FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
 NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
@@ -239,8 +238,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
-                          error:(NSError *__autoreleasing *)error
-{
+                          error:(NSError *__autoreleasing *)error {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
         if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
             return nil;
@@ -262,7 +260,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     // 兼容\uD800-\uDFFF引起JSON解码报错3840问题
     if (serializationError && serializationError.code == 3840) {
         NSString *escapeString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSData *escapeData = [escapeString.fw_escapeJson dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *escapeData = [[self escapeJsonString:escapeString] dataUsingEncoding:NSUTF8StringEncoding];
         if (escapeData && escapeData.length != data.length) {
             serializationError = nil;
             responseObject = [NSJSONSerialization JSONObjectWithData:escapeData options:self.readingOptions error:&serializationError];
@@ -282,6 +280,23 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     }
 
     return responseObject;
+}
+
+- (NSString *)escapeJsonString:(NSString *)string {
+    if (string.length < 1) return string;
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+    int count = (int)matches.count;
+    if (count < 1) return string;
+    
+    // 倒序循环，避免replace越界
+    for (int i = count - 1; i >= 0; i--) {
+        NSRange range = [matches objectAtIndex:i].range;
+        NSString *substr = [[string substringWithRange:range] uppercaseString];
+        if (range.length == 12 && [substr characterAtIndex:3] <= 'B' && [substr characterAtIndex:9] > 'B') continue;
+        string = [string stringByReplacingCharactersInRange:range withString:@""];
+    }
+    return string;
 }
 
 #pragma mark - NSSecureCoding
