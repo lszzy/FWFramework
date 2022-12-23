@@ -27,9 +27,9 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
 
-void FWRequestLog(NSString *format, ...) {
+void __FWRequestLog(NSString *format, ...) {
 #ifdef DEBUG
-    if (![FWNetworkConfig sharedConfig].debugLogEnabled) {
+    if (![__FWNetworkConfig sharedConfig].debugLogEnabled) {
         return;
     }
     va_list argptr;
@@ -39,12 +39,12 @@ void FWRequestLog(NSString *format, ...) {
 #endif
 }
 
-@implementation FWNetworkConfig {
-    NSMutableArray<id<FWUrlFilterProtocol>> *_urlFilters;
-    NSMutableArray<id<FWCacheDirPathFilterProtocol>> *_cacheDirPathFilters;
+@implementation __FWNetworkConfig {
+    NSMutableArray<id<__FWUrlFilterProtocol>> *_urlFilters;
+    NSMutableArray<id<__FWCacheDirPathFilterProtocol>> *_cacheDirPathFilters;
 }
 
-+ (FWNetworkConfig *)sharedConfig {
++ (__FWNetworkConfig *)sharedConfig {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -68,7 +68,7 @@ void FWRequestLog(NSString *format, ...) {
     return self;
 }
 
-- (void)addUrlFilter:(id<FWUrlFilterProtocol>)filter {
+- (void)addUrlFilter:(id<__FWUrlFilterProtocol>)filter {
     [_urlFilters addObject:filter];
 }
 
@@ -76,7 +76,7 @@ void FWRequestLog(NSString *format, ...) {
     [_urlFilters removeAllObjects];
 }
 
-- (void)addCacheDirPathFilter:(id<FWCacheDirPathFilterProtocol>)filter {
+- (void)addCacheDirPathFilter:(id<__FWCacheDirPathFilterProtocol>)filter {
     [_cacheDirPathFilters addObject:filter];
 }
 
@@ -84,11 +84,11 @@ void FWRequestLog(NSString *format, ...) {
     [_cacheDirPathFilters removeAllObjects];
 }
 
-- (NSArray<id<FWUrlFilterProtocol>> *)urlFilters {
+- (NSArray<id<__FWUrlFilterProtocol>> *)urlFilters {
     return [_urlFilters copy];
 }
 
-- (NSArray<id<FWCacheDirPathFilterProtocol>> *)cacheDirPathFilters {
+- (NSArray<id<__FWCacheDirPathFilterProtocol>> *)cacheDirPathFilters {
     return [_cacheDirPathFilters copy];
 }
 
@@ -100,7 +100,7 @@ void FWRequestLog(NSString *format, ...) {
 
 @end
 
-@implementation FWNetworkUtils
+@implementation __FWNetworkUtils
 
 + (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator {
     if ([json isKindOfClass:[NSDictionary class]] &&
@@ -154,7 +154,7 @@ void FWRequestLog(NSString *format, ...) {
     NSError *error = nil;
     [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
     if (error) {
-        FWRequestLog(@"error to set do not backup attribute, error = %@", error);
+        __FWRequestLog(@"error to set do not backup attribute, error = %@", error);
     }
 }
 
@@ -178,7 +178,7 @@ void FWRequestLog(NSString *format, ...) {
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 }
 
-+ (NSStringEncoding)stringEncodingWithRequest:(FWBaseRequest *)request {
++ (NSStringEncoding)stringEncodingWithRequest:(__FWBaseRequest *)request {
     // From AFNetworking 2.6.3
     NSStringEncoding stringEncoding = NSUTF8StringEncoding;
     NSString *encodingName = [request.response.textEncodingName copy];

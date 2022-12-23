@@ -26,17 +26,17 @@
 #import "NetworkConfig.h"
 #import "BaseRequest.h"
 
-@interface FWChainRequest()<FWRequestDelegate>
+@interface __FWChainRequest()<__FWRequestDelegate>
 
-@property (strong, nonatomic) NSMutableArray<FWBaseRequest *> *requestArray;
-@property (strong, nonatomic) NSMutableArray<FWChainCallback> *requestCallbackArray;
+@property (strong, nonatomic) NSMutableArray<__FWBaseRequest *> *requestArray;
+@property (strong, nonatomic) NSMutableArray<__FWChainCallback> *requestCallbackArray;
 @property (assign, nonatomic) NSUInteger nextRequestIndex;
-@property (weak, nonatomic) FWBaseRequest *nextRequest;
-@property (copy, nonatomic) FWChainCallback emptyCallback;
+@property (weak, nonatomic) __FWBaseRequest *nextRequest;
+@property (copy, nonatomic) __FWChainCallback emptyCallback;
 
 @end
 
-@implementation FWChainRequest
+@implementation __FWChainRequest
 
 - (instancetype)init {
     self = [super init];
@@ -45,23 +45,23 @@
         _requestArray = [NSMutableArray array];
         _requestCallbackArray = [NSMutableArray array];
         _stoppedOnFailure = YES;
-        _emptyCallback = ^(FWChainRequest *chainRequest, FWBaseRequest *baseRequest) { };
+        _emptyCallback = ^(__FWChainRequest *chainRequest, __FWBaseRequest *baseRequest) { };
     }
     return self;
 }
 
 - (void)start {
     if (_nextRequestIndex > 0) {
-        FWRequestLog(@"Error! Chain request has already started.");
+        __FWRequestLog(@"Error! Chain request has already started.");
         return;
     }
 
     _succeedRequest = nil;
     _failedRequest = nil;
-    [[FWRequestManager sharedManager] addChainRequest:self];
+    [[__FWRequestManager sharedManager] addChainRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     if (![self startNextRequest:nil]) {
-        FWRequestLog(@"Error! Chain request array is empty.");
+        __FWRequestLog(@"Error! Chain request array is empty.");
     }
 }
 
@@ -70,25 +70,25 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestManager sharedManager] removeChainRequest:self];
+    [[__FWRequestManager sharedManager] removeChainRequest:self];
 }
 
-- (void)startWithCompletionBlockWithSuccess:(void (^)(FWChainRequest *chainRequest))success
-                                    failure:(void (^)(FWChainRequest *chainRequest))failure {
+- (void)startWithCompletionBlockWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
+                                    failure:(void (^)(__FWChainRequest *chainRequest))failure {
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];
 }
 
-- (void)startWithCompletion:(void (^)(FWChainRequest *))completion {
+- (void)startWithCompletion:(void (^)(__FWChainRequest *))completion {
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
 }
 
-- (void)startWithWillStart:(nullable void (^)(FWChainRequest *chainRequest))willStart
-                  willStop:(nullable void (^)(FWChainRequest *chainRequest))willStop
-                   success:(nullable void (^)(FWChainRequest *chainRequest))success
-                   failure:(nullable void (^)(FWChainRequest *chainRequest))failure
-                   didStop:(nullable void (^)(FWChainRequest *chainRequest))didStop {
-    FWRequestAccessory *accessory = [FWRequestAccessory new];
+- (void)startWithWillStart:(nullable void (^)(__FWChainRequest *chainRequest))willStart
+                  willStop:(nullable void (^)(__FWChainRequest *chainRequest))willStop
+                   success:(nullable void (^)(__FWChainRequest *chainRequest))success
+                   failure:(nullable void (^)(__FWChainRequest *chainRequest))failure
+                   didStop:(nullable void (^)(__FWChainRequest *chainRequest))didStop {
+    __FWRequestAccessory *accessory = [__FWRequestAccessory new];
     accessory.willStartBlock = willStart;
     accessory.willStopBlock = willStop;
     accessory.didStopBlock = didStop;
@@ -98,7 +98,7 @@
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStart:)]) {
             [accessory requestWillStart:self];
         }
@@ -106,7 +106,7 @@
 }
 
 - (void)toggleAccessoriesWillStopCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStop:)]) {
             [accessory requestWillStop:self];
         }
@@ -114,15 +114,15 @@
 }
 
 - (void)toggleAccessoriesDidStopCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestDidStop:)]) {
             [accessory requestDidStop:self];
         }
     }
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(FWChainRequest *chainRequest))success
-                              failure:(void (^)(FWChainRequest *chainRequest))failure {
+- (void)setCompletionBlockWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
+                              failure:(void (^)(__FWChainRequest *chainRequest))failure {
     self.successCompletionBlock = success;
     self.failureCompletionBlock = failure;
 }
@@ -137,7 +137,7 @@
     [self clearRequest];
 }
 
-- (void)addRequest:(FWBaseRequest *)request callback:(FWChainCallback)callback {
+- (void)addRequest:(__FWBaseRequest *)request callback:(__FWChainCallback)callback {
     [_requestArray addObject:request];
     if (callback != nil) {
         [_requestCallbackArray addObject:callback];
@@ -146,20 +146,20 @@
     }
 }
 
-- (NSArray<FWBaseRequest *> *)requestArray {
+- (NSArray<__FWBaseRequest *> *)requestArray {
     return _requestArray;
 }
 
-- (BOOL)startNextRequest:(FWBaseRequest *)previousRequest {
+- (BOOL)startNextRequest:(__FWBaseRequest *)previousRequest {
     if (_nextRequestIndex >= [_requestArray count] && self.requestBuilder) {
-        FWBaseRequest *baseRequest = self.requestBuilder(self, previousRequest);
+        __FWBaseRequest *baseRequest = self.requestBuilder(self, previousRequest);
         if (baseRequest) {
             [self addRequest:baseRequest callback:nil];
         }
     }
     
     if (_nextRequestIndex < [_requestArray count]) {
-        FWBaseRequest *request = _requestArray[_nextRequestIndex];
+        __FWBaseRequest *request = _requestArray[_nextRequestIndex];
         _nextRequestIndex++;
         request.delegate = self;
         [request clearCompletionBlock];
@@ -180,12 +180,12 @@
 
 #pragma mark - Network Request Delegate
 
-- (void)requestFinished:(FWBaseRequest *)request {
+- (void)requestFinished:(__FWBaseRequest *)request {
     _succeedRequest = request;
     _failedRequest = nil;
     
     NSUInteger currentRequestIndex = _nextRequestIndex - 1;
-    FWChainCallback chainCallback = _requestCallbackArray[currentRequestIndex];
+    __FWChainCallback chainCallback = _requestCallbackArray[currentRequestIndex];
     chainCallback(self, request);
     
     if (self.stoppedOnSuccess || ![self startNextRequest:request]) {
@@ -193,7 +193,7 @@
     }
 }
 
-- (void)requestFailed:(FWBaseRequest *)request {
+- (void)requestFailed:(__FWBaseRequest *)request {
     _succeedRequest = nil;
     _failedRequest = request;
     
@@ -223,14 +223,14 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestManager sharedManager] removeChainRequest:self];
+    [[__FWRequestManager sharedManager] removeChainRequest:self];
 }
 
 - (void)clearRequest {
     if (_nextRequestIndex > 0) {
         NSUInteger currentRequestIndex = _nextRequestIndex - 1;
         if (currentRequestIndex < [_requestArray count]) {
-            FWBaseRequest *request = _requestArray[currentRequestIndex];
+            __FWBaseRequest *request = _requestArray[currentRequestIndex];
             [request stop];
         }
     }
@@ -243,7 +243,7 @@
 
 #pragma mark - Request Accessoies
 
-- (void)addAccessory:(id<FWRequestAccessory>)accessory {
+- (void)addAccessory:(id<__FWRequestAccessory>)accessory {
     if (!self.requestAccessories) {
         self.requestAccessories = [NSMutableArray array];
     }

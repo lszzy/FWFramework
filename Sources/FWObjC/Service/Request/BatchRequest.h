@@ -25,80 +25,80 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWBaseRequest;
-@class FWBatchRequest;
-@protocol FWRequestAccessory;
+@class __FWBaseRequest;
+@class __FWBatchRequest;
+@protocol __FWRequestAccessory;
 
-///  The FWBatchRequestDelegate protocol defines several optional methods you can use
+///  The __FWBatchRequestDelegate protocol defines several optional methods you can use
 ///  to receive network-related messages. All the delegate methods will be called
 ///  on the main queue. Note the delegate methods will be called when all the requests
 ///  of batch request finishes.
 NS_SWIFT_NAME(BatchRequestDelegate)
-@protocol FWBatchRequestDelegate <NSObject>
+@protocol __FWBatchRequestDelegate <NSObject>
 
 @optional
 ///  Tell the delegate that the batch request has finished successfully/
 ///
 ///  @param batchRequest The corresponding batch request.
-- (void)batchRequestFinished:(FWBatchRequest *)batchRequest;
+- (void)batchRequestFinished:(__FWBatchRequest *)batchRequest;
 
 ///  Tell the delegate that the batch request has failed.
 ///
 ///  @param batchRequest The corresponding batch request.
-- (void)batchRequestFailed:(FWBatchRequest *)batchRequest;
+- (void)batchRequestFailed:(__FWBatchRequest *)batchRequest;
 
 @end
 
-///  FWBatchRequest can be used to batch several FWRequest. Note that when used inside FWBatchRequest, a single
-///  FWBaseRequest will have its own callback and delegate cleared, in favor of the batch request callback.
+///  __FWBatchRequest can be used to batch several __FWRequest. Note that when used inside __FWBatchRequest, a single
+///  __FWBaseRequest will have its own callback and delegate cleared, in favor of the batch request callback.
 NS_SWIFT_NAME(BatchRequest)
-@interface FWBatchRequest : NSObject
+@interface __FWBatchRequest : NSObject
 
 ///  All the requests are stored in this array.
-@property (nonatomic, strong, readonly) NSArray<FWBaseRequest *> *requestArray;
+@property (nonatomic, strong, readonly) NSArray<__FWBaseRequest *> *requestArray;
 
 ///  The delegate object of the batch request. Default is nil.
-@property (nonatomic, weak, nullable) id<FWBatchRequestDelegate> delegate;
+@property (nonatomic, weak, nullable) id<__FWBatchRequestDelegate> delegate;
 
 ///  The success callback. Note this will be called only if all the requests are finished.
 ///  This block will be called on the main queue.
-@property (nonatomic, copy, nullable) void (^successCompletionBlock)(FWBatchRequest *);
+@property (nonatomic, copy, nullable) void (^successCompletionBlock)(__FWBatchRequest *);
 
 ///  The failure callback. Note this will be called if one of the requests fails.
 ///  This block will be called on the main queue.
-@property (nonatomic, copy, nullable) void (^failureCompletionBlock)(FWBatchRequest *);
+@property (nonatomic, copy, nullable) void (^failureCompletionBlock)(__FWBatchRequest *);
 
 ///  Tag can be used to identify batch request. Default value is 0.
 @property (nonatomic) NSInteger tag;
 
 ///  This can be used to add several accessories object. Note if you use `addAccessory` to add accessory
 ///  this array will be automatically created. Default is nil.
-@property (nonatomic, strong, nullable) NSMutableArray<id<FWRequestAccessory>> *requestAccessories;
+@property (nonatomic, strong, nullable) NSMutableArray<id<__FWRequestAccessory>> *requestAccessories;
 
 ///  The first request that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly, nullable) FWBaseRequest *failedRequest;
+@property (nonatomic, strong, readonly, nullable) __FWBaseRequest *failedRequest;
 
 ///  The requests that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly) NSArray<FWBaseRequest *> *failedRequestArray;
+@property (nonatomic, strong, readonly) NSArray<__FWBaseRequest *> *failedRequestArray;
 
 ///  When true, the batch request is stopped if one of the requests fails. Defaults to YES.
 @property (nonatomic, assign) BOOL stoppedOnFailure;
 
-///  Creates a `FWBatchRequest` with a bunch of requests.
+///  Creates a `__FWBatchRequest` with a bunch of requests.
 ///
 ///  @param requestArray requests useds to create batch request.
 ///
-- (instancetype)initWithRequestArray:(NSArray<FWBaseRequest *> *)requestArray;
+- (instancetype)initWithRequestArray:(NSArray<__FWBaseRequest *> *)requestArray;
 
 ///  Set completion callbacks
-- (void)setCompletionBlockWithSuccess:(nullable void (^)(FWBatchRequest *batchRequest))success
-                              failure:(nullable void (^)(FWBatchRequest *batchRequest))failure;
+- (void)setCompletionBlockWithSuccess:(nullable void (^)(__FWBatchRequest *batchRequest))success
+                              failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure;
 
 ///  Nil out both success and failure callback blocks.
 - (void)clearCompletionBlock;
 
 ///  Convenience method to add request accessory. See also `requestAccessories`.
-- (void)addAccessory:(id<FWRequestAccessory>)accessory;
+- (void)addAccessory:(id<__FWRequestAccessory>)accessory;
 
 ///  Append all the requests to queue.
 - (void)start;
@@ -107,17 +107,17 @@ NS_SWIFT_NAME(BatchRequest)
 - (void)stop;
 
 ///  Convenience method to start the batch request with block callbacks.
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(FWBatchRequest *batchRequest))success
-                                    failure:(nullable void (^)(FWBatchRequest *batchRequest))failure;
+- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(__FWBatchRequest *batchRequest))success
+                                    failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure;
 
 ///  Convenience method to start the batch request with completion block.
-- (void)startWithCompletion:(nullable void (^)(FWBatchRequest *batchRequest))completion;
+- (void)startWithCompletion:(nullable void (^)(__FWBatchRequest *batchRequest))completion;
 
-- (void)startWithWillStart:(nullable void (^)(FWBatchRequest *batchRequest))willStart
-                  willStop:(nullable void (^)(FWBatchRequest *batchRequest))willStop
-                   success:(nullable void (^)(FWBatchRequest *batchRequest))success
-                   failure:(nullable void (^)(FWBatchRequest *batchRequest))failure
-                   didStop:(nullable void (^)(FWBatchRequest *batchRequest))didStop;
+- (void)startWithWillStart:(nullable void (^)(__FWBatchRequest *batchRequest))willStart
+                  willStop:(nullable void (^)(__FWBatchRequest *batchRequest))willStop
+                   success:(nullable void (^)(__FWBatchRequest *batchRequest))success
+                   failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure
+                   didStop:(nullable void (^)(__FWBatchRequest *batchRequest))didStop;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;

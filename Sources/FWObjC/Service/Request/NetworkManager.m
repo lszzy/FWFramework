@@ -30,19 +30,19 @@
 
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
-@implementation FWNetworkManager {
+@implementation __FWNetworkManager {
     __FWHTTPSessionManager *_manager;
-    FWNetworkConfig *_config;
+    __FWNetworkConfig *_config;
     __FWJSONResponseSerializer *_jsonResponseSerializer;
     __FWXMLParserResponseSerializer *_xmlParserResponseSerialzier;
-    NSMutableDictionary<NSNumber *, FWBaseRequest *> *_requestsRecord;
+    NSMutableDictionary<NSNumber *, __FWBaseRequest *> *_requestsRecord;
 
     dispatch_queue_t _processingQueue;
     pthread_mutex_t _lock;
     NSIndexSet *_allStatusCodes;
 }
 
-+ (FWNetworkManager *)sharedManager {
++ (__FWNetworkManager *)sharedManager {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -54,7 +54,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _config = [FWNetworkConfig sharedConfig];
+        _config = [__FWNetworkConfig sharedConfig];
         _manager = [[__FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
         _processingQueue = dispatch_queue_create("site.wuyong.queue.request.processing", DISPATCH_QUEUE_CONCURRENT);
@@ -96,7 +96,7 @@
 
 #pragma mark -
 
-- (NSString *)buildRequestUrl:(FWBaseRequest *)request {
+- (NSString *)buildRequestUrl:(__FWBaseRequest *)request {
     NSParameterAssert(request != nil);
 
     NSString *detailUrl = [request requestUrl];
@@ -110,7 +110,7 @@
     }
     // Filter URL if needed
     NSArray *filters = [_config urlFilters];
-    for (id<FWUrlFilterProtocol> filter in filters) {
+    for (id<__FWUrlFilterProtocol> filter in filters) {
         if ([filter respondsToSelector:@selector(filterUrl:withRequest:)]) {
             detailUrl = [filter filterUrl:detailUrl withRequest:request];
         }
@@ -147,11 +147,11 @@
     return resultUrl.absoluteString;
 }
 
-- (__FWHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
+- (__FWHTTPRequestSerializer *)requestSerializerForRequest:(__FWBaseRequest *)request {
     __FWHTTPRequestSerializer *requestSerializer = nil;
-    if (request.requestSerializerType == FWRequestSerializerTypeHTTP) {
+    if (request.requestSerializerType == __FWRequestSerializerTypeHTTP) {
         requestSerializer = [__FWHTTPRequestSerializer serializer];
-    } else if (request.requestSerializerType == FWRequestSerializerTypeJSON) {
+    } else if (request.requestSerializerType == __FWRequestSerializerTypeJSON) {
         requestSerializer = [__FWJSONRequestSerializer serializer];
     }
 
@@ -180,15 +180,15 @@
     return requestSerializer;
 }
 
-- (NSURLSessionTask *)sessionTaskForRequest:(FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
-    if ([request requestMethod] == FWRequestMethodGET && request.resumableDownloadPath) {
+- (NSURLSessionTask *)sessionTaskForRequest:(__FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
+    if ([request requestMethod] == __FWRequestMethodGET && request.resumableDownloadPath) {
         return [self downloadTaskWithRequest:request progress:request.resumableDownloadProgressBlock error:error];
     }
     
     return [self dataTaskWithRequest:request error:error];
 }
 
-- (void)addRequest:(FWBaseRequest *)request {
+- (void)addRequest:(__FWBaseRequest *)request {
     NSParameterAssert(request != nil);
 
     NSError * __autoreleasing requestSerializationError = nil;
@@ -204,13 +204,13 @@
     // Set request task priority
     if ([request.requestTask respondsToSelector:@selector(priority)]) {
         switch (request.requestPriority) {
-            case FWRequestPriorityHigh:
+            case __FWRequestPriorityHigh:
                 request.requestTask.priority = NSURLSessionTaskPriorityHigh;
                 break;
-            case FWRequestPriorityLow:
+            case __FWRequestPriorityLow:
                 request.requestTask.priority = NSURLSessionTaskPriorityLow;
                 break;
-            case FWRequestPriorityDefault:
+            case __FWRequestPriorityDefault:
                 /**!fall through*/
             default:
                 request.requestTask.priority = NSURLSessionTaskPriorityDefault;
@@ -219,12 +219,12 @@
     }
 
     // Retain request
-    FWRequestLog(@"Add request: %@", NSStringFromClass([request class]));
+    __FWRequestLog(@"Add request: %@", NSStringFromClass([request class]));
     [self addRequestToRecord:request];
     [request.requestTask resume];
 }
 
-- (void)cancelRequest:(FWBaseRequest *)request {
+- (void)cancelRequest:(__FWBaseRequest *)request {
     NSParameterAssert(request != nil);
 
     if (request.resumableDownloadPath && [self incompleteDownloadTempPathForDownloadPath:request.resumableDownloadPath] != nil) {
@@ -249,7 +249,7 @@
         NSArray *copiedKeys = [allKeys copy];
         for (NSNumber *key in copiedKeys) {
             Lock();
-            FWBaseRequest *request = _requestsRecord[key];
+            __FWBaseRequest *request = _requestsRecord[key];
             Unlock();
             // We are using non-recursive lock.
             // Do not lock `stop`, otherwise deadlock may occur.
@@ -258,22 +258,22 @@
     }
 }
 
-- (BOOL)validateResult:(FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
+- (BOOL)validateResult:(__FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
     BOOL result = [request statusCodeValidator];
     if (!result) {
         if (error) {
             NSString *desc = [NSString stringWithFormat:@"Invalid status code (%ld)", (long)[request responseStatusCode]];
-            *error = [NSError errorWithDomain:FWRequestValidationErrorDomain code:FWRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:desc}];
+            *error = [NSError errorWithDomain:__FWRequestValidationErrorDomain code:__FWRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:desc}];
         }
         return result;
     }
     id json = [request responseJSONObject];
     id validator = [request jsonValidator];
     if (json && validator) {
-        result = [FWNetworkUtils validateJSON:json withValidator:validator];
+        result = [__FWNetworkUtils validateJSON:json withValidator:validator];
         if (!result) {
             if (error) {
-                *error = [NSError errorWithDomain:FWRequestValidationErrorDomain code:FWRequestValidationErrorInvalidJSONFormat userInfo:@{NSLocalizedDescriptionKey:@"Invalid JSON format"}];
+                *error = [NSError errorWithDomain:__FWRequestValidationErrorDomain code:__FWRequestValidationErrorInvalidJSONFormat userInfo:@{NSLocalizedDescriptionKey:@"Invalid JSON format"}];
             }
             return result;
         }
@@ -283,7 +283,7 @@
 
 - (void)handleRequestResult:(NSUInteger)requestIdentifier response:(NSURLResponse *)response responseObject:(id)responseObject error:(NSError *)error {
     Lock();
-    FWBaseRequest *request = _requestsRecord[@(requestIdentifier)];
+    __FWBaseRequest *request = _requestsRecord[@(requestIdentifier)];
     Unlock();
 
     // When the request is cancelled and removed from records, the underlying
@@ -295,7 +295,7 @@
         return;
     }
 
-    FWRequestLog(@"Finished Request: %@", NSStringFromClass([request class]));
+    __FWRequestLog(@"Finished Request: %@", NSStringFromClass([request class]));
 
     NSError * __autoreleasing serializationError = nil;
     NSError * __autoreleasing validationError = nil;
@@ -308,17 +308,17 @@
     request.responseObject = responseObject;
     if ([request.responseObject isKindOfClass:[NSData class]]) {
         request.responseData = responseObject;
-        request.responseString = [[NSString alloc] initWithData:responseObject encoding:[FWNetworkUtils stringEncodingWithRequest:request]];
+        request.responseString = [[NSString alloc] initWithData:responseObject encoding:[__FWNetworkUtils stringEncodingWithRequest:request]];
 
         switch (request.responseSerializerType) {
-            case FWResponseSerializerTypeHTTP:
+            case __FWResponseSerializerTypeHTTP:
                 // Default serializer. Do nothing.
                 break;
-            case FWResponseSerializerTypeJSON:
+            case __FWResponseSerializerTypeJSON:
                 request.responseObject = [self.jsonResponseSerializer responseObjectForResponse:response data:request.responseData error:&serializationError];
                 request.responseJSONObject = request.responseObject;
                 break;
-            case FWResponseSerializerTypeXMLParser:
+            case __FWResponseSerializerTypeXMLParser:
                 request.responseObject = [self.xmlParserResponseSerialzier responseObjectForResponse:response data:request.responseData error:&serializationError];
                 break;
         }
@@ -357,7 +357,7 @@
         NSArray *filters = [_config urlFilters];
         if (filters.count > 0) {
             NSError * __autoreleasing responseError = nil;
-            for (id<FWUrlFilterProtocol> filter in filters) {
+            for (id<__FWUrlFilterProtocol> filter in filters) {
                 if ([filter respondsToSelector:@selector(filterResponse:withError:)]) {
                     succeed = [filter filterResponse:request withError:&responseError];
                     requestError = responseError;
@@ -382,7 +382,7 @@
     });
 }
 
-- (void)requestDidSucceedWithRequest:(FWBaseRequest *)request {
+- (void)requestDidSucceedWithRequest:(__FWBaseRequest *)request {
     @autoreleasepool {
         [request requestCompletePreprocessor];
     }
@@ -400,9 +400,9 @@
     });
 }
 
-- (void)requestDidFailWithRequest:(FWBaseRequest *)request error:(NSError *)error {
+- (void)requestDidFailWithRequest:(__FWBaseRequest *)request error:(NSError *)error {
     request.error = error;
-    FWRequestLog(@"Request %@ failed, status code = %ld, error = %@",
+    __FWRequestLog(@"Request %@ failed, status code = %ld, error = %@",
            NSStringFromClass([request class]), (long)request.responseStatusCode, error.localizedDescription);
 
     // Save incomplete download data.
@@ -420,7 +420,7 @@
         NSURL *url = request.responseObject;
         if (url.isFileURL && [[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
             request.responseData = [NSData dataWithContentsOfURL:url];
-            request.responseString = [[NSString alloc] initWithData:request.responseData encoding:[FWNetworkUtils stringEncodingWithRequest:request]];
+            request.responseString = [[NSString alloc] initWithData:request.responseData encoding:[__FWNetworkUtils stringEncodingWithRequest:request]];
 
             [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
         }
@@ -444,22 +444,22 @@
     });
 }
 
-- (void)addRequestToRecord:(FWBaseRequest *)request {
+- (void)addRequestToRecord:(__FWBaseRequest *)request {
     Lock();
     _requestsRecord[@(request.requestIdentifier)] = request;
     Unlock();
 }
 
-- (void)removeRequestFromRecord:(FWBaseRequest *)request {
+- (void)removeRequestFromRecord:(__FWBaseRequest *)request {
     Lock();
     [_requestsRecord removeObjectForKey:@(request.requestIdentifier)];
-    FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
+    __FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
     Unlock();
 }
 
 #pragma mark -
 
-- (NSURLSessionDataTask *)dataTaskWithRequest:(FWBaseRequest *)request
+- (NSURLSessionDataTask *)dataTaskWithRequest:(__FWBaseRequest *)request
                                         error:(NSError * _Nullable __autoreleasing *)error {
     NSURLSessionDataTask *dataTask = [_manager dataTaskWithRequestBuilder:^NSURLRequest *{
         
@@ -481,7 +481,7 @@
         
         // Filter URLRequest with filters if needed
         NSArray *filters = [[self config] urlFilters];
-        for (id<FWUrlFilterProtocol> filter in filters) {
+        for (id<__FWUrlFilterProtocol> filter in filters) {
             if ([filter respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
                 [filter filterUrlRequest:urlRequest withRequest:request];
             }
@@ -514,7 +514,7 @@
     return dataTask;
 }
 
-- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(FWBaseRequest *)request
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(__FWBaseRequest *)request
                                              progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
                                                 error:(NSError * _Nullable __autoreleasing *)error {
     // add parameters to URL;
@@ -526,7 +526,7 @@
     
     // Filter URLRequest with filters if needed
     NSArray *filters = [_config urlFilters];
-    for (id<FWUrlFilterProtocol> filter in filters) {
+    for (id<__FWUrlFilterProtocol> filter in filters) {
         if ([filter respondsToSelector:@selector(filterUrlRequest:withRequest:)]) {
             [filter filterUrlRequest:urlRequest withRequest:request];
         }
@@ -561,7 +561,7 @@
     if (localUrl != nil) {
         BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:localUrl.path];
         NSData *data = [NSData dataWithContentsOfURL:localUrl];
-        BOOL resumeDataIsValid = [FWNetworkUtils validateResumeData:data];
+        BOOL resumeDataIsValid = [__FWNetworkUtils validateResumeData:data];
 
         BOOL canBeResumed = resumeDataFileExists && resumeDataIsValid;
         // Try to resume with resumeData.
@@ -575,7 +575,7 @@
                 }];
                 resumeSucceeded = YES;
             } @catch (NSException *exception) {
-                FWRequestLog(@"Resume download failed, reason = %@", exception.reason);
+                __FWRequestLog(@"Resume download failed, reason = %@", exception.reason);
                 resumeSucceeded = NO;
             }
         }
@@ -604,7 +604,7 @@
     if ([fileManager createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:&error] && error == nil) {
         return cacheFolder;
     }
-    FWRequestLog(@"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
+    __FWRequestLog(@"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
     return nil;
 }
 
@@ -613,14 +613,14 @@
         return nil;
     }
     NSString *tempPath = nil;
-    NSString *md5URLString = [FWNetworkUtils md5StringFromString:downloadPath];
+    NSString *md5URLString = [__FWNetworkUtils md5StringFromString:downloadPath];
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLString];
     return tempPath == nil ? nil : [NSURL fileURLWithPath:tempPath];
 }
 
 #pragma mark - Testing
 
-- (FWNetworkConfig *)config {
+- (__FWNetworkConfig *)config {
     return _config;
 }
 

@@ -31,11 +31,11 @@
 #define NSFoundationVersionNumber_With_QoS_Available NSFoundationVersionNumber_iOS_8_0
 #endif
 
-NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.validation";
+NSString *const __FWRequestValidationErrorDomain = @"site.wuyong.error.request.validation";
 
-NSString *const FWRequestCacheErrorDomain = @"site.wuyong.error.request.cache";
+NSString *const __FWRequestCacheErrorDomain = @"site.wuyong.error.request.cache";
 
-static dispatch_queue_t fwrequest_cache_writing_queue() {
+static dispatch_queue_t __fw_request_cache_writing_queue() {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -49,7 +49,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     return queue;
 }
 
-@interface FWCacheMetadata : NSObject<NSSecureCoding>
+@interface __FWCacheMetadata : NSObject<NSSecureCoding>
 
 @property (nonatomic, assign) long long version;
 @property (nonatomic, strong) NSString *sensitiveDataString;
@@ -59,7 +59,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 @end
 
-@implementation FWCacheMetadata
+@implementation __FWCacheMetadata
 
 + (BOOL)supportsSecureCoding {
     return YES;
@@ -90,7 +90,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 @end
 
-@implementation FWRequestAccessory
+@implementation __FWRequestAccessory
 
 - (void)requestWillStart:(id)request {
     if (self.willStartBlock != nil) {
@@ -115,19 +115,19 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 @end
 
-@interface FWBaseRequest ()
+@interface __FWBaseRequest ()
 
 @property (nonatomic, strong) NSData *cacheData;
 @property (nonatomic, strong) NSString *cacheString;
 @property (nonatomic, strong) id cacheJSON;
 @property (nonatomic, strong) NSXMLParser *cacheXML;
 
-@property (nonatomic, strong) FWCacheMetadata *cacheMetadata;
+@property (nonatomic, strong) __FWCacheMetadata *cacheMetadata;
 @property (nonatomic, assign) BOOL dataFromCache;
 
 @end
 
-@implementation FWBaseRequest
+@implementation __FWBaseRequest
 
 #pragma mark - Request and Response Information
 
@@ -188,17 +188,17 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 - (NSString *)requestMethodString {
     switch ([self requestMethod]) {
-        case FWRequestMethodPOST:
+        case __FWRequestMethodPOST:
             return @"POST";
-        case FWRequestMethodHEAD:
+        case __FWRequestMethodHEAD:
             return @"HEAD";
-        case FWRequestMethodPUT:
+        case __FWRequestMethodPUT:
             return @"PUT";
-        case FWRequestMethodDELETE:
+        case __FWRequestMethodDELETE:
             return @"DELETE";
-        case FWRequestMethodPATCH:
+        case __FWRequestMethodPATCH:
             return @"PATCH";
-        case FWRequestMethodGET:
+        case __FWRequestMethodGET:
         default:
             return @"GET";
     }
@@ -206,8 +206,8 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 #pragma mark - Request Configuration
 
-- (void)setCompletionBlockWithSuccess:(FWRequestCompletionBlock)success
-                              failure:(FWRequestCompletionBlock)failure {
+- (void)setCompletionBlockWithSuccess:(__FWRequestCompletionBlock)success
+                              failure:(__FWRequestCompletionBlock)failure {
     self.successCompletionBlock = success;
     self.failureCompletionBlock = failure;
 }
@@ -219,7 +219,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     self.uploadProgressBlock = nil;
 }
 
-- (void)addAccessory:(id<FWRequestAccessory>)accessory {
+- (void)addAccessory:(id<__FWRequestAccessory>)accessory {
     if (!self.requestAccessories) {
         self.requestAccessories = [NSMutableArray array];
     }
@@ -250,7 +250,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self requestCompletePreprocessor];
         [self requestCompleteFilter];
-        FWBaseRequest *strongSelf = self;
+        __FWBaseRequest *strongSelf = self;
         [strongSelf.delegate requestFinished:strongSelf];
         if (strongSelf.successCompletionBlock) {
             strongSelf.successCompletionBlock(strongSelf);
@@ -262,32 +262,32 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 - (void)startWithoutCache {
     [self clearCacheVariables];
     [self toggleAccessoriesWillStartCallBack];
-    [[FWNetworkManager sharedManager] addRequest:self];
+    [[__FWNetworkManager sharedManager] addRequest:self];
 }
 
 - (void)stop {
     [self toggleAccessoriesWillStopCallBack];
     self.delegate = nil;
-    [[FWNetworkManager sharedManager] cancelRequest:self];
+    [[__FWNetworkManager sharedManager] cancelRequest:self];
     [self toggleAccessoriesDidStopCallBack];
 }
 
-- (void)startWithCompletionBlockWithSuccess:(FWRequestCompletionBlock)success
-                                    failure:(FWRequestCompletionBlock)failure {
+- (void)startWithCompletionBlockWithSuccess:(__FWRequestCompletionBlock)success
+                                    failure:(__FWRequestCompletionBlock)failure {
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];
 }
 
-- (void)startWithCompletion:(FWRequestCompletionBlock)completion {
+- (void)startWithCompletion:(__FWRequestCompletionBlock)completion {
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
 }
 
-- (void)startWithWillStart:(nullable FWRequestCompletionBlock)willStart
-                  willStop:(nullable FWRequestCompletionBlock)willStop
-                   success:(nullable FWRequestCompletionBlock)success
-                   failure:(nullable FWRequestCompletionBlock)failure
-                   didStop:(nullable FWRequestCompletionBlock)didStop {
-    FWRequestAccessory *accessory = [FWRequestAccessory new];
+- (void)startWithWillStart:(nullable __FWRequestCompletionBlock)willStart
+                  willStop:(nullable __FWRequestCompletionBlock)willStop
+                   success:(nullable __FWRequestCompletionBlock)success
+                   failure:(nullable __FWRequestCompletionBlock)failure
+                   didStop:(nullable __FWRequestCompletionBlock)didStop {
+    __FWRequestAccessory *accessory = [__FWRequestAccessory new];
     accessory.willStartBlock = willStart;
     accessory.willStopBlock = willStop;
     accessory.didStopBlock = didStop;
@@ -297,7 +297,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStart:)]) {
             [accessory requestWillStart:self];
         }
@@ -305,7 +305,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 }
 
 - (void)toggleAccessoriesWillStopCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStop:)]) {
             [accessory requestWillStop:self];
         }
@@ -313,7 +313,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 }
 
 - (void)toggleAccessoriesDidStopCallBack {
-    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+    for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestDidStop:)]) {
             [accessory requestDidStop:self];
         }
@@ -323,15 +323,15 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 #pragma mark - Subclass Override
 
 - (BOOL)responseMockValidator {
-    if (FWNetworkConfig.sharedConfig.debugMockValidator) {
-        return FWNetworkConfig.sharedConfig.debugMockValidator(self);
+    if (__FWNetworkConfig.sharedConfig.debugMockValidator) {
+        return __FWNetworkConfig.sharedConfig.debugMockValidator(self);
     }
     return [self responseStatusCode] == 404;
 }
 
 - (BOOL)responseMockProcessor {
-    if (FWNetworkConfig.sharedConfig.debugMockProcessor) {
-        return FWNetworkConfig.sharedConfig.debugMockProcessor(self);
+    if (__FWNetworkConfig.sharedConfig.debugMockProcessor) {
+        return __FWNetworkConfig.sharedConfig.debugMockProcessor(self);
     }
     return NO;
 }
@@ -347,7 +347,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     NSData *responseData = _responseData;
     if (self.writeCacheAsynchronously) {
         __weak __typeof__(self) self_weak_ = self;
-        dispatch_async(fwrequest_cache_writing_queue(), ^{
+        dispatch_async(__fw_request_cache_writing_queue(), ^{
             __typeof__(self) self = self_weak_;
             [self saveResponseDataToCacheFile:responseData];
         });
@@ -393,16 +393,16 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     return argument;
 }
 
-- (FWRequestMethod)requestMethod {
-    return FWRequestMethodGET;
+- (__FWRequestMethod)requestMethod {
+    return __FWRequestMethodGET;
 }
 
-- (FWRequestSerializerType)requestSerializerType {
-    return FWRequestSerializerTypeHTTP;
+- (__FWRequestSerializerType)requestSerializerType {
+    return __FWRequestSerializerTypeHTTP;
 }
 
-- (FWResponseSerializerType)responseSerializerType {
-    return FWResponseSerializerTypeJSON;
+- (__FWResponseSerializerType)responseSerializerType {
+    return __FWResponseSerializerTypeJSON;
 }
 
 - (NSArray *)requestAuthorizationHeaderFieldArray {
@@ -524,7 +524,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     // Make sure cache time in valid.
     if ([self cacheTimeInSeconds] < 0) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorInvalidCacheTime userInfo:@{ NSLocalizedDescriptionKey:@"Invalid cache time"}];
+            *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorInvalidCacheTime userInfo:@{ NSLocalizedDescriptionKey:@"Invalid cache time"}];
         }
         return NO;
     }
@@ -532,7 +532,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     // Try load metadata.
     if (![self loadCacheMetadata]) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorInvalidMetadata userInfo:@{ NSLocalizedDescriptionKey:@"Invalid metadata. Cache may not exist"}];
+            *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorInvalidMetadata userInfo:@{ NSLocalizedDescriptionKey:@"Invalid metadata. Cache may not exist"}];
         }
         return NO;
     }
@@ -545,7 +545,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     // Try load cache.
     if (![self loadCacheData]) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorInvalidCacheData userInfo:@{ NSLocalizedDescriptionKey:@"Invalid cache data"}];
+            *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorInvalidCacheData userInfo:@{ NSLocalizedDescriptionKey:@"Invalid cache data"}];
         }
         return NO;
     }
@@ -559,7 +559,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     NSTimeInterval duration = -[creationDate timeIntervalSinceNow];
     if (duration < 0 || duration > [self cacheTimeInSeconds]) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorExpired userInfo:@{ NSLocalizedDescriptionKey:@"Cache expired"}];
+            *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorExpired userInfo:@{ NSLocalizedDescriptionKey:@"Cache expired"}];
         }
         return NO;
     }
@@ -567,7 +567,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     long long cacheVersionFileContent = self.cacheMetadata.version;
     if (cacheVersionFileContent != [self cacheVersion]) {
         if (error) {
-            *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorVersionMismatch userInfo:@{ NSLocalizedDescriptionKey:@"Cache version mismatch"}];
+            *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorVersionMismatch userInfo:@{ NSLocalizedDescriptionKey:@"Cache version mismatch"}];
         }
         return NO;
     }
@@ -578,18 +578,18 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
         // If one of the strings is nil, short-circuit evaluation will trigger
         if (sensitiveDataString.length != currentSensitiveDataString.length || ![sensitiveDataString isEqualToString:currentSensitiveDataString]) {
             if (error) {
-                *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorSensitiveDataMismatch userInfo:@{ NSLocalizedDescriptionKey:@"Cache sensitive data mismatch"}];
+                *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorSensitiveDataMismatch userInfo:@{ NSLocalizedDescriptionKey:@"Cache sensitive data mismatch"}];
             }
             return NO;
         }
     }
     // App version
     NSString *appVersionString = self.cacheMetadata.appVersionString;
-    NSString *currentAppVersionString = [FWNetworkUtils appVersionString];
+    NSString *currentAppVersionString = [__FWNetworkUtils appVersionString];
     if (appVersionString || currentAppVersionString) {
         if (appVersionString.length != currentAppVersionString.length || ![appVersionString isEqualToString:currentAppVersionString]) {
             if (error) {
-                *error = [NSError errorWithDomain:FWRequestCacheErrorDomain code:FWRequestCacheErrorAppVersionMismatch userInfo:@{ NSLocalizedDescriptionKey:@"App version mismatch"}];
+                *error = [NSError errorWithDomain:__FWRequestCacheErrorDomain code:__FWRequestCacheErrorAppVersionMismatch userInfo:@{ NSLocalizedDescriptionKey:@"App version mismatch"}];
             }
             return NO;
         }
@@ -605,7 +605,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
             _cacheMetadata = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
             return YES;
         } @catch (NSException *exception) {
-            FWRequestLog(@"Load cache metadata failed, reason = %@", exception.reason);
+            __FWRequestLog(@"Load cache metadata failed, reason = %@", exception.reason);
             return NO;
         }
     }
@@ -622,10 +622,10 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
         _cacheData = data;
         _cacheString = [[NSString alloc] initWithData:_cacheData encoding:self.cacheMetadata.stringEncoding];
         switch (self.responseSerializerType) {
-            case FWResponseSerializerTypeHTTP:
+            case __FWResponseSerializerTypeHTTP:
                 // Do nothing.
                 return YES;
-            case FWResponseSerializerTypeJSON:
+            case __FWResponseSerializerTypeJSON:
                 _cacheJSON = [NSJSONSerialization JSONObjectWithData:_cacheData options:(NSJSONReadingOptions)0 error:&error];
                 
                 // 兼容\uD800-\uDFFF引起JSON解码报错3840问题
@@ -639,7 +639,7 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
                 }
                 
                 return error == nil;
-            case FWResponseSerializerTypeXMLParser:
+            case __FWResponseSerializerTypeXMLParser:
                 _cacheXML = [[NSXMLParser alloc] initWithData:_cacheData];
                 return YES;
         }
@@ -654,15 +654,15 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
                 // New data will always overwrite old data.
                 [data writeToFile:[self cacheFilePath] atomically:YES];
 
-                FWCacheMetadata *metadata = [[FWCacheMetadata alloc] init];
+                __FWCacheMetadata *metadata = [[__FWCacheMetadata alloc] init];
                 metadata.version = [self cacheVersion];
                 metadata.sensitiveDataString = ((NSObject *)[self cacheSensitiveData]).description;
-                metadata.stringEncoding = [FWNetworkUtils stringEncodingWithRequest:self];
+                metadata.stringEncoding = [__FWNetworkUtils stringEncodingWithRequest:self];
                 metadata.creationDate = [NSDate date];
-                metadata.appVersionString = [FWNetworkUtils appVersionString];
+                metadata.appVersionString = [__FWNetworkUtils appVersionString];
                 [NSKeyedArchiver archiveRootObject:metadata toFile:[self cacheMetadataFilePath]];
             } @catch (NSException *exception) {
-                FWRequestLog(@"Save cache failed, reason = %@", exception.reason);
+                __FWRequestLog(@"Save cache failed, reason = %@", exception.reason);
             }
         }
     }
@@ -698,9 +698,9 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES
                                                attributes:nil error:&error];
     if (error) {
-        FWRequestLog(@"create cache directory failed, error = %@", error);
+        __FWRequestLog(@"create cache directory failed, error = %@", error);
     } else {
-        [FWNetworkUtils addDoNotBackupAttribute:path];
+        [__FWNetworkUtils addDoNotBackupAttribute:path];
     }
 }
 
@@ -709,9 +709,9 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
     NSString *path = [pathOfLibrary stringByAppendingPathComponent:@"LazyRequestCache"];
 
     // Filter cache base path
-    NSArray<id<FWCacheDirPathFilterProtocol>> *filters = [[FWNetworkConfig sharedConfig] cacheDirPathFilters];
+    NSArray<id<__FWCacheDirPathFilterProtocol>> *filters = [[__FWNetworkConfig sharedConfig] cacheDirPathFilters];
     if (filters.count > 0) {
-        for (id<FWCacheDirPathFilterProtocol> filter in filters) {
+        for (id<__FWCacheDirPathFilterProtocol> filter in filters) {
             if ([filter respondsToSelector:@selector(filterCacheDirPath:withRequest:)]) {
                 path = [filter filterCacheDirPath:path withRequest:self];
             }
@@ -724,11 +724,11 @@ static dispatch_queue_t fwrequest_cache_writing_queue() {
 
 - (NSString *)cacheFileName {
     NSString *requestUrl = [self requestUrl];
-    NSString *baseUrl = [FWNetworkConfig sharedConfig].baseUrl;
+    NSString *baseUrl = [__FWNetworkConfig sharedConfig].baseUrl;
     id argument = [self cacheFileNameFilter:[self requestArgument]];
     NSString *requestInfo = [NSString stringWithFormat:@"Method:%ld Host:%@ Url:%@ Argument:%@",
                              (long)[self requestMethod], baseUrl, requestUrl, argument];
-    NSString *cacheFileName = [FWNetworkUtils md5StringFromString:requestInfo];
+    NSString *cacheFileName = [__FWNetworkUtils md5StringFromString:requestInfo];
     return cacheFileName;
 }
 
