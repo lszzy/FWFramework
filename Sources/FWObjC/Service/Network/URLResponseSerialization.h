@@ -1,4 +1,4 @@
-// FWURLResponseSerialization.h
+// URLResponseSerialization.h
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,15 +28,15 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Recursively removes `NSNull` values from a JSON object.
 */
-FOUNDATION_EXPORT id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) NS_SWIFT_NAME(JSONObjectByRemovingKeysWithNullValues(_:readingOptions:));
+FOUNDATION_EXPORT id __FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) NS_SWIFT_NAME(JSONObjectByRemovingKeysWithNullValues(_:readingOptions:));
 
 /**
- The `FWURLResponseSerialization` protocol is adopted by an object that decodes data into a more useful object representation, according to details in the server response. Response serializers may additionally perform validation on the incoming response and data.
+ The `__FWURLResponseSerialization` protocol is adopted by an object that decodes data into a more useful object representation, according to details in the server response. Response serializers may additionally perform validation on the incoming response and data.
 
  For example, a JSON response serializer may check for an acceptable status code (`2XX` range) and content type (`application/json`), decoding a valid JSON response into an object.
  */
 NS_SWIFT_NAME(URLResponseSerialization)
-@protocol FWURLResponseSerialization <NSObject, NSSecureCoding, NSCopying>
+@protocol __FWURLResponseSerialization <NSObject, NSSecureCoding, NSCopying>
 
 /**
  The response object decoded from the data associated with a specified response.
@@ -56,12 +56,12 @@ NS_SWIFT_NAME(URLResponseSerialization)
 #pragma mark -
 
 /**
- `FWHTTPResponseSerializer` conforms to the `FWURLRequestSerialization` & `FWURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
+ `__FWHTTPResponseSerializer` conforms to the `__FWURLRequestSerialization` & `__FWURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
 
- Any request or response serializer dealing with HTTP is encouraged to subclass `FWHTTPResponseSerializer` in order to ensure consistent default behavior.
+ Any request or response serializer dealing with HTTP is encouraged to subclass `__FWHTTPResponseSerializer` in order to ensure consistent default behavior.
  */
 NS_SWIFT_NAME(HTTPResponseSerializer)
-@interface FWHTTPResponseSerializer : NSObject <FWURLResponseSerialization>
+@interface __FWHTTPResponseSerializer : NSObject <__FWURLResponseSerialization>
 
 - (instancetype)init;
 
@@ -117,9 +117,9 @@ NS_SWIFT_NAME(HTTPResponseSerializer)
 
 
 /**
- `FWJSONResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes JSON responses.
+ `__FWJSONResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes JSON responses.
 
- By default, `FWJSONResponseSerializer` accepts the following MIME types, which includes the official standard, `application/json`, as well as other commonly-used types:
+ By default, `__FWJSONResponseSerializer` accepts the following MIME types, which includes the official standard, `application/json`, as well as other commonly-used types:
 
  - `application/json`
  - `text/json`
@@ -128,7 +128,7 @@ NS_SWIFT_NAME(HTTPResponseSerializer)
  In RFC 7159 - Section 8.1, it states that JSON text is required to be encoded in UTF-8, UTF-16, or UTF-32, and the default encoding is UTF-8. NSJSONSerialization provides support for all the encodings listed in the specification, and recommends UTF-8 for efficiency. Using an unsupported encoding will result in serialization error. See the `NSJSONSerialization` documentation for more details.
  */
 NS_SWIFT_NAME(JSONResponseSerializer)
-@interface FWJSONResponseSerializer : FWHTTPResponseSerializer
+@interface __FWJSONResponseSerializer : __FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -154,15 +154,15 @@ NS_SWIFT_NAME(JSONResponseSerializer)
 #pragma mark -
 
 /**
- `FWXMLParserResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLParser` objects.
+ `__FWXMLParserResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLParser` objects.
 
- By default, `FWXMLParserResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
+ By default, `__FWXMLParserResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
 
  - `application/xml`
  - `text/xml`
  */
 NS_SWIFT_NAME(XMLParserResponseSerializer)
-@interface FWXMLParserResponseSerializer : FWHTTPResponseSerializer
+@interface __FWXMLParserResponseSerializer : __FWHTTPResponseSerializer
 
 @end
 
@@ -171,15 +171,15 @@ NS_SWIFT_NAME(XMLParserResponseSerializer)
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 
 /**
- `FWXMLDocumentResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
+ `__FWXMLDocumentResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
 
- By default, `FWXMLDocumentResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
+ By default, `__FWXMLDocumentResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
 
  - `application/xml`
  - `text/xml`
  */
 NS_SWIFT_NAME(XMLDocumentResponseSerializer)
-@interface FWXMLDocumentResponseSerializer : FWHTTPResponseSerializer
+@interface __FWXMLDocumentResponseSerializer : __FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -202,14 +202,14 @@ NS_SWIFT_NAME(XMLDocumentResponseSerializer)
 #pragma mark -
 
 /**
- `FWPropertyListResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
+ `__FWPropertyListResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
 
- By default, `FWPropertyListResponseSerializer` accepts the following MIME types:
+ By default, `__FWPropertyListResponseSerializer` accepts the following MIME types:
 
  - `application/x-plist`
  */
 NS_SWIFT_NAME(PropertyListResponseSerializer)
-@interface FWPropertyListResponseSerializer : FWHTTPResponseSerializer
+@interface __FWPropertyListResponseSerializer : __FWHTTPResponseSerializer
 
 - (instancetype)init;
 
@@ -237,9 +237,9 @@ NS_SWIFT_NAME(PropertyListResponseSerializer)
 #pragma mark -
 
 /**
- `FWImageResponseSerializer` is a subclass of `FWHTTPResponseSerializer` that validates and decodes image responses.
+ `__FWImageResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes image responses.
 
- By default, `FWImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
+ By default, `__FWImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
 
  - `application/octet-stream`
  - `image/tiff`
@@ -259,7 +259,7 @@ NS_SWIFT_NAME(PropertyListResponseSerializer)
  - `image/svg+xml`
  */
 NS_SWIFT_NAME(ImageResponseSerializer)
-@interface FWImageResponseSerializer : FWHTTPResponseSerializer
+@interface __FWImageResponseSerializer : __FWHTTPResponseSerializer
 
 /**
  The scale factor used when interpreting the image data to construct `responseImage`. Specifying a scale factor of 1.0 results in an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor changes the size of the image as reported by the size property. This is set to the value of scale of the main screen by default, which automatically scales images for retina displays, for instance.
@@ -291,22 +291,22 @@ NS_SWIFT_NAME(ImageResponseSerializer)
 #pragma mark -
 
 /**
- `FWCompoundSerializer` is a subclass of `FWHTTPResponseSerializer` that delegates the response serialization to the first `FWHTTPResponseSerializer` object that returns an object for `responseObjectForResponse:data:error:`, falling back on the default behavior of `FWHTTPResponseSerializer`. This is useful for supporting multiple potential types and structures of server responses with a single serializer.
+ `FWCompoundSerializer` is a subclass of `__FWHTTPResponseSerializer` that delegates the response serialization to the first `__FWHTTPResponseSerializer` object that returns an object for `responseObjectForResponse:data:error:`, falling back on the default behavior of `__FWHTTPResponseSerializer`. This is useful for supporting multiple potential types and structures of server responses with a single serializer.
  */
 NS_SWIFT_NAME(CompoundResponseSerializer)
-@interface FWCompoundResponseSerializer : FWHTTPResponseSerializer
+@interface __FWCompoundResponseSerializer : __FWHTTPResponseSerializer
 
 /**
  The component response serializers.
  */
-@property (readonly, nonatomic, copy) NSArray <id<FWURLResponseSerialization>> *responseSerializers;
+@property (readonly, nonatomic, copy) NSArray <id<__FWURLResponseSerialization>> *responseSerializers;
 
 /**
  Creates and returns a compound serializer comprised of the specified response serializers.
 
- @warning Each response serializer specified must be a subclass of `FWHTTPResponseSerializer`, and response to `-validateResponse:data:error:`.
+ @warning Each response serializer specified must be a subclass of `__FWHTTPResponseSerializer`, and response to `-validateResponse:data:error:`.
  */
-+ (instancetype)compoundSerializerWithResponseSerializers:(NSArray <id<FWURLResponseSerialization>> *)responseSerializers;
++ (instancetype)compoundSerializerWithResponseSerializers:(NSArray <id<__FWURLResponseSerialization>> *)responseSerializers;
 
 @end
 
@@ -319,33 +319,33 @@ NS_SWIFT_NAME(CompoundResponseSerializer)
 
  The following error domain is predefined.
 
- - `NSString * const FWURLResponseSerializationErrorDomain`
+ - `NSString * const __FWURLResponseSerializationErrorDomain`
 
  ### Constants
 
- `FWURLResponseSerializationErrorDomain`
- FWURLResponseSerializer errors. Error codes for `FWURLResponseSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ `__FWURLResponseSerializationErrorDomain`
+ FWURLResponseSerializer errors. Error codes for `__FWURLResponseSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const FWURLResponseSerializationErrorDomain NS_SWIFT_NAME(URLResponseSerializationErrorDomain);
+FOUNDATION_EXPORT NSString * const __FWURLResponseSerializationErrorDomain NS_SWIFT_NAME(URLResponseSerializationErrorDomain);
 
 /**
  ## User info dictionary keys
 
  These keys may exist in the user info dictionary, in addition to those defined for NSError.
 
- - `NSString * const FWNetworkingOperationFailingURLResponseErrorKey`
- - `NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey`
+ - `NSString * const __FWNetworkingOperationFailingURLResponseErrorKey`
+ - `NSString * const __FWNetworkingOperationFailingURLResponseDataErrorKey`
 
  ### Constants
 
- `FWNetworkingOperationFailingURLResponseErrorKey`
- The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `FWURLResponseSerializationErrorDomain`.
+ `__FWNetworkingOperationFailingURLResponseErrorKey`
+ The corresponding value is an `NSURLResponse` containing the response of the operation associated with an error. This key is only present in the `__FWURLResponseSerializationErrorDomain`.
 
- `FWNetworkingOperationFailingURLResponseDataErrorKey`
- The corresponding value is an `NSData` containing the original data of the operation associated with an error. This key is only present in the `FWURLResponseSerializationErrorDomain`.
+ `__FWNetworkingOperationFailingURLResponseDataErrorKey`
+ The corresponding value is an `NSData` containing the original data of the operation associated with an error. This key is only present in the `__FWURLResponseSerializationErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const FWNetworkingOperationFailingURLResponseErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLResponseErrorKey);
+FOUNDATION_EXPORT NSString * const __FWNetworkingOperationFailingURLResponseErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLResponseErrorKey);
 
-FOUNDATION_EXPORT NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLResponseDataErrorKey);
+FOUNDATION_EXPORT NSString * const __FWNetworkingOperationFailingURLResponseDataErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLResponseDataErrorKey);
 
 NS_ASSUME_NONNULL_END

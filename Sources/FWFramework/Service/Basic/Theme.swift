@@ -419,7 +419,7 @@ import FWObjC
             notifyObject.fw_notifyThemeChanged(style)
             if selfObject == UIScreen.main {
                 NotificationCenter.default.post(
-                    name: .FWThemeChanged,
+                    name: .ThemeChanged,
                     object: selfObject,
                     userInfo: [
                         NSKeyValueChangeKey.oldKey.rawValue: oldStyle.rawValue,

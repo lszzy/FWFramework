@@ -13,7 +13,7 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
     static let testImage = FW.iconImage("zmdi-var-flower", 24)
     
     func didInitialize() {
-        fw.observeNotification(.FWThemeChanged) { _ in
+        fw.observeNotification(.ThemeChanged) { _ in
             FW.debug("主题改变通知：\(ThemeManager.shared.style.rawValue)")
         }
         

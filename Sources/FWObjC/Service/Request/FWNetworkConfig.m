@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 
 #import "FWNetworkConfig.h"
-#import "FWSecurityPolicy.h"
+#import "SecurityPolicy.h"
 
 @implementation FWNetworkConfig {
     NSMutableArray<id<FWUrlFilterProtocol>> *_urlFilters;
@@ -45,7 +45,7 @@
         _cdnUrl = @"";
         _urlFilters = [NSMutableArray array];
         _cacheDirPathFilters = [NSMutableArray array];
-        _securityPolicy = [FWSecurityPolicy defaultPolicy];
+        _securityPolicy = [__FWSecurityPolicy defaultPolicy];
         _removeNullValues = YES;
         _debugLogEnabled = NO;
         _debugMockEnabled = NO;

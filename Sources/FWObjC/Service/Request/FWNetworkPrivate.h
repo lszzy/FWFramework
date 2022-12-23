@@ -34,10 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2) NS_REFINED_FOR_SWIFT;
 
-@class FWHTTPSessionManager;
-@class FWHTTPResponseSerializer;
-@class FWJSONResponseSerializer;
-@class FWXMLParserResponseSerializer;
+@class __FWHTTPSessionManager;
+@class __FWHTTPResponseSerializer;
+@class __FWJSONResponseSerializer;
+@class __FWXMLParserResponseSerializer;
 
 NS_SWIFT_NAME(NetworkUtils)
 @interface FWNetworkUtils : NSObject
@@ -104,15 +104,15 @@ NS_SWIFT_NAME(NetworkUtils)
 
 @interface FWNetworkAgent (Private)
 
-- (FWHTTPSessionManager *)manager;
+- (__FWHTTPSessionManager *)manager;
 - (void)resetURLSessionManager;
 - (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration;
 
 - (NSString *)incompleteDownloadTempCacheFolder;
 
-- (FWHTTPResponseSerializer *)httpResponseSerializer;
-- (FWJSONResponseSerializer *)jsonResponseSerializer;
-- (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier;
+- (__FWHTTPResponseSerializer *)httpResponseSerializer;
+- (__FWJSONResponseSerializer *)jsonResponseSerializer;
+- (__FWXMLParserResponseSerializer *)xmlParserResponseSerialzier;
 
 @end
 

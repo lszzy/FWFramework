@@ -1,4 +1,4 @@
-// FWURLRequestSerialization.h
+// URLRequestSerialization.h
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return The percent-escaped string.
  */
-FOUNDATION_EXPORT NSString * FWPercentEscapedStringFromString(NSString *string) NS_SWIFT_NAME(PercentEscapedStringFromString(_:));
+FOUNDATION_EXPORT NSString * __FWPercentEscapedStringFromString(NSString *string) NS_SWIFT_NAME(PercentEscapedStringFromString(_:));
 
 /**
  A helper method to generate encoded url query parameters for appending to the end of a URL.
@@ -48,15 +48,15 @@ FOUNDATION_EXPORT NSString * FWPercentEscapedStringFromString(NSString *string) 
 
  @return A url encoded query string
  */
-FOUNDATION_EXPORT NSString * FWQueryStringFromParameters(NSDictionary *parameters) NS_SWIFT_NAME(QueryStringFromParameters(_:));
+FOUNDATION_EXPORT NSString * __FWQueryStringFromParameters(NSDictionary *parameters) NS_SWIFT_NAME(QueryStringFromParameters(_:));
 
 /**
- The `FWURLRequestSerialization` protocol is adopted by an object that encodes parameters for a specified HTTP requests. Request serializers may encode parameters as query strings, HTTP bodies, setting the appropriate HTTP header fields as necessary.
+ The `__FWURLRequestSerialization` protocol is adopted by an object that encodes parameters for a specified HTTP requests. Request serializers may encode parameters as query strings, HTTP bodies, setting the appropriate HTTP header fields as necessary.
 
  For example, a JSON request serializer may set the HTTP body of the request to a JSON representation, and set the `Content-Type` HTTP header field value to `application/json`.
  */
 NS_SWIFT_NAME(URLRequestSerialization)
-@protocol FWURLRequestSerialization <NSObject, NSSecureCoding, NSCopying>
+@protocol __FWURLRequestSerialization <NSObject, NSSecureCoding, NSCopying>
 
 /**
  Returns a request with the specified parameters encoded into a copy of the original request.
@@ -78,19 +78,19 @@ NS_SWIFT_NAME(URLRequestSerialization)
 /**
 
  */
-typedef NS_ENUM(NSUInteger, FWHTTPRequestQueryStringSerializationStyle) {
-    FWHTTPRequestQueryStringDefaultStyle = 0,
+typedef NS_ENUM(NSUInteger, __FWHTTPRequestQueryStringSerializationStyle) {
+    __FWHTTPRequestQueryStringDefaultStyle = 0,
 } NS_SWIFT_NAME(HTTPRequestQueryStringSerializationStyle);
 
-@protocol FWMultipartFormData;
+@protocol __FWMultipartFormData;
 
 /**
- `FWHTTPRequestSerializer` conforms to the `FWURLRequestSerialization` & `FWURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
+ `__FWHTTPRequestSerializer` conforms to the `__FWURLRequestSerialization` & `__FWURLResponseSerialization` protocols, offering a concrete base implementation of query string / URL form-encoded parameter serialization and default request headers, as well as response status code and content type validation.
 
- Any request or response serializer dealing with HTTP is encouraged to subclass `FWHTTPRequestSerializer` in order to ensure consistent default behavior.
+ Any request or response serializer dealing with HTTP is encouraged to subclass `__FWHTTPRequestSerializer` in order to ensure consistent default behavior.
  */
 NS_SWIFT_NAME(HTTPRequestSerializer)
-@interface FWHTTPRequestSerializer : NSObject <FWURLRequestSerialization>
+@interface __FWHTTPRequestSerializer : NSObject <__FWURLRequestSerialization>
 
 /**
  The string encoding used to serialize parameters. `NSUTF8StringEncoding` by default.
@@ -204,9 +204,9 @@ forHTTPHeaderField:(NSString *)field;
 
  @param style The serialization style.
 
- @see FWHTTPRequestQueryStringSerializationStyle
+ @see __FWHTTPRequestQueryStringSerializationStyle
  */
-- (void)setQueryStringSerializationWithStyle:(FWHTTPRequestQueryStringSerializationStyle)style;
+- (void)setQueryStringSerializationWithStyle:(__FWHTTPRequestQueryStringSerializationStyle)style;
 
 /**
  Set the a custom method of query string serialization according to the specified block.
@@ -244,7 +244,7 @@ forHTTPHeaderField:(NSString *)field;
  @param method The HTTP method for the request. This parameter must not be `GET` or `HEAD`, or `nil`.
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded and set in the request HTTP body.
- @param block A block that takes a single argument and appends data to the HTTP body. The block argument is an object adopting the `FWMultipartFormData` protocol.
+ @param block A block that takes a single argument and appends data to the HTTP body. The block argument is an object adopting the `__FWMultipartFormData` protocol.
  @param error The error that occurred while constructing the request.
 
  @return An `NSMutableURLRequest` object
@@ -252,7 +252,7 @@ forHTTPHeaderField:(NSString *)field;
 - (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
                                               URLString:(NSString *)URLString
                                              parameters:(nullable NSDictionary <NSString *, id> *)parameters
-                              constructingBodyWithBlock:(nullable void (^)(id <FWMultipartFormData> formData))block
+                              constructingBodyWithBlock:(nullable void (^)(id <__FWMultipartFormData> formData))block
                                                   error:(NSError * _Nullable __autoreleasing *)error;
 
 /**
@@ -262,7 +262,7 @@ forHTTPHeaderField:(NSString *)field;
  @param fileURL The file URL to write multipart form contents to.
  @param handler A handler block to execute.
 
- @note There is a bug in `NSURLSessionTask` that causes requests to not send a `Content-Length` header when streaming contents from an HTTP body, which is notably problematic when interacting with the Amazon S3 webservice. As a workaround, this method takes a request constructed with `multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:error:`, or any other request with an `HTTPBodyStream`, writes the contents to the specified file and returns a copy of the original request with the `HTTPBodyStream` property set to `nil`. From here, the file can either be passed to `FWURLSessionManager -uploadTaskWithRequest:fromFile:progress:completionHandler:`, or have its contents read into an `NSData` that's assigned to the `HTTPBody` property of the request.
+ @note There is a bug in `NSURLSessionTask` that causes requests to not send a `Content-Length` header when streaming contents from an HTTP body, which is notably problematic when interacting with the Amazon S3 webservice. As a workaround, this method takes a request constructed with `multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:error:`, or any other request with an `HTTPBodyStream`, writes the contents to the specified file and returns a copy of the original request with the `HTTPBodyStream` property set to `nil`. From here, the file can either be passed to `__FWURLSessionManager -uploadTaskWithRequest:fromFile:progress:completionHandler:`, or have its contents read into an `NSData` that's assigned to the `HTTPBody` property of the request.
 
  @see https://github.com/AFNetworking/AFNetworking/issues/1398
  */
@@ -275,10 +275,10 @@ forHTTPHeaderField:(NSString *)field;
 #pragma mark -
 
 /**
- The `FWMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `FWHTTPRequestSerializer -multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:`.
+ The `__FWMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `__FWHTTPRequestSerializer -multipartFormRequestWithMethod:URLString:parameters:constructingBodyWithBlock:`.
  */
 NS_SWIFT_NAME(MultipartFormData)
-@protocol FWMultipartFormData
+@protocol __FWMultipartFormData
 
 /**
  Appends the HTTP header `Content-Disposition: file; filename=#{generated filename}; name=#{name}"` and `Content-Type: #{generated mimeType}`, followed by the encoded file data and the multipart form boundary.
@@ -376,10 +376,10 @@ NS_SWIFT_NAME(MultipartFormData)
 #pragma mark -
 
 /**
- `FWJSONRequestSerializer` is a subclass of `FWHTTPRequestSerializer` that encodes parameters as JSON using `NSJSONSerialization`, setting the `Content-Type` of the encoded request to `application/json`.
+ `__FWJSONRequestSerializer` is a subclass of `__FWHTTPRequestSerializer` that encodes parameters as JSON using `NSJSONSerialization`, setting the `Content-Type` of the encoded request to `application/json`.
  */
 NS_SWIFT_NAME(JSONRequestSerializer)
-@interface FWJSONRequestSerializer : FWHTTPRequestSerializer
+@interface __FWJSONRequestSerializer : __FWHTTPRequestSerializer
 
 /**
  Options for writing the request JSON data from Foundation objects. For possible values, see the `NSJSONSerialization` documentation section "NSJSONWritingOptions". `0` by default.
@@ -398,10 +398,10 @@ NS_SWIFT_NAME(JSONRequestSerializer)
 #pragma mark -
 
 /**
- `FWPropertyListRequestSerializer` is a subclass of `FWHTTPRequestSerializer` that encodes parameters as JSON using `NSPropertyListSerializer`, setting the `Content-Type` of the encoded request to `application/x-plist`.
+ `__FWPropertyListRequestSerializer` is a subclass of `__FWHTTPRequestSerializer` that encodes parameters as JSON using `NSPropertyListSerializer`, setting the `Content-Type` of the encoded request to `application/x-plist`.
  */
 NS_SWIFT_NAME(PropertyListRequestSerializer)
-@interface FWPropertyListRequestSerializer : FWHTTPRequestSerializer
+@interface __FWPropertyListRequestSerializer : __FWHTTPRequestSerializer
 
 /**
  The property list format. Possible values are described in "NSPropertyListFormat".
@@ -437,28 +437,28 @@ NS_SWIFT_NAME(PropertyListRequestSerializer)
 
  The following error domain is predefined.
 
- - `NSString * const FWURLRequestSerializationErrorDomain`
+ - `NSString * const __FWURLRequestSerializationErrorDomain`
 
  ### Constants
 
- `FWURLRequestSerializationErrorDomain`
- FWURLRequestSerializer errors. Error codes for `FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ `__FWURLRequestSerializationErrorDomain`
+ FWURLRequestSerializer errors. Error codes for `__FWURLRequestSerializationErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const FWURLRequestSerializationErrorDomain NS_SWIFT_NAME(URLRequestSerializationErrorDomain);
+FOUNDATION_EXPORT NSString * const __FWURLRequestSerializationErrorDomain NS_SWIFT_NAME(URLRequestSerializationErrorDomain);
 
 /**
  ## User info dictionary keys
 
  These keys may exist in the user info dictionary, in addition to those defined for NSError.
 
- - `NSString * const FWNetworkingOperationFailingURLRequestErrorKey`
+ - `NSString * const __FWNetworkingOperationFailingURLRequestErrorKey`
 
  ### Constants
 
- `FWNetworkingOperationFailingURLRequestErrorKey`
- The corresponding value is an `NSURLRequest` containing the request of the operation associated with an error. This key is only present in the `FWURLRequestSerializationErrorDomain`.
+ `__FWNetworkingOperationFailingURLRequestErrorKey`
+ The corresponding value is an `NSURLRequest` containing the request of the operation associated with an error. This key is only present in the `__FWURLRequestSerializationErrorDomain`.
  */
-FOUNDATION_EXPORT NSString * const FWNetworkingOperationFailingURLRequestErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLRequestErrorKey);
+FOUNDATION_EXPORT NSString * const __FWNetworkingOperationFailingURLRequestErrorKey NS_SWIFT_NAME(NetworkingOperationFailingURLRequestErrorKey);
 
 /**
  ## Throttling Bandwidth for HTTP Request Input Streams

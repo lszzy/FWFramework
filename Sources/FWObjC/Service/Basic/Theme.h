@@ -28,7 +28,7 @@ static const __FWThemeMode __FWThemeModeLight = __FWThemeStyleLight;
 static const __FWThemeMode __FWThemeModeDark = __FWThemeStyleDark;
 
 /// iOS13主题改变通知，object为__FWThemeManager时表示手工切换，object为UIScreen时为系统切换
-extern NSNotificationName const __FWThemeChangedNotification NS_SWIFT_NAME(FWThemeChanged);
+extern NSNotificationName const __FWThemeChangedNotification NS_SWIFT_NAME(ThemeChanged);
 
 /**
  主题管理器，iOS13+可跟随系统改变

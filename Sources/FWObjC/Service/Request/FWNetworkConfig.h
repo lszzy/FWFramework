@@ -26,7 +26,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWBaseRequest;
-@class FWSecurityPolicy;
+@class __FWSecurityPolicy;
 
 ///  FWUrlFilterProtocol can be used to append common parameters to requests before sending them.
 NS_SWIFT_NAME(UrlFilterProtocol)
@@ -92,8 +92,8 @@ NS_SWIFT_NAME(NetworkConfig)
 @property (nonatomic, strong, readonly) NSArray<id<FWUrlFilterProtocol>> *urlFilters;
 ///  Cache path filters. See also `FWCacheDirPathFilterProtocol`.
 @property (nonatomic, strong, readonly) NSArray<id<FWCacheDirPathFilterProtocol>> *cacheDirPathFilters;
-///  Security policy will be used by AFNetworking. See also `FWSecurityPolicy`.
-@property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
+///  Security policy will be used by AFNetworking. See also `__FWSecurityPolicy`.
+@property (nonatomic, strong) __FWSecurityPolicy *securityPolicy;
 ///  Whether to remove NSNull values from response JSON. Defaults to YES.
 @property (nonatomic, assign) BOOL removeNullValues;
 ///  Whether to log debug info. Default is NO;
@@ -104,7 +104,7 @@ NS_SWIFT_NAME(NetworkConfig)
 @property (nonatomic, copy, nullable) BOOL (^debugMockValidator)(FWBaseRequest *request);
 ///  Global mock processor when debug mock enabled. Default is nil.
 @property (nonatomic, copy, nullable) BOOL (^debugMockProcessor)(FWBaseRequest *request);
-///  SessionConfiguration will be used to initialize FWHTTPSessionManager. Default is nil.
+///  SessionConfiguration will be used to initialize __FWHTTPSessionManager. Default is nil.
 @property (nonatomic, strong, nullable) NSURLSessionConfiguration *sessionConfiguration;
 ///  NSURLSessionTaskMetrics
 @property (nonatomic, copy, nullable) void (^collectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics);

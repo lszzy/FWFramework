@@ -6,7 +6,7 @@
 //
 
 #import "WebImage.h"
-#import "FWHTTPSessionManager.h"
+#import "HTTPSessionManager.h"
 #import "Plugin.h"
 #import <objc/runtime.h>
 
@@ -316,8 +316,8 @@
 }
 
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration {
-    FWHTTPSessionManager *sessionManager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
-    FWImageResponseSerializer *responseSerializer = [FWImageResponseSerializer serializer];
+    __FWHTTPSessionManager *sessionManager = [[__FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
+    __FWImageResponseSerializer *responseSerializer = [__FWImageResponseSerializer serializer];
     responseSerializer.imageScale = 1;
     responseSerializer.shouldCacheResponseData = YES;
     sessionManager.responseSerializer = responseSerializer;
@@ -328,7 +328,7 @@
                              imageCache:[[__FWAutoPurgingImageCache alloc] init]];
 }
 
-- (instancetype)initWithSessionManager:(FWHTTPSessionManager *)sessionManager
+- (instancetype)initWithSessionManager:(__FWHTTPSessionManager *)sessionManager
                 downloadPrioritization:(__FWImageDownloadPrioritization)downloadPrioritization
                 maximumActiveDownloads:(NSInteger)maximumActiveDownloads
                             imageCache:(id <__FWImageRequestCache>)imageCache {
@@ -754,7 +754,7 @@
                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
                        __strong __typeof(weakSelf)strongSelf = weakSelf;
                        if ([[strongSelf activeImageDownloadReceipt:object].receiptID isEqual:downloadID]) {
-                           [FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
+                           [__FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
                            if (completion) {
                                completion(responseObject, NO, nil);
                            }
@@ -890,8 +890,8 @@
              progress:(void (^)(double))progress
 {
     return [[__FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
-        NSData *imageData = [FWImageResponseSerializer cachedResponseDataForImage:responseObject];
-        [FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
+        NSData *imageData = [__FWImageResponseSerializer cachedResponseDataForImage:responseObject];
+        [__FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
         if (completion) {
             completion(responseObject, imageData, nil);
         }

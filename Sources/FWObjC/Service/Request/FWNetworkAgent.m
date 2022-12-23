@@ -25,7 +25,7 @@
 #import "FWNetworkConfig.h"
 #import "FWNetworkPrivate.h"
 #import <pthread/pthread.h>
-#import "FWHTTPSessionManager.h"
+#import "HTTPSessionManager.h"
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)
@@ -33,10 +33,10 @@
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
 @implementation FWNetworkAgent {
-    FWHTTPSessionManager *_manager;
+    __FWHTTPSessionManager *_manager;
     FWNetworkConfig *_config;
-    FWJSONResponseSerializer *_jsonResponseSerializer;
-    FWXMLParserResponseSerializer *_xmlParserResponseSerialzier;
+    __FWJSONResponseSerializer *_jsonResponseSerializer;
+    __FWXMLParserResponseSerializer *_xmlParserResponseSerialzier;
     NSMutableDictionary<NSNumber *, FWBaseRequest *> *_requestsRecord;
 
     dispatch_queue_t _processingQueue;
@@ -57,14 +57,14 @@
     self = [super init];
     if (self) {
         _config = [FWNetworkConfig sharedConfig];
-        _manager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
+        _manager = [[__FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
         _processingQueue = dispatch_queue_create("site.wuyong.queue.request.processing", DISPATCH_QUEUE_CONCURRENT);
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         pthread_mutex_init(&_lock, NULL);
 
         _manager.securityPolicy = _config.securityPolicy;
-        _manager.responseSerializer = [FWHTTPResponseSerializer serializer];
+        _manager.responseSerializer = [__FWHTTPResponseSerializer serializer];
         // Take over the status code validation
         _manager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _manager.completionQueue = _processingQueue;
@@ -73,24 +73,24 @@
     return self;
 }
 
-- (FWHTTPResponseSerializer *)httpResponseSerializer {
+- (__FWHTTPResponseSerializer *)httpResponseSerializer {
     return _manager.responseSerializer;
 }
 
-- (FWJSONResponseSerializer *)jsonResponseSerializer {
+- (__FWJSONResponseSerializer *)jsonResponseSerializer {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _jsonResponseSerializer = [FWJSONResponseSerializer serializer];
+        _jsonResponseSerializer = [__FWJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
         _jsonResponseSerializer.removesKeysWithNullValues = _config.removeNullValues;
     });
     return _jsonResponseSerializer;
 }
 
-- (FWXMLParserResponseSerializer *)xmlParserResponseSerialzier {
+- (__FWXMLParserResponseSerializer *)xmlParserResponseSerialzier {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _xmlParserResponseSerialzier = [FWXMLParserResponseSerializer serializer];
+        _xmlParserResponseSerialzier = [__FWXMLParserResponseSerializer serializer];
         _xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
     });
     return _xmlParserResponseSerialzier;
@@ -149,12 +149,12 @@
     return resultUrl.absoluteString;
 }
 
-- (FWHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
-    FWHTTPRequestSerializer *requestSerializer = nil;
+- (__FWHTTPRequestSerializer *)requestSerializerForRequest:(FWBaseRequest *)request {
+    __FWHTTPRequestSerializer *requestSerializer = nil;
     if (request.requestSerializerType == FWRequestSerializerTypeHTTP) {
-        requestSerializer = [FWHTTPRequestSerializer serializer];
+        requestSerializer = [__FWHTTPRequestSerializer serializer];
     } else if (request.requestSerializerType == FWRequestSerializerTypeJSON) {
-        requestSerializer = [FWJSONRequestSerializer serializer];
+        requestSerializer = [__FWJSONRequestSerializer serializer];
     }
 
     requestSerializer.timeoutInterval = [request requestTimeoutInterval];
@@ -468,7 +468,7 @@
         NSURLRequest *customUrlRequest = [request buildCustomUrlRequest];
         if (customUrlRequest) return customUrlRequest;
         
-        FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
+        __FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
         NSString *urlString = [self buildRequestUrl:request];
 
         NSMutableURLRequest *urlRequest = nil;
@@ -520,7 +520,7 @@
                                              progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
                                                 error:(NSError * _Nullable __autoreleasing *)error {
     // add parameters to URL;
-    FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
+    __FWHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
     NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:request.requestMethodString URLString:[self buildRequestUrl:request] parameters:request.requestArgument error:error];
     
     // Filter URLRequest with request
@@ -626,16 +626,16 @@
     return _config;
 }
 
-- (FWHTTPSessionManager *)manager {
+- (__FWHTTPSessionManager *)manager {
     return _manager;
 }
 
 - (void)resetURLSessionManager {
-    _manager = [FWHTTPSessionManager manager];
+    _manager = [__FWHTTPSessionManager manager];
 }
 
 - (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration {
-    _manager = [[FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
+    _manager = [[__FWHTTPSessionManager alloc] initWithSessionConfiguration:configuration];
 }
 
 @end
