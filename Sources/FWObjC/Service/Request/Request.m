@@ -23,7 +23,6 @@
 
 #import "NetworkConfig.h"
 #import "Request.h"
-#import "NetworkPrivate.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11

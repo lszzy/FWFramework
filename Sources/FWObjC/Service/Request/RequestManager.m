@@ -1,5 +1,5 @@
 //
-//  RequestAgent.m
+//  RequestManager.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,20 +21,20 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "RequestAgent.h"
+#import "RequestManager.h"
 #import "BatchRequest.h"
 #import "ChainRequest.h"
 
-@interface FWRequestAgent()
+@interface FWRequestManager()
 
 @property (strong, nonatomic) NSMutableArray<FWBatchRequest *> *batchRequestArray;
 @property (strong, nonatomic) NSMutableArray<FWChainRequest *> *chainRequestArray;
 
 @end
 
-@implementation FWRequestAgent
+@implementation FWRequestManager
 
-+ (FWRequestAgent *)sharedAgent {
++ (FWRequestManager *)sharedManager {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

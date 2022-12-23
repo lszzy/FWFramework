@@ -1,5 +1,5 @@
 //
-//  NetworkAgent.h
+//  NetworkManager.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -22,21 +22,30 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "Request.h"
+#import "BatchRequest.h"
+#import "ChainRequest.h"
+#import "RequestManager.h"
+#import "NetworkConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWBaseRequest;
+@class __FWHTTPSessionManager;
+@class __FWHTTPResponseSerializer;
+@class __FWJSONResponseSerializer;
+@class __FWXMLParserResponseSerializer;
 
-///  FWNetworkAgent is the underlying class that handles actual request generation,
+///  FWNetworkManager is the underlying class that handles actual request generation,
 ///  serialization and response handling.
-NS_SWIFT_NAME(NetworkAgent)
-@interface FWNetworkAgent : NSObject
+NS_SWIFT_NAME(NetworkManager)
+@interface FWNetworkManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-///  Get the shared agent.
-+ (FWNetworkAgent *)sharedAgent;
+///  Get the shared manager.
++ (FWNetworkManager *)sharedManager;
 
 ///  Add request to session and start it.
 - (void)addRequest:(FWBaseRequest *)request;
@@ -53,6 +62,16 @@ NS_SWIFT_NAME(NetworkAgent)
 ///
 ///  @return The result URL.
 - (NSString *)buildRequestUrl:(FWBaseRequest *)request;
+
+- (__FWHTTPSessionManager *)manager;
+- (void)resetURLSessionManager;
+- (void)resetURLSessionManagerWithConfiguration:(NSURLSessionConfiguration *)configuration;
+
+- (NSString *)incompleteDownloadTempCacheFolder;
+
+- (__FWHTTPResponseSerializer *)httpResponseSerializer;
+- (__FWJSONResponseSerializer *)jsonResponseSerializer;
+- (__FWXMLParserResponseSerializer *)xmlParserResponseSerialzier;
 
 @end
 

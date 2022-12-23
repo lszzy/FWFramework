@@ -88,6 +88,8 @@ NS_SWIFT_NAME(Request)
 ///  Whether cache is asynchronously written to storage. Default is YES.
 - (BOOL)writeCacheAsynchronously;
 
+- (NSString *)cacheBasePath;
+
 @end
 
 NS_ASSUME_NONNULL_END

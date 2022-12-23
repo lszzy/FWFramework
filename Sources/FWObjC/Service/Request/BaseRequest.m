@@ -22,23 +22,37 @@
 //  THE SOFTWARE.
 
 #import "BaseRequest.h"
-#import "NetworkAgent.h"
-#import "NetworkPrivate.h"
+#import "NetworkManager.h"
 #import <objc/runtime.h>
 
 NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.validation";
 
-@interface FWBaseRequest ()
+@implementation FWRequestAccessory
 
-@property (nonatomic, strong, readwrite) NSURLSessionTask *requestTask;
-@property (nonatomic, assign, readwrite) NSUInteger requestIdentifier;
-@property (nonatomic, strong, readwrite) NSData *responseData;
-@property (nonatomic, strong, readwrite) id responseJSONObject;
-@property (nonatomic, strong, readwrite) id responseObject;
-@property (nonatomic, strong, readwrite) NSString *responseString;
-@property (nonatomic, strong, readwrite) NSError *error;
-@property (nonatomic, readwrite) NSInteger requestTotalCount;
-@property (nonatomic, readwrite) NSTimeInterval requestTotalTime;
+- (void)requestWillStart:(id)request {
+    if (self.willStartBlock != nil) {
+        self.willStartBlock(request);
+        self.willStartBlock = nil;
+    }
+}
+
+- (void)requestWillStop:(id)request {
+    if (self.willStopBlock != nil) {
+        self.willStopBlock(request);
+        self.willStopBlock = nil;
+    }
+}
+
+- (void)requestDidStop:(id)request {
+    if (self.didStopBlock != nil) {
+        self.didStopBlock(request);
+        self.didStopBlock = nil;
+    }
+}
+
+@end
+
+@interface FWBaseRequest ()
 
 @end
 
@@ -145,13 +159,13 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 
 - (void)start {
     [self toggleAccessoriesWillStartCallBack];
-    [[FWNetworkAgent sharedAgent] addRequest:self];
+    [[FWNetworkManager sharedManager] addRequest:self];
 }
 
 - (void)stop {
     [self toggleAccessoriesWillStopCallBack];
     self.delegate = nil;
-    [[FWNetworkAgent sharedAgent] cancelRequest:self];
+    [[FWNetworkManager sharedManager] cancelRequest:self];
     [self toggleAccessoriesDidStopCallBack];
 }
 
@@ -163,6 +177,44 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 
 - (void)startWithCompletion:(FWRequestCompletionBlock)completion {
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
+}
+
+- (void)startWithWillStart:(nullable FWRequestCompletionBlock)willStart
+                  willStop:(nullable FWRequestCompletionBlock)willStop
+                   success:(nullable FWRequestCompletionBlock)success
+                   failure:(nullable FWRequestCompletionBlock)failure
+                   didStop:(nullable FWRequestCompletionBlock)didStop {
+    FWRequestAccessory *accessory = [FWRequestAccessory new];
+    accessory.willStartBlock = willStart;
+    accessory.willStopBlock = willStop;
+    accessory.didStopBlock = didStop;
+    [self addAccessory:accessory];
+    [self startWithCompletionBlockWithSuccess:success
+                                      failure:failure];
+}
+
+- (void)toggleAccessoriesWillStartCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStart:)]) {
+            [accessory requestWillStart:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesWillStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStop:)]) {
+            [accessory requestWillStop:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesDidStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestDidStop:)]) {
+            [accessory requestDidStop:self];
+        }
+    }
 }
 
 #pragma mark - Subclass Override
