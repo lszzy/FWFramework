@@ -27,10 +27,6 @@ __FWImageCoderOptions const __FWImageCoderOptionScaleFactor = @"imageScaleFactor
 
 #pragma mark - UIImage+FWImagePlugin
 
-UIImage * FWImageNamed(NSString *name) {
-    return [UIImage fw_imageNamed:name];
-}
-
 static NSArray *FWInnerBundlePreferredScales() {
     static NSArray *scales;
     static dispatch_once_t onceToken;
