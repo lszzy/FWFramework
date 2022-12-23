@@ -62,7 +62,7 @@ extension TabController {
         settingsNav.tabBarItem.title = FW.localized("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
         
-        fw.observeNotification(.FWLanguageChanged) { (notification) in
+        fw.observeNotification(.LanguageChanged) { (notification) in
             homeNav.tabBarItem.title = FW.localized("homeTitle")
             testNav.tabBarItem.title = FW.localized("testTitle")
             settingsNav.tabBarItem.title = FW.localized("settingTitle")

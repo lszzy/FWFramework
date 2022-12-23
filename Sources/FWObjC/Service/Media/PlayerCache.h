@@ -215,11 +215,11 @@ NS_SWIFT_NAME(PlayerCacheConfiguration)
 
 #pragma mark - __FWPlayerCacheManager
 
-extern NSNotificationName __FWPlayerCacheManagerDidUpdateCacheNotification NS_SWIFT_NAME(FWPlayerCacheManagerDidUpdate);
-extern NSNotificationName __FWPlayerCacheManagerDidFinishCacheNotification NS_SWIFT_NAME(FWPlayerCacheManagerDidFinish);
+extern NSNotificationName __FWPlayerCacheManagerDidUpdateCacheNotification NS_SWIFT_NAME(PlayerCacheManagerDidUpdate);
+extern NSNotificationName __FWPlayerCacheManagerDidFinishCacheNotification NS_SWIFT_NAME(PlayerCacheManagerDidFinish);
 
-extern NSString *__FWPlayerCacheConfigurationKey NS_SWIFT_NAME(FWPlayerCacheConfigurationKey);
-extern NSString *__FWPlayerCacheFinishedErrorKey NS_SWIFT_NAME(FWPlayerCacheFinishedErrorKey);
+extern NSString *__FWPlayerCacheConfigurationKey NS_SWIFT_NAME(PlayerCacheConfigurationKey);
+extern NSString *__FWPlayerCacheFinishedErrorKey NS_SWIFT_NAME(PlayerCacheFinishedErrorKey);
 
 NS_SWIFT_NAME(PlayerCacheManager)
 @interface __FWPlayerCacheManager : NSObject

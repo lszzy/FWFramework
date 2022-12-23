@@ -29,7 +29,7 @@ import FWObjC
 extension Notification.Name {
     
     /// 本地化语言改变通知，object为本地化语言名称
-    public static let FWLanguageChanged = Notification.Name("FWLanguageChangedNotification")
+    public static let LanguageChanged = Notification.Name("FWLanguageChangedNotification")
     
 }
 
@@ -83,10 +83,10 @@ extension Notification.Name {
                 object_setClass(self, TargetBundle.self)
                 
                 if let language = Bundle.fw_localizedLanguage {
-                    self.fw_languageChanged(Notification(name: .FWLanguageChanged, object: language))
+                    self.fw_languageChanged(Notification(name: .LanguageChanged, object: language))
                 }
                 
-                NotificationCenter.default.addObserver(self, selector: #selector(Bundle.fw_languageChanged(_:)), name: .FWLanguageChanged, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(Bundle.fw_languageChanged(_:)), name: .LanguageChanged, object: nil)
             }
         }
         return self
@@ -136,7 +136,7 @@ extension Notification.Name {
             }
             fw_localizedChanged(newValue)
             
-            NotificationCenter.default.post(name: .FWLanguageChanged, object: newValue)
+            NotificationCenter.default.post(name: .LanguageChanged, object: newValue)
         }
     }
 

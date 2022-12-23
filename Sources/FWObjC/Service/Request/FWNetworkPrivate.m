@@ -23,7 +23,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import "FWNetworkPrivate.h"
-#import "FWURLRequestSerialization.h"
+#import "URLRequestSerialization.h"
 #import <objc/runtime.h>
 
 void FWRequestLog(NSString *format, ...) {

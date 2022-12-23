@@ -22,7 +22,7 @@
 #import "Theme.h"
 #import "Exception.h"
 #import "CacheManager.h"
-#import "FWHTTPSessionManager.h"
+#import "HTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
 #import "Database.h"
 #import "WebImage.h"

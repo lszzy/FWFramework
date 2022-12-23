@@ -1,4 +1,4 @@
-// FWURLResponseSerialization.m
+// URLResponseSerialization.m
 // Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,17 +19,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "FWURLResponseSerialization.h"
+#import "URLResponseSerialization.h"
 #import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
 
-NSString * const FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
-NSString * const FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
-NSString * const FWNetworkingOperationFailingURLResponseDataErrorKey = @"site.wuyong.serialization.response.error.data";
+NSString * const __FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
+NSString * const __FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
+NSString * const __FWNetworkingOperationFailingURLResponseDataErrorKey = @"site.wuyong.serialization.response.error.data";
 
-static NSError * FWErrorWithUnderlyingError(NSError *error, NSError *underlyingError) {
+static NSError * __FWErrorWithUnderlyingError(NSError *error, NSError *underlyingError) {
     if (!error) {
         return underlyingError;
     }
@@ -44,22 +44,22 @@ static NSError * FWErrorWithUnderlyingError(NSError *error, NSError *underlyingE
     return [[NSError alloc] initWithDomain:error.domain code:error.code userInfo:mutableUserInfo];
 }
 
-static BOOL FWErrorOrUnderlyingErrorHasCodeInDomain(NSError *error, NSInteger code, NSString *domain) {
+static BOOL __FWErrorOrUnderlyingErrorHasCodeInDomain(NSError *error, NSInteger code, NSString *domain) {
     if ([error.domain isEqualToString:domain] && error.code == code) {
         return YES;
     } else if (error.userInfo[NSUnderlyingErrorKey]) {
-        return FWErrorOrUnderlyingErrorHasCodeInDomain(error.userInfo[NSUnderlyingErrorKey], code, domain);
+        return __FWErrorOrUnderlyingErrorHasCodeInDomain(error.userInfo[NSUnderlyingErrorKey], code, domain);
     }
 
     return NO;
 }
 
-id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) {
+id __FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) {
     if ([JSONObject isKindOfClass:[NSArray class]]) {
         NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:[(NSArray *)JSONObject count]];
         for (id value in (NSArray *)JSONObject) {
             if (![value isEqual:[NSNull null]]) {
-                [mutableArray addObject:FWJSONObjectByRemovingKeysWithNullValues(value, readingOptions)];
+                [mutableArray addObject:__FWJSONObjectByRemovingKeysWithNullValues(value, readingOptions)];
             }
         }
 
@@ -71,7 +71,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             if (!value || [value isEqual:[NSNull null]]) {
                 [mutableDictionary removeObjectForKey:key];
             } else if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]]) {
-                mutableDictionary[key] = FWJSONObjectByRemovingKeysWithNullValues(value, readingOptions);
+                mutableDictionary[key] = __FWJSONObjectByRemovingKeysWithNullValues(value, readingOptions);
             }
         }
 
@@ -81,7 +81,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return JSONObject;
 }
 
-@implementation FWHTTPResponseSerializer
+@implementation __FWHTTPResponseSerializer
 
 + (instancetype)serializer {
     return [[self alloc] init];
@@ -126,13 +126,13 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
                 NSMutableDictionary *mutableUserInfo = [@{
                                                           NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTable(@"Request failed: unacceptable content-type: %@", @"AFNetworking", nil), [response MIMEType]],
                                                           NSURLErrorFailingURLErrorKey:[response URL],
-                                                          FWNetworkingOperationFailingURLResponseErrorKey: response,
+                                                          __FWNetworkingOperationFailingURLResponseErrorKey: response,
                                                         } mutableCopy];
                 if (data) {
-                    mutableUserInfo[FWNetworkingOperationFailingURLResponseDataErrorKey] = data;
+                    mutableUserInfo[__FWNetworkingOperationFailingURLResponseDataErrorKey] = data;
                 }
 
-                validationError = FWErrorWithUnderlyingError([NSError errorWithDomain:FWURLResponseSerializationErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:mutableUserInfo], validationError);
+                validationError = __FWErrorWithUnderlyingError([NSError errorWithDomain:__FWURLResponseSerializationErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:mutableUserInfo], validationError);
             }
 
             responseIsValid = NO;
@@ -142,14 +142,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             NSMutableDictionary *mutableUserInfo = [@{
                                                NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTable(@"Request failed: %@ (%ld)", @"AFNetworking", nil), [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode], (long)response.statusCode],
                                                NSURLErrorFailingURLErrorKey:[response URL],
-                                               FWNetworkingOperationFailingURLResponseErrorKey: response,
+                                               __FWNetworkingOperationFailingURLResponseErrorKey: response,
                                        } mutableCopy];
 
             if (data) {
-                mutableUserInfo[FWNetworkingOperationFailingURLResponseDataErrorKey] = data;
+                mutableUserInfo[__FWNetworkingOperationFailingURLResponseDataErrorKey] = data;
             }
 
-            validationError = FWErrorWithUnderlyingError([NSError errorWithDomain:FWURLResponseSerializationErrorDomain code:NSURLErrorBadServerResponse userInfo:mutableUserInfo], validationError);
+            validationError = __FWErrorWithUnderlyingError([NSError errorWithDomain:__FWURLResponseSerializationErrorDomain code:NSURLErrorBadServerResponse userInfo:mutableUserInfo], validationError);
 
             responseIsValid = NO;
         }
@@ -162,7 +162,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return responseIsValid;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
@@ -199,7 +199,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWHTTPResponseSerializer *serializer = [[[self class] allocWithZone:zone] init];
+    __FWHTTPResponseSerializer *serializer = [[[self class] allocWithZone:zone] init];
     serializer.acceptableStatusCodes = [self.acceptableStatusCodes copyWithZone:zone];
     serializer.acceptableContentTypes = [self.acceptableContentTypes copyWithZone:zone];
 
@@ -210,14 +210,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark -
 
-@implementation FWJSONResponseSerializer
+@implementation __FWJSONResponseSerializer
 
 + (instancetype)serializer {
     return [self serializerWithReadingOptions:(NSJSONReadingOptions)0];
 }
 
 + (instancetype)serializerWithReadingOptions:(NSJSONReadingOptions)readingOptions {
-    FWJSONResponseSerializer *serializer = [[self alloc] init];
+    __FWJSONResponseSerializer *serializer = [[self alloc] init];
     serializer.readingOptions = readingOptions;
 
     return serializer;
@@ -234,13 +234,13 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return self;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
-        if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
+        if (!error || __FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, __FWURLResponseSerializationErrorDomain)) {
             return nil;
         }
     }
@@ -270,13 +270,13 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     if (!responseObject)
     {
         if (error) {
-            *error = FWErrorWithUnderlyingError(serializationError, *error);
+            *error = __FWErrorWithUnderlyingError(serializationError, *error);
         }
         return nil;
     }
     
     if (self.removesKeysWithNullValues) {
-        return FWJSONObjectByRemovingKeysWithNullValues(responseObject, self.readingOptions);
+        return __FWJSONObjectByRemovingKeysWithNullValues(responseObject, self.readingOptions);
     }
 
     return responseObject;
@@ -327,7 +327,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWJSONResponseSerializer *serializer = [super copyWithZone:zone];
+    __FWJSONResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.readingOptions = self.readingOptions;
     serializer.removesKeysWithNullValues = self.removesKeysWithNullValues;
 
@@ -338,10 +338,10 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark -
 
-@implementation FWXMLParserResponseSerializer
+@implementation __FWXMLParserResponseSerializer
 
 + (instancetype)serializer {
-    FWXMLParserResponseSerializer *serializer = [[self alloc] init];
+    __FWXMLParserResponseSerializer *serializer = [[self alloc] init];
 
     return serializer;
 }
@@ -357,14 +357,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return self;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSHTTPURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error
 {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
-        if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
+        if (!error || __FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, __FWURLResponseSerializationErrorDomain)) {
             return nil;
         }
     }
@@ -378,14 +378,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 
-@implementation FWXMLDocumentResponseSerializer
+@implementation __FWXMLDocumentResponseSerializer
 
 + (instancetype)serializer {
     return [self serializerWithXMLDocumentOptions:0];
 }
 
 + (instancetype)serializerWithXMLDocumentOptions:(NSUInteger)mask {
-    FWXMLDocumentResponseSerializer *serializer = [[self alloc] init];
+    __FWXMLDocumentResponseSerializer *serializer = [[self alloc] init];
     serializer.options = mask;
 
     return serializer;
@@ -402,14 +402,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return self;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error
 {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
-        if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
+        if (!error || __FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, __FWURLResponseSerializationErrorDomain)) {
             return nil;
         }
     }
@@ -420,7 +420,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     if (!document)
     {
         if (error) {
-            *error = FWErrorWithUnderlyingError(serializationError, *error);
+            *error = __FWErrorWithUnderlyingError(serializationError, *error);
         }
         return nil;
     }
@@ -450,7 +450,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWXMLDocumentResponseSerializer *serializer = [super copyWithZone:zone];
+    __FWXMLDocumentResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.options = self.options;
 
     return serializer;
@@ -462,7 +462,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark -
 
-@implementation FWPropertyListResponseSerializer
+@implementation __FWPropertyListResponseSerializer
 
 + (instancetype)serializer {
     return [self serializerWithFormat:NSPropertyListXMLFormat_v1_0 readOptions:0];
@@ -471,7 +471,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 + (instancetype)serializerWithFormat:(NSPropertyListFormat)format
                          readOptions:(NSPropertyListReadOptions)readOptions
 {
-    FWPropertyListResponseSerializer *serializer = [[self alloc] init];
+    __FWPropertyListResponseSerializer *serializer = [[self alloc] init];
     serializer.format = format;
     serializer.readOptions = readOptions;
 
@@ -489,14 +489,14 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return self;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error
 {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
-        if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
+        if (!error || __FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, __FWURLResponseSerializationErrorDomain)) {
             return nil;
         }
     }
@@ -512,7 +512,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     if (!responseObject)
     {
         if (error) {
-            *error = FWErrorWithUnderlyingError(serializationError, *error);
+            *error = __FWErrorWithUnderlyingError(serializationError, *error);
         }
         return nil;
     }
@@ -548,7 +548,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWPropertyListResponseSerializer *serializer = [super copyWithZone:zone];
+    __FWPropertyListResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.format = self.format;
     serializer.readOptions = self.readOptions;
 
@@ -565,7 +565,7 @@ id FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 @end
 
-static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDictionary *options) {
+static UIImage * __FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDictionary *options) {
     if (!data || [data length] == 0) {
         return nil;
     }
@@ -600,13 +600,13 @@ static UIImage * FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDictionar
     return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
 }
 
-static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *response, NSData *data, CGFloat scale, NSDictionary *options) {
+static UIImage * __FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *response, NSData *data, CGFloat scale, NSDictionary *options) {
     if (!data || [data length] == 0) {
         return nil;
     }
     
     // Fix animated png bug
-    UIImage *image = FWImageWithDataAtScale(data, scale, options);
+    UIImage *image = __FWImageWithDataAtScale(data, scale, options);
     if (image.images || !image) {
         return image;
     }
@@ -623,7 +623,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
             CGColorSpaceRef imageColorSpace = CGImageGetColorSpace(imageRef);
             CGColorSpaceModel imageColorSpaceModel = CGColorSpaceGetModel(imageColorSpace);
 
-            // CGImageCreateWithJPEGDataProvider does not properly handle CMKY, so fall back to FWImageWithDataAtScale
+            // CGImageCreateWithJPEGDataProvider does not properly handle CMKY, so fall back to __FWImageWithDataAtScale
             if (imageColorSpaceModel == kCGColorSpaceModelCMYK) {
                 CGImageRelease(imageRef);
                 imageRef = NULL;
@@ -693,7 +693,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     return inflatedImage;
 }
 
-@implementation FWImageResponseSerializer
+@implementation __FWImageResponseSerializer
 
 - (instancetype)init {
     self = [super init];
@@ -733,7 +733,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
                           error:(NSError *__autoreleasing *)error
 {
     if (![self validateResponse:(NSHTTPURLResponse *)response data:data error:error]) {
-        if (!error || FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, FWURLResponseSerializationErrorDomain)) {
+        if (!error || __FWErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, __FWURLResponseSerializationErrorDomain)) {
             return nil;
         }
     }
@@ -741,13 +741,13 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     UIImage *image = nil;
     NSDictionary *options = [self userInfoForResponse:response];
     if (self.automaticallyInflatesResponseImage) {
-        image = FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
+        image = __FWInflatedImageFromResponseWithDataAtScale((NSHTTPURLResponse *)response, data, self.imageScale, options);
     } else {
-        image = FWImageWithDataAtScale(data, self.imageScale, options);
+        image = __FWImageWithDataAtScale(data, self.imageScale, options);
     }
     
     if (self.shouldCacheResponseData && image) {
-        [FWImageResponseSerializer setCachedResponseData:data forImage:image];
+        [__FWImageResponseSerializer setCachedResponseData:data forImage:image];
     }
     
     return image;
@@ -787,7 +787,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWImageResponseSerializer *serializer = [super copyWithZone:zone];
+    __FWImageResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.imageScale = self.imageScale;
     serializer.automaticallyInflatesResponseImage = self.automaticallyInflatesResponseImage;
     serializer.shouldCacheResponseData = self.shouldCacheResponseData;
@@ -799,27 +799,27 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 
 #pragma mark -
 
-@interface FWCompoundResponseSerializer ()
+@interface __FWCompoundResponseSerializer ()
 @property (readwrite, nonatomic, copy) NSArray *responseSerializers;
 @end
 
-@implementation FWCompoundResponseSerializer
+@implementation __FWCompoundResponseSerializer
 
 + (instancetype)compoundSerializerWithResponseSerializers:(NSArray *)responseSerializers {
-    FWCompoundResponseSerializer *serializer = [[self alloc] init];
+    __FWCompoundResponseSerializer *serializer = [[self alloc] init];
     serializer.responseSerializers = responseSerializers;
 
     return serializer;
 }
 
-#pragma mark - FWURLResponseSerialization
+#pragma mark - __FWURLResponseSerialization
 
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error
 {
-    for (id <FWURLResponseSerialization> serializer in self.responseSerializers) {
-        if (![serializer isKindOfClass:[FWHTTPResponseSerializer class]]) {
+    for (id <__FWURLResponseSerialization> serializer in self.responseSerializers) {
+        if (![serializer isKindOfClass:[__FWHTTPResponseSerializer class]]) {
             continue;
         }
 
@@ -827,7 +827,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         id responseObject = [serializer responseObjectForResponse:response data:data error:&serializerError];
         if (responseObject) {
             if (error) {
-                *error = FWErrorWithUnderlyingError(serializerError, *error);
+                *error = __FWErrorWithUnderlyingError(serializerError, *error);
             }
 
             return responseObject;
@@ -849,7 +849,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
         return nil;
     }
 
-    NSSet *classes = [NSSet setWithArray:@[[NSArray class], [FWHTTPResponseSerializer <FWURLResponseSerialization> class]]];
+    NSSet *classes = [NSSet setWithArray:@[[NSArray class], [__FWHTTPResponseSerializer <__FWURLResponseSerialization> class]]];
     self.responseSerializers = [decoder decodeObjectOfClasses:classes forKey:NSStringFromSelector(@selector(responseSerializers))];
 
     return self;
@@ -864,7 +864,7 @@ static UIImage * FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWCompoundResponseSerializer *serializer = [super copyWithZone:zone];
+    __FWCompoundResponseSerializer *serializer = [super copyWithZone:zone];
     serializer.responseSerializers = self.responseSerializers;
 
     return serializer;

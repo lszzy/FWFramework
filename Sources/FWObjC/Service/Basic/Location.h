@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - __FWLocationManager
 
 /// 定位更新通知
-extern NSNotificationName const __FWLocationUpdatedNotification NS_SWIFT_NAME(FWLocationUpdated);
+extern NSNotificationName const __FWLocationUpdatedNotification NS_SWIFT_NAME(LocationUpdated);
 /// 定位失败通知
-extern NSNotificationName const __FWLocationFailedNotification NS_SWIFT_NAME(FWLocationFailed);
+extern NSNotificationName const __FWLocationFailedNotification NS_SWIFT_NAME(LocationFailed);
 /// 方向改变通知
-extern NSNotificationName const __FWHeadingUpdatedNotification NS_SWIFT_NAME(FWHeadingUpdated);
+extern NSNotificationName const __FWHeadingUpdatedNotification NS_SWIFT_NAME(HeadingUpdated);
 
 /**
  位置服务

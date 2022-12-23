@@ -66,10 +66,10 @@ typedef NS_ENUM(NSInteger, FWRequestPriority) {
     FWRequestPriorityHigh = 4,
 } NS_SWIFT_NAME(RequestPriority);
 
-@protocol FWMultipartFormData;
+@protocol __FWMultipartFormData;
 
-typedef void (^FWConstructingBlock)(id<FWMultipartFormData> formData) NS_SWIFT_NAME(ConstructingBlock);
-typedef void (^FWURLSessionTaskProgressBlock)(NSProgress *) NS_SWIFT_NAME(URLSessionTaskProgressBlock);
+typedef void (^FWConstructingBlock)(id<__FWMultipartFormData> formData) NS_SWIFT_NAME(ConstructingBlock);
+typedef void (^__FWURLSessionTaskProgressBlock)(NSProgress *) NS_SWIFT_NAME(URLSessionTaskProgressBlock);
 
 @class FWBaseRequest;
 
@@ -240,10 +240,10 @@ NS_SWIFT_NAME(BaseRequest)
 @property (nonatomic, strong, nullable) NSString *resumableDownloadPath;
 
 ///  You can use this block to track the download progress. See also `resumableDownloadPath`.
-@property (nonatomic, copy, nullable) FWURLSessionTaskProgressBlock resumableDownloadProgressBlock;
+@property (nonatomic, copy, nullable) __FWURLSessionTaskProgressBlock resumableDownloadProgressBlock;
 
 ///  You can use this block to track the upload progress.
-@property (nonatomic, copy, nullable) FWURLSessionTaskProgressBlock uploadProgressBlock;
+@property (nonatomic, copy, nullable) __FWURLSessionTaskProgressBlock uploadProgressBlock;
 
 ///  The priority of the request. Default is `FWRequestPriorityDefault`.
 @property (nonatomic) FWRequestPriority requestPriority;
@@ -333,7 +333,7 @@ NS_SWIFT_NAME(BaseRequest)
 ///              `timeoutIntervalForResource` of `NSURLSessionConfiguration`.
 - (NSTimeInterval)requestTimeoutInterval;
 
-///  Custom request cache policy. Default is -1, uses FWHTTPRequestSerializer.cachePolicy.
+///  Custom request cache policy. Default is -1, uses __FWHTTPRequestSerializer.cachePolicy.
 - (NSURLRequestCachePolicy)requestCachePolicy;
 
 ///  Additional request argument.

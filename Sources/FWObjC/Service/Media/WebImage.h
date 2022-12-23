@@ -74,7 +74,7 @@ NS_SWIFT_NAME(ImageDownloadReceipt)
 
 @end
 
-@class FWHTTPSessionManager;
+@class __FWHTTPSessionManager;
 
 /// 图片下载器，默认解码scale为1，同SDWebImage
 NS_SWIFT_NAME(ImageDownloader)
@@ -82,7 +82,7 @@ NS_SWIFT_NAME(ImageDownloader)
 
 @property (nonatomic, strong, nullable) id <__FWImageRequestCache> imageCache;
 
-@property (nonatomic, strong) FWHTTPSessionManager *sessionManager;
+@property (nonatomic, strong) __FWHTTPSessionManager *sessionManager;
 
 @property (nonatomic, assign) __FWImageDownloadPrioritization downloadPrioritization;
 
@@ -98,7 +98,7 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration;
 
-- (instancetype)initWithSessionManager:(FWHTTPSessionManager *)sessionManager
+- (instancetype)initWithSessionManager:(__FWHTTPSessionManager *)sessionManager
                 downloadPrioritization:(__FWImageDownloadPrioritization)downloadPrioritization
                 maximumActiveDownloads:(NSInteger)maximumActiveDownloads
                             imageCache:(nullable id <__FWImageRequestCache>)imageCache;
