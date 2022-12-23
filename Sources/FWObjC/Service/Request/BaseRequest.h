@@ -25,93 +25,93 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const FWRequestValidationErrorDomain NS_SWIFT_NAME(RequestValidationErrorDomain);
+FOUNDATION_EXPORT NSString *const __FWRequestValidationErrorDomain NS_SWIFT_NAME(RequestValidationErrorDomain);
 
-FOUNDATION_EXPORT NSString *const FWRequestCacheErrorDomain NS_SWIFT_NAME(RequestCacheErrorDomain);
+FOUNDATION_EXPORT NSString *const __FWRequestCacheErrorDomain NS_SWIFT_NAME(RequestCacheErrorDomain);
 
-typedef NS_ENUM(NSInteger, FWRequestValidationErrorCode) {
-    FWRequestValidationErrorInvalidStatusCode = -8,
-    FWRequestValidationErrorInvalidJSONFormat = -9,
+typedef NS_ENUM(NSInteger, __FWRequestValidationErrorCode) {
+    __FWRequestValidationErrorInvalidStatusCode = -8,
+    __FWRequestValidationErrorInvalidJSONFormat = -9,
 } NS_SWIFT_NAME(RequestValidationErrorCode);
 
-typedef NS_ENUM(NSInteger, FWRequestCacheErrorCode) {
-    FWRequestCacheErrorExpired = -1,
-    FWRequestCacheErrorVersionMismatch = -2,
-    FWRequestCacheErrorSensitiveDataMismatch = -3,
-    FWRequestCacheErrorAppVersionMismatch = -4,
-    FWRequestCacheErrorInvalidCacheTime = -5,
-    FWRequestCacheErrorInvalidMetadata = -6,
-    FWRequestCacheErrorInvalidCacheData = -7,
+typedef NS_ENUM(NSInteger, __FWRequestCacheErrorCode) {
+    __FWRequestCacheErrorExpired = -1,
+    __FWRequestCacheErrorVersionMismatch = -2,
+    __FWRequestCacheErrorSensitiveDataMismatch = -3,
+    __FWRequestCacheErrorAppVersionMismatch = -4,
+    __FWRequestCacheErrorInvalidCacheTime = -5,
+    __FWRequestCacheErrorInvalidMetadata = -6,
+    __FWRequestCacheErrorInvalidCacheData = -7,
 } NS_SWIFT_NAME(RequestCacheErrorCode);
 
 ///  HTTP Request method.
-typedef NS_ENUM(NSInteger, FWRequestMethod) {
-    FWRequestMethodGET = 0,
-    FWRequestMethodPOST,
-    FWRequestMethodHEAD,
-    FWRequestMethodPUT,
-    FWRequestMethodDELETE,
-    FWRequestMethodPATCH,
+typedef NS_ENUM(NSInteger, __FWRequestMethod) {
+    __FWRequestMethodGET = 0,
+    __FWRequestMethodPOST,
+    __FWRequestMethodHEAD,
+    __FWRequestMethodPUT,
+    __FWRequestMethodDELETE,
+    __FWRequestMethodPATCH,
 } NS_SWIFT_NAME(RequestMethod);
 
 ///  Request serializer type.
-typedef NS_ENUM(NSInteger, FWRequestSerializerType) {
-    FWRequestSerializerTypeHTTP = 0,
-    FWRequestSerializerTypeJSON,
+typedef NS_ENUM(NSInteger, __FWRequestSerializerType) {
+    __FWRequestSerializerTypeHTTP = 0,
+    __FWRequestSerializerTypeJSON,
 } NS_SWIFT_NAME(RequestSerializerType);
 
 ///  Response serializer type, which determines response serialization process and
 ///  the type of `responseObject`.
-typedef NS_ENUM(NSInteger, FWResponseSerializerType) {
+typedef NS_ENUM(NSInteger, __FWResponseSerializerType) {
     /// NSData type
-    FWResponseSerializerTypeHTTP,
+    __FWResponseSerializerTypeHTTP,
     /// JSON object type
-    FWResponseSerializerTypeJSON,
+    __FWResponseSerializerTypeJSON,
     /// NSXMLParser type
-    FWResponseSerializerTypeXMLParser,
+    __FWResponseSerializerTypeXMLParser,
 } NS_SWIFT_NAME(ResponseSerializerType);
 
 ///  Request priority
-typedef NS_ENUM(NSInteger, FWRequestPriority) {
-    FWRequestPriorityLow = -4L,
-    FWRequestPriorityDefault = 0,
-    FWRequestPriorityHigh = 4,
+typedef NS_ENUM(NSInteger, __FWRequestPriority) {
+    __FWRequestPriorityLow = -4L,
+    __FWRequestPriorityDefault = 0,
+    __FWRequestPriorityHigh = 4,
 } NS_SWIFT_NAME(RequestPriority);
 
 @protocol __FWMultipartFormData;
 
-typedef void (^FWConstructingBlock)(id<__FWMultipartFormData> formData) NS_SWIFT_NAME(ConstructingBlock);
+typedef void (^__FWConstructingBlock)(id<__FWMultipartFormData> formData) NS_SWIFT_NAME(ConstructingBlock);
 typedef void (^__FWURLSessionTaskProgressBlock)(NSProgress *) NS_SWIFT_NAME(URLSessionTaskProgressBlock);
 
-@class FWBaseRequest;
+@class __FWBaseRequest;
 
-typedef void(^FWRequestCompletionBlock)(__kindof FWBaseRequest *request) NS_SWIFT_NAME(RequestCompletionBlock);
+typedef void(^__FWRequestCompletionBlock)(__kindof __FWBaseRequest *request) NS_SWIFT_NAME(RequestCompletionBlock);
 
-///  The FWRequestDelegate protocol defines several optional methods you can use
+///  The __FWRequestDelegate protocol defines several optional methods you can use
 ///  to receive network-related messages. All the delegate methods will be called
 ///  on the main queue.
 NS_SWIFT_NAME(RequestDelegate)
-@protocol FWRequestDelegate <NSObject>
+@protocol __FWRequestDelegate <NSObject>
 
 @optional
 ///  Tell the delegate that the request has finished successfully.
 ///
 ///  @param request The corresponding request.
-- (void)requestFinished:(__kindof FWBaseRequest *)request;
+- (void)requestFinished:(__kindof __FWBaseRequest *)request;
 
 ///  Tell the delegate that the request has failed.
 ///
 ///  @param request The corresponding request.
-- (void)requestFailed:(__kindof FWBaseRequest *)request;
+- (void)requestFailed:(__kindof __FWBaseRequest *)request;
 
 @end
 
-///  The FWRequestAccessory protocol defines several optional methods that can be
+///  The __FWRequestAccessory protocol defines several optional methods that can be
 ///  used to track the status of a request. Objects that conforms this protocol
 ///  ("accessories") can perform additional configurations accordingly. All the
 ///  accessory methods will be called on the main queue.
 NS_SWIFT_NAME(RequestAccessory)
-@protocol FWRequestAccessory <NSObject>
+@protocol __FWRequestAccessory <NSObject>
 
 @optional
 
@@ -135,7 +135,7 @@ NS_SWIFT_NAME(RequestAccessory)
 @end
 
 NS_SWIFT_NAME(RequestAccessory)
-@interface FWRequestAccessory : NSObject <FWRequestAccessory>
+@interface __FWRequestAccessory : NSObject <__FWRequestAccessory>
 
 @property (nonatomic, copy, nullable) void (^willStartBlock)(id);
 @property (nonatomic, copy, nullable) void (^willStopBlock)(id);
@@ -143,13 +143,13 @@ NS_SWIFT_NAME(RequestAccessory)
 
 @end
 
-///  FWBaseRequest is the base class you should inherit to create your own request class. It provides many options
-///  for constructing request. It adds local caching feature. Note download
+///  __FWBaseRequest is the base class you should inherit to create your own request class. It provides many options
+///  for constructing request, including local caching feature. Note download
 ///  request will not be cached whatsoever, because download request may involve complicated
 ///  cache control policy controlled by `Cache-Control`, `Last-Modified`, etc.
 ///  https://github.com/yuantiku/YTKNetwork
 NS_SWIFT_NAME(BaseRequest)
-@interface FWBaseRequest : NSObject
+@interface __FWBaseRequest : NSObject
 
 #pragma mark - Request and Response Information
 ///=============================================================================
@@ -186,13 +186,13 @@ NS_SWIFT_NAME(BaseRequest)
 @property (nonatomic, strong, readwrite, nullable) NSString *responseString;
 
 ///  This serialized response object. The actual type of this object is determined by
-///  `FWResponseSerializerType`. Note this value can be nil if request failed.
+///  `__FWResponseSerializerType`. Note this value can be nil if request failed.
 ///
 ///  @note If `resumableDownloadPath` and DownloadTask is using, this value will
 ///              be the path to which file is successfully saved (NSURL), or nil if request failed.
 @property (nonatomic, strong, readwrite, nullable) id responseObject;
 
-///  If you use `FWResponseSerializerTypeJSON`, this is a convenience (and sematic) getter
+///  If you use `__FWResponseSerializerTypeJSON`, this is a convenience (and sematic) getter
 ///  for the response object. Otherwise this value is nil.
 @property (nonatomic, strong, readwrite, nullable) id responseJSONObject;
 
@@ -235,24 +235,24 @@ NS_SWIFT_NAME(BaseRequest)
 
 ///  The delegate object of the request. If you choose block style callback you can ignore this.
 ///  Default is nil.
-@property (nonatomic, weak, nullable) id<FWRequestDelegate> delegate;
+@property (nonatomic, weak, nullable) id<__FWRequestDelegate> delegate;
 
 ///  The success callback. Note if this value is not nil and `requestFinished` delegate method is
 ///  also implemented, both will be executed but delegate method is first called. This block
 ///  will be called on the main queue.
-@property (nonatomic, copy, nullable) FWRequestCompletionBlock successCompletionBlock;
+@property (nonatomic, copy, nullable) __FWRequestCompletionBlock successCompletionBlock;
 
 ///  The failure callback. Note if this value is not nil and `requestFailed` delegate method is
 ///  also implemented, both will be executed but delegate method is first called. This block
 ///  will be called on the main queue.
-@property (nonatomic, copy, nullable) FWRequestCompletionBlock failureCompletionBlock;
+@property (nonatomic, copy, nullable) __FWRequestCompletionBlock failureCompletionBlock;
 
 ///  This can be used to add several accessories object. Note if you use `addAccessory` to add accessory
 ///  this array will be automatically created. Default is nil.
-@property (nonatomic, strong, nullable) NSMutableArray<id<FWRequestAccessory>> *requestAccessories;
+@property (nonatomic, strong, nullable) NSMutableArray<id<__FWRequestAccessory>> *requestAccessories;
 
 ///  This can be use to construct HTTP body when needed in POST request. Default is nil.
-@property (nonatomic, copy, nullable) FWConstructingBlock constructingBodyBlock;
+@property (nonatomic, copy, nullable) __FWConstructingBlock constructingBodyBlock;
 
 ///  This value is used to perform resumable download request. Default is nil.
 ///
@@ -269,18 +269,18 @@ NS_SWIFT_NAME(BaseRequest)
 ///  You can use this block to track the upload progress.
 @property (nonatomic, copy, nullable) __FWURLSessionTaskProgressBlock uploadProgressBlock;
 
-///  The priority of the request. Default is `FWRequestPriorityDefault`.
-@property (nonatomic) FWRequestPriority requestPriority;
+///  The priority of the request. Default is `__FWRequestPriorityDefault`.
+@property (nonatomic) __FWRequestPriority requestPriority;
 
 ///  Set completion callbacks
-- (void)setCompletionBlockWithSuccess:(nullable FWRequestCompletionBlock)success
-                              failure:(nullable FWRequestCompletionBlock)failure;
+- (void)setCompletionBlockWithSuccess:(nullable __FWRequestCompletionBlock)success
+                              failure:(nullable __FWRequestCompletionBlock)failure;
 
 ///  Nil out both success and failure callback blocks.
 - (void)clearCompletionBlock;
 
 ///  Convenience method to add request accessory. See also `requestAccessories`.
-- (void)addAccessory:(id<FWRequestAccessory>)accessory;
+- (void)addAccessory:(id<__FWRequestAccessory>)accessory;
 
 #pragma mark - Request Action
 ///=============================================================================
@@ -294,17 +294,17 @@ NS_SWIFT_NAME(BaseRequest)
 - (void)stop;
 
 ///  Convenience method to start the request with block callbacks.
-- (void)startWithCompletionBlockWithSuccess:(nullable FWRequestCompletionBlock)success
-                                    failure:(nullable FWRequestCompletionBlock)failure;
+- (void)startWithCompletionBlockWithSuccess:(nullable __FWRequestCompletionBlock)success
+                                    failure:(nullable __FWRequestCompletionBlock)failure;
 
 ///  Convenience method to start the request with completion block.
-- (void)startWithCompletion:(nullable FWRequestCompletionBlock)completion;
+- (void)startWithCompletion:(nullable __FWRequestCompletionBlock)completion;
 
-- (void)startWithWillStart:(nullable FWRequestCompletionBlock)willStart
-                  willStop:(nullable FWRequestCompletionBlock)willStop
-                   success:(nullable FWRequestCompletionBlock)success
-                   failure:(nullable FWRequestCompletionBlock)failure
-                   didStop:(nullable FWRequestCompletionBlock)didStop;
+- (void)startWithWillStart:(nullable __FWRequestCompletionBlock)willStart
+                  willStop:(nullable __FWRequestCompletionBlock)willStop
+                   success:(nullable __FWRequestCompletionBlock)success
+                   failure:(nullable __FWRequestCompletionBlock)failure
+                   didStop:(nullable __FWRequestCompletionBlock)didStop;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;
@@ -376,13 +376,13 @@ NS_SWIFT_NAME(BaseRequest)
 - (id)cacheFileNameFilter:(id)argument;
 
 ///  HTTP request method.
-- (FWRequestMethod)requestMethod;
+- (__FWRequestMethod)requestMethod;
 
 ///  Request serializer type.
-- (FWRequestSerializerType)requestSerializerType;
+- (__FWRequestSerializerType)requestSerializerType;
 
 ///  Response serializer type. See also `responseObject`.
-- (FWResponseSerializerType)responseSerializerType;
+- (__FWResponseSerializerType)responseSerializerType;
 
 ///  Username and password used for HTTP authorization. Should be formed as @[@"Username", @"Password"].
 - (nullable NSArray<NSString *> *)requestAuthorizationHeaderFieldArray;

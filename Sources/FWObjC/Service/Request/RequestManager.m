@@ -25,16 +25,16 @@
 #import "BatchRequest.h"
 #import "ChainRequest.h"
 
-@interface FWRequestManager()
+@interface __FWRequestManager()
 
-@property (strong, nonatomic) NSMutableArray<FWBatchRequest *> *batchRequestArray;
-@property (strong, nonatomic) NSMutableArray<FWChainRequest *> *chainRequestArray;
+@property (strong, nonatomic) NSMutableArray<__FWBatchRequest *> *batchRequestArray;
+@property (strong, nonatomic) NSMutableArray<__FWChainRequest *> *chainRequestArray;
 
 @end
 
-@implementation FWRequestManager
+@implementation __FWRequestManager
 
-+ (FWRequestManager *)sharedManager {
++ (__FWRequestManager *)sharedManager {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -52,25 +52,25 @@
     return self;
 }
 
-- (void)addBatchRequest:(FWBatchRequest *)request {
+- (void)addBatchRequest:(__FWBatchRequest *)request {
     @synchronized(self) {
         [_batchRequestArray addObject:request];
     }
 }
 
-- (void)removeBatchRequest:(FWBatchRequest *)request {
+- (void)removeBatchRequest:(__FWBatchRequest *)request {
     @synchronized(self) {
         [_batchRequestArray removeObject:request];
     }
 }
 
-- (void)addChainRequest:(FWChainRequest *)request {
+- (void)addChainRequest:(__FWChainRequest *)request {
     @synchronized(self) {
         [_chainRequestArray addObject:request];
     }
 }
 
-- (void)removeChainRequest:(FWChainRequest *)request {
+- (void)removeChainRequest:(__FWChainRequest *)request {
     @synchronized(self) {
         [_chainRequestArray removeObject:request];
     }

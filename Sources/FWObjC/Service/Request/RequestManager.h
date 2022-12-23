@@ -25,31 +25,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWBatchRequest;
-@class FWChainRequest;
+@class __FWBatchRequest;
+@class __FWChainRequest;
 
-///  FWRequestManager handles batch request management. It keeps track of all
+///  __FWRequestManager handles batch request management. It keeps track of all
 ///  the batch requests.
 NS_SWIFT_NAME(RequestManager)
-@interface FWRequestManager : NSObject
+@interface __FWRequestManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 ///  Get the shared batch request manager.
-+ (FWRequestManager *)sharedManager;
++ (__FWRequestManager *)sharedManager;
 
 ///  Add a batch request.
-- (void)addBatchRequest:(FWBatchRequest *)request;
+- (void)addBatchRequest:(__FWBatchRequest *)request;
 
 ///  Remove a previously added batch request.
-- (void)removeBatchRequest:(FWBatchRequest *)request;
+- (void)removeBatchRequest:(__FWBatchRequest *)request;
 
 ///  Add a chain request.
-- (void)addChainRequest:(FWChainRequest *)request;
+- (void)addChainRequest:(__FWChainRequest *)request;
 
 ///  Remove a previously added chain request.
-- (void)removeChainRequest:(FWChainRequest *)request;
+- (void)removeChainRequest:(__FWChainRequest *)request;
 
 @end
 

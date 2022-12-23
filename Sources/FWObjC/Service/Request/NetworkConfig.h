@@ -25,14 +25,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2) NS_REFINED_FOR_SWIFT;
+FOUNDATION_EXPORT void __FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2) NS_REFINED_FOR_SWIFT;
 
-@class FWBaseRequest;
+@class __FWBaseRequest;
 @class __FWSecurityPolicy;
 
-///  FWUrlFilterProtocol can be used to append common parameters to requests before sending them.
+///  __FWUrlFilterProtocol can be used to append common parameters to requests before sending them.
 NS_SWIFT_NAME(UrlFilterProtocol)
-@protocol FWUrlFilterProtocol <NSObject>
+@protocol __FWUrlFilterProtocol <NSObject>
 
 @optional
 
@@ -42,58 +42,58 @@ NS_SWIFT_NAME(UrlFilterProtocol)
 ///  @param request   request itself
 ///
 ///  @return A new url which will be used as a new `requestUrl`
-- (NSString *)filterUrl:(NSString *)originUrl withRequest:(FWBaseRequest *)request;
+- (NSString *)filterUrl:(NSString *)originUrl withRequest:(__FWBaseRequest *)request;
 
 ///  Preprocess URLRequest before actually sending them.
 ///
 ///  @param urlRequest request's URLRequest
 ///  @param request   request itself
 ///
-- (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest withRequest:(FWBaseRequest *)request;
+- (void)filterUrlRequest:(NSMutableURLRequest *)urlRequest withRequest:(__FWBaseRequest *)request;
 
 ///  Postprocess request before actually run callback.
 ///
 ///  @param request   request itself
 ///  @param error   result error
 ///
-- (BOOL)filterResponse:(FWBaseRequest *)request withError:(NSError * _Nullable __autoreleasing *)error;
+- (BOOL)filterResponse:(__FWBaseRequest *)request withError:(NSError * _Nullable __autoreleasing *)error;
 
 @end
 
-///  FWCacheDirPathFilterProtocol can be used to append common path components when caching response results
+///  __FWCacheDirPathFilterProtocol can be used to append common path components when caching response results
 NS_SWIFT_NAME(CacheDirPathFilterProtocol)
-@protocol FWCacheDirPathFilterProtocol <NSObject>
+@protocol __FWCacheDirPathFilterProtocol <NSObject>
 
 @optional
 
 ///  Preprocess cache path before actually saving them.
 ///
-///  @param originPath original base cache path, which is generated in `FWRequest` class.
+///  @param originPath original base cache path, which is generated in `__FWRequest` class.
 ///  @param request    request itself
 ///
 ///  @return A new path which will be used as base path when caching.
-- (NSString *)filterCacheDirPath:(NSString *)originPath withRequest:(FWBaseRequest *)request;
+- (NSString *)filterCacheDirPath:(NSString *)originPath withRequest:(__FWBaseRequest *)request;
 @end
 
-///  FWNetworkConfig stored global network-related configurations, which will be used in `FWNetworkManager`
+///  __FWNetworkConfig stored global network-related configurations, which will be used in `__FWNetworkManager`
 ///  to form and filter requests, as well as caching response.
 NS_SWIFT_NAME(NetworkConfig)
-@interface FWNetworkConfig : NSObject
+@interface __FWNetworkConfig : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 ///  Return a shared config object.
-+ (FWNetworkConfig *)sharedConfig;
++ (__FWNetworkConfig *)sharedConfig;
 
 ///  Request base URL, such as "http://www.yuantiku.com". Default is empty string.
 @property (nonatomic, strong) NSString *baseUrl;
 ///  Request CDN URL. Default is empty string.
 @property (nonatomic, strong) NSString *cdnUrl;
-///  URL filters. See also `FWUrlFilterProtocol`.
-@property (nonatomic, strong, readonly) NSArray<id<FWUrlFilterProtocol>> *urlFilters;
-///  Cache path filters. See also `FWCacheDirPathFilterProtocol`.
-@property (nonatomic, strong, readonly) NSArray<id<FWCacheDirPathFilterProtocol>> *cacheDirPathFilters;
+///  URL filters. See also `__FWUrlFilterProtocol`.
+@property (nonatomic, strong, readonly) NSArray<id<__FWUrlFilterProtocol>> *urlFilters;
+///  Cache path filters. See also `__FWCacheDirPathFilterProtocol`.
+@property (nonatomic, strong, readonly) NSArray<id<__FWCacheDirPathFilterProtocol>> *cacheDirPathFilters;
 ///  Security policy will be used by AFNetworking. See also `__FWSecurityPolicy`.
 @property (nonatomic, strong) __FWSecurityPolicy *securityPolicy;
 ///  Whether to remove NSNull values from response JSON. Defaults to YES.
@@ -103,27 +103,27 @@ NS_SWIFT_NAME(NetworkConfig)
 ///  Whether to enable mock response when failed in debug mode. Default is NO.
 @property (nonatomic, assign) BOOL debugMockEnabled;
 ///  Global mock validator when debug mock enabled. Default is nil.
-@property (nonatomic, copy, nullable) BOOL (^debugMockValidator)(FWBaseRequest *request);
+@property (nonatomic, copy, nullable) BOOL (^debugMockValidator)(__FWBaseRequest *request);
 ///  Global mock processor when debug mock enabled. Default is nil.
-@property (nonatomic, copy, nullable) BOOL (^debugMockProcessor)(FWBaseRequest *request);
+@property (nonatomic, copy, nullable) BOOL (^debugMockProcessor)(__FWBaseRequest *request);
 ///  SessionConfiguration will be used to initialize __FWHTTPSessionManager. Default is nil.
 @property (nonatomic, strong, nullable) NSURLSessionConfiguration *sessionConfiguration;
 ///  NSURLSessionTaskMetrics
 @property (nonatomic, copy, nullable) void (^collectingMetricsBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics);
 
 ///  Add a new URL filter.
-- (void)addUrlFilter:(id<FWUrlFilterProtocol>)filter;
+- (void)addUrlFilter:(id<__FWUrlFilterProtocol>)filter;
 ///  Remove all URL filters.
 - (void)clearUrlFilter;
 ///  Add a new cache path filter
-- (void)addCacheDirPathFilter:(id<FWCacheDirPathFilterProtocol>)filter;
+- (void)addCacheDirPathFilter:(id<__FWCacheDirPathFilterProtocol>)filter;
 ///  Clear all cache path filters.
 - (void)clearCacheDirPathFilter;
 
 @end
 
 NS_SWIFT_NAME(NetworkUtils)
-@interface FWNetworkUtils : NSObject
+@interface __FWNetworkUtils : NSObject
 
 + (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator;
 
@@ -133,7 +133,7 @@ NS_SWIFT_NAME(NetworkUtils)
 
 + (NSString *)appVersionString;
 
-+ (NSStringEncoding)stringEncodingWithRequest:(FWBaseRequest *)request;
++ (NSStringEncoding)stringEncodingWithRequest:(__FWBaseRequest *)request;
 
 + (BOOL)validateResumeData:(NSData *)data;
 

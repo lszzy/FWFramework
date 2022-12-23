@@ -30,28 +30,28 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWBaseRequest;
+@class __FWBaseRequest;
 @class __FWHTTPSessionManager;
 @class __FWHTTPResponseSerializer;
 @class __FWJSONResponseSerializer;
 @class __FWXMLParserResponseSerializer;
 
-///  FWNetworkManager is the underlying class that handles actual request generation,
+///  __FWNetworkManager is the underlying class that handles actual request generation,
 ///  serialization and response handling.
 NS_SWIFT_NAME(NetworkManager)
-@interface FWNetworkManager : NSObject
+@interface __FWNetworkManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 ///  Get the shared manager.
-+ (FWNetworkManager *)sharedManager;
++ (__FWNetworkManager *)sharedManager;
 
 ///  Add request to session and start it.
-- (void)addRequest:(FWBaseRequest *)request;
+- (void)addRequest:(__FWBaseRequest *)request;
 
 ///  Cancel a request that was previously added.
-- (void)cancelRequest:(FWBaseRequest *)request;
+- (void)cancelRequest:(__FWBaseRequest *)request;
 
 ///  Cancel all requests that were previously added.
 - (void)cancelAllRequests;
@@ -61,7 +61,7 @@ NS_SWIFT_NAME(NetworkManager)
 ///  @param request The request to parse. Should not be nil.
 ///
 ///  @return The result URL.
-- (NSString *)buildRequestUrl:(FWBaseRequest *)request;
+- (NSString *)buildRequestUrl:(__FWBaseRequest *)request;
 
 - (__FWHTTPSessionManager *)manager;
 - (void)resetURLSessionManager;
