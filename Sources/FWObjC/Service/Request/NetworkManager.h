@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "Request.h"
+#import "BaseRequest.h"
 #import "BatchRequest.h"
 #import "ChainRequest.h"
 #import "RequestManager.h"

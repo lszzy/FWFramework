@@ -52,8 +52,8 @@ NS_SWIFT_NAME(ChainRequestDelegate)
 /// The chain callback called when one request finished
 typedef void (^FWChainCallback)(FWChainRequest *chainRequest, FWBaseRequest *baseRequest) NS_SWIFT_NAME(ChainCallback);
 
-///  FWChainRequest can be used to chain several FWRequest so that one will only starts after another finishes.
-///  Note that when used inside FWChainRequest, a single FWRequest will have its own callback and delegate
+///  FWChainRequest can be used to chain several FWBaseRequest so that one will only starts after another finishes.
+///  Note that when used inside FWChainRequest, a single FWBaseRequest will have its own callback and delegate
 ///  cleared, in favor of the chain request callback.
 NS_SWIFT_NAME(ChainRequest)
 @interface FWChainRequest : NSObject
