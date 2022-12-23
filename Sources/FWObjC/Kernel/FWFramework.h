@@ -23,7 +23,7 @@
 #import "Exception.h"
 #import "CacheManager.h"
 #import "HTTPSessionManager.h"
-#import "FWNetworkPrivate.h"
+#import "NetworkPrivate.h"
 #import "Database.h"
 #import "WebImage.h"
 

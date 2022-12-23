@@ -1,5 +1,5 @@
 //
-//  FWRequestAgent.m
+//  RequestAgent.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,9 +21,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWRequestAgent.h"
-#import "FWBatchRequest.h"
-#import "FWChainRequest.h"
+#import "RequestAgent.h"
+#import "BatchRequest.h"
+#import "ChainRequest.h"
 
 @interface FWRequestAgent()
 

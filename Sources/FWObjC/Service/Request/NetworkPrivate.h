@@ -1,5 +1,5 @@
 //
-//  FWNetworkPrivate.h
+//  NetworkPrivate.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -22,13 +22,13 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "FWRequest.h"
-#import "FWBatchRequest.h"
-#import "FWChainRequest.h"
-#import "FWRequestAgent.h"
-#import "FWNetworkAgent.h"
-#import "FWNetworkConfig.h"
-#import "FWRequestAccessory.h"
+#import "Request.h"
+#import "BatchRequest.h"
+#import "ChainRequest.h"
+#import "RequestAgent.h"
+#import "NetworkAgent.h"
+#import "NetworkConfig.h"
+#import "RequestAccessory.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

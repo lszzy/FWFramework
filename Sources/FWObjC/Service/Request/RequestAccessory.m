@@ -1,11 +1,11 @@
 //
-//  FWRequestAccessory.m
+//  RequestAccessory.m
 //  FWNetwork
 //
 //  Created by Chuanren Shang on 2020/8/17.
 //
 
-#import "FWRequestAccessory.h"
+#import "RequestAccessory.h"
 
 @implementation FWRequestAccessory
 

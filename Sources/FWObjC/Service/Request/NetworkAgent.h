@@ -1,5 +1,5 @@
 //
-//  FWRequestAgent.h
+//  NetworkAgent.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -25,31 +25,34 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWBatchRequest;
-@class FWChainRequest;
+@class FWBaseRequest;
 
-///  FWRequestAgent handles batch request management. It keeps track of all
-///  the batch requests.
-NS_SWIFT_NAME(RequestAgent)
-@interface FWRequestAgent : NSObject
+///  FWNetworkAgent is the underlying class that handles actual request generation,
+///  serialization and response handling.
+NS_SWIFT_NAME(NetworkAgent)
+@interface FWNetworkAgent : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-///  Get the shared batch request agent.
-+ (FWRequestAgent *)sharedAgent;
+///  Get the shared agent.
++ (FWNetworkAgent *)sharedAgent;
 
-///  Add a batch request.
-- (void)addBatchRequest:(FWBatchRequest *)request;
+///  Add request to session and start it.
+- (void)addRequest:(FWBaseRequest *)request;
 
-///  Remove a previously added batch request.
-- (void)removeBatchRequest:(FWBatchRequest *)request;
+///  Cancel a request that was previously added.
+- (void)cancelRequest:(FWBaseRequest *)request;
 
-///  Add a chain request.
-- (void)addChainRequest:(FWChainRequest *)request;
+///  Cancel all requests that were previously added.
+- (void)cancelAllRequests;
 
-///  Remove a previously added chain request.
-- (void)removeChainRequest:(FWChainRequest *)request;
+///  Return the constructed URL of request.
+///
+///  @param request The request to parse. Should not be nil.
+///
+///  @return The result URL.
+- (NSString *)buildRequestUrl:(FWBaseRequest *)request;
 
 @end
 

@@ -1,5 +1,5 @@
 //
-//  FWBatchRequest.m
+//  BatchRequest.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,10 +21,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWBatchRequest.h"
-#import "FWNetworkPrivate.h"
-#import "FWRequestAgent.h"
-#import "FWRequest.h"
+#import "BatchRequest.h"
+#import "NetworkPrivate.h"
+#import "RequestAgent.h"
+#import "Request.h"
 
 @interface FWBatchRequest() <FWRequestDelegate>
 

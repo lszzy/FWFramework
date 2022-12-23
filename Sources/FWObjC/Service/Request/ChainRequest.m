@@ -1,5 +1,5 @@
 //
-//  FWChainRequest.m
+//  ChainRequest.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,10 +21,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWChainRequest.h"
-#import "FWRequestAgent.h"
-#import "FWNetworkPrivate.h"
-#import "FWBaseRequest.h"
+#import "ChainRequest.h"
+#import "RequestAgent.h"
+#import "NetworkPrivate.h"
+#import "BaseRequest.h"
 
 @interface FWChainRequest()<FWRequestDelegate>
 

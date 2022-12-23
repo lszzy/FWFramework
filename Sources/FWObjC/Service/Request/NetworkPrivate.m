@@ -1,5 +1,5 @@
 //
-//  FWNetworkPrivate.m
+//  NetworkPrivate.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 
 #import <CommonCrypto/CommonDigest.h>
-#import "FWNetworkPrivate.h"
+#import "NetworkPrivate.h"
 #import "URLRequestSerialization.h"
 #import <objc/runtime.h>
 
